@@ -397,16 +397,46 @@ public class PEGGenerator extends BodyTransformer {
 			return;
 		}
 		if (s instanceof TableSwitchStmt){
+			TableSwitchStmt tst = (TableSwitchStmt)s;
+			Unit defaulttarget = tst.getDefaultTarget();
+			doAllMove(s.hashCode(), defaulttarget.hashCode());
+			Iterator targets = tst.getTargets().iterator();
+			for(; targets.hasNext(); ){
+				Unit target = (Unit)targets.next();
+				doAllMove(s.hashCode(), target.hashCode());
+			}
 			return;
 		}
 		if (s instanceof LookupSwitchStmt)
 			return;
 		if (s instanceof MonitorStmt)
 			return;
-		if (s instanceof RetStmt)
+		if (s instanceof RetStmt){
+			doAllMove(s.hashCode(), sm.getActiveBody().hashCode());
+			if(recordReturn.containsKey(sm)){
+				List<Value> ret = recordReturn.get(sm);
+				ret.add(null);
+				recordReturn.put(sm, ret);
+			}else{
+				List<Value> ret = new ArrayList<Value>();
+				ret.add(null);
+				recordReturn.put(sm, ret);
+			}
 			return;
-		if (s instanceof NopStmt)
+		}
+		if (s instanceof NopStmt){
+			doAllMove(s.hashCode(), sm.getActiveBody().hashCode());
+			if(recordReturn.containsKey(sm)){
+				List<Value> ret = recordReturn.get(sm);
+				ret.add(null);
+				recordReturn.put(sm, ret);
+			}else{
+				List<Value> ret = new ArrayList<Value>();
+				ret.add(null);
+				recordReturn.put(sm, ret);
+			}
 			return;
+		}
 		//this function is mine
 		domytest(s, succst);
 		//addFlowEdges(s);
