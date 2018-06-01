@@ -1,10 +1,14 @@
 package pegraph.datastructure;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import soot.Local;
 import soot.SootMethod;
@@ -33,9 +37,26 @@ public class PegIntra {
 		this.soot_method = sm;
 	}	
 	
-	public void exportIntraGraph(String file_name){
+	public void exportIntraGraph(String path){
 		//TODO
-		
+		String file_path = path + soot_method.getName() + ".txt";
+		String regEx="[`~!@#$%^&*()+=|{}';',\\[\\]<>?~£¡@#£¤%¡­¡­&*£¨£©¡ª¡ª+|{}¡¾¡¿¡®£»£º¡±¡°¡¯¡££¬¡¢£¿]"; 
+		Pattern p = Pattern.compile(regEx); 
+		Matcher m = p.matcher(file_path);
+		file_path = m.replaceAll("").trim();
+		File file = new File(file_path);
+		try{
+			if(!file.exists())
+				file.createNewFile();
+			FileWriter fileWriter = new FileWriter(file);
+			fileWriter.write("method: "+soot_method.getClass().getName()+"."+soot_method.getName()+":"+soot_method.hashCode()+"\r\n");
+			for(CallEdge edge : ceList){
+				fileWriter.write(edge.print());
+			}
+			fileWriter.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	public String toString(){

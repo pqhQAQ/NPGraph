@@ -11,7 +11,7 @@ public class Assign extends Function{
 		List<Local> list = new ArrayList<Local>();
 		if(rop == null)
 			return list;
-		if(rub.contains(rop)){
+		if(rub.contains(rop) || contains(rub, rop.getName())){
 			if(rop.getName().equals(lop.getName())){
 				list.add(rop);				
 			}else{
@@ -23,5 +23,13 @@ public class Assign extends Function{
 				list.add(rop);							
 		}
 		return list;
+	}
+	
+	private boolean contains(List<Local> rub, String name){
+		for(Local local : rub){
+			if(local.getName().equals(name))
+				return true;
+		}
+		return false;
 	}
 }

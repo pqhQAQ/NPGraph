@@ -19,4 +19,8 @@ public class CallEdge{
 		this.caller = arg;
 	}
 	
+	public String print(){
+		String path = caller.getName()+"("+caller.getHashcode()+") -> "+receiver.getName()+"("+receiver.getHashcode()+") \r\n";
+		return path;
+	}
 }
