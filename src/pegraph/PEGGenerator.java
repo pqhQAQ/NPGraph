@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 
 import pegraph.datastructure.PegIntra;
 import pegraph.datastructure.CallEdge;
+import pegraph.datastructure.CallInfo;
 import pegraph.datastructure.Point;
 import function.*;
 import soot.ArrayType;
@@ -22,6 +23,8 @@ import soot.BodyTransformer;
 import soot.Local;
 import soot.PatchingChain;
 import soot.RefType;
+import soot.Scene;
+import soot.SootClass;
 import soot.SootMethod;
 import soot.Type;
 import soot.Unit;
@@ -69,8 +72,13 @@ public class PEGGenerator extends BodyTransformer {
 	private boolean call;
 	private int callhash;
 	private PegIntra intra_graph;
+	private static List<CallEdge> inter_graph = new ArrayList<CallEdge>();
 	private List<Local> objectlocal = new ArrayList<Local>();
-	private Map<SootMethod, List<Value>> recordReturn = new HashMap<SootMethod, List<Value>>();
+	private static Map<Integer, List<Local>> recordReturn = new HashMap<Integer, List<Local>>();
+	private static List<SootMethod> allMethod = new ArrayList<SootMethod>();
+	private static Map<Integer, List<Local>> methodPar = new HashMap<Integer, List<Local>>();
+	private static List<CallInfo> callInfoList = new ArrayList<CallInfo>();
+	public static Map<String, Long> mapTable = new HashMap<String, Long>();
 
 	@Override
 	protected void internalTransform(Body arg0, String arg1, Map arg2) {
@@ -82,7 +90,12 @@ public class PEGGenerator extends BodyTransformer {
 			sm.retrieveActiveBody();
 		}
 
-		String file_path = "D:/project/workspace/NPGraph/sootOutput/" + sm.getName() + "_jimple.txt";
+		allMethod.add(sm);
+		List<Local> par = getPar();
+		if (!par.isEmpty())
+			methodPar.put(sm.hashCode(), par);
+		String file_path = "D:/project/workspace/NPGraph/sootOutput/" + sm.getDeclaringClass().getName() + "_"
+				+ sm.getName() + "_jimple.txt";
 		String regEx = "[`~!@#$%^&*()+=|{}';',\\[\\]<>?~£¡@#£¤%¡­¡­&*£¨£©¡ª¡ª+|{}¡¾¡¿¡®£»£º¡±¡°¡¯¡££¬¡¢£¿]";
 		Pattern p = Pattern.compile(regEx);
 		Matcher m = p.matcher(file_path);
@@ -92,7 +105,8 @@ public class PEGGenerator extends BodyTransformer {
 			if (!file.exists())
 				file.createNewFile();
 			FileWriter fileWriter = new FileWriter(file);
-			fileWriter.write("method: "+sm.getClass().getName()+"."+sm.getName()+":"+sm.hashCode()+"\r\n");
+			fileWriter.write(
+					"method: " + sm.getDeclaringClass().getName() + "." + sm.getName() + ":" + sm.hashCode() + "\r\n");
 			call = false;
 			initEntry();
 			// first of all, flow edges are added by inspecting the statements
@@ -116,7 +130,136 @@ public class PEGGenerator extends BodyTransformer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		intra_graph.exportIntraGraph("D:/project/workspace/NPGraph/sootOutput/");
+		// createCall();
+		for(CallEdge ce : intra_graph.ceList){
+			if(!mapTable.containsKey(ce.callStr()))
+				mapTable.put(ce.callStr(), (long)mapTable.size());
+			if(!mapTable.containsKey(ce.receiveStr()))
+				mapTable.put(ce.receiveStr(), (long)mapTable.size());
+		}
+		intra_graph.exportMapGraph("D:/project/workspace/NPGraph/sootOutput/");
+		//intra_graph.exportIntraGraph("D:/project/workspace/NPGraph/sootOutput/");
+	}
+
+	public boolean callContains(int hashcode) {
+		for (SootMethod m : allMethod) {
+			if (m.hashCode() == hashcode)
+				return true;
+		}
+		return false;
+	}
+
+	private void printCall(String path) {
+		String file_path = path + "CallSite.txt";
+		String regEx = "[`~!@#$%^&*()+=|{}';',\\[\\]<>?~£¡@#£¤%¡­¡­&*£¨£©¡ª¡ª+|{}¡¾¡¿¡®£»£º¡±¡°¡¯¡££¬¡¢£¿]";
+		Pattern p = Pattern.compile(regEx);
+		Matcher m = p.matcher(file_path);
+		file_path = m.replaceAll("").trim();
+		File file = new File(file_path);
+		try {
+			if (!file.exists())
+				file.createNewFile();
+			FileWriter fileWriter = new FileWriter(file);
+			for (CallEdge edge : inter_graph) {
+				fileWriter.write(edge.print());
+			}
+			fileWriter.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void printMapCall(String path) {
+		String file_path = path + "MapCallSite.txt";
+		String regEx = "[`~!@#$%^&*()+=|{}';',\\[\\]<>?~£¡@#£¤%¡­¡­&*£¨£©¡ª¡ª+|{}¡¾¡¿¡®£»£º¡±¡°¡¯¡££¬¡¢£¿]";
+		Pattern p = Pattern.compile(regEx);
+		Matcher m = p.matcher(file_path);
+		file_path = m.replaceAll("").trim();
+		File file = new File(file_path);
+		try {
+			if (!file.exists())
+				file.createNewFile();
+			FileWriter fileWriter = new FileWriter(file);
+			for (CallEdge edge : inter_graph) {
+				if(!mapTable.containsKey(edge.callStr()))
+					mapTable.put(edge.callStr(), (long)mapTable.size());
+				if(!mapTable.containsKey(edge.receiveStr()))
+					mapTable.put(edge.receiveStr(), (long)mapTable.size());
+				fileWriter.write(mapTable.get(edge.callStr())+" -> "+mapTable.get(edge.receiveStr())+"\r\n");
+			}
+			fileWriter.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void printMap(String path){
+		String file_path = path + "MapTable.txt";
+		String regEx = "[`~!@#$%^&*()+=|{}';',\\[\\]<>?~£¡@#£¤%¡­¡­&*£¨£©¡ª¡ª+|{}¡¾¡¿¡®£»£º¡±¡°¡¯¡££¬¡¢£¿]";
+		Pattern p = Pattern.compile(regEx);
+		Matcher m = p.matcher(file_path);
+		file_path = m.replaceAll("").trim();
+		File file = new File(file_path);
+		try {
+			if (!file.exists())
+				file.createNewFile();
+			FileWriter fileWriter = new FileWriter(file);
+			for (Map.Entry<String, Long> entry : mapTable.entrySet()) {
+				fileWriter.write(entry.getKey()+" <-> "+entry.getValue()+"\r\n");
+			}
+			fileWriter.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void createCall() {
+		for (CallInfo callInfo : callInfoList) {
+			if (callContains(callInfo.receiverHash)) {
+				Point base = callInfo.base;
+				int receiverhash = callInfo.receiverHash;
+				CallEdge calledge0 = new CallEdge();
+				calledge0.addCaller(new Point("0", base.getHashcode()));
+				calledge0.addReceiver(new Point("0", receiverhash));
+				if (!inter_graph.contains(calledge0))
+					inter_graph.add(calledge0);
+				for (int i = 0; i < callInfo.args.size(); i++) {
+					Point call = callInfo.args.get(i);
+					Point receive = callInfo.rargs.get(i);
+					CallEdge calledge = new CallEdge();
+					calledge.addCaller(new Point(call.getName(), base.getHashcode()));
+					calledge.addReceiver(new Point(receive.getName(), receiverhash));
+					if (!inter_graph.contains(calledge))
+						inter_graph.add(calledge);
+				}
+
+				List<Local> ret = recordReturn.get(receiverhash);
+				CallEdge calledge1 = new CallEdge();
+				calledge1.addCaller(new Point("0", -receiverhash));
+				calledge1.addReceiver(new Point("0", -base.getHashcode()));
+				if (!inter_graph.contains(calledge1))
+					inter_graph.add(calledge1);
+				for (Local l : ret) {
+					if(l == null){
+						CallEdge calledge = new CallEdge();
+						calledge.addCaller(new Point("0", -receiverhash));
+						calledge.addReceiver(new Point(base.getName(), -base.getHashcode()));
+						if (!inter_graph.contains(calledge))
+							inter_graph.add(calledge);
+					}else if (l instanceof Local) {
+						CallEdge calledge = new CallEdge();
+						calledge.addCaller(new Point(l.getName(), -receiverhash));
+						calledge.addReceiver(new Point(base.getName(), -base.getHashcode()));
+						if (!inter_graph.contains(calledge))
+							inter_graph.add(calledge);
+					}
+				}
+			}
+		}
+
+		//printCall("D:/project/workspace/NPGraph/sootOutput/");
+		printMapCall("D:/project/workspace/NPGraph/sootOutput/");
+		printMap("D:/project/workspace/NPGraph/sootOutput/");
 	}
 
 	private void initEntry() {
@@ -183,31 +326,97 @@ public class PEGGenerator extends BodyTransformer {
 		}
 	}
 
-	private void interFunc() {
+	private void interFunc(Stmt st, Stmt succst) {
 		// to complete later
+		InvokeExpr ie = st.getInvokeExpr();
+		SootMethod receiver = ie.getMethod();
+		if (st instanceof AssignStmt) {
+			Value lhs = ((DefinitionStmt) st).getLeftOp();
+			Value rhs = ((DefinitionStmt) st).getRightOp();
+			if (!(lhs instanceof Local) || !contains(((Local) lhs).getName())) {
+				return;
+			}
+			List<Point> args = new ArrayList<Point>();
+			List<Point> rargs = new ArrayList<Point>();
+			for (int i = 0; i < ie.getArgCount(); i++) {
+				Value arg = ie.getArg(i);
+				if (arg instanceof Local && contains(((Local) arg).getName())) {
+					Local rarg = receiver.getActiveBody().getParameterLocal(i);
+					args.add(new Point(((Local) arg).getName(), st.hashCode()));
+					rargs.add(new Point(rarg.getName(), receiver.hashCode()));
+				}
+			}
+
+			// if(!args.isEmpty())
+			callInfoList.add(new CallInfo(new Point(((Local) lhs).getName(), st.hashCode()), args, rargs,
+					ie.getMethod().hashCode()));
+		}
+		// if(ie instanceof InstanceInvokeExpr){
+		// InstanceInvokeExpr iie = (InstanceInvokeExpr) ie;
+		// List<Local> u = iie.getUseBoxes();
+		// Local base = (Local) ((InstanceInvokeExpr) ie).getBase();
+		// Local last = sm.getActiveBody().getLocals().getLast();
+		// List<Point> args = new ArrayList<Point>();
+		// List<Point> rargs = new ArrayList<Point>();
+		// for(int i = 0; i<ie.getArgCount(); i++){
+		// Value arg = ie.getArg(i);
+		// if(arg instanceof Local && contains(((Local)arg).getName())){
+		// Local rarg = receiver.getActiveBody().getParameterLocal(i);
+		// args.add(new Point(((Local)arg).getName(), st.hashCode()));
+		// rargs.add(new Point(rarg.getName(), receiver.hashCode()));
+		// }
+		// }
+		//
+		// //if(!args.isEmpty())
+		// callInfoList.add(new CallInfo(new Point(last.getName(),
+		// st.hashCode()), args, rargs, ie.getMethod().hashCode()));
+		// }
 	}
 
 	private void domytest(Stmt s, Stmt succst) {
+		// case inter: local := function()
 		if (s.containsInvokeExpr()) {
-			interFunc();
-			call = true;
-			doAllMove(s.hashCode(), -s.hashCode());
-			doAllMove(-s.hashCode(), succst.hashCode());
+			if (s instanceof AssignStmt) {
+				Local lhs = (Local) ((AssignStmt) s).getLeftOp();
+				interFunc(s, succst);
+				call = true;
+				// doAllMove(s.hashCode(), -s.hashCode());
+				CallEdge calledge0 = new CallEdge();
+				calledge0.addCaller(new Point("0", s.hashCode()));
+				calledge0.addReceiver(new Point("0", -s.hashCode()));
+				intra_graph.addCallEdge(calledge0);
+				for (Local l : objectlocal) {
+					if (!l.getName().equals(lhs.getName())) {
+						CallEdge calledge = new CallEdge();
+						calledge.addCaller(new Point(l.getName(), s.hashCode()));
+						calledge.addReceiver(new Point(l.getName(), -s.hashCode()));
+						intra_graph.addCallEdge(calledge);
+					}
+				}
+				doAllMove(-s.hashCode(), succst.hashCode());
+				return;
+			}
+			doAllMove(s.hashCode(), succst.hashCode());
 			return;
 		}
-
 		// case 1: ReturnStmt
 		if (s instanceof ReturnStmt) {
 			Value v = ((ReturnStmt) s).getOp();
 			doAllMove(callhash, -sm.hashCode());
-			if (recordReturn.containsKey(sm)) {
-				List<Value> ret = recordReturn.get(sm);
-				ret.add(v);
-				recordReturn.put(sm, ret);
+			if (recordReturn.containsKey(sm.hashCode())) {
+				List<Local> ret = recordReturn.get(sm.hashCode());
+				if (v instanceof NullConstant || !(contains(((Local) v).getName())))
+					ret.add(null);
+				else
+					ret.add((Local) v);
+				recordReturn.put(sm.hashCode(), ret);
 			} else {
-				List<Value> ret = new ArrayList<Value>();
-				ret.add(v);
-				recordReturn.put(sm, ret);
+				List<Local> ret = new ArrayList<Local>();
+				if (v instanceof NullConstant || !(contains(((Local) v).getName())))
+					ret.add(null);
+				else
+					ret.add((Local) v);
+				recordReturn.put(sm.hashCode(), ret);
 			}
 			return;
 		}
@@ -288,16 +497,14 @@ public class PEGGenerator extends BodyTransformer {
 			}
 
 			// case 4.3: local := local
-			if (!contains(((Local)lhs).getName())) {
+			if (!contains(((Local) lhs).getName())) {
 				doAllMove(callhash, succst.hashCode());
 				return;
 			}
-			if (rhs instanceof Local && objectlocal.contains(rhs)) {
+			if (rhs instanceof Local && contains(((Local) rhs).getName())) {
 				// intra_graph.addLocal2Local((Local) rhs, (Local) lhs);
 				List<Local> rub = new ArrayList<Local>();
-				if (rhs instanceof Local && objectlocal.contains(rhs)) {
-					rub.add((Local) rhs);
-				}
+				rub.add((Local) rhs);
 				Function f = new Assign();
 				RF((Local) lhs, rub, f, callhash, succst.hashCode());
 				return;
@@ -353,7 +560,7 @@ public class PEGGenerator extends BodyTransformer {
 				RF((Local) lhs, null, f, callhash, succst.hashCode());
 				return;
 			}
-			if(rhs instanceof NullConstant){
+			if (rhs instanceof NullConstant) {
 				Function f = new Add();
 				RF((Local) lhs, null, f, callhash, succst.hashCode());
 				return;
@@ -380,7 +587,7 @@ public class PEGGenerator extends BodyTransformer {
 					List<Local> rub = new ArrayList<Local>();
 					rub.add(ropbase);
 					Function f = new Assign();
-					RF((Local)lhs, rub, f, callhash, succst.hashCode());
+					RF((Local) lhs, rub, f, callhash, succst.hashCode());
 					return;
 				}
 				doAllMove(callhash, succst.hashCode());
@@ -408,7 +615,7 @@ public class PEGGenerator extends BodyTransformer {
 				// intra_graph.addArrayRef2Local((ArrayRef) rhs, (Local) lhs);
 				return;
 			}
-
+			doAllMove(s.hashCode(), succst.hashCode());
 			return;
 
 		} // AssignStmt
@@ -422,22 +629,22 @@ public class PEGGenerator extends BodyTransformer {
 	 * @param sm
 	 */
 	private void processStmt(Stmt s, Stmt succst) {
-//		if (call) {
-//			callhash = -s.hashCode();
-//			call = false;
-//		} else
-//			callhash = s.hashCode();
+		// if (call) {
+		// callhash = -s.hashCode();
+		// call = false;
+		// } else
+		// callhash = s.hashCode();
 		callhash = s.hashCode();
 		if (s instanceof ReturnVoidStmt) {
 			doAllMove(callhash, -sm.hashCode());
-			if (recordReturn.containsKey(sm)) {
-				List<Value> ret = recordReturn.get(sm);
+			if (recordReturn.containsKey(sm.hashCode())) {
+				List<Local> ret = recordReturn.get(sm.hashCode());
 				ret.add(null);
-				recordReturn.put(sm, ret);
+				recordReturn.put(sm.hashCode(), ret);
 			} else {
-				List<Value> ret = new ArrayList<Value>();
+				List<Local> ret = new ArrayList<Local>();
 				ret.add(null);
-				recordReturn.put(sm, ret);
+				recordReturn.put(sm.hashCode(), ret);
 			}
 			return;
 		}
@@ -471,27 +678,27 @@ public class PEGGenerator extends BodyTransformer {
 			return;
 		if (s instanceof RetStmt) {
 			doAllMove(callhash, -sm.hashCode());
-			if (recordReturn.containsKey(sm)) {
-				List<Value> ret = recordReturn.get(sm);
+			if (recordReturn.containsKey(sm.hashCode())) {
+				List<Local> ret = recordReturn.get(sm.hashCode());
 				ret.add(null);
-				recordReturn.put(sm, ret);
+				recordReturn.put(sm.hashCode(), ret);
 			} else {
-				List<Value> ret = new ArrayList<Value>();
+				List<Local> ret = new ArrayList<Local>();
 				ret.add(null);
-				recordReturn.put(sm, ret);
+				recordReturn.put(sm.hashCode(), ret);
 			}
 			return;
 		}
 		if (s instanceof NopStmt) {
 			doAllMove(callhash, -sm.hashCode());
-			if (recordReturn.containsKey(sm)) {
-				List<Value> ret = recordReturn.get(sm);
+			if (recordReturn.containsKey(sm.hashCode())) {
+				List<Local> ret = recordReturn.get(sm.hashCode());
 				ret.add(null);
-				recordReturn.put(sm, ret);
+				recordReturn.put(sm.hashCode(), ret);
 			} else {
-				List<Value> ret = new ArrayList<Value>();
+				List<Local> ret = new ArrayList<Local>();
 				ret.add(null);
-				recordReturn.put(sm, ret);
+				recordReturn.put(sm.hashCode(), ret);
 			}
 			return;
 		}
@@ -513,14 +720,14 @@ public class PEGGenerator extends BodyTransformer {
 		}
 	}
 
-	private boolean contains(String name){
-		for(Local local : objectlocal){
-			if(local.getName().equals(name))
+	private boolean contains(String name) {
+		for (Local local : objectlocal) {
+			if (local.getName().equals(name))
 				return true;
 		}
 		return false;
 	}
-	
+
 	private boolean isJavaObjectNew(InvokeExpr invoke) {
 		SootMethod static_target = invoke.getMethod();
 		String sig = static_target.getSubSignature();

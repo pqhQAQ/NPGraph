@@ -1,10 +1,12 @@
 package client;
 
 import java.io.File;
+import java.util.List;
 
 import pegraph.PEGGenerator;
 import soot.PackManager;
 import soot.Scene;
+import soot.SootMethod;
 import soot.Transform;
 import soot.options.Options;
 
@@ -51,6 +53,12 @@ public class IntraGenerator {
 		
 		//run 
 		soot.Main.main(args);
+		PEGGenerator peg = new PEGGenerator();
+		peg.createCall();
+		//List<SootMethod> am = peg.allMethod;
+		//for(SootMethod method : am){
+			//peg.createIntra();
+		//}
 		
 	}
 
