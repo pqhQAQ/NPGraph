@@ -40,7 +40,7 @@ public class PegIntra {
 	
 	public void exportIntraGraph(String path){
 		//TODO
-		String file_path = path + soot_method.getName() + ".txt";
+		String file_path = path + soot_method.getDeclaringClass().getName()+"."+soot_method.getName() + ".txt";
 		String regEx="[`~!@#$%^&*()+=|{}';',\\[\\]<>?~£¡@#£¤%¡­¡­&*£¨£©¡ª¡ª+|{}¡¾¡¿¡®£»£º¡±¡°¡¯¡££¬¡¢£¿]"; 
 		Pattern p = Pattern.compile(regEx); 
 		Matcher m = p.matcher(file_path);
@@ -62,7 +62,7 @@ public class PegIntra {
 	
 	public void exportMapGraph(String path){
 		//TODO
-		String file_path = path + soot_method.getName() + "_map.txt";
+		String file_path = path + soot_method.getDeclaringClass().getName()+"."+soot_method.getName() + "_map.txt";
 		String regEx="[`~!@#$%^&*()+=|{}';',\\[\\]<>?~£¡@#£¤%¡­¡­&*£¨£©¡ª¡ª+|{}¡¾¡¿¡®£»£º¡±¡°¡¯¡££¬¡¢£¿]"; 
 		Pattern p = Pattern.compile(regEx); 
 		Matcher m = p.matcher(file_path);
@@ -81,25 +81,6 @@ public class PegIntra {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-	}
-	
-	public String toString(){
-		StringBuilder builder = new StringBuilder();
-		
-		//--method signature
-		
-		//--formal parameters
-		
-		//--formal return
-		
-		//--call sites
-		
-		//--edges
-		//local2local: Assign
-		
-		//obj2local: New
-	
-		return builder.toString();
 	}
 	
 	public boolean contains(CallEdge calledge){

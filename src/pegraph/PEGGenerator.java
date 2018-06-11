@@ -131,14 +131,14 @@ public class PEGGenerator extends BodyTransformer {
 			e.printStackTrace();
 		}
 		// createCall();
-		for(CallEdge ce : intra_graph.ceList){
-			if(!mapTable.containsKey(ce.callStr()))
-				mapTable.put(ce.callStr(), (long)mapTable.size());
-			if(!mapTable.containsKey(ce.receiveStr()))
-				mapTable.put(ce.receiveStr(), (long)mapTable.size());
+		for (CallEdge ce : intra_graph.ceList) {
+			if (!mapTable.containsKey(ce.callStr()))
+				mapTable.put(ce.callStr(), (long) mapTable.size());
+			if (!mapTable.containsKey(ce.receiveStr()))
+				mapTable.put(ce.receiveStr(), (long) mapTable.size());
 		}
 		intra_graph.exportMapGraph("D:/project/workspace/NPGraph/sootOutput/");
-		//intra_graph.exportIntraGraph("D:/project/workspace/NPGraph/sootOutput/");
+		intra_graph.exportIntraGraph("D:/project/workspace/NPGraph/sootOutput/");
 	}
 
 	public boolean callContains(int hashcode) {
@@ -168,7 +168,7 @@ public class PEGGenerator extends BodyTransformer {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void printMapCall(String path) {
 		String file_path = path + "MapCallSite.txt";
 		String regEx = "[`~!@#$%^&*()+=|{}';',\\[\\]<>?~£¡@#£¤%¡­¡­&*£¨£©¡ª¡ª+|{}¡¾¡¿¡®£»£º¡±¡°¡¯¡££¬¡¢£¿]";
@@ -181,19 +181,19 @@ public class PEGGenerator extends BodyTransformer {
 				file.createNewFile();
 			FileWriter fileWriter = new FileWriter(file);
 			for (CallEdge edge : inter_graph) {
-				if(!mapTable.containsKey(edge.callStr()))
-					mapTable.put(edge.callStr(), (long)mapTable.size());
-				if(!mapTable.containsKey(edge.receiveStr()))
-					mapTable.put(edge.receiveStr(), (long)mapTable.size());
-				fileWriter.write(mapTable.get(edge.callStr())+" -> "+mapTable.get(edge.receiveStr())+"\r\n");
+				if (!mapTable.containsKey(edge.callStr()))
+					mapTable.put(edge.callStr(), (long) mapTable.size());
+				if (!mapTable.containsKey(edge.receiveStr()))
+					mapTable.put(edge.receiveStr(), (long) mapTable.size());
+				fileWriter.write(mapTable.get(edge.callStr()) + " -> " + mapTable.get(edge.receiveStr()) + "\r\n");
 			}
 			fileWriter.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void printMap(String path){
+
+	public void printMap(String path) {
 		String file_path = path + "MapTable.txt";
 		String regEx = "[`~!@#$%^&*()+=|{}';',\\[\\]<>?~£¡@#£¤%¡­¡­&*£¨£©¡ª¡ª+|{}¡¾¡¿¡®£»£º¡±¡°¡¯¡££¬¡¢£¿]";
 		Pattern p = Pattern.compile(regEx);
@@ -205,14 +205,14 @@ public class PEGGenerator extends BodyTransformer {
 				file.createNewFile();
 			FileWriter fileWriter = new FileWriter(file);
 			for (Map.Entry<String, Long> entry : mapTable.entrySet()) {
-				fileWriter.write(entry.getKey()+" <-> "+entry.getValue()+"\r\n");
+				fileWriter.write(entry.getKey() + " <-> " + entry.getValue() + "\r\n");
 			}
 			fileWriter.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void createCall() {
 		for (CallInfo callInfo : callInfoList) {
 			if (callContains(callInfo.receiverHash)) {
@@ -232,32 +232,39 @@ public class PEGGenerator extends BodyTransformer {
 					if (!inter_graph.contains(calledge))
 						inter_graph.add(calledge);
 				}
+				
 
-				List<Local> ret = recordReturn.get(receiverhash);
-				CallEdge calledge1 = new CallEdge();
-				calledge1.addCaller(new Point("0", -receiverhash));
-				calledge1.addReceiver(new Point("0", -base.getHashcode()));
-				if (!inter_graph.contains(calledge1))
-					inter_graph.add(calledge1);
-				for (Local l : ret) {
-					if(l == null){
-						CallEdge calledge = new CallEdge();
-						calledge.addCaller(new Point("0", -receiverhash));
-						calledge.addReceiver(new Point(base.getName(), -base.getHashcode()));
-						if (!inter_graph.contains(calledge))
-							inter_graph.add(calledge);
-					}else if (l instanceof Local) {
-						CallEdge calledge = new CallEdge();
-						calledge.addCaller(new Point(l.getName(), -receiverhash));
-						calledge.addReceiver(new Point(base.getName(), -base.getHashcode()));
-						if (!inter_graph.contains(calledge))
-							inter_graph.add(calledge);
-					}
-				}
+				CallEdge calledge = new CallEdge();
+				calledge.addCaller(new Point(".return", -receiverhash));
+				calledge.addReceiver(new Point(base.getName(), -base.getHashcode()));
+				if (!inter_graph.contains(calledge))
+					inter_graph.add(calledge);
+
+//				List<Local> ret = recordReturn.get(receiverhash);
+//				CallEdge calledge1 = new CallEdge();
+//				calledge1.addCaller(new Point("0", -receiverhash));
+//				calledge1.addReceiver(new Point("0", -base.getHashcode()));
+//				if (!inter_graph.contains(calledge1))
+//					inter_graph.add(calledge1);
+//				for (Local l : ret) {
+//					if (l == null) {
+//						CallEdge calledge = new CallEdge();
+//						calledge.addCaller(new Point("0", -receiverhash));
+//						calledge.addReceiver(new Point(base.getName(), -base.getHashcode()));
+//						if (!inter_graph.contains(calledge))
+//							inter_graph.add(calledge);
+//					} else if (l instanceof Local) {
+//						CallEdge calledge = new CallEdge();
+//						calledge.addCaller(new Point(l.getName(), -receiverhash));
+//						calledge.addReceiver(new Point(base.getName(), -base.getHashcode()));
+//						if (!inter_graph.contains(calledge))
+//							inter_graph.add(calledge);
+//					}
+//				}
 			}
 		}
 
-		//printCall("D:/project/workspace/NPGraph/sootOutput/");
+		printCall("D:/project/workspace/NPGraph/sootOutput/");
 		printMapCall("D:/project/workspace/NPGraph/sootOutput/");
 		printMap("D:/project/workspace/NPGraph/sootOutput/");
 	}
@@ -281,7 +288,7 @@ public class PEGGenerator extends BodyTransformer {
 					intra_graph.addCallEdge(calledge);
 				} else {
 					List<Local> par = getPar();
-					if (par.contains(local)) {
+					if (par.contains(local) || local.getName().equals("this")) {
 						calledge.addCaller(new Point(local.getName(), sm.hashCode()));
 					} else {
 						calledge.addCaller(new Point("0", sm.hashCode()));
@@ -330,6 +337,9 @@ public class PEGGenerator extends BodyTransformer {
 		// to complete later
 		InvokeExpr ie = st.getInvokeExpr();
 		SootMethod receiver = ie.getMethod();
+		if(!receiver.hasActiveBody()){
+			return;
+		}
 		if (st instanceof AssignStmt) {
 			Value lhs = ((DefinitionStmt) st).getLeftOp();
 			Value rhs = ((DefinitionStmt) st).getRightOp();
@@ -338,6 +348,14 @@ public class PEGGenerator extends BodyTransformer {
 			}
 			List<Point> args = new ArrayList<Point>();
 			List<Point> rargs = new ArrayList<Point>();
+			for (Local local : receiver.getActiveBody().getLocals()) {
+				if (local.getName().equals("this") && ie instanceof InstanceInvokeExpr) {
+					args.add(new Point(((Local) ((InstanceInvokeExpr) st.getInvokeExpr()).getBase()).getName(),
+							st.hashCode()));
+					rargs.add(new Point("this", receiver.hashCode()));
+					break;
+				}
+			}
 			for (int i = 0; i < ie.getArgCount(); i++) {
 				Value arg = ie.getArg(i);
 				if (arg instanceof Local && contains(((Local) arg).getName())) {
@@ -403,19 +421,36 @@ public class PEGGenerator extends BodyTransformer {
 		if (s instanceof ReturnStmt) {
 			Value v = ((ReturnStmt) s).getOp();
 			doAllMove(callhash, -sm.hashCode());
+			CallEdge calledge = new CallEdge();
 			if (recordReturn.containsKey(sm.hashCode())) {
 				List<Local> ret = recordReturn.get(sm.hashCode());
-				if (v instanceof NullConstant || !(contains(((Local) v).getName())))
+				if (v instanceof NullConstant || !(v instanceof Local) || !(contains(((Local) v).getName()))) {
+					calledge.addCaller(new Point("0", callhash));
+					calledge.addReceiver(new Point(".return", -sm.hashCode()));
+					intra_graph.addCallEdge(calledge);
 					ret.add(null);
-				else
+				}
+				else{
+					calledge.addCaller(new Point(((Local) v).getName(), callhash));
+					calledge.addReceiver(new Point(".return", -sm.hashCode()));
+					intra_graph.addCallEdge(calledge);
 					ret.add((Local) v);
+				}
 				recordReturn.put(sm.hashCode(), ret);
 			} else {
 				List<Local> ret = new ArrayList<Local>();
-				if (v instanceof NullConstant || !(contains(((Local) v).getName())))
+				if (v instanceof NullConstant || !(v instanceof Local) || !(contains(((Local) v).getName()))) {
+					calledge.addCaller(new Point("0", callhash));
+					calledge.addReceiver(new Point(".return", -sm.hashCode()));
+					intra_graph.addCallEdge(calledge);
 					ret.add(null);
-				else
+				}
+				else{
+					calledge.addCaller(new Point(((Local) v).getName(), callhash));
+					calledge.addReceiver(new Point(".return", -sm.hashCode()));
+					intra_graph.addCallEdge(calledge);
 					ret.add((Local) v);
+				}
 				recordReturn.put(sm.hashCode(), ret);
 			}
 			return;
@@ -442,62 +477,58 @@ public class PEGGenerator extends BodyTransformer {
 		if (s instanceof AssignStmt) {
 			// case 4.1: lhs is array access
 			if (lhs instanceof ArrayRef) {
+				// array will be complete later
 				// if rhs is local
-				ArrayRef arl = (ArrayRef) lhs;
-				Local lopbase = (Local) arl.getBase();
-				if (rhs instanceof Local && objectlocal.contains(rhs)) {
-					// intra_graph.addLocal2ArrayRef((Local) rhs, (ArrayRef)
-					// lhs);
-					List<Local> rub = new ArrayList<Local>();
-					rub.add((Local) rhs);
-					Function f = new Assign();
-					RF(lopbase, rub, f, callhash, succst.hashCode());
-					return;
-				}
-				if (rhs instanceof BinopExpr) {
-					BinopExpr ber = (BinopExpr) rhs;
-					List<Local> rub = new ArrayList<Local>();
-					if (objectlocal.contains((Local) ber.getOp1()))
-						rub.add((Local) ber.getOp1());
-					if (objectlocal.contains((Local) ber.getOp2()))
-						rub.add((Local) ber.getOp2());
-					Function f = new Assign();
-					RF(lopbase, rub, f, callhash, succst.hashCode());
-					return;
-				}
+				/*
+				 * ArrayRef arl = (ArrayRef) lhs; Local lopbase = (Local)
+				 * arl.getBase(); if (rhs instanceof Local &&
+				 * objectlocal.contains(rhs)) { //
+				 * intra_graph.addLocal2ArrayRef((Local) rhs, (ArrayRef) //
+				 * lhs); List<Local> rub = new ArrayList<Local>();
+				 * rub.add((Local) rhs); Function f = new Assign(); RF(lopbase,
+				 * rub, f, callhash, succst.hashCode()); return; } if (rhs
+				 * instanceof BinopExpr) { BinopExpr ber = (BinopExpr) rhs;
+				 * List<Local> rub = new ArrayList<Local>(); if
+				 * (objectlocal.contains((Local) ber.getOp1())) rub.add((Local)
+				 * ber.getOp1()); if (objectlocal.contains((Local)
+				 * ber.getOp2())) rub.add((Local) ber.getOp2()); Function f =
+				 * new Assign(); RF(lopbase, rub, f, callhash,
+				 * succst.hashCode()); return; }
+				 */
 				doAllMove(callhash, succst.hashCode());
 				return;
 			}
 
 			// case 4.2: lhs is a field access
-			if (lhs instanceof InstanceFieldRef) {
-				Local lopbase = (Local) ((InstanceFieldRef) lhs).getBase();
-				if (rhs instanceof Local && objectlocal.contains(rhs)) {
-					// intra_graph.addLocal2FieldRef((Local) rhs, (FieldRef)
-					// lhs);
-					List<Local> rub = new ArrayList<Local>();
-					rub.add((Local) rhs);
-					Function f = new Assign();
-					RF(lopbase, rub, f, callhash, succst.hashCode());
-					return;
-				}
-				if (rhs instanceof BinopExpr) {
-					BinopExpr ber = (BinopExpr) rhs;
-					List<Local> rub = new ArrayList<Local>();
-					if (objectlocal.contains((Local) ber.getOp1()))
-						rub.add((Local) ber.getOp1());
-					if (objectlocal.contains((Local) ber.getOp2()))
-						rub.add((Local) ber.getOp2());
-					Function f = new Assign();
-					RF(lopbase, rub, f, callhash, succst.hashCode());
-					return;
-				}
+			if (lhs instanceof FieldRef) {
+				// field will be complete later
+				// Local lopbase = (Local) ((InstanceFieldRef) lhs).getBase();
+				// if (rhs instanceof Local && objectlocal.contains(rhs)) {
+				// // intra_graph.addLocal2FieldRef((Local) rhs, (FieldRef)
+				// // lhs);
+				// List<Local> rub = new ArrayList<Local>();
+				// rub.add((Local) rhs);
+				// Function f = new Assign();
+				// RF(lopbase, rub, f, callhash, succst.hashCode());
+				// return;
+				// }
+				// if (rhs instanceof BinopExpr) {
+				// BinopExpr ber = (BinopExpr) rhs;
+				// List<Local> rub = new ArrayList<Local>();
+				// if (objectlocal.contains((Local) ber.getOp1()))
+				// rub.add((Local) ber.getOp1());
+				// if (objectlocal.contains((Local) ber.getOp2()))
+				// rub.add((Local) ber.getOp2());
+				// Function f = new Assign();
+				// RF(lopbase, rub, f, callhash, succst.hashCode());
+				// return;
+				// }
 				doAllMove(callhash, succst.hashCode());
 				return;
 			}
 
 			// case 4.3: local := local
-			if (!contains(((Local) lhs).getName())) {
+			if (!(lhs instanceof Local) || !contains(((Local) lhs).getName())) {
 				doAllMove(callhash, succst.hashCode());
 				return;
 			}
@@ -567,29 +598,32 @@ public class PEGGenerator extends BodyTransformer {
 			}
 			// case 4.8: rhs is field access x.f; X.f is StaticFieldRef, not
 			// consider
-			if (rhs instanceof InstanceFieldRef && objectlocal.contains(rhs)) {
+			if (rhs instanceof FieldRef) {
+				// will be completed later
 				// intra_graph.addField2Local((FieldRef) rhs, (Local) lhs);
-				Local ropbase = (Local) ((InstanceFieldRef) rhs).getBase();
-				List<Local> rub = new ArrayList<Local>();
-				rub.add(ropbase);
-				Function f = new Assign();
-				RF((Local) lhs, rub, f, callhash, succst.hashCode());
+				// Local ropbase = (Local) ((InstanceFieldRef) rhs).getBase();
+				// List<Local> rub = new ArrayList<Local>();
+				// rub.add(ropbase);
+				// Function f = new Assign();
+				// RF((Local) lhs, rub, f, callhash, succst.hashCode());
+				doAllMove(callhash, succst.hashCode());
 				return;
 			}
 			// case4.11: rhs is arrayref
 			if (rhs instanceof ArrayRef) {
+				// will be completed later
 				// if rhs is local
-				ArrayRef arr = (ArrayRef) rhs;
-				Local ropbase = (Local) arr.getBase();
-				if (contains(ropbase.getName())) {
-					// intra_graph.addLocal2ArrayRef((Local) rhs, (ArrayRef)
-					// lhs);
-					List<Local> rub = new ArrayList<Local>();
-					rub.add(ropbase);
-					Function f = new Assign();
-					RF((Local) lhs, rub, f, callhash, succst.hashCode());
-					return;
-				}
+				// ArrayRef arr = (ArrayRef) rhs;
+				// Local ropbase = (Local) arr.getBase();
+				// if (contains(ropbase.getName())) {
+				// // intra_graph.addLocal2ArrayRef((Local) rhs, (ArrayRef)
+				// // lhs);
+				// List<Local> rub = new ArrayList<Local>();
+				// rub.add(ropbase);
+				// Function f = new Assign();
+				// RF((Local) lhs, rub, f, callhash, succst.hashCode());
+				// return;
+				// }
 				doAllMove(callhash, succst.hashCode());
 				return;
 			}
@@ -613,6 +647,7 @@ public class PEGGenerator extends BodyTransformer {
 			// case 4.10: rhs is array reference
 			if (rhs instanceof ArrayRef && isTypeofInterest(rhs)) {
 				// intra_graph.addArrayRef2Local((ArrayRef) rhs, (Local) lhs);
+				doAllMove(callhash, succst.hashCode());
 				return;
 			}
 			doAllMove(s.hashCode(), succst.hashCode());
@@ -637,6 +672,10 @@ public class PEGGenerator extends BodyTransformer {
 		callhash = s.hashCode();
 		if (s instanceof ReturnVoidStmt) {
 			doAllMove(callhash, -sm.hashCode());
+			CallEdge calledge = new CallEdge();
+			calledge.addCaller(new Point("0", callhash));
+			calledge.addReceiver(new Point(".return", -sm.hashCode()));
+			intra_graph.addCallEdge(calledge);
 			if (recordReturn.containsKey(sm.hashCode())) {
 				List<Local> ret = recordReturn.get(sm.hashCode());
 				ret.add(null);
@@ -672,12 +711,20 @@ public class PEGGenerator extends BodyTransformer {
 			}
 			return;
 		}
-		if (s instanceof LookupSwitchStmt)
+		if (s instanceof LookupSwitchStmt){
+			doAllMove(callhash, -sm.hashCode());
 			return;
-		if (s instanceof MonitorStmt)
+		}
+		if (s instanceof MonitorStmt){
+			doAllMove(callhash, -sm.hashCode());
 			return;
+		}
 		if (s instanceof RetStmt) {
 			doAllMove(callhash, -sm.hashCode());
+			CallEdge calledge = new CallEdge();
+			calledge.addCaller(new Point("0", callhash));
+			calledge.addReceiver(new Point(".return", -sm.hashCode()));
+			intra_graph.addCallEdge(calledge);
 			if (recordReturn.containsKey(sm.hashCode())) {
 				List<Local> ret = recordReturn.get(sm.hashCode());
 				ret.add(null);
@@ -691,6 +738,10 @@ public class PEGGenerator extends BodyTransformer {
 		}
 		if (s instanceof NopStmt) {
 			doAllMove(callhash, -sm.hashCode());
+			CallEdge calledge = new CallEdge();
+			calledge.addCaller(new Point("0", callhash));
+			calledge.addReceiver(new Point(".return", -sm.hashCode()));
+			intra_graph.addCallEdge(calledge);
 			if (recordReturn.containsKey(sm.hashCode())) {
 				List<Local> ret = recordReturn.get(sm.hashCode());
 				ret.add(null);

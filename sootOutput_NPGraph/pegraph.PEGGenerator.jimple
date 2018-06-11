@@ -1,0 +1,2033 @@
+public class pegraph.PEGGenerator extends soot.BodyTransformer
+{
+    private soot.SootMethod sm;
+    private boolean call;
+    private int callhash;
+    private pegraph.datastructure.PegIntra intra_graph;
+    private static java.util.List inter_graph;
+    private java.util.List objectlocal;
+    private static java.util.Map recordReturn;
+    private static java.util.List allMethod;
+    private static java.util.Map methodPar;
+    private static java.util.List callInfoList;
+    public static java.util.Map mapTable;
+
+    static void <clinit>()
+    {
+        java.util.ArrayList $r0;
+        java.util.HashMap $r1;
+
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        <pegraph.PEGGenerator: java.util.List inter_graph> = $r0;
+        $r1 = new java.util.HashMap;
+        specialinvoke $r1.<java.util.HashMap: void <init>()>();
+        <pegraph.PEGGenerator: java.util.Map recordReturn> = $r1;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        <pegraph.PEGGenerator: java.util.List allMethod> = $r0;
+        $r1 = new java.util.HashMap;
+        specialinvoke $r1.<java.util.HashMap: void <init>()>();
+        <pegraph.PEGGenerator: java.util.Map methodPar> = $r1;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        <pegraph.PEGGenerator: java.util.List callInfoList> = $r0;
+        $r1 = new java.util.HashMap;
+        specialinvoke $r1.<java.util.HashMap: void <init>()>();
+        <pegraph.PEGGenerator: java.util.Map mapTable> = $r1;
+        return;
+    }
+
+    public void <init>()
+    {
+        pegraph.PEGGenerator this;
+        java.util.ArrayList $r0;
+
+        this := @this: pegraph.PEGGenerator;
+        specialinvoke this.<soot.BodyTransformer: void <init>()>();
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<pegraph.PEGGenerator: java.util.List objectlocal> = $r0;
+        return;
+    }
+
+    protected void internalTransform(soot.Body, java.lang.String, java.util.Map)
+    {
+        pegraph.PEGGenerator this;
+        soot.Body arg0, $r4;
+        java.lang.String arg1, file_path, regEx, $r11, $r12, $r18, $r20;
+        java.util.Map arg2, $r6, $r23;
+        java.util.List par, $r5;
+        java.util.regex.Pattern p;
+        java.util.regex.Matcher m;
+        java.io.File file, $r13;
+        java.io.FileWriter fileWriter, $r14;
+        java.util.Iterator stmts, l11;
+        soot.jimple.Stmt nowst, succst;
+        java.lang.Exception e, $r21;
+        pegraph.datastructure.CallEdge ce;
+        soot.SootMethod $r0, $r2, $r3, $r16;
+        pegraph.datastructure.PegIntra $r1, $r22;
+        boolean $z0;
+        int $i0, $i1, $i2;
+        java.lang.Integer $r7;
+        java.lang.Object $r8;
+        java.lang.StringBuilder $r9, $r15;
+        soot.SootClass $r10, $r17;
+        soot.PatchingChain $r19;
+        long $l3;
+        java.lang.Long $r24;
+
+        this := @this: pegraph.PEGGenerator;
+        arg0 := @parameter0: soot.Body;
+        arg1 := @parameter1: java.lang.String;
+        arg2 := @parameter2: java.util.Map;
+        $r0 = virtualinvoke arg0.<soot.Body: soot.SootMethod getMethod()>();
+        this.<pegraph.PEGGenerator: soot.SootMethod sm> = $r0;
+        $r1 = new pegraph.datastructure.PegIntra;
+        $r2 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        specialinvoke $r1.<pegraph.datastructure.PegIntra: void <init>(soot.SootMethod)>($r2);
+        this.<pegraph.PEGGenerator: pegraph.datastructure.PegIntra intra_graph> = $r1;
+        $r3 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $z0 = virtualinvoke $r3.<soot.SootMethod: boolean hasActiveBody()>();
+        if $z0 != 0 goto label0;
+
+        $r3 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        virtualinvoke $r3.<soot.SootMethod: soot.Body retrieveActiveBody()>();
+
+     label0:
+        $r5 = <pegraph.PEGGenerator: java.util.List allMethod>;
+        $r0 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        interfaceinvoke $r5.<java.util.List: boolean add(java.lang.Object)>($r0);
+        par = specialinvoke this.<pegraph.PEGGenerator: java.util.List getPar()>();
+        $z0 = interfaceinvoke par.<java.util.List: boolean isEmpty()>();
+        if $z0 != 0 goto label1;
+
+        $r6 = <pegraph.PEGGenerator: java.util.Map methodPar>;
+        $r0 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i0 = virtualinvoke $r0.<java.lang.Object: int hashCode()>();
+        $r7 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i0);
+        interfaceinvoke $r6.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r7, par);
+
+     label1:
+        $r9 = new java.lang.StringBuilder;
+        specialinvoke $r9.<java.lang.StringBuilder: void <init>(java.lang.String)>("D:/project/workspace/NPGraph/sootOutput/");
+        $r0 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $r10 = virtualinvoke $r0.<soot.SootMethod: soot.SootClass getDeclaringClass()>();
+        $r11 = virtualinvoke $r10.<soot.SootClass: java.lang.String getName()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r11);
+        $r9 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("_");
+        $r0 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $r11 = virtualinvoke $r0.<soot.SootMethod: java.lang.String getName()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r11);
+        $r9 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("_jimple.txt");
+        file_path = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.String toString()>();
+        regEx = "[`~!@#$%^&*()+=|{}\';\',\\[\\]<>?~\uff01@#\uffe5%\u2026\u2026&*\uff08\uff09\u2014\u2014+|{}\u3010\u3011\u2018\uff1b\uff1a\u201d\u201c\u2019\u3002\uff0c\u3001\uff1f]";
+        p = staticinvoke <java.util.regex.Pattern: java.util.regex.Pattern compile(java.lang.String)>(regEx);
+        m = virtualinvoke p.<java.util.regex.Pattern: java.util.regex.Matcher matcher(java.lang.CharSequence)>(file_path);
+        $r12 = virtualinvoke m.<java.util.regex.Matcher: java.lang.String replaceAll(java.lang.String)>("");
+        file_path = virtualinvoke $r12.<java.lang.String: java.lang.String trim()>();
+        $r13 = new java.io.File;
+        specialinvoke $r13.<java.io.File: void <init>(java.lang.String)>(file_path);
+        file = $r13;
+
+     label2:
+        $z0 = virtualinvoke file.<java.io.File: boolean exists()>();
+        if $z0 != 0 goto label3;
+
+        virtualinvoke file.<java.io.File: boolean createNewFile()>();
+
+     label3:
+        $r14 = new java.io.FileWriter;
+        specialinvoke $r14.<java.io.FileWriter: void <init>(java.io.File)>(file);
+        fileWriter = $r14;
+        $r15 = new java.lang.StringBuilder;
+        specialinvoke $r15.<java.lang.StringBuilder: void <init>(java.lang.String)>("method: ");
+        $r16 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $r17 = virtualinvoke $r16.<soot.SootMethod: soot.SootClass getDeclaringClass()>();
+        $r18 = virtualinvoke $r17.<soot.SootClass: java.lang.String getName()>();
+        $r15 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r18);
+        $r15 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(".");
+        $r16 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $r18 = virtualinvoke $r16.<soot.SootMethod: java.lang.String getName()>();
+        $r15 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r18);
+        $r15 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(":");
+        $r16 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i1 = virtualinvoke $r16.<java.lang.Object: int hashCode()>();
+        $r15 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i1);
+        $r15 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\r\n");
+        $r11 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke fileWriter.<java.io.FileWriter: void write(java.lang.String)>($r11);
+        this.<pegraph.PEGGenerator: boolean call> = 0;
+        specialinvoke this.<pegraph.PEGGenerator: void initEntry()>();
+        $r3 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $r4 = virtualinvoke $r3.<soot.SootMethod: soot.Body getActiveBody()>();
+        $r19 = virtualinvoke $r4.<soot.Body: soot.PatchingChain getUnits()>();
+        stmts = virtualinvoke $r19.<soot.PatchingChain: java.util.Iterator iterator()>();
+        $z0 = interfaceinvoke stmts.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label6;
+
+        $r8 = interfaceinvoke stmts.<java.util.Iterator: java.lang.Object next()>();
+        nowst = (soot.jimple.Stmt) $r8;
+        succst = nowst;
+        goto label5;
+
+     label4:
+        $r8 = interfaceinvoke stmts.<java.util.Iterator: java.lang.Object next()>();
+        succst = (soot.jimple.Stmt) $r8;
+        $r15 = new java.lang.StringBuilder;
+        $i2 = virtualinvoke nowst.<java.lang.Object: int hashCode()>();
+        $r20 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>($i2);
+        specialinvoke $r15.<java.lang.StringBuilder: void <init>(java.lang.String)>($r20);
+        $r15 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(":");
+        $r18 = virtualinvoke nowst.<java.lang.Object: java.lang.String toString()>();
+        $r15 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r18);
+        $r15 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\r\n");
+        $r11 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke fileWriter.<java.io.FileWriter: void write(java.lang.String)>($r11);
+        specialinvoke this.<pegraph.PEGGenerator: void processStmt(soot.jimple.Stmt,soot.jimple.Stmt)>(nowst, succst);
+        nowst = succst;
+
+     label5:
+        $z0 = interfaceinvoke stmts.<java.util.Iterator: boolean hasNext()>();
+        if $z0 != 0 goto label4;
+
+        $r15 = new java.lang.StringBuilder;
+        $i2 = virtualinvoke succst.<java.lang.Object: int hashCode()>();
+        $r20 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>($i2);
+        specialinvoke $r15.<java.lang.StringBuilder: void <init>(java.lang.String)>($r20);
+        $r15 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(":");
+        $r18 = virtualinvoke succst.<java.lang.Object: java.lang.String toString()>();
+        $r15 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r18);
+        $r15 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\r\n");
+        $r11 = virtualinvoke $r15.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke fileWriter.<java.io.FileWriter: void write(java.lang.String)>($r11);
+        specialinvoke this.<pegraph.PEGGenerator: void processStmt(soot.jimple.Stmt,soot.jimple.Stmt)>(succst, succst);
+
+     label6:
+        virtualinvoke fileWriter.<java.io.FileWriter: void close()>();
+
+     label7:
+        goto label9;
+
+     label8:
+        $r21 := @caughtexception;
+        e = $r21;
+        virtualinvoke e.<java.lang.Exception: void printStackTrace()>();
+
+     label9:
+        $r22 = this.<pegraph.PEGGenerator: pegraph.datastructure.PegIntra intra_graph>;
+        $r5 = $r22.<pegraph.datastructure.PegIntra: java.util.List ceList>;
+        l11 = interfaceinvoke $r5.<java.util.List: java.util.Iterator iterator()>();
+        goto label12;
+
+     label10:
+        $r8 = interfaceinvoke l11.<java.util.Iterator: java.lang.Object next()>();
+        ce = (pegraph.datastructure.CallEdge) $r8;
+        $r6 = <pegraph.PEGGenerator: java.util.Map mapTable>;
+        $r11 = virtualinvoke ce.<pegraph.datastructure.CallEdge: java.lang.String callStr()>();
+        $z0 = interfaceinvoke $r6.<java.util.Map: boolean containsKey(java.lang.Object)>($r11);
+        if $z0 != 0 goto label11;
+
+        $r6 = <pegraph.PEGGenerator: java.util.Map mapTable>;
+        $r11 = virtualinvoke ce.<pegraph.datastructure.CallEdge: java.lang.String callStr()>();
+        $r23 = <pegraph.PEGGenerator: java.util.Map mapTable>;
+        $i1 = interfaceinvoke $r23.<java.util.Map: int size()>();
+        $l3 = (long) $i1;
+        $r24 = staticinvoke <java.lang.Long: java.lang.Long valueOf(long)>($l3);
+        interfaceinvoke $r6.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r11, $r24);
+
+     label11:
+        $r6 = <pegraph.PEGGenerator: java.util.Map mapTable>;
+        $r11 = virtualinvoke ce.<pegraph.datastructure.CallEdge: java.lang.String receiveStr()>();
+        $z0 = interfaceinvoke $r6.<java.util.Map: boolean containsKey(java.lang.Object)>($r11);
+        if $z0 != 0 goto label12;
+
+        $r6 = <pegraph.PEGGenerator: java.util.Map mapTable>;
+        $r11 = virtualinvoke ce.<pegraph.datastructure.CallEdge: java.lang.String receiveStr()>();
+        $r23 = <pegraph.PEGGenerator: java.util.Map mapTable>;
+        $i1 = interfaceinvoke $r23.<java.util.Map: int size()>();
+        $l3 = (long) $i1;
+        $r24 = staticinvoke <java.lang.Long: java.lang.Long valueOf(long)>($l3);
+        interfaceinvoke $r6.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r11, $r24);
+
+     label12:
+        $z0 = interfaceinvoke l11.<java.util.Iterator: boolean hasNext()>();
+        if $z0 != 0 goto label10;
+
+        $r22 = this.<pegraph.PEGGenerator: pegraph.datastructure.PegIntra intra_graph>;
+        virtualinvoke $r22.<pegraph.datastructure.PegIntra: void exportMapGraph(java.lang.String)>("D:/project/workspace/NPGraph/sootOutput/");
+        $r22 = this.<pegraph.PEGGenerator: pegraph.datastructure.PegIntra intra_graph>;
+        virtualinvoke $r22.<pegraph.datastructure.PegIntra: void exportIntraGraph(java.lang.String)>("D:/project/workspace/NPGraph/sootOutput/");
+        return;
+
+        catch java.lang.Exception from label2 to label7 with label8;
+    }
+
+    public boolean callContains(int)
+    {
+        pegraph.PEGGenerator this;
+        int hashcode, $i0;
+        java.util.List $r0;
+        java.util.Iterator l3;
+        soot.SootMethod m;
+        java.lang.Object $r1;
+        boolean $z0;
+
+        this := @this: pegraph.PEGGenerator;
+        hashcode := @parameter0: int;
+        $r0 = <pegraph.PEGGenerator: java.util.List allMethod>;
+        l3 = interfaceinvoke $r0.<java.util.List: java.util.Iterator iterator()>();
+        goto label1;
+
+     label0:
+        $r1 = interfaceinvoke l3.<java.util.Iterator: java.lang.Object next()>();
+        m = (soot.SootMethod) $r1;
+        $i0 = virtualinvoke m.<java.lang.Object: int hashCode()>();
+        if $i0 != hashcode goto label1;
+
+        return 1;
+
+     label1:
+        $z0 = interfaceinvoke l3.<java.util.Iterator: boolean hasNext()>();
+        if $z0 != 0 goto label0;
+
+        return 0;
+    }
+
+    private void printCall(java.lang.String)
+    {
+        pegraph.PEGGenerator this;
+        java.lang.String path, file_path, regEx, $r1, $r2, $r7;
+        java.lang.StringBuilder $r0;
+        java.util.regex.Pattern p;
+        java.util.regex.Matcher m;
+        java.io.File file, $r3;
+        java.io.FileWriter fileWriter, $r4;
+        java.util.Iterator l9;
+        pegraph.datastructure.CallEdge edge;
+        java.lang.Exception e, $r8;
+        boolean $z0;
+        java.util.List $r5;
+        java.lang.Object $r6;
+
+        this := @this: pegraph.PEGGenerator;
+        path := @parameter0: java.lang.String;
+        $r0 = new java.lang.StringBuilder;
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>(path);
+        specialinvoke $r0.<java.lang.StringBuilder: void <init>(java.lang.String)>($r1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("CallSite.txt");
+        file_path = virtualinvoke $r0.<java.lang.StringBuilder: java.lang.String toString()>();
+        regEx = "[`~!@#$%^&*()+=|{}\';\',\\[\\]<>?~\uff01@#\uffe5%\u2026\u2026&*\uff08\uff09\u2014\u2014+|{}\u3010\u3011\u2018\uff1b\uff1a\u201d\u201c\u2019\u3002\uff0c\u3001\uff1f]";
+        p = staticinvoke <java.util.regex.Pattern: java.util.regex.Pattern compile(java.lang.String)>(regEx);
+        m = virtualinvoke p.<java.util.regex.Pattern: java.util.regex.Matcher matcher(java.lang.CharSequence)>(file_path);
+        $r2 = virtualinvoke m.<java.util.regex.Matcher: java.lang.String replaceAll(java.lang.String)>("");
+        file_path = virtualinvoke $r2.<java.lang.String: java.lang.String trim()>();
+        $r3 = new java.io.File;
+        specialinvoke $r3.<java.io.File: void <init>(java.lang.String)>(file_path);
+        file = $r3;
+
+     label0:
+        $z0 = virtualinvoke file.<java.io.File: boolean exists()>();
+        if $z0 != 0 goto label1;
+
+        virtualinvoke file.<java.io.File: boolean createNewFile()>();
+
+     label1:
+        $r4 = new java.io.FileWriter;
+        specialinvoke $r4.<java.io.FileWriter: void <init>(java.io.File)>(file);
+        fileWriter = $r4;
+        $r5 = <pegraph.PEGGenerator: java.util.List inter_graph>;
+        l9 = interfaceinvoke $r5.<java.util.List: java.util.Iterator iterator()>();
+        goto label3;
+
+     label2:
+        $r6 = interfaceinvoke l9.<java.util.Iterator: java.lang.Object next()>();
+        edge = (pegraph.datastructure.CallEdge) $r6;
+        $r7 = virtualinvoke edge.<pegraph.datastructure.CallEdge: java.lang.String print()>();
+        virtualinvoke fileWriter.<java.io.FileWriter: void write(java.lang.String)>($r7);
+
+     label3:
+        $z0 = interfaceinvoke l9.<java.util.Iterator: boolean hasNext()>();
+        if $z0 != 0 goto label2;
+
+        virtualinvoke fileWriter.<java.io.FileWriter: void close()>();
+
+     label4:
+        goto label6;
+
+     label5:
+        $r8 := @caughtexception;
+        e = $r8;
+        virtualinvoke e.<java.lang.Exception: void printStackTrace()>();
+
+     label6:
+        return;
+
+        catch java.lang.Exception from label0 to label4 with label5;
+    }
+
+    private void printMapCall(java.lang.String)
+    {
+        pegraph.PEGGenerator this;
+        java.lang.String path, file_path, regEx, $r1, $r2, $r8, $r12;
+        java.lang.StringBuilder $r0, $r11;
+        java.util.regex.Pattern p;
+        java.util.regex.Matcher m;
+        java.io.File file, $r3;
+        java.io.FileWriter fileWriter, $r4;
+        java.util.Iterator l9;
+        pegraph.datastructure.CallEdge edge;
+        java.lang.Exception e, $r14;
+        boolean $z0;
+        java.util.List $r5;
+        java.lang.Object $r6, $r13;
+        java.util.Map $r7, $r9;
+        int $i0;
+        long $l1;
+        java.lang.Long $r10;
+
+        this := @this: pegraph.PEGGenerator;
+        path := @parameter0: java.lang.String;
+        $r0 = new java.lang.StringBuilder;
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>(path);
+        specialinvoke $r0.<java.lang.StringBuilder: void <init>(java.lang.String)>($r1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("MapCallSite.txt");
+        file_path = virtualinvoke $r0.<java.lang.StringBuilder: java.lang.String toString()>();
+        regEx = "[`~!@#$%^&*()+=|{}\';\',\\[\\]<>?~\uff01@#\uffe5%\u2026\u2026&*\uff08\uff09\u2014\u2014+|{}\u3010\u3011\u2018\uff1b\uff1a\u201d\u201c\u2019\u3002\uff0c\u3001\uff1f]";
+        p = staticinvoke <java.util.regex.Pattern: java.util.regex.Pattern compile(java.lang.String)>(regEx);
+        m = virtualinvoke p.<java.util.regex.Pattern: java.util.regex.Matcher matcher(java.lang.CharSequence)>(file_path);
+        $r2 = virtualinvoke m.<java.util.regex.Matcher: java.lang.String replaceAll(java.lang.String)>("");
+        file_path = virtualinvoke $r2.<java.lang.String: java.lang.String trim()>();
+        $r3 = new java.io.File;
+        specialinvoke $r3.<java.io.File: void <init>(java.lang.String)>(file_path);
+        file = $r3;
+
+     label0:
+        $z0 = virtualinvoke file.<java.io.File: boolean exists()>();
+        if $z0 != 0 goto label1;
+
+        virtualinvoke file.<java.io.File: boolean createNewFile()>();
+
+     label1:
+        $r4 = new java.io.FileWriter;
+        specialinvoke $r4.<java.io.FileWriter: void <init>(java.io.File)>(file);
+        fileWriter = $r4;
+        $r5 = <pegraph.PEGGenerator: java.util.List inter_graph>;
+        l9 = interfaceinvoke $r5.<java.util.List: java.util.Iterator iterator()>();
+        goto label5;
+
+     label2:
+        $r6 = interfaceinvoke l9.<java.util.Iterator: java.lang.Object next()>();
+        edge = (pegraph.datastructure.CallEdge) $r6;
+        $r7 = <pegraph.PEGGenerator: java.util.Map mapTable>;
+        $r8 = virtualinvoke edge.<pegraph.datastructure.CallEdge: java.lang.String callStr()>();
+        $z0 = interfaceinvoke $r7.<java.util.Map: boolean containsKey(java.lang.Object)>($r8);
+        if $z0 != 0 goto label3;
+
+        $r7 = <pegraph.PEGGenerator: java.util.Map mapTable>;
+        $r8 = virtualinvoke edge.<pegraph.datastructure.CallEdge: java.lang.String callStr()>();
+        $r9 = <pegraph.PEGGenerator: java.util.Map mapTable>;
+        $i0 = interfaceinvoke $r9.<java.util.Map: int size()>();
+        $l1 = (long) $i0;
+        $r10 = staticinvoke <java.lang.Long: java.lang.Long valueOf(long)>($l1);
+        interfaceinvoke $r7.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r8, $r10);
+
+     label3:
+        $r7 = <pegraph.PEGGenerator: java.util.Map mapTable>;
+        $r8 = virtualinvoke edge.<pegraph.datastructure.CallEdge: java.lang.String receiveStr()>();
+        $z0 = interfaceinvoke $r7.<java.util.Map: boolean containsKey(java.lang.Object)>($r8);
+        if $z0 != 0 goto label4;
+
+        $r7 = <pegraph.PEGGenerator: java.util.Map mapTable>;
+        $r8 = virtualinvoke edge.<pegraph.datastructure.CallEdge: java.lang.String receiveStr()>();
+        $r9 = <pegraph.PEGGenerator: java.util.Map mapTable>;
+        $i0 = interfaceinvoke $r9.<java.util.Map: int size()>();
+        $l1 = (long) $i0;
+        $r10 = staticinvoke <java.lang.Long: java.lang.Long valueOf(long)>($l1);
+        interfaceinvoke $r7.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r8, $r10);
+
+     label4:
+        $r11 = new java.lang.StringBuilder;
+        specialinvoke $r11.<java.lang.StringBuilder: void <init>()>();
+        $r9 = <pegraph.PEGGenerator: java.util.Map mapTable>;
+        $r12 = virtualinvoke edge.<pegraph.datastructure.CallEdge: java.lang.String callStr()>();
+        $r13 = interfaceinvoke $r9.<java.util.Map: java.lang.Object get(java.lang.Object)>($r12);
+        $r11 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r13);
+        $r11 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" -> ");
+        $r9 = <pegraph.PEGGenerator: java.util.Map mapTable>;
+        $r12 = virtualinvoke edge.<pegraph.datastructure.CallEdge: java.lang.String receiveStr()>();
+        $r13 = interfaceinvoke $r9.<java.util.Map: java.lang.Object get(java.lang.Object)>($r12);
+        $r11 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r13);
+        $r11 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\r\n");
+        $r8 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke fileWriter.<java.io.FileWriter: void write(java.lang.String)>($r8);
+
+     label5:
+        $z0 = interfaceinvoke l9.<java.util.Iterator: boolean hasNext()>();
+        if $z0 != 0 goto label2;
+
+        virtualinvoke fileWriter.<java.io.FileWriter: void close()>();
+
+     label6:
+        goto label8;
+
+     label7:
+        $r14 := @caughtexception;
+        e = $r14;
+        virtualinvoke e.<java.lang.Exception: void printStackTrace()>();
+
+     label8:
+        return;
+
+        catch java.lang.Exception from label0 to label6 with label7;
+    }
+
+    public void printMap(java.lang.String)
+    {
+        pegraph.PEGGenerator this;
+        java.lang.String path, file_path, regEx, $r1, $r2, $r10, $r12;
+        java.lang.StringBuilder $r0, $r8;
+        java.util.regex.Pattern p;
+        java.util.regex.Matcher m;
+        java.io.File file, $r3;
+        java.io.FileWriter fileWriter, $r4;
+        java.util.Iterator l9;
+        java.util.Map$Entry entry;
+        java.lang.Exception e, $r13;
+        boolean $z0;
+        java.util.Map $r5;
+        java.util.Set $r6;
+        java.lang.Object $r7, $r9, $r11;
+
+        this := @this: pegraph.PEGGenerator;
+        path := @parameter0: java.lang.String;
+        $r0 = new java.lang.StringBuilder;
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>(path);
+        specialinvoke $r0.<java.lang.StringBuilder: void <init>(java.lang.String)>($r1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("MapTable.txt");
+        file_path = virtualinvoke $r0.<java.lang.StringBuilder: java.lang.String toString()>();
+        regEx = "[`~!@#$%^&*()+=|{}\';\',\\[\\]<>?~\uff01@#\uffe5%\u2026\u2026&*\uff08\uff09\u2014\u2014+|{}\u3010\u3011\u2018\uff1b\uff1a\u201d\u201c\u2019\u3002\uff0c\u3001\uff1f]";
+        p = staticinvoke <java.util.regex.Pattern: java.util.regex.Pattern compile(java.lang.String)>(regEx);
+        m = virtualinvoke p.<java.util.regex.Pattern: java.util.regex.Matcher matcher(java.lang.CharSequence)>(file_path);
+        $r2 = virtualinvoke m.<java.util.regex.Matcher: java.lang.String replaceAll(java.lang.String)>("");
+        file_path = virtualinvoke $r2.<java.lang.String: java.lang.String trim()>();
+        $r3 = new java.io.File;
+        specialinvoke $r3.<java.io.File: void <init>(java.lang.String)>(file_path);
+        file = $r3;
+
+     label0:
+        $z0 = virtualinvoke file.<java.io.File: boolean exists()>();
+        if $z0 != 0 goto label1;
+
+        virtualinvoke file.<java.io.File: boolean createNewFile()>();
+
+     label1:
+        $r4 = new java.io.FileWriter;
+        specialinvoke $r4.<java.io.FileWriter: void <init>(java.io.File)>(file);
+        fileWriter = $r4;
+        $r5 = <pegraph.PEGGenerator: java.util.Map mapTable>;
+        $r6 = interfaceinvoke $r5.<java.util.Map: java.util.Set entrySet()>();
+        l9 = interfaceinvoke $r6.<java.util.Set: java.util.Iterator iterator()>();
+        goto label3;
+
+     label2:
+        $r7 = interfaceinvoke l9.<java.util.Iterator: java.lang.Object next()>();
+        entry = (java.util.Map$Entry) $r7;
+        $r8 = new java.lang.StringBuilder;
+        $r9 = interfaceinvoke entry.<java.util.Map$Entry: java.lang.Object getKey()>();
+        $r10 = (java.lang.String) $r9;
+        $r10 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r10);
+        specialinvoke $r8.<java.lang.StringBuilder: void <init>(java.lang.String)>($r10);
+        $r8 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" <-> ");
+        $r11 = interfaceinvoke entry.<java.util.Map$Entry: java.lang.Object getValue()>();
+        $r8 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r11);
+        $r8 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\r\n");
+        $r12 = virtualinvoke $r8.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke fileWriter.<java.io.FileWriter: void write(java.lang.String)>($r12);
+
+     label3:
+        $z0 = interfaceinvoke l9.<java.util.Iterator: boolean hasNext()>();
+        if $z0 != 0 goto label2;
+
+        virtualinvoke fileWriter.<java.io.FileWriter: void close()>();
+
+     label4:
+        goto label6;
+
+     label5:
+        $r13 := @caughtexception;
+        e = $r13;
+        virtualinvoke e.<java.lang.Exception: void printStackTrace()>();
+
+     label6:
+        return;
+
+        catch java.lang.Exception from label0 to label4 with label5;
+    }
+
+    public void createCall()
+    {
+        pegraph.PEGGenerator this;
+        java.util.List $r0, $r5;
+        java.util.Iterator l2;
+        pegraph.datastructure.CallInfo callInfo;
+        pegraph.datastructure.Point base, call, receive, $r3;
+        int receiverhash, i, $i0, $i1;
+        pegraph.datastructure.CallEdge calledge0, calledge, $r2;
+        java.lang.Object $r1;
+        boolean $z0;
+        java.lang.String $r4;
+
+        this := @this: pegraph.PEGGenerator;
+        $r0 = <pegraph.PEGGenerator: java.util.List callInfoList>;
+        l2 = interfaceinvoke $r0.<java.util.List: java.util.Iterator iterator()>();
+        goto label5;
+
+     label0:
+        $r1 = interfaceinvoke l2.<java.util.Iterator: java.lang.Object next()>();
+        callInfo = (pegraph.datastructure.CallInfo) $r1;
+        $i0 = callInfo.<pegraph.datastructure.CallInfo: int receiverHash>;
+        $z0 = virtualinvoke this.<pegraph.PEGGenerator: boolean callContains(int)>($i0);
+        if $z0 == 0 goto label5;
+
+        base = callInfo.<pegraph.datastructure.CallInfo: pegraph.datastructure.Point base>;
+        receiverhash = callInfo.<pegraph.datastructure.CallInfo: int receiverHash>;
+        $r2 = new pegraph.datastructure.CallEdge;
+        specialinvoke $r2.<pegraph.datastructure.CallEdge: void <init>()>();
+        calledge0 = $r2;
+        $r3 = new pegraph.datastructure.Point;
+        $i1 = virtualinvoke base.<pegraph.datastructure.Point: int getHashcode()>();
+        specialinvoke $r3.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>("0", $i1);
+        virtualinvoke calledge0.<pegraph.datastructure.CallEdge: void addCaller(pegraph.datastructure.Point)>($r3);
+        $r3 = new pegraph.datastructure.Point;
+        specialinvoke $r3.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>("0", receiverhash);
+        virtualinvoke calledge0.<pegraph.datastructure.CallEdge: void addReceiver(pegraph.datastructure.Point)>($r3);
+        $r0 = <pegraph.PEGGenerator: java.util.List inter_graph>;
+        $z0 = interfaceinvoke $r0.<java.util.List: boolean contains(java.lang.Object)>(calledge0);
+        if $z0 != 0 goto label1;
+
+        $r0 = <pegraph.PEGGenerator: java.util.List inter_graph>;
+        interfaceinvoke $r0.<java.util.List: boolean add(java.lang.Object)>(calledge0);
+
+     label1:
+        i = 0;
+        goto label4;
+
+     label2:
+        $r0 = callInfo.<pegraph.datastructure.CallInfo: java.util.List args>;
+        $r1 = interfaceinvoke $r0.<java.util.List: java.lang.Object get(int)>(i);
+        call = (pegraph.datastructure.Point) $r1;
+        $r0 = callInfo.<pegraph.datastructure.CallInfo: java.util.List rargs>;
+        $r1 = interfaceinvoke $r0.<java.util.List: java.lang.Object get(int)>(i);
+        receive = (pegraph.datastructure.Point) $r1;
+        $r2 = new pegraph.datastructure.CallEdge;
+        specialinvoke $r2.<pegraph.datastructure.CallEdge: void <init>()>();
+        calledge = $r2;
+        $r3 = new pegraph.datastructure.Point;
+        $r4 = virtualinvoke call.<pegraph.datastructure.Point: java.lang.String getName()>();
+        $i1 = virtualinvoke base.<pegraph.datastructure.Point: int getHashcode()>();
+        specialinvoke $r3.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>($r4, $i1);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addCaller(pegraph.datastructure.Point)>($r3);
+        $r3 = new pegraph.datastructure.Point;
+        $r4 = virtualinvoke receive.<pegraph.datastructure.Point: java.lang.String getName()>();
+        specialinvoke $r3.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>($r4, receiverhash);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addReceiver(pegraph.datastructure.Point)>($r3);
+        $r0 = <pegraph.PEGGenerator: java.util.List inter_graph>;
+        $z0 = interfaceinvoke $r0.<java.util.List: boolean contains(java.lang.Object)>(calledge);
+        if $z0 != 0 goto label3;
+
+        $r0 = <pegraph.PEGGenerator: java.util.List inter_graph>;
+        interfaceinvoke $r0.<java.util.List: boolean add(java.lang.Object)>(calledge);
+
+     label3:
+        i = i + 1;
+
+     label4:
+        $r5 = callInfo.<pegraph.datastructure.CallInfo: java.util.List args>;
+        $i0 = interfaceinvoke $r5.<java.util.List: int size()>();
+        if i < $i0 goto label2;
+
+        $r2 = new pegraph.datastructure.CallEdge;
+        specialinvoke $r2.<pegraph.datastructure.CallEdge: void <init>()>();
+        calledge = $r2;
+        $r3 = new pegraph.datastructure.Point;
+        $i1 = neg receiverhash;
+        specialinvoke $r3.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>(".return", $i1);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addCaller(pegraph.datastructure.Point)>($r3);
+        $r3 = new pegraph.datastructure.Point;
+        $r4 = virtualinvoke base.<pegraph.datastructure.Point: java.lang.String getName()>();
+        $i1 = virtualinvoke base.<pegraph.datastructure.Point: int getHashcode()>();
+        $i1 = neg $i1;
+        specialinvoke $r3.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>($r4, $i1);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addReceiver(pegraph.datastructure.Point)>($r3);
+        $r0 = <pegraph.PEGGenerator: java.util.List inter_graph>;
+        $z0 = interfaceinvoke $r0.<java.util.List: boolean contains(java.lang.Object)>(calledge);
+        if $z0 != 0 goto label5;
+
+        $r0 = <pegraph.PEGGenerator: java.util.List inter_graph>;
+        interfaceinvoke $r0.<java.util.List: boolean add(java.lang.Object)>(calledge);
+
+     label5:
+        $z0 = interfaceinvoke l2.<java.util.Iterator: boolean hasNext()>();
+        if $z0 != 0 goto label0;
+
+        specialinvoke this.<pegraph.PEGGenerator: void printCall(java.lang.String)>("D:/project/workspace/NPGraph/sootOutput/");
+        specialinvoke this.<pegraph.PEGGenerator: void printMapCall(java.lang.String)>("D:/project/workspace/NPGraph/sootOutput/");
+        virtualinvoke this.<pegraph.PEGGenerator: void printMap(java.lang.String)>("D:/project/workspace/NPGraph/sootOutput/");
+        return;
+    }
+
+    private void initEntry()
+    {
+        pegraph.PEGGenerator this;
+        soot.Body body;
+        soot.jimple.Stmt st;
+        soot.util.Chain locals;
+        pegraph.datastructure.CallEdge calledge0, calledge, $r5;
+        java.util.Iterator l6, $r2;
+        soot.Local local;
+        java.util.List par, $r4;
+        soot.SootMethod $r0, $r7;
+        soot.PatchingChain $r1;
+        java.lang.Object $r3;
+        pegraph.datastructure.Point $r6;
+        int $i0;
+        pegraph.datastructure.PegIntra $r8;
+        boolean $z0;
+        java.lang.String $r9, $r10;
+
+        this := @this: pegraph.PEGGenerator;
+        $r0 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        body = virtualinvoke $r0.<soot.SootMethod: soot.Body getActiveBody()>();
+        $r1 = virtualinvoke body.<soot.Body: soot.PatchingChain getUnits()>();
+        $r2 = virtualinvoke $r1.<soot.PatchingChain: java.util.Iterator iterator()>();
+        $r3 = interfaceinvoke $r2.<java.util.Iterator: java.lang.Object next()>();
+        st = (soot.jimple.Stmt) $r3;
+        $r4 = this.<pegraph.PEGGenerator: java.util.List objectlocal>;
+        interfaceinvoke $r4.<java.util.List: void clear()>();
+        locals = virtualinvoke body.<soot.Body: soot.util.Chain getLocals()>();
+        $r5 = new pegraph.datastructure.CallEdge;
+        specialinvoke $r5.<pegraph.datastructure.CallEdge: void <init>()>();
+        calledge0 = $r5;
+        $r6 = new pegraph.datastructure.Point;
+        $r7 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i0 = virtualinvoke $r7.<java.lang.Object: int hashCode()>();
+        specialinvoke $r6.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>("0", $i0);
+        virtualinvoke calledge0.<pegraph.datastructure.CallEdge: void addCaller(pegraph.datastructure.Point)>($r6);
+        $r6 = new pegraph.datastructure.Point;
+        $i0 = virtualinvoke st.<java.lang.Object: int hashCode()>();
+        specialinvoke $r6.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>("0", $i0);
+        virtualinvoke calledge0.<pegraph.datastructure.CallEdge: void addReceiver(pegraph.datastructure.Point)>($r6);
+        $r8 = this.<pegraph.PEGGenerator: pegraph.datastructure.PegIntra intra_graph>;
+        virtualinvoke $r8.<pegraph.datastructure.PegIntra: pegraph.datastructure.CallEdge addCallEdge(pegraph.datastructure.CallEdge)>(calledge0);
+        l6 = interfaceinvoke locals.<soot.util.Chain: java.util.Iterator iterator()>();
+        goto label5;
+
+     label0:
+        $r3 = interfaceinvoke l6.<java.util.Iterator: java.lang.Object next()>();
+        local = (soot.Local) $r3;
+        $z0 = staticinvoke <pegraph.PEGGenerator: boolean isTypeofInterest(soot.Value)>(local);
+        if $z0 == 0 goto label5;
+
+        $r4 = this.<pegraph.PEGGenerator: java.util.List objectlocal>;
+        interfaceinvoke $r4.<java.util.List: boolean add(java.lang.Object)>(local);
+        $r5 = new pegraph.datastructure.CallEdge;
+        specialinvoke $r5.<pegraph.datastructure.CallEdge: void <init>()>();
+        calledge = $r5;
+        $r0 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $r9 = virtualinvoke $r0.<soot.SootMethod: java.lang.String getName()>();
+        $z0 = virtualinvoke $r9.<java.lang.String: boolean equals(java.lang.Object)>("main");
+        if $z0 == 0 goto label1;
+
+        $r6 = new pegraph.datastructure.Point;
+        $r7 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i0 = virtualinvoke $r7.<java.lang.Object: int hashCode()>();
+        specialinvoke $r6.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>("0", $i0);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addCaller(pegraph.datastructure.Point)>($r6);
+        $r6 = new pegraph.datastructure.Point;
+        $r10 = interfaceinvoke local.<soot.Local: java.lang.String getName()>();
+        $i0 = virtualinvoke st.<java.lang.Object: int hashCode()>();
+        specialinvoke $r6.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>($r10, $i0);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addReceiver(pegraph.datastructure.Point)>($r6);
+        $r8 = this.<pegraph.PEGGenerator: pegraph.datastructure.PegIntra intra_graph>;
+        virtualinvoke $r8.<pegraph.datastructure.PegIntra: pegraph.datastructure.CallEdge addCallEdge(pegraph.datastructure.CallEdge)>(calledge);
+        goto label5;
+
+     label1:
+        par = specialinvoke this.<pegraph.PEGGenerator: java.util.List getPar()>();
+        $z0 = interfaceinvoke par.<java.util.List: boolean contains(java.lang.Object)>(local);
+        if $z0 != 0 goto label2;
+
+        $r9 = interfaceinvoke local.<soot.Local: java.lang.String getName()>();
+        $z0 = virtualinvoke $r9.<java.lang.String: boolean equals(java.lang.Object)>("this");
+        if $z0 == 0 goto label3;
+
+     label2:
+        $r6 = new pegraph.datastructure.Point;
+        $r10 = interfaceinvoke local.<soot.Local: java.lang.String getName()>();
+        $r7 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i0 = virtualinvoke $r7.<java.lang.Object: int hashCode()>();
+        specialinvoke $r6.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>($r10, $i0);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addCaller(pegraph.datastructure.Point)>($r6);
+        goto label4;
+
+     label3:
+        $r6 = new pegraph.datastructure.Point;
+        $r7 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i0 = virtualinvoke $r7.<java.lang.Object: int hashCode()>();
+        specialinvoke $r6.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>("0", $i0);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addCaller(pegraph.datastructure.Point)>($r6);
+
+     label4:
+        $r6 = new pegraph.datastructure.Point;
+        $r10 = interfaceinvoke local.<soot.Local: java.lang.String getName()>();
+        $i0 = virtualinvoke st.<java.lang.Object: int hashCode()>();
+        specialinvoke $r6.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>($r10, $i0);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addReceiver(pegraph.datastructure.Point)>($r6);
+        $r8 = this.<pegraph.PEGGenerator: pegraph.datastructure.PegIntra intra_graph>;
+        virtualinvoke $r8.<pegraph.datastructure.PegIntra: pegraph.datastructure.CallEdge addCallEdge(pegraph.datastructure.CallEdge)>(calledge);
+
+     label5:
+        $z0 = interfaceinvoke l6.<java.util.Iterator: boolean hasNext()>();
+        if $z0 != 0 goto label0;
+
+        return;
+    }
+
+    private java.util.List getPar()
+    {
+        pegraph.PEGGenerator this;
+        java.util.ArrayList $r0, par;
+        int parnum, i;
+        soot.SootMethod $r1, $r2;
+        soot.Body $r3;
+        soot.Local $r4;
+
+        this := @this: pegraph.PEGGenerator;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        par = $r0;
+        $r1 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        parnum = virtualinvoke $r1.<soot.SootMethod: int getParameterCount()>();
+        i = 0;
+        goto label1;
+
+     label0:
+        $r2 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $r3 = virtualinvoke $r2.<soot.SootMethod: soot.Body getActiveBody()>();
+        $r4 = virtualinvoke $r3.<soot.Body: soot.Local getParameterLocal(int)>(i);
+        interfaceinvoke par.<java.util.List: boolean add(java.lang.Object)>($r4);
+        i = i + 1;
+
+     label1:
+        if i < parnum goto label0;
+
+        return par;
+    }
+
+    private void RF(soot.Local, java.util.List, function.Function, int, int)
+    {
+        pegraph.PEGGenerator this;
+        soot.Local lop, l, ol, y;
+        java.util.List rub, fnull, fy, $r5;
+        function.Function f;
+        int caller, receiver;
+        java.util.ArrayList $r0, result;
+        java.util.Iterator l9, l12;
+        java.lang.String s, s1, s2, $r3, $r4, $r6;
+        pegraph.datastructure.CallEdge calledge, $r8;
+        boolean $z0;
+        java.lang.Object $r1;
+        java.lang.StringBuilder $r2;
+        java.lang.String[] $r7;
+        pegraph.datastructure.Point $r9;
+        pegraph.datastructure.PegIntra $r10;
+
+        this := @this: pegraph.PEGGenerator;
+        lop := @parameter0: soot.Local;
+        rub := @parameter1: java.util.List;
+        f := @parameter2: function.Function;
+        caller := @parameter3: int;
+        receiver := @parameter4: int;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        result = $r0;
+        interfaceinvoke result.<java.util.List: boolean add(java.lang.Object)>("0,0");
+        fnull = virtualinvoke f.<function.Function: java.util.List func(soot.Local,soot.Local,java.util.List)>(null, lop, rub);
+        l9 = interfaceinvoke fnull.<java.util.List: java.util.Iterator iterator()>();
+        goto label1;
+
+     label0:
+        $r1 = interfaceinvoke l9.<java.util.Iterator: java.lang.Object next()>();
+        l = (soot.Local) $r1;
+        $r2 = new java.lang.StringBuilder;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>(java.lang.String)>("0,");
+        $r3 = interfaceinvoke l.<soot.Local: java.lang.String getName()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r3);
+        $r4 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke result.<java.util.List: boolean add(java.lang.Object)>($r4);
+
+     label1:
+        $z0 = interfaceinvoke l9.<java.util.Iterator: boolean hasNext()>();
+        if $z0 != 0 goto label0;
+
+        $r5 = this.<pegraph.PEGGenerator: java.util.List objectlocal>;
+        l9 = interfaceinvoke $r5.<java.util.List: java.util.Iterator iterator()>();
+        goto label5;
+
+     label2:
+        $r1 = interfaceinvoke l9.<java.util.Iterator: java.lang.Object next()>();
+        ol = (soot.Local) $r1;
+        fy = virtualinvoke f.<function.Function: java.util.List func(soot.Local,soot.Local,java.util.List)>(ol, lop, rub);
+        l12 = interfaceinvoke fy.<java.util.List: java.util.Iterator iterator()>();
+        goto label4;
+
+     label3:
+        $r1 = interfaceinvoke l12.<java.util.Iterator: java.lang.Object next()>();
+        y = (soot.Local) $r1;
+        $z0 = interfaceinvoke fnull.<java.util.List: boolean contains(java.lang.Object)>(y);
+        if $z0 != 0 goto label4;
+
+        $r2 = new java.lang.StringBuilder;
+        $r6 = interfaceinvoke ol.<soot.Local: java.lang.String getName()>();
+        $r6 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r6);
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>(java.lang.String)>($r6);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(",");
+        $r3 = interfaceinvoke y.<soot.Local: java.lang.String getName()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r3);
+        $r4 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke result.<java.util.List: boolean add(java.lang.Object)>($r4);
+
+     label4:
+        $z0 = interfaceinvoke l12.<java.util.Iterator: boolean hasNext()>();
+        if $z0 != 0 goto label3;
+
+     label5:
+        $z0 = interfaceinvoke l9.<java.util.Iterator: boolean hasNext()>();
+        if $z0 != 0 goto label2;
+
+        l9 = interfaceinvoke result.<java.util.List: java.util.Iterator iterator()>();
+        goto label7;
+
+     label6:
+        $r1 = interfaceinvoke l9.<java.util.Iterator: java.lang.Object next()>();
+        s = (java.lang.String) $r1;
+        $r7 = virtualinvoke s.<java.lang.String: java.lang.String[] split(java.lang.String)>(",");
+        s1 = $r7[0];
+        $r7 = virtualinvoke s.<java.lang.String: java.lang.String[] split(java.lang.String)>(",");
+        s2 = $r7[1];
+        $r8 = new pegraph.datastructure.CallEdge;
+        specialinvoke $r8.<pegraph.datastructure.CallEdge: void <init>()>();
+        calledge = $r8;
+        $r9 = new pegraph.datastructure.Point;
+        specialinvoke $r9.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>(s1, caller);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addCaller(pegraph.datastructure.Point)>($r9);
+        $r9 = new pegraph.datastructure.Point;
+        specialinvoke $r9.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>(s2, receiver);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addReceiver(pegraph.datastructure.Point)>($r9);
+        $r10 = this.<pegraph.PEGGenerator: pegraph.datastructure.PegIntra intra_graph>;
+        virtualinvoke $r10.<pegraph.datastructure.PegIntra: pegraph.datastructure.CallEdge addCallEdge(pegraph.datastructure.CallEdge)>(calledge);
+
+     label7:
+        $z0 = interfaceinvoke l9.<java.util.Iterator: boolean hasNext()>();
+        if $z0 != 0 goto label6;
+
+        return;
+    }
+
+    private void interFunc(soot.jimple.Stmt, soot.jimple.Stmt)
+    {
+        pegraph.PEGGenerator this;
+        soot.jimple.Stmt st, succst;
+        soot.jimple.InvokeExpr ie, $r9;
+        soot.SootMethod receiver, $r19;
+        soot.Value lhs, arg, $r11;
+        java.util.ArrayList args, rargs, $r3;
+        java.util.Iterator l10;
+        soot.Local local, rarg, $r1, $r12, $r17;
+        int i, $i0, $i1, $i2;
+        boolean $z0;
+        soot.jimple.DefinitionStmt $r0;
+        java.lang.String $r2, $r7, $r13, $r18;
+        soot.Body $r4;
+        soot.util.Chain $r5;
+        java.lang.Object $r6;
+        pegraph.datastructure.Point $r8, $r16;
+        soot.jimple.InstanceInvokeExpr $r10;
+        java.util.List $r14;
+        pegraph.datastructure.CallInfo $r15;
+
+        this := @this: pegraph.PEGGenerator;
+        st := @parameter0: soot.jimple.Stmt;
+        succst := @parameter1: soot.jimple.Stmt;
+        ie = interfaceinvoke st.<soot.jimple.Stmt: soot.jimple.InvokeExpr getInvokeExpr()>();
+        receiver = interfaceinvoke ie.<soot.jimple.InvokeExpr: soot.SootMethod getMethod()>();
+        $z0 = virtualinvoke receiver.<soot.SootMethod: boolean hasActiveBody()>();
+        if $z0 != 0 goto label0;
+
+        return;
+
+     label0:
+        $z0 = st instanceof soot.jimple.AssignStmt;
+        if $z0 == 0 goto label9;
+
+        $r0 = (soot.jimple.DefinitionStmt) st;
+        lhs = interfaceinvoke $r0.<soot.jimple.DefinitionStmt: soot.Value getLeftOp()>();
+        $r0 = (soot.jimple.DefinitionStmt) st;
+        interfaceinvoke $r0.<soot.jimple.DefinitionStmt: soot.Value getRightOp()>();
+        $z0 = lhs instanceof soot.Local;
+        if $z0 == 0 goto label1;
+
+        $r1 = (soot.Local) lhs;
+        $r2 = interfaceinvoke $r1.<soot.Local: java.lang.String getName()>();
+        $z0 = specialinvoke this.<pegraph.PEGGenerator: boolean contains(java.lang.String)>($r2);
+        if $z0 != 0 goto label2;
+
+     label1:
+        return;
+
+     label2:
+        $r3 = new java.util.ArrayList;
+        specialinvoke $r3.<java.util.ArrayList: void <init>()>();
+        args = $r3;
+        $r3 = new java.util.ArrayList;
+        specialinvoke $r3.<java.util.ArrayList: void <init>()>();
+        rargs = $r3;
+        $r4 = virtualinvoke receiver.<soot.SootMethod: soot.Body getActiveBody()>();
+        $r5 = virtualinvoke $r4.<soot.Body: soot.util.Chain getLocals()>();
+        l10 = interfaceinvoke $r5.<soot.util.Chain: java.util.Iterator iterator()>();
+        goto label4;
+
+     label3:
+        $r6 = interfaceinvoke l10.<java.util.Iterator: java.lang.Object next()>();
+        local = (soot.Local) $r6;
+        $r7 = interfaceinvoke local.<soot.Local: java.lang.String getName()>();
+        $z0 = virtualinvoke $r7.<java.lang.String: boolean equals(java.lang.Object)>("this");
+        if $z0 == 0 goto label4;
+
+        $z0 = ie instanceof soot.jimple.InstanceInvokeExpr;
+        if $z0 == 0 goto label4;
+
+        $r8 = new pegraph.datastructure.Point;
+        $r9 = interfaceinvoke st.<soot.jimple.Stmt: soot.jimple.InvokeExpr getInvokeExpr()>();
+        $r10 = (soot.jimple.InstanceInvokeExpr) $r9;
+        $r11 = interfaceinvoke $r10.<soot.jimple.InstanceInvokeExpr: soot.Value getBase()>();
+        $r12 = (soot.Local) $r11;
+        $r13 = interfaceinvoke $r12.<soot.Local: java.lang.String getName()>();
+        $i0 = virtualinvoke st.<java.lang.Object: int hashCode()>();
+        specialinvoke $r8.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>($r13, $i0);
+        interfaceinvoke args.<java.util.List: boolean add(java.lang.Object)>($r8);
+        $r8 = new pegraph.datastructure.Point;
+        $i0 = virtualinvoke receiver.<java.lang.Object: int hashCode()>();
+        specialinvoke $r8.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>("this", $i0);
+        interfaceinvoke rargs.<java.util.List: boolean add(java.lang.Object)>($r8);
+        goto label5;
+
+     label4:
+        $z0 = interfaceinvoke l10.<java.util.Iterator: boolean hasNext()>();
+        if $z0 != 0 goto label3;
+
+     label5:
+        i = 0;
+        goto label8;
+
+     label6:
+        arg = interfaceinvoke ie.<soot.jimple.InvokeExpr: soot.Value getArg(int)>(i);
+        $z0 = arg instanceof soot.Local;
+        if $z0 == 0 goto label7;
+
+        $r1 = (soot.Local) arg;
+        $r2 = interfaceinvoke $r1.<soot.Local: java.lang.String getName()>();
+        $z0 = specialinvoke this.<pegraph.PEGGenerator: boolean contains(java.lang.String)>($r2);
+        if $z0 == 0 goto label7;
+
+        $r4 = virtualinvoke receiver.<soot.SootMethod: soot.Body getActiveBody()>();
+        rarg = virtualinvoke $r4.<soot.Body: soot.Local getParameterLocal(int)>(i);
+        $r8 = new pegraph.datastructure.Point;
+        $r12 = (soot.Local) arg;
+        $r13 = interfaceinvoke $r12.<soot.Local: java.lang.String getName()>();
+        $i0 = virtualinvoke st.<java.lang.Object: int hashCode()>();
+        specialinvoke $r8.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>($r13, $i0);
+        interfaceinvoke args.<java.util.List: boolean add(java.lang.Object)>($r8);
+        $r8 = new pegraph.datastructure.Point;
+        $r13 = interfaceinvoke rarg.<soot.Local: java.lang.String getName()>();
+        $i0 = virtualinvoke receiver.<java.lang.Object: int hashCode()>();
+        specialinvoke $r8.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>($r13, $i0);
+        interfaceinvoke rargs.<java.util.List: boolean add(java.lang.Object)>($r8);
+
+     label7:
+        i = i + 1;
+
+     label8:
+        $i1 = interfaceinvoke ie.<soot.jimple.InvokeExpr: int getArgCount()>();
+        if i < $i1 goto label6;
+
+        $r14 = <pegraph.PEGGenerator: java.util.List callInfoList>;
+        $r15 = new pegraph.datastructure.CallInfo;
+        $r16 = new pegraph.datastructure.Point;
+        $r17 = (soot.Local) lhs;
+        $r18 = interfaceinvoke $r17.<soot.Local: java.lang.String getName()>();
+        $i2 = virtualinvoke st.<java.lang.Object: int hashCode()>();
+        specialinvoke $r16.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>($r18, $i2);
+        $r19 = interfaceinvoke ie.<soot.jimple.InvokeExpr: soot.SootMethod getMethod()>();
+        $i2 = virtualinvoke $r19.<java.lang.Object: int hashCode()>();
+        specialinvoke $r15.<pegraph.datastructure.CallInfo: void <init>(pegraph.datastructure.Point,java.util.List,java.util.List,int)>($r16, args, rargs, $i2);
+        interfaceinvoke $r14.<java.util.List: boolean add(java.lang.Object)>($r15);
+
+     label9:
+        return;
+    }
+
+    private void domytest(soot.jimple.Stmt, soot.jimple.Stmt)
+    {
+        pegraph.PEGGenerator this;
+        soot.jimple.Stmt s, succst;
+        soot.Local lhs, l, $r15, $r17;
+        pegraph.datastructure.CallEdge calledge0, calledge, $r2;
+        java.util.Iterator l6;
+        soot.Value v, rhs, y, $r1, lhs, $r21;
+        java.util.List 'ret', $r5;
+        java.util.ArrayList rub, $r18, 'ret';
+        function.Assign f, $r20;
+        soot.jimple.BinopExpr ber;
+        boolean $z0;
+        soot.jimple.AssignStmt $r0;
+        pegraph.datastructure.Point $r3;
+        int $i0, $i1, $i2, $i3;
+        pegraph.datastructure.PegIntra $r4;
+        java.lang.Object $r6;
+        java.lang.String $r7, $r8, $r9;
+        soot.jimple.ReturnStmt $r10;
+        soot.SootMethod $r11, $r13, $r16;
+        java.util.Map $r12;
+        java.lang.Integer $r14;
+        soot.jimple.DefinitionStmt $r19;
+        function.Remove $r22, f;
+        function.Add $r23, f;
+        soot.jimple.CastExpr $r24;
+
+        this := @this: pegraph.PEGGenerator;
+        s := @parameter0: soot.jimple.Stmt;
+        succst := @parameter1: soot.jimple.Stmt;
+        $z0 = interfaceinvoke s.<soot.jimple.Stmt: boolean containsInvokeExpr()>();
+        if $z0 == 0 goto label3;
+
+        $z0 = s instanceof soot.jimple.AssignStmt;
+        if $z0 == 0 goto label2;
+
+        $r0 = (soot.jimple.AssignStmt) s;
+        $r1 = interfaceinvoke $r0.<soot.jimple.AssignStmt: soot.Value getLeftOp()>();
+        lhs = (soot.Local) $r1;
+        specialinvoke this.<pegraph.PEGGenerator: void interFunc(soot.jimple.Stmt,soot.jimple.Stmt)>(s, succst);
+        this.<pegraph.PEGGenerator: boolean call> = 1;
+        $r2 = new pegraph.datastructure.CallEdge;
+        specialinvoke $r2.<pegraph.datastructure.CallEdge: void <init>()>();
+        calledge0 = $r2;
+        $r3 = new pegraph.datastructure.Point;
+        $i0 = virtualinvoke s.<java.lang.Object: int hashCode()>();
+        specialinvoke $r3.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>("0", $i0);
+        virtualinvoke calledge0.<pegraph.datastructure.CallEdge: void addCaller(pegraph.datastructure.Point)>($r3);
+        $r3 = new pegraph.datastructure.Point;
+        $i0 = virtualinvoke s.<java.lang.Object: int hashCode()>();
+        $i0 = neg $i0;
+        specialinvoke $r3.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>("0", $i0);
+        virtualinvoke calledge0.<pegraph.datastructure.CallEdge: void addReceiver(pegraph.datastructure.Point)>($r3);
+        $r4 = this.<pegraph.PEGGenerator: pegraph.datastructure.PegIntra intra_graph>;
+        virtualinvoke $r4.<pegraph.datastructure.PegIntra: pegraph.datastructure.CallEdge addCallEdge(pegraph.datastructure.CallEdge)>(calledge0);
+        $r5 = this.<pegraph.PEGGenerator: java.util.List objectlocal>;
+        l6 = interfaceinvoke $r5.<java.util.List: java.util.Iterator iterator()>();
+        goto label1;
+
+     label0:
+        $r6 = interfaceinvoke l6.<java.util.Iterator: java.lang.Object next()>();
+        l = (soot.Local) $r6;
+        $r7 = interfaceinvoke l.<soot.Local: java.lang.String getName()>();
+        $r8 = interfaceinvoke lhs.<soot.Local: java.lang.String getName()>();
+        $z0 = virtualinvoke $r7.<java.lang.String: boolean equals(java.lang.Object)>($r8);
+        if $z0 != 0 goto label1;
+
+        $r2 = new pegraph.datastructure.CallEdge;
+        specialinvoke $r2.<pegraph.datastructure.CallEdge: void <init>()>();
+        calledge = $r2;
+        $r3 = new pegraph.datastructure.Point;
+        $r9 = interfaceinvoke l.<soot.Local: java.lang.String getName()>();
+        $i0 = virtualinvoke s.<java.lang.Object: int hashCode()>();
+        specialinvoke $r3.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>($r9, $i0);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addCaller(pegraph.datastructure.Point)>($r3);
+        $r3 = new pegraph.datastructure.Point;
+        $r9 = interfaceinvoke l.<soot.Local: java.lang.String getName()>();
+        $i0 = virtualinvoke s.<java.lang.Object: int hashCode()>();
+        $i0 = neg $i0;
+        specialinvoke $r3.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>($r9, $i0);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addReceiver(pegraph.datastructure.Point)>($r3);
+        $r4 = this.<pegraph.PEGGenerator: pegraph.datastructure.PegIntra intra_graph>;
+        virtualinvoke $r4.<pegraph.datastructure.PegIntra: pegraph.datastructure.CallEdge addCallEdge(pegraph.datastructure.CallEdge)>(calledge);
+
+     label1:
+        $z0 = interfaceinvoke l6.<java.util.Iterator: boolean hasNext()>();
+        if $z0 != 0 goto label0;
+
+        $i1 = virtualinvoke s.<java.lang.Object: int hashCode()>();
+        $i1 = neg $i1;
+        $i2 = virtualinvoke succst.<java.lang.Object: int hashCode()>();
+        specialinvoke this.<pegraph.PEGGenerator: void doAllMove(int,int)>($i1, $i2);
+        return;
+
+     label2:
+        $i1 = virtualinvoke s.<java.lang.Object: int hashCode()>();
+        $i2 = virtualinvoke succst.<java.lang.Object: int hashCode()>();
+        specialinvoke this.<pegraph.PEGGenerator: void doAllMove(int,int)>($i1, $i2);
+        return;
+
+     label3:
+        $z0 = s instanceof soot.jimple.ReturnStmt;
+        if $z0 == 0 goto label12;
+
+        $r10 = (soot.jimple.ReturnStmt) s;
+        v = interfaceinvoke $r10.<soot.jimple.ReturnStmt: soot.Value getOp()>();
+        $i1 = this.<pegraph.PEGGenerator: int callhash>;
+        $r11 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i2 = virtualinvoke $r11.<java.lang.Object: int hashCode()>();
+        $i2 = neg $i2;
+        specialinvoke this.<pegraph.PEGGenerator: void doAllMove(int,int)>($i1, $i2);
+        $r2 = new pegraph.datastructure.CallEdge;
+        specialinvoke $r2.<pegraph.datastructure.CallEdge: void <init>()>();
+        calledge = $r2;
+        $r12 = <pegraph.PEGGenerator: java.util.Map recordReturn>;
+        $r13 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i1 = virtualinvoke $r13.<java.lang.Object: int hashCode()>();
+        $r14 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i1);
+        $z0 = interfaceinvoke $r12.<java.util.Map: boolean containsKey(java.lang.Object)>($r14);
+        if $z0 == 0 goto label7;
+
+        $r12 = <pegraph.PEGGenerator: java.util.Map recordReturn>;
+        $r13 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i1 = virtualinvoke $r13.<java.lang.Object: int hashCode()>();
+        $r14 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i1);
+        $r6 = interfaceinvoke $r12.<java.util.Map: java.lang.Object get(java.lang.Object)>($r14);
+        'ret' = (java.util.List) $r6;
+        $z0 = v instanceof soot.jimple.NullConstant;
+        if $z0 != 0 goto label4;
+
+        $z0 = v instanceof soot.Local;
+        if $z0 == 0 goto label4;
+
+        $r15 = (soot.Local) v;
+        $r8 = interfaceinvoke $r15.<soot.Local: java.lang.String getName()>();
+        $z0 = specialinvoke this.<pegraph.PEGGenerator: boolean contains(java.lang.String)>($r8);
+        if $z0 != 0 goto label5;
+
+     label4:
+        $r3 = new pegraph.datastructure.Point;
+        $i0 = this.<pegraph.PEGGenerator: int callhash>;
+        specialinvoke $r3.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>("0", $i0);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addCaller(pegraph.datastructure.Point)>($r3);
+        $r3 = new pegraph.datastructure.Point;
+        $r16 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i0 = virtualinvoke $r16.<java.lang.Object: int hashCode()>();
+        $i0 = neg $i0;
+        specialinvoke $r3.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>(".return", $i0);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addReceiver(pegraph.datastructure.Point)>($r3);
+        $r4 = this.<pegraph.PEGGenerator: pegraph.datastructure.PegIntra intra_graph>;
+        virtualinvoke $r4.<pegraph.datastructure.PegIntra: pegraph.datastructure.CallEdge addCallEdge(pegraph.datastructure.CallEdge)>(calledge);
+        interfaceinvoke 'ret'.<java.util.List: boolean add(java.lang.Object)>(null);
+        goto label6;
+
+     label5:
+        $r3 = new pegraph.datastructure.Point;
+        $r17 = (soot.Local) v;
+        $r9 = interfaceinvoke $r17.<soot.Local: java.lang.String getName()>();
+        $i0 = this.<pegraph.PEGGenerator: int callhash>;
+        specialinvoke $r3.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>($r9, $i0);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addCaller(pegraph.datastructure.Point)>($r3);
+        $r3 = new pegraph.datastructure.Point;
+        $r16 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i0 = virtualinvoke $r16.<java.lang.Object: int hashCode()>();
+        $i0 = neg $i0;
+        specialinvoke $r3.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>(".return", $i0);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addReceiver(pegraph.datastructure.Point)>($r3);
+        $r4 = this.<pegraph.PEGGenerator: pegraph.datastructure.PegIntra intra_graph>;
+        virtualinvoke $r4.<pegraph.datastructure.PegIntra: pegraph.datastructure.CallEdge addCallEdge(pegraph.datastructure.CallEdge)>(calledge);
+        $r15 = (soot.Local) v;
+        interfaceinvoke 'ret'.<java.util.List: boolean add(java.lang.Object)>($r15);
+
+     label6:
+        $r12 = <pegraph.PEGGenerator: java.util.Map recordReturn>;
+        $r13 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i1 = virtualinvoke $r13.<java.lang.Object: int hashCode()>();
+        $r14 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i1);
+        interfaceinvoke $r12.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r14, 'ret');
+        goto label11;
+
+     label7:
+        $r18 = new java.util.ArrayList;
+        specialinvoke $r18.<java.util.ArrayList: void <init>()>();
+        'ret' = $r18;
+        $z0 = v instanceof soot.jimple.NullConstant;
+        if $z0 != 0 goto label8;
+
+        $z0 = v instanceof soot.Local;
+        if $z0 == 0 goto label8;
+
+        $r15 = (soot.Local) v;
+        $r8 = interfaceinvoke $r15.<soot.Local: java.lang.String getName()>();
+        $z0 = specialinvoke this.<pegraph.PEGGenerator: boolean contains(java.lang.String)>($r8);
+        if $z0 != 0 goto label9;
+
+     label8:
+        $r3 = new pegraph.datastructure.Point;
+        $i0 = this.<pegraph.PEGGenerator: int callhash>;
+        specialinvoke $r3.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>("0", $i0);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addCaller(pegraph.datastructure.Point)>($r3);
+        $r3 = new pegraph.datastructure.Point;
+        $r16 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i0 = virtualinvoke $r16.<java.lang.Object: int hashCode()>();
+        $i0 = neg $i0;
+        specialinvoke $r3.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>(".return", $i0);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addReceiver(pegraph.datastructure.Point)>($r3);
+        $r4 = this.<pegraph.PEGGenerator: pegraph.datastructure.PegIntra intra_graph>;
+        virtualinvoke $r4.<pegraph.datastructure.PegIntra: pegraph.datastructure.CallEdge addCallEdge(pegraph.datastructure.CallEdge)>(calledge);
+        interfaceinvoke 'ret'.<java.util.List: boolean add(java.lang.Object)>(null);
+        goto label10;
+
+     label9:
+        $r3 = new pegraph.datastructure.Point;
+        $r17 = (soot.Local) v;
+        $r9 = interfaceinvoke $r17.<soot.Local: java.lang.String getName()>();
+        $i0 = this.<pegraph.PEGGenerator: int callhash>;
+        specialinvoke $r3.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>($r9, $i0);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addCaller(pegraph.datastructure.Point)>($r3);
+        $r3 = new pegraph.datastructure.Point;
+        $r16 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i0 = virtualinvoke $r16.<java.lang.Object: int hashCode()>();
+        $i0 = neg $i0;
+        specialinvoke $r3.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>(".return", $i0);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addReceiver(pegraph.datastructure.Point)>($r3);
+        $r4 = this.<pegraph.PEGGenerator: pegraph.datastructure.PegIntra intra_graph>;
+        virtualinvoke $r4.<pegraph.datastructure.PegIntra: pegraph.datastructure.CallEdge addCallEdge(pegraph.datastructure.CallEdge)>(calledge);
+        $r15 = (soot.Local) v;
+        interfaceinvoke 'ret'.<java.util.List: boolean add(java.lang.Object)>($r15);
+
+     label10:
+        $r12 = <pegraph.PEGGenerator: java.util.Map recordReturn>;
+        $r13 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i1 = virtualinvoke $r13.<java.lang.Object: int hashCode()>();
+        $r14 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i1);
+        interfaceinvoke $r12.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r14, 'ret');
+
+     label11:
+        return;
+
+     label12:
+        $z0 = s instanceof soot.jimple.ThrowStmt;
+        if $z0 == 0 goto label13;
+
+        return;
+
+     label13:
+        $r19 = (soot.jimple.DefinitionStmt) s;
+        lhs = interfaceinvoke $r19.<soot.jimple.DefinitionStmt: soot.Value getLeftOp()>();
+        $r19 = (soot.jimple.DefinitionStmt) s;
+        rhs = interfaceinvoke $r19.<soot.jimple.DefinitionStmt: soot.Value getRightOp()>();
+        $z0 = s instanceof soot.jimple.IdentityStmt;
+        if $z0 == 0 goto label16;
+
+        $z0 = rhs instanceof soot.jimple.ThisRef;
+        if $z0 != 0 goto label14;
+
+        $z0 = rhs instanceof soot.jimple.ParameterRef;
+        if $z0 == 0 goto label15;
+
+     label14:
+        $i1 = this.<pegraph.PEGGenerator: int callhash>;
+        $i2 = virtualinvoke succst.<java.lang.Object: int hashCode()>();
+        specialinvoke this.<pegraph.PEGGenerator: void doAllMove(int,int)>($i1, $i2);
+
+     label15:
+        return;
+
+     label16:
+        $z0 = s instanceof soot.jimple.AssignStmt;
+        if $z0 == 0 goto label36;
+
+        $z0 = lhs instanceof soot.jimple.ArrayRef;
+        if $z0 == 0 goto label17;
+
+        $i1 = this.<pegraph.PEGGenerator: int callhash>;
+        $i2 = virtualinvoke succst.<java.lang.Object: int hashCode()>();
+        specialinvoke this.<pegraph.PEGGenerator: void doAllMove(int,int)>($i1, $i2);
+        return;
+
+     label17:
+        $z0 = lhs instanceof soot.jimple.FieldRef;
+        if $z0 == 0 goto label18;
+
+        $i1 = this.<pegraph.PEGGenerator: int callhash>;
+        $i2 = virtualinvoke succst.<java.lang.Object: int hashCode()>();
+        specialinvoke this.<pegraph.PEGGenerator: void doAllMove(int,int)>($i1, $i2);
+        return;
+
+     label18:
+        $z0 = lhs instanceof soot.Local;
+        if $z0 == 0 goto label19;
+
+        $r15 = (soot.Local) lhs;
+        $r8 = interfaceinvoke $r15.<soot.Local: java.lang.String getName()>();
+        $z0 = specialinvoke this.<pegraph.PEGGenerator: boolean contains(java.lang.String)>($r8);
+        if $z0 != 0 goto label20;
+
+     label19:
+        $i1 = this.<pegraph.PEGGenerator: int callhash>;
+        $i2 = virtualinvoke succst.<java.lang.Object: int hashCode()>();
+        specialinvoke this.<pegraph.PEGGenerator: void doAllMove(int,int)>($i1, $i2);
+        return;
+
+     label20:
+        $z0 = rhs instanceof soot.Local;
+        if $z0 == 0 goto label21;
+
+        $r15 = (soot.Local) rhs;
+        $r8 = interfaceinvoke $r15.<soot.Local: java.lang.String getName()>();
+        $z0 = specialinvoke this.<pegraph.PEGGenerator: boolean contains(java.lang.String)>($r8);
+        if $z0 == 0 goto label21;
+
+        $r18 = new java.util.ArrayList;
+        specialinvoke $r18.<java.util.ArrayList: void <init>()>();
+        rub = $r18;
+        $r15 = (soot.Local) rhs;
+        interfaceinvoke rub.<java.util.List: boolean add(java.lang.Object)>($r15);
+        $r20 = new function.Assign;
+        specialinvoke $r20.<function.Assign: void <init>()>();
+        f = $r20;
+        $r15 = (soot.Local) lhs;
+        $i0 = this.<pegraph.PEGGenerator: int callhash>;
+        $i3 = virtualinvoke succst.<java.lang.Object: int hashCode()>();
+        specialinvoke this.<pegraph.PEGGenerator: void RF(soot.Local,java.util.List,function.Function,int,int)>($r15, rub, f, $i0, $i3);
+        return;
+
+     label21:
+        $z0 = rhs instanceof soot.jimple.BinopExpr;
+        if $z0 == 0 goto label24;
+
+        ber = (soot.jimple.BinopExpr) rhs;
+        $r18 = new java.util.ArrayList;
+        specialinvoke $r18.<java.util.ArrayList: void <init>()>();
+        rub = $r18;
+        $r5 = this.<pegraph.PEGGenerator: java.util.List objectlocal>;
+        $r21 = interfaceinvoke ber.<soot.jimple.BinopExpr: soot.Value getOp1()>();
+        $r15 = (soot.Local) $r21;
+        $z0 = interfaceinvoke $r5.<java.util.List: boolean contains(java.lang.Object)>($r15);
+        if $z0 == 0 goto label22;
+
+        $r21 = interfaceinvoke ber.<soot.jimple.BinopExpr: soot.Value getOp1()>();
+        $r15 = (soot.Local) $r21;
+        interfaceinvoke rub.<java.util.List: boolean add(java.lang.Object)>($r15);
+
+     label22:
+        $r5 = this.<pegraph.PEGGenerator: java.util.List objectlocal>;
+        $r21 = interfaceinvoke ber.<soot.jimple.BinopExpr: soot.Value getOp2()>();
+        $r15 = (soot.Local) $r21;
+        $z0 = interfaceinvoke $r5.<java.util.List: boolean contains(java.lang.Object)>($r15);
+        if $z0 == 0 goto label23;
+
+        $r21 = interfaceinvoke ber.<soot.jimple.BinopExpr: soot.Value getOp2()>();
+        $r15 = (soot.Local) $r21;
+        interfaceinvoke rub.<java.util.List: boolean add(java.lang.Object)>($r15);
+
+     label23:
+        $r20 = new function.Assign;
+        specialinvoke $r20.<function.Assign: void <init>()>();
+        f = $r20;
+        $r15 = (soot.Local) lhs;
+        $i0 = this.<pegraph.PEGGenerator: int callhash>;
+        $i3 = virtualinvoke succst.<java.lang.Object: int hashCode()>();
+        specialinvoke this.<pegraph.PEGGenerator: void RF(soot.Local,java.util.List,function.Function,int,int)>($r15, rub, f, $i0, $i3);
+        return;
+
+     label24:
+        $z0 = rhs instanceof soot.jimple.StringConstant;
+        if $z0 == 0 goto label25;
+
+        $i1 = this.<pegraph.PEGGenerator: int callhash>;
+        $i2 = virtualinvoke succst.<java.lang.Object: int hashCode()>();
+        specialinvoke this.<pegraph.PEGGenerator: void doAllMove(int,int)>($i1, $i2);
+        return;
+
+     label25:
+        $z0 = rhs instanceof soot.jimple.ClassConstant;
+        if $z0 == 0 goto label26;
+
+        $i1 = this.<pegraph.PEGGenerator: int callhash>;
+        $i2 = virtualinvoke succst.<java.lang.Object: int hashCode()>();
+        specialinvoke this.<pegraph.PEGGenerator: void doAllMove(int,int)>($i1, $i2);
+        return;
+
+     label26:
+        $z0 = rhs instanceof soot.jimple.NewExpr;
+        if $z0 == 0 goto label27;
+
+        $r22 = new function.Remove;
+        specialinvoke $r22.<function.Remove: void <init>()>();
+        f = $r22;
+        $r15 = (soot.Local) lhs;
+        $i0 = this.<pegraph.PEGGenerator: int callhash>;
+        $i3 = virtualinvoke succst.<java.lang.Object: int hashCode()>();
+        specialinvoke this.<pegraph.PEGGenerator: void RF(soot.Local,java.util.List,function.Function,int,int)>($r15, null, f, $i0, $i3);
+        return;
+
+     label27:
+        $z0 = rhs instanceof soot.jimple.NewArrayExpr;
+        if $z0 == 0 goto label28;
+
+        $r22 = new function.Remove;
+        specialinvoke $r22.<function.Remove: void <init>()>();
+        f = $r22;
+        $r15 = (soot.Local) lhs;
+        $i0 = this.<pegraph.PEGGenerator: int callhash>;
+        $i3 = virtualinvoke succst.<java.lang.Object: int hashCode()>();
+        specialinvoke this.<pegraph.PEGGenerator: void RF(soot.Local,java.util.List,function.Function,int,int)>($r15, null, f, $i0, $i3);
+        return;
+
+     label28:
+        $z0 = rhs instanceof soot.jimple.NewMultiArrayExpr;
+        if $z0 == 0 goto label29;
+
+        $r22 = new function.Remove;
+        specialinvoke $r22.<function.Remove: void <init>()>();
+        f = $r22;
+        $r15 = (soot.Local) lhs;
+        $i0 = this.<pegraph.PEGGenerator: int callhash>;
+        $i3 = virtualinvoke succst.<java.lang.Object: int hashCode()>();
+        specialinvoke this.<pegraph.PEGGenerator: void RF(soot.Local,java.util.List,function.Function,int,int)>($r15, null, f, $i0, $i3);
+        return;
+
+     label29:
+        $z0 = rhs instanceof soot.jimple.NullConstant;
+        if $z0 == 0 goto label30;
+
+        $r23 = new function.Add;
+        specialinvoke $r23.<function.Add: void <init>()>();
+        f = $r23;
+        $r15 = (soot.Local) lhs;
+        $i0 = this.<pegraph.PEGGenerator: int callhash>;
+        $i3 = virtualinvoke succst.<java.lang.Object: int hashCode()>();
+        specialinvoke this.<pegraph.PEGGenerator: void RF(soot.Local,java.util.List,function.Function,int,int)>($r15, null, f, $i0, $i3);
+        return;
+
+     label30:
+        $z0 = rhs instanceof soot.jimple.FieldRef;
+        if $z0 == 0 goto label31;
+
+        $i1 = this.<pegraph.PEGGenerator: int callhash>;
+        $i2 = virtualinvoke succst.<java.lang.Object: int hashCode()>();
+        specialinvoke this.<pegraph.PEGGenerator: void doAllMove(int,int)>($i1, $i2);
+        return;
+
+     label31:
+        $z0 = rhs instanceof soot.jimple.ArrayRef;
+        if $z0 == 0 goto label32;
+
+        $i1 = this.<pegraph.PEGGenerator: int callhash>;
+        $i2 = virtualinvoke succst.<java.lang.Object: int hashCode()>();
+        specialinvoke this.<pegraph.PEGGenerator: void doAllMove(int,int)>($i1, $i2);
+        return;
+
+     label32:
+        $z0 = rhs instanceof soot.jimple.CastExpr;
+        if $z0 == 0 goto label34;
+
+        $r24 = (soot.jimple.CastExpr) rhs;
+        y = interfaceinvoke $r24.<soot.jimple.CastExpr: soot.Value getOp()>();
+        $z0 = y instanceof soot.Local;
+        if $z0 == 0 goto label33;
+
+        $r15 = (soot.Local) y;
+        $r8 = interfaceinvoke $r15.<soot.Local: java.lang.String getName()>();
+        $z0 = specialinvoke this.<pegraph.PEGGenerator: boolean contains(java.lang.String)>($r8);
+        if $z0 == 0 goto label33;
+
+        $r18 = new java.util.ArrayList;
+        specialinvoke $r18.<java.util.ArrayList: void <init>()>();
+        rub = $r18;
+        $r15 = (soot.Local) y;
+        interfaceinvoke rub.<java.util.List: boolean add(java.lang.Object)>($r15);
+        $r20 = new function.Assign;
+        specialinvoke $r20.<function.Assign: void <init>()>();
+        f = $r20;
+        $r15 = (soot.Local) lhs;
+        $i0 = this.<pegraph.PEGGenerator: int callhash>;
+        $i3 = virtualinvoke succst.<java.lang.Object: int hashCode()>();
+        specialinvoke this.<pegraph.PEGGenerator: void RF(soot.Local,java.util.List,function.Function,int,int)>($r15, rub, f, $i0, $i3);
+        return;
+
+     label33:
+        $i1 = this.<pegraph.PEGGenerator: int callhash>;
+        $i2 = virtualinvoke succst.<java.lang.Object: int hashCode()>();
+        specialinvoke this.<pegraph.PEGGenerator: void doAllMove(int,int)>($i1, $i2);
+        return;
+
+     label34:
+        $z0 = rhs instanceof soot.jimple.ArrayRef;
+        if $z0 == 0 goto label35;
+
+        $z0 = staticinvoke <pegraph.PEGGenerator: boolean isTypeofInterest(soot.Value)>(rhs);
+        if $z0 == 0 goto label35;
+
+        $i1 = this.<pegraph.PEGGenerator: int callhash>;
+        $i2 = virtualinvoke succst.<java.lang.Object: int hashCode()>();
+        specialinvoke this.<pegraph.PEGGenerator: void doAllMove(int,int)>($i1, $i2);
+        return;
+
+     label35:
+        $i1 = virtualinvoke s.<java.lang.Object: int hashCode()>();
+        $i2 = virtualinvoke succst.<java.lang.Object: int hashCode()>();
+        specialinvoke this.<pegraph.PEGGenerator: void doAllMove(int,int)>($i1, $i2);
+        return;
+
+     label36:
+        return;
+    }
+
+    private void processStmt(soot.jimple.Stmt, soot.jimple.Stmt)
+    {
+        pegraph.PEGGenerator this;
+        soot.jimple.Stmt s, succst, target;
+        pegraph.datastructure.CallEdge calledge, $r1;
+        java.util.List 'ret', $r10;
+        soot.jimple.GotoStmt gos;
+        soot.Unit target, defaulttarget;
+        soot.jimple.IfStmt ifs;
+        soot.jimple.TableSwitchStmt tst;
+        java.util.Iterator targets;
+        int $i0, $i1, $i2;
+        boolean $z0;
+        soot.SootMethod $r0, $r3, $r6;
+        pegraph.datastructure.Point $r2;
+        pegraph.datastructure.PegIntra $r4;
+        java.util.Map $r5;
+        java.lang.Integer $r7;
+        java.lang.Object $r8;
+        java.util.ArrayList $r9, 'ret';
+
+        this := @this: pegraph.PEGGenerator;
+        s := @parameter0: soot.jimple.Stmt;
+        succst := @parameter1: soot.jimple.Stmt;
+        $i0 = virtualinvoke s.<java.lang.Object: int hashCode()>();
+        this.<pegraph.PEGGenerator: int callhash> = $i0;
+        $z0 = s instanceof soot.jimple.ReturnVoidStmt;
+        if $z0 == 0 goto label2;
+
+        $i0 = this.<pegraph.PEGGenerator: int callhash>;
+        $r0 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i1 = virtualinvoke $r0.<java.lang.Object: int hashCode()>();
+        $i1 = neg $i1;
+        specialinvoke this.<pegraph.PEGGenerator: void doAllMove(int,int)>($i0, $i1);
+        $r1 = new pegraph.datastructure.CallEdge;
+        specialinvoke $r1.<pegraph.datastructure.CallEdge: void <init>()>();
+        calledge = $r1;
+        $r2 = new pegraph.datastructure.Point;
+        $i2 = this.<pegraph.PEGGenerator: int callhash>;
+        specialinvoke $r2.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>("0", $i2);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addCaller(pegraph.datastructure.Point)>($r2);
+        $r2 = new pegraph.datastructure.Point;
+        $r3 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i2 = virtualinvoke $r3.<java.lang.Object: int hashCode()>();
+        $i2 = neg $i2;
+        specialinvoke $r2.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>(".return", $i2);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addReceiver(pegraph.datastructure.Point)>($r2);
+        $r4 = this.<pegraph.PEGGenerator: pegraph.datastructure.PegIntra intra_graph>;
+        virtualinvoke $r4.<pegraph.datastructure.PegIntra: pegraph.datastructure.CallEdge addCallEdge(pegraph.datastructure.CallEdge)>(calledge);
+        $r5 = <pegraph.PEGGenerator: java.util.Map recordReturn>;
+        $r6 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i0 = virtualinvoke $r6.<java.lang.Object: int hashCode()>();
+        $r7 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i0);
+        $z0 = interfaceinvoke $r5.<java.util.Map: boolean containsKey(java.lang.Object)>($r7);
+        if $z0 == 0 goto label0;
+
+        $r5 = <pegraph.PEGGenerator: java.util.Map recordReturn>;
+        $r6 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i0 = virtualinvoke $r6.<java.lang.Object: int hashCode()>();
+        $r7 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i0);
+        $r8 = interfaceinvoke $r5.<java.util.Map: java.lang.Object get(java.lang.Object)>($r7);
+        'ret' = (java.util.List) $r8;
+        interfaceinvoke 'ret'.<java.util.List: boolean add(java.lang.Object)>(null);
+        $r5 = <pegraph.PEGGenerator: java.util.Map recordReturn>;
+        $r6 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i0 = virtualinvoke $r6.<java.lang.Object: int hashCode()>();
+        $r7 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i0);
+        interfaceinvoke $r5.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r7, 'ret');
+        goto label1;
+
+     label0:
+        $r9 = new java.util.ArrayList;
+        specialinvoke $r9.<java.util.ArrayList: void <init>()>();
+        'ret' = $r9;
+        interfaceinvoke 'ret'.<java.util.List: boolean add(java.lang.Object)>(null);
+        $r5 = <pegraph.PEGGenerator: java.util.Map recordReturn>;
+        $r6 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i0 = virtualinvoke $r6.<java.lang.Object: int hashCode()>();
+        $r7 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i0);
+        interfaceinvoke $r5.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r7, 'ret');
+
+     label1:
+        return;
+
+     label2:
+        $z0 = s instanceof soot.jimple.GotoStmt;
+        if $z0 == 0 goto label3;
+
+        gos = (soot.jimple.GotoStmt) s;
+        target = interfaceinvoke gos.<soot.jimple.GotoStmt: soot.Unit getTarget()>();
+        $i0 = this.<pegraph.PEGGenerator: int callhash>;
+        $i1 = virtualinvoke target.<java.lang.Object: int hashCode()>();
+        specialinvoke this.<pegraph.PEGGenerator: void doAllMove(int,int)>($i0, $i1);
+        return;
+
+     label3:
+        $z0 = s instanceof soot.jimple.IfStmt;
+        if $z0 == 0 goto label4;
+
+        ifs = (soot.jimple.IfStmt) s;
+        target = interfaceinvoke ifs.<soot.jimple.IfStmt: soot.jimple.Stmt getTarget()>();
+        $i0 = this.<pegraph.PEGGenerator: int callhash>;
+        $i1 = virtualinvoke target.<java.lang.Object: int hashCode()>();
+        specialinvoke this.<pegraph.PEGGenerator: void doAllMove(int,int)>($i0, $i1);
+        $i0 = this.<pegraph.PEGGenerator: int callhash>;
+        $i1 = virtualinvoke succst.<java.lang.Object: int hashCode()>();
+        specialinvoke this.<pegraph.PEGGenerator: void doAllMove(int,int)>($i0, $i1);
+        return;
+
+     label4:
+        $z0 = s instanceof soot.jimple.TableSwitchStmt;
+        if $z0 == 0 goto label7;
+
+        tst = (soot.jimple.TableSwitchStmt) s;
+        defaulttarget = interfaceinvoke tst.<soot.jimple.TableSwitchStmt: soot.Unit getDefaultTarget()>();
+        $i0 = this.<pegraph.PEGGenerator: int callhash>;
+        $i1 = virtualinvoke defaulttarget.<java.lang.Object: int hashCode()>();
+        specialinvoke this.<pegraph.PEGGenerator: void doAllMove(int,int)>($i0, $i1);
+        $r10 = interfaceinvoke tst.<soot.jimple.TableSwitchStmt: java.util.List getTargets()>();
+        targets = interfaceinvoke $r10.<java.util.List: java.util.Iterator iterator()>();
+        goto label6;
+
+     label5:
+        $r8 = interfaceinvoke targets.<java.util.Iterator: java.lang.Object next()>();
+        target = (soot.Unit) $r8;
+        $i0 = this.<pegraph.PEGGenerator: int callhash>;
+        $i1 = virtualinvoke target.<java.lang.Object: int hashCode()>();
+        specialinvoke this.<pegraph.PEGGenerator: void doAllMove(int,int)>($i0, $i1);
+
+     label6:
+        $z0 = interfaceinvoke targets.<java.util.Iterator: boolean hasNext()>();
+        if $z0 != 0 goto label5;
+
+        return;
+
+     label7:
+        $z0 = s instanceof soot.jimple.LookupSwitchStmt;
+        if $z0 == 0 goto label8;
+
+        $i0 = this.<pegraph.PEGGenerator: int callhash>;
+        $r0 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i1 = virtualinvoke $r0.<java.lang.Object: int hashCode()>();
+        $i1 = neg $i1;
+        specialinvoke this.<pegraph.PEGGenerator: void doAllMove(int,int)>($i0, $i1);
+        return;
+
+     label8:
+        $z0 = s instanceof soot.jimple.MonitorStmt;
+        if $z0 == 0 goto label9;
+
+        $i0 = this.<pegraph.PEGGenerator: int callhash>;
+        $r0 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i1 = virtualinvoke $r0.<java.lang.Object: int hashCode()>();
+        $i1 = neg $i1;
+        specialinvoke this.<pegraph.PEGGenerator: void doAllMove(int,int)>($i0, $i1);
+        return;
+
+     label9:
+        $z0 = s instanceof soot.jimple.RetStmt;
+        if $z0 == 0 goto label12;
+
+        $i0 = this.<pegraph.PEGGenerator: int callhash>;
+        $r0 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i1 = virtualinvoke $r0.<java.lang.Object: int hashCode()>();
+        $i1 = neg $i1;
+        specialinvoke this.<pegraph.PEGGenerator: void doAllMove(int,int)>($i0, $i1);
+        $r1 = new pegraph.datastructure.CallEdge;
+        specialinvoke $r1.<pegraph.datastructure.CallEdge: void <init>()>();
+        calledge = $r1;
+        $r2 = new pegraph.datastructure.Point;
+        $i2 = this.<pegraph.PEGGenerator: int callhash>;
+        specialinvoke $r2.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>("0", $i2);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addCaller(pegraph.datastructure.Point)>($r2);
+        $r2 = new pegraph.datastructure.Point;
+        $r3 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i2 = virtualinvoke $r3.<java.lang.Object: int hashCode()>();
+        $i2 = neg $i2;
+        specialinvoke $r2.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>(".return", $i2);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addReceiver(pegraph.datastructure.Point)>($r2);
+        $r4 = this.<pegraph.PEGGenerator: pegraph.datastructure.PegIntra intra_graph>;
+        virtualinvoke $r4.<pegraph.datastructure.PegIntra: pegraph.datastructure.CallEdge addCallEdge(pegraph.datastructure.CallEdge)>(calledge);
+        $r5 = <pegraph.PEGGenerator: java.util.Map recordReturn>;
+        $r6 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i0 = virtualinvoke $r6.<java.lang.Object: int hashCode()>();
+        $r7 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i0);
+        $z0 = interfaceinvoke $r5.<java.util.Map: boolean containsKey(java.lang.Object)>($r7);
+        if $z0 == 0 goto label10;
+
+        $r5 = <pegraph.PEGGenerator: java.util.Map recordReturn>;
+        $r6 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i0 = virtualinvoke $r6.<java.lang.Object: int hashCode()>();
+        $r7 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i0);
+        $r8 = interfaceinvoke $r5.<java.util.Map: java.lang.Object get(java.lang.Object)>($r7);
+        'ret' = (java.util.List) $r8;
+        interfaceinvoke 'ret'.<java.util.List: boolean add(java.lang.Object)>(null);
+        $r5 = <pegraph.PEGGenerator: java.util.Map recordReturn>;
+        $r6 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i0 = virtualinvoke $r6.<java.lang.Object: int hashCode()>();
+        $r7 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i0);
+        interfaceinvoke $r5.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r7, 'ret');
+        goto label11;
+
+     label10:
+        $r9 = new java.util.ArrayList;
+        specialinvoke $r9.<java.util.ArrayList: void <init>()>();
+        'ret' = $r9;
+        interfaceinvoke 'ret'.<java.util.List: boolean add(java.lang.Object)>(null);
+        $r5 = <pegraph.PEGGenerator: java.util.Map recordReturn>;
+        $r6 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i0 = virtualinvoke $r6.<java.lang.Object: int hashCode()>();
+        $r7 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i0);
+        interfaceinvoke $r5.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r7, 'ret');
+
+     label11:
+        return;
+
+     label12:
+        $z0 = s instanceof soot.jimple.NopStmt;
+        if $z0 == 0 goto label15;
+
+        $i0 = this.<pegraph.PEGGenerator: int callhash>;
+        $r0 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i1 = virtualinvoke $r0.<java.lang.Object: int hashCode()>();
+        $i1 = neg $i1;
+        specialinvoke this.<pegraph.PEGGenerator: void doAllMove(int,int)>($i0, $i1);
+        $r1 = new pegraph.datastructure.CallEdge;
+        specialinvoke $r1.<pegraph.datastructure.CallEdge: void <init>()>();
+        calledge = $r1;
+        $r2 = new pegraph.datastructure.Point;
+        $i2 = this.<pegraph.PEGGenerator: int callhash>;
+        specialinvoke $r2.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>("0", $i2);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addCaller(pegraph.datastructure.Point)>($r2);
+        $r2 = new pegraph.datastructure.Point;
+        $r3 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i2 = virtualinvoke $r3.<java.lang.Object: int hashCode()>();
+        $i2 = neg $i2;
+        specialinvoke $r2.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>(".return", $i2);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addReceiver(pegraph.datastructure.Point)>($r2);
+        $r4 = this.<pegraph.PEGGenerator: pegraph.datastructure.PegIntra intra_graph>;
+        virtualinvoke $r4.<pegraph.datastructure.PegIntra: pegraph.datastructure.CallEdge addCallEdge(pegraph.datastructure.CallEdge)>(calledge);
+        $r5 = <pegraph.PEGGenerator: java.util.Map recordReturn>;
+        $r6 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i0 = virtualinvoke $r6.<java.lang.Object: int hashCode()>();
+        $r7 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i0);
+        $z0 = interfaceinvoke $r5.<java.util.Map: boolean containsKey(java.lang.Object)>($r7);
+        if $z0 == 0 goto label13;
+
+        $r5 = <pegraph.PEGGenerator: java.util.Map recordReturn>;
+        $r6 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i0 = virtualinvoke $r6.<java.lang.Object: int hashCode()>();
+        $r7 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i0);
+        $r8 = interfaceinvoke $r5.<java.util.Map: java.lang.Object get(java.lang.Object)>($r7);
+        'ret' = (java.util.List) $r8;
+        interfaceinvoke 'ret'.<java.util.List: boolean add(java.lang.Object)>(null);
+        $r5 = <pegraph.PEGGenerator: java.util.Map recordReturn>;
+        $r6 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i0 = virtualinvoke $r6.<java.lang.Object: int hashCode()>();
+        $r7 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i0);
+        interfaceinvoke $r5.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r7, 'ret');
+        goto label14;
+
+     label13:
+        $r9 = new java.util.ArrayList;
+        specialinvoke $r9.<java.util.ArrayList: void <init>()>();
+        'ret' = $r9;
+        interfaceinvoke 'ret'.<java.util.List: boolean add(java.lang.Object)>(null);
+        $r5 = <pegraph.PEGGenerator: java.util.Map recordReturn>;
+        $r6 = this.<pegraph.PEGGenerator: soot.SootMethod sm>;
+        $i0 = virtualinvoke $r6.<java.lang.Object: int hashCode()>();
+        $r7 = staticinvoke <java.lang.Integer: java.lang.Integer valueOf(int)>($i0);
+        interfaceinvoke $r5.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r7, 'ret');
+
+     label14:
+        return;
+
+     label15:
+        specialinvoke this.<pegraph.PEGGenerator: void domytest(soot.jimple.Stmt,soot.jimple.Stmt)>(s, succst);
+        return;
+    }
+
+    private void doAllMove(int, int)
+    {
+        pegraph.PEGGenerator this;
+        int start, end;
+        pegraph.datastructure.CallEdge $r0, calledge0, calledge;
+        java.util.Iterator l5;
+        soot.Local l;
+        pegraph.datastructure.Point $r1;
+        pegraph.datastructure.PegIntra $r2;
+        java.util.List $r3;
+        java.lang.Object $r4;
+        java.lang.String $r5;
+        boolean $z0;
+
+        this := @this: pegraph.PEGGenerator;
+        start := @parameter0: int;
+        end := @parameter1: int;
+        $r0 = new pegraph.datastructure.CallEdge;
+        specialinvoke $r0.<pegraph.datastructure.CallEdge: void <init>()>();
+        calledge0 = $r0;
+        $r1 = new pegraph.datastructure.Point;
+        specialinvoke $r1.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>("0", start);
+        virtualinvoke calledge0.<pegraph.datastructure.CallEdge: void addCaller(pegraph.datastructure.Point)>($r1);
+        $r1 = new pegraph.datastructure.Point;
+        specialinvoke $r1.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>("0", end);
+        virtualinvoke calledge0.<pegraph.datastructure.CallEdge: void addReceiver(pegraph.datastructure.Point)>($r1);
+        $r2 = this.<pegraph.PEGGenerator: pegraph.datastructure.PegIntra intra_graph>;
+        virtualinvoke $r2.<pegraph.datastructure.PegIntra: pegraph.datastructure.CallEdge addCallEdge(pegraph.datastructure.CallEdge)>(calledge0);
+        $r3 = this.<pegraph.PEGGenerator: java.util.List objectlocal>;
+        l5 = interfaceinvoke $r3.<java.util.List: java.util.Iterator iterator()>();
+        goto label1;
+
+     label0:
+        $r4 = interfaceinvoke l5.<java.util.Iterator: java.lang.Object next()>();
+        l = (soot.Local) $r4;
+        $r0 = new pegraph.datastructure.CallEdge;
+        specialinvoke $r0.<pegraph.datastructure.CallEdge: void <init>()>();
+        calledge = $r0;
+        $r1 = new pegraph.datastructure.Point;
+        $r5 = interfaceinvoke l.<soot.Local: java.lang.String getName()>();
+        specialinvoke $r1.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>($r5, start);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addCaller(pegraph.datastructure.Point)>($r1);
+        $r1 = new pegraph.datastructure.Point;
+        $r5 = interfaceinvoke l.<soot.Local: java.lang.String getName()>();
+        specialinvoke $r1.<pegraph.datastructure.Point: void <init>(java.lang.String,int)>($r5, end);
+        virtualinvoke calledge.<pegraph.datastructure.CallEdge: void addReceiver(pegraph.datastructure.Point)>($r1);
+        $r2 = this.<pegraph.PEGGenerator: pegraph.datastructure.PegIntra intra_graph>;
+        virtualinvoke $r2.<pegraph.datastructure.PegIntra: pegraph.datastructure.CallEdge addCallEdge(pegraph.datastructure.CallEdge)>(calledge);
+
+     label1:
+        $z0 = interfaceinvoke l5.<java.util.Iterator: boolean hasNext()>();
+        if $z0 != 0 goto label0;
+
+        return;
+    }
+
+    private boolean contains(java.lang.String)
+    {
+        pegraph.PEGGenerator this;
+        java.lang.String name, $r2;
+        java.util.Iterator l3;
+        soot.Local local;
+        java.util.List $r0;
+        java.lang.Object $r1;
+        boolean $z0;
+
+        this := @this: pegraph.PEGGenerator;
+        name := @parameter0: java.lang.String;
+        $r0 = this.<pegraph.PEGGenerator: java.util.List objectlocal>;
+        l3 = interfaceinvoke $r0.<java.util.List: java.util.Iterator iterator()>();
+        goto label1;
+
+     label0:
+        $r1 = interfaceinvoke l3.<java.util.Iterator: java.lang.Object next()>();
+        local = (soot.Local) $r1;
+        $r2 = interfaceinvoke local.<soot.Local: java.lang.String getName()>();
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>(name);
+        if $z0 == 0 goto label1;
+
+        return 1;
+
+     label1:
+        $z0 = interfaceinvoke l3.<java.util.Iterator: boolean hasNext()>();
+        if $z0 != 0 goto label0;
+
+        return 0;
+    }
+
+    private boolean isJavaObjectNew(soot.jimple.InvokeExpr)
+    {
+        pegraph.PEGGenerator this;
+        soot.jimple.InvokeExpr invoke;
+        soot.SootMethod static_target;
+        java.lang.String sig, 'cls', $r1;
+        soot.SootClass $r0;
+        boolean $z0;
+
+        this := @this: pegraph.PEGGenerator;
+        invoke := @parameter0: soot.jimple.InvokeExpr;
+        static_target = interfaceinvoke invoke.<soot.jimple.InvokeExpr: soot.SootMethod getMethod()>();
+        sig = virtualinvoke static_target.<soot.SootMethod: java.lang.String getSubSignature()>();
+        $r0 = virtualinvoke static_target.<soot.SootMethod: soot.SootClass getDeclaringClass()>();
+        'cls' = virtualinvoke $r0.<soot.SootClass: java.lang.String getName()>();
+        $z0 = virtualinvoke sig.<java.lang.String: boolean equals(java.lang.Object)>("java.lang.Object newInstance()");
+        if $z0 == 0 goto label0;
+
+        $z0 = virtualinvoke 'cls'.<java.lang.String: boolean equals(java.lang.Object)>("java.lang.Class");
+        if $z0 != 0 goto label4;
+
+     label0:
+        $z0 = virtualinvoke sig.<java.lang.String: boolean equals(java.lang.Object)>("java.lang.Object newInstance(java.lang.Object[])");
+        if $z0 == 0 goto label1;
+
+        $z0 = virtualinvoke 'cls'.<java.lang.String: boolean equals(java.lang.Object)>("java.lang.reflect.Constructor");
+        if $z0 != 0 goto label4;
+
+     label1:
+        $r1 = virtualinvoke static_target.<soot.SootMethod: java.lang.String getSignature()>();
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>("<java.lang.reflect.Array: java.lang.Object newInstance(java.lang.Class,int)>");
+        if $z0 != 0 goto label4;
+
+        $z0 = virtualinvoke sig.<java.lang.String: boolean equals(java.lang.Object)>("java.lang.Object invoke(java.lang.Object,java.lang.Object[])");
+        if $z0 == 0 goto label2;
+
+        $z0 = virtualinvoke 'cls'.<java.lang.String: boolean equals(java.lang.Object)>("java.lang.reflect.Method");
+        if $z0 != 0 goto label4;
+
+     label2:
+        $z0 = virtualinvoke sig.<java.lang.String: boolean equals(java.lang.Object)>("java.lang.Object newProxyInstance(java.lang.ClassLoader,java.lang.Class[],java.lang.reflect.InvocationHandler)");
+        if $z0 == 0 goto label3;
+
+        $z0 = virtualinvoke 'cls'.<java.lang.String: boolean equals(java.lang.Object)>("java.lang.reflect.Proxy");
+        if $z0 != 0 goto label4;
+
+     label3:
+        return 0;
+
+     label4:
+        return 1;
+    }
+
+    public static boolean isTypeofInterest(soot.Value)
+    {
+        soot.Value v;
+        soot.Type $r0;
+        boolean $z0;
+
+        v := @parameter0: soot.Value;
+        $r0 = interfaceinvoke v.<soot.Value: soot.Type getType()>();
+        $z0 = $r0 instanceof soot.RefType;
+        if $z0 != 0 goto label0;
+
+        $r0 = interfaceinvoke v.<soot.Value: soot.Type getType()>();
+        $z0 = $r0 instanceof soot.ArrayType;
+        if $z0 != 0 goto label0;
+
+        return 0;
+
+     label0:
+        return 1;
+    }
+}
