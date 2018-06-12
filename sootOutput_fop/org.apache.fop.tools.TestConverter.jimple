@@ -1,0 +1,731 @@
+public class org.apache.fop.tools.TestConverter extends java.lang.Object
+{
+    private org.apache.fop.apps.FopFactory fopFactory;
+    private boolean failOnly;
+    private java.lang.String outputFormat;
+    private java.io.File destdir;
+    private java.io.File compare;
+    private java.lang.String baseDir;
+    private java.util.Map differ;
+    protected org.apache.commons.logging.impl.SimpleLog logger;
+
+    public static void main(java.lang.String[])
+    {
+        java.lang.String[] args;
+        org.apache.fop.tools.TestConverter tc, $r1;
+        java.lang.String results, testFile, $r2, $r3;
+        int count, $i0, $i1;
+        java.io.PrintStream $r0;
+        boolean $z0;
+
+        args := @parameter0: java.lang.String[];
+        if args == null goto label0;
+
+        $i0 = lengthof args;
+        if $i0 != 0 goto label1;
+
+     label0:
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>("test suite file name required");
+
+     label1:
+        $r1 = new org.apache.fop.tools.TestConverter;
+        specialinvoke $r1.<org.apache.fop.tools.TestConverter: void <init>()>();
+        tc = $r1;
+        results = "results";
+        testFile = null;
+        count = 0;
+
+     label2:
+        $i1 = lengthof args;
+        if count >= $i1 goto label11;
+
+        $r2 = args[count];
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>("-failOnly");
+        if $z0 == 0 goto label3;
+
+        virtualinvoke tc.<org.apache.fop.tools.TestConverter: void setFailOnly(boolean)>(1);
+        goto label10;
+
+     label3:
+        $r2 = args[count];
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>("-pdf");
+        if $z0 == 0 goto label4;
+
+        virtualinvoke tc.<org.apache.fop.tools.TestConverter: void setOutputFormat(java.lang.String)>("application/pdf");
+        goto label10;
+
+     label4:
+        $r2 = args[count];
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>("-rtf");
+        if $z0 == 0 goto label5;
+
+        virtualinvoke tc.<org.apache.fop.tools.TestConverter: void setOutputFormat(java.lang.String)>("application/rtf");
+        goto label10;
+
+     label5:
+        $r2 = args[count];
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>("-ps");
+        if $z0 == 0 goto label6;
+
+        virtualinvoke tc.<org.apache.fop.tools.TestConverter: void setOutputFormat(java.lang.String)>("application/postscript");
+        goto label10;
+
+     label6:
+        $r2 = args[count];
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>("-d");
+        if $z0 == 0 goto label7;
+
+        virtualinvoke tc.<org.apache.fop.tools.TestConverter: void setDebug(boolean)>(1);
+        goto label10;
+
+     label7:
+        $r2 = args[count];
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>("-b");
+        if $z0 == 0 goto label8;
+
+        count = count + 1;
+        $r3 = args[count];
+        virtualinvoke tc.<org.apache.fop.tools.TestConverter: void setBaseDir(java.lang.String)>($r3);
+        goto label10;
+
+     label8:
+        $r2 = args[count];
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>("-results");
+        if $z0 == 0 goto label9;
+
+        count = count + 1;
+        results = args[count];
+        goto label10;
+
+     label9:
+        testFile = args[count];
+
+     label10:
+        count = count + 1;
+        goto label2;
+
+     label11:
+        if testFile != null goto label12;
+
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>("test suite file name required");
+
+     label12:
+        virtualinvoke tc.<org.apache.fop.tools.TestConverter: java.util.Map runTests(java.lang.String,java.lang.String,java.lang.String)>(testFile, results, null);
+        return;
+    }
+
+    public void <init>()
+    {
+        org.apache.fop.tools.TestConverter this;
+        org.apache.fop.apps.FopFactory $r0;
+        java.util.HashMap $r1;
+        org.apache.commons.logging.impl.SimpleLog $r2, $r3;
+
+        this := @this: org.apache.fop.tools.TestConverter;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $r0 = staticinvoke <org.apache.fop.apps.FopFactory: org.apache.fop.apps.FopFactory newInstance()>();
+        this.<org.apache.fop.tools.TestConverter: org.apache.fop.apps.FopFactory fopFactory> = $r0;
+        this.<org.apache.fop.tools.TestConverter: boolean failOnly> = 0;
+        this.<org.apache.fop.tools.TestConverter: java.lang.String outputFormat> = "application/X-fop-areatree";
+        this.<org.apache.fop.tools.TestConverter: java.io.File compare> = null;
+        this.<org.apache.fop.tools.TestConverter: java.lang.String baseDir> = "./";
+        $r1 = new java.util.HashMap;
+        specialinvoke $r1.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.tools.TestConverter: java.util.Map differ> = $r1;
+        this.<org.apache.fop.tools.TestConverter: org.apache.commons.logging.impl.SimpleLog logger> = null;
+        $r2 = new org.apache.commons.logging.impl.SimpleLog;
+        specialinvoke $r2.<org.apache.commons.logging.impl.SimpleLog: void <init>(java.lang.String)>("FOP/Test");
+        this.<org.apache.fop.tools.TestConverter: org.apache.commons.logging.impl.SimpleLog logger> = $r2;
+        $r3 = this.<org.apache.fop.tools.TestConverter: org.apache.commons.logging.impl.SimpleLog logger>;
+        virtualinvoke $r3.<org.apache.commons.logging.impl.SimpleLog: void setLevel(int)>(5);
+        return;
+    }
+
+    public void setOutputFormat(java.lang.String)
+    {
+        org.apache.fop.tools.TestConverter this;
+        java.lang.String outputFormat;
+
+        this := @this: org.apache.fop.tools.TestConverter;
+        outputFormat := @parameter0: java.lang.String;
+        this.<org.apache.fop.tools.TestConverter: java.lang.String outputFormat> = outputFormat;
+        return;
+    }
+
+    public void setFailOnly(boolean)
+    {
+        org.apache.fop.tools.TestConverter this;
+        boolean fail;
+
+        this := @this: org.apache.fop.tools.TestConverter;
+        fail := @parameter0: boolean;
+        this.<org.apache.fop.tools.TestConverter: boolean failOnly> = fail;
+        return;
+    }
+
+    public void setBaseDir(java.lang.String)
+    {
+        org.apache.fop.tools.TestConverter this;
+        java.lang.String str;
+
+        this := @this: org.apache.fop.tools.TestConverter;
+        str := @parameter0: java.lang.String;
+        this.<org.apache.fop.tools.TestConverter: java.lang.String baseDir> = str;
+        return;
+    }
+
+    public void setDebug(boolean)
+    {
+        org.apache.fop.tools.TestConverter this;
+        boolean debug;
+        org.apache.commons.logging.impl.SimpleLog $r0;
+
+        this := @this: org.apache.fop.tools.TestConverter;
+        debug := @parameter0: boolean;
+        if debug == 0 goto label0;
+
+        $r0 = this.<org.apache.fop.tools.TestConverter: org.apache.commons.logging.impl.SimpleLog logger>;
+        virtualinvoke $r0.<org.apache.commons.logging.impl.SimpleLog: void setLevel(int)>(2);
+        goto label1;
+
+     label0:
+        $r0 = this.<org.apache.fop.tools.TestConverter: org.apache.commons.logging.impl.SimpleLog logger>;
+        virtualinvoke $r0.<org.apache.commons.logging.impl.SimpleLog: void setLevel(int)>(5);
+
+     label1:
+        return;
+    }
+
+    public java.util.Map runTests(java.lang.String, java.lang.String, java.lang.String)
+    {
+        org.apache.fop.tools.TestConverter this;
+        java.lang.String fname, dest, compDir, profile, $r3, $r5, $r6, $r9, $r13;
+        java.lang.StringBuffer $r0, $r1, $r8;
+        java.io.File f, $r4, $r7;
+        javax.xml.parsers.DocumentBuilderFactory factory;
+        javax.xml.parsers.DocumentBuilder db;
+        org.w3c.dom.Document doc;
+        org.w3c.dom.NodeList suitelist, testcases;
+        null_type testsuite;
+        int count, $i0, $i1;
+        org.w3c.dom.Node testcase, $r12;
+        java.lang.Exception e, $r14;
+        org.apache.commons.logging.impl.SimpleLog $r2;
+        boolean $z0;
+        java.util.Map $r10;
+        org.w3c.dom.Element testsuite;
+        org.w3c.dom.NamedNodeMap $r11;
+
+        this := @this: org.apache.fop.tools.TestConverter;
+        fname := @parameter0: java.lang.String;
+        dest := @parameter1: java.lang.String;
+        compDir := @parameter2: java.lang.String;
+        $r2 = this.<org.apache.fop.tools.TestConverter: org.apache.commons.logging.impl.SimpleLog logger>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("running tests in file:");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(fname);
+        $r3 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r2.<org.apache.commons.logging.impl.SimpleLog: void debug(java.lang.Object)>($r3);
+
+     label0:
+        if compDir == null goto label1;
+
+        $r4 = new java.io.File;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r5 = this.<org.apache.fop.tools.TestConverter: java.lang.String baseDir>;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("/");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(compDir);
+        $r6 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r4.<java.io.File: void <init>(java.lang.String)>($r6);
+        this.<org.apache.fop.tools.TestConverter: java.io.File compare> = $r4;
+
+     label1:
+        $r4 = new java.io.File;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r5 = this.<org.apache.fop.tools.TestConverter: java.lang.String baseDir>;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("/");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(dest);
+        $r6 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r4.<java.io.File: void <init>(java.lang.String)>($r6);
+        this.<org.apache.fop.tools.TestConverter: java.io.File destdir> = $r4;
+        $r7 = this.<org.apache.fop.tools.TestConverter: java.io.File destdir>;
+        virtualinvoke $r7.<java.io.File: boolean mkdirs()>();
+        $r7 = new java.io.File;
+        $r8 = new java.lang.StringBuffer;
+        specialinvoke $r8.<java.lang.StringBuffer: void <init>()>();
+        $r6 = this.<org.apache.fop.tools.TestConverter: java.lang.String baseDir>;
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("/");
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(fname);
+        $r9 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r7.<java.io.File: void <init>(java.lang.String)>($r9);
+        f = $r7;
+        factory = staticinvoke <javax.xml.parsers.DocumentBuilderFactory: javax.xml.parsers.DocumentBuilderFactory newInstance()>();
+        db = virtualinvoke factory.<javax.xml.parsers.DocumentBuilderFactory: javax.xml.parsers.DocumentBuilder newDocumentBuilder()>();
+        doc = virtualinvoke db.<javax.xml.parsers.DocumentBuilder: org.w3c.dom.Document parse(java.io.File)>(f);
+        suitelist = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.NodeList getChildNodes()>();
+        $i0 = interfaceinvoke suitelist.<org.w3c.dom.NodeList: int getLength()>();
+        if $i0 != 0 goto label3;
+
+        $r10 = this.<org.apache.fop.tools.TestConverter: java.util.Map differ>;
+
+     label2:
+        return $r10;
+
+     label3:
+        testsuite = null;
+        testsuite = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element getDocumentElement()>();
+        $z0 = interfaceinvoke testsuite.<org.w3c.dom.Node: boolean hasAttributes()>();
+        if $z0 == 0 goto label4;
+
+        $r11 = interfaceinvoke testsuite.<org.w3c.dom.Node: org.w3c.dom.NamedNodeMap getAttributes()>();
+        $r12 = interfaceinvoke $r11.<org.w3c.dom.NamedNodeMap: org.w3c.dom.Node getNamedItem(java.lang.String)>("profile");
+        profile = interfaceinvoke $r12.<org.w3c.dom.Node: java.lang.String getNodeValue()>();
+        $r2 = this.<org.apache.fop.tools.TestConverter: org.apache.commons.logging.impl.SimpleLog logger>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("testing test suite:");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(profile);
+        $r3 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r2.<org.apache.commons.logging.impl.SimpleLog: void debug(java.lang.Object)>($r3);
+
+     label4:
+        testcases = interfaceinvoke testsuite.<org.w3c.dom.Node: org.w3c.dom.NodeList getChildNodes()>();
+        count = 0;
+
+     label5:
+        $i1 = interfaceinvoke testcases.<org.w3c.dom.NodeList: int getLength()>();
+        if count >= $i1 goto label7;
+
+        testcase = interfaceinvoke testcases.<org.w3c.dom.NodeList: org.w3c.dom.Node item(int)>(count);
+        $r13 = interfaceinvoke testcase.<org.w3c.dom.Node: java.lang.String getNodeName()>();
+        $z0 = virtualinvoke $r13.<java.lang.String: boolean equals(java.lang.Object)>("testcases");
+        if $z0 == 0 goto label6;
+
+        virtualinvoke this.<org.apache.fop.tools.TestConverter: void runTestCase(org.w3c.dom.Node)>(testcase);
+
+     label6:
+        count = count + 1;
+        goto label5;
+
+     label7:
+        goto label9;
+
+     label8:
+        $r14 := @caughtexception;
+        e = $r14;
+        $r2 = this.<org.apache.fop.tools.TestConverter: org.apache.commons.logging.impl.SimpleLog logger>;
+        virtualinvoke $r2.<org.apache.commons.logging.impl.SimpleLog: void error(java.lang.Object,java.lang.Throwable)>("Error while running tests", e);
+
+     label9:
+        $r10 = this.<org.apache.fop.tools.TestConverter: java.util.Map differ>;
+        return $r10;
+
+        catch java.lang.Exception from label0 to label2 with label8;
+        catch java.lang.Exception from label3 to label7 with label8;
+    }
+
+    protected void runTestCase(org.w3c.dom.Node)
+    {
+        org.apache.fop.tools.TestConverter this;
+        org.w3c.dom.Node tcase, node, $r1;
+        java.lang.String profile, nodename, $r4;
+        org.w3c.dom.NodeList cases;
+        int count, $i0;
+        boolean $z0;
+        org.w3c.dom.NamedNodeMap $r0;
+        org.apache.commons.logging.impl.SimpleLog $r2;
+        java.lang.StringBuffer $r3;
+
+        this := @this: org.apache.fop.tools.TestConverter;
+        tcase := @parameter0: org.w3c.dom.Node;
+        $z0 = interfaceinvoke tcase.<org.w3c.dom.Node: boolean hasAttributes()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = interfaceinvoke tcase.<org.w3c.dom.Node: org.w3c.dom.NamedNodeMap getAttributes()>();
+        $r1 = interfaceinvoke $r0.<org.w3c.dom.NamedNodeMap: org.w3c.dom.Node getNamedItem(java.lang.String)>("profile");
+        profile = interfaceinvoke $r1.<org.w3c.dom.Node: java.lang.String getNodeValue()>();
+        $r2 = this.<org.apache.fop.tools.TestConverter: org.apache.commons.logging.impl.SimpleLog logger>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("testing profile:");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(profile);
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r2.<org.apache.commons.logging.impl.SimpleLog: void debug(java.lang.Object)>($r4);
+
+     label0:
+        cases = interfaceinvoke tcase.<org.w3c.dom.Node: org.w3c.dom.NodeList getChildNodes()>();
+        count = 0;
+
+     label1:
+        $i0 = interfaceinvoke cases.<org.w3c.dom.NodeList: int getLength()>();
+        if count >= $i0 goto label5;
+
+        node = interfaceinvoke cases.<org.w3c.dom.NodeList: org.w3c.dom.Node item(int)>(count);
+        nodename = interfaceinvoke node.<org.w3c.dom.Node: java.lang.String getNodeName()>();
+        $z0 = virtualinvoke nodename.<java.lang.String: boolean equals(java.lang.Object)>("testcases");
+        if $z0 == 0 goto label2;
+
+        virtualinvoke this.<org.apache.fop.tools.TestConverter: void runTestCase(org.w3c.dom.Node)>(node);
+        goto label4;
+
+     label2:
+        $z0 = virtualinvoke nodename.<java.lang.String: boolean equals(java.lang.Object)>("test");
+        if $z0 == 0 goto label3;
+
+        virtualinvoke this.<org.apache.fop.tools.TestConverter: void runTest(org.w3c.dom.Node,org.w3c.dom.Node)>(tcase, node);
+        goto label4;
+
+     label3:
+        $z0 = virtualinvoke nodename.<java.lang.String: boolean equals(java.lang.Object)>("result");
+        if $z0 == 0 goto label4;
+
+     label4:
+        count = count + 1;
+        goto label1;
+
+     label5:
+        return;
+    }
+
+    protected void runTest(org.w3c.dom.Node, org.w3c.dom.Node)
+    {
+        org.apache.fop.tools.TestConverter this;
+        org.w3c.dom.Node testcase, test, result, xslNode, resNode, $r2;
+        java.lang.String id, agreement, xml, xsl, res, baseURL, outname, $r5, $r8, $r9, $r14, $r15, $r22;
+        boolean pass, $z0;
+        java.io.File xmlFile, outputFile, f1, f2, $r6, $r13, $r20;
+        java.lang.Exception e, $r11, $r25;
+        null_type inputHandler;
+        java.lang.StringBuffer $r0, $r4, $r7, $r21;
+        org.apache.fop.apps.FOUserAgent userAgent;
+        java.io.BufferedOutputStream outStream, $r23;
+        org.w3c.dom.NamedNodeMap $r1;
+        org.apache.commons.logging.impl.SimpleLog $r3;
+        java.net.URL $r10;
+        org.apache.fop.cli.InputHandler $r12, inputHandler;
+        org.apache.fop.apps.FopFactory $r16;
+        java.util.Map $r17;
+        java.lang.Boolean $r18;
+        int $i0;
+        java.io.FileOutputStream $r24;
+
+        this := @this: org.apache.fop.tools.TestConverter;
+        testcase := @parameter0: org.w3c.dom.Node;
+        test := @parameter1: org.w3c.dom.Node;
+        $r1 = interfaceinvoke test.<org.w3c.dom.Node: org.w3c.dom.NamedNodeMap getAttributes()>();
+        $r2 = interfaceinvoke $r1.<org.w3c.dom.NamedNodeMap: org.w3c.dom.Node getNamedItem(java.lang.String)>("id");
+        id = interfaceinvoke $r2.<org.w3c.dom.Node: java.lang.String getNodeValue()>();
+        result = specialinvoke this.<org.apache.fop.tools.TestConverter: org.w3c.dom.Node locateResult(org.w3c.dom.Node,java.lang.String)>(testcase, id);
+        pass = 0;
+        if result == null goto label0;
+
+        $r1 = interfaceinvoke result.<org.w3c.dom.Node: org.w3c.dom.NamedNodeMap getAttributes()>();
+        $r2 = interfaceinvoke $r1.<org.w3c.dom.NamedNodeMap: org.w3c.dom.Node getNamedItem(java.lang.String)>("agreement");
+        agreement = interfaceinvoke $r2.<org.w3c.dom.Node: java.lang.String getNodeValue()>();
+        pass = virtualinvoke agreement.<java.lang.String: boolean equals(java.lang.Object)>("full");
+
+     label0:
+        if pass == 0 goto label1;
+
+        $z0 = this.<org.apache.fop.tools.TestConverter: boolean failOnly>;
+        if $z0 == 0 goto label1;
+
+        return;
+
+     label1:
+        $r1 = interfaceinvoke test.<org.w3c.dom.Node: org.w3c.dom.NamedNodeMap getAttributes()>();
+        $r2 = interfaceinvoke $r1.<org.w3c.dom.NamedNodeMap: org.w3c.dom.Node getNamedItem(java.lang.String)>("xml");
+        xml = interfaceinvoke $r2.<org.w3c.dom.Node: java.lang.String getNodeValue()>();
+        $r1 = interfaceinvoke test.<org.w3c.dom.Node: org.w3c.dom.NamedNodeMap getAttributes()>();
+        xslNode = interfaceinvoke $r1.<org.w3c.dom.NamedNodeMap: org.w3c.dom.Node getNamedItem(java.lang.String)>("xsl");
+        xsl = null;
+        if xslNode == null goto label2;
+
+        xsl = interfaceinvoke xslNode.<org.w3c.dom.Node: java.lang.String getNodeValue()>();
+
+     label2:
+        $r3 = this.<org.apache.fop.tools.TestConverter: org.apache.commons.logging.impl.SimpleLog logger>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("converting xml:");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(xml);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" and xsl:");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(xsl);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" to area tree");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<org.apache.commons.logging.impl.SimpleLog: void debug(java.lang.Object)>($r5);
+        res = xml;
+        $r1 = interfaceinvoke test.<org.w3c.dom.Node: org.w3c.dom.NamedNodeMap getAttributes()>();
+        resNode = interfaceinvoke $r1.<org.w3c.dom.NamedNodeMap: org.w3c.dom.Node getNamedItem(java.lang.String)>("results");
+        if resNode == null goto label3;
+
+        res = interfaceinvoke resNode.<org.w3c.dom.Node: java.lang.String getNodeValue()>();
+
+     label3:
+        $r6 = new java.io.File;
+        $r7 = new java.lang.StringBuffer;
+        specialinvoke $r7.<java.lang.StringBuffer: void <init>()>();
+        $r8 = this.<org.apache.fop.tools.TestConverter: java.lang.String baseDir>;
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r8);
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("/");
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(xml);
+        $r9 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r6.<java.io.File: void <init>(java.lang.String)>($r9);
+        xmlFile = $r6;
+        baseURL = null;
+
+     label4:
+        $r6 = virtualinvoke xmlFile.<java.io.File: java.io.File getParentFile()>();
+        $r10 = virtualinvoke $r6.<java.io.File: java.net.URL toURL()>();
+        baseURL = virtualinvoke $r10.<java.net.URL: java.lang.String toExternalForm()>();
+
+     label5:
+        goto label7;
+
+     label6:
+        $r11 := @caughtexception;
+        e = $r11;
+        $r3 = this.<org.apache.fop.tools.TestConverter: org.apache.commons.logging.impl.SimpleLog logger>;
+        virtualinvoke $r3.<org.apache.commons.logging.impl.SimpleLog: void error(java.lang.Object)>("Error setting base directory");
+
+     label7:
+        inputHandler = null;
+        if xsl != null goto label8;
+
+        $r12 = new org.apache.fop.cli.InputHandler;
+        specialinvoke $r12.<org.apache.fop.cli.InputHandler: void <init>(java.io.File)>(xmlFile);
+        inputHandler = $r12;
+        goto label9;
+
+     label8:
+        $r12 = new org.apache.fop.cli.InputHandler;
+        $r13 = new java.io.File;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r14 = this.<org.apache.fop.tools.TestConverter: java.lang.String baseDir>;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r14);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("/");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(xsl);
+        $r15 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r13.<java.io.File: void <init>(java.lang.String)>($r15);
+        specialinvoke $r12.<org.apache.fop.cli.InputHandler: void <init>(java.io.File,java.io.File,java.util.Vector)>(xmlFile, $r13, null);
+        inputHandler = $r12;
+
+     label9:
+        $r16 = this.<org.apache.fop.tools.TestConverter: org.apache.fop.apps.FopFactory fopFactory>;
+        userAgent = virtualinvoke $r16.<org.apache.fop.apps.FopFactory: org.apache.fop.apps.FOUserAgent newFOUserAgent()>();
+        virtualinvoke userAgent.<org.apache.fop.apps.FOUserAgent: void setBaseURL(java.lang.String)>(baseURL);
+        $r17 = virtualinvoke userAgent.<org.apache.fop.apps.FOUserAgent: java.util.Map getRendererOptions()>();
+        $r18 = new java.lang.Boolean;
+        specialinvoke $r18.<java.lang.Boolean: void <init>(boolean)>(0);
+        interfaceinvoke $r17.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("fineDetail", $r18);
+        $r17 = virtualinvoke userAgent.<org.apache.fop.apps.FOUserAgent: java.util.Map getRendererOptions()>();
+        $r18 = new java.lang.Boolean;
+        specialinvoke $r18.<java.lang.Boolean: void <init>(boolean)>(1);
+        interfaceinvoke $r17.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("consistentOutput", $r18);
+        virtualinvoke userAgent.<org.apache.fop.apps.FOUserAgent: void setProducer(java.lang.String)>("Testsuite Converter");
+        outname = res;
+        $z0 = virtualinvoke outname.<java.lang.String: boolean endsWith(java.lang.String)>(".xml");
+        if $z0 != 0 goto label10;
+
+        $z0 = virtualinvoke outname.<java.lang.String: boolean endsWith(java.lang.String)>(".pdf");
+        if $z0 == 0 goto label11;
+
+     label10:
+        $i0 = virtualinvoke outname.<java.lang.String: int length()>();
+        $i0 = $i0 - 4;
+        outname = virtualinvoke outname.<java.lang.String: java.lang.String substring(int,int)>(0, $i0);
+
+     label11:
+        $r6 = new java.io.File;
+        $r20 = this.<org.apache.fop.tools.TestConverter: java.io.File destdir>;
+        $r21 = new java.lang.StringBuffer;
+        specialinvoke $r21.<java.lang.StringBuffer: void <init>()>();
+        $r21 = virtualinvoke $r21.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(outname);
+        $r22 = specialinvoke this.<org.apache.fop.tools.TestConverter: java.lang.String makeResultExtension()>();
+        $r21 = virtualinvoke $r21.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r22);
+        $r8 = virtualinvoke $r21.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r6.<java.io.File: void <init>(java.io.File,java.lang.String)>($r20, $r8);
+        outputFile = $r6;
+        $r6 = virtualinvoke outputFile.<java.io.File: java.io.File getParentFile()>();
+        virtualinvoke $r6.<java.io.File: boolean mkdirs()>();
+        $r23 = new java.io.BufferedOutputStream;
+        $r24 = new java.io.FileOutputStream;
+        specialinvoke $r24.<java.io.FileOutputStream: void <init>(java.io.File)>(outputFile);
+        specialinvoke $r23.<java.io.BufferedOutputStream: void <init>(java.io.OutputStream)>($r24);
+        outStream = $r23;
+        $r3 = this.<org.apache.fop.tools.TestConverter: org.apache.commons.logging.impl.SimpleLog logger>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("ddir:");
+        $r20 = this.<org.apache.fop.tools.TestConverter: java.io.File destdir>;
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r20);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" on:");
+        $r9 = virtualinvoke outputFile.<java.io.File: java.lang.String getName()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r9);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<org.apache.commons.logging.impl.SimpleLog: void debug(java.lang.Object)>($r5);
+        $r9 = this.<org.apache.fop.tools.TestConverter: java.lang.String outputFormat>;
+        virtualinvoke inputHandler.<org.apache.fop.cli.InputHandler: void renderTo(org.apache.fop.apps.FOUserAgent,java.lang.String,java.io.OutputStream)>(userAgent, $r9, outStream);
+        virtualinvoke outStream.<java.io.OutputStream: void close()>();
+        $r6 = this.<org.apache.fop.tools.TestConverter: java.io.File compare>;
+        if $r6 == null goto label12;
+
+        $r6 = new java.io.File;
+        $r20 = this.<org.apache.fop.tools.TestConverter: java.io.File destdir>;
+        $r21 = new java.lang.StringBuffer;
+        specialinvoke $r21.<java.lang.StringBuffer: void <init>()>();
+        $r21 = virtualinvoke $r21.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(outname);
+        $r21 = virtualinvoke $r21.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(".at.xml");
+        $r8 = virtualinvoke $r21.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r6.<java.io.File: void <init>(java.io.File,java.lang.String)>($r20, $r8);
+        f1 = $r6;
+        $r6 = new java.io.File;
+        $r20 = this.<org.apache.fop.tools.TestConverter: java.io.File compare>;
+        $r21 = new java.lang.StringBuffer;
+        specialinvoke $r21.<java.lang.StringBuffer: void <init>()>();
+        $r21 = virtualinvoke $r21.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(outname);
+        $r21 = virtualinvoke $r21.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(".at.xml");
+        $r8 = virtualinvoke $r21.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r6.<java.io.File: void <init>(java.io.File,java.lang.String)>($r20, $r8);
+        f2 = $r6;
+        $z0 = virtualinvoke this.<org.apache.fop.tools.TestConverter: boolean compareFiles(java.io.File,java.io.File)>(f1, f2);
+        if $z0 != 0 goto label12;
+
+        $r17 = this.<org.apache.fop.tools.TestConverter: java.util.Map differ>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(outname);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(".at.xml");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r18 = new java.lang.Boolean;
+        specialinvoke $r18.<java.lang.Boolean: void <init>(boolean)>(pass);
+        interfaceinvoke $r17.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r5, $r18);
+
+     label12:
+        goto label14;
+
+     label13:
+        $r25 := @caughtexception;
+        e = $r25;
+        $r3 = this.<org.apache.fop.tools.TestConverter: org.apache.commons.logging.impl.SimpleLog logger>;
+        virtualinvoke $r3.<org.apache.commons.logging.impl.SimpleLog: void error(java.lang.Object,java.lang.Throwable)>("Error while running tests", e);
+
+     label14:
+        return;
+
+        catch java.lang.Exception from label4 to label5 with label6;
+        catch java.lang.Exception from label3 to label12 with label13;
+    }
+
+    private java.lang.String makeResultExtension()
+    {
+        org.apache.fop.tools.TestConverter this;
+        java.lang.String $r0, $r1;
+        boolean $z0;
+
+        this := @this: org.apache.fop.tools.TestConverter;
+        $r0 = "application/pdf";
+        $r1 = this.<org.apache.fop.tools.TestConverter: java.lang.String outputFormat>;
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>($r1);
+        if $z0 == 0 goto label0;
+
+        return ".pdf";
+
+     label0:
+        $r0 = "application/rtf";
+        $r1 = this.<org.apache.fop.tools.TestConverter: java.lang.String outputFormat>;
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>($r1);
+        if $z0 == 0 goto label1;
+
+        return ".rtf";
+
+     label1:
+        $r0 = "application/postscript";
+        $r1 = this.<org.apache.fop.tools.TestConverter: java.lang.String outputFormat>;
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>($r1);
+        if $z0 == 0 goto label2;
+
+        return ".ps";
+
+     label2:
+        return ".at.xml";
+    }
+
+    protected boolean compareFiles(java.io.File, java.io.File)
+    {
+        org.apache.fop.tools.TestConverter this;
+        java.io.File f1, f2;
+        java.lang.Exception e, $r0;
+        boolean $z0;
+        org.apache.commons.logging.impl.SimpleLog $r1;
+
+        this := @this: org.apache.fop.tools.TestConverter;
+        f1 := @parameter0: java.io.File;
+        f2 := @parameter1: java.io.File;
+
+     label0:
+        $z0 = staticinvoke <org.apache.fop.tools.anttasks.FileCompare: boolean compareFiles(java.io.File,java.io.File)>(f1, f2);
+
+     label1:
+        return $z0;
+
+     label2:
+        $r0 := @caughtexception;
+        e = $r0;
+        $r1 = this.<org.apache.fop.tools.TestConverter: org.apache.commons.logging.impl.SimpleLog logger>;
+        virtualinvoke $r1.<org.apache.commons.logging.impl.SimpleLog: void error(java.lang.Object,java.lang.Throwable)>("Error while comparing files", e);
+        return 0;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+
+    private org.w3c.dom.Node locateResult(org.w3c.dom.Node, java.lang.String)
+    {
+        org.apache.fop.tools.TestConverter this;
+        org.w3c.dom.Node testcase, node, $r1;
+        java.lang.String id, nodename, resultid;
+        org.w3c.dom.NodeList cases;
+        int count, $i0;
+        boolean $z0;
+        org.w3c.dom.NamedNodeMap $r0;
+
+        this := @this: org.apache.fop.tools.TestConverter;
+        testcase := @parameter0: org.w3c.dom.Node;
+        id := @parameter1: java.lang.String;
+        cases = interfaceinvoke testcase.<org.w3c.dom.Node: org.w3c.dom.NodeList getChildNodes()>();
+        count = 0;
+
+     label0:
+        $i0 = interfaceinvoke cases.<org.w3c.dom.NodeList: int getLength()>();
+        if count >= $i0 goto label2;
+
+        node = interfaceinvoke cases.<org.w3c.dom.NodeList: org.w3c.dom.Node item(int)>(count);
+        nodename = interfaceinvoke node.<org.w3c.dom.Node: java.lang.String getNodeName()>();
+        $z0 = virtualinvoke nodename.<java.lang.String: boolean equals(java.lang.Object)>("result");
+        if $z0 == 0 goto label1;
+
+        $r0 = interfaceinvoke node.<org.w3c.dom.Node: org.w3c.dom.NamedNodeMap getAttributes()>();
+        $r1 = interfaceinvoke $r0.<org.w3c.dom.NamedNodeMap: org.w3c.dom.Node getNamedItem(java.lang.String)>("id");
+        resultid = interfaceinvoke $r1.<org.w3c.dom.Node: java.lang.String getNodeValue()>();
+        $z0 = virtualinvoke id.<java.lang.String: boolean equals(java.lang.Object)>(resultid);
+        if $z0 == 0 goto label1;
+
+        return node;
+
+     label1:
+        count = count + 1;
+        goto label0;
+
+     label2:
+        return null;
+    }
+}

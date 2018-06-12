@@ -1,0 +1,130 @@
+public class org.apache.fop.render.ps.PSGraphics2DAdapter extends org.apache.fop.render.AbstractGraphics2DAdapter
+{
+    private org.apache.xmlgraphics.ps.PSGenerator gen;
+    private boolean clip;
+
+    public void <init>(org.apache.fop.render.ps.PSRenderer)
+    {
+        org.apache.fop.render.ps.PSGraphics2DAdapter this;
+        org.apache.fop.render.ps.PSRenderer renderer;
+        org.apache.xmlgraphics.ps.PSGenerator $r0;
+
+        this := @this: org.apache.fop.render.ps.PSGraphics2DAdapter;
+        renderer := @parameter0: org.apache.fop.render.ps.PSRenderer;
+        $r0 = renderer.<org.apache.fop.render.ps.PSRenderer: org.apache.xmlgraphics.ps.PSGenerator gen>;
+        specialinvoke this.<org.apache.fop.render.ps.PSGraphics2DAdapter: void <init>(org.apache.xmlgraphics.ps.PSGenerator,boolean)>($r0, 1);
+        return;
+    }
+
+    public void <init>(org.apache.xmlgraphics.ps.PSGenerator, boolean)
+    {
+        org.apache.fop.render.ps.PSGraphics2DAdapter this;
+        org.apache.xmlgraphics.ps.PSGenerator gen;
+        boolean clip;
+
+        this := @this: org.apache.fop.render.ps.PSGraphics2DAdapter;
+        gen := @parameter0: org.apache.xmlgraphics.ps.PSGenerator;
+        clip := @parameter1: boolean;
+        specialinvoke this.<org.apache.fop.render.AbstractGraphics2DAdapter: void <init>()>();
+        this.<org.apache.fop.render.ps.PSGraphics2DAdapter: boolean clip> = 1;
+        this.<org.apache.fop.render.ps.PSGraphics2DAdapter: org.apache.xmlgraphics.ps.PSGenerator gen> = gen;
+        this.<org.apache.fop.render.ps.PSGraphics2DAdapter: boolean clip> = clip;
+        return;
+    }
+
+    public void paintImage(org.apache.xmlgraphics.java2d.Graphics2DImagePainter, org.apache.fop.render.RendererContext, int, int, int, int) throws java.io.IOException
+    {
+        org.apache.fop.render.ps.PSGraphics2DAdapter this;
+        org.apache.xmlgraphics.java2d.Graphics2DImagePainter painter;
+        org.apache.fop.render.RendererContext context;
+        int x, y, width, height;
+        float fwidth, fheight, fx, fy, imw, imh, sx, sy, $f0;
+        java.awt.Dimension dim;
+        boolean textAsShapes, $z0;
+        org.apache.xmlgraphics.java2d.ps.PSGraphics2D graphics, $r1;
+        java.awt.geom.AffineTransform transform, $r4;
+        java.awt.geom.Rectangle2D$Double area, $r6;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $d8;
+        org.apache.xmlgraphics.ps.PSGenerator $r0, $r2;
+        org.apache.xmlgraphics.java2d.GraphicContext $r3;
+        org.apache.xmlgraphics.ps.PSState $r5;
+
+        this := @this: org.apache.fop.render.ps.PSGraphics2DAdapter;
+        painter := @parameter0: org.apache.xmlgraphics.java2d.Graphics2DImagePainter;
+        context := @parameter1: org.apache.fop.render.RendererContext;
+        x := @parameter2: int;
+        y := @parameter3: int;
+        width := @parameter4: int;
+        height := @parameter5: int;
+        $f0 = (float) width;
+        fwidth = $f0 / 1000.0F;
+        $f0 = (float) height;
+        fheight = $f0 / 1000.0F;
+        $f0 = (float) x;
+        fx = $f0 / 1000.0F;
+        $f0 = (float) y;
+        fy = $f0 / 1000.0F;
+        dim = interfaceinvoke painter.<org.apache.xmlgraphics.java2d.Graphics2DImagePainter: java.awt.Dimension getImageSize()>();
+        $d0 = virtualinvoke dim.<java.awt.Dimension: double getWidth()>();
+        $f0 = (float) $d0;
+        imw = $f0 / 1000.0F;
+        $d0 = virtualinvoke dim.<java.awt.Dimension: double getHeight()>();
+        $f0 = (float) $d0;
+        imh = $f0 / 1000.0F;
+        sx = fwidth / imw;
+        sy = fheight / imh;
+        $r0 = this.<org.apache.fop.render.ps.PSGraphics2DAdapter: org.apache.xmlgraphics.ps.PSGenerator gen>;
+        virtualinvoke $r0.<org.apache.xmlgraphics.ps.PSGenerator: void commentln(java.lang.String)>("%FOPBeginGraphics2D");
+        $r0 = this.<org.apache.fop.render.ps.PSGraphics2DAdapter: org.apache.xmlgraphics.ps.PSGenerator gen>;
+        virtualinvoke $r0.<org.apache.xmlgraphics.ps.PSGenerator: void saveGraphicsState()>();
+        $z0 = this.<org.apache.fop.render.ps.PSGraphics2DAdapter: boolean clip>;
+        if $z0 == 0 goto label0;
+
+        $r0 = this.<org.apache.fop.render.ps.PSGraphics2DAdapter: org.apache.xmlgraphics.ps.PSGenerator gen>;
+        virtualinvoke $r0.<org.apache.xmlgraphics.ps.PSGenerator: void writeln(java.lang.String)>("newpath");
+        $r0 = this.<org.apache.fop.render.ps.PSGraphics2DAdapter: org.apache.xmlgraphics.ps.PSGenerator gen>;
+        $d1 = (double) fx;
+        $d2 = (double) fy;
+        $d3 = (double) fwidth;
+        $d4 = (double) fheight;
+        virtualinvoke $r0.<org.apache.xmlgraphics.ps.PSGenerator: void defineRect(double,double,double,double)>($d1, $d2, $d3, $d4);
+        $r0 = this.<org.apache.fop.render.ps.PSGraphics2DAdapter: org.apache.xmlgraphics.ps.PSGenerator gen>;
+        virtualinvoke $r0.<org.apache.xmlgraphics.ps.PSGenerator: void writeln(java.lang.String)>("clip");
+
+     label0:
+        $r0 = this.<org.apache.fop.render.ps.PSGraphics2DAdapter: org.apache.xmlgraphics.ps.PSGenerator gen>;
+        $d1 = (double) sx;
+        $d4 = (double) sy;
+        $d5 = (double) fx;
+        $d6 = (double) fy;
+        virtualinvoke $r0.<org.apache.xmlgraphics.ps.PSGenerator: void concatMatrix(double,double,double,double,double,double)>($d1, 0.0, 0.0, $d4, $d5, $d6);
+        textAsShapes = 0;
+        $r1 = new org.apache.xmlgraphics.java2d.ps.PSGraphics2D;
+        $r2 = this.<org.apache.fop.render.ps.PSGraphics2DAdapter: org.apache.xmlgraphics.ps.PSGenerator gen>;
+        specialinvoke $r1.<org.apache.xmlgraphics.java2d.ps.PSGraphics2D: void <init>(boolean,org.apache.xmlgraphics.ps.PSGenerator)>(0, $r2);
+        graphics = $r1;
+        $r3 = new org.apache.xmlgraphics.java2d.GraphicContext;
+        specialinvoke $r3.<org.apache.xmlgraphics.java2d.GraphicContext: void <init>()>();
+        virtualinvoke graphics.<org.apache.xmlgraphics.java2d.ps.PSGraphics2D: void setGraphicContext(org.apache.xmlgraphics.java2d.GraphicContext)>($r3);
+        $r4 = new java.awt.geom.AffineTransform;
+        specialinvoke $r4.<java.awt.geom.AffineTransform: void <init>()>();
+        transform = $r4;
+        $d1 = (double) fx;
+        $d2 = (double) fy;
+        virtualinvoke transform.<java.awt.geom.AffineTransform: void translate(double,double)>($d1, $d2);
+        $r0 = this.<org.apache.fop.render.ps.PSGraphics2DAdapter: org.apache.xmlgraphics.ps.PSGenerator gen>;
+        $r5 = virtualinvoke $r0.<org.apache.xmlgraphics.ps.PSGenerator: org.apache.xmlgraphics.ps.PSState getCurrentState()>();
+        virtualinvoke $r5.<org.apache.xmlgraphics.ps.PSState: void concatMatrix(java.awt.geom.AffineTransform)>(transform);
+        $r6 = new java.awt.geom.Rectangle2D$Double;
+        $d7 = (double) imw;
+        $d8 = (double) imh;
+        specialinvoke $r6.<java.awt.geom.Rectangle2D$Double: void <init>(double,double,double,double)>(0.0, 0.0, $d7, $d8);
+        area = $r6;
+        interfaceinvoke painter.<org.apache.xmlgraphics.java2d.Graphics2DImagePainter: void paint(java.awt.Graphics2D,java.awt.geom.Rectangle2D)>(graphics, area);
+        $r0 = this.<org.apache.fop.render.ps.PSGraphics2DAdapter: org.apache.xmlgraphics.ps.PSGenerator gen>;
+        virtualinvoke $r0.<org.apache.xmlgraphics.ps.PSGenerator: boolean restoreGraphicsState()>();
+        $r0 = this.<org.apache.fop.render.ps.PSGraphics2DAdapter: org.apache.xmlgraphics.ps.PSGenerator gen>;
+        virtualinvoke $r0.<org.apache.xmlgraphics.ps.PSGenerator: void commentln(java.lang.String)>("%FOPEndGraphics2D");
+        return;
+    }
+}

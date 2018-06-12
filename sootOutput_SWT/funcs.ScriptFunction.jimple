@@ -1,0 +1,216 @@
+public class funcs.ScriptFunction extends java.lang.Object
+{
+    private static java.lang.String scriptAdd;
+    private static java.io.File scriptFile;
+    private static java.lang.String[] pythonScriptSuffix;
+    private static java.lang.String[] androidScriptSuffix;
+    private static java.lang.String[] iosScriptSuffix;
+    private java.util.ArrayList AllScripts;
+    private static java.util.ArrayList androidScriptFiles;
+    private static java.util.ArrayList iosScriptFiles;
+    private static boolean isInit;
+    private static funcs.ScriptFunction sf;
+
+    static void <clinit>()
+    {
+        java.lang.String $r0;
+        java.io.File $r1;
+        java.lang.String[] $r2;
+        java.util.ArrayList $r3;
+
+        <funcs.ScriptFunction: java.lang.String scriptAdd> = "Scripts/";
+        $r1 = new java.io.File;
+        $r0 = <funcs.ScriptFunction: java.lang.String scriptAdd>;
+        specialinvoke $r1.<java.io.File: void <init>(java.lang.String)>($r0);
+        <funcs.ScriptFunction: java.io.File scriptFile> = $r1;
+        $r2 = newarray (java.lang.String)[1];
+        $r2[0] = ".py";
+        <funcs.ScriptFunction: java.lang.String[] pythonScriptSuffix> = $r2;
+        $r2 = newarray (java.lang.String)[1];
+        $r2[0] = ".apk";
+        <funcs.ScriptFunction: java.lang.String[] androidScriptSuffix> = $r2;
+        $r2 = newarray (java.lang.String)[1];
+        $r2[0] = ".app";
+        <funcs.ScriptFunction: java.lang.String[] iosScriptSuffix> = $r2;
+        $r3 = new java.util.ArrayList;
+        specialinvoke $r3.<java.util.ArrayList: void <init>()>();
+        <funcs.ScriptFunction: java.util.ArrayList androidScriptFiles> = $r3;
+        $r3 = new java.util.ArrayList;
+        specialinvoke $r3.<java.util.ArrayList: void <init>()>();
+        <funcs.ScriptFunction: java.util.ArrayList iosScriptFiles> = $r3;
+        <funcs.ScriptFunction: boolean isInit> = 0;
+        return;
+    }
+
+    public static funcs.ScriptFunction getScriptFunction()
+    {
+        boolean $z0;
+        funcs.ScriptFunction $r0;
+
+        $z0 = <funcs.ScriptFunction: boolean isInit>;
+        if $z0 != 0 goto label0;
+
+        $r0 = new funcs.ScriptFunction;
+        specialinvoke $r0.<funcs.ScriptFunction: void <init>()>();
+        return $r0;
+
+     label0:
+        $r0 = <funcs.ScriptFunction: funcs.ScriptFunction sf>;
+        return $r0;
+    }
+
+    public static void main(java.lang.String[])
+    {
+        java.lang.String[] args;
+        funcs.ScriptFunction $r0;
+
+        args := @parameter0: java.lang.String[];
+        $r0 = new funcs.ScriptFunction;
+        specialinvoke $r0.<funcs.ScriptFunction: void <init>()>();
+        return;
+    }
+
+    private void <init>()
+    {
+        funcs.ScriptFunction this;
+        java.util.ArrayList $r0;
+        java.io.File $r1;
+        boolean $z0;
+        funcs.ScriptFunction$checkNewFile $r2;
+
+        this := @this: funcs.ScriptFunction;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<funcs.ScriptFunction: java.util.ArrayList AllScripts> = $r0;
+        $r1 = <funcs.ScriptFunction: java.io.File scriptFile>;
+        $z0 = virtualinvoke $r1.<java.io.File: boolean exists()>();
+        if $z0 != 0 goto label0;
+
+        $r1 = <funcs.ScriptFunction: java.io.File scriptFile>;
+        virtualinvoke $r1.<java.io.File: boolean mkdirs()>();
+
+     label0:
+        $r2 = new funcs.ScriptFunction$checkNewFile;
+        specialinvoke $r2.<funcs.ScriptFunction$checkNewFile: void <init>(funcs.ScriptFunction)>(this);
+        virtualinvoke $r2.<funcs.ScriptFunction$checkNewFile: void start()>();
+        <funcs.ScriptFunction: funcs.ScriptFunction sf> = this;
+        <funcs.ScriptFunction: boolean isInit> = 1;
+        return;
+    }
+
+    public int getIndex(java.lang.String)
+    {
+        funcs.ScriptFunction this;
+        java.lang.String scriptname, $r3;
+        int i, $i0;
+        java.util.ArrayList $r0, $r4;
+        java.lang.Object $r1;
+        data.MyScript $r2;
+        boolean $z0;
+
+        this := @this: funcs.ScriptFunction;
+        scriptname := @parameter0: java.lang.String;
+        i = 0;
+        goto label2;
+
+     label0:
+        $r0 = this.<funcs.ScriptFunction: java.util.ArrayList AllScripts>;
+        $r1 = virtualinvoke $r0.<java.util.ArrayList: java.lang.Object get(int)>(i);
+        $r2 = (data.MyScript) $r1;
+        $r3 = $r2.<data.MyScript: java.lang.String scriptname>;
+        $z0 = virtualinvoke $r3.<java.lang.String: boolean equals(java.lang.Object)>(scriptname);
+        if $z0 == 0 goto label1;
+
+        return i;
+
+     label1:
+        i = i + 1;
+
+     label2:
+        $r4 = this.<funcs.ScriptFunction: java.util.ArrayList AllScripts>;
+        $i0 = virtualinvoke $r4.<java.util.ArrayList: int size()>();
+        if i < $i0 goto label0;
+
+        return -1;
+    }
+
+    public data.MyScript getScript(java.lang.String)
+    {
+        funcs.ScriptFunction this;
+        java.lang.String scriptname, $r2;
+        java.util.Iterator l3;
+        data.MyScript s;
+        java.util.ArrayList $r0;
+        java.lang.Object $r1;
+        boolean $z0;
+
+        this := @this: funcs.ScriptFunction;
+        scriptname := @parameter0: java.lang.String;
+        $r0 = this.<funcs.ScriptFunction: java.util.ArrayList AllScripts>;
+        l3 = virtualinvoke $r0.<java.util.ArrayList: java.util.Iterator iterator()>();
+        goto label1;
+
+     label0:
+        $r1 = interfaceinvoke l3.<java.util.Iterator: java.lang.Object next()>();
+        s = (data.MyScript) $r1;
+        $r2 = s.<data.MyScript: java.lang.String scriptname>;
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>(scriptname);
+        if $z0 == 0 goto label1;
+
+        return s;
+
+     label1:
+        $z0 = interfaceinvoke l3.<java.util.Iterator: boolean hasNext()>();
+        if $z0 != 0 goto label0;
+
+        return null;
+    }
+
+    public java.util.ArrayList getAllScripts()
+    {
+        funcs.ScriptFunction this;
+        java.util.ArrayList $r0;
+        java.lang.Object $r1;
+
+        this := @this: funcs.ScriptFunction;
+        $r0 = this.<funcs.ScriptFunction: java.util.ArrayList AllScripts>;
+        $r1 = virtualinvoke $r0.<java.util.ArrayList: java.lang.Object clone()>();
+        $r0 = (java.util.ArrayList) $r1;
+        return $r0;
+    }
+
+    static java.io.File access$0()
+    {
+        java.io.File $r0;
+
+        $r0 = <funcs.ScriptFunction: java.io.File scriptFile>;
+        return $r0;
+    }
+
+    static java.lang.String[] access$1()
+    {
+        java.lang.String[] $r0;
+
+        $r0 = <funcs.ScriptFunction: java.lang.String[] pythonScriptSuffix>;
+        return $r0;
+    }
+
+    static java.util.ArrayList access$2(funcs.ScriptFunction)
+    {
+        funcs.ScriptFunction l0;
+        java.util.ArrayList $r0;
+
+        l0 := @parameter0: funcs.ScriptFunction;
+        $r0 = l0.<funcs.ScriptFunction: java.util.ArrayList AllScripts>;
+        return $r0;
+    }
+
+    static java.lang.String access$3()
+    {
+        java.lang.String $r0;
+
+        $r0 = <funcs.ScriptFunction: java.lang.String scriptAdd>;
+        return $r0;
+    }
+}

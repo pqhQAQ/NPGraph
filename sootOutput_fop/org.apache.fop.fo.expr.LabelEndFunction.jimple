@@ -1,0 +1,81 @@
+public class org.apache.fop.fo.expr.LabelEndFunction extends org.apache.fop.fo.expr.FunctionBase
+{
+
+    public void <init>()
+    {
+        org.apache.fop.fo.expr.LabelEndFunction this;
+
+        this := @this: org.apache.fop.fo.expr.LabelEndFunction;
+        specialinvoke this.<org.apache.fop.fo.expr.FunctionBase: void <init>()>();
+        return;
+    }
+
+    public int nbArgs()
+    {
+        org.apache.fop.fo.expr.LabelEndFunction this;
+
+        this := @this: org.apache.fop.fo.expr.LabelEndFunction;
+        return 0;
+    }
+
+    public org.apache.fop.fo.properties.Property eval(org.apache.fop.fo.properties.Property[], org.apache.fop.fo.expr.PropertyInfo) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.expr.LabelEndFunction this;
+        org.apache.fop.fo.properties.Property[] args;
+        org.apache.fop.fo.expr.PropertyInfo pInfo;
+        org.apache.fop.datatypes.Length distance, separation, startIndent, labelEnd;
+        org.apache.fop.fo.PropertyList pList, $r0, $r5;
+        org.apache.fop.datatypes.LengthBase base, $r4;
+        org.apache.fop.fo.properties.PercentLength refWidth, $r6;
+        org.apache.fop.fo.properties.Property $r1;
+        org.apache.fop.fo.FObj $r2;
+        boolean $z0;
+        org.apache.fop.fo.expr.PropertyException $r3;
+        org.apache.fop.datatypes.Numeric labelEnd;
+
+        this := @this: org.apache.fop.fo.expr.LabelEndFunction;
+        args := @parameter0: org.apache.fop.fo.properties.Property[];
+        pInfo := @parameter1: org.apache.fop.fo.expr.PropertyInfo;
+        $r0 = virtualinvoke pInfo.<org.apache.fop.fo.expr.PropertyInfo: org.apache.fop.fo.PropertyList getPropertyList()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(177);
+        distance = virtualinvoke $r1.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        $r0 = virtualinvoke pInfo.<org.apache.fop.fo.expr.PropertyInfo: org.apache.fop.fo.PropertyList getPropertyList()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property getNearestSpecified(int)>(178);
+        separation = virtualinvoke $r1.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        pList = virtualinvoke pInfo.<org.apache.fop.fo.expr.PropertyInfo: org.apache.fop.fo.PropertyList getPropertyList()>();
+
+     label0:
+        if pList == null goto label1;
+
+        $r2 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.FObj getFObj()>();
+        $z0 = $r2 instanceof org.apache.fop.fo.flow.ListItem;
+        if $z0 != 0 goto label1;
+
+        pList = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.PropertyList getParentPropertyList()>();
+        goto label0;
+
+     label1:
+        if pList != null goto label2;
+
+        $r3 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r3.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>("label-end() called from outside an fo:list-item");
+        throw $r3;
+
+     label2:
+        $r1 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(211);
+        startIndent = virtualinvoke $r1.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        $r4 = new org.apache.fop.datatypes.LengthBase;
+        $r5 = virtualinvoke pInfo.<org.apache.fop.fo.expr.PropertyInfo: org.apache.fop.fo.PropertyList getPropertyList()>();
+        specialinvoke $r4.<org.apache.fop.datatypes.LengthBase: void <init>(org.apache.fop.fo.PropertyList,int)>($r5, 4);
+        base = $r4;
+        $r6 = new org.apache.fop.fo.properties.PercentLength;
+        specialinvoke $r6.<org.apache.fop.fo.properties.PercentLength: void <init>(double,org.apache.fop.datatypes.PercentBase)>(1.0, base);
+        refWidth = $r6;
+        labelEnd = distance;
+        labelEnd = staticinvoke <org.apache.fop.fo.expr.NumericOp: org.apache.fop.datatypes.Numeric addition(org.apache.fop.datatypes.Numeric,org.apache.fop.datatypes.Numeric)>(labelEnd, startIndent);
+        labelEnd = staticinvoke <org.apache.fop.fo.expr.NumericOp: org.apache.fop.datatypes.Numeric subtraction(org.apache.fop.datatypes.Numeric,org.apache.fop.datatypes.Numeric)>(labelEnd, separation);
+        labelEnd = staticinvoke <org.apache.fop.fo.expr.NumericOp: org.apache.fop.datatypes.Numeric subtraction(org.apache.fop.datatypes.Numeric,org.apache.fop.datatypes.Numeric)>(refWidth, labelEnd);
+        $r1 = (org.apache.fop.fo.properties.Property) labelEnd;
+        return $r1;
+    }
+}

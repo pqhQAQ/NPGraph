@@ -1,0 +1,425 @@
+public class org.apache.fop.util.DOM2SAX extends java.lang.Object
+{
+    private static final java.lang.String EMPTYSTRING;
+    private static final java.lang.String XMLNS_PREFIX;
+    private org.xml.sax.ContentHandler contentHandler;
+    private org.xml.sax.ext.LexicalHandler lexicalHandler;
+    private java.util.Map prefixes;
+
+    public void <init>(org.xml.sax.ContentHandler)
+    {
+        org.apache.fop.util.DOM2SAX this;
+        org.xml.sax.ContentHandler handler;
+        java.util.HashMap $r0;
+        boolean $z0;
+        org.xml.sax.ext.LexicalHandler $r1;
+
+        this := @this: org.apache.fop.util.DOM2SAX;
+        handler := @parameter0: org.xml.sax.ContentHandler;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.util.DOM2SAX: java.util.Map prefixes> = $r0;
+        this.<org.apache.fop.util.DOM2SAX: org.xml.sax.ContentHandler contentHandler> = handler;
+        $z0 = handler instanceof org.xml.sax.ext.LexicalHandler;
+        if $z0 == 0 goto label0;
+
+        $r1 = (org.xml.sax.ext.LexicalHandler) handler;
+        this.<org.apache.fop.util.DOM2SAX: org.xml.sax.ext.LexicalHandler lexicalHandler> = $r1;
+
+     label0:
+        return;
+    }
+
+    public void writeDocument(org.w3c.dom.Document, boolean) throws org.xml.sax.SAXException
+    {
+        org.apache.fop.util.DOM2SAX this;
+        org.w3c.dom.Document doc;
+        boolean fragment;
+        org.w3c.dom.Node n;
+        org.xml.sax.ContentHandler $r0;
+
+        this := @this: org.apache.fop.util.DOM2SAX;
+        doc := @parameter0: org.w3c.dom.Document;
+        fragment := @parameter1: boolean;
+        if fragment != 0 goto label0;
+
+        $r0 = this.<org.apache.fop.util.DOM2SAX: org.xml.sax.ContentHandler contentHandler>;
+        interfaceinvoke $r0.<org.xml.sax.ContentHandler: void startDocument()>();
+
+     label0:
+        n = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Node getFirstChild()>();
+
+     label1:
+        if n == null goto label2;
+
+        specialinvoke this.<org.apache.fop.util.DOM2SAX: void writeNode(org.w3c.dom.Node)>(n);
+        n = interfaceinvoke n.<org.w3c.dom.Node: org.w3c.dom.Node getNextSibling()>();
+        goto label1;
+
+     label2:
+        if fragment != 0 goto label3;
+
+        $r0 = this.<org.apache.fop.util.DOM2SAX: org.xml.sax.ContentHandler contentHandler>;
+        interfaceinvoke $r0.<org.xml.sax.ContentHandler: void endDocument()>();
+
+     label3:
+        return;
+    }
+
+    private boolean startPrefixMapping(java.lang.String, java.lang.String) throws org.xml.sax.SAXException
+    {
+        org.apache.fop.util.DOM2SAX this;
+        java.lang.String prefix, uri, lastUri;
+        boolean pushed, $z0;
+        java.util.Stack uriStack, $r3;
+        java.util.Map $r0;
+        java.lang.Object $r1;
+        org.xml.sax.ContentHandler $r2;
+
+        this := @this: org.apache.fop.util.DOM2SAX;
+        prefix := @parameter0: java.lang.String;
+        uri := @parameter1: java.lang.String;
+        pushed = 1;
+        $r0 = this.<org.apache.fop.util.DOM2SAX: java.util.Map prefixes>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>(prefix);
+        uriStack = (java.util.Stack) $r1;
+        if uriStack == null goto label3;
+
+        $z0 = virtualinvoke uriStack.<java.util.Stack: boolean isEmpty()>();
+        if $z0 == 0 goto label0;
+
+        $r2 = this.<org.apache.fop.util.DOM2SAX: org.xml.sax.ContentHandler contentHandler>;
+        interfaceinvoke $r2.<org.xml.sax.ContentHandler: void startPrefixMapping(java.lang.String,java.lang.String)>(prefix, uri);
+        virtualinvoke uriStack.<java.util.Stack: java.lang.Object push(java.lang.Object)>(uri);
+        goto label4;
+
+     label0:
+        $r1 = virtualinvoke uriStack.<java.util.Stack: java.lang.Object peek()>();
+        lastUri = (java.lang.String) $r1;
+        $z0 = virtualinvoke lastUri.<java.lang.String: boolean equals(java.lang.Object)>(uri);
+        if $z0 != 0 goto label1;
+
+        $r2 = this.<org.apache.fop.util.DOM2SAX: org.xml.sax.ContentHandler contentHandler>;
+        interfaceinvoke $r2.<org.xml.sax.ContentHandler: void startPrefixMapping(java.lang.String,java.lang.String)>(prefix, uri);
+        virtualinvoke uriStack.<java.util.Stack: java.lang.Object push(java.lang.Object)>(uri);
+        goto label2;
+
+     label1:
+        pushed = 0;
+
+     label2:
+        goto label4;
+
+     label3:
+        $r2 = this.<org.apache.fop.util.DOM2SAX: org.xml.sax.ContentHandler contentHandler>;
+        interfaceinvoke $r2.<org.xml.sax.ContentHandler: void startPrefixMapping(java.lang.String,java.lang.String)>(prefix, uri);
+        $r3 = new java.util.Stack;
+        specialinvoke $r3.<java.util.Stack: void <init>()>();
+        uriStack = $r3;
+        $r0 = this.<org.apache.fop.util.DOM2SAX: java.util.Map prefixes>;
+        interfaceinvoke $r0.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(prefix, uriStack);
+        virtualinvoke uriStack.<java.util.Stack: java.lang.Object push(java.lang.Object)>(uri);
+
+     label4:
+        return pushed;
+    }
+
+    private void endPrefixMapping(java.lang.String) throws org.xml.sax.SAXException
+    {
+        org.apache.fop.util.DOM2SAX this;
+        java.lang.String prefix;
+        java.util.Stack uriStack;
+        java.util.Map $r0;
+        java.lang.Object $r1;
+        org.xml.sax.ContentHandler $r2;
+
+        this := @this: org.apache.fop.util.DOM2SAX;
+        prefix := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.util.DOM2SAX: java.util.Map prefixes>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>(prefix);
+        uriStack = (java.util.Stack) $r1;
+        if uriStack == null goto label0;
+
+        $r2 = this.<org.apache.fop.util.DOM2SAX: org.xml.sax.ContentHandler contentHandler>;
+        interfaceinvoke $r2.<org.xml.sax.ContentHandler: void endPrefixMapping(java.lang.String)>(prefix);
+        virtualinvoke uriStack.<java.util.Stack: java.lang.Object pop()>();
+
+     label0:
+        return;
+    }
+
+    private static java.lang.String getLocalName(org.w3c.dom.Node)
+    {
+        org.w3c.dom.Node node;
+        java.lang.String localName, qname, $r0;
+        int col, $i0;
+
+        node := @parameter0: org.w3c.dom.Node;
+        localName = interfaceinvoke node.<org.w3c.dom.Node: java.lang.String getLocalName()>();
+        if localName != null goto label2;
+
+        qname = interfaceinvoke node.<org.w3c.dom.Node: java.lang.String getNodeName()>();
+        col = virtualinvoke qname.<java.lang.String: int lastIndexOf(int)>(58);
+        if col <= 0 goto label0;
+
+        $i0 = col + 1;
+        $r0 = virtualinvoke qname.<java.lang.String: java.lang.String substring(int)>($i0);
+        goto label1;
+
+     label0:
+        $r0 = qname;
+
+     label1:
+        return $r0;
+
+     label2:
+        return localName;
+    }
+
+    private void writeNode(org.w3c.dom.Node) throws org.xml.sax.SAXException
+    {
+        org.apache.fop.util.DOM2SAX this;
+        org.w3c.dom.Node node, next, attr;
+        java.lang.String cdata, value, qnameAttr, uriAttr, prefix, qname, uri, localName, data, $r5, $r6, $r7, $r8;
+        java.util.ArrayList pushedPrefixes, $r3;
+        org.xml.sax.helpers.AttributesImpl attrs, $r4;
+        org.w3c.dom.NamedNodeMap map;
+        int length, i, colon, nPushedPrefixes, $i1, $i2;
+        short $s0;
+        org.xml.sax.ext.LexicalHandler $r0;
+        org.xml.sax.ContentHandler $r1;
+        char[] $r2;
+        boolean $z0;
+        java.lang.Object $r9;
+
+        this := @this: org.apache.fop.util.DOM2SAX;
+        node := @parameter0: org.w3c.dom.Node;
+        if node != null goto label0;
+
+        return;
+
+     label0:
+        $s0 = interfaceinvoke node.<org.w3c.dom.Node: short getNodeType()>();
+        tableswitch($s0)
+        {
+            case 1: goto label8;
+            case 2: goto label1;
+            case 3: goto label28;
+            case 4: goto label2;
+            case 5: goto label1;
+            case 6: goto label1;
+            case 7: goto label27;
+            case 8: goto label4;
+            case 9: goto label5;
+            case 10: goto label1;
+            case 11: goto label1;
+            case 12: goto label1;
+            default: goto label29;
+        };
+
+     label1:
+        goto label29;
+
+     label2:
+        cdata = interfaceinvoke node.<org.w3c.dom.Node: java.lang.String getNodeValue()>();
+        $r0 = this.<org.apache.fop.util.DOM2SAX: org.xml.sax.ext.LexicalHandler lexicalHandler>;
+        if $r0 == null goto label3;
+
+        $r0 = this.<org.apache.fop.util.DOM2SAX: org.xml.sax.ext.LexicalHandler lexicalHandler>;
+        interfaceinvoke $r0.<org.xml.sax.ext.LexicalHandler: void startCDATA()>();
+        $r1 = this.<org.apache.fop.util.DOM2SAX: org.xml.sax.ContentHandler contentHandler>;
+        $r2 = virtualinvoke cdata.<java.lang.String: char[] toCharArray()>();
+        $i1 = virtualinvoke cdata.<java.lang.String: int length()>();
+        interfaceinvoke $r1.<org.xml.sax.ContentHandler: void characters(char[],int,int)>($r2, 0, $i1);
+        $r0 = this.<org.apache.fop.util.DOM2SAX: org.xml.sax.ext.LexicalHandler lexicalHandler>;
+        interfaceinvoke $r0.<org.xml.sax.ext.LexicalHandler: void endCDATA()>();
+        goto label29;
+
+     label3:
+        $r1 = this.<org.apache.fop.util.DOM2SAX: org.xml.sax.ContentHandler contentHandler>;
+        $r2 = virtualinvoke cdata.<java.lang.String: char[] toCharArray()>();
+        $i1 = virtualinvoke cdata.<java.lang.String: int length()>();
+        interfaceinvoke $r1.<org.xml.sax.ContentHandler: void characters(char[],int,int)>($r2, 0, $i1);
+        goto label29;
+
+     label4:
+        $r0 = this.<org.apache.fop.util.DOM2SAX: org.xml.sax.ext.LexicalHandler lexicalHandler>;
+        if $r0 == null goto label29;
+
+        value = interfaceinvoke node.<org.w3c.dom.Node: java.lang.String getNodeValue()>();
+        $r0 = this.<org.apache.fop.util.DOM2SAX: org.xml.sax.ext.LexicalHandler lexicalHandler>;
+        $r2 = virtualinvoke value.<java.lang.String: char[] toCharArray()>();
+        $i1 = virtualinvoke value.<java.lang.String: int length()>();
+        interfaceinvoke $r0.<org.xml.sax.ext.LexicalHandler: void comment(char[],int,int)>($r2, 0, $i1);
+        goto label29;
+
+     label5:
+        $r1 = this.<org.apache.fop.util.DOM2SAX: org.xml.sax.ContentHandler contentHandler>;
+        interfaceinvoke $r1.<org.xml.sax.ContentHandler: void startDocument()>();
+        next = interfaceinvoke node.<org.w3c.dom.Node: org.w3c.dom.Node getFirstChild()>();
+
+     label6:
+        if next == null goto label7;
+
+        specialinvoke this.<org.apache.fop.util.DOM2SAX: void writeNode(org.w3c.dom.Node)>(next);
+        next = interfaceinvoke next.<org.w3c.dom.Node: org.w3c.dom.Node getNextSibling()>();
+        goto label6;
+
+     label7:
+        $r1 = this.<org.apache.fop.util.DOM2SAX: org.xml.sax.ContentHandler contentHandler>;
+        interfaceinvoke $r1.<org.xml.sax.ContentHandler: void endDocument()>();
+        goto label29;
+
+     label8:
+        $r3 = new java.util.ArrayList;
+        specialinvoke $r3.<java.util.ArrayList: void <init>()>();
+        pushedPrefixes = $r3;
+        $r4 = new org.xml.sax.helpers.AttributesImpl;
+        specialinvoke $r4.<org.xml.sax.helpers.AttributesImpl: void <init>()>();
+        attrs = $r4;
+        map = interfaceinvoke node.<org.w3c.dom.Node: org.w3c.dom.NamedNodeMap getAttributes()>();
+        length = interfaceinvoke map.<org.w3c.dom.NamedNodeMap: int getLength()>();
+        i = 0;
+
+     label9:
+        if i >= length goto label13;
+
+        attr = interfaceinvoke map.<org.w3c.dom.NamedNodeMap: org.w3c.dom.Node item(int)>(i);
+        qnameAttr = interfaceinvoke attr.<org.w3c.dom.Node: java.lang.String getNodeName()>();
+        $z0 = virtualinvoke qnameAttr.<java.lang.String: boolean startsWith(java.lang.String)>("xmlns");
+        if $z0 == 0 goto label12;
+
+        uriAttr = interfaceinvoke attr.<org.w3c.dom.Node: java.lang.String getNodeValue()>();
+        colon = virtualinvoke qnameAttr.<java.lang.String: int lastIndexOf(int)>(58);
+        if colon <= 0 goto label10;
+
+        $i2 = colon + 1;
+        $r5 = virtualinvoke qnameAttr.<java.lang.String: java.lang.String substring(int)>($i2);
+        goto label11;
+
+     label10:
+        $r5 = "";
+
+     label11:
+        prefix = $r5;
+        $z0 = specialinvoke this.<org.apache.fop.util.DOM2SAX: boolean startPrefixMapping(java.lang.String,java.lang.String)>(prefix, uriAttr);
+        if $z0 == 0 goto label12;
+
+        interfaceinvoke pushedPrefixes.<java.util.List: boolean add(java.lang.Object)>(prefix);
+
+     label12:
+        i = i + 1;
+        goto label9;
+
+     label13:
+        i = 0;
+
+     label14:
+        if i >= length goto label19;
+
+        attr = interfaceinvoke map.<org.w3c.dom.NamedNodeMap: org.w3c.dom.Node item(int)>(i);
+        qnameAttr = interfaceinvoke attr.<org.w3c.dom.Node: java.lang.String getNodeName()>();
+        $z0 = virtualinvoke qnameAttr.<java.lang.String: boolean startsWith(java.lang.String)>("xmlns");
+        if $z0 != 0 goto label18;
+
+        uriAttr = interfaceinvoke attr.<org.w3c.dom.Node: java.lang.String getNamespaceURI()>();
+        if uriAttr == null goto label17;
+
+        colon = virtualinvoke qnameAttr.<java.lang.String: int lastIndexOf(int)>(58);
+        if colon <= 0 goto label15;
+
+        $r5 = virtualinvoke qnameAttr.<java.lang.String: java.lang.String substring(int,int)>(0, colon);
+        goto label16;
+
+     label15:
+        $r5 = "";
+
+     label16:
+        prefix = $r5;
+        $z0 = specialinvoke this.<org.apache.fop.util.DOM2SAX: boolean startPrefixMapping(java.lang.String,java.lang.String)>(prefix, uriAttr);
+        if $z0 == 0 goto label17;
+
+        interfaceinvoke pushedPrefixes.<java.util.List: boolean add(java.lang.Object)>(prefix);
+
+     label17:
+        $r6 = interfaceinvoke attr.<org.w3c.dom.Node: java.lang.String getNamespaceURI()>();
+        $r7 = staticinvoke <org.apache.fop.util.DOM2SAX: java.lang.String getLocalName(org.w3c.dom.Node)>(attr);
+        $r8 = interfaceinvoke attr.<org.w3c.dom.Node: java.lang.String getNodeValue()>();
+        virtualinvoke attrs.<org.xml.sax.helpers.AttributesImpl: void addAttribute(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)>($r6, $r7, qnameAttr, "CDATA", $r8);
+
+     label18:
+        i = i + 1;
+        goto label14;
+
+     label19:
+        qname = interfaceinvoke node.<org.w3c.dom.Node: java.lang.String getNodeName()>();
+        uri = interfaceinvoke node.<org.w3c.dom.Node: java.lang.String getNamespaceURI()>();
+        localName = staticinvoke <org.apache.fop.util.DOM2SAX: java.lang.String getLocalName(org.w3c.dom.Node)>(node);
+        if uri == null goto label22;
+
+        colon = virtualinvoke qname.<java.lang.String: int lastIndexOf(int)>(58);
+        if colon <= 0 goto label20;
+
+        $r5 = virtualinvoke qname.<java.lang.String: java.lang.String substring(int,int)>(0, colon);
+        goto label21;
+
+     label20:
+        $r5 = "";
+
+     label21:
+        prefix = $r5;
+        $z0 = specialinvoke this.<org.apache.fop.util.DOM2SAX: boolean startPrefixMapping(java.lang.String,java.lang.String)>(prefix, uri);
+        if $z0 == 0 goto label22;
+
+        interfaceinvoke pushedPrefixes.<java.util.List: boolean add(java.lang.Object)>(prefix);
+
+     label22:
+        $r1 = this.<org.apache.fop.util.DOM2SAX: org.xml.sax.ContentHandler contentHandler>;
+        interfaceinvoke $r1.<org.xml.sax.ContentHandler: void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes)>(uri, localName, qname, attrs);
+        next = interfaceinvoke node.<org.w3c.dom.Node: org.w3c.dom.Node getFirstChild()>();
+
+     label23:
+        if next == null goto label24;
+
+        specialinvoke this.<org.apache.fop.util.DOM2SAX: void writeNode(org.w3c.dom.Node)>(next);
+        next = interfaceinvoke next.<org.w3c.dom.Node: org.w3c.dom.Node getNextSibling()>();
+        goto label23;
+
+     label24:
+        $r1 = this.<org.apache.fop.util.DOM2SAX: org.xml.sax.ContentHandler contentHandler>;
+        interfaceinvoke $r1.<org.xml.sax.ContentHandler: void endElement(java.lang.String,java.lang.String,java.lang.String)>(uri, localName, qname);
+        nPushedPrefixes = interfaceinvoke pushedPrefixes.<java.util.List: int size()>();
+        i = 0;
+
+     label25:
+        if i >= nPushedPrefixes goto label26;
+
+        $r9 = interfaceinvoke pushedPrefixes.<java.util.List: java.lang.Object get(int)>(i);
+        $r6 = (java.lang.String) $r9;
+        specialinvoke this.<org.apache.fop.util.DOM2SAX: void endPrefixMapping(java.lang.String)>($r6);
+        i = i + 1;
+        goto label25;
+
+     label26:
+        goto label29;
+
+     label27:
+        $r1 = this.<org.apache.fop.util.DOM2SAX: org.xml.sax.ContentHandler contentHandler>;
+        $r6 = interfaceinvoke node.<org.w3c.dom.Node: java.lang.String getNodeName()>();
+        $r7 = interfaceinvoke node.<org.w3c.dom.Node: java.lang.String getNodeValue()>();
+        interfaceinvoke $r1.<org.xml.sax.ContentHandler: void processingInstruction(java.lang.String,java.lang.String)>($r6, $r7);
+        goto label29;
+
+     label28:
+        data = interfaceinvoke node.<org.w3c.dom.Node: java.lang.String getNodeValue()>();
+        $r1 = this.<org.apache.fop.util.DOM2SAX: org.xml.sax.ContentHandler contentHandler>;
+        $r2 = virtualinvoke data.<java.lang.String: char[] toCharArray()>();
+        $i1 = virtualinvoke data.<java.lang.String: int length()>();
+        interfaceinvoke $r1.<org.xml.sax.ContentHandler: void characters(char[],int,int)>($r2, 0, $i1);
+        goto label29;
+
+     label29:
+        return;
+    }
+}

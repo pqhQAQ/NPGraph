@@ -1,0 +1,967 @@
+public class org.apache.fop.fonts.FontInfo extends java.lang.Object
+{
+    private static final org.apache.fop.fonts.FontTriplet[] TRIPLETS_TYPE;
+    protected static org.apache.commons.logging.Log log;
+    private java.util.Map usedFonts;
+    private java.util.Map triplets;
+    private java.util.Map tripletPriorities;
+    private java.util.Map fonts;
+    private java.util.Collection loggedFontKeys;
+    private java.util.Map fontInstanceCache;
+    static java.lang.Class class$org$apache$fop$fonts$FontInfo;
+
+    public void <init>()
+    {
+        org.apache.fop.fonts.FontInfo this;
+        java.util.HashMap $r0;
+
+        this := @this: org.apache.fop.fonts.FontInfo;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.fonts.FontInfo: java.util.Map fontInstanceCache> = $r0;
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.fonts.FontInfo: java.util.Map triplets> = $r0;
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.fonts.FontInfo: java.util.Map tripletPriorities> = $r0;
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.fonts.FontInfo: java.util.Map fonts> = $r0;
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.fonts.FontInfo: java.util.Map usedFonts> = $r0;
+        return;
+    }
+
+    public boolean isSetupValid()
+    {
+        org.apache.fop.fonts.FontInfo this;
+        java.util.Map $r0;
+        org.apache.fop.fonts.FontTriplet $r1;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.FontInfo;
+        this.<org.apache.fop.fonts.FontInfo: java.util.Map tripletPriorities> = null;
+        $r0 = this.<org.apache.fop.fonts.FontInfo: java.util.Map triplets>;
+        $r1 = <org.apache.fop.fonts.Font: org.apache.fop.fonts.FontTriplet DEFAULT_FONT>;
+        $z0 = interfaceinvoke $r0.<java.util.Map: boolean containsKey(java.lang.Object)>($r1);
+        return $z0;
+    }
+
+    public void addFontProperties(java.lang.String, java.lang.String, java.lang.String, int)
+    {
+        org.apache.fop.fonts.FontInfo this;
+        java.lang.String name, family, style;
+        int weight;
+        org.apache.fop.fonts.FontTriplet $r0;
+
+        this := @this: org.apache.fop.fonts.FontInfo;
+        name := @parameter0: java.lang.String;
+        family := @parameter1: java.lang.String;
+        style := @parameter2: java.lang.String;
+        weight := @parameter3: int;
+        $r0 = staticinvoke <org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet createFontKey(java.lang.String,java.lang.String,int)>(family, style, weight);
+        virtualinvoke this.<org.apache.fop.fonts.FontInfo: void addFontProperties(java.lang.String,org.apache.fop.fonts.FontTriplet)>(name, $r0);
+        return;
+    }
+
+    public void addFontProperties(java.lang.String, org.apache.fop.fonts.FontTriplet)
+    {
+        org.apache.fop.fonts.FontInfo this;
+        java.lang.String name, oldName, $r2;
+        org.apache.fop.fonts.FontTriplet triplet;
+        org.apache.commons.logging.Log $r0;
+        java.lang.StringBuffer $r1;
+        int newPriority, oldPriority;
+        boolean $z0;
+        java.util.Map $r3;
+        java.lang.Object $r4;
+        java.lang.Integer $r5, $r6;
+
+        this := @this: org.apache.fop.fonts.FontInfo;
+        name := @parameter0: java.lang.String;
+        triplet := @parameter1: org.apache.fop.fonts.FontTriplet;
+        $r0 = <org.apache.fop.fonts.FontInfo: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = <org.apache.fop.fonts.FontInfo: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Registering: ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(triplet);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" under ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(name);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r2);
+
+     label0:
+        $r3 = this.<org.apache.fop.fonts.FontInfo: java.util.Map triplets>;
+        $r4 = interfaceinvoke $r3.<java.util.Map: java.lang.Object get(java.lang.Object)>(triplet);
+        oldName = (java.lang.String) $r4;
+        newPriority = virtualinvoke triplet.<org.apache.fop.fonts.FontTriplet: int getPriority()>();
+        if oldName == null goto label2;
+
+        $r3 = this.<org.apache.fop.fonts.FontInfo: java.util.Map tripletPriorities>;
+        $r4 = interfaceinvoke $r3.<java.util.Map: java.lang.Object get(java.lang.Object)>(triplet);
+        $r5 = (java.lang.Integer) $r4;
+        oldPriority = virtualinvoke $r5.<java.lang.Integer: int intValue()>();
+        if oldPriority >= newPriority goto label1;
+
+        specialinvoke this.<org.apache.fop.fonts.FontInfo: void logDuplicateFont(org.apache.fop.fonts.FontTriplet,boolean,java.lang.String,int,java.lang.String,int)>(triplet, 0, oldName, oldPriority, name, newPriority);
+        return;
+
+     label1:
+        specialinvoke this.<org.apache.fop.fonts.FontInfo: void logDuplicateFont(org.apache.fop.fonts.FontTriplet,boolean,java.lang.String,int,java.lang.String,int)>(triplet, 1, oldName, oldPriority, name, newPriority);
+
+     label2:
+        $r3 = this.<org.apache.fop.fonts.FontInfo: java.util.Map triplets>;
+        interfaceinvoke $r3.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(triplet, name);
+        $r3 = this.<org.apache.fop.fonts.FontInfo: java.util.Map tripletPriorities>;
+        $r6 = new java.lang.Integer;
+        specialinvoke $r6.<java.lang.Integer: void <init>(int)>(newPriority);
+        interfaceinvoke $r3.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(triplet, $r6);
+        return;
+    }
+
+    private void logDuplicateFont(org.apache.fop.fonts.FontTriplet, boolean, java.lang.String, int, java.lang.String, int)
+    {
+        org.apache.fop.fonts.FontInfo this;
+        org.apache.fop.fonts.FontTriplet triplet;
+        boolean replacing, $z0;
+        java.lang.String oldKey, newKey, $r2, $r8;
+        int oldPriority, newPriority;
+        org.apache.commons.logging.Log $r0;
+        java.lang.StringBuffer $r1;
+        java.util.Map $r3, $r4;
+        java.lang.Object $r5, $r6;
+        org.apache.fop.fonts.FontMetrics $r7;
+
+        this := @this: org.apache.fop.fonts.FontInfo;
+        triplet := @parameter0: org.apache.fop.fonts.FontTriplet;
+        replacing := @parameter1: boolean;
+        oldKey := @parameter2: java.lang.String;
+        oldPriority := @parameter3: int;
+        newKey := @parameter4: java.lang.String;
+        newPriority := @parameter5: int;
+        $r0 = <org.apache.fop.fonts.FontInfo: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label2;
+
+        $r0 = <org.apache.fop.fonts.FontInfo: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(triplet);
+        if replacing == 0 goto label0;
+
+        $r2 = ": Replacing ";
+        goto label1;
+
+     label0:
+        $r2 = ": Not replacing ";
+
+     label1:
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r3 = this.<org.apache.fop.fonts.FontInfo: java.util.Map fonts>;
+        $r4 = this.<org.apache.fop.fonts.FontInfo: java.util.Map triplets>;
+        $r5 = interfaceinvoke $r4.<java.util.Map: java.lang.Object get(java.lang.Object)>(triplet);
+        $r6 = interfaceinvoke $r3.<java.util.Map: java.lang.Object get(java.lang.Object)>($r5);
+        $r7 = (org.apache.fop.fonts.FontMetrics) $r6;
+        $r2 = interfaceinvoke $r7.<org.apache.fop.fonts.FontMetrics: java.lang.String getFullName()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" (");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(oldPriority);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(") by ");
+        $r3 = this.<org.apache.fop.fonts.FontInfo: java.util.Map fonts>;
+        $r6 = interfaceinvoke $r3.<java.util.Map: java.lang.Object get(java.lang.Object)>(newKey);
+        $r7 = (org.apache.fop.fonts.FontMetrics) $r6;
+        $r2 = interfaceinvoke $r7.<org.apache.fop.fonts.FontMetrics: java.lang.String getFullName()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" (");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(newPriority);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(")");
+        $r8 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r8);
+
+     label2:
+        return;
+    }
+
+    public void addMetrics(java.lang.String, org.apache.fop.fonts.FontMetrics)
+    {
+        org.apache.fop.fonts.FontInfo this;
+        java.lang.String name;
+        org.apache.fop.fonts.FontMetrics metrics;
+        java.util.Map $r0;
+
+        this := @this: org.apache.fop.fonts.FontInfo;
+        name := @parameter0: java.lang.String;
+        metrics := @parameter1: org.apache.fop.fonts.FontMetrics;
+        $r0 = this.<org.apache.fop.fonts.FontInfo: java.util.Map fonts>;
+        interfaceinvoke $r0.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(name, metrics);
+        return;
+    }
+
+    private org.apache.fop.fonts.FontTriplet fontLookup(java.lang.String, java.lang.String, int, boolean)
+    {
+        org.apache.fop.fonts.FontInfo this;
+        java.lang.String family, style, f, $r2;
+        int weight;
+        boolean substFont, $z0;
+        org.apache.commons.logging.Log $r0;
+        java.lang.StringBuffer $r1;
+        org.apache.fop.fonts.FontTriplet startKey, key;
+
+        this := @this: org.apache.fop.fonts.FontInfo;
+        family := @parameter0: java.lang.String;
+        style := @parameter1: java.lang.String;
+        weight := @parameter2: int;
+        substFont := @parameter3: boolean;
+        $r0 = <org.apache.fop.fonts.FontInfo: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = <org.apache.fop.fonts.FontInfo: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Font lookup: ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(family);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(style);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(weight);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r2);
+
+     label0:
+        startKey = staticinvoke <org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet createFontKey(java.lang.String,java.lang.String,int)>(family, style, weight);
+        key = startKey;
+        f = virtualinvoke this.<org.apache.fop.fonts.FontInfo: java.lang.String getInternalFontKey(org.apache.fop.fonts.FontTriplet)>(key);
+        if f != null goto label1;
+
+        key = specialinvoke this.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet doAdjustedLookup(java.lang.String,java.lang.String,int,org.apache.fop.fonts.FontTriplet,boolean)>(family, style, weight, startKey, substFont);
+
+     label1:
+        if key == null goto label3;
+
+        if key == startKey goto label2;
+
+        specialinvoke this.<org.apache.fop.fonts.FontInfo: void notifyFontReplacement(org.apache.fop.fonts.FontTriplet,org.apache.fop.fonts.FontTriplet)>(startKey, key);
+
+     label2:
+        return key;
+
+     label3:
+        return null;
+    }
+
+    private org.apache.fop.fonts.FontTriplet doAdjustedLookup(java.lang.String, java.lang.String, int, org.apache.fop.fonts.FontTriplet, boolean)
+    {
+        org.apache.fop.fonts.FontInfo this;
+        java.lang.String family, style, f, $r0;
+        int weight, diffWeight, tryWeight, $i0, $i2;
+        org.apache.fop.fonts.FontTriplet startKey, key, $r1;
+        boolean substFont, $z0;
+        byte direction, $b1;
+
+        this := @this: org.apache.fop.fonts.FontInfo;
+        family := @parameter0: java.lang.String;
+        style := @parameter1: java.lang.String;
+        weight := @parameter2: int;
+        startKey := @parameter3: org.apache.fop.fonts.FontTriplet;
+        substFont := @parameter4: boolean;
+        $r0 = virtualinvoke startKey.<org.apache.fop.fonts.FontTriplet: java.lang.String getName()>();
+        $z0 = virtualinvoke family.<java.lang.String: boolean equals(java.lang.Object)>($r0);
+        if $z0 != 0 goto label0;
+
+        key = staticinvoke <org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet createFontKey(java.lang.String,java.lang.String,int)>(family, style, weight);
+        f = virtualinvoke this.<org.apache.fop.fonts.FontInfo: java.lang.String getInternalFontKey(org.apache.fop.fonts.FontTriplet)>(key);
+        if f == null goto label0;
+
+        return key;
+
+     label0:
+        key = virtualinvoke this.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet findAdjustWeight(java.lang.String,java.lang.String,int)>(family, style, weight);
+        f = virtualinvoke this.<org.apache.fop.fonts.FontInfo: java.lang.String getInternalFontKey(org.apache.fop.fonts.FontTriplet)>(key);
+        if substFont != 0 goto label1;
+
+        if f != null goto label1;
+
+        return null;
+
+     label1:
+        if f != null goto label2;
+
+        if style == "normal" goto label2;
+
+        key = staticinvoke <org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet createFontKey(java.lang.String,java.lang.String,int)>(family, "normal", weight);
+        f = virtualinvoke this.<org.apache.fop.fonts.FontInfo: java.lang.String getInternalFontKey(org.apache.fop.fonts.FontTriplet)>(key);
+
+     label2:
+        if f != null goto label7;
+
+        if weight == 400 goto label7;
+
+        $i0 = 400 - weight;
+        diffWeight = $i0 / 100;
+        if diffWeight <= 0 goto label3;
+
+        $b1 = 1;
+        goto label4;
+
+     label3:
+        $b1 = -1;
+
+     label4:
+        direction = $b1;
+        tryWeight = weight;
+
+     label5:
+        if tryWeight == 400 goto label7;
+
+        $i2 = 100 * direction;
+        tryWeight = tryWeight + $i2;
+        key = staticinvoke <org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet createFontKey(java.lang.String,java.lang.String,int)>(family, style, weight);
+        f = virtualinvoke this.<org.apache.fop.fonts.FontInfo: java.lang.String getInternalFontKey(org.apache.fop.fonts.FontTriplet)>(key);
+        if f != null goto label6;
+
+        key = staticinvoke <org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet createFontKey(java.lang.String,java.lang.String,int)>(family, "normal", weight);
+        f = virtualinvoke this.<org.apache.fop.fonts.FontInfo: java.lang.String getInternalFontKey(org.apache.fop.fonts.FontTriplet)>(key);
+
+     label6:
+        if f == null goto label5;
+
+        goto label7;
+
+     label7:
+        if f != null goto label8;
+
+        $r1 = specialinvoke this.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet doAdjustedLookup(java.lang.String,java.lang.String,int,org.apache.fop.fonts.FontTriplet,boolean)>("any", style, weight, startKey, 0);
+        return $r1;
+
+     label8:
+        if f != null goto label9;
+
+        key = <org.apache.fop.fonts.Font: org.apache.fop.fonts.FontTriplet DEFAULT_FONT>;
+        f = virtualinvoke this.<org.apache.fop.fonts.FontInfo: java.lang.String getInternalFontKey(org.apache.fop.fonts.FontTriplet)>(key);
+
+     label9:
+        if f == null goto label10;
+
+        return key;
+
+     label10:
+        return null;
+    }
+
+    public void useFont(java.lang.String)
+    {
+        org.apache.fop.fonts.FontInfo this;
+        java.lang.String internalName;
+        java.util.Map $r0, $r1;
+        java.lang.Object $r2;
+
+        this := @this: org.apache.fop.fonts.FontInfo;
+        internalName := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.fonts.FontInfo: java.util.Map usedFonts>;
+        $r1 = this.<org.apache.fop.fonts.FontInfo: java.util.Map fonts>;
+        $r2 = interfaceinvoke $r1.<java.util.Map: java.lang.Object get(java.lang.Object)>(internalName);
+        interfaceinvoke $r0.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(internalName, $r2);
+        return;
+    }
+
+    public org.apache.fop.fonts.Font getFontInstance(org.apache.fop.fonts.FontTriplet, int)
+    {
+        org.apache.fop.fonts.FontInfo this;
+        org.apache.fop.fonts.FontTriplet triplet;
+        int fontSize;
+        java.util.Map sizes, $r0;
+        java.lang.Integer size, $r3;
+        org.apache.fop.fonts.Font font, $r4;
+        java.lang.String fname;
+        org.apache.fop.fonts.FontMetrics metrics;
+        java.lang.Object $r1;
+        java.util.HashMap $r2;
+
+        this := @this: org.apache.fop.fonts.FontInfo;
+        triplet := @parameter0: org.apache.fop.fonts.FontTriplet;
+        fontSize := @parameter1: int;
+        $r0 = this.<org.apache.fop.fonts.FontInfo: java.util.Map fontInstanceCache>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>(triplet);
+        sizes = (java.util.Map) $r1;
+        if sizes != null goto label0;
+
+        $r2 = new java.util.HashMap;
+        specialinvoke $r2.<java.util.HashMap: void <init>()>();
+        sizes = $r2;
+        $r0 = this.<org.apache.fop.fonts.FontInfo: java.util.Map fontInstanceCache>;
+        interfaceinvoke $r0.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(triplet, sizes);
+
+     label0:
+        $r3 = new java.lang.Integer;
+        specialinvoke $r3.<java.lang.Integer: void <init>(int)>(fontSize);
+        size = $r3;
+        $r1 = interfaceinvoke sizes.<java.util.Map: java.lang.Object get(java.lang.Object)>(size);
+        font = (org.apache.fop.fonts.Font) $r1;
+        if font != null goto label1;
+
+        fname = virtualinvoke this.<org.apache.fop.fonts.FontInfo: java.lang.String getInternalFontKey(org.apache.fop.fonts.FontTriplet)>(triplet);
+        virtualinvoke this.<org.apache.fop.fonts.FontInfo: void useFont(java.lang.String)>(fname);
+        metrics = virtualinvoke this.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontMetrics getMetricsFor(java.lang.String)>(fname);
+        $r4 = new org.apache.fop.fonts.Font;
+        specialinvoke $r4.<org.apache.fop.fonts.Font: void <init>(java.lang.String,org.apache.fop.fonts.FontTriplet,org.apache.fop.fonts.FontMetrics,int)>(fname, triplet, metrics, fontSize);
+        font = $r4;
+        interfaceinvoke sizes.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(size, font);
+
+     label1:
+        return font;
+    }
+
+    public org.apache.fop.fonts.FontTriplet fontLookup(java.lang.String, java.lang.String, int)
+    {
+        org.apache.fop.fonts.FontInfo this;
+        java.lang.String family, style;
+        int weight;
+        org.apache.fop.fonts.FontTriplet $r0;
+
+        this := @this: org.apache.fop.fonts.FontInfo;
+        family := @parameter0: java.lang.String;
+        style := @parameter1: java.lang.String;
+        weight := @parameter2: int;
+        $r0 = specialinvoke this.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet fontLookup(java.lang.String,java.lang.String,int,boolean)>(family, style, weight, 1);
+        return $r0;
+    }
+
+    public org.apache.fop.fonts.FontTriplet[] fontLookup(java.lang.String[], java.lang.String, int)
+    {
+        org.apache.fop.fonts.FontInfo this;
+        java.lang.String[] families;
+        java.lang.String style, $r3, $r4, $r11;
+        int weight, i, c, $i1, $i2;
+        java.util.ArrayList tmpTriplets, $r1;
+        org.apache.fop.fonts.FontTriplet triplet;
+        java.lang.StringBuffer sb, $r8, $r10;
+        java.lang.IllegalArgumentException $r0;
+        boolean $z0;
+        org.apache.fop.fonts.FontTriplet[] $r5, $r7;
+        java.lang.Object[] $r6;
+        java.lang.IllegalStateException $r9;
+
+        this := @this: org.apache.fop.fonts.FontInfo;
+        families := @parameter0: java.lang.String[];
+        style := @parameter1: java.lang.String;
+        weight := @parameter2: int;
+        $i1 = lengthof families;
+        if $i1 != 0 goto label0;
+
+        $r0 = new java.lang.IllegalArgumentException;
+        specialinvoke $r0.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Specify at least one font family");
+        throw $r0;
+
+     label0:
+        $r1 = new java.util.ArrayList;
+        specialinvoke $r1.<java.util.ArrayList: void <init>()>();
+        tmpTriplets = $r1;
+        i = 0;
+        c = lengthof families;
+
+     label1:
+        if i >= c goto label5;
+
+        $r3 = families[i];
+        $i2 = lengthof families;
+        $i2 = $i2 - 1;
+        if i < $i2 goto label2;
+
+        $z0 = 1;
+        goto label3;
+
+     label2:
+        $z0 = 0;
+
+     label3:
+        triplet = specialinvoke this.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet fontLookup(java.lang.String,java.lang.String,int,boolean)>($r3, style, weight, $z0);
+        if triplet == null goto label4;
+
+        interfaceinvoke tmpTriplets.<java.util.List: boolean add(java.lang.Object)>(triplet);
+
+     label4:
+        i = i + 1;
+        goto label1;
+
+     label5:
+        $i1 = interfaceinvoke tmpTriplets.<java.util.List: int size()>();
+        if $i1 == 0 goto label6;
+
+        $r5 = <org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet[] TRIPLETS_TYPE>;
+        $r6 = interfaceinvoke tmpTriplets.<java.util.List: java.lang.Object[] toArray(java.lang.Object[])>($r5);
+        $r7 = (org.apache.fop.fonts.FontTriplet[]) $r6;
+        $r7 = (org.apache.fop.fonts.FontTriplet[]) $r7;
+        return $r7;
+
+     label6:
+        $r8 = new java.lang.StringBuffer;
+        specialinvoke $r8.<java.lang.StringBuffer: void <init>()>();
+        sb = $r8;
+        i = 0;
+        c = lengthof families;
+
+     label7:
+        if i >= c goto label9;
+
+        if i <= 0 goto label8;
+
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", ");
+
+     label8:
+        $r3 = families[i];
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        i = i + 1;
+        goto label7;
+
+     label9:
+        $r9 = new java.lang.IllegalStateException;
+        $r10 = new java.lang.StringBuffer;
+        specialinvoke $r10.<java.lang.StringBuffer: void <init>()>();
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("fontLookup must return an array with at least one FontTriplet on the last call. Lookup: ");
+        $r11 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r11);
+        $r4 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r9.<java.lang.IllegalStateException: void <init>(java.lang.String)>($r4);
+        throw $r9;
+    }
+
+    private void notifyFontReplacement(org.apache.fop.fonts.FontTriplet, org.apache.fop.fonts.FontTriplet)
+    {
+        org.apache.fop.fonts.FontInfo this;
+        org.apache.fop.fonts.FontTriplet replacedKey, newKey;
+        java.util.HashSet $r0;
+        java.util.Collection $r1;
+        boolean $z0;
+        org.apache.commons.logging.Log $r2;
+        java.lang.StringBuffer $r3;
+        java.lang.String $r4;
+
+        this := @this: org.apache.fop.fonts.FontInfo;
+        replacedKey := @parameter0: org.apache.fop.fonts.FontTriplet;
+        newKey := @parameter1: org.apache.fop.fonts.FontTriplet;
+        $r1 = this.<org.apache.fop.fonts.FontInfo: java.util.Collection loggedFontKeys>;
+        if $r1 != null goto label0;
+
+        $r0 = new java.util.HashSet;
+        specialinvoke $r0.<java.util.HashSet: void <init>()>();
+        this.<org.apache.fop.fonts.FontInfo: java.util.Collection loggedFontKeys> = $r0;
+
+     label0:
+        $r1 = this.<org.apache.fop.fonts.FontInfo: java.util.Collection loggedFontKeys>;
+        $z0 = interfaceinvoke $r1.<java.util.Collection: boolean contains(java.lang.Object)>(replacedKey);
+        if $z0 != 0 goto label1;
+
+        $r1 = this.<org.apache.fop.fonts.FontInfo: java.util.Collection loggedFontKeys>;
+        interfaceinvoke $r1.<java.util.Collection: boolean add(java.lang.Object)>(replacedKey);
+        $r2 = <org.apache.fop.fonts.FontInfo: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Font \'");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(replacedKey);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\' not found. Substituting with \'");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(newKey);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\'.");
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r4);
+
+     label1:
+        return;
+    }
+
+    public org.apache.fop.fonts.FontTriplet findAdjustWeight(java.lang.String, java.lang.String, int)
+    {
+        org.apache.fop.fonts.FontInfo this;
+        java.lang.String family, style, f;
+        int weight, newWeight;
+        org.apache.fop.fonts.FontTriplet key;
+
+        this := @this: org.apache.fop.fonts.FontInfo;
+        family := @parameter0: java.lang.String;
+        style := @parameter1: java.lang.String;
+        weight := @parameter2: int;
+        key = null;
+        f = null;
+        newWeight = weight;
+        if newWeight >= 400 goto label3;
+
+     label0:
+        if f != null goto label1;
+
+        if newWeight <= 100 goto label1;
+
+        newWeight = newWeight + -100;
+        key = staticinvoke <org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet createFontKey(java.lang.String,java.lang.String,int)>(family, style, newWeight);
+        f = virtualinvoke this.<org.apache.fop.fonts.FontInfo: java.lang.String getInternalFontKey(org.apache.fop.fonts.FontTriplet)>(key);
+        goto label0;
+
+     label1:
+        newWeight = weight;
+
+     label2:
+        if f != null goto label8;
+
+        if newWeight >= 400 goto label8;
+
+        newWeight = newWeight + 100;
+        key = staticinvoke <org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet createFontKey(java.lang.String,java.lang.String,int)>(family, style, newWeight);
+        f = virtualinvoke this.<org.apache.fop.fonts.FontInfo: java.lang.String getInternalFontKey(org.apache.fop.fonts.FontTriplet)>(key);
+        goto label2;
+
+     label3:
+        if newWeight != 500 goto label4;
+
+        key = staticinvoke <org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet createFontKey(java.lang.String,java.lang.String,int)>(family, style, 400);
+        f = virtualinvoke this.<org.apache.fop.fonts.FontInfo: java.lang.String getInternalFontKey(org.apache.fop.fonts.FontTriplet)>(key);
+        goto label8;
+
+     label4:
+        if newWeight <= 500 goto label8;
+
+     label5:
+        if f != null goto label6;
+
+        if newWeight >= 1000 goto label6;
+
+        newWeight = newWeight + 100;
+        key = staticinvoke <org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet createFontKey(java.lang.String,java.lang.String,int)>(family, style, newWeight);
+        f = virtualinvoke this.<org.apache.fop.fonts.FontInfo: java.lang.String getInternalFontKey(org.apache.fop.fonts.FontTriplet)>(key);
+        goto label5;
+
+     label6:
+        newWeight = weight;
+
+     label7:
+        if f != null goto label8;
+
+        if newWeight <= 400 goto label8;
+
+        newWeight = newWeight + -100;
+        key = staticinvoke <org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet createFontKey(java.lang.String,java.lang.String,int)>(family, style, newWeight);
+        f = virtualinvoke this.<org.apache.fop.fonts.FontInfo: java.lang.String getInternalFontKey(org.apache.fop.fonts.FontTriplet)>(key);
+        goto label7;
+
+     label8:
+        if f != null goto label9;
+
+        if weight == 400 goto label9;
+
+        key = staticinvoke <org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet createFontKey(java.lang.String,java.lang.String,int)>(family, style, 400);
+        f = virtualinvoke this.<org.apache.fop.fonts.FontInfo: java.lang.String getInternalFontKey(org.apache.fop.fonts.FontTriplet)>(key);
+
+     label9:
+        if f == null goto label10;
+
+        return key;
+
+     label10:
+        return null;
+    }
+
+    public boolean hasFont(java.lang.String, java.lang.String, int)
+    {
+        org.apache.fop.fonts.FontInfo this;
+        java.lang.String family, style;
+        int weight;
+        org.apache.fop.fonts.FontTriplet key;
+        java.util.Map $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.FontInfo;
+        family := @parameter0: java.lang.String;
+        style := @parameter1: java.lang.String;
+        weight := @parameter2: int;
+        key = staticinvoke <org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet createFontKey(java.lang.String,java.lang.String,int)>(family, style, weight);
+        $r0 = this.<org.apache.fop.fonts.FontInfo: java.util.Map triplets>;
+        $z0 = interfaceinvoke $r0.<java.util.Map: boolean containsKey(java.lang.Object)>(key);
+        return $z0;
+    }
+
+    public java.lang.String getInternalFontKey(org.apache.fop.fonts.FontTriplet)
+    {
+        org.apache.fop.fonts.FontInfo this;
+        org.apache.fop.fonts.FontTriplet triplet;
+        java.util.Map $r0;
+        java.lang.Object $r1;
+        java.lang.String $r2;
+
+        this := @this: org.apache.fop.fonts.FontInfo;
+        triplet := @parameter0: org.apache.fop.fonts.FontTriplet;
+        $r0 = this.<org.apache.fop.fonts.FontInfo: java.util.Map triplets>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>(triplet);
+        $r2 = (java.lang.String) $r1;
+        return $r2;
+    }
+
+    public static org.apache.fop.fonts.FontTriplet createFontKey(java.lang.String, java.lang.String, int)
+    {
+        java.lang.String family, style;
+        int weight;
+        org.apache.fop.fonts.FontTriplet $r0;
+
+        family := @parameter0: java.lang.String;
+        style := @parameter1: java.lang.String;
+        weight := @parameter2: int;
+        $r0 = new org.apache.fop.fonts.FontTriplet;
+        specialinvoke $r0.<org.apache.fop.fonts.FontTriplet: void <init>(java.lang.String,java.lang.String,int)>(family, style, weight);
+        return $r0;
+    }
+
+    public java.util.Map getFonts()
+    {
+        org.apache.fop.fonts.FontInfo this;
+        java.util.Map $r0;
+
+        this := @this: org.apache.fop.fonts.FontInfo;
+        $r0 = this.<org.apache.fop.fonts.FontInfo: java.util.Map fonts>;
+        $r0 = staticinvoke <java.util.Collections: java.util.Map unmodifiableMap(java.util.Map)>($r0);
+        return $r0;
+    }
+
+    public java.util.Map getFontTriplets()
+    {
+        org.apache.fop.fonts.FontInfo this;
+        java.util.Map $r0;
+
+        this := @this: org.apache.fop.fonts.FontInfo;
+        $r0 = this.<org.apache.fop.fonts.FontInfo: java.util.Map triplets>;
+        $r0 = staticinvoke <java.util.Collections: java.util.Map unmodifiableMap(java.util.Map)>($r0);
+        return $r0;
+    }
+
+    public java.util.Map getUsedFonts()
+    {
+        org.apache.fop.fonts.FontInfo this;
+        java.util.Map $r0;
+
+        this := @this: org.apache.fop.fonts.FontInfo;
+        $r0 = this.<org.apache.fop.fonts.FontInfo: java.util.Map usedFonts>;
+        return $r0;
+    }
+
+    public org.apache.fop.fonts.FontMetrics getMetricsFor(java.lang.String)
+    {
+        org.apache.fop.fonts.FontInfo this;
+        java.lang.String fontName;
+        org.apache.fop.fonts.FontMetrics metrics;
+        java.util.Map $r0;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.fonts.FontInfo;
+        fontName := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.fonts.FontInfo: java.util.Map fonts>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>(fontName);
+        metrics = (org.apache.fop.fonts.FontMetrics) $r1;
+        $r0 = this.<org.apache.fop.fonts.FontInfo: java.util.Map usedFonts>;
+        interfaceinvoke $r0.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(fontName, metrics);
+        return metrics;
+    }
+
+    public org.apache.fop.fonts.FontTriplet getTripletFor(java.lang.String)
+    {
+        org.apache.fop.fonts.FontInfo this;
+        java.lang.String fontName, $r5;
+        java.util.ArrayList $r0, foundTriplets;
+        java.util.Iterator iter;
+        java.util.Map$Entry tripletEntry;
+        java.util.Map $r1;
+        java.util.Set $r2;
+        boolean $z0;
+        java.lang.Object $r3, $r4;
+        int $i0;
+        org.apache.fop.fonts.FontTriplet $r6;
+
+        this := @this: org.apache.fop.fonts.FontInfo;
+        fontName := @parameter0: java.lang.String;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        foundTriplets = $r0;
+        $r1 = this.<org.apache.fop.fonts.FontInfo: java.util.Map triplets>;
+        $r2 = interfaceinvoke $r1.<java.util.Map: java.util.Set entrySet()>();
+        iter = interfaceinvoke $r2.<java.util.Set: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label2;
+
+        $r3 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        tripletEntry = (java.util.Map$Entry) $r3;
+        $r4 = interfaceinvoke tripletEntry.<java.util.Map$Entry: java.lang.Object getValue()>();
+        $r5 = (java.lang.String) $r4;
+        $z0 = virtualinvoke fontName.<java.lang.String: boolean equals(java.lang.Object)>($r5);
+        if $z0 == 0 goto label1;
+
+        $r4 = interfaceinvoke tripletEntry.<java.util.Map$Entry: java.lang.Object getKey()>();
+        interfaceinvoke foundTriplets.<java.util.List: boolean add(java.lang.Object)>($r4);
+
+     label1:
+        goto label0;
+
+     label2:
+        $i0 = interfaceinvoke foundTriplets.<java.util.List: int size()>();
+        if $i0 <= 0 goto label3;
+
+        staticinvoke <java.util.Collections: void sort(java.util.List)>(foundTriplets);
+        $r3 = interfaceinvoke foundTriplets.<java.util.List: java.lang.Object get(int)>(0);
+        $r6 = (org.apache.fop.fonts.FontTriplet) $r3;
+        return $r6;
+
+     label3:
+        return null;
+    }
+
+    public java.lang.String getFontStyleFor(java.lang.String)
+    {
+        org.apache.fop.fonts.FontInfo this;
+        java.lang.String fontName, $r0;
+        org.apache.fop.fonts.FontTriplet triplet;
+
+        this := @this: org.apache.fop.fonts.FontInfo;
+        fontName := @parameter0: java.lang.String;
+        triplet = virtualinvoke this.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet getTripletFor(java.lang.String)>(fontName);
+        if triplet == null goto label0;
+
+        $r0 = virtualinvoke triplet.<org.apache.fop.fonts.FontTriplet: java.lang.String getStyle()>();
+        return $r0;
+
+     label0:
+        return "";
+    }
+
+    public int getFontWeightFor(java.lang.String)
+    {
+        org.apache.fop.fonts.FontInfo this;
+        java.lang.String fontName;
+        org.apache.fop.fonts.FontTriplet triplet;
+        int $i0;
+
+        this := @this: org.apache.fop.fonts.FontInfo;
+        fontName := @parameter0: java.lang.String;
+        triplet = virtualinvoke this.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet getTripletFor(java.lang.String)>(fontName);
+        if triplet == null goto label0;
+
+        $i0 = virtualinvoke triplet.<org.apache.fop.fonts.FontTriplet: int getWeight()>();
+        return $i0;
+
+     label0:
+        return 0;
+    }
+
+    public void dumpAllTripletsToSystemOut()
+    {
+        org.apache.fop.fonts.FontInfo this;
+        java.util.TreeSet $r0, entries;
+        java.util.Iterator iter;
+        org.apache.fop.fonts.FontTriplet triplet;
+        java.lang.String key, $r5, $r6;
+        org.apache.fop.fonts.FontMetrics metrics;
+        java.util.Map $r1;
+        java.util.Set $r2;
+        boolean $z0;
+        java.lang.Object $r3, $r8;
+        java.lang.StringBuffer $r4;
+        java.io.PrintStream $r7;
+
+        this := @this: org.apache.fop.fonts.FontInfo;
+        $r0 = new java.util.TreeSet;
+        specialinvoke $r0.<java.util.TreeSet: void <init>()>();
+        entries = $r0;
+        $r1 = this.<org.apache.fop.fonts.FontInfo: java.util.Map triplets>;
+        $r2 = interfaceinvoke $r1.<java.util.Map: java.util.Set keySet()>();
+        iter = interfaceinvoke $r2.<java.util.Set: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r3 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        triplet = (org.apache.fop.fonts.FontTriplet) $r3;
+        key = virtualinvoke this.<org.apache.fop.fonts.FontInfo: java.lang.String getInternalFontKey(org.apache.fop.fonts.FontTriplet)>(triplet);
+        metrics = virtualinvoke this.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontMetrics getMetricsFor(java.lang.String)>(key);
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke triplet.<org.apache.fop.fonts.FontTriplet: java.lang.String toString()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" -> ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(key);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" -> ");
+        $r5 = interfaceinvoke metrics.<org.apache.fop.fonts.FontMetrics: java.lang.String getFontName()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r6 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke entries.<java.util.Collection: boolean add(java.lang.Object)>($r6);
+        goto label0;
+
+     label1:
+        iter = interfaceinvoke entries.<java.util.Collection: java.util.Iterator iterator()>();
+
+     label2:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label3;
+
+        $r7 = <java.lang.System: java.io.PrintStream out>;
+        $r8 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        virtualinvoke $r7.<java.io.PrintStream: void println(java.lang.Object)>($r8);
+        goto label2;
+
+     label3:
+        return;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        org.apache.fop.fonts.FontTriplet[] $r0;
+        java.lang.Class $r1;
+        org.apache.commons.logging.Log $r2;
+
+        $r0 = newarray (org.apache.fop.fonts.FontTriplet)[1];
+        <org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet[] TRIPLETS_TYPE> = $r0;
+        $r1 = <org.apache.fop.fonts.FontInfo: java.lang.Class class$org$apache$fop$fonts$FontInfo>;
+        if $r1 != null goto label0;
+
+        $r1 = staticinvoke <org.apache.fop.fonts.FontInfo: java.lang.Class class$(java.lang.String)>("org.apache.fop.fonts.FontInfo");
+        <org.apache.fop.fonts.FontInfo: java.lang.Class class$org$apache$fop$fonts$FontInfo> = $r1;
+        goto label1;
+
+     label0:
+        $r1 = <org.apache.fop.fonts.FontInfo: java.lang.Class class$org$apache$fop$fonts$FontInfo>;
+
+     label1:
+        $r2 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r1);
+        <org.apache.fop.fonts.FontInfo: org.apache.commons.logging.Log log> = $r2;
+        return;
+    }
+}

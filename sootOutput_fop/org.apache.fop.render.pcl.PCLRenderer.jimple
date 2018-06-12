@@ -1,0 +1,2920 @@
+public class org.apache.fop.render.pcl.PCLRenderer extends org.apache.fop.render.PrintRenderer
+{
+    private static org.apache.commons.logging.Log log;
+    public static final java.lang.String MIME_TYPE;
+    private static final org.apache.fop.util.QName CONV_MODE;
+    private static final org.apache.fop.util.QName SRC_TRANSPARENCY;
+    protected java.io.OutputStream out;
+    protected org.apache.fop.render.pcl.PCLGenerator gen;
+    private boolean ioTrouble;
+    private java.util.Stack graphicContextStack;
+    private org.apache.xmlgraphics.java2d.GraphicContext graphicContext;
+    private org.apache.fop.render.pcl.PCLPageDefinition currentPageDefinition;
+    private int currentPrintDirection;
+    private java.awt.geom.GeneralPath currentPath;
+    private java.awt.Color currentFillColor;
+    private boolean qualityBeforeSpeed;
+    private boolean allTextAsBitmaps;
+    private boolean useColorCanvas;
+    private boolean disabledPJL;
+    private static final org.apache.xmlgraphics.image.loader.ImageFlavor[] FLAVORS;
+    static java.lang.Class class$org$apache$fop$render$pcl$PCLRenderer;
+
+    public void <init>()
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        java.util.Stack $r0;
+        org.apache.xmlgraphics.java2d.GraphicContext $r1;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        specialinvoke this.<org.apache.fop.render.PrintRenderer: void <init>()>();
+        this.<org.apache.fop.render.pcl.PCLRenderer: boolean ioTrouble> = 0;
+        $r0 = new java.util.Stack;
+        specialinvoke $r0.<java.util.Stack: void <init>()>();
+        this.<org.apache.fop.render.pcl.PCLRenderer: java.util.Stack graphicContextStack> = $r0;
+        $r1 = new org.apache.xmlgraphics.java2d.GraphicContext;
+        specialinvoke $r1.<org.apache.xmlgraphics.java2d.GraphicContext: void <init>()>();
+        this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.xmlgraphics.java2d.GraphicContext graphicContext> = $r1;
+        this.<org.apache.fop.render.pcl.PCLRenderer: int currentPrintDirection> = 0;
+        this.<org.apache.fop.render.pcl.PCLRenderer: java.awt.geom.GeneralPath currentPath> = null;
+        this.<org.apache.fop.render.pcl.PCLRenderer: java.awt.Color currentFillColor> = null;
+        this.<org.apache.fop.render.pcl.PCLRenderer: boolean qualityBeforeSpeed> = 0;
+        this.<org.apache.fop.render.pcl.PCLRenderer: boolean allTextAsBitmaps> = 0;
+        this.<org.apache.fop.render.pcl.PCLRenderer: boolean useColorCanvas> = 0;
+        this.<org.apache.fop.render.pcl.PCLRenderer: boolean disabledPJL> = 0;
+        return;
+    }
+
+    public void setQualityBeforeSpeed(boolean)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        boolean qualityBeforeSpeed;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        qualityBeforeSpeed := @parameter0: boolean;
+        this.<org.apache.fop.render.pcl.PCLRenderer: boolean qualityBeforeSpeed> = qualityBeforeSpeed;
+        return;
+    }
+
+    public void setPJLDisabled(boolean)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        boolean disable;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        disable := @parameter0: boolean;
+        this.<org.apache.fop.render.pcl.PCLRenderer: boolean disabledPJL> = disable;
+        return;
+    }
+
+    public boolean isPJLDisabled()
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        $z0 = this.<org.apache.fop.render.pcl.PCLRenderer: boolean disabledPJL>;
+        return $z0;
+    }
+
+    public void setupFontInfo(org.apache.fop.fonts.FontInfo)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        org.apache.fop.fonts.FontInfo inFontInfo, $r3;
+        java.awt.image.BufferedImage fontImage, $r0;
+        java.awt.Graphics2D g;
+        java.awt.RenderingHints$Key $r1;
+        java.lang.Object $r2;
+        java.util.List $r4;
+        org.apache.fop.fonts.FontResolver $r5;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        inFontInfo := @parameter0: org.apache.fop.fonts.FontInfo;
+        this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.fonts.FontInfo fontInfo> = inFontInfo;
+        $r0 = new java.awt.image.BufferedImage;
+        specialinvoke $r0.<java.awt.image.BufferedImage: void <init>(int,int,int)>(100, 100, 1);
+        fontImage = $r0;
+        g = virtualinvoke fontImage.<java.awt.image.BufferedImage: java.awt.Graphics2D createGraphics()>();
+        $r1 = <java.awt.RenderingHints: java.awt.RenderingHints$Key KEY_FRACTIONALMETRICS>;
+        $r2 = <java.awt.RenderingHints: java.lang.Object VALUE_FRACTIONALMETRICS_ON>;
+        virtualinvoke g.<java.awt.Graphics2D: void setRenderingHint(java.awt.RenderingHints$Key,java.lang.Object)>($r1, $r2);
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r4 = this.<org.apache.fop.render.pcl.PCLRenderer: java.util.List fontList>;
+        $r5 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.fonts.FontResolver fontResolver>;
+        staticinvoke <org.apache.fop.render.java2d.FontSetup: void setup(org.apache.fop.fonts.FontInfo,java.util.List,org.apache.fop.fonts.FontResolver,java.awt.Graphics2D)>($r3, $r4, $r5, g);
+        return;
+    }
+
+    protected void handleIOTrouble(java.io.IOException)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        java.io.IOException ioe;
+        boolean $z0;
+        org.apache.commons.logging.Log $r0;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        ioe := @parameter0: java.io.IOException;
+        $z0 = this.<org.apache.fop.render.pcl.PCLRenderer: boolean ioTrouble>;
+        if $z0 != 0 goto label0;
+
+        $r0 = <org.apache.fop.render.pcl.PCLRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("Error while writing to target file", ioe);
+        this.<org.apache.fop.render.pcl.PCLRenderer: boolean ioTrouble> = 1;
+
+     label0:
+        return;
+    }
+
+    public org.apache.fop.render.Graphics2DAdapter getGraphics2DAdapter()
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        org.apache.fop.render.pcl.PCLGraphics2DAdapter $r0;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        $r0 = new org.apache.fop.render.pcl.PCLGraphics2DAdapter;
+        specialinvoke $r0.<org.apache.fop.render.pcl.PCLGraphics2DAdapter: void <init>()>();
+        return $r0;
+    }
+
+    public org.apache.xmlgraphics.java2d.GraphicContext getGraphicContext()
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        org.apache.xmlgraphics.java2d.GraphicContext $r0;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        $r0 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.xmlgraphics.java2d.GraphicContext graphicContext>;
+        return $r0;
+    }
+
+    protected int getResolution()
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        int resolution;
+        org.apache.fop.apps.FOUserAgent $r0;
+        float $f0;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        $r0 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        $f0 = virtualinvoke $r0.<org.apache.fop.apps.FOUserAgent: float getTargetResolution()>();
+        resolution = staticinvoke <java.lang.Math: int round(float)>($f0);
+        if resolution > 300 goto label0;
+
+        return 300;
+
+     label0:
+        return 600;
+    }
+
+    public boolean setFont(java.lang.String, float, java.lang.String) throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        java.lang.String name, text, formattedSize, $r0, $r5, $r7;
+        float size, $f0, $f1, $f2;
+        byte[] encoded;
+        int i, c, fontcode, $i2;
+        java.lang.Exception e, $r1;
+        byte $b0;
+        char $c1;
+        org.apache.commons.logging.Log $r2;
+        org.apache.fop.render.pcl.PCLGenerator $r3, $r6;
+        double $d0, $d1;
+        java.lang.StringBuffer $r4;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        name := @parameter0: java.lang.String;
+        size := @parameter1: float;
+        text := @parameter2: java.lang.String;
+        encoded = virtualinvoke text.<java.lang.String: byte[] getBytes(java.lang.String)>("ISO-8859-1");
+        i = 0;
+        c = lengthof encoded;
+
+     label0:
+        if i >= c goto label2;
+
+        $b0 = encoded[i];
+        if $b0 != 63 goto label1;
+
+        $c1 = virtualinvoke text.<java.lang.String: char charAt(int)>(i);
+        if $c1 == 63 goto label1;
+
+        return 0;
+
+     label1:
+        i = i + 1;
+        goto label0;
+
+     label2:
+        fontcode = 0;
+        $i2 = virtualinvoke name.<java.lang.String: int length()>();
+        if $i2 <= 1 goto label6;
+
+        $c1 = virtualinvoke name.<java.lang.String: char charAt(int)>(0);
+        if $c1 != 70 goto label6;
+
+     label3:
+        $r0 = virtualinvoke name.<java.lang.String: java.lang.String substring(int)>(1);
+        fontcode = staticinvoke <java.lang.Integer: int parseInt(java.lang.String)>($r0);
+
+     label4:
+        goto label6;
+
+     label5:
+        $r1 := @caughtexception;
+        e = $r1;
+        $r2 = <org.apache.fop.render.pcl.PCLRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void error(java.lang.Object)>(e);
+
+     label6:
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $f0 = size / 1000.0F;
+        $d0 = (double) $f0;
+        formattedSize = virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: java.lang.String formatDouble2(double)>($d0);
+        tableswitch(fontcode)
+        {
+            case 1: goto label7;
+            case 2: goto label8;
+            case 3: goto label9;
+            case 4: goto label10;
+            case 5: goto label11;
+            case 6: goto label12;
+            case 7: goto label13;
+            case 8: goto label14;
+            case 9: goto label15;
+            case 10: goto label16;
+            case 11: goto label17;
+            case 12: goto label18;
+            case 13: goto label19;
+            case 14: goto label20;
+            default: goto label21;
+        };
+
+     label7:
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("(0N");
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("(s1p");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(formattedSize);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("v0s0b16602T");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r5);
+        goto label22;
+
+     label8:
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("(0N");
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("(s1p");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(formattedSize);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("v1s0b16602T");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r5);
+        goto label22;
+
+     label9:
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("(0N");
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("(s1p");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(formattedSize);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("v0s3b16602T");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r5);
+        goto label22;
+
+     label10:
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("(0N");
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("(s1p");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(formattedSize);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("v1s3b16602T");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r5);
+        goto label22;
+
+     label11:
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("(0N");
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("(s1p");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(formattedSize);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("v0s0b16901T");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r5);
+        goto label22;
+
+     label12:
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("(0N");
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("(s1p");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(formattedSize);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("v1s0b16901T");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r5);
+        goto label22;
+
+     label13:
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("(0N");
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("(s1p");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(formattedSize);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("v0s3b16901T");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r5);
+        goto label22;
+
+     label14:
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("(0N");
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("(s1p");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(formattedSize);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("v1s3b16901T");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r5);
+        goto label22;
+
+     label15:
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("(0N");
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("(s0p");
+        $r6 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $f1 = size / 1000.0F;
+        $f2 = 120.01F / $f1;
+        $d1 = (double) $f2;
+        $r7 = virtualinvoke $r6.<org.apache.fop.render.pcl.PCLGenerator: java.lang.String formatDouble2(double)>($d1);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r7);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("h0s0b4099T");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r5);
+        goto label22;
+
+     label16:
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("(0N");
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("(s0p");
+        $r6 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $f1 = size / 1000.0F;
+        $f2 = 120.01F / $f1;
+        $d1 = (double) $f2;
+        $r7 = virtualinvoke $r6.<org.apache.fop.render.pcl.PCLGenerator: java.lang.String formatDouble2(double)>($d1);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r7);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("h1s0b4099T");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r5);
+        goto label22;
+
+     label17:
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("(0N");
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("(s0p");
+        $r6 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $f1 = size / 1000.0F;
+        $f2 = 120.01F / $f1;
+        $d1 = (double) $f2;
+        $r7 = virtualinvoke $r6.<org.apache.fop.render.pcl.PCLGenerator: java.lang.String formatDouble2(double)>($d1);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r7);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("h0s3b4099T");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r5);
+        goto label22;
+
+     label18:
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("(0N");
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("(s0p");
+        $r6 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $f1 = size / 1000.0F;
+        $f2 = 120.01F / $f1;
+        $d1 = (double) $f2;
+        $r7 = virtualinvoke $r6.<org.apache.fop.render.pcl.PCLGenerator: java.lang.String formatDouble2(double)>($d1);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r7);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("h1s3b4099T");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r5);
+        goto label22;
+
+     label19:
+        return 0;
+
+     label20:
+        return 0;
+
+     label21:
+        return 0;
+
+     label22:
+        return 1;
+
+        catch java.lang.Exception from label3 to label4 with label5;
+    }
+
+    public void startRenderer(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        java.io.OutputStream outputStream, $r2;
+        org.apache.commons.logging.Log $r0;
+        org.apache.fop.render.pcl.PCLGenerator $r1, $r3;
+        int $i0, $i1, $i2;
+        boolean $z0;
+        java.lang.StringBuffer $r4;
+        org.apache.fop.apps.FOUserAgent $r5, $r8;
+        java.lang.String $r6, $r7, $r9;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        outputStream := @parameter0: java.io.OutputStream;
+        $r0 = <org.apache.fop.render.pcl.PCLRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("Rendering areas to PCL...");
+        this.<org.apache.fop.render.pcl.PCLRenderer: java.io.OutputStream out> = outputStream;
+        $r1 = new org.apache.fop.render.pcl.PCLGenerator;
+        $r2 = this.<org.apache.fop.render.pcl.PCLRenderer: java.io.OutputStream out>;
+        $i0 = virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: int getResolution()>();
+        specialinvoke $r1.<org.apache.fop.render.pcl.PCLGenerator: void <init>(java.io.OutputStream,int)>($r2, $i0);
+        this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen> = $r1;
+        $z0 = virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: boolean isPJLDisabled()>();
+        if $z0 != 0 goto label1;
+
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void universalEndOfLanguage()>();
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("@PJL COMMENT Produced by ");
+        $r5 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        $r6 = virtualinvoke $r5.<org.apache.fop.apps.FOUserAgent: java.lang.String getProducer()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\n");
+        $r7 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeText(java.lang.String)>($r7);
+        $r8 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        $r9 = virtualinvoke $r8.<org.apache.fop.apps.FOUserAgent: java.lang.String getTitle()>();
+        if $r9 == null goto label0;
+
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("@PJL JOB NAME = \"");
+        $r5 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        $r6 = virtualinvoke $r5.<org.apache.fop.apps.FOUserAgent: java.lang.String getTitle()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\"\n");
+        $r7 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeText(java.lang.String)>($r7);
+
+     label0:
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("@PJL SET RESOLUTION = ");
+        $i1 = virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: int getResolution()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\n");
+        $r7 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeText(java.lang.String)>($r7);
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeText(java.lang.String)>("@PJL ENTER LANGUAGE = PCL\n");
+
+     label1:
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void resetPrinter()>();
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $i2 = virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: int getResolution()>();
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void setUnitOfMeasure(int)>($i2);
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $i2 = virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: int getResolution()>();
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void setRasterGraphicsResolution(int)>($i2);
+        return;
+    }
+
+    public void stopRenderer() throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        org.apache.fop.render.pcl.PCLGenerator $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        $r0 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r0.<org.apache.fop.render.pcl.PCLGenerator: void separateJobs()>();
+        $r0 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r0.<org.apache.fop.render.pcl.PCLGenerator: void resetPrinter()>();
+        $z0 = virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: boolean isPJLDisabled()>();
+        if $z0 != 0 goto label0;
+
+        $r0 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r0.<org.apache.fop.render.pcl.PCLGenerator: void universalEndOfLanguage()>();
+
+     label0:
+        return;
+    }
+
+    public java.lang.String getMimeType()
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        return "application/vnd.hp-PCL";
+    }
+
+    public void renderPage(org.apache.fop.area.PageViewport) throws java.io.IOException, org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        org.apache.fop.area.PageViewport page;
+        org.apache.fop.util.QName $r0;
+        java.lang.String paperSource;
+        long pagewidth, pageheight;
+        org.apache.fop.render.pcl.PCLGenerator $r1;
+        int $i0;
+        java.awt.geom.Rectangle2D $r2;
+        double $d0;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        page := @parameter0: org.apache.fop.area.PageViewport;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void saveGraphicsState()>();
+        $r0 = new org.apache.fop.util.QName;
+        specialinvoke $r0.<org.apache.fop.util.QName: void <init>(java.lang.String,java.lang.String,java.lang.String)>("http://xmlgraphics.apache.org/fop/extensions/pcl", null, "paper-source");
+        paperSource = virtualinvoke page.<org.apache.fop.area.PageViewport: java.lang.String getForeignAttributeValue(org.apache.fop.util.QName)>($r0);
+        if paperSource == null goto label0;
+
+        $r1 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $i0 = staticinvoke <java.lang.Integer: int parseInt(java.lang.String)>(paperSource);
+        virtualinvoke $r1.<org.apache.fop.render.pcl.PCLGenerator: void selectPaperSource(int)>($i0);
+
+     label0:
+        $r2 = virtualinvoke page.<org.apache.fop.area.PageViewport: java.awt.geom.Rectangle2D getViewArea()>();
+        $d0 = virtualinvoke $r2.<java.awt.geom.Rectangle2D: double getWidth()>();
+        pagewidth = staticinvoke <java.lang.Math: long round(double)>($d0);
+        $r2 = virtualinvoke page.<org.apache.fop.area.PageViewport: java.awt.geom.Rectangle2D getViewArea()>();
+        $d0 = virtualinvoke $r2.<java.awt.geom.Rectangle2D: double getHeight()>();
+        pageheight = staticinvoke <java.lang.Math: long round(double)>($d0);
+        specialinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void selectPageFormat(long,long)>(pagewidth, pageheight);
+        specialinvoke this.<org.apache.fop.render.PrintRenderer: void renderPage(org.apache.fop.area.PageViewport)>(page);
+        $r1 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r1.<org.apache.fop.render.pcl.PCLGenerator: void formFeed()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void restoreGraphicsState()>();
+        return;
+    }
+
+    private void selectPageFormat(long, long) throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        long pagewidth, pageheight;
+        org.apache.fop.render.pcl.PCLPageDefinition $r0, $r1, $r4;
+        org.apache.commons.logging.Log $r2;
+        java.lang.StringBuffer $r3;
+        java.lang.String $r5, $r6;
+        java.awt.Dimension $r7;
+        java.awt.Rectangle $r8;
+        boolean $z0;
+        org.apache.fop.render.pcl.PCLGenerator $r9;
+        int $i0;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        pagewidth := @parameter0: long;
+        pageheight := @parameter1: long;
+        $r0 = staticinvoke <org.apache.fop.render.pcl.PCLPageDefinition: org.apache.fop.render.pcl.PCLPageDefinition getPageDefinition(long,long,int)>(pagewidth, pageheight, 1000);
+        this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLPageDefinition currentPageDefinition> = $r0;
+        $r1 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLPageDefinition currentPageDefinition>;
+        if $r1 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.render.pcl.PCLPageDefinition: org.apache.fop.render.pcl.PCLPageDefinition getDefaultPageDefinition()>();
+        this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLPageDefinition currentPageDefinition> = $r0;
+        $r2 = <org.apache.fop.render.pcl.PCLRenderer: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Paper type could not be determined. Falling back to: ");
+        $r4 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLPageDefinition currentPageDefinition>;
+        $r5 = virtualinvoke $r4.<org.apache.fop.render.pcl.PCLPageDefinition: java.lang.String getName()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r6 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r6);
+
+     label0:
+        $r2 = <org.apache.fop.render.pcl.PCLRenderer: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("page size: ");
+        $r4 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLPageDefinition currentPageDefinition>;
+        $r7 = virtualinvoke $r4.<org.apache.fop.render.pcl.PCLPageDefinition: java.awt.Dimension getPhysicalPageSize()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r7);
+        $r6 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r6);
+        $r2 = <org.apache.fop.render.pcl.PCLRenderer: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("logical page: ");
+        $r4 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLPageDefinition currentPageDefinition>;
+        $r8 = virtualinvoke $r4.<org.apache.fop.render.pcl.PCLPageDefinition: java.awt.Rectangle getLogicalPageRect()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r8);
+        $r6 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r6);
+        $r1 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLPageDefinition currentPageDefinition>;
+        $z0 = virtualinvoke $r1.<org.apache.fop.render.pcl.PCLPageDefinition: boolean isLandscapeFormat()>();
+        if $z0 == 0 goto label1;
+
+        $r9 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r9.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("&l1O");
+        goto label2;
+
+     label1:
+        $r9 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r9.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("&l0O");
+
+     label2:
+        $r9 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $r0 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLPageDefinition currentPageDefinition>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.render.pcl.PCLPageDefinition: int getSelector()>();
+        virtualinvoke $r9.<org.apache.fop.render.pcl.PCLGenerator: void selectPageSize(int)>($i0);
+        $r9 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r9.<org.apache.fop.render.pcl.PCLGenerator: void clearHorizontalMargins()>();
+        $r9 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r9.<org.apache.fop.render.pcl.PCLGenerator: void setTopMargin(int)>(0);
+        return;
+    }
+
+    protected void saveGraphicsState()
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        java.util.Stack $r0;
+        org.apache.xmlgraphics.java2d.GraphicContext $r1;
+        java.lang.Object $r3;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        $r0 = this.<org.apache.fop.render.pcl.PCLRenderer: java.util.Stack graphicContextStack>;
+        $r1 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.xmlgraphics.java2d.GraphicContext graphicContext>;
+        virtualinvoke $r0.<java.util.Stack: java.lang.Object push(java.lang.Object)>($r1);
+        $r1 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.xmlgraphics.java2d.GraphicContext graphicContext>;
+        $r3 = virtualinvoke $r1.<org.apache.xmlgraphics.java2d.GraphicContext: java.lang.Object clone()>();
+        $r1 = (org.apache.xmlgraphics.java2d.GraphicContext) $r3;
+        this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.xmlgraphics.java2d.GraphicContext graphicContext> = $r1;
+        return;
+    }
+
+    protected void restoreGraphicsState()
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        java.util.Stack $r0;
+        java.lang.Object $r1;
+        org.apache.xmlgraphics.java2d.GraphicContext $r2;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        $r0 = this.<org.apache.fop.render.pcl.PCLRenderer: java.util.Stack graphicContextStack>;
+        $r1 = virtualinvoke $r0.<java.util.Stack: java.lang.Object pop()>();
+        $r2 = (org.apache.xmlgraphics.java2d.GraphicContext) $r1;
+        this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.xmlgraphics.java2d.GraphicContext graphicContext> = $r2;
+        return;
+    }
+
+    protected void clipRect(float, float, float, float)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        float x, y, width, height;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        x := @parameter0: float;
+        y := @parameter1: float;
+        width := @parameter2: float;
+        height := @parameter3: float;
+        return;
+    }
+
+    private java.awt.geom.Point2D transformedPoint(float, float)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        float x, y;
+        int $i0, $i1;
+        java.awt.geom.Point2D $r0;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        x := @parameter0: float;
+        y := @parameter1: float;
+        $i0 = staticinvoke <java.lang.Math: int round(float)>(x);
+        $i1 = staticinvoke <java.lang.Math: int round(float)>(y);
+        $r0 = specialinvoke this.<org.apache.fop.render.pcl.PCLRenderer: java.awt.geom.Point2D transformedPoint(int,int)>($i0, $i1);
+        return $r0;
+    }
+
+    private java.awt.geom.Point2D transformedPoint(int, int)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        int x, y, $i0, $i1, $i2, $i3;
+        java.awt.geom.AffineTransform at;
+        java.lang.StringBuffer $r0, $r8;
+        java.awt.geom.Point2D$Float orgPoint, transPoint, $r4;
+        java.awt.Dimension pageSize;
+        java.awt.Rectangle logRect;
+        float ty, tx, $f0, $f1, $f2;
+        org.apache.xmlgraphics.java2d.GraphicContext $r1;
+        org.apache.commons.logging.Log $r2;
+        boolean $z0;
+        java.lang.String $r3, $r9;
+        org.apache.fop.render.pcl.PCLPageDefinition $r6;
+        double $d0, $d1;
+        java.lang.IllegalStateException $r7;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        x := @parameter0: int;
+        y := @parameter1: int;
+        $r1 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.xmlgraphics.java2d.GraphicContext graphicContext>;
+        at = virtualinvoke $r1.<org.apache.xmlgraphics.java2d.GraphicContext: java.awt.geom.AffineTransform getTransform()>();
+        $r2 = <org.apache.fop.render.pcl.PCLRenderer: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r2.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r2 = <org.apache.fop.render.pcl.PCLRenderer: org.apache.commons.logging.Log log>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Current transform: ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(at);
+        $r3 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r3);
+
+     label0:
+        $r4 = new java.awt.geom.Point2D$Float;
+        $f0 = (float) x;
+        $f1 = (float) y;
+        specialinvoke $r4.<java.awt.geom.Point2D$Float: void <init>(float,float)>($f0, $f1);
+        orgPoint = $r4;
+        $r4 = new java.awt.geom.Point2D$Float;
+        specialinvoke $r4.<java.awt.geom.Point2D$Float: void <init>()>();
+        transPoint = $r4;
+        virtualinvoke at.<java.awt.geom.AffineTransform: java.awt.geom.Point2D transform(java.awt.geom.Point2D,java.awt.geom.Point2D)>(orgPoint, transPoint);
+        $r6 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLPageDefinition currentPageDefinition>;
+        pageSize = virtualinvoke $r6.<org.apache.fop.render.pcl.PCLPageDefinition: java.awt.Dimension getPhysicalPageSize()>();
+        $r6 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLPageDefinition currentPageDefinition>;
+        logRect = virtualinvoke $r6.<org.apache.fop.render.pcl.PCLPageDefinition: java.awt.Rectangle getLogicalPageRect()>();
+        $i0 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentPrintDirection>;
+        lookupswitch($i0)
+        {
+            case 0: goto label1;
+            case 90: goto label2;
+            case 180: goto label3;
+            case 270: goto label4;
+            default: goto label5;
+        };
+
+     label1:
+        $f2 = transPoint.<java.awt.geom.Point2D$Float: float x>;
+        $i1 = logRect.<java.awt.Rectangle: int x>;
+        $f0 = (float) $i1;
+        $f2 = $f2 - $f0;
+        transPoint.<java.awt.geom.Point2D$Float: float x> = $f2;
+        $f2 = transPoint.<java.awt.geom.Point2D$Float: float y>;
+        $i1 = logRect.<java.awt.Rectangle: int y>;
+        $f0 = (float) $i1;
+        $f2 = $f2 - $f0;
+        transPoint.<java.awt.geom.Point2D$Float: float y> = $f2;
+        goto label6;
+
+     label2:
+        ty = transPoint.<java.awt.geom.Point2D$Float: float x>;
+        $i2 = pageSize.<java.awt.Dimension: int height>;
+        $f2 = (float) $i2;
+        $f0 = transPoint.<java.awt.geom.Point2D$Float: float y>;
+        $f2 = $f2 - $f0;
+        transPoint.<java.awt.geom.Point2D$Float: float x> = $f2;
+        transPoint.<java.awt.geom.Point2D$Float: float y> = ty;
+        $f2 = transPoint.<java.awt.geom.Point2D$Float: float x>;
+        $i1 = logRect.<java.awt.Rectangle: int y>;
+        $f0 = (float) $i1;
+        $f2 = $f2 - $f0;
+        transPoint.<java.awt.geom.Point2D$Float: float x> = $f2;
+        $f2 = transPoint.<java.awt.geom.Point2D$Float: float y>;
+        $i1 = logRect.<java.awt.Rectangle: int x>;
+        $f0 = (float) $i1;
+        $f2 = $f2 - $f0;
+        transPoint.<java.awt.geom.Point2D$Float: float y> = $f2;
+        goto label6;
+
+     label3:
+        $i2 = pageSize.<java.awt.Dimension: int width>;
+        $f2 = (float) $i2;
+        $f0 = transPoint.<java.awt.geom.Point2D$Float: float x>;
+        $f2 = $f2 - $f0;
+        transPoint.<java.awt.geom.Point2D$Float: float x> = $f2;
+        $i2 = pageSize.<java.awt.Dimension: int height>;
+        $f2 = (float) $i2;
+        $f0 = transPoint.<java.awt.geom.Point2D$Float: float y>;
+        $f2 = $f2 - $f0;
+        transPoint.<java.awt.geom.Point2D$Float: float y> = $f2;
+        $f2 = transPoint.<java.awt.geom.Point2D$Float: float x>;
+        $i1 = pageSize.<java.awt.Dimension: int width>;
+        $i3 = logRect.<java.awt.Rectangle: int x>;
+        $i1 = $i1 - $i3;
+        $i3 = logRect.<java.awt.Rectangle: int width>;
+        $i1 = $i1 - $i3;
+        $f0 = (float) $i1;
+        $f2 = $f2 - $f0;
+        transPoint.<java.awt.geom.Point2D$Float: float x> = $f2;
+        $f2 = transPoint.<java.awt.geom.Point2D$Float: float y>;
+        $i1 = pageSize.<java.awt.Dimension: int height>;
+        $i3 = logRect.<java.awt.Rectangle: int y>;
+        $i1 = $i1 - $i3;
+        $i3 = logRect.<java.awt.Rectangle: int height>;
+        $i1 = $i1 - $i3;
+        $f0 = (float) $i1;
+        $f2 = $f2 - $f0;
+        transPoint.<java.awt.geom.Point2D$Float: float y> = $f2;
+        $f2 = transPoint.<java.awt.geom.Point2D$Float: float y>;
+        $d0 = (double) $f2;
+        $d1 = staticinvoke <org.apache.fop.util.UnitConv: double in2mpt(double)>(0.5);
+        $d0 = $d0 - $d1;
+        $f2 = (float) $d0;
+        transPoint.<java.awt.geom.Point2D$Float: float y> = $f2;
+        goto label6;
+
+     label4:
+        tx = transPoint.<java.awt.geom.Point2D$Float: float y>;
+        $i2 = pageSize.<java.awt.Dimension: int width>;
+        $f2 = (float) $i2;
+        $f0 = transPoint.<java.awt.geom.Point2D$Float: float x>;
+        $f2 = $f2 - $f0;
+        transPoint.<java.awt.geom.Point2D$Float: float y> = $f2;
+        transPoint.<java.awt.geom.Point2D$Float: float x> = tx;
+        $f2 = transPoint.<java.awt.geom.Point2D$Float: float x>;
+        $i1 = pageSize.<java.awt.Dimension: int height>;
+        $i3 = logRect.<java.awt.Rectangle: int y>;
+        $i1 = $i1 - $i3;
+        $i3 = logRect.<java.awt.Rectangle: int height>;
+        $i1 = $i1 - $i3;
+        $f0 = (float) $i1;
+        $f2 = $f2 - $f0;
+        transPoint.<java.awt.geom.Point2D$Float: float x> = $f2;
+        $f2 = transPoint.<java.awt.geom.Point2D$Float: float y>;
+        $i1 = pageSize.<java.awt.Dimension: int width>;
+        $i3 = logRect.<java.awt.Rectangle: int x>;
+        $i1 = $i1 - $i3;
+        $i3 = logRect.<java.awt.Rectangle: int width>;
+        $i1 = $i1 - $i3;
+        $f0 = (float) $i1;
+        $f2 = $f2 - $f0;
+        transPoint.<java.awt.geom.Point2D$Float: float y> = $f2;
+        goto label6;
+
+     label5:
+        $r7 = new java.lang.IllegalStateException;
+        $r8 = new java.lang.StringBuffer;
+        specialinvoke $r8.<java.lang.StringBuffer: void <init>()>();
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Illegal print direction: ");
+        $i3 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentPrintDirection>;
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i3);
+        $r9 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r7.<java.lang.IllegalStateException: void <init>(java.lang.String)>($r9);
+        throw $r7;
+
+     label6:
+        return transPoint;
+    }
+
+    private void changePrintDirection()
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        java.awt.geom.AffineTransform at;
+        short newDir;
+        java.io.IOException ioe, $r2;
+        org.apache.xmlgraphics.java2d.GraphicContext $r0;
+        double $d0;
+        byte $b0;
+        int $i1;
+        org.apache.fop.render.pcl.PCLGenerator $r1;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        $r0 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.xmlgraphics.java2d.GraphicContext graphicContext>;
+        at = virtualinvoke $r0.<org.apache.xmlgraphics.java2d.GraphicContext: java.awt.geom.AffineTransform getTransform()>();
+
+     label0:
+        $d0 = virtualinvoke at.<java.awt.geom.AffineTransform: double getScaleX()>();
+        $b0 = $d0 cmpl 0.0;
+        if $b0 != 0 goto label1;
+
+        $d0 = virtualinvoke at.<java.awt.geom.AffineTransform: double getScaleY()>();
+        $b0 = $d0 cmpl 0.0;
+        if $b0 != 0 goto label1;
+
+        $d0 = virtualinvoke at.<java.awt.geom.AffineTransform: double getShearX()>();
+        $b0 = $d0 cmpl 1.0;
+        if $b0 != 0 goto label1;
+
+        $d0 = virtualinvoke at.<java.awt.geom.AffineTransform: double getShearY()>();
+        $b0 = $d0 cmpl -1.0;
+        if $b0 != 0 goto label1;
+
+        newDir = 90;
+        goto label4;
+
+     label1:
+        $d0 = virtualinvoke at.<java.awt.geom.AffineTransform: double getScaleX()>();
+        $b0 = $d0 cmpl -1.0;
+        if $b0 != 0 goto label2;
+
+        $d0 = virtualinvoke at.<java.awt.geom.AffineTransform: double getScaleY()>();
+        $b0 = $d0 cmpl -1.0;
+        if $b0 != 0 goto label2;
+
+        $d0 = virtualinvoke at.<java.awt.geom.AffineTransform: double getShearX()>();
+        $b0 = $d0 cmpl 0.0;
+        if $b0 != 0 goto label2;
+
+        $d0 = virtualinvoke at.<java.awt.geom.AffineTransform: double getShearY()>();
+        $b0 = $d0 cmpl 0.0;
+        if $b0 != 0 goto label2;
+
+        newDir = 180;
+        goto label4;
+
+     label2:
+        $d0 = virtualinvoke at.<java.awt.geom.AffineTransform: double getScaleX()>();
+        $b0 = $d0 cmpl 0.0;
+        if $b0 != 0 goto label3;
+
+        $d0 = virtualinvoke at.<java.awt.geom.AffineTransform: double getScaleY()>();
+        $b0 = $d0 cmpl 0.0;
+        if $b0 != 0 goto label3;
+
+        $d0 = virtualinvoke at.<java.awt.geom.AffineTransform: double getShearX()>();
+        $b0 = $d0 cmpl -1.0;
+        if $b0 != 0 goto label3;
+
+        $d0 = virtualinvoke at.<java.awt.geom.AffineTransform: double getShearY()>();
+        $b0 = $d0 cmpl 1.0;
+        if $b0 != 0 goto label3;
+
+        newDir = 270;
+        goto label4;
+
+     label3:
+        newDir = 0;
+
+     label4:
+        $i1 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentPrintDirection>;
+        if newDir == $i1 goto label5;
+
+        this.<org.apache.fop.render.pcl.PCLRenderer: int currentPrintDirection> = newDir;
+        $r1 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $i1 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentPrintDirection>;
+        virtualinvoke $r1.<org.apache.fop.render.pcl.PCLGenerator: void changePrintDirection(int)>($i1);
+
+     label5:
+        goto label7;
+
+     label6:
+        $r2 := @caughtexception;
+        ioe = $r2;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void handleIOTrouble(java.io.IOException)>(ioe);
+
+     label7:
+        return;
+
+        catch java.io.IOException from label0 to label5 with label6;
+    }
+
+    protected void startVParea(org.apache.fop.area.CTM, java.awt.geom.Rectangle2D)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        org.apache.fop.area.CTM ctm;
+        java.awt.geom.Rectangle2D clippingRect;
+        java.awt.geom.AffineTransform at, $r0, $r6;
+        double[] $r1;
+        org.apache.xmlgraphics.java2d.GraphicContext $r2, $r5;
+        org.apache.commons.logging.Log $r3;
+        boolean $z0;
+        java.lang.StringBuffer $r4;
+        java.lang.String $r7;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        ctm := @parameter0: org.apache.fop.area.CTM;
+        clippingRect := @parameter1: java.awt.geom.Rectangle2D;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void saveGraphicsState()>();
+        $r0 = new java.awt.geom.AffineTransform;
+        $r1 = virtualinvoke ctm.<org.apache.fop.area.CTM: double[] toArray()>();
+        specialinvoke $r0.<java.awt.geom.AffineTransform: void <init>(double[])>($r1);
+        at = $r0;
+        $r2 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.xmlgraphics.java2d.GraphicContext graphicContext>;
+        virtualinvoke $r2.<org.apache.xmlgraphics.java2d.GraphicContext: void transform(java.awt.geom.AffineTransform)>(at);
+        specialinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void changePrintDirection()>();
+        $r3 = <org.apache.fop.render.pcl.PCLRenderer: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r3.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r3 = <org.apache.fop.render.pcl.PCLRenderer: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("startVPArea: ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(at);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" --> ");
+        $r5 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.xmlgraphics.java2d.GraphicContext graphicContext>;
+        $r6 = virtualinvoke $r5.<org.apache.xmlgraphics.java2d.GraphicContext: java.awt.geom.AffineTransform getTransform()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r6);
+        $r7 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r7);
+
+     label0:
+        return;
+    }
+
+    protected void endVParea()
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        java.lang.StringBuffer $r0;
+        org.apache.commons.logging.Log $r1;
+        boolean $z0;
+        org.apache.xmlgraphics.java2d.GraphicContext $r2;
+        java.awt.geom.AffineTransform $r3;
+        java.lang.String $r4;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void restoreGraphicsState()>();
+        specialinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void changePrintDirection()>();
+        $r1 = <org.apache.fop.render.pcl.PCLRenderer: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r1 = <org.apache.fop.render.pcl.PCLRenderer: org.apache.commons.logging.Log log>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("endVPArea() --> ");
+        $r2 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.xmlgraphics.java2d.GraphicContext graphicContext>;
+        $r3 = virtualinvoke $r2.<org.apache.xmlgraphics.java2d.GraphicContext: java.awt.geom.AffineTransform getTransform()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r3);
+        $r4 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r4);
+
+     label0:
+        return;
+    }
+
+    protected void handleBlockTraits(org.apache.fop.area.Block)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        org.apache.fop.area.Block block;
+        int borderPaddingStart, borderPaddingBefore, $i0, $i1;
+        float startx, starty, width, height, $f0, $f1;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        block := @parameter0: org.apache.fop.area.Block;
+        borderPaddingStart = virtualinvoke block.<org.apache.fop.area.Block: int getBorderAndPaddingWidthStart()>();
+        borderPaddingBefore = virtualinvoke block.<org.apache.fop.area.Block: int getBorderAndPaddingWidthBefore()>();
+        $i0 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentIPPosition>;
+        $f0 = (float) $i0;
+        startx = $f0 / 1000.0F;
+        $i0 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition>;
+        $f0 = (float) $i0;
+        starty = $f0 / 1000.0F;
+        $i0 = virtualinvoke block.<org.apache.fop.area.Block: int getIPD()>();
+        $f0 = (float) $i0;
+        width = $f0 / 1000.0F;
+        $i0 = virtualinvoke block.<org.apache.fop.area.Block: int getBPD()>();
+        $f0 = (float) $i0;
+        height = $f0 / 1000.0F;
+        $i1 = virtualinvoke block.<org.apache.fop.area.Block: int getStartIndent()>();
+        $f1 = (float) $i1;
+        $f1 = $f1 / 1000.0F;
+        startx = startx + $f1;
+        $i1 = virtualinvoke block.<org.apache.fop.area.Block: int getBorderAndPaddingWidthStart()>();
+        $f1 = (float) $i1;
+        $f1 = $f1 / 1000.0F;
+        startx = startx - $f1;
+        $f1 = (float) borderPaddingStart;
+        $f1 = $f1 / 1000.0F;
+        width = width + $f1;
+        $i1 = virtualinvoke block.<org.apache.fop.area.Block: int getBorderAndPaddingWidthEnd()>();
+        $f1 = (float) $i1;
+        $f1 = $f1 / 1000.0F;
+        width = width + $f1;
+        $f1 = (float) borderPaddingBefore;
+        $f1 = $f1 / 1000.0F;
+        height = height + $f1;
+        $i1 = virtualinvoke block.<org.apache.fop.area.Block: int getBorderAndPaddingWidthAfter()>();
+        $f1 = (float) $i1;
+        $f1 = $f1 / 1000.0F;
+        height = height + $f1;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void drawBackAndBorders(org.apache.fop.area.Area,float,float,float,float)>(block, startx, starty, width, height);
+        return;
+    }
+
+    protected void handleRegionTraits(org.apache.fop.area.RegionViewport)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        org.apache.fop.area.RegionViewport region;
+        java.awt.geom.Rectangle2D viewArea;
+        float startx, starty, width, height;
+        double $d0;
+        org.apache.fop.area.RegionReference $r0;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        region := @parameter0: org.apache.fop.area.RegionViewport;
+        viewArea = virtualinvoke region.<org.apache.fop.area.RegionViewport: java.awt.geom.Rectangle2D getViewArea()>();
+        $d0 = virtualinvoke viewArea.<java.awt.geom.Rectangle2D: double getX()>();
+        $d0 = $d0 / 1000.0;
+        startx = (float) $d0;
+        $d0 = virtualinvoke viewArea.<java.awt.geom.Rectangle2D: double getY()>();
+        $d0 = $d0 / 1000.0;
+        starty = (float) $d0;
+        $d0 = virtualinvoke viewArea.<java.awt.geom.Rectangle2D: double getWidth()>();
+        $d0 = $d0 / 1000.0;
+        width = (float) $d0;
+        $d0 = virtualinvoke viewArea.<java.awt.geom.Rectangle2D: double getHeight()>();
+        $d0 = $d0 / 1000.0;
+        height = (float) $d0;
+        $r0 = virtualinvoke region.<org.apache.fop.area.RegionViewport: org.apache.fop.area.RegionReference getRegionReference()>();
+        $i0 = virtualinvoke $r0.<org.apache.fop.area.RegionReference: int getRegionClass()>();
+        if $i0 != 36 goto label0;
+
+        $i1 = virtualinvoke region.<org.apache.fop.area.RegionViewport: int getBorderAndPaddingWidthBefore()>();
+        this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition> = $i1;
+        $i1 = virtualinvoke region.<org.apache.fop.area.RegionViewport: int getBorderAndPaddingWidthStart()>();
+        this.<org.apache.fop.render.pcl.PCLRenderer: int currentIPPosition> = $i1;
+
+     label0:
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void drawBackAndBorders(org.apache.fop.area.Area,float,float,float,float)>(region, startx, starty, width, height);
+        return;
+    }
+
+    protected void renderText(org.apache.fop.area.inline.TextArea)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        org.apache.fop.area.inline.TextArea text;
+        java.lang.String fontname, $r2, $r6;
+        int fontsize, saveIP, rx, bl, baseline, extraWidth, maxAscent, additionalBPD, $i0, $i1, $i2, $i3, $i4, $i5, $i6;
+        java.awt.Color col;
+        boolean pclFont, $z0;
+        org.apache.fop.fonts.Font font;
+        org.apache.fop.render.java2d.FontMetricsMapper mapper;
+        org.apache.fop.render.Graphics2DAdapter g2a;
+        java.awt.Rectangle paintRect, $r8;
+        org.apache.fop.render.RendererContext rc;
+        java.util.HashMap atts, $r9;
+        org.apache.fop.render.pcl.PCLRenderer$1 painter, $r11;
+        java.io.IOException ioe, $r12;
+        java.lang.Integer $r0;
+        java.lang.Object $r1;
+        float $f0;
+        org.apache.fop.render.pcl.PCLGenerator $r3;
+        org.apache.xmlgraphics.java2d.GraphicContext $r4;
+        org.apache.fop.fonts.FontInfo $r5;
+        org.apache.fop.fonts.FontMetrics $r7;
+        org.apache.fop.util.QName $r10;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        text := @parameter0: org.apache.fop.area.inline.TextArea;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void renderInlineAreaBackAndBorders(org.apache.fop.area.inline.InlineArea)>(text);
+        fontname = virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: java.lang.String getInternalFontNameForArea(org.apache.fop.area.Area)>(text);
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer FONT_SIZE>;
+        fontsize = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getTraitAsInteger(java.lang.Object)>($r0);
+        saveIP = this.<org.apache.fop.render.pcl.PCLRenderer: int currentIPPosition>;
+        $i0 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentIPPosition>;
+        $i1 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getBorderAndPaddingWidthStart()>();
+        rx = $i0 + $i1;
+        $i0 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition>;
+        $i1 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getOffset()>();
+        $i0 = $i0 + $i1;
+        $i1 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getBaselineOffset()>();
+        bl = $i0 + $i1;
+
+     label0:
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer COLOR>;
+        $r1 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: java.lang.Object getTrait(java.lang.Object)>($r0);
+        col = (java.awt.Color) $r1;
+        $z0 = this.<org.apache.fop.render.pcl.PCLRenderer: boolean allTextAsBitmaps>;
+        if $z0 == 0 goto label1;
+
+        $z0 = 0;
+        goto label2;
+
+     label1:
+        $f0 = (float) fontsize;
+        $r2 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: java.lang.String getText()>();
+        $z0 = virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: boolean setFont(java.lang.String,float,java.lang.String)>(fontname, $f0, $r2);
+
+     label2:
+        pclFont = $z0;
+        if pclFont == 0 goto label6;
+
+        if col == null goto label3;
+
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void setTransparencyMode(boolean,boolean)>(1, 0);
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void selectGrayscale(java.awt.Color)>(col);
+
+     label3:
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void saveGraphicsState()>();
+        $r4 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.xmlgraphics.java2d.GraphicContext graphicContext>;
+        virtualinvoke $r4.<org.apache.xmlgraphics.java2d.GraphicContext: void translate(int,int)>(rx, bl);
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void setCursorPos(float,float)>(0.0F, 0.0F);
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void setTransparencyMode(boolean,boolean)>(1, 1);
+        $z0 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: boolean hasUnderline()>();
+        if $z0 == 0 goto label4;
+
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("&d0D");
+
+     label4:
+        specialinvoke this.<org.apache.fop.render.PrintRenderer: void renderText(org.apache.fop.area.inline.TextArea)>(text);
+        $z0 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: boolean hasUnderline()>();
+        if $z0 == 0 goto label5;
+
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("&d@");
+
+     label5:
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void restoreGraphicsState()>();
+        goto label7;
+
+     label6:
+        font = virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.fonts.Font getFontFromArea(org.apache.fop.area.Area)>(text);
+        baseline = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getBaselineOffset()>();
+        $i0 = virtualinvoke font.<org.apache.fop.fonts.Font: int getFontSize()>();
+        extraWidth = $i0 / 3;
+        $r5 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r6 = virtualinvoke font.<org.apache.fop.fonts.Font: java.lang.String getFontName()>();
+        $r7 = virtualinvoke $r5.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontMetrics getMetricsFor(java.lang.String)>($r6);
+        mapper = (org.apache.fop.render.java2d.FontMetricsMapper) $r7;
+        $i1 = virtualinvoke font.<org.apache.fop.fonts.Font: int getFontSize()>();
+        $i0 = interfaceinvoke mapper.<org.apache.fop.render.java2d.FontMetricsMapper: int getMaxAscent(int)>($i1);
+        maxAscent = $i0 / 1000;
+        additionalBPD = maxAscent - baseline;
+        g2a = virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.Graphics2DAdapter getGraphics2DAdapter()>();
+        $r8 = new java.awt.Rectangle;
+        $i2 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition>;
+        $i3 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getOffset()>();
+        $i2 = $i2 + $i3;
+        $i2 = $i2 - additionalBPD;
+        $i3 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getIPD()>();
+        $i3 = $i3 + extraWidth;
+        $i4 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getBPD()>();
+        $i4 = $i4 + additionalBPD;
+        specialinvoke $r8.<java.awt.Rectangle: void <init>(int,int,int,int)>(rx, $i2, $i3, $i4);
+        paintRect = $r8;
+        $i1 = paintRect.<java.awt.Rectangle: int x>;
+        $i5 = paintRect.<java.awt.Rectangle: int y>;
+        $i2 = paintRect.<java.awt.Rectangle: int width>;
+        $i3 = paintRect.<java.awt.Rectangle: int height>;
+        rc = virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.RendererContext createRendererContext(int,int,int,int,java.util.Map)>($i1, $i5, $i2, $i3, null);
+        $r9 = new java.util.HashMap;
+        specialinvoke $r9.<java.util.HashMap: void <init>()>();
+        atts = $r9;
+        $r10 = <org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.util.QName CONV_MODE>;
+        interfaceinvoke atts.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r10, "bitmap");
+        $r10 = <org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.util.QName SRC_TRANSPARENCY>;
+        interfaceinvoke atts.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r10, "true");
+        virtualinvoke rc.<org.apache.fop.render.RendererContext: void setProperty(java.lang.String,java.lang.Object)>("foreign-attributes", atts);
+        $r11 = new org.apache.fop.render.pcl.PCLRenderer$1;
+        specialinvoke $r11.<org.apache.fop.render.pcl.PCLRenderer$1: void <init>(org.apache.fop.render.pcl.PCLRenderer,org.apache.fop.render.java2d.FontMetricsMapper,org.apache.fop.fonts.Font,int,int,java.awt.Color,org.apache.fop.area.inline.TextArea,int,java.awt.Rectangle)>(this, mapper, font, baseline, additionalBPD, col, text, fontsize, paintRect);
+        painter = $r11;
+        $i2 = paintRect.<java.awt.Rectangle: int x>;
+        $i3 = paintRect.<java.awt.Rectangle: int y>;
+        $i4 = paintRect.<java.awt.Rectangle: int width>;
+        $i6 = paintRect.<java.awt.Rectangle: int height>;
+        interfaceinvoke g2a.<org.apache.fop.render.Graphics2DAdapter: void paintImage(org.apache.xmlgraphics.java2d.Graphics2DImagePainter,org.apache.fop.render.RendererContext,int,int,int,int)>(painter, rc, $i2, $i3, $i4, $i6);
+        $i5 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getAllocIPD()>();
+        $i1 = saveIP + $i5;
+        this.<org.apache.fop.render.pcl.PCLRenderer: int currentIPPosition> = $i1;
+
+     label7:
+        goto label9;
+
+     label8:
+        $r12 := @caughtexception;
+        ioe = $r12;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void handleIOTrouble(java.io.IOException)>(ioe);
+
+     label9:
+        return;
+
+        catch java.io.IOException from label0 to label7 with label8;
+    }
+
+    private static void renderTextDecoration(java.awt.Graphics2D, org.apache.fop.fonts.FontMetrics, int, org.apache.fop.area.inline.InlineArea, int, int)
+    {
+        java.awt.Graphics2D g2d;
+        org.apache.fop.fonts.FontMetrics fm;
+        int fontsize, baseline, startx, $i0, $i1;
+        org.apache.fop.area.inline.InlineArea inline;
+        boolean hasTextDeco, $z0;
+        float descender, capHeight, lineWidth, endx, y, $f0, $f1, $f2, $f3, $f4;
+        java.awt.Color ct;
+        java.lang.Integer $r0;
+        java.lang.Object $r1;
+        java.awt.BasicStroke $r2;
+        java.awt.geom.Line2D$Float $r3;
+        double $d0, $d1, $d2;
+
+        g2d := @parameter0: java.awt.Graphics2D;
+        fm := @parameter1: org.apache.fop.fonts.FontMetrics;
+        fontsize := @parameter2: int;
+        inline := @parameter3: org.apache.fop.area.inline.InlineArea;
+        baseline := @parameter4: int;
+        startx := @parameter5: int;
+        $z0 = virtualinvoke inline.<org.apache.fop.area.inline.InlineArea: boolean hasUnderline()>();
+        if $z0 != 0 goto label0;
+
+        $z0 = virtualinvoke inline.<org.apache.fop.area.inline.InlineArea: boolean hasOverline()>();
+        if $z0 != 0 goto label0;
+
+        $z0 = virtualinvoke inline.<org.apache.fop.area.inline.InlineArea: boolean hasLineThrough()>();
+        if $z0 == 0 goto label1;
+
+     label0:
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        hasTextDeco = $z0;
+        if hasTextDeco == 0 goto label5;
+
+        $i0 = interfaceinvoke fm.<org.apache.fop.fonts.FontMetrics: int getDescender(int)>(fontsize);
+        $f0 = (float) $i0;
+        descender = $f0 / 1000.0F;
+        $i0 = interfaceinvoke fm.<org.apache.fop.fonts.FontMetrics: int getCapHeight(int)>(fontsize);
+        $f0 = (float) $i0;
+        capHeight = $f0 / 1000.0F;
+        $f0 = descender / -4.0F;
+        lineWidth = $f0 / 1000.0F;
+        $i1 = virtualinvoke inline.<org.apache.fop.area.inline.InlineArea: int getIPD()>();
+        $i0 = startx + $i1;
+        $f0 = (float) $i0;
+        endx = $f0 / 1000.0F;
+        $z0 = virtualinvoke inline.<org.apache.fop.area.inline.InlineArea: boolean hasUnderline()>();
+        if $z0 == 0 goto label3;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer UNDERLINE_COLOR>;
+        $r1 = virtualinvoke inline.<org.apache.fop.area.inline.InlineArea: java.lang.Object getTrait(java.lang.Object)>($r0);
+        ct = (java.awt.Color) $r1;
+        virtualinvoke g2d.<java.awt.Graphics2D: void setColor(java.awt.Color)>(ct);
+        $f0 = (float) baseline;
+        $f1 = descender / 2.0F;
+        y = $f0 - $f1;
+        $r2 = new java.awt.BasicStroke;
+        specialinvoke $r2.<java.awt.BasicStroke: void <init>(float)>(lineWidth);
+        virtualinvoke g2d.<java.awt.Graphics2D: void setStroke(java.awt.Stroke)>($r2);
+        $r3 = new java.awt.geom.Line2D$Float;
+        $f2 = (float) startx;
+        $f2 = $f2 / 1000.0F;
+        $f3 = y / 1000.0F;
+        $f4 = y / 1000.0F;
+        specialinvoke $r3.<java.awt.geom.Line2D$Float: void <init>(float,float,float,float)>($f2, $f3, endx, $f4);
+        virtualinvoke g2d.<java.awt.Graphics2D: void draw(java.awt.Shape)>($r3);
+
+     label3:
+        $z0 = virtualinvoke inline.<org.apache.fop.area.inline.InlineArea: boolean hasOverline()>();
+        if $z0 == 0 goto label4;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer OVERLINE_COLOR>;
+        $r1 = virtualinvoke inline.<org.apache.fop.area.inline.InlineArea: java.lang.Object getTrait(java.lang.Object)>($r0);
+        ct = (java.awt.Color) $r1;
+        virtualinvoke g2d.<java.awt.Graphics2D: void setColor(java.awt.Color)>(ct);
+        $d0 = (double) baseline;
+        $d1 = (double) capHeight;
+        $d2 = 1.1 * $d1;
+        $d0 = $d0 - $d2;
+        y = (float) $d0;
+        $r2 = new java.awt.BasicStroke;
+        specialinvoke $r2.<java.awt.BasicStroke: void <init>(float)>(lineWidth);
+        virtualinvoke g2d.<java.awt.Graphics2D: void setStroke(java.awt.Stroke)>($r2);
+        $r3 = new java.awt.geom.Line2D$Float;
+        $f2 = (float) startx;
+        $f2 = $f2 / 1000.0F;
+        $f3 = y / 1000.0F;
+        $f4 = y / 1000.0F;
+        specialinvoke $r3.<java.awt.geom.Line2D$Float: void <init>(float,float,float,float)>($f2, $f3, endx, $f4);
+        virtualinvoke g2d.<java.awt.Graphics2D: void draw(java.awt.Shape)>($r3);
+
+     label4:
+        $z0 = virtualinvoke inline.<org.apache.fop.area.inline.InlineArea: boolean hasLineThrough()>();
+        if $z0 == 0 goto label5;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer LINETHROUGH_COLOR>;
+        $r1 = virtualinvoke inline.<org.apache.fop.area.inline.InlineArea: java.lang.Object getTrait(java.lang.Object)>($r0);
+        ct = (java.awt.Color) $r1;
+        virtualinvoke g2d.<java.awt.Graphics2D: void setColor(java.awt.Color)>(ct);
+        $d0 = (double) baseline;
+        $d1 = (double) capHeight;
+        $d2 = 0.45 * $d1;
+        $d0 = $d0 - $d2;
+        y = (float) $d0;
+        $r2 = new java.awt.BasicStroke;
+        specialinvoke $r2.<java.awt.BasicStroke: void <init>(float)>(lineWidth);
+        virtualinvoke g2d.<java.awt.Graphics2D: void setStroke(java.awt.Stroke)>($r2);
+        $r3 = new java.awt.geom.Line2D$Float;
+        $f2 = (float) startx;
+        $f2 = $f2 / 1000.0F;
+        $f3 = y / 1000.0F;
+        $f4 = y / 1000.0F;
+        specialinvoke $r3.<java.awt.geom.Line2D$Float: void <init>(float,float,float,float)>($f2, $f3, endx, $f4);
+        virtualinvoke g2d.<java.awt.Graphics2D: void draw(java.awt.Shape)>($r3);
+
+     label5:
+        return;
+    }
+
+    void setCursorPos(float, float)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        float x, y;
+        java.awt.geom.Point2D transPoint;
+        java.io.IOException ioe, $r1;
+        org.apache.fop.render.pcl.PCLGenerator $r0;
+        double $d0, $d1;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        x := @parameter0: float;
+        y := @parameter1: float;
+
+     label0:
+        transPoint = specialinvoke this.<org.apache.fop.render.pcl.PCLRenderer: java.awt.geom.Point2D transformedPoint(float,float)>(x, y);
+        $r0 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $d0 = virtualinvoke transPoint.<java.awt.geom.Point2D: double getX()>();
+        $d1 = virtualinvoke transPoint.<java.awt.geom.Point2D: double getY()>();
+        virtualinvoke $r0.<org.apache.fop.render.pcl.PCLGenerator: void setCursorPos(double,double)>($d0, $d1);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r1 := @caughtexception;
+        ioe = $r1;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void handleIOTrouble(java.io.IOException)>(ioe);
+
+     label3:
+        return;
+
+        catch java.io.IOException from label0 to label1 with label2;
+    }
+
+    protected void clip()
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        java.awt.geom.GeneralPath $r0;
+        java.lang.IllegalStateException $r1;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        $r0 = this.<org.apache.fop.render.pcl.PCLRenderer: java.awt.geom.GeneralPath currentPath>;
+        if $r0 != null goto label0;
+
+        $r1 = new java.lang.IllegalStateException;
+        specialinvoke $r1.<java.lang.IllegalStateException: void <init>(java.lang.String)>("No current path available!");
+        throw $r1;
+
+     label0:
+        this.<org.apache.fop.render.pcl.PCLRenderer: java.awt.geom.GeneralPath currentPath> = null;
+        return;
+    }
+
+    protected void closePath()
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        java.awt.geom.GeneralPath $r0;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        $r0 = this.<org.apache.fop.render.pcl.PCLRenderer: java.awt.geom.GeneralPath currentPath>;
+        virtualinvoke $r0.<java.awt.geom.GeneralPath: void closePath()>();
+        return;
+    }
+
+    protected void lineTo(float, float)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        float x, y;
+        java.awt.geom.GeneralPath $r0, $r1;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        x := @parameter0: float;
+        y := @parameter1: float;
+        $r1 = this.<org.apache.fop.render.pcl.PCLRenderer: java.awt.geom.GeneralPath currentPath>;
+        if $r1 != null goto label0;
+
+        $r0 = new java.awt.geom.GeneralPath;
+        specialinvoke $r0.<java.awt.geom.GeneralPath: void <init>()>();
+        this.<org.apache.fop.render.pcl.PCLRenderer: java.awt.geom.GeneralPath currentPath> = $r0;
+
+     label0:
+        $r1 = this.<org.apache.fop.render.pcl.PCLRenderer: java.awt.geom.GeneralPath currentPath>;
+        virtualinvoke $r1.<java.awt.geom.GeneralPath: void lineTo(float,float)>(x, y);
+        return;
+    }
+
+    protected void moveTo(float, float)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        float x, y;
+        java.awt.geom.GeneralPath $r0, $r1;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        x := @parameter0: float;
+        y := @parameter1: float;
+        $r1 = this.<org.apache.fop.render.pcl.PCLRenderer: java.awt.geom.GeneralPath currentPath>;
+        if $r1 != null goto label0;
+
+        $r0 = new java.awt.geom.GeneralPath;
+        specialinvoke $r0.<java.awt.geom.GeneralPath: void <init>()>();
+        this.<org.apache.fop.render.pcl.PCLRenderer: java.awt.geom.GeneralPath currentPath> = $r0;
+
+     label0:
+        $r1 = this.<org.apache.fop.render.pcl.PCLRenderer: java.awt.geom.GeneralPath currentPath>;
+        virtualinvoke $r1.<java.awt.geom.GeneralPath: void moveTo(float,float)>(x, y);
+        return;
+    }
+
+    protected void fillRect(float, float, float, float)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        float x, y, width, height, $f0, $f1;
+        java.io.IOException ioe, $r2;
+        org.apache.fop.render.pcl.PCLGenerator $r0;
+        int $i0, $i1;
+        java.awt.Color $r1;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        x := @parameter0: float;
+        y := @parameter1: float;
+        width := @parameter2: float;
+        height := @parameter3: float;
+
+     label0:
+        $f0 = x * 1000.0F;
+        $f1 = y * 1000.0F;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void setCursorPos(float,float)>($f0, $f1);
+        $r0 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $f0 = width * 1000.0F;
+        $i0 = (int) $f0;
+        $f1 = height * 1000.0F;
+        $i1 = (int) $f1;
+        $r1 = this.<org.apache.fop.render.pcl.PCLRenderer: java.awt.Color currentFillColor>;
+        virtualinvoke $r0.<org.apache.fop.render.pcl.PCLGenerator: void fillRect(int,int,java.awt.Color)>($i0, $i1, $r1);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r2 := @caughtexception;
+        ioe = $r2;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void handleIOTrouble(java.io.IOException)>(ioe);
+
+     label3:
+        return;
+
+        catch java.io.IOException from label0 to label1 with label2;
+    }
+
+    protected void updateFillColor(java.awt.Color)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        java.awt.Color color;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        color := @parameter0: java.awt.Color;
+        this.<org.apache.fop.render.pcl.PCLRenderer: java.awt.Color currentFillColor> = color;
+        return;
+    }
+
+    protected void renderWord(org.apache.fop.area.inline.WordArea)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        org.apache.fop.area.inline.WordArea word;
+        java.lang.String s;
+        java.io.IOException ioe, $r1;
+        org.apache.fop.render.pcl.PCLGenerator $r0;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        word := @parameter0: org.apache.fop.area.inline.WordArea;
+        s = virtualinvoke word.<org.apache.fop.area.inline.WordArea: java.lang.String getWord()>();
+
+     label0:
+        $r0 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        virtualinvoke $r0.<org.apache.fop.render.pcl.PCLGenerator: void writeText(java.lang.String)>(s);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r1 := @caughtexception;
+        ioe = $r1;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void handleIOTrouble(java.io.IOException)>(ioe);
+
+     label3:
+        specialinvoke this.<org.apache.fop.render.PrintRenderer: void renderWord(org.apache.fop.area.inline.WordArea)>(word);
+        return;
+
+        catch java.io.IOException from label0 to label1 with label2;
+    }
+
+    protected void renderSpace(org.apache.fop.area.inline.SpaceArea)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        org.apache.fop.area.inline.SpaceArea space;
+        org.apache.fop.area.inline.AbstractTextArea textArea;
+        java.lang.String s, $r4, $r5;
+        char sp;
+        org.apache.fop.fonts.Font font;
+        int tws, $i0, $i1, $i2;
+        double dx;
+        java.io.IOException ioe, $r6;
+        org.apache.fop.area.Area $r0;
+        boolean $z0;
+        float $f0;
+        org.apache.fop.render.pcl.PCLGenerator $r1, $r3;
+        java.lang.StringBuffer $r2;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        space := @parameter0: org.apache.fop.area.inline.SpaceArea;
+        $r0 = virtualinvoke space.<org.apache.fop.area.inline.SpaceArea: org.apache.fop.area.Area getParentArea()>();
+        textArea = (org.apache.fop.area.inline.AbstractTextArea) $r0;
+        s = virtualinvoke space.<org.apache.fop.area.inline.SpaceArea: java.lang.String getSpace()>();
+        sp = virtualinvoke s.<java.lang.String: char charAt(int)>(0);
+        font = virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.fonts.Font getFontFromArea(org.apache.fop.area.Area)>(textArea);
+        $z0 = virtualinvoke space.<org.apache.fop.area.inline.SpaceArea: boolean isAdjustable()>();
+        if $z0 == 0 goto label0;
+
+        $i0 = virtualinvoke textArea.<org.apache.fop.area.inline.AbstractTextArea: int getTextWordSpaceAdjust()>();
+        $i1 = virtualinvoke textArea.<org.apache.fop.area.inline.AbstractTextArea: int getTextLetterSpaceAdjust()>();
+        $i2 = 2 * $i1;
+        $i0 = $i0 + $i2;
+        goto label1;
+
+     label0:
+        $i0 = 0;
+
+     label1:
+        tws = $i0;
+        $i0 = virtualinvoke font.<org.apache.fop.fonts.Font: int getCharWidth(char)>(sp);
+        $i0 = $i0 + tws;
+        $f0 = (float) $i0;
+        $f0 = $f0 / 100.0F;
+        dx = (double) $f0;
+
+     label2:
+        $r1 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("&a+");
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $r4 = virtualinvoke $r3.<org.apache.fop.render.pcl.PCLGenerator: java.lang.String formatDouble2(double)>(dx);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("H");
+        $r5 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r1.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r5);
+
+     label3:
+        goto label5;
+
+     label4:
+        $r6 := @caughtexception;
+        ioe = $r6;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void handleIOTrouble(java.io.IOException)>(ioe);
+
+     label5:
+        specialinvoke this.<org.apache.fop.render.PrintRenderer: void renderSpace(org.apache.fop.area.inline.SpaceArea)>(space);
+        return;
+
+        catch java.io.IOException from label2 to label3 with label4;
+    }
+
+    public void renderViewport(org.apache.fop.area.inline.Viewport)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        org.apache.fop.area.inline.Viewport viewport;
+        float x, y, width, height, borderPaddingStart, borderPaddingBefore, bpwidth, bpheight, $f0, $f1, $f2, $f3, $f4;
+        int $i0, $i1;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        viewport := @parameter0: org.apache.fop.area.inline.Viewport;
+        $i0 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentIPPosition>;
+        $f0 = (float) $i0;
+        x = $f0 / 1000.0F;
+        $i0 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition>;
+        $i1 = virtualinvoke viewport.<org.apache.fop.area.inline.Viewport: int getOffset()>();
+        $i0 = $i0 + $i1;
+        $f0 = (float) $i0;
+        y = $f0 / 1000.0F;
+        $i0 = virtualinvoke viewport.<org.apache.fop.area.inline.Viewport: int getIPD()>();
+        $f0 = (float) $i0;
+        width = $f0 / 1000.0F;
+        $i0 = virtualinvoke viewport.<org.apache.fop.area.inline.Viewport: int getBPD()>();
+        $f0 = (float) $i0;
+        height = $f0 / 1000.0F;
+        $i0 = virtualinvoke viewport.<org.apache.fop.area.inline.Viewport: int getBorderAndPaddingWidthStart()>();
+        $f0 = (float) $i0;
+        borderPaddingStart = $f0 / 1000.0F;
+        $i0 = virtualinvoke viewport.<org.apache.fop.area.inline.Viewport: int getBorderAndPaddingWidthBefore()>();
+        $f0 = (float) $i0;
+        borderPaddingBefore = $f0 / 1000.0F;
+        $i1 = virtualinvoke viewport.<org.apache.fop.area.inline.Viewport: int getBorderAndPaddingWidthEnd()>();
+        $f1 = (float) $i1;
+        $f1 = $f1 / 1000.0F;
+        bpwidth = borderPaddingStart + $f1;
+        $i1 = virtualinvoke viewport.<org.apache.fop.area.inline.Viewport: int getBorderAndPaddingWidthAfter()>();
+        $f1 = (float) $i1;
+        $f1 = $f1 / 1000.0F;
+        bpheight = borderPaddingBefore + $f1;
+        $f2 = width + bpwidth;
+        $f3 = height + bpheight;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void drawBackAndBorders(org.apache.fop.area.Area,float,float,float,float)>(viewport, x, y, $f2, $f3);
+        $z0 = virtualinvoke viewport.<org.apache.fop.area.inline.Viewport: boolean getClip()>();
+        if $z0 == 0 goto label0;
+
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void saveGraphicsState()>();
+        $f1 = x + borderPaddingStart;
+        $f4 = y + borderPaddingBefore;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void clipRect(float,float,float,float)>($f1, $f4, width, height);
+
+     label0:
+        specialinvoke this.<org.apache.fop.render.PrintRenderer: void renderViewport(org.apache.fop.area.inline.Viewport)>(viewport);
+        $z0 = virtualinvoke viewport.<org.apache.fop.area.inline.Viewport: boolean getClip()>();
+        if $z0 == 0 goto label1;
+
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void restoreGraphicsState()>();
+
+     label1:
+        return;
+    }
+
+    protected void renderBlockViewport(org.apache.fop.area.BlockViewport, java.util.List)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        org.apache.fop.area.BlockViewport bv;
+        java.util.List children, breakOutList;
+        int saveIP, saveBP, borderPaddingStart, borderPaddingBefore, $i0, $i1, $i2, $i3, $i4, $i5;
+        org.apache.fop.area.CTM ctm, tempctm, $r3;
+        float width, height, bpwidth, bpheight, $f0, $f1, $f2;
+        java.awt.geom.AffineTransform positionTransform, contentRectTransform, contentTransform, $r0, $r1;
+        java.awt.Rectangle clippingRect, $r4;
+        double $d0, $d1, $d2, $d3;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        bv := @parameter0: org.apache.fop.area.BlockViewport;
+        children := @parameter1: java.util.List;
+        saveIP = this.<org.apache.fop.render.pcl.PCLRenderer: int currentIPPosition>;
+        saveBP = this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition>;
+        ctm = virtualinvoke bv.<org.apache.fop.area.BlockViewport: org.apache.fop.area.CTM getCTM()>();
+        borderPaddingStart = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getBorderAndPaddingWidthStart()>();
+        borderPaddingBefore = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getBorderAndPaddingWidthBefore()>();
+        $i0 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getIPD()>();
+        $f0 = (float) $i0;
+        width = $f0 / 1000.0F;
+        $i0 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getBPD()>();
+        $f0 = (float) $i0;
+        height = $f0 / 1000.0F;
+        $i0 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getPositioning()>();
+        if $i0 == 2 goto label0;
+
+        $i0 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getPositioning()>();
+        if $i0 != 3 goto label4;
+
+     label0:
+        breakOutList = null;
+        $i0 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getPositioning()>();
+        if $i0 != 3 goto label1;
+
+        breakOutList = specialinvoke this.<org.apache.fop.render.pcl.PCLRenderer: java.util.List breakOutOfStateStack()>();
+
+     label1:
+        $r0 = new java.awt.geom.AffineTransform;
+        specialinvoke $r0.<java.awt.geom.AffineTransform: void <init>()>();
+        positionTransform = $r0;
+        $i1 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getXOffset()>();
+        $d0 = (double) $i1;
+        $i2 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getYOffset()>();
+        $d1 = (double) $i2;
+        virtualinvoke positionTransform.<java.awt.geom.AffineTransform: void translate(double,double)>($d0, $d1);
+        $i1 = neg borderPaddingStart;
+        $d0 = (double) $i1;
+        $i2 = neg borderPaddingBefore;
+        $d1 = (double) $i2;
+        virtualinvoke positionTransform.<java.awt.geom.AffineTransform: void translate(double,double)>($d0, $d1);
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void saveGraphicsState()>();
+        $r1 = virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: java.awt.geom.AffineTransform mptToPt(java.awt.geom.AffineTransform)>(positionTransform);
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void concatenateTransformationMatrix(java.awt.geom.AffineTransform)>($r1);
+        $i1 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getBorderAndPaddingWidthEnd()>();
+        $i0 = borderPaddingStart + $i1;
+        $f0 = (float) $i0;
+        bpwidth = $f0 / 1000.0F;
+        $i1 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getBorderAndPaddingWidthAfter()>();
+        $i0 = borderPaddingBefore + $i1;
+        $f0 = (float) $i0;
+        bpheight = $f0 / 1000.0F;
+        $f1 = width + bpwidth;
+        $f2 = height + bpheight;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void drawBackAndBorders(org.apache.fop.area.Area,float,float,float,float)>(bv, 0.0F, 0.0F, $f1, $f2);
+        $r0 = new java.awt.geom.AffineTransform;
+        specialinvoke $r0.<java.awt.geom.AffineTransform: void <init>()>();
+        contentRectTransform = $r0;
+        $d0 = (double) borderPaddingStart;
+        $d1 = (double) borderPaddingBefore;
+        virtualinvoke contentRectTransform.<java.awt.geom.AffineTransform: void translate(double,double)>($d0, $d1);
+        $r1 = virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: java.awt.geom.AffineTransform mptToPt(java.awt.geom.AffineTransform)>(contentRectTransform);
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void concatenateTransformationMatrix(java.awt.geom.AffineTransform)>($r1);
+        $z0 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: boolean getClip()>();
+        if $z0 == 0 goto label2;
+
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void clipRect(float,float,float,float)>(0.0F, 0.0F, width, height);
+
+     label2:
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void saveGraphicsState()>();
+        contentTransform = virtualinvoke ctm.<org.apache.fop.area.CTM: java.awt.geom.AffineTransform toAffineTransform()>();
+        $r1 = virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: java.awt.geom.AffineTransform mptToPt(java.awt.geom.AffineTransform)>(contentTransform);
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void concatenateTransformationMatrix(java.awt.geom.AffineTransform)>($r1);
+        this.<org.apache.fop.render.pcl.PCLRenderer: int currentIPPosition> = 0;
+        this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition> = 0;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void renderBlocks(org.apache.fop.area.Block,java.util.List)>(bv, children);
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void restoreGraphicsState()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void restoreGraphicsState()>();
+        if breakOutList == null goto label3;
+
+        specialinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void restoreStateStackAfterBreakOut(java.util.List)>(breakOutList);
+
+     label3:
+        this.<org.apache.fop.render.pcl.PCLRenderer: int currentIPPosition> = saveIP;
+        this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition> = saveBP;
+        goto label6;
+
+     label4:
+        $i1 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition>;
+        $i3 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getSpaceBefore()>();
+        $i1 = $i1 + $i3;
+        this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition> = $i1;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void handleBlockTraits(org.apache.fop.area.Block)>(bv);
+        $i1 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentIPPosition>;
+        $i3 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getStartIndent()>();
+        $i1 = $i1 + $i3;
+        this.<org.apache.fop.render.pcl.PCLRenderer: int currentIPPosition> = $i1;
+        $r3 = new org.apache.fop.area.CTM;
+        $i3 = this.<org.apache.fop.render.pcl.PCLRenderer: int containingIPPosition>;
+        $d2 = (double) $i3;
+        $i4 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition>;
+        $d3 = (double) $i4;
+        specialinvoke $r3.<org.apache.fop.area.CTM: void <init>(double,double)>($d2, $d3);
+        tempctm = $r3;
+        ctm = virtualinvoke tempctm.<org.apache.fop.area.CTM: org.apache.fop.area.CTM multiply(org.apache.fop.area.CTM)>(ctm);
+        $i1 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition>;
+        $i1 = $i1 + borderPaddingBefore;
+        this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition> = $i1;
+        clippingRect = null;
+        $z0 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: boolean getClip()>();
+        if $z0 == 0 goto label5;
+
+        $r4 = new java.awt.Rectangle;
+        $i3 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentIPPosition>;
+        $i2 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition>;
+        $i4 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getIPD()>();
+        $i5 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getBPD()>();
+        specialinvoke $r4.<java.awt.Rectangle: void <init>(int,int,int,int)>($i3, $i2, $i4, $i5);
+        clippingRect = $r4;
+
+     label5:
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void startVParea(org.apache.fop.area.CTM,java.awt.geom.Rectangle2D)>(ctm, clippingRect);
+        this.<org.apache.fop.render.pcl.PCLRenderer: int currentIPPosition> = 0;
+        this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition> = 0;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void renderBlocks(org.apache.fop.area.Block,java.util.List)>(bv, children);
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void endVParea()>();
+        this.<org.apache.fop.render.pcl.PCLRenderer: int currentIPPosition> = saveIP;
+        this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition> = saveBP;
+        $i1 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition>;
+        $i3 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getAllocBPD()>();
+        $i1 = $i1 + $i3;
+        this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition> = $i1;
+
+     label6:
+        return;
+    }
+
+    protected void renderReferenceArea(org.apache.fop.area.Block)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        org.apache.fop.area.Block block;
+        int saveIP, saveBP, $i0, $i1;
+        java.awt.geom.AffineTransform at, $r0, $r1;
+        java.util.List children;
+        double $d0, $d1;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        block := @parameter0: org.apache.fop.area.Block;
+        saveIP = this.<org.apache.fop.render.pcl.PCLRenderer: int currentIPPosition>;
+        saveBP = this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition>;
+        $r0 = new java.awt.geom.AffineTransform;
+        specialinvoke $r0.<java.awt.geom.AffineTransform: void <init>()>();
+        at = $r0;
+        $i0 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentIPPosition>;
+        $d0 = (double) $i0;
+        $i1 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition>;
+        $d1 = (double) $i1;
+        virtualinvoke at.<java.awt.geom.AffineTransform: void translate(double,double)>($d0, $d1);
+        $i0 = virtualinvoke block.<org.apache.fop.area.Block: int getXOffset()>();
+        $d0 = (double) $i0;
+        $i1 = virtualinvoke block.<org.apache.fop.area.Block: int getYOffset()>();
+        $d1 = (double) $i1;
+        virtualinvoke at.<java.awt.geom.AffineTransform: void translate(double,double)>($d0, $d1);
+        $i1 = virtualinvoke block.<org.apache.fop.area.Block: int getSpaceBefore()>();
+        $d1 = (double) $i1;
+        virtualinvoke at.<java.awt.geom.AffineTransform: void translate(double,double)>(0.0, $d1);
+        $z0 = virtualinvoke at.<java.awt.geom.AffineTransform: boolean isIdentity()>();
+        if $z0 != 0 goto label0;
+
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void saveGraphicsState()>();
+        $r1 = virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: java.awt.geom.AffineTransform mptToPt(java.awt.geom.AffineTransform)>(at);
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void concatenateTransformationMatrix(java.awt.geom.AffineTransform)>($r1);
+
+     label0:
+        this.<org.apache.fop.render.pcl.PCLRenderer: int currentIPPosition> = 0;
+        this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition> = 0;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void handleBlockTraits(org.apache.fop.area.Block)>(block);
+        children = virtualinvoke block.<org.apache.fop.area.Block: java.util.List getChildAreas()>();
+        if children == null goto label1;
+
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void renderBlocks(org.apache.fop.area.Block,java.util.List)>(block, children);
+
+     label1:
+        $z0 = virtualinvoke at.<java.awt.geom.AffineTransform: boolean isIdentity()>();
+        if $z0 != 0 goto label2;
+
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void restoreGraphicsState()>();
+
+     label2:
+        this.<org.apache.fop.render.pcl.PCLRenderer: int currentIPPosition> = saveIP;
+        this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition> = saveBP;
+        return;
+    }
+
+    protected void renderFlow(org.apache.fop.area.NormalFlow)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        org.apache.fop.area.NormalFlow flow;
+        int saveIP, saveBP, $i0, $i1;
+        java.awt.geom.AffineTransform at, $r0, $r1;
+        double $d0, $d1;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        flow := @parameter0: org.apache.fop.area.NormalFlow;
+        saveIP = this.<org.apache.fop.render.pcl.PCLRenderer: int currentIPPosition>;
+        saveBP = this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition>;
+        $r0 = new java.awt.geom.AffineTransform;
+        specialinvoke $r0.<java.awt.geom.AffineTransform: void <init>()>();
+        at = $r0;
+        $i0 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentIPPosition>;
+        $d0 = (double) $i0;
+        $i1 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition>;
+        $d1 = (double) $i1;
+        virtualinvoke at.<java.awt.geom.AffineTransform: void translate(double,double)>($d0, $d1);
+        $z0 = virtualinvoke at.<java.awt.geom.AffineTransform: boolean isIdentity()>();
+        if $z0 != 0 goto label0;
+
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void saveGraphicsState()>();
+        $r1 = virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: java.awt.geom.AffineTransform mptToPt(java.awt.geom.AffineTransform)>(at);
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void concatenateTransformationMatrix(java.awt.geom.AffineTransform)>($r1);
+
+     label0:
+        this.<org.apache.fop.render.pcl.PCLRenderer: int currentIPPosition> = 0;
+        this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition> = 0;
+        specialinvoke this.<org.apache.fop.render.PrintRenderer: void renderFlow(org.apache.fop.area.NormalFlow)>(flow);
+        $z0 = virtualinvoke at.<java.awt.geom.AffineTransform: boolean isIdentity()>();
+        if $z0 != 0 goto label1;
+
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void restoreGraphicsState()>();
+
+     label1:
+        this.<org.apache.fop.render.pcl.PCLRenderer: int currentIPPosition> = saveIP;
+        this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition> = saveBP;
+        return;
+    }
+
+    protected void concatenateTransformationMatrix(java.awt.geom.AffineTransform)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        java.awt.geom.AffineTransform at, $r1;
+        boolean $z0;
+        org.apache.xmlgraphics.java2d.GraphicContext $r0;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        at := @parameter0: java.awt.geom.AffineTransform;
+        $z0 = virtualinvoke at.<java.awt.geom.AffineTransform: boolean isIdentity()>();
+        if $z0 != 0 goto label0;
+
+        $r0 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.xmlgraphics.java2d.GraphicContext graphicContext>;
+        $r1 = virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: java.awt.geom.AffineTransform ptToMpt(java.awt.geom.AffineTransform)>(at);
+        virtualinvoke $r0.<org.apache.xmlgraphics.java2d.GraphicContext: void transform(java.awt.geom.AffineTransform)>($r1);
+        specialinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void changePrintDirection()>();
+
+     label0:
+        return;
+    }
+
+    private java.util.List breakOutOfStateStack()
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        org.apache.commons.logging.Log $r0;
+        java.util.ArrayList breakOutList, $r1;
+        java.util.Stack $r2;
+        boolean $z0;
+        org.apache.xmlgraphics.java2d.GraphicContext $r3;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        $r0 = <org.apache.fop.render.pcl.PCLRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("Block.FIXED --> break out");
+        $r1 = new java.util.ArrayList;
+        specialinvoke $r1.<java.util.ArrayList: void <init>()>();
+        breakOutList = $r1;
+
+     label0:
+        $r2 = this.<org.apache.fop.render.pcl.PCLRenderer: java.util.Stack graphicContextStack>;
+        $z0 = virtualinvoke $r2.<java.util.Stack: boolean empty()>();
+        if $z0 != 0 goto label1;
+
+        $r3 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.xmlgraphics.java2d.GraphicContext graphicContext>;
+        interfaceinvoke breakOutList.<java.util.List: void add(int,java.lang.Object)>(0, $r3);
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void restoreGraphicsState()>();
+        goto label0;
+
+     label1:
+        return breakOutList;
+    }
+
+    private void restoreStateStackAfterBreakOut(java.util.List)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        java.util.List breakOutList;
+        org.apache.commons.logging.Log $r0;
+        int i, c;
+        java.lang.Object $r1;
+        org.apache.xmlgraphics.java2d.GraphicContext $r2;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        breakOutList := @parameter0: java.util.List;
+        $r0 = <org.apache.fop.render.pcl.PCLRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("Block.FIXED --> restoring context after break-out");
+        i = 0;
+        c = interfaceinvoke breakOutList.<java.util.List: int size()>();
+
+     label0:
+        if i >= c goto label1;
+
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void saveGraphicsState()>();
+        $r1 = interfaceinvoke breakOutList.<java.util.List: java.lang.Object get(int)>(i);
+        $r2 = (org.apache.xmlgraphics.java2d.GraphicContext) $r1;
+        this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.xmlgraphics.java2d.GraphicContext graphicContext> = $r2;
+        i = i + 1;
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    protected org.apache.fop.render.RendererContext createRendererContext(int, int, int, int, java.util.Map)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        int x, y, width, height;
+        java.util.Map foreignAttributes;
+        org.apache.fop.render.RendererContext context;
+        boolean $z0;
+        java.lang.Boolean $r0;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        x := @parameter0: int;
+        y := @parameter1: int;
+        width := @parameter2: int;
+        height := @parameter3: int;
+        foreignAttributes := @parameter4: java.util.Map;
+        context = specialinvoke this.<org.apache.fop.render.PrintRenderer: org.apache.fop.render.RendererContext createRendererContext(int,int,int,int,java.util.Map)>(x, y, width, height, foreignAttributes);
+        $z0 = this.<org.apache.fop.render.pcl.PCLRenderer: boolean useColorCanvas>;
+        $r0 = staticinvoke <java.lang.Boolean: java.lang.Boolean valueOf(boolean)>($z0);
+        virtualinvoke context.<org.apache.fop.render.RendererContext: void setProperty(java.lang.String,java.lang.Object)>("color-canvas", $r0);
+        return context;
+    }
+
+    public void renderImage(org.apache.fop.area.inline.Image, java.awt.geom.Rectangle2D)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        org.apache.fop.area.inline.Image image;
+        java.awt.geom.Rectangle2D pos;
+        java.lang.String $r0;
+        java.util.Map $r1;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        image := @parameter0: org.apache.fop.area.inline.Image;
+        pos := @parameter1: java.awt.geom.Rectangle2D;
+        $r0 = virtualinvoke image.<org.apache.fop.area.inline.Image: java.lang.String getURL()>();
+        $r1 = virtualinvoke image.<org.apache.fop.area.inline.Image: java.util.Map getForeignAttributes()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void drawImage(java.lang.String,java.awt.geom.Rectangle2D,java.util.Map)>($r0, pos, $r1);
+        return;
+    }
+
+    protected void drawImage(java.lang.String, java.awt.geom.Rectangle2D, java.util.Map)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        java.lang.String uri, uri, $r10, $r16;
+        java.awt.geom.Rectangle2D pos;
+        java.util.Map foreignAttributes, hints;
+        java.awt.Rectangle posInt, $r0;
+        java.awt.Point origin, $r1;
+        int x, y, $i0, $i1, $i2, $i3, $i4, $i5, $i6;
+        org.apache.xmlgraphics.image.loader.ImageManager manager;
+        org.apache.xmlgraphics.image.loader.ImageInfo info;
+        org.apache.xmlgraphics.image.loader.ImageSessionContext sessionContext;
+        org.apache.xmlgraphics.image.loader.Image img;
+        org.apache.xmlgraphics.image.loader.impl.ImageGraphics2D imageG2D;
+        org.apache.fop.render.RendererContext context;
+        org.apache.xmlgraphics.image.loader.impl.ImageRendered imgRend;
+        java.awt.image.RenderedImage ri;
+        org.apache.xmlgraphics.image.loader.impl.ImageXMLDOM imgXML;
+        org.apache.xmlgraphics.image.loader.ImageException ie, $r13;
+        java.io.FileNotFoundException fe, $r17;
+        java.io.IOException ioe, $r18;
+        double $d0, $d1, $d2, $d3;
+        org.apache.fop.apps.FOUserAgent $r2;
+        org.apache.fop.apps.FopFactory $r3;
+        org.apache.xmlgraphics.image.loader.ImageFlavor[] $r4;
+        boolean $z0;
+        org.apache.fop.render.Graphics2DAdapter $r5;
+        org.apache.xmlgraphics.java2d.Graphics2DImagePainter $r6;
+        float $f0, $f1;
+        org.apache.fop.render.pcl.PCLGenerator $r7;
+        java.awt.Dimension $r8;
+        org.w3c.dom.Document $r9;
+        java.lang.UnsupportedOperationException $r11;
+        java.lang.StringBuffer $r12, $r15;
+        org.apache.commons.logging.Log $r14;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        uri := @parameter0: java.lang.String;
+        pos := @parameter1: java.awt.geom.Rectangle2D;
+        foreignAttributes := @parameter2: java.util.Map;
+        uri = staticinvoke <org.apache.fop.datatypes.URISpecification: java.lang.String getURL(java.lang.String)>(uri);
+        $r0 = new java.awt.Rectangle;
+        $d0 = virtualinvoke pos.<java.awt.geom.Rectangle2D: double getX()>();
+        $i0 = (int) $d0;
+        $d1 = virtualinvoke pos.<java.awt.geom.Rectangle2D: double getY()>();
+        $i1 = (int) $d1;
+        $d2 = virtualinvoke pos.<java.awt.geom.Rectangle2D: double getWidth()>();
+        $i2 = (int) $d2;
+        $d3 = virtualinvoke pos.<java.awt.geom.Rectangle2D: double getHeight()>();
+        $i3 = (int) $d3;
+        specialinvoke $r0.<java.awt.Rectangle: void <init>(int,int,int,int)>($i0, $i1, $i2, $i3);
+        posInt = $r0;
+        $r1 = new java.awt.Point;
+        $i0 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentIPPosition>;
+        $i1 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition>;
+        specialinvoke $r1.<java.awt.Point: void <init>(int,int)>($i0, $i1);
+        origin = $r1;
+        $i4 = origin.<java.awt.Point: int x>;
+        $i5 = posInt.<java.awt.Rectangle: int x>;
+        x = $i4 + $i5;
+        $i4 = origin.<java.awt.Point: int y>;
+        $i5 = posInt.<java.awt.Rectangle: int y>;
+        y = $i4 + $i5;
+        $r2 = virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        $r3 = virtualinvoke $r2.<org.apache.fop.apps.FOUserAgent: org.apache.fop.apps.FopFactory getFactory()>();
+        manager = virtualinvoke $r3.<org.apache.fop.apps.FopFactory: org.apache.xmlgraphics.image.loader.ImageManager getImageManager()>();
+        info = null;
+
+     label0:
+        $r2 = virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        sessionContext = virtualinvoke $r2.<org.apache.fop.apps.FOUserAgent: org.apache.xmlgraphics.image.loader.ImageSessionContext getImageSessionContext()>();
+        info = virtualinvoke manager.<org.apache.xmlgraphics.image.loader.ImageManager: org.apache.xmlgraphics.image.loader.ImageInfo getImageInfo(java.lang.String,org.apache.xmlgraphics.image.loader.ImageSessionContext)>(uri, sessionContext);
+        hints = staticinvoke <org.apache.xmlgraphics.image.loader.util.ImageUtil: java.util.Map getDefaultHints(org.apache.xmlgraphics.image.loader.ImageSessionContext)>(sessionContext);
+        $r4 = <org.apache.fop.render.pcl.PCLRenderer: org.apache.xmlgraphics.image.loader.ImageFlavor[] FLAVORS>;
+        img = virtualinvoke manager.<org.apache.xmlgraphics.image.loader.ImageManager: org.apache.xmlgraphics.image.loader.Image getImage(org.apache.xmlgraphics.image.loader.ImageInfo,org.apache.xmlgraphics.image.loader.ImageFlavor[],java.util.Map,org.apache.xmlgraphics.image.loader.ImageSessionContext)>(info, $r4, hints, sessionContext);
+        $z0 = img instanceof org.apache.xmlgraphics.image.loader.impl.ImageGraphics2D;
+        if $z0 == 0 goto label1;
+
+        imageG2D = (org.apache.xmlgraphics.image.loader.impl.ImageGraphics2D) img;
+        $i5 = posInt.<java.awt.Rectangle: int x>;
+        $i0 = posInt.<java.awt.Rectangle: int y>;
+        $i1 = posInt.<java.awt.Rectangle: int width>;
+        $i2 = posInt.<java.awt.Rectangle: int height>;
+        context = virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.RendererContext createRendererContext(int,int,int,int,java.util.Map)>($i5, $i0, $i1, $i2, foreignAttributes);
+        $r5 = virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.Graphics2DAdapter getGraphics2DAdapter()>();
+        $r6 = virtualinvoke imageG2D.<org.apache.xmlgraphics.image.loader.impl.ImageGraphics2D: org.apache.xmlgraphics.java2d.Graphics2DImagePainter getGraphics2DImagePainter()>();
+        $i3 = posInt.<java.awt.Rectangle: int width>;
+        $i6 = posInt.<java.awt.Rectangle: int height>;
+        interfaceinvoke $r5.<org.apache.fop.render.Graphics2DAdapter: void paintImage(org.apache.xmlgraphics.java2d.Graphics2DImagePainter,org.apache.fop.render.RendererContext,int,int,int,int)>($r6, context, x, y, $i3, $i6);
+        goto label4;
+
+     label1:
+        $z0 = img instanceof org.apache.xmlgraphics.image.loader.impl.ImageRendered;
+        if $z0 == 0 goto label2;
+
+        imgRend = (org.apache.xmlgraphics.image.loader.impl.ImageRendered) img;
+        ri = virtualinvoke imgRend.<org.apache.xmlgraphics.image.loader.impl.ImageRendered: java.awt.image.RenderedImage getRenderedImage()>();
+        $f0 = (float) x;
+        $f1 = (float) y;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void setCursorPos(float,float)>($f0, $f1);
+        $r7 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.pcl.PCLGenerator gen>;
+        $r8 = new java.awt.Dimension;
+        $i2 = posInt.<java.awt.Rectangle: int width>;
+        $i3 = posInt.<java.awt.Rectangle: int height>;
+        specialinvoke $r8.<java.awt.Dimension: void <init>(int,int)>($i2, $i3);
+        virtualinvoke $r7.<org.apache.fop.render.pcl.PCLGenerator: void paintBitmap(java.awt.image.RenderedImage,java.awt.Dimension,boolean)>(ri, $r8, 0);
+        goto label4;
+
+     label2:
+        $z0 = img instanceof org.apache.xmlgraphics.image.loader.impl.ImageXMLDOM;
+        if $z0 == 0 goto label3;
+
+        imgXML = (org.apache.xmlgraphics.image.loader.impl.ImageXMLDOM) img;
+        $r9 = virtualinvoke imgXML.<org.apache.xmlgraphics.image.loader.impl.ImageXMLDOM: org.w3c.dom.Document getDocument()>();
+        $r10 = virtualinvoke imgXML.<org.apache.xmlgraphics.image.loader.impl.ImageXMLDOM: java.lang.String getRootNamespace()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void renderDocument(org.w3c.dom.Document,java.lang.String,java.awt.geom.Rectangle2D,java.util.Map)>($r9, $r10, pos, foreignAttributes);
+        goto label4;
+
+     label3:
+        $r11 = new java.lang.UnsupportedOperationException;
+        $r12 = new java.lang.StringBuffer;
+        specialinvoke $r12.<java.lang.StringBuffer: void <init>()>();
+        $r12 = virtualinvoke $r12.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unsupported image type: ");
+        $r12 = virtualinvoke $r12.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(img);
+        $r10 = virtualinvoke $r12.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r11.<java.lang.UnsupportedOperationException: void <init>(java.lang.String)>($r10);
+        throw $r11;
+
+     label4:
+        goto label10;
+
+     label5:
+        $r13 := @caughtexception;
+        ie = $r13;
+        $r14 = <org.apache.fop.render.pcl.PCLRenderer: org.apache.commons.logging.Log log>;
+        $r15 = new java.lang.StringBuffer;
+        specialinvoke $r15.<java.lang.StringBuffer: void <init>()>();
+        $r15 = virtualinvoke $r15.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Error while processing image: ");
+        if info == null goto label6;
+
+        $r10 = virtualinvoke info.<org.apache.xmlgraphics.image.loader.ImageInfo: java.lang.String toString()>();
+        goto label7;
+
+     label6:
+        $r10 = uri;
+
+     label7:
+        $r15 = virtualinvoke $r15.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r10);
+        $r16 = virtualinvoke $r15.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r14.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r16, ie);
+        goto label10;
+
+     label8:
+        $r17 := @caughtexception;
+        fe = $r17;
+        $r14 = <org.apache.fop.render.pcl.PCLRenderer: org.apache.commons.logging.Log log>;
+        $r16 = virtualinvoke fe.<java.io.FileNotFoundException: java.lang.String getMessage()>();
+        interfaceinvoke $r14.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r16);
+        goto label10;
+
+     label9:
+        $r18 := @caughtexception;
+        ioe = $r18;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void handleIOTrouble(java.io.IOException)>(ioe);
+
+     label10:
+        return;
+
+        catch org.apache.xmlgraphics.image.loader.ImageException from label0 to label4 with label5;
+        catch java.io.FileNotFoundException from label0 to label4 with label8;
+        catch java.io.IOException from label0 to label4 with label9;
+    }
+
+    public void renderForeignObject(org.apache.fop.area.inline.ForeignObject, java.awt.geom.Rectangle2D)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        org.apache.fop.area.inline.ForeignObject fo;
+        java.awt.geom.Rectangle2D pos;
+        org.w3c.dom.Document doc;
+        java.lang.String ns;
+        java.util.Map $r0;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        fo := @parameter0: org.apache.fop.area.inline.ForeignObject;
+        pos := @parameter1: java.awt.geom.Rectangle2D;
+        doc = virtualinvoke fo.<org.apache.fop.area.inline.ForeignObject: org.w3c.dom.Document getDocument()>();
+        ns = virtualinvoke fo.<org.apache.fop.area.inline.ForeignObject: java.lang.String getNameSpace()>();
+        $r0 = virtualinvoke fo.<org.apache.fop.area.inline.ForeignObject: java.util.Map getForeignAttributes()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void renderDocument(org.w3c.dom.Document,java.lang.String,java.awt.geom.Rectangle2D,java.util.Map)>(doc, ns, pos, $r0);
+        return;
+    }
+
+    protected void renderInlineAreaBackAndBorders(org.apache.fop.area.inline.InlineArea)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        org.apache.fop.area.inline.InlineArea area;
+        float x, y, width, height, borderPaddingStart, borderPaddingBefore, bpwidth, bpheight, $f0, $f1, $f2, $f3, $f4;
+        int $i0, $i1;
+        byte $b2;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        area := @parameter0: org.apache.fop.area.inline.InlineArea;
+        $i0 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentIPPosition>;
+        $f0 = (float) $i0;
+        x = $f0 / 1000.0F;
+        $i0 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition>;
+        $i1 = virtualinvoke area.<org.apache.fop.area.inline.InlineArea: int getOffset()>();
+        $i0 = $i0 + $i1;
+        $f0 = (float) $i0;
+        y = $f0 / 1000.0F;
+        $i0 = virtualinvoke area.<org.apache.fop.area.inline.InlineArea: int getIPD()>();
+        $f0 = (float) $i0;
+        width = $f0 / 1000.0F;
+        $i0 = virtualinvoke area.<org.apache.fop.area.inline.InlineArea: int getBPD()>();
+        $f0 = (float) $i0;
+        height = $f0 / 1000.0F;
+        $i0 = virtualinvoke area.<org.apache.fop.area.inline.InlineArea: int getBorderAndPaddingWidthStart()>();
+        $f0 = (float) $i0;
+        borderPaddingStart = $f0 / 1000.0F;
+        $i0 = virtualinvoke area.<org.apache.fop.area.inline.InlineArea: int getBorderAndPaddingWidthBefore()>();
+        $f0 = (float) $i0;
+        borderPaddingBefore = $f0 / 1000.0F;
+        $i1 = virtualinvoke area.<org.apache.fop.area.inline.InlineArea: int getBorderAndPaddingWidthEnd()>();
+        $f1 = (float) $i1;
+        $f1 = $f1 / 1000.0F;
+        bpwidth = borderPaddingStart + $f1;
+        $i1 = virtualinvoke area.<org.apache.fop.area.inline.InlineArea: int getBorderAndPaddingWidthAfter()>();
+        $f1 = (float) $i1;
+        $f1 = $f1 / 1000.0F;
+        bpheight = borderPaddingBefore + $f1;
+        $b2 = height cmpl 0.0F;
+        if $b2 != 0 goto label0;
+
+        $b2 = bpheight cmpl 0.0F;
+        if $b2 == 0 goto label1;
+
+        $b2 = bpwidth cmpl 0.0F;
+        if $b2 == 0 goto label1;
+
+     label0:
+        $f2 = y - borderPaddingBefore;
+        $f3 = width + bpwidth;
+        $f4 = height + bpheight;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void drawBackAndBorders(org.apache.fop.area.Area,float,float,float,float)>(area, x, $f2, $f3, $f4);
+
+     label1:
+        return;
+    }
+
+    protected void drawBackAndBorders(org.apache.fop.area.Area, float, float, float, float)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        org.apache.fop.area.Area area;
+        float startx, starty, width, height, sx, sy, paddRectWidth, paddRectHeight, $f0, $f1, $f2, $f3, $f4, $f5;
+        java.lang.Integer $r0;
+        org.apache.fop.traits.BorderProps bpsBefore, bpsAfter, bpsStart, bpsEnd;
+        org.apache.fop.area.Trait$Background back;
+        org.apache.xmlgraphics.image.loader.ImageSize imageSize;
+        int horzCount, vertCount, x, y, $i0, $i1, $i2, $i3, $i4;
+        java.awt.geom.Rectangle2D$Float pos, borderRect, $r5;
+        java.lang.Object $r1;
+        java.awt.Color $r2, $r3;
+        org.apache.xmlgraphics.image.loader.ImageInfo $r4;
+        java.lang.String $r6;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        area := @parameter0: org.apache.fop.area.Area;
+        startx := @parameter1: float;
+        starty := @parameter2: float;
+        width := @parameter3: float;
+        height := @parameter4: float;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_BEFORE>;
+        $r1 = virtualinvoke area.<org.apache.fop.area.Area: java.lang.Object getTrait(java.lang.Object)>($r0);
+        bpsBefore = (org.apache.fop.traits.BorderProps) $r1;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_AFTER>;
+        $r1 = virtualinvoke area.<org.apache.fop.area.Area: java.lang.Object getTrait(java.lang.Object)>($r0);
+        bpsAfter = (org.apache.fop.traits.BorderProps) $r1;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_START>;
+        $r1 = virtualinvoke area.<org.apache.fop.area.Area: java.lang.Object getTrait(java.lang.Object)>($r0);
+        bpsStart = (org.apache.fop.traits.BorderProps) $r1;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_END>;
+        $r1 = virtualinvoke area.<org.apache.fop.area.Area: java.lang.Object getTrait(java.lang.Object)>($r0);
+        bpsEnd = (org.apache.fop.traits.BorderProps) $r1;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BACKGROUND>;
+        $r1 = virtualinvoke area.<org.apache.fop.area.Area: java.lang.Object getTrait(java.lang.Object)>($r0);
+        back = (org.apache.fop.area.Trait$Background) $r1;
+        if back == null goto label14;
+
+        sx = startx;
+        sy = starty;
+        paddRectWidth = width;
+        paddRectHeight = height;
+        if bpsStart == null goto label0;
+
+        $i0 = bpsStart.<org.apache.fop.traits.BorderProps: int width>;
+        $f0 = (float) $i0;
+        $f0 = $f0 / 1000.0F;
+        sx = sx + $f0;
+        $i0 = bpsStart.<org.apache.fop.traits.BorderProps: int width>;
+        $f0 = (float) $i0;
+        $f0 = $f0 / 1000.0F;
+        paddRectWidth = paddRectWidth - $f0;
+
+     label0:
+        if bpsBefore == null goto label1;
+
+        $i0 = bpsBefore.<org.apache.fop.traits.BorderProps: int width>;
+        $f0 = (float) $i0;
+        $f0 = $f0 / 1000.0F;
+        sy = sy + $f0;
+        $i0 = bpsBefore.<org.apache.fop.traits.BorderProps: int width>;
+        $f0 = (float) $i0;
+        $f0 = $f0 / 1000.0F;
+        paddRectHeight = paddRectHeight - $f0;
+
+     label1:
+        if bpsEnd == null goto label2;
+
+        $i0 = bpsEnd.<org.apache.fop.traits.BorderProps: int width>;
+        $f0 = (float) $i0;
+        $f0 = $f0 / 1000.0F;
+        paddRectWidth = paddRectWidth - $f0;
+
+     label2:
+        if bpsAfter == null goto label3;
+
+        $i0 = bpsAfter.<org.apache.fop.traits.BorderProps: int width>;
+        $f0 = (float) $i0;
+        $f0 = $f0 / 1000.0F;
+        paddRectHeight = paddRectHeight - $f0;
+
+     label3:
+        $r2 = virtualinvoke back.<org.apache.fop.area.Trait$Background: java.awt.Color getColor()>();
+        if $r2 == null goto label4;
+
+        $r3 = virtualinvoke back.<org.apache.fop.area.Trait$Background: java.awt.Color getColor()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void updateFillColor(java.awt.Color)>($r3);
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void fillRect(float,float,float,float)>(sx, sy, paddRectWidth, paddRectHeight);
+
+     label4:
+        $r4 = virtualinvoke back.<org.apache.fop.area.Trait$Background: org.apache.xmlgraphics.image.loader.ImageInfo getImageInfo()>();
+        if $r4 == null goto label14;
+
+        $r4 = virtualinvoke back.<org.apache.fop.area.Trait$Background: org.apache.xmlgraphics.image.loader.ImageInfo getImageInfo()>();
+        imageSize = virtualinvoke $r4.<org.apache.xmlgraphics.image.loader.ImageInfo: org.apache.xmlgraphics.image.loader.ImageSize getSize()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void saveGraphicsState()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void clipRect(float,float,float,float)>(sx, sy, paddRectWidth, paddRectHeight);
+        $f1 = paddRectWidth * 1000.0F;
+        $i0 = virtualinvoke imageSize.<org.apache.xmlgraphics.image.loader.ImageSize: int getWidthMpt()>();
+        $f0 = (float) $i0;
+        $f1 = $f1 / $f0;
+        $f1 = $f1 + 1.0F;
+        horzCount = (int) $f1;
+        $f1 = paddRectHeight * 1000.0F;
+        $i0 = virtualinvoke imageSize.<org.apache.xmlgraphics.image.loader.ImageSize: int getHeightMpt()>();
+        $f0 = (float) $i0;
+        $f1 = $f1 / $f0;
+        $f1 = $f1 + 1.0F;
+        vertCount = (int) $f1;
+        $i1 = virtualinvoke back.<org.apache.fop.area.Trait$Background: int getRepeat()>();
+        if $i1 != 96 goto label5;
+
+        horzCount = 1;
+        vertCount = 1;
+        goto label7;
+
+     label5:
+        $i1 = virtualinvoke back.<org.apache.fop.area.Trait$Background: int getRepeat()>();
+        if $i1 != 113 goto label6;
+
+        vertCount = 1;
+        goto label7;
+
+     label6:
+        $i1 = virtualinvoke back.<org.apache.fop.area.Trait$Background: int getRepeat()>();
+        if $i1 != 114 goto label7;
+
+        horzCount = 1;
+
+     label7:
+        sx = sx * 1000.0F;
+        sy = sy * 1000.0F;
+        if horzCount != 1 goto label8;
+
+        $i0 = virtualinvoke back.<org.apache.fop.area.Trait$Background: int getHoriz()>();
+        $f0 = (float) $i0;
+        sx = sx + $f0;
+
+     label8:
+        if vertCount != 1 goto label9;
+
+        $i0 = virtualinvoke back.<org.apache.fop.area.Trait$Background: int getVertical()>();
+        $f0 = (float) $i0;
+        sy = sy + $f0;
+
+     label9:
+        x = 0;
+
+     label10:
+        if x >= horzCount goto label13;
+
+        y = 0;
+
+     label11:
+        if y >= vertCount goto label12;
+
+        $r5 = new java.awt.geom.Rectangle2D$Float;
+        $i2 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentIPPosition>;
+        $f2 = (float) $i2;
+        $f3 = sx - $f2;
+        $i3 = virtualinvoke imageSize.<org.apache.xmlgraphics.image.loader.ImageSize: int getWidthMpt()>();
+        $i2 = x * $i3;
+        $f2 = (float) $i2;
+        $f3 = $f3 + $f2;
+        $i3 = this.<org.apache.fop.render.pcl.PCLRenderer: int currentBPPosition>;
+        $f4 = (float) $i3;
+        $f2 = sy - $f4;
+        $i4 = virtualinvoke imageSize.<org.apache.xmlgraphics.image.loader.ImageSize: int getHeightMpt()>();
+        $i3 = y * $i4;
+        $f4 = (float) $i3;
+        $f2 = $f2 + $f4;
+        $i3 = virtualinvoke imageSize.<org.apache.xmlgraphics.image.loader.ImageSize: int getWidthMpt()>();
+        $f4 = (float) $i3;
+        $i4 = virtualinvoke imageSize.<org.apache.xmlgraphics.image.loader.ImageSize: int getHeightMpt()>();
+        $f5 = (float) $i4;
+        specialinvoke $r5.<java.awt.geom.Rectangle2D$Float: void <init>(float,float,float,float)>($f3, $f2, $f4, $f5);
+        pos = $r5;
+        $r6 = virtualinvoke back.<org.apache.fop.area.Trait$Background: java.lang.String getURL()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void drawImage(java.lang.String,java.awt.geom.Rectangle2D,java.util.Map)>($r6, pos, null);
+        y = y + 1;
+        goto label11;
+
+     label12:
+        x = x + 1;
+        goto label10;
+
+     label13:
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void restoreGraphicsState()>();
+
+     label14:
+        $r5 = new java.awt.geom.Rectangle2D$Float;
+        specialinvoke $r5.<java.awt.geom.Rectangle2D$Float: void <init>(float,float,float,float)>(startx, starty, width, height);
+        borderRect = $r5;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void drawBorders(java.awt.geom.Rectangle2D$Float,org.apache.fop.traits.BorderProps,org.apache.fop.traits.BorderProps,org.apache.fop.traits.BorderProps,org.apache.fop.traits.BorderProps)>(borderRect, bpsBefore, bpsAfter, bpsStart, bpsEnd);
+        return;
+    }
+
+    protected void drawBorders(java.awt.geom.Rectangle2D$Float, org.apache.fop.traits.BorderProps, org.apache.fop.traits.BorderProps, org.apache.fop.traits.BorderProps, org.apache.fop.traits.BorderProps)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        java.awt.geom.Rectangle2D$Float borderRect;
+        org.apache.fop.traits.BorderProps bpsBefore, bpsAfter, bpsStart, bpsEnd;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        borderRect := @parameter0: java.awt.geom.Rectangle2D$Float;
+        bpsBefore := @parameter1: org.apache.fop.traits.BorderProps;
+        bpsAfter := @parameter2: org.apache.fop.traits.BorderProps;
+        bpsStart := @parameter3: org.apache.fop.traits.BorderProps;
+        bpsEnd := @parameter4: org.apache.fop.traits.BorderProps;
+        if bpsBefore != null goto label0;
+
+        if bpsAfter != null goto label0;
+
+        if bpsStart != null goto label0;
+
+        if bpsEnd != null goto label0;
+
+        return;
+
+     label0:
+        $z0 = this.<org.apache.fop.render.pcl.PCLRenderer: boolean qualityBeforeSpeed>;
+        if $z0 == 0 goto label1;
+
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void drawQualityBorders(java.awt.geom.Rectangle2D$Float,org.apache.fop.traits.BorderProps,org.apache.fop.traits.BorderProps,org.apache.fop.traits.BorderProps,org.apache.fop.traits.BorderProps)>(borderRect, bpsBefore, bpsAfter, bpsStart, bpsEnd);
+        goto label2;
+
+     label1:
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void drawFastBorders(java.awt.geom.Rectangle2D$Float,org.apache.fop.traits.BorderProps,org.apache.fop.traits.BorderProps,org.apache.fop.traits.BorderProps,org.apache.fop.traits.BorderProps)>(borderRect, bpsBefore, bpsAfter, bpsStart, bpsEnd);
+
+     label2:
+        return;
+    }
+
+    protected void drawFastBorders(java.awt.geom.Rectangle2D$Float, org.apache.fop.traits.BorderProps, org.apache.fop.traits.BorderProps, org.apache.fop.traits.BorderProps, org.apache.fop.traits.BorderProps)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        java.awt.geom.Rectangle2D$Float borderRect;
+        org.apache.fop.traits.BorderProps bpsBefore, bpsAfter, bpsStart, bpsEnd;
+        float startx, starty, width, height, borderWidth, $f0, $f1, $f2;
+        int $i0;
+        java.awt.Color $r0;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        borderRect := @parameter0: java.awt.geom.Rectangle2D$Float;
+        bpsBefore := @parameter1: org.apache.fop.traits.BorderProps;
+        bpsAfter := @parameter2: org.apache.fop.traits.BorderProps;
+        bpsStart := @parameter3: org.apache.fop.traits.BorderProps;
+        bpsEnd := @parameter4: org.apache.fop.traits.BorderProps;
+        startx = borderRect.<java.awt.geom.Rectangle2D$Float: float x>;
+        starty = borderRect.<java.awt.geom.Rectangle2D$Float: float y>;
+        width = borderRect.<java.awt.geom.Rectangle2D$Float: float width>;
+        height = borderRect.<java.awt.geom.Rectangle2D$Float: float height>;
+        if bpsBefore == null goto label0;
+
+        $i0 = bpsBefore.<org.apache.fop.traits.BorderProps: int width>;
+        $f0 = (float) $i0;
+        borderWidth = $f0 / 1000.0F;
+        $r0 = bpsBefore.<org.apache.fop.traits.BorderProps: java.awt.Color color>;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void updateFillColor(java.awt.Color)>($r0);
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void fillRect(float,float,float,float)>(startx, starty, width, borderWidth);
+
+     label0:
+        if bpsAfter == null goto label1;
+
+        $i0 = bpsAfter.<org.apache.fop.traits.BorderProps: int width>;
+        $f0 = (float) $i0;
+        borderWidth = $f0 / 1000.0F;
+        $r0 = bpsAfter.<org.apache.fop.traits.BorderProps: java.awt.Color color>;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void updateFillColor(java.awt.Color)>($r0);
+        $f1 = starty + height;
+        $f1 = $f1 - borderWidth;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void fillRect(float,float,float,float)>(startx, $f1, width, borderWidth);
+
+     label1:
+        if bpsStart == null goto label2;
+
+        $i0 = bpsStart.<org.apache.fop.traits.BorderProps: int width>;
+        $f0 = (float) $i0;
+        borderWidth = $f0 / 1000.0F;
+        $r0 = bpsStart.<org.apache.fop.traits.BorderProps: java.awt.Color color>;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void updateFillColor(java.awt.Color)>($r0);
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void fillRect(float,float,float,float)>(startx, starty, borderWidth, height);
+
+     label2:
+        if bpsEnd == null goto label3;
+
+        $i0 = bpsEnd.<org.apache.fop.traits.BorderProps: int width>;
+        $f0 = (float) $i0;
+        borderWidth = $f0 / 1000.0F;
+        $r0 = bpsEnd.<org.apache.fop.traits.BorderProps: java.awt.Color color>;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void updateFillColor(java.awt.Color)>($r0);
+        $f2 = startx + width;
+        $f2 = $f2 - borderWidth;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void fillRect(float,float,float,float)>($f2, starty, borderWidth, height);
+
+     label3:
+        return;
+    }
+
+    protected void drawQualityBorders(java.awt.geom.Rectangle2D$Float, org.apache.fop.traits.BorderProps, org.apache.fop.traits.BorderProps, org.apache.fop.traits.BorderProps, org.apache.fop.traits.BorderProps)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        java.awt.geom.Rectangle2D$Float borderRect, effBorderRect, $r0;
+        org.apache.fop.traits.BorderProps bpsBefore, bpsAfter, bpsStart, bpsEnd;
+        org.apache.fop.render.Graphics2DAdapter g2a;
+        java.awt.Rectangle paintRect, $r1;
+        int pixelWidth, xoffset, yoffset, $i0, $i1, $i2, $i3, $i5, $i6, $i7;
+        org.apache.fop.render.RendererContext rc;
+        java.util.HashMap atts, $r3;
+        org.apache.fop.render.pcl.PCLRenderer$2 painter, $r6;
+        java.io.IOException ioe, $r7;
+        float $f0, $f1, $f2, $f3, $f4;
+        double $d0, $d1, $d2, $d3;
+        org.apache.fop.apps.FOUserAgent $r2;
+        long $l4;
+        org.apache.fop.util.QName $r4;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        borderRect := @parameter0: java.awt.geom.Rectangle2D$Float;
+        bpsBefore := @parameter1: org.apache.fop.traits.BorderProps;
+        bpsAfter := @parameter2: org.apache.fop.traits.BorderProps;
+        bpsStart := @parameter3: org.apache.fop.traits.BorderProps;
+        bpsEnd := @parameter4: org.apache.fop.traits.BorderProps;
+        g2a = virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.Graphics2DAdapter getGraphics2DAdapter()>();
+        $r0 = new java.awt.geom.Rectangle2D$Float;
+        $f0 = borderRect.<java.awt.geom.Rectangle2D$Float: float width>;
+        $f1 = borderRect.<java.awt.geom.Rectangle2D$Float: float height>;
+        specialinvoke $r0.<java.awt.geom.Rectangle2D$Float: void <init>(float,float,float,float)>(0.0F, 0.0F, $f0, $f1);
+        effBorderRect = $r0;
+        $r1 = new java.awt.Rectangle;
+        $f2 = borderRect.<java.awt.geom.Rectangle2D$Float: float x>;
+        $f2 = $f2 * 1000.0F;
+        $i0 = staticinvoke <java.lang.Math: int round(float)>($f2);
+        $f3 = borderRect.<java.awt.geom.Rectangle2D$Float: float y>;
+        $f3 = $f3 * 1000.0F;
+        $i1 = staticinvoke <java.lang.Math: int round(float)>($f3);
+        $f0 = borderRect.<java.awt.geom.Rectangle2D$Float: float width>;
+        $f0 = $f0 * 1000.0F;
+        $d0 = (double) $f0;
+        $d0 = staticinvoke <java.lang.Math: double floor(double)>($d0);
+        $i2 = (int) $d0;
+        $i2 = $i2 + 1;
+        $f1 = borderRect.<java.awt.geom.Rectangle2D$Float: float height>;
+        $f1 = $f1 * 1000.0F;
+        $d1 = (double) $f1;
+        $d1 = staticinvoke <java.lang.Math: double floor(double)>($d1);
+        $i3 = (int) $d1;
+        $i3 = $i3 + 1;
+        specialinvoke $r1.<java.awt.Rectangle: void <init>(int,int,int,int)>($i0, $i1, $i2, $i3);
+        paintRect = $r1;
+        $d2 = staticinvoke <org.apache.fop.util.UnitConv: double in2mpt(double)>(1.0);
+        $r2 = this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        $f2 = virtualinvoke $r2.<org.apache.fop.apps.FOUserAgent: float getTargetResolution()>();
+        $d3 = (double) $f2;
+        $d2 = $d2 / $d3;
+        $l4 = staticinvoke <java.lang.Math: long round(double)>($d2);
+        pixelWidth = (int) $l4;
+        $f4 = effBorderRect.<java.awt.geom.Rectangle2D$Float: float x>;
+        $f4 = neg $f4;
+        $f4 = $f4 * 1000.0F;
+        $i5 = staticinvoke <java.lang.Math: int round(float)>($f4);
+        xoffset = $i5 + pixelWidth;
+        yoffset = pixelWidth;
+        $i6 = paintRect.<java.awt.Rectangle: int x>;
+        $i6 = $i6 + xoffset;
+        paintRect.<java.awt.Rectangle: int x> = $i6;
+        $i6 = paintRect.<java.awt.Rectangle: int y>;
+        $i6 = $i6 + yoffset;
+        paintRect.<java.awt.Rectangle: int y> = $i6;
+        $i6 = paintRect.<java.awt.Rectangle: int width>;
+        $i0 = 2 * pixelWidth;
+        $i6 = $i6 + $i0;
+        paintRect.<java.awt.Rectangle: int width> = $i6;
+        $i6 = paintRect.<java.awt.Rectangle: int height>;
+        $i0 = 2 * pixelWidth;
+        $i6 = $i6 + $i0;
+        paintRect.<java.awt.Rectangle: int height> = $i6;
+        $i6 = paintRect.<java.awt.Rectangle: int x>;
+        $i0 = paintRect.<java.awt.Rectangle: int y>;
+        $i1 = paintRect.<java.awt.Rectangle: int width>;
+        $i2 = paintRect.<java.awt.Rectangle: int height>;
+        rc = virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.render.RendererContext createRendererContext(int,int,int,int,java.util.Map)>($i6, $i0, $i1, $i2, null);
+        $r3 = new java.util.HashMap;
+        specialinvoke $r3.<java.util.HashMap: void <init>()>();
+        atts = $r3;
+        $r4 = <org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.util.QName CONV_MODE>;
+        interfaceinvoke atts.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r4, "bitmap");
+        $r4 = <org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.util.QName SRC_TRANSPARENCY>;
+        interfaceinvoke atts.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r4, "true");
+        virtualinvoke rc.<org.apache.fop.render.RendererContext: void setProperty(java.lang.String,java.lang.Object)>("foreign-attributes", atts);
+        $r6 = new org.apache.fop.render.pcl.PCLRenderer$2;
+        specialinvoke $r6.<org.apache.fop.render.pcl.PCLRenderer$2: void <init>(org.apache.fop.render.pcl.PCLRenderer,int,int,java.awt.geom.Rectangle2D$Float,org.apache.fop.traits.BorderProps,org.apache.fop.traits.BorderProps,org.apache.fop.traits.BorderProps,org.apache.fop.traits.BorderProps,java.awt.Rectangle)>(this, xoffset, yoffset, effBorderRect, bpsBefore, bpsEnd, bpsAfter, bpsStart, paintRect);
+        painter = $r6;
+
+     label0:
+        $i1 = paintRect.<java.awt.Rectangle: int x>;
+        $i1 = $i1 - xoffset;
+        $i2 = paintRect.<java.awt.Rectangle: int y>;
+        $i3 = paintRect.<java.awt.Rectangle: int width>;
+        $i7 = paintRect.<java.awt.Rectangle: int height>;
+        interfaceinvoke g2a.<org.apache.fop.render.Graphics2DAdapter: void paintImage(org.apache.xmlgraphics.java2d.Graphics2DImagePainter,org.apache.fop.render.RendererContext,int,int,int,int)>(painter, rc, $i1, $i2, $i3, $i7);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r7 := @caughtexception;
+        ioe = $r7;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLRenderer: void handleIOTrouble(java.io.IOException)>(ioe);
+
+     label3:
+        return;
+
+        catch java.io.IOException from label0 to label1 with label2;
+    }
+
+    public void setAllTextAsBitmaps(boolean)
+    {
+        org.apache.fop.render.pcl.PCLRenderer this;
+        boolean allTextAsBitmaps;
+
+        this := @this: org.apache.fop.render.pcl.PCLRenderer;
+        allTextAsBitmaps := @parameter0: boolean;
+        this.<org.apache.fop.render.pcl.PCLRenderer: boolean allTextAsBitmaps> = allTextAsBitmaps;
+        return;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void access$000(java.awt.Graphics2D, org.apache.fop.fonts.FontMetrics, int, org.apache.fop.area.inline.InlineArea, int, int)
+    {
+        java.awt.Graphics2D x0;
+        org.apache.fop.fonts.FontMetrics x1;
+        int x2, x4, x5;
+        org.apache.fop.area.inline.InlineArea x3;
+
+        x0 := @parameter0: java.awt.Graphics2D;
+        x1 := @parameter1: org.apache.fop.fonts.FontMetrics;
+        x2 := @parameter2: int;
+        x3 := @parameter3: org.apache.fop.area.inline.InlineArea;
+        x4 := @parameter4: int;
+        x5 := @parameter5: int;
+        staticinvoke <org.apache.fop.render.pcl.PCLRenderer: void renderTextDecoration(java.awt.Graphics2D,org.apache.fop.fonts.FontMetrics,int,org.apache.fop.area.inline.InlineArea,int,int)>(x0, x1, x2, x3, x4, x5);
+        return;
+    }
+
+    static java.awt.geom.GeneralPath access$100(org.apache.fop.render.pcl.PCLRenderer)
+    {
+        org.apache.fop.render.pcl.PCLRenderer x0;
+        java.awt.geom.GeneralPath $r0;
+
+        x0 := @parameter0: org.apache.fop.render.pcl.PCLRenderer;
+        $r0 = x0.<org.apache.fop.render.pcl.PCLRenderer: java.awt.geom.GeneralPath currentPath>;
+        return $r0;
+    }
+
+    static java.awt.geom.GeneralPath access$102(org.apache.fop.render.pcl.PCLRenderer, java.awt.geom.GeneralPath)
+    {
+        org.apache.fop.render.pcl.PCLRenderer x0;
+        java.awt.geom.GeneralPath x1;
+
+        x0 := @parameter0: org.apache.fop.render.pcl.PCLRenderer;
+        x1 := @parameter1: java.awt.geom.GeneralPath;
+        x0.<org.apache.fop.render.pcl.PCLRenderer: java.awt.geom.GeneralPath currentPath> = x1;
+        return x1;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+        org.apache.fop.util.QName $r2;
+        org.apache.xmlgraphics.image.loader.ImageFlavor[] $r3;
+        org.apache.xmlgraphics.image.loader.ImageFlavor $r4;
+
+        $r0 = <org.apache.fop.render.pcl.PCLRenderer: java.lang.Class class$org$apache$fop$render$pcl$PCLRenderer>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.render.pcl.PCLRenderer: java.lang.Class class$(java.lang.String)>("org.apache.fop.render.pcl.PCLRenderer");
+        <org.apache.fop.render.pcl.PCLRenderer: java.lang.Class class$org$apache$fop$render$pcl$PCLRenderer> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.render.pcl.PCLRenderer: java.lang.Class class$org$apache$fop$render$pcl$PCLRenderer>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.render.pcl.PCLRenderer: org.apache.commons.logging.Log log> = $r1;
+        $r2 = new org.apache.fop.util.QName;
+        specialinvoke $r2.<org.apache.fop.util.QName: void <init>(java.lang.String,java.lang.String,java.lang.String)>("http://xmlgraphics.apache.org/fop/extensions", null, "conversion-mode");
+        <org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.util.QName CONV_MODE> = $r2;
+        $r2 = new org.apache.fop.util.QName;
+        specialinvoke $r2.<org.apache.fop.util.QName: void <init>(java.lang.String,java.lang.String,java.lang.String)>("http://xmlgraphics.apache.org/fop/extensions", null, "source-transparency");
+        <org.apache.fop.render.pcl.PCLRenderer: org.apache.fop.util.QName SRC_TRANSPARENCY> = $r2;
+        $r3 = newarray (org.apache.xmlgraphics.image.loader.ImageFlavor)[4];
+        $r4 = <org.apache.xmlgraphics.image.loader.ImageFlavor: org.apache.xmlgraphics.image.loader.ImageFlavor GRAPHICS2D>;
+        $r3[0] = $r4;
+        $r4 = <org.apache.xmlgraphics.image.loader.ImageFlavor: org.apache.xmlgraphics.image.loader.ImageFlavor BUFFERED_IMAGE>;
+        $r3[1] = $r4;
+        $r4 = <org.apache.xmlgraphics.image.loader.ImageFlavor: org.apache.xmlgraphics.image.loader.ImageFlavor RENDERED_IMAGE>;
+        $r3[2] = $r4;
+        $r4 = <org.apache.xmlgraphics.image.loader.ImageFlavor: org.apache.xmlgraphics.image.loader.ImageFlavor XML_DOM>;
+        $r3[3] = $r4;
+        <org.apache.fop.render.pcl.PCLRenderer: org.apache.xmlgraphics.image.loader.ImageFlavor[] FLAVORS> = $r3;
+        return;
+    }
+}

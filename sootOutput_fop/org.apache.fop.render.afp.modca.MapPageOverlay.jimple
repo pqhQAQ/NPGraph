@@ -1,0 +1,177 @@
+public class org.apache.fop.render.afp.modca.MapPageOverlay extends org.apache.fop.render.afp.modca.AbstractAFPObject
+{
+    private java.util.List overLays;
+
+    public void <init>()
+    {
+        org.apache.fop.render.afp.modca.MapPageOverlay this;
+        java.util.ArrayList $r0;
+
+        this := @this: org.apache.fop.render.afp.modca.MapPageOverlay;
+        specialinvoke this.<org.apache.fop.render.afp.modca.AbstractAFPObject: void <init>()>();
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.render.afp.modca.MapPageOverlay: java.util.List overLays> = $r0;
+        return;
+    }
+
+    public void addOverlay(java.lang.String) throws org.apache.fop.render.afp.modca.MaximumSizeExceededException
+    {
+        org.apache.fop.render.afp.modca.MapPageOverlay this;
+        java.lang.String name, $r4, $r7;
+        java.lang.StringBuffer $r0, $r6;
+        byte[] data;
+        java.io.UnsupportedEncodingException usee, $r8;
+        java.util.List $r1;
+        int $i0;
+        org.apache.fop.render.afp.modca.MaximumSizeExceededException $r2;
+        java.lang.IllegalArgumentException $r3;
+        org.apache.commons.logging.Log $r5;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.afp.modca.MapPageOverlay;
+        name := @parameter0: java.lang.String;
+        $r1 = this.<org.apache.fop.render.afp.modca.MapPageOverlay: java.util.List overLays>;
+        $i0 = interfaceinvoke $r1.<java.util.List: int size()>();
+        if $i0 <= 253 goto label0;
+
+        $r2 = new org.apache.fop.render.afp.modca.MaximumSizeExceededException;
+        specialinvoke $r2.<org.apache.fop.render.afp.modca.MaximumSizeExceededException: void <init>()>();
+        throw $r2;
+
+     label0:
+        $i0 = virtualinvoke name.<java.lang.String: int length()>();
+        if $i0 == 8 goto label1;
+
+        $r3 = new java.lang.IllegalArgumentException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("The name of overlay ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(name);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" must be 8 characters");
+        $r4 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r3.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r4);
+        throw $r3;
+
+     label1:
+        $r5 = <org.apache.fop.render.afp.modca.MapPageOverlay: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r5.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label2;
+
+        $r5 = <org.apache.fop.render.afp.modca.MapPageOverlay: org.apache.commons.logging.Log log>;
+        $r6 = new java.lang.StringBuffer;
+        specialinvoke $r6.<java.lang.StringBuffer: void <init>()>();
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("addOverlay():: adding overlay ");
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(name);
+        $r7 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r7);
+
+     label2:
+        data = virtualinvoke name.<java.lang.String: byte[] getBytes(java.lang.String)>("Cp1146");
+        $r1 = this.<org.apache.fop.render.afp.modca.MapPageOverlay: java.util.List overLays>;
+        interfaceinvoke $r1.<java.util.List: boolean add(java.lang.Object)>(data);
+
+     label3:
+        goto label5;
+
+     label4:
+        $r8 := @caughtexception;
+        usee = $r8;
+        $r5 = <org.apache.fop.render.afp.modca.MapPageOverlay: org.apache.commons.logging.Log log>;
+        $r6 = new java.lang.StringBuffer;
+        specialinvoke $r6.<java.lang.StringBuffer: void <init>()>();
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("addOverlay():: UnsupportedEncodingException translating the name ");
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(name);
+        $r7 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r7);
+
+     label5:
+        return;
+
+        catch java.io.UnsupportedEncodingException from label2 to label3 with label4;
+    }
+
+    public void writeDataStream(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.render.afp.modca.MapPageOverlay this;
+        java.io.OutputStream os;
+        int oLayCount, recordlength, pos, i, j, $i0, $i2;
+        byte[] data, rl1, name, $r2;
+        byte olayref, $b1;
+        java.util.List $r0;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.render.afp.modca.MapPageOverlay;
+        os := @parameter0: java.io.OutputStream;
+        $r0 = this.<org.apache.fop.render.afp.modca.MapPageOverlay: java.util.List overLays>;
+        oLayCount = interfaceinvoke $r0.<java.util.List: int size()>();
+        recordlength = oLayCount * 18;
+        $i0 = recordlength + 9;
+        data = newarray (byte)[$i0];
+        data[0] = 90;
+        $i0 = recordlength + 8;
+        rl1 = staticinvoke <org.apache.fop.render.afp.tools.BinaryUtils: byte[] convert(int,int)>($i0, 2);
+        $b1 = rl1[0];
+        data[1] = $b1;
+        $b1 = rl1[1];
+        data[2] = $b1;
+        data[3] = -45;
+        data[4] = -85;
+        data[5] = -40;
+        data[6] = 0;
+        data[7] = 0;
+        data[8] = 0;
+        pos = 8;
+        olayref = 0;
+        i = 0;
+
+     label0:
+        if i >= oLayCount goto label3;
+
+        $i0 = olayref + 1;
+        olayref = (byte) $i0;
+        pos = pos + 1;
+        data[pos] = 0;
+        pos = pos + 1;
+        data[pos] = 18;
+        pos = pos + 1;
+        data[pos] = 12;
+        pos = pos + 1;
+        data[pos] = 2;
+        pos = pos + 1;
+        data[pos] = -124;
+        pos = pos + 1;
+        data[pos] = 0;
+        $r0 = this.<org.apache.fop.render.afp.modca.MapPageOverlay: java.util.List overLays>;
+        $r1 = interfaceinvoke $r0.<java.util.List: java.lang.Object get(int)>(i);
+        $r2 = (byte[]) $r1;
+        name = (byte[]) $r2;
+        j = 0;
+
+     label1:
+        $i2 = lengthof name;
+        if j >= $i2 goto label2;
+
+        pos = pos + 1;
+        $b1 = name[j];
+        data[pos] = $b1;
+        j = j + 1;
+        goto label1;
+
+     label2:
+        pos = pos + 1;
+        data[pos] = 4;
+        pos = pos + 1;
+        data[pos] = 36;
+        pos = pos + 1;
+        data[pos] = 2;
+        pos = pos + 1;
+        data[pos] = olayref;
+        i = i + 1;
+        goto label0;
+
+     label3:
+        virtualinvoke os.<java.io.OutputStream: void write(byte[])>(data);
+        return;
+    }
+}

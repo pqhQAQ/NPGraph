@@ -1,0 +1,94 @@
+public class org.apache.fop.pdf.PDFICCStream extends org.apache.fop.pdf.PDFStream
+{
+    private java.awt.color.ICC_Profile cp;
+    private org.apache.fop.pdf.PDFDeviceColorSpace pdfColorSpace;
+
+    public void <init>()
+    {
+        org.apache.fop.pdf.PDFICCStream this;
+
+        this := @this: org.apache.fop.pdf.PDFICCStream;
+        specialinvoke this.<org.apache.fop.pdf.PDFStream: void <init>()>();
+        this.<org.apache.fop.pdf.PDFICCStream: java.awt.color.ICC_Profile cp> = null;
+        return;
+    }
+
+    public void setColorSpace(java.awt.color.ICC_Profile, org.apache.fop.pdf.PDFDeviceColorSpace)
+    {
+        org.apache.fop.pdf.PDFICCStream this;
+        java.awt.color.ICC_Profile icc;
+        org.apache.fop.pdf.PDFDeviceColorSpace alt;
+
+        this := @this: org.apache.fop.pdf.PDFICCStream;
+        icc := @parameter0: java.awt.color.ICC_Profile;
+        alt := @parameter1: org.apache.fop.pdf.PDFDeviceColorSpace;
+        this.<org.apache.fop.pdf.PDFICCStream: java.awt.color.ICC_Profile cp> = icc;
+        this.<org.apache.fop.pdf.PDFICCStream: org.apache.fop.pdf.PDFDeviceColorSpace pdfColorSpace> = alt;
+        return;
+    }
+
+    public java.awt.color.ICC_Profile getICCProfile()
+    {
+        org.apache.fop.pdf.PDFICCStream this;
+        java.awt.color.ICC_Profile $r0;
+
+        this := @this: org.apache.fop.pdf.PDFICCStream;
+        $r0 = this.<org.apache.fop.pdf.PDFICCStream: java.awt.color.ICC_Profile cp>;
+        return $r0;
+    }
+
+    protected int output(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFICCStream this;
+        java.io.OutputStream stream;
+        int length;
+
+        this := @this: org.apache.fop.pdf.PDFICCStream;
+        stream := @parameter0: java.io.OutputStream;
+        length = specialinvoke this.<org.apache.fop.pdf.PDFStream: int output(java.io.OutputStream)>(stream);
+        this.<org.apache.fop.pdf.PDFICCStream: java.awt.color.ICC_Profile cp> = null;
+        return length;
+    }
+
+    protected void outputRawStreamData(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFICCStream this;
+        java.io.OutputStream out;
+        java.awt.color.ICC_Profile $r0;
+
+        this := @this: org.apache.fop.pdf.PDFICCStream;
+        out := @parameter0: java.io.OutputStream;
+        $r0 = this.<org.apache.fop.pdf.PDFICCStream: java.awt.color.ICC_Profile cp>;
+        virtualinvoke $r0.<java.awt.color.ICC_Profile: void write(java.io.OutputStream)>(out);
+        return;
+    }
+
+    protected void populateStreamDict(java.lang.Object)
+    {
+        org.apache.fop.pdf.PDFICCStream this;
+        java.lang.Object lengthEntry;
+        java.awt.color.ICC_Profile $r0;
+        int $i0;
+        org.apache.fop.pdf.PDFDeviceColorSpace $r1, $r3;
+        org.apache.fop.pdf.PDFName $r2;
+        java.lang.String $r4;
+
+        this := @this: org.apache.fop.pdf.PDFICCStream;
+        lengthEntry := @parameter0: java.lang.Object;
+        $r0 = this.<org.apache.fop.pdf.PDFICCStream: java.awt.color.ICC_Profile cp>;
+        $i0 = virtualinvoke $r0.<java.awt.color.ICC_Profile: int getNumComponents()>();
+        virtualinvoke this.<org.apache.fop.pdf.PDFICCStream: void put(java.lang.String,int)>("N", $i0);
+        $r1 = this.<org.apache.fop.pdf.PDFICCStream: org.apache.fop.pdf.PDFDeviceColorSpace pdfColorSpace>;
+        if $r1 == null goto label0;
+
+        $r2 = new org.apache.fop.pdf.PDFName;
+        $r3 = this.<org.apache.fop.pdf.PDFICCStream: org.apache.fop.pdf.PDFDeviceColorSpace pdfColorSpace>;
+        $r4 = virtualinvoke $r3.<org.apache.fop.pdf.PDFDeviceColorSpace: java.lang.String getName()>();
+        specialinvoke $r2.<org.apache.fop.pdf.PDFName: void <init>(java.lang.String)>($r4);
+        virtualinvoke this.<org.apache.fop.pdf.PDFICCStream: void put(java.lang.String,java.lang.Object)>("Alternate", $r2);
+
+     label0:
+        specialinvoke this.<org.apache.fop.pdf.PDFStream: void populateStreamDict(java.lang.Object)>(lengthEntry);
+        return;
+    }
+}

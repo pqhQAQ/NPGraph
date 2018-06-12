@@ -1,0 +1,950 @@
+public class org.apache.fop.render.txt.TXTRenderer extends org.apache.fop.render.AbstractPathOrientedRenderer
+{
+    private static final char LIGHT_SHADE;
+    private static final char MEDIUM_SHADE;
+    private static final char DARK_SHADE;
+    private static final char FULL_BLOCK;
+    private static final char IMAGE_CHAR;
+    private java.io.OutputStream outputStream;
+    private org.apache.fop.render.txt.TXTStream currentStream;
+    private java.lang.StringBuffer[] charData;
+    private java.lang.StringBuffer[] decoData;
+    public static final int CHAR_HEIGHT;
+    public static final int CHAR_WIDTH;
+    private int pageWidth;
+    private int pageHeight;
+    private java.lang.String lineEnding;
+    private java.lang.String pageEnding;
+    private boolean firstPage;
+    private org.apache.fop.render.txt.border.BorderManager bm;
+    private char fillChar;
+    private org.apache.fop.render.txt.TXTState currentState;
+    private java.lang.String encoding;
+
+    public void <init>()
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        org.apache.fop.render.txt.TXTState $r0;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        specialinvoke this.<org.apache.fop.render.AbstractPathOrientedRenderer: void <init>()>();
+        this.<org.apache.fop.render.txt.TXTRenderer: java.lang.String lineEnding> = "\r\n";
+        this.<org.apache.fop.render.txt.TXTRenderer: java.lang.String pageEnding> = "\f";
+        this.<org.apache.fop.render.txt.TXTRenderer: boolean firstPage> = 0;
+        $r0 = new org.apache.fop.render.txt.TXTState;
+        specialinvoke $r0.<org.apache.fop.render.txt.TXTState: void <init>()>();
+        this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.TXTState currentState> = $r0;
+        return;
+    }
+
+    public java.lang.String getMimeType()
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        return "text/plain";
+    }
+
+    public void setEncoding(java.lang.String)
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        java.lang.String encoding;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        encoding := @parameter0: java.lang.String;
+        this.<org.apache.fop.render.txt.TXTRenderer: java.lang.String encoding> = encoding;
+        return;
+    }
+
+    public boolean isLayInside(int, int)
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        int x, y, $i0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        x := @parameter0: int;
+        y := @parameter1: int;
+        if x < 0 goto label0;
+
+        $i0 = this.<org.apache.fop.render.txt.TXTRenderer: int pageWidth>;
+        if x >= $i0 goto label0;
+
+        if y < 0 goto label0;
+
+        $i0 = this.<org.apache.fop.render.txt.TXTRenderer: int pageHeight>;
+        if y >= $i0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    protected void addChar(int, int, char, boolean)
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        int x, y, $i0, $i1;
+        char ch;
+        boolean ischar;
+        java.awt.Point point;
+        org.apache.fop.render.txt.TXTState $r0;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        x := @parameter0: int;
+        y := @parameter1: int;
+        ch := @parameter2: char;
+        ischar := @parameter3: boolean;
+        $r0 = this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.TXTState currentState>;
+        point = virtualinvoke $r0.<org.apache.fop.render.txt.TXTState: java.awt.Point transformPoint(int,int)>(x, y);
+        $i0 = point.<java.awt.Point: int x>;
+        $i1 = point.<java.awt.Point: int y>;
+        virtualinvoke this.<org.apache.fop.render.txt.TXTRenderer: void putChar(int,int,char,boolean)>($i0, $i1, ch, ischar);
+        return;
+    }
+
+    protected void putChar(int, int, char, boolean)
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        int x, y, $i0;
+        char ch;
+        boolean ischar, $z0;
+        java.lang.StringBuffer sb, $r1;
+        java.lang.StringBuffer[] $r0;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        x := @parameter0: int;
+        y := @parameter1: int;
+        ch := @parameter2: char;
+        ischar := @parameter3: boolean;
+        $z0 = virtualinvoke this.<org.apache.fop.render.txt.TXTRenderer: boolean isLayInside(int,int)>(x, y);
+        if $z0 == 0 goto label4;
+
+        if ischar == 0 goto label0;
+
+        $r0 = this.<org.apache.fop.render.txt.TXTRenderer: java.lang.StringBuffer[] charData>;
+        $r1 = $r0[y];
+        goto label1;
+
+     label0:
+        $r0 = this.<org.apache.fop.render.txt.TXTRenderer: java.lang.StringBuffer[] decoData>;
+        $r1 = $r0[y];
+
+     label1:
+        sb = $r1;
+
+     label2:
+        $i0 = virtualinvoke sb.<java.lang.StringBuffer: int length()>();
+        if $i0 > x goto label3;
+
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(32);
+        goto label2;
+
+     label3:
+        virtualinvoke sb.<java.lang.StringBuffer: void setCharAt(int,char)>(x, ch);
+
+     label4:
+        return;
+    }
+
+    protected void addString(int, int, java.lang.String)
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        int row, col, l, $i0;
+        java.lang.String s;
+        char $c1;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        row := @parameter0: int;
+        col := @parameter1: int;
+        s := @parameter2: java.lang.String;
+        l = 0;
+
+     label0:
+        $i0 = virtualinvoke s.<java.lang.String: int length()>();
+        if l >= $i0 goto label1;
+
+        $i0 = col + l;
+        $c1 = virtualinvoke s.<java.lang.String: char charAt(int)>(l);
+        virtualinvoke this.<org.apache.fop.render.txt.TXTRenderer: void addChar(int,int,char,boolean)>($i0, row, $c1, 1);
+        l = l + 1;
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    protected void renderText(org.apache.fop.area.inline.TextArea)
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        org.apache.fop.area.inline.TextArea area;
+        int col, row, $i0;
+        java.lang.String s;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        area := @parameter0: org.apache.fop.area.inline.TextArea;
+        $i0 = this.<org.apache.fop.render.txt.TXTRenderer: int currentIPPosition>;
+        col = staticinvoke <org.apache.fop.render.txt.Helper: int ceilPosition(int,int)>($i0, 6000);
+        $i0 = this.<org.apache.fop.render.txt.TXTRenderer: int currentBPPosition>;
+        row = staticinvoke <org.apache.fop.render.txt.Helper: int ceilPosition(int,int)>($i0, 7860);
+        s = virtualinvoke area.<org.apache.fop.area.inline.TextArea: java.lang.String getText()>();
+        virtualinvoke this.<org.apache.fop.render.txt.TXTRenderer: void addString(int,int,java.lang.String)>(row, col, s);
+        specialinvoke this.<org.apache.fop.render.AbstractPathOrientedRenderer: void renderText(org.apache.fop.area.inline.TextArea)>(area);
+        return;
+    }
+
+    public void renderPage(org.apache.fop.area.PageViewport) throws java.io.IOException, org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        org.apache.fop.area.PageViewport page;
+        java.awt.geom.Rectangle2D bounds;
+        double width, height;
+        int i, $i0, $i1, $i2;
+        boolean $z0;
+        org.apache.fop.render.txt.TXTStream $r0;
+        java.lang.String $r1;
+        java.lang.StringBuffer[] $r2, $r3;
+        java.lang.StringBuffer $r4;
+        org.apache.fop.render.txt.border.BorderManager $r5;
+        org.apache.fop.render.txt.TXTState $r6;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        page := @parameter0: org.apache.fop.area.PageViewport;
+        $z0 = this.<org.apache.fop.render.txt.TXTRenderer: boolean firstPage>;
+        if $z0 == 0 goto label0;
+
+        this.<org.apache.fop.render.txt.TXTRenderer: boolean firstPage> = 0;
+        goto label1;
+
+     label0:
+        $r0 = this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.TXTStream currentStream>;
+        $r1 = this.<org.apache.fop.render.txt.TXTRenderer: java.lang.String pageEnding>;
+        virtualinvoke $r0.<org.apache.fop.render.txt.TXTStream: void add(java.lang.String)>($r1);
+
+     label1:
+        bounds = virtualinvoke page.<org.apache.fop.area.PageViewport: java.awt.geom.Rectangle2D getViewArea()>();
+        width = virtualinvoke bounds.<java.awt.geom.Rectangle2D: double getWidth()>();
+        height = virtualinvoke bounds.<java.awt.geom.Rectangle2D: double getHeight()>();
+        $i0 = (int) width;
+        $i0 = staticinvoke <org.apache.fop.render.txt.Helper: int ceilPosition(int,int)>($i0, 6000);
+        this.<org.apache.fop.render.txt.TXTRenderer: int pageWidth> = $i0;
+        $i0 = (int) height;
+        $i0 = staticinvoke <org.apache.fop.render.txt.Helper: int ceilPosition(int,int)>($i0, 7860);
+        this.<org.apache.fop.render.txt.TXTRenderer: int pageHeight> = $i0;
+        $i0 = this.<org.apache.fop.render.txt.TXTRenderer: int pageHeight>;
+        $r2 = newarray (java.lang.StringBuffer)[$i0];
+        this.<org.apache.fop.render.txt.TXTRenderer: java.lang.StringBuffer[] charData> = $r2;
+        $i0 = this.<org.apache.fop.render.txt.TXTRenderer: int pageHeight>;
+        $r2 = newarray (java.lang.StringBuffer)[$i0];
+        this.<org.apache.fop.render.txt.TXTRenderer: java.lang.StringBuffer[] decoData> = $r2;
+        i = 0;
+
+     label2:
+        $i0 = this.<org.apache.fop.render.txt.TXTRenderer: int pageHeight>;
+        if i >= $i0 goto label3;
+
+        $r3 = this.<org.apache.fop.render.txt.TXTRenderer: java.lang.StringBuffer[] charData>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r3[i] = $r4;
+        $r3 = this.<org.apache.fop.render.txt.TXTRenderer: java.lang.StringBuffer[] decoData>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r3[i] = $r4;
+        i = i + 1;
+        goto label2;
+
+     label3:
+        $r5 = new org.apache.fop.render.txt.border.BorderManager;
+        $i1 = this.<org.apache.fop.render.txt.TXTRenderer: int pageWidth>;
+        $i2 = this.<org.apache.fop.render.txt.TXTRenderer: int pageHeight>;
+        $r6 = this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.TXTState currentState>;
+        specialinvoke $r5.<org.apache.fop.render.txt.border.BorderManager: void <init>(int,int,org.apache.fop.render.txt.TXTState)>($i1, $i2, $r6);
+        this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.border.BorderManager bm> = $r5;
+        specialinvoke this.<org.apache.fop.render.AbstractPathOrientedRenderer: void renderPage(org.apache.fop.area.PageViewport)>(page);
+        specialinvoke this.<org.apache.fop.render.txt.TXTRenderer: void flushBorderToBuffer()>();
+        specialinvoke this.<org.apache.fop.render.txt.TXTRenderer: void flushBuffer()>();
+        return;
+    }
+
+    private void flushBorderToBuffer()
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        int x, y, $i0;
+        java.lang.Character c;
+        org.apache.fop.render.txt.border.BorderManager $r0;
+        char $c1;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        x = 0;
+
+     label0:
+        $i0 = this.<org.apache.fop.render.txt.TXTRenderer: int pageWidth>;
+        if x >= $i0 goto label4;
+
+        y = 0;
+
+     label1:
+        $i0 = this.<org.apache.fop.render.txt.TXTRenderer: int pageHeight>;
+        if y >= $i0 goto label3;
+
+        $r0 = this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.border.BorderManager bm>;
+        c = virtualinvoke $r0.<org.apache.fop.render.txt.border.BorderManager: java.lang.Character getCharacter(int,int)>(x, y);
+        if c == null goto label2;
+
+        $c1 = virtualinvoke c.<java.lang.Character: char charValue()>();
+        virtualinvoke this.<org.apache.fop.render.txt.TXTRenderer: void putChar(int,int,char,boolean)>(x, y, $c1, 0);
+
+     label2:
+        y = y + 1;
+        goto label1;
+
+     label3:
+        x = x + 1;
+        goto label0;
+
+     label4:
+        return;
+    }
+
+    private void flushBuffer()
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        int row, len, countr, $i0, $i1;
+        java.lang.StringBuffer cr, dr, outr, $r1;
+        java.lang.StringBuffer[] $r0;
+        char $c2, $c3;
+        org.apache.fop.render.txt.TXTStream $r2;
+        java.lang.String $r3;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        row = 0;
+
+     label0:
+        $i0 = this.<org.apache.fop.render.txt.TXTRenderer: int pageHeight>;
+        if row >= $i0 goto label11;
+
+        $r0 = this.<org.apache.fop.render.txt.TXTRenderer: java.lang.StringBuffer[] charData>;
+        cr = $r0[row];
+        $r0 = this.<org.apache.fop.render.txt.TXTRenderer: java.lang.StringBuffer[] decoData>;
+        dr = $r0[row];
+        outr = null;
+        if cr == null goto label1;
+
+        if dr != null goto label1;
+
+        outr = cr;
+        goto label8;
+
+     label1:
+        if dr == null goto label2;
+
+        if cr != null goto label2;
+
+        outr = dr;
+        goto label8;
+
+     label2:
+        if cr == null goto label8;
+
+        if dr == null goto label8;
+
+        len = virtualinvoke dr.<java.lang.StringBuffer: int length()>();
+        $i1 = virtualinvoke cr.<java.lang.StringBuffer: int length()>();
+        if $i1 <= len goto label3;
+
+        len = virtualinvoke cr.<java.lang.StringBuffer: int length()>();
+
+     label3:
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        outr = $r1;
+        countr = 0;
+
+     label4:
+        if countr >= len goto label8;
+
+        $i0 = virtualinvoke cr.<java.lang.StringBuffer: int length()>();
+        if countr >= $i0 goto label5;
+
+        $c2 = virtualinvoke cr.<java.lang.StringBuffer: char charAt(int)>(countr);
+        if $c2 == 32 goto label5;
+
+        $c3 = virtualinvoke cr.<java.lang.StringBuffer: char charAt(int)>(countr);
+        virtualinvoke outr.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c3);
+        goto label7;
+
+     label5:
+        $i0 = virtualinvoke dr.<java.lang.StringBuffer: int length()>();
+        if countr >= $i0 goto label6;
+
+        $c3 = virtualinvoke dr.<java.lang.StringBuffer: char charAt(int)>(countr);
+        virtualinvoke outr.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c3);
+        goto label7;
+
+     label6:
+        virtualinvoke outr.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(32);
+
+     label7:
+        countr = countr + 1;
+        goto label4;
+
+     label8:
+        if outr == null goto label9;
+
+        $r2 = this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.TXTStream currentStream>;
+        $r3 = virtualinvoke outr.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r2.<org.apache.fop.render.txt.TXTStream: void add(java.lang.String)>($r3);
+
+     label9:
+        $i0 = this.<org.apache.fop.render.txt.TXTRenderer: int pageHeight>;
+        if row >= $i0 goto label10;
+
+        $r2 = this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.TXTStream currentStream>;
+        $r3 = this.<org.apache.fop.render.txt.TXTRenderer: java.lang.String lineEnding>;
+        virtualinvoke $r2.<org.apache.fop.render.txt.TXTStream: void add(java.lang.String)>($r3);
+
+     label10:
+        row = row + 1;
+        goto label0;
+
+     label11:
+        return;
+    }
+
+    public void startRenderer(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        java.io.OutputStream os;
+        org.apache.commons.logging.Log $r0;
+        org.apache.fop.render.txt.TXTStream $r1, $r2;
+        java.lang.String $r3;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        os := @parameter0: java.io.OutputStream;
+        $r0 = <org.apache.fop.render.txt.TXTRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>("Rendering areas to TEXT.");
+        this.<org.apache.fop.render.txt.TXTRenderer: java.io.OutputStream outputStream> = os;
+        $r1 = new org.apache.fop.render.txt.TXTStream;
+        specialinvoke $r1.<org.apache.fop.render.txt.TXTStream: void <init>(java.io.OutputStream)>(os);
+        this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.TXTStream currentStream> = $r1;
+        $r2 = this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.TXTStream currentStream>;
+        $r3 = this.<org.apache.fop.render.txt.TXTRenderer: java.lang.String encoding>;
+        virtualinvoke $r2.<org.apache.fop.render.txt.TXTStream: void setEncoding(java.lang.String)>($r3);
+        this.<org.apache.fop.render.txt.TXTRenderer: boolean firstPage> = 1;
+        return;
+    }
+
+    public void stopRenderer() throws java.io.IOException
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        org.apache.commons.logging.Log $r0;
+        java.io.OutputStream $r1;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        $r0 = <org.apache.fop.render.txt.TXTRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>("writing out TEXT");
+        $r1 = this.<org.apache.fop.render.txt.TXTRenderer: java.io.OutputStream outputStream>;
+        virtualinvoke $r1.<java.io.OutputStream: void flush()>();
+        specialinvoke this.<org.apache.fop.render.AbstractPathOrientedRenderer: void stopRenderer()>();
+        return;
+    }
+
+    protected void restoreStateStackAfterBreakOut(java.util.List)
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        java.util.List breakOutList;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        breakOutList := @parameter0: java.util.List;
+        return;
+    }
+
+    protected java.util.List breakOutOfStateStack()
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        return null;
+    }
+
+    protected void saveGraphicsState()
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        org.apache.fop.area.CTM $r0;
+        org.apache.fop.render.txt.TXTState $r1;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        $r1 = this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.TXTState currentState>;
+        $r0 = new org.apache.fop.area.CTM;
+        specialinvoke $r0.<org.apache.fop.area.CTM: void <init>()>();
+        virtualinvoke $r1.<org.apache.fop.render.txt.TXTState: void push(org.apache.fop.area.CTM)>($r0);
+        return;
+    }
+
+    protected void restoreGraphicsState()
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        org.apache.fop.render.txt.TXTState $r0;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        $r0 = this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.TXTState currentState>;
+        virtualinvoke $r0.<org.apache.fop.render.txt.TXTState: void pop()>();
+        return;
+    }
+
+    protected void beginTextObject()
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        return;
+    }
+
+    protected void endTextObject()
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        return;
+    }
+
+    protected void clip()
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        return;
+    }
+
+    protected void clipRect(float, float, float, float)
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        float x, y, width, height;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        x := @parameter0: float;
+        y := @parameter1: float;
+        width := @parameter2: float;
+        height := @parameter3: float;
+        return;
+    }
+
+    protected void moveTo(float, float)
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        float x, y;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        x := @parameter0: float;
+        y := @parameter1: float;
+        return;
+    }
+
+    protected void lineTo(float, float)
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        float x, y;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        x := @parameter0: float;
+        y := @parameter1: float;
+        return;
+    }
+
+    protected void closePath()
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        return;
+    }
+
+    private void fillRect(int, int, int, int, char)
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        int startX, startY, width, height, x, y, $i0;
+        char charToFill;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        startX := @parameter0: int;
+        startY := @parameter1: int;
+        width := @parameter2: int;
+        height := @parameter3: int;
+        charToFill := @parameter4: char;
+        x = startX;
+
+     label0:
+        $i0 = startX + width;
+        if x >= $i0 goto label3;
+
+        y = startY;
+
+     label1:
+        $i0 = startY + height;
+        if y >= $i0 goto label2;
+
+        virtualinvoke this.<org.apache.fop.render.txt.TXTRenderer: void addChar(int,int,char,boolean)>(x, y, charToFill, 0);
+        y = y + 1;
+        goto label1;
+
+     label2:
+        x = x + 1;
+        goto label0;
+
+     label3:
+        return;
+    }
+
+    protected void fillRect(float, float, float, float)
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        float x, y, width, height;
+        org.apache.fop.render.txt.border.BorderManager $r0, $r1, $r2, $r3;
+        int $i0, $i1, $i2, $i3;
+        char $c4;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        x := @parameter0: float;
+        y := @parameter1: float;
+        width := @parameter2: float;
+        height := @parameter3: float;
+        $r0 = this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.border.BorderManager bm>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.render.txt.border.BorderManager: int getStartX()>();
+        $r1 = this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.border.BorderManager bm>;
+        $i1 = virtualinvoke $r1.<org.apache.fop.render.txt.border.BorderManager: int getStartY()>();
+        $r2 = this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.border.BorderManager bm>;
+        $i2 = virtualinvoke $r2.<org.apache.fop.render.txt.border.BorderManager: int getWidth()>();
+        $r3 = this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.border.BorderManager bm>;
+        $i3 = virtualinvoke $r3.<org.apache.fop.render.txt.border.BorderManager: int getHeight()>();
+        $c4 = this.<org.apache.fop.render.txt.TXTRenderer: char fillChar>;
+        specialinvoke this.<org.apache.fop.render.txt.TXTRenderer: void fillRect(int,int,int,int,char)>($i0, $i1, $i2, $i3, $c4);
+        return;
+    }
+
+    protected void updateColor(java.awt.Color, boolean)
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        java.awt.Color col;
+        boolean fill;
+        double fillShade;
+        int $i0, $i1;
+        float $f0, $f1, $f2;
+        byte $b2;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        col := @parameter0: java.awt.Color;
+        fill := @parameter1: boolean;
+        if col != null goto label0;
+
+        return;
+
+     label0:
+        $i0 = virtualinvoke col.<java.awt.Color: int getRed()>();
+        $f0 = (float) $i0;
+        $f1 = 0.0011764707F * $f0;
+        $i1 = virtualinvoke col.<java.awt.Color: int getGreen()>();
+        $f2 = (float) $i1;
+        $f0 = 0.0023137254F * $f2;
+        $f1 = $f1 + $f0;
+        $i1 = virtualinvoke col.<java.awt.Color: int getBlue()>();
+        $f2 = (float) $i1;
+        $f0 = 4.3137255E-4F * $f2;
+        $f1 = $f1 + $f0;
+        fillShade = (double) $f1;
+        fillShade = 1.0 - fillShade;
+        $b2 = fillShade cmpl 0.800000011920929;
+        if $b2 <= 0 goto label1;
+
+        this.<org.apache.fop.render.txt.TXTRenderer: char fillChar> = 9608;
+        goto label5;
+
+     label1:
+        $b2 = fillShade cmpl 0.6000000238418579;
+        if $b2 <= 0 goto label2;
+
+        this.<org.apache.fop.render.txt.TXTRenderer: char fillChar> = 9619;
+        goto label5;
+
+     label2:
+        $b2 = fillShade cmpl 0.4000000059604645;
+        if $b2 <= 0 goto label3;
+
+        this.<org.apache.fop.render.txt.TXTRenderer: char fillChar> = 9618;
+        goto label5;
+
+     label3:
+        $b2 = fillShade cmpl 0.20000000298023224;
+        if $b2 <= 0 goto label4;
+
+        this.<org.apache.fop.render.txt.TXTRenderer: char fillChar> = 9617;
+        goto label5;
+
+     label4:
+        this.<org.apache.fop.render.txt.TXTRenderer: char fillChar> = 32;
+
+     label5:
+        return;
+    }
+
+    protected void drawImage(java.lang.String, java.awt.geom.Rectangle2D, java.util.Map)
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        java.lang.String url;
+        java.awt.geom.Rectangle2D pos;
+        java.util.Map foreignAttributes;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        url := @parameter0: java.lang.String;
+        pos := @parameter1: java.awt.geom.Rectangle2D;
+        foreignAttributes := @parameter2: java.util.Map;
+        return;
+    }
+
+    public void renderImage(org.apache.fop.area.inline.Image, java.awt.geom.Rectangle2D)
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        org.apache.fop.area.inline.Image image;
+        java.awt.geom.Rectangle2D pos;
+        int x1, y1, width, height, $i0;
+        double $d0;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        image := @parameter0: org.apache.fop.area.inline.Image;
+        pos := @parameter1: java.awt.geom.Rectangle2D;
+        $i0 = this.<org.apache.fop.render.txt.TXTRenderer: int currentIPPosition>;
+        x1 = staticinvoke <org.apache.fop.render.txt.Helper: int ceilPosition(int,int)>($i0, 6000);
+        $i0 = this.<org.apache.fop.render.txt.TXTRenderer: int currentBPPosition>;
+        y1 = staticinvoke <org.apache.fop.render.txt.Helper: int ceilPosition(int,int)>($i0, 7860);
+        $d0 = virtualinvoke pos.<java.awt.geom.Rectangle2D: double getWidth()>();
+        $i0 = (int) $d0;
+        width = staticinvoke <org.apache.fop.render.txt.Helper: int ceilPosition(int,int)>($i0, 6000);
+        $d0 = virtualinvoke pos.<java.awt.geom.Rectangle2D: double getHeight()>();
+        $i0 = (int) $d0;
+        height = staticinvoke <org.apache.fop.render.txt.Helper: int ceilPosition(int,int)>($i0, 7860);
+        specialinvoke this.<org.apache.fop.render.txt.TXTRenderer: void fillRect(int,int,int,int,char)>(x1, y1, width, height, 35);
+        return;
+    }
+
+    protected int toMilli(float)
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        float x, $f0;
+        int $i0;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        x := @parameter0: float;
+        $f0 = x * 1000.0F;
+        $i0 = staticinvoke <java.lang.Math: int round(float)>($f0);
+        return $i0;
+    }
+
+    private void addBitOfBorder(int, int, int, int)
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        int x, y, style, type, $i0, $i1;
+        java.awt.Point point;
+        org.apache.fop.render.txt.TXTState $r0;
+        boolean $z0;
+        org.apache.fop.render.txt.border.BorderManager $r1;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        x := @parameter0: int;
+        y := @parameter1: int;
+        style := @parameter2: int;
+        type := @parameter3: int;
+        $r0 = this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.TXTState currentState>;
+        point = virtualinvoke $r0.<org.apache.fop.render.txt.TXTState: java.awt.Point transformPoint(int,int)>(x, y);
+        $i0 = point.<java.awt.Point: int x>;
+        $i1 = point.<java.awt.Point: int y>;
+        $z0 = virtualinvoke this.<org.apache.fop.render.txt.TXTRenderer: boolean isLayInside(int,int)>($i0, $i1);
+        if $z0 == 0 goto label0;
+
+        $r1 = this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.border.BorderManager bm>;
+        $i0 = point.<java.awt.Point: int x>;
+        $i1 = point.<java.awt.Point: int y>;
+        virtualinvoke $r1.<org.apache.fop.render.txt.border.BorderManager: void addBorderElement(int,int,int,int)>($i0, $i1, style, type);
+
+     label0:
+        return;
+    }
+
+    protected void drawBorderLine(float, float, float, float, boolean, boolean, int, java.awt.Color)
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        float x1, y1, x2, y2;
+        boolean horz, startOrBefore;
+        int style, borderHeight, borderWidth, borderStartX, borderStartY, x, y, length, i, $i0, $i1, $i2;
+        java.awt.Color col;
+        byte dx, dy, startType, endType;
+        org.apache.fop.render.txt.border.BorderManager $r0;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        x1 := @parameter0: float;
+        y1 := @parameter1: float;
+        x2 := @parameter2: float;
+        y2 := @parameter3: float;
+        horz := @parameter4: boolean;
+        startOrBefore := @parameter5: boolean;
+        style := @parameter6: int;
+        col := @parameter7: java.awt.Color;
+        $r0 = this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.border.BorderManager bm>;
+        borderHeight = virtualinvoke $r0.<org.apache.fop.render.txt.border.BorderManager: int getHeight()>();
+        $r0 = this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.border.BorderManager bm>;
+        borderWidth = virtualinvoke $r0.<org.apache.fop.render.txt.border.BorderManager: int getWidth()>();
+        $r0 = this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.border.BorderManager bm>;
+        borderStartX = virtualinvoke $r0.<org.apache.fop.render.txt.border.BorderManager: int getStartX()>();
+        $r0 = this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.border.BorderManager bm>;
+        borderStartY = virtualinvoke $r0.<org.apache.fop.render.txt.border.BorderManager: int getStartY()>();
+        if horz == 0 goto label0;
+
+        if startOrBefore == 0 goto label0;
+
+        x = borderStartX;
+        y = borderStartY;
+        goto label3;
+
+     label0:
+        if horz == 0 goto label1;
+
+        if startOrBefore != 0 goto label1;
+
+        x = borderStartX;
+        $i0 = borderStartY + borderHeight;
+        y = $i0 - 1;
+        goto label3;
+
+     label1:
+        if horz != 0 goto label2;
+
+        if startOrBefore == 0 goto label2;
+
+        x = borderStartX;
+        y = borderStartY;
+        goto label3;
+
+     label2:
+        $i0 = borderStartX + borderWidth;
+        x = $i0 - 1;
+        y = borderStartY;
+
+     label3:
+        if horz == 0 goto label4;
+
+        length = borderWidth;
+        dx = 1;
+        dy = 0;
+        startType = 2;
+        endType = 8;
+        goto label5;
+
+     label4:
+        length = borderHeight;
+        dx = 0;
+        dy = 1;
+        startType = 4;
+        endType = 1;
+
+     label5:
+        specialinvoke this.<org.apache.fop.render.txt.TXTRenderer: void addBitOfBorder(int,int,int,int)>(x, y, style, startType);
+        i = 0;
+
+     label6:
+        $i1 = length - 2;
+        if i >= $i1 goto label7;
+
+        x = x + dx;
+        y = y + dy;
+        $i2 = startType + endType;
+        specialinvoke this.<org.apache.fop.render.txt.TXTRenderer: void addBitOfBorder(int,int,int,int)>(x, y, style, $i2);
+        i = i + 1;
+        goto label6;
+
+     label7:
+        x = x + dx;
+        y = y + dy;
+        specialinvoke this.<org.apache.fop.render.txt.TXTRenderer: void addBitOfBorder(int,int,int,int)>(x, y, style, endType);
+        return;
+    }
+
+    protected void drawBackAndBorders(org.apache.fop.area.Area, float, float, float, float)
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        org.apache.fop.area.Area area;
+        float startx, starty, width, height;
+        org.apache.fop.render.txt.border.BorderManager $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        area := @parameter0: org.apache.fop.area.Area;
+        startx := @parameter1: float;
+        starty := @parameter2: float;
+        width := @parameter3: float;
+        height := @parameter4: float;
+        $r0 = this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.border.BorderManager bm>;
+        $i0 = virtualinvoke this.<org.apache.fop.render.txt.TXTRenderer: int toMilli(float)>(width);
+        $i0 = staticinvoke <org.apache.fop.render.txt.Helper: int ceilPosition(int,int)>($i0, 6000);
+        virtualinvoke $r0.<org.apache.fop.render.txt.border.BorderManager: void setWidth(int)>($i0);
+        $r0 = this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.border.BorderManager bm>;
+        $i0 = virtualinvoke this.<org.apache.fop.render.txt.TXTRenderer: int toMilli(float)>(height);
+        $i0 = staticinvoke <org.apache.fop.render.txt.Helper: int ceilPosition(int,int)>($i0, 7860);
+        virtualinvoke $r0.<org.apache.fop.render.txt.border.BorderManager: void setHeight(int)>($i0);
+        $r0 = this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.border.BorderManager bm>;
+        $i0 = virtualinvoke this.<org.apache.fop.render.txt.TXTRenderer: int toMilli(float)>(startx);
+        $i0 = staticinvoke <org.apache.fop.render.txt.Helper: int ceilPosition(int,int)>($i0, 6000);
+        virtualinvoke $r0.<org.apache.fop.render.txt.border.BorderManager: void setStartX(int)>($i0);
+        $r0 = this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.border.BorderManager bm>;
+        $i0 = virtualinvoke this.<org.apache.fop.render.txt.TXTRenderer: int toMilli(float)>(starty);
+        $i0 = staticinvoke <org.apache.fop.render.txt.Helper: int ceilPosition(int,int)>($i0, 7860);
+        virtualinvoke $r0.<org.apache.fop.render.txt.border.BorderManager: void setStartY(int)>($i0);
+        specialinvoke this.<org.apache.fop.render.AbstractPathOrientedRenderer: void drawBackAndBorders(org.apache.fop.area.Area,float,float,float,float)>(area, startx, starty, width, height);
+        return;
+    }
+
+    protected void startVParea(org.apache.fop.area.CTM, java.awt.geom.Rectangle2D)
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        org.apache.fop.area.CTM ctm;
+        java.awt.geom.Rectangle2D clippingRect;
+        org.apache.fop.render.txt.TXTState $r0;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        ctm := @parameter0: org.apache.fop.area.CTM;
+        clippingRect := @parameter1: java.awt.geom.Rectangle2D;
+        $r0 = this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.TXTState currentState>;
+        virtualinvoke $r0.<org.apache.fop.render.txt.TXTState: void push(org.apache.fop.area.CTM)>(ctm);
+        return;
+    }
+
+    protected void endVParea()
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        org.apache.fop.render.txt.TXTState $r0;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        $r0 = this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.TXTState currentState>;
+        virtualinvoke $r0.<org.apache.fop.render.txt.TXTState: void pop()>();
+        return;
+    }
+
+    protected void concatenateTransformationMatrix(java.awt.geom.AffineTransform)
+    {
+        org.apache.fop.render.txt.TXTRenderer this;
+        java.awt.geom.AffineTransform at, $r2;
+        org.apache.fop.area.CTM $r0;
+        org.apache.fop.render.txt.TXTState $r1;
+
+        this := @this: org.apache.fop.render.txt.TXTRenderer;
+        at := @parameter0: java.awt.geom.AffineTransform;
+        $r1 = this.<org.apache.fop.render.txt.TXTRenderer: org.apache.fop.render.txt.TXTState currentState>;
+        $r0 = new org.apache.fop.area.CTM;
+        $r2 = virtualinvoke this.<org.apache.fop.render.txt.TXTRenderer: java.awt.geom.AffineTransform ptToMpt(java.awt.geom.AffineTransform)>(at);
+        specialinvoke $r0.<org.apache.fop.area.CTM: void <init>(java.awt.geom.AffineTransform)>($r2);
+        virtualinvoke $r1.<org.apache.fop.render.txt.TXTState: void push(org.apache.fop.area.CTM)>($r0);
+        return;
+    }
+}

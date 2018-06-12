@@ -1,0 +1,143 @@
+public class org.apache.fop.render.afp.modca.IncludeObject extends org.apache.fop.render.afp.modca.AbstractNamedAFPObject
+{
+    private byte objectType;
+    private int orientation;
+
+    public void <init>(java.lang.String)
+    {
+        org.apache.fop.render.afp.modca.IncludeObject this;
+        java.lang.String name;
+
+        this := @this: org.apache.fop.render.afp.modca.IncludeObject;
+        name := @parameter0: java.lang.String;
+        specialinvoke this.<org.apache.fop.render.afp.modca.AbstractNamedAFPObject: void <init>(java.lang.String)>(name);
+        this.<org.apache.fop.render.afp.modca.IncludeObject: byte objectType> = -110;
+        this.<org.apache.fop.render.afp.modca.IncludeObject: int orientation> = 0;
+        this.<org.apache.fop.render.afp.modca.IncludeObject: byte objectType> = -5;
+        return;
+    }
+
+    public void setOrientation(int)
+    {
+        org.apache.fop.render.afp.modca.IncludeObject this;
+        int orientation;
+        java.lang.IllegalArgumentException $r0;
+
+        this := @this: org.apache.fop.render.afp.modca.IncludeObject;
+        orientation := @parameter0: int;
+        if orientation == 0 goto label0;
+
+        if orientation == 90 goto label0;
+
+        if orientation == 180 goto label0;
+
+        if orientation != 270 goto label1;
+
+     label0:
+        this.<org.apache.fop.render.afp.modca.IncludeObject: int orientation> = orientation;
+        goto label2;
+
+     label1:
+        $r0 = new java.lang.IllegalArgumentException;
+        specialinvoke $r0.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("The orientation must be one of the values 0, 90, 180, 270");
+        throw $r0;
+
+     label2:
+        return;
+    }
+
+    public void writeDataStream(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.render.afp.modca.IncludeObject this;
+        java.io.OutputStream os;
+        byte[] data, rl1, $r0, $r1;
+        int i, $i1, $i2;
+        byte $b0;
+
+        this := @this: org.apache.fop.render.afp.modca.IncludeObject;
+        os := @parameter0: java.io.OutputStream;
+        data = newarray (byte)[37];
+        data[0] = 90;
+        rl1 = staticinvoke <org.apache.fop.render.afp.tools.BinaryUtils: byte[] convert(int,int)>(36, 2);
+        $b0 = rl1[0];
+        data[1] = $b0;
+        $b0 = rl1[1];
+        data[2] = $b0;
+        data[3] = -45;
+        data[4] = -81;
+        data[5] = -61;
+        data[6] = 0;
+        data[7] = 0;
+        data[8] = 0;
+        i = 0;
+
+     label0:
+        $r0 = this.<org.apache.fop.render.afp.modca.IncludeObject: byte[] nameBytes>;
+        $i1 = lengthof $r0;
+        if i >= $i1 goto label1;
+
+        $i1 = 9 + i;
+        $r1 = this.<org.apache.fop.render.afp.modca.IncludeObject: byte[] nameBytes>;
+        $b0 = $r1[i];
+        data[$i1] = $b0;
+        i = i + 1;
+        goto label0;
+
+     label1:
+        data[17] = 0;
+        $b0 = this.<org.apache.fop.render.afp.modca.IncludeObject: byte objectType>;
+        data[18] = $b0;
+        data[20] = -1;
+        data[21] = -1;
+        data[22] = -1;
+        data[23] = -1;
+        data[24] = -1;
+        data[25] = -1;
+        $i2 = this.<org.apache.fop.render.afp.modca.IncludeObject: int orientation>;
+        lookupswitch($i2)
+        {
+            case 90: goto label2;
+            case 180: goto label3;
+            case 270: goto label4;
+            default: goto label5;
+        };
+
+     label2:
+        data[26] = 45;
+        data[27] = 0;
+        data[28] = 90;
+        data[29] = 0;
+        goto label6;
+
+     label3:
+        data[26] = 90;
+        data[27] = 0;
+        data[28] = -121;
+        data[29] = 0;
+        goto label6;
+
+     label4:
+        data[26] = -121;
+        data[27] = 0;
+        data[28] = 0;
+        data[29] = 0;
+        goto label6;
+
+     label5:
+        data[26] = 0;
+        data[27] = 0;
+        data[28] = 45;
+        data[29] = 0;
+
+     label6:
+        data[30] = -1;
+        data[31] = -1;
+        data[32] = -1;
+        data[33] = -1;
+        data[34] = -1;
+        data[35] = -1;
+        data[36] = 1;
+        virtualinvoke os.<java.io.OutputStream: void write(byte[])>(data);
+        return;
+    }
+}

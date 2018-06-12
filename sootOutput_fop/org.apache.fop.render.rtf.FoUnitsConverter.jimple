@@ -1,0 +1,270 @@
+final class org.apache.fop.render.rtf.FoUnitsConverter extends java.lang.Object
+{
+    private static final org.apache.fop.render.rtf.FoUnitsConverter INSTANCE;
+    public static final float POINT_TO_TWIPS;
+    public static final float IN_TO_TWIPS;
+    public static final float MM_TO_TWIPS;
+    public static final float CM_TO_TWIPS;
+    private static final java.util.Map TWIP_FACTORS;
+
+    private void <init>()
+    {
+        org.apache.fop.render.rtf.FoUnitsConverter this;
+
+        this := @this: org.apache.fop.render.rtf.FoUnitsConverter;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    static org.apache.fop.render.rtf.FoUnitsConverter getInstance()
+    {
+        org.apache.fop.render.rtf.FoUnitsConverter $r0;
+
+        $r0 = <org.apache.fop.render.rtf.FoUnitsConverter: org.apache.fop.render.rtf.FoUnitsConverter INSTANCE>;
+        return $r0;
+    }
+
+    float convertToTwips(java.lang.String) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.render.rtf.FoUnitsConverter this;
+        java.lang.String foValue, foValue, $r1, $r2;
+        java.lang.StringBuffer number, units, $r0;
+        int i, $i0;
+        char c;
+        boolean $z0;
+        float $f0;
+
+        this := @this: org.apache.fop.render.rtf.FoUnitsConverter;
+        foValue := @parameter0: java.lang.String;
+        foValue = virtualinvoke foValue.<java.lang.String: java.lang.String trim()>();
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        number = $r0;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        units = $r0;
+        i = 0;
+
+     label0:
+        $i0 = virtualinvoke foValue.<java.lang.String: int length()>();
+        if i >= $i0 goto label4;
+
+        c = virtualinvoke foValue.<java.lang.String: char charAt(int)>(i);
+        $z0 = staticinvoke <java.lang.Character: boolean isDigit(char)>(c);
+        if $z0 != 0 goto label1;
+
+        if c != 46 goto label2;
+
+     label1:
+        virtualinvoke number.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(c);
+        goto label3;
+
+     label2:
+        $r1 = virtualinvoke foValue.<java.lang.String: java.lang.String substring(int)>(i);
+        $r1 = virtualinvoke $r1.<java.lang.String: java.lang.String trim()>();
+        virtualinvoke units.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        goto label4;
+
+     label3:
+        i = i + 1;
+        goto label0;
+
+     label4:
+        $r1 = virtualinvoke number.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r2 = virtualinvoke units.<java.lang.StringBuffer: java.lang.String toString()>();
+        $f0 = specialinvoke this.<org.apache.fop.render.rtf.FoUnitsConverter: float numberToTwips(java.lang.String,java.lang.String)>($r1, $r2);
+        return $f0;
+    }
+
+    private float numberToTwips(java.lang.String, java.lang.String) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.render.rtf.FoUnitsConverter this;
+        java.lang.String number, units, $r1, $r5, $r7;
+        float result, $f0;
+        java.lang.Exception e, $r3;
+        java.lang.StringBuffer $r0;
+        java.lang.Float factor, $r2;
+        int $i0;
+        org.apache.fop.apps.FOPException $r4;
+        java.util.Map $r6;
+        java.lang.Object $r8;
+
+        this := @this: org.apache.fop.render.rtf.FoUnitsConverter;
+        number := @parameter0: java.lang.String;
+        units := @parameter1: java.lang.String;
+        result = 0.0F;
+
+     label0:
+        if number == null goto label1;
+
+        $r1 = virtualinvoke number.<java.lang.String: java.lang.String trim()>();
+        $i0 = virtualinvoke $r1.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label1;
+
+        $r2 = staticinvoke <java.lang.Float: java.lang.Float valueOf(java.lang.String)>(number);
+        result = virtualinvoke $r2.<java.lang.Float: float floatValue()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r3 := @caughtexception;
+        e = $r3;
+        $r4 = new org.apache.fop.apps.FOPException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("number format error: cannot convert \'");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(number);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\' to float value");
+        $r5 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r4.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>($r5);
+        throw $r4;
+
+     label3:
+        if units == null goto label5;
+
+        $r1 = virtualinvoke units.<java.lang.String: java.lang.String trim()>();
+        $i0 = virtualinvoke $r1.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label5;
+
+        $r6 = <org.apache.fop.render.rtf.FoUnitsConverter: java.util.Map TWIP_FACTORS>;
+        $r7 = virtualinvoke units.<java.lang.String: java.lang.String toLowerCase()>();
+        $r8 = interfaceinvoke $r6.<java.util.Map: java.lang.Object get(java.lang.Object)>($r7);
+        factor = (java.lang.Float) $r8;
+        if factor != null goto label4;
+
+        $r4 = new org.apache.fop.apps.FOPException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("conversion factor not found for \'");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(units);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\' units");
+        $r5 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r4.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>($r5);
+        throw $r4;
+
+     label4:
+        $f0 = virtualinvoke factor.<java.lang.Float: float floatValue()>();
+        result = result * $f0;
+
+     label5:
+        return result;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+
+    int convertFontSize(java.lang.String) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.render.rtf.FoUnitsConverter this;
+        java.lang.String size, sFONTSUFFIX, size, $r2, $r3;
+        java.lang.StringBuffer $r0;
+        float result;
+        java.lang.Exception e, $r5;
+        boolean $z0;
+        org.apache.fop.apps.FOPException $r1;
+        int $i0, $i1, $i2;
+        java.lang.Float $r4;
+        double $d0;
+
+        this := @this: org.apache.fop.render.rtf.FoUnitsConverter;
+        size := @parameter0: java.lang.String;
+        size = virtualinvoke size.<java.lang.String: java.lang.String trim()>();
+        sFONTSUFFIX = "pt";
+        $z0 = virtualinvoke size.<java.lang.String: boolean endsWith(java.lang.String)>("pt");
+        if $z0 != 0 goto label0;
+
+        $r1 = new org.apache.fop.apps.FOPException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Invalid font size \'");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(size);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\', must end with \'");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("pt");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\'");
+        $r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>($r2);
+        throw $r1;
+
+     label0:
+        result = 0.0F;
+        $i0 = virtualinvoke size.<java.lang.String: int length()>();
+        $r3 = "pt";
+        $i1 = virtualinvoke $r3.<java.lang.String: int length()>();
+        $i0 = $i0 - $i1;
+        size = virtualinvoke size.<java.lang.String: java.lang.String substring(int,int)>(0, $i0);
+
+     label1:
+        $r4 = staticinvoke <java.lang.Float: java.lang.Float valueOf(java.lang.String)>(size);
+        result = virtualinvoke $r4.<java.lang.Float: float floatValue()>();
+
+     label2:
+        goto label4;
+
+     label3:
+        $r5 := @caughtexception;
+        e = $r5;
+        $r1 = new org.apache.fop.apps.FOPException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Invalid font size value \'");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(size);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\'");
+        $r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>($r2);
+        throw $r1;
+
+     label4:
+        $d0 = (double) result;
+        $d0 = $d0 * 2.0;
+        $i2 = (int) $d0;
+        return $i2;
+
+        catch java.lang.Exception from label1 to label2 with label3;
+    }
+
+    public float convertMptToTwips(int)
+    {
+        org.apache.fop.render.rtf.FoUnitsConverter this;
+        int width;
+        float $f0;
+
+        this := @this: org.apache.fop.render.rtf.FoUnitsConverter;
+        width := @parameter0: int;
+        $f0 = (float) width;
+        $f0 = $f0 * 20.0F;
+        $f0 = $f0 / 1000.0F;
+        return $f0;
+    }
+
+    static void <clinit>()
+    {
+        org.apache.fop.render.rtf.FoUnitsConverter $r0;
+        java.lang.Float $r1;
+        java.util.HashMap $r2;
+        java.util.Map $r3;
+
+        $r0 = new org.apache.fop.render.rtf.FoUnitsConverter;
+        specialinvoke $r0.<org.apache.fop.render.rtf.FoUnitsConverter: void <init>()>();
+        <org.apache.fop.render.rtf.FoUnitsConverter: org.apache.fop.render.rtf.FoUnitsConverter INSTANCE> = $r0;
+        $r2 = new java.util.HashMap;
+        specialinvoke $r2.<java.util.HashMap: void <init>()>();
+        <org.apache.fop.render.rtf.FoUnitsConverter: java.util.Map TWIP_FACTORS> = $r2;
+        $r3 = <org.apache.fop.render.rtf.FoUnitsConverter: java.util.Map TWIP_FACTORS>;
+        $r1 = new java.lang.Float;
+        specialinvoke $r1.<java.lang.Float: void <init>(float)>(56.692913F);
+        interfaceinvoke $r3.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("mm", $r1);
+        $r3 = <org.apache.fop.render.rtf.FoUnitsConverter: java.util.Map TWIP_FACTORS>;
+        $r1 = new java.lang.Float;
+        specialinvoke $r1.<java.lang.Float: void <init>(float)>(566.92914F);
+        interfaceinvoke $r3.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("cm", $r1);
+        $r3 = <org.apache.fop.render.rtf.FoUnitsConverter: java.util.Map TWIP_FACTORS>;
+        $r1 = new java.lang.Float;
+        specialinvoke $r1.<java.lang.Float: void <init>(float)>(20.0F);
+        interfaceinvoke $r3.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("pt", $r1);
+        $r3 = <org.apache.fop.render.rtf.FoUnitsConverter: java.util.Map TWIP_FACTORS>;
+        $r1 = new java.lang.Float;
+        specialinvoke $r1.<java.lang.Float: void <init>(float)>(1440.0F);
+        interfaceinvoke $r3.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("in", $r1);
+        return;
+    }
+}

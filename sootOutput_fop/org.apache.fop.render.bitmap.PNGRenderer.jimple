@@ -1,0 +1,215 @@
+public class org.apache.fop.render.bitmap.PNGRenderer extends org.apache.fop.render.java2d.Java2DRenderer
+{
+    public static final java.lang.String MIME_TYPE;
+    private static final java.lang.String PNG_FILE_EXTENSION;
+    private java.io.OutputStream firstOutputStream;
+    private org.apache.fop.render.bitmap.MultiFileRenderingUtil multiFileUtil;
+
+    public void <init>()
+    {
+        org.apache.fop.render.bitmap.PNGRenderer this;
+
+        this := @this: org.apache.fop.render.bitmap.PNGRenderer;
+        specialinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void <init>()>();
+        return;
+    }
+
+    public java.lang.String getMimeType()
+    {
+        org.apache.fop.render.bitmap.PNGRenderer this;
+
+        this := @this: org.apache.fop.render.bitmap.PNGRenderer;
+        return "image/png";
+    }
+
+    public void startRenderer(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.render.bitmap.PNGRenderer this;
+        java.io.OutputStream outputStream;
+        org.apache.commons.logging.Log $r0;
+        org.apache.fop.render.bitmap.MultiFileRenderingUtil $r1;
+        org.apache.fop.apps.FOUserAgent $r2;
+        java.io.File $r3;
+
+        this := @this: org.apache.fop.render.bitmap.PNGRenderer;
+        outputStream := @parameter0: java.io.OutputStream;
+        $r0 = <org.apache.fop.render.bitmap.PNGRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>("rendering areas to PNG");
+        $r1 = new org.apache.fop.render.bitmap.MultiFileRenderingUtil;
+        $r2 = virtualinvoke this.<org.apache.fop.render.bitmap.PNGRenderer: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        $r3 = virtualinvoke $r2.<org.apache.fop.apps.FOUserAgent: java.io.File getOutputFile()>();
+        specialinvoke $r1.<org.apache.fop.render.bitmap.MultiFileRenderingUtil: void <init>(java.lang.String,java.io.File)>("png", $r3);
+        this.<org.apache.fop.render.bitmap.PNGRenderer: org.apache.fop.render.bitmap.MultiFileRenderingUtil multiFileUtil> = $r1;
+        this.<org.apache.fop.render.bitmap.PNGRenderer: java.io.OutputStream firstOutputStream> = outputStream;
+        return;
+    }
+
+    public void stopRenderer() throws java.io.IOException
+    {
+        org.apache.fop.render.bitmap.PNGRenderer this;
+        int i, $i0, $i1;
+        java.io.OutputStream os, $r6;
+        org.apache.fop.area.PageViewport pv;
+        java.awt.image.BufferedImage image;
+        java.lang.Throwable l5, $r7;
+        java.util.List $r0, $r2;
+        org.apache.commons.logging.Log $r1;
+        java.lang.Object $r3;
+        boolean $z0;
+        java.lang.StringBuffer $r4;
+        java.lang.String $r5;
+
+        this := @this: org.apache.fop.render.bitmap.PNGRenderer;
+        specialinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void stopRenderer()>();
+        i = 0;
+
+     label0:
+        $r0 = this.<org.apache.fop.render.bitmap.PNGRenderer: java.util.List pageViewportList>;
+        $i0 = interfaceinvoke $r0.<java.util.List: int size()>();
+        if i >= $i0 goto label9;
+
+        os = virtualinvoke this.<org.apache.fop.render.bitmap.PNGRenderer: java.io.OutputStream getCurrentOutputStream(int)>(i);
+        if os != null goto label1;
+
+        $r1 = <org.apache.fop.render.bitmap.PNGRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void warn(java.lang.Object)>("No filename information available. Stopping early after the first page.");
+        goto label9;
+
+     label1:
+        $r2 = this.<org.apache.fop.render.bitmap.PNGRenderer: java.util.List pageViewportList>;
+        $r3 = interfaceinvoke $r2.<java.util.List: java.lang.Object get(int)>(i);
+        pv = (org.apache.fop.area.PageViewport) $r3;
+        image = virtualinvoke this.<org.apache.fop.render.bitmap.PNGRenderer: java.awt.image.BufferedImage getPageImage(org.apache.fop.area.PageViewport)>(pv);
+        $r1 = <org.apache.fop.render.bitmap.PNGRenderer: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label2;
+
+        $r1 = <org.apache.fop.render.bitmap.PNGRenderer: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Encoding page ");
+        $i1 = i + 1;
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r5);
+
+     label2:
+        specialinvoke this.<org.apache.fop.render.bitmap.PNGRenderer: void writeImage(java.io.OutputStream,java.awt.image.RenderedImage)>(os, image);
+
+     label3:
+        $r6 = this.<org.apache.fop.render.bitmap.PNGRenderer: java.io.OutputStream firstOutputStream>;
+        if os == $r6 goto label8;
+
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.OutputStream)>(os);
+        goto label8;
+
+     label4:
+        $r7 := @caughtexception;
+
+     label5:
+        l5 = $r7;
+
+     label6:
+        $r6 = this.<org.apache.fop.render.bitmap.PNGRenderer: java.io.OutputStream firstOutputStream>;
+        if os == $r6 goto label7;
+
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.OutputStream)>(os);
+
+     label7:
+        throw l5;
+
+     label8:
+        i = i + 1;
+        goto label0;
+
+     label9:
+        return;
+
+        catch java.lang.Throwable from label1 to label3 with label4;
+        catch java.lang.Throwable from label5 to label6 with label4;
+    }
+
+    private void writeImage(java.io.OutputStream, java.awt.image.RenderedImage) throws java.io.IOException
+    {
+        org.apache.fop.render.bitmap.PNGRenderer this;
+        java.io.OutputStream os;
+        java.awt.image.RenderedImage image;
+        org.apache.xmlgraphics.image.writer.ImageWriterParams $r0, params;
+        org.apache.xmlgraphics.image.writer.ImageWriter writer;
+        java.lang.StringBuffer $r1, $r9;
+        org.apache.fop.apps.FOUserAgent $r2;
+        float $f0;
+        int $i0;
+        org.apache.xmlgraphics.image.writer.ImageWriterRegistry $r3;
+        java.lang.String $r4, $r6, $r7;
+        java.io.IOException $r5;
+        org.apache.commons.logging.Log $r8;
+        boolean $z0;
+        java.lang.Class $r10;
+
+        this := @this: org.apache.fop.render.bitmap.PNGRenderer;
+        os := @parameter0: java.io.OutputStream;
+        image := @parameter1: java.awt.image.RenderedImage;
+        $r0 = new org.apache.xmlgraphics.image.writer.ImageWriterParams;
+        specialinvoke $r0.<org.apache.xmlgraphics.image.writer.ImageWriterParams: void <init>()>();
+        params = $r0;
+        $r2 = this.<org.apache.fop.render.bitmap.PNGRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        $f0 = virtualinvoke $r2.<org.apache.fop.apps.FOUserAgent: float getTargetResolution()>();
+        $i0 = staticinvoke <java.lang.Math: int round(float)>($f0);
+        virtualinvoke params.<org.apache.xmlgraphics.image.writer.ImageWriterParams: void setResolution(int)>($i0);
+        $r3 = staticinvoke <org.apache.xmlgraphics.image.writer.ImageWriterRegistry: org.apache.xmlgraphics.image.writer.ImageWriterRegistry getInstance()>();
+        $r4 = virtualinvoke this.<org.apache.fop.render.bitmap.PNGRenderer: java.lang.String getMimeType()>();
+        writer = virtualinvoke $r3.<org.apache.xmlgraphics.image.writer.ImageWriterRegistry: org.apache.xmlgraphics.image.writer.ImageWriter getWriterFor(java.lang.String)>($r4);
+        if writer != null goto label0;
+
+        $r5 = new java.io.IOException;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Could not get an ImageWriter to produce ");
+        $r6 = virtualinvoke this.<org.apache.fop.render.bitmap.PNGRenderer: java.lang.String getMimeType()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(". The most likely explanation for this is a class loading problem.");
+        $r7 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r5.<java.io.IOException: void <init>(java.lang.String)>($r7);
+        throw $r5;
+
+     label0:
+        $r8 = <org.apache.fop.render.bitmap.PNGRenderer: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r8.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label1;
+
+        $r8 = <org.apache.fop.render.bitmap.PNGRenderer: org.apache.commons.logging.Log log>;
+        $r9 = new java.lang.StringBuffer;
+        specialinvoke $r9.<java.lang.StringBuffer: void <init>()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Writing image using ");
+        $r10 = virtualinvoke writer.<java.lang.Object: java.lang.Class getClass()>();
+        $r7 = virtualinvoke $r10.<java.lang.Class: java.lang.String getName()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r7);
+        $r4 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r8.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r4);
+
+     label1:
+        interfaceinvoke writer.<org.apache.xmlgraphics.image.writer.ImageWriter: void writeImage(java.awt.image.RenderedImage,java.io.OutputStream,org.apache.xmlgraphics.image.writer.ImageWriterParams)>(image, os, params);
+        return;
+    }
+
+    protected java.io.OutputStream getCurrentOutputStream(int) throws java.io.IOException
+    {
+        org.apache.fop.render.bitmap.PNGRenderer this;
+        int pageNumber;
+        java.io.OutputStream $r0;
+        org.apache.fop.render.bitmap.MultiFileRenderingUtil $r1;
+
+        this := @this: org.apache.fop.render.bitmap.PNGRenderer;
+        pageNumber := @parameter0: int;
+        if pageNumber != 0 goto label0;
+
+        $r0 = this.<org.apache.fop.render.bitmap.PNGRenderer: java.io.OutputStream firstOutputStream>;
+        return $r0;
+
+     label0:
+        $r1 = this.<org.apache.fop.render.bitmap.PNGRenderer: org.apache.fop.render.bitmap.MultiFileRenderingUtil multiFileUtil>;
+        $r0 = virtualinvoke $r1.<org.apache.fop.render.bitmap.MultiFileRenderingUtil: java.io.OutputStream createOutputStream(int)>(pageNumber);
+        return $r0;
+    }
+}

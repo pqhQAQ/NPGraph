@@ -1,0 +1,178 @@
+public abstract class org.apache.fop.layoutmgr.PositionIterator extends java.lang.Object implements java.util.Iterator
+{
+    private java.util.Iterator parentIter;
+    private java.lang.Object nextObj;
+    private org.apache.fop.layoutmgr.LayoutManager childLM;
+    private boolean bHasNext;
+
+    protected void <init>(java.util.Iterator)
+    {
+        org.apache.fop.layoutmgr.PositionIterator this;
+        java.util.Iterator pIter;
+
+        this := @this: org.apache.fop.layoutmgr.PositionIterator;
+        pIter := @parameter0: java.util.Iterator;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.layoutmgr.PositionIterator: java.util.Iterator parentIter> = pIter;
+        specialinvoke this.<org.apache.fop.layoutmgr.PositionIterator: void lookAhead()>();
+        return;
+    }
+
+    public org.apache.fop.layoutmgr.LayoutManager getNextChildLM()
+    {
+        org.apache.fop.layoutmgr.PositionIterator this;
+        org.apache.fop.layoutmgr.LayoutManager $r0, $r3;
+        java.lang.Object $r1, $r2;
+
+        this := @this: org.apache.fop.layoutmgr.PositionIterator;
+        $r0 = this.<org.apache.fop.layoutmgr.PositionIterator: org.apache.fop.layoutmgr.LayoutManager childLM>;
+        if $r0 != null goto label0;
+
+        $r1 = this.<org.apache.fop.layoutmgr.PositionIterator: java.lang.Object nextObj>;
+        if $r1 == null goto label0;
+
+        $r2 = this.<org.apache.fop.layoutmgr.PositionIterator: java.lang.Object nextObj>;
+        $r3 = virtualinvoke this.<org.apache.fop.layoutmgr.PositionIterator: org.apache.fop.layoutmgr.LayoutManager getLM(java.lang.Object)>($r2);
+        this.<org.apache.fop.layoutmgr.PositionIterator: org.apache.fop.layoutmgr.LayoutManager childLM> = $r3;
+        this.<org.apache.fop.layoutmgr.PositionIterator: boolean bHasNext> = 1;
+
+     label0:
+        $r0 = this.<org.apache.fop.layoutmgr.PositionIterator: org.apache.fop.layoutmgr.LayoutManager childLM>;
+        return $r0;
+    }
+
+    protected abstract org.apache.fop.layoutmgr.LayoutManager getLM(java.lang.Object);
+
+    protected abstract org.apache.fop.layoutmgr.Position getPos(java.lang.Object);
+
+    private void lookAhead()
+    {
+        org.apache.fop.layoutmgr.PositionIterator this;
+        java.util.Iterator $r0, $r1;
+        boolean $z0;
+        java.lang.Object $r2;
+
+        this := @this: org.apache.fop.layoutmgr.PositionIterator;
+        $r0 = this.<org.apache.fop.layoutmgr.PositionIterator: java.util.Iterator parentIter>;
+        $z0 = interfaceinvoke $r0.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label0;
+
+        this.<org.apache.fop.layoutmgr.PositionIterator: boolean bHasNext> = 1;
+        $r1 = this.<org.apache.fop.layoutmgr.PositionIterator: java.util.Iterator parentIter>;
+        $r2 = interfaceinvoke $r1.<java.util.Iterator: java.lang.Object next()>();
+        this.<org.apache.fop.layoutmgr.PositionIterator: java.lang.Object nextObj> = $r2;
+        goto label1;
+
+     label0:
+        virtualinvoke this.<org.apache.fop.layoutmgr.PositionIterator: void endIter()>();
+
+     label1:
+        return;
+    }
+
+    protected boolean checkNext()
+    {
+        org.apache.fop.layoutmgr.PositionIterator this;
+        org.apache.fop.layoutmgr.LayoutManager lm, $r1;
+        java.lang.Object $r0;
+
+        this := @this: org.apache.fop.layoutmgr.PositionIterator;
+        $r0 = this.<org.apache.fop.layoutmgr.PositionIterator: java.lang.Object nextObj>;
+        lm = virtualinvoke this.<org.apache.fop.layoutmgr.PositionIterator: org.apache.fop.layoutmgr.LayoutManager getLM(java.lang.Object)>($r0);
+        $r1 = this.<org.apache.fop.layoutmgr.PositionIterator: org.apache.fop.layoutmgr.LayoutManager childLM>;
+        if $r1 != null goto label0;
+
+        this.<org.apache.fop.layoutmgr.PositionIterator: org.apache.fop.layoutmgr.LayoutManager childLM> = lm;
+        goto label1;
+
+     label0:
+        $r1 = this.<org.apache.fop.layoutmgr.PositionIterator: org.apache.fop.layoutmgr.LayoutManager childLM>;
+        if $r1 == lm goto label1;
+
+        if lm == null goto label1;
+
+        this.<org.apache.fop.layoutmgr.PositionIterator: boolean bHasNext> = 0;
+        this.<org.apache.fop.layoutmgr.PositionIterator: org.apache.fop.layoutmgr.LayoutManager childLM> = null;
+        return 0;
+
+     label1:
+        return 1;
+    }
+
+    protected void endIter()
+    {
+        org.apache.fop.layoutmgr.PositionIterator this;
+
+        this := @this: org.apache.fop.layoutmgr.PositionIterator;
+        this.<org.apache.fop.layoutmgr.PositionIterator: boolean bHasNext> = 0;
+        this.<org.apache.fop.layoutmgr.PositionIterator: java.lang.Object nextObj> = null;
+        this.<org.apache.fop.layoutmgr.PositionIterator: org.apache.fop.layoutmgr.LayoutManager childLM> = null;
+        return;
+    }
+
+    public boolean hasNext()
+    {
+        org.apache.fop.layoutmgr.PositionIterator this;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.PositionIterator;
+        $z0 = this.<org.apache.fop.layoutmgr.PositionIterator: boolean bHasNext>;
+        if $z0 == 0 goto label0;
+
+        $z0 = virtualinvoke this.<org.apache.fop.layoutmgr.PositionIterator: boolean checkNext()>();
+        if $z0 == 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public java.lang.Object next() throws java.util.NoSuchElementException
+    {
+        org.apache.fop.layoutmgr.PositionIterator this;
+        org.apache.fop.layoutmgr.Position retObj;
+        boolean $z0;
+        java.lang.Object $r0;
+        java.util.NoSuchElementException $r1;
+
+        this := @this: org.apache.fop.layoutmgr.PositionIterator;
+        $z0 = this.<org.apache.fop.layoutmgr.PositionIterator: boolean bHasNext>;
+        if $z0 == 0 goto label0;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PositionIterator: java.lang.Object nextObj>;
+        retObj = virtualinvoke this.<org.apache.fop.layoutmgr.PositionIterator: org.apache.fop.layoutmgr.Position getPos(java.lang.Object)>($r0);
+        specialinvoke this.<org.apache.fop.layoutmgr.PositionIterator: void lookAhead()>();
+        return retObj;
+
+     label0:
+        $r1 = new java.util.NoSuchElementException;
+        specialinvoke $r1.<java.util.NoSuchElementException: void <init>(java.lang.String)>("PosIter");
+        throw $r1;
+    }
+
+    public java.lang.Object peekNext()
+    {
+        org.apache.fop.layoutmgr.PositionIterator this;
+        java.lang.Object $r0;
+
+        this := @this: org.apache.fop.layoutmgr.PositionIterator;
+        $r0 = this.<org.apache.fop.layoutmgr.PositionIterator: java.lang.Object nextObj>;
+        return $r0;
+    }
+
+    public void remove() throws java.lang.UnsupportedOperationException
+    {
+        org.apache.fop.layoutmgr.PositionIterator this;
+        java.lang.UnsupportedOperationException $r0;
+
+        this := @this: org.apache.fop.layoutmgr.PositionIterator;
+        $r0 = new java.lang.UnsupportedOperationException;
+        specialinvoke $r0.<java.lang.UnsupportedOperationException: void <init>(java.lang.String)>("PositionIterator doesn\'t support remove");
+        throw $r0;
+    }
+}

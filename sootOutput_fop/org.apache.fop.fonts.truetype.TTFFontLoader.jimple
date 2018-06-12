@@ -1,0 +1,254 @@
+public class org.apache.fop.fonts.truetype.TTFFontLoader extends org.apache.fop.fonts.FontLoader
+{
+    private org.apache.fop.fonts.MultiByteFont multiFont;
+
+    public void <init>(java.lang.String, org.apache.fop.fonts.FontResolver)
+    {
+        org.apache.fop.fonts.truetype.TTFFontLoader this;
+        java.lang.String fontFileURI;
+        org.apache.fop.fonts.FontResolver resolver;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFFontLoader;
+        fontFileURI := @parameter0: java.lang.String;
+        resolver := @parameter1: org.apache.fop.fonts.FontResolver;
+        specialinvoke this.<org.apache.fop.fonts.FontLoader: void <init>(java.lang.String,org.apache.fop.fonts.FontResolver)>(fontFileURI, resolver);
+        return;
+    }
+
+    protected void read() throws java.io.IOException
+    {
+        org.apache.fop.fonts.truetype.TTFFontLoader this;
+        java.io.InputStream in;
+        org.apache.fop.fonts.truetype.TTFFile ttf, $r2;
+        org.apache.fop.fonts.truetype.FontFileReader reader, $r3;
+        boolean supported;
+        java.lang.Throwable l5, $r8;
+        org.apache.fop.fonts.FontResolver $r0;
+        java.lang.String $r1, $r6, $r7;
+        java.io.IOException $r4;
+        java.lang.StringBuffer $r5;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFFontLoader;
+        $r0 = this.<org.apache.fop.fonts.truetype.TTFFontLoader: org.apache.fop.fonts.FontResolver resolver>;
+        $r1 = this.<org.apache.fop.fonts.truetype.TTFFontLoader: java.lang.String fontFileURI>;
+        in = staticinvoke <org.apache.fop.fonts.truetype.TTFFontLoader: java.io.InputStream openFontUri(org.apache.fop.fonts.FontResolver,java.lang.String)>($r0, $r1);
+
+     label0:
+        $r2 = new org.apache.fop.fonts.truetype.TTFFile;
+        specialinvoke $r2.<org.apache.fop.fonts.truetype.TTFFile: void <init>()>();
+        ttf = $r2;
+        $r3 = new org.apache.fop.fonts.truetype.FontFileReader;
+        specialinvoke $r3.<org.apache.fop.fonts.truetype.FontFileReader: void <init>(java.io.InputStream)>(in);
+        reader = $r3;
+        supported = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: boolean readFont(org.apache.fop.fonts.truetype.FontFileReader,java.lang.String)>(reader, null);
+        if supported != 0 goto label1;
+
+        $r4 = new java.io.IOException;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("TrueType font is not supported: ");
+        $r6 = this.<org.apache.fop.fonts.truetype.TTFFontLoader: java.lang.String fontFileURI>;
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r7 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r4.<java.io.IOException: void <init>(java.lang.String)>($r7);
+        throw $r4;
+
+     label1:
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFFontLoader: void buildFont(org.apache.fop.fonts.truetype.TTFFile)>(ttf);
+        this.<org.apache.fop.fonts.truetype.TTFFontLoader: boolean loaded> = 1;
+
+     label2:
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.InputStream)>(in);
+        goto label6;
+
+     label3:
+        $r8 := @caughtexception;
+
+     label4:
+        l5 = $r8;
+
+     label5:
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.InputStream)>(in);
+        throw l5;
+
+     label6:
+        return;
+
+        catch java.lang.Throwable from label0 to label2 with label3;
+        catch java.lang.Throwable from label4 to label5 with label3;
+    }
+
+    private void buildFont(org.apache.fop.fonts.truetype.TTFFile)
+    {
+        org.apache.fop.fonts.truetype.TTFFontLoader this;
+        org.apache.fop.fonts.truetype.TTFFile ttf;
+        int[] wx, $r7;
+        java.util.List entries, $r9;
+        org.apache.fop.fonts.BFEntry[] bfentries;
+        int pos, $i0, $i1, $i2, $i3, $i4;
+        java.util.ListIterator iter;
+        org.apache.fop.fonts.truetype.TTFCmapEntry ce;
+        boolean $z0;
+        java.lang.UnsupportedOperationException $r0;
+        org.apache.fop.fonts.MultiByteFont $r1, $r2;
+        org.apache.fop.fonts.FontResolver $r3;
+        org.apache.fop.fonts.CustomFont $r4;
+        java.lang.String $r5;
+        java.util.Set $r6;
+        org.apache.fop.fonts.CIDFontType $r8;
+        java.lang.Object $r10;
+        org.apache.fop.fonts.BFEntry $r11;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFFontLoader;
+        ttf := @parameter0: org.apache.fop.fonts.truetype.TTFFile;
+        $z0 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: boolean isCFF()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = new java.lang.UnsupportedOperationException;
+        specialinvoke $r0.<java.lang.UnsupportedOperationException: void <init>(java.lang.String)>("OpenType fonts with CFF data are not supported, yet");
+        throw $r0;
+
+     label0:
+        $r1 = new org.apache.fop.fonts.MultiByteFont;
+        specialinvoke $r1.<org.apache.fop.fonts.MultiByteFont: void <init>()>();
+        this.<org.apache.fop.fonts.truetype.TTFFontLoader: org.apache.fop.fonts.MultiByteFont multiFont> = $r1;
+        $r2 = this.<org.apache.fop.fonts.truetype.TTFFontLoader: org.apache.fop.fonts.MultiByteFont multiFont>;
+        $r3 = this.<org.apache.fop.fonts.truetype.TTFFontLoader: org.apache.fop.fonts.FontResolver resolver>;
+        virtualinvoke $r2.<org.apache.fop.fonts.MultiByteFont: void setResolver(org.apache.fop.fonts.FontResolver)>($r3);
+        $r1 = this.<org.apache.fop.fonts.truetype.TTFFontLoader: org.apache.fop.fonts.MultiByteFont multiFont>;
+        this.<org.apache.fop.fonts.truetype.TTFFontLoader: org.apache.fop.fonts.CustomFont returnFont> = $r1;
+        $r4 = this.<org.apache.fop.fonts.truetype.TTFFontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $r5 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: java.lang.String getPostScriptName()>();
+        virtualinvoke $r4.<org.apache.fop.fonts.CustomFont: void setFontName(java.lang.String)>($r5);
+        $r4 = this.<org.apache.fop.fonts.truetype.TTFFontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $r5 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: java.lang.String getFullName()>();
+        virtualinvoke $r4.<org.apache.fop.fonts.CustomFont: void setFullName(java.lang.String)>($r5);
+        $r4 = this.<org.apache.fop.fonts.truetype.TTFFontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $r6 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: java.util.Set getFamilyNames()>();
+        virtualinvoke $r4.<org.apache.fop.fonts.CustomFont: void setFamilyNames(java.util.Set)>($r6);
+        $r4 = this.<org.apache.fop.fonts.truetype.TTFFontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $r5 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: java.lang.String getSubFamilyName()>();
+        virtualinvoke $r4.<org.apache.fop.fonts.CustomFont: void setFontSubFamilyName(java.lang.String)>($r5);
+        $r4 = this.<org.apache.fop.fonts.truetype.TTFFontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i0 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: int getCapHeight()>();
+        virtualinvoke $r4.<org.apache.fop.fonts.CustomFont: void setCapHeight(int)>($i0);
+        $r4 = this.<org.apache.fop.fonts.truetype.TTFFontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i0 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: int getXHeight()>();
+        virtualinvoke $r4.<org.apache.fop.fonts.CustomFont: void setXHeight(int)>($i0);
+        $r4 = this.<org.apache.fop.fonts.truetype.TTFFontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i0 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: int getLowerCaseAscent()>();
+        virtualinvoke $r4.<org.apache.fop.fonts.CustomFont: void setAscender(int)>($i0);
+        $r4 = this.<org.apache.fop.fonts.truetype.TTFFontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i0 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: int getLowerCaseDescent()>();
+        virtualinvoke $r4.<org.apache.fop.fonts.CustomFont: void setDescender(int)>($i0);
+        $r4 = this.<org.apache.fop.fonts.truetype.TTFFontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $r7 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: int[] getFontBBox()>();
+        virtualinvoke $r4.<org.apache.fop.fonts.CustomFont: void setFontBBox(int[])>($r7);
+        $r4 = this.<org.apache.fop.fonts.truetype.TTFFontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i0 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: int getFlags()>();
+        virtualinvoke $r4.<org.apache.fop.fonts.CustomFont: void setFlags(int)>($i0);
+        $r4 = this.<org.apache.fop.fonts.truetype.TTFFontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $r5 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: java.lang.String getStemV()>();
+        $i0 = staticinvoke <java.lang.Integer: int parseInt(java.lang.String)>($r5);
+        virtualinvoke $r4.<org.apache.fop.fonts.CustomFont: void setStemV(int)>($i0);
+        $r4 = this.<org.apache.fop.fonts.truetype.TTFFontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $r5 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: java.lang.String getItalicAngle()>();
+        $i0 = staticinvoke <java.lang.Integer: int parseInt(java.lang.String)>($r5);
+        virtualinvoke $r4.<org.apache.fop.fonts.CustomFont: void setItalicAngle(int)>($i0);
+        $r4 = this.<org.apache.fop.fonts.truetype.TTFFontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        virtualinvoke $r4.<org.apache.fop.fonts.CustomFont: void setMissingWidth(int)>(0);
+        $r4 = this.<org.apache.fop.fonts.truetype.TTFFontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i0 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: int getWeightClass()>();
+        virtualinvoke $r4.<org.apache.fop.fonts.CustomFont: void setWeight(int)>($i0);
+        $r2 = this.<org.apache.fop.fonts.truetype.TTFFontLoader: org.apache.fop.fonts.MultiByteFont multiFont>;
+        $r8 = <org.apache.fop.fonts.CIDFontType: org.apache.fop.fonts.CIDFontType CIDTYPE2>;
+        virtualinvoke $r2.<org.apache.fop.fonts.MultiByteFont: void setCIDType(org.apache.fop.fonts.CIDFontType)>($r8);
+        wx = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: int[] getWidths()>();
+        $r2 = this.<org.apache.fop.fonts.truetype.TTFFontLoader: org.apache.fop.fonts.MultiByteFont multiFont>;
+        virtualinvoke $r2.<org.apache.fop.fonts.MultiByteFont: void setWidthArray(int[])>(wx);
+        entries = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: java.util.List getCMaps()>();
+        $i1 = interfaceinvoke entries.<java.util.List: int size()>();
+        bfentries = newarray (org.apache.fop.fonts.BFEntry)[$i1];
+        pos = 0;
+        $r9 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: java.util.List getCMaps()>();
+        iter = interfaceinvoke $r9.<java.util.List: java.util.ListIterator listIterator()>();
+
+     label1:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label2;
+
+        $r10 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        ce = (org.apache.fop.fonts.truetype.TTFCmapEntry) $r10;
+        $r11 = new org.apache.fop.fonts.BFEntry;
+        $i2 = virtualinvoke ce.<org.apache.fop.fonts.truetype.TTFCmapEntry: int getUnicodeStart()>();
+        $i3 = virtualinvoke ce.<org.apache.fop.fonts.truetype.TTFCmapEntry: int getUnicodeEnd()>();
+        $i4 = virtualinvoke ce.<org.apache.fop.fonts.truetype.TTFCmapEntry: int getGlyphStartIndex()>();
+        specialinvoke $r11.<org.apache.fop.fonts.BFEntry: void <init>(int,int,int)>($i2, $i3, $i4);
+        bfentries[pos] = $r11;
+        pos = pos + 1;
+        goto label1;
+
+     label2:
+        $r2 = this.<org.apache.fop.fonts.truetype.TTFFontLoader: org.apache.fop.fonts.MultiByteFont multiFont>;
+        virtualinvoke $r2.<org.apache.fop.fonts.MultiByteFont: void setBFEntries(org.apache.fop.fonts.BFEntry[])>(bfentries);
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFFontLoader: void copyKerning(org.apache.fop.fonts.truetype.TTFFile,boolean)>(ttf, 1);
+        $r2 = this.<org.apache.fop.fonts.truetype.TTFFontLoader: org.apache.fop.fonts.MultiByteFont multiFont>;
+        $r5 = this.<org.apache.fop.fonts.truetype.TTFFontLoader: java.lang.String fontFileURI>;
+        virtualinvoke $r2.<org.apache.fop.fonts.MultiByteFont: void setEmbedFileName(java.lang.String)>($r5);
+        return;
+    }
+
+    private void copyKerning(org.apache.fop.fonts.truetype.TTFFile, boolean)
+    {
+        org.apache.fop.fonts.truetype.TTFFontLoader this;
+        org.apache.fop.fonts.truetype.TTFFile ttf;
+        boolean isCid, $z0;
+        java.util.Iterator iter;
+        java.lang.Integer kpx1;
+        java.util.Map h2, $r0;
+        java.util.Set $r1;
+        java.lang.Object $r2;
+        org.apache.fop.fonts.CustomFont $r3;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFFontLoader;
+        ttf := @parameter0: org.apache.fop.fonts.truetype.TTFFile;
+        isCid := @parameter1: boolean;
+        if isCid == 0 goto label0;
+
+        $r0 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: java.util.Map getKerning()>();
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.util.Set keySet()>();
+        iter = interfaceinvoke $r1.<java.util.Set: java.util.Iterator iterator()>();
+        goto label1;
+
+     label0:
+        $r0 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: java.util.Map getAnsiKerning()>();
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.util.Set keySet()>();
+        iter = interfaceinvoke $r1.<java.util.Set: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label4;
+
+        $r2 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        kpx1 = (java.lang.Integer) $r2;
+        if isCid == 0 goto label2;
+
+        $r0 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: java.util.Map getKerning()>();
+        $r2 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>(kpx1);
+        h2 = (java.util.Map) $r2;
+        goto label3;
+
+     label2:
+        $r0 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: java.util.Map getAnsiKerning()>();
+        $r2 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>(kpx1);
+        h2 = (java.util.Map) $r2;
+
+     label3:
+        $r3 = this.<org.apache.fop.fonts.truetype.TTFFontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        virtualinvoke $r3.<org.apache.fop.fonts.CustomFont: void putKerningEntry(java.lang.Integer,java.util.Map)>(kpx1, h2);
+        goto label1;
+
+     label4:
+        return;
+    }
+}

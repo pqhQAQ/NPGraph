@@ -1,0 +1,123 @@
+class org.apache.fop.area.AreaTreeParser$Handler$WordMaker extends org.apache.fop.area.AreaTreeParser$Handler$AbstractMaker
+{
+    private final org.apache.fop.area.AreaTreeParser$Handler this$0;
+
+    private void <init>(org.apache.fop.area.AreaTreeParser$Handler)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler$WordMaker this;
+        org.apache.fop.area.AreaTreeParser$Handler l1;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler$WordMaker;
+        l1 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        this.<org.apache.fop.area.AreaTreeParser$Handler$WordMaker: org.apache.fop.area.AreaTreeParser$Handler this$0> = l1;
+        specialinvoke this.<org.apache.fop.area.AreaTreeParser$Handler$AbstractMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(l1, null);
+        return;
+    }
+
+    private int[] toIntArray(java.lang.String)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler$WordMaker this;
+        java.lang.String s, $r3;
+        java.util.StringTokenizer tokenizer, $r0;
+        java.util.ArrayList values, $r1;
+        int[] res;
+        int i, c, $i0, $i1;
+        boolean $z0;
+        java.lang.Integer $r2, $r5;
+        java.lang.Object $r4;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler$WordMaker;
+        s := @parameter0: java.lang.String;
+        if s == null goto label0;
+
+        $i0 = virtualinvoke s.<java.lang.String: int length()>();
+        if $i0 != 0 goto label1;
+
+     label0:
+        return null;
+
+     label1:
+        $r0 = new java.util.StringTokenizer;
+        specialinvoke $r0.<java.util.StringTokenizer: void <init>(java.lang.String,java.lang.String)>(s, " ");
+        tokenizer = $r0;
+        $r1 = new java.util.ArrayList;
+        specialinvoke $r1.<java.util.ArrayList: void <init>()>();
+        values = $r1;
+
+     label2:
+        $z0 = virtualinvoke tokenizer.<java.util.StringTokenizer: boolean hasMoreTokens()>();
+        if $z0 == 0 goto label3;
+
+        $r2 = new java.lang.Integer;
+        $r3 = virtualinvoke tokenizer.<java.util.StringTokenizer: java.lang.String nextToken()>();
+        specialinvoke $r2.<java.lang.Integer: void <init>(java.lang.String)>($r3);
+        interfaceinvoke values.<java.util.List: boolean add(java.lang.Object)>($r2);
+        goto label2;
+
+     label3:
+        $i0 = interfaceinvoke values.<java.util.List: int size()>();
+        res = newarray (int)[$i0];
+        i = 0;
+        c = lengthof res;
+
+     label4:
+        if i >= c goto label5;
+
+        $r4 = interfaceinvoke values.<java.util.List: java.lang.Object get(int)>(i);
+        $r5 = (java.lang.Integer) $r4;
+        $i1 = virtualinvoke $r5.<java.lang.Integer: int intValue()>();
+        res[i] = $i1;
+        i = i + 1;
+        goto label4;
+
+     label5:
+        return res;
+    }
+
+    public void endElement()
+    {
+        org.apache.fop.area.AreaTreeParser$Handler$WordMaker this;
+        int offset;
+        int[] letterAdjust;
+        java.lang.String txt, $r3;
+        org.apache.fop.area.inline.WordArea word, $r5;
+        org.apache.fop.area.inline.AbstractTextArea text;
+        org.apache.fop.area.AreaTreeParser$Handler $r0, $r1;
+        org.xml.sax.Attributes $r2;
+        java.lang.StringBuffer $r4;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler$WordMaker;
+        $r0 = this.<org.apache.fop.area.AreaTreeParser$Handler$WordMaker: org.apache.fop.area.AreaTreeParser$Handler this$0>;
+        $r1 = this.<org.apache.fop.area.AreaTreeParser$Handler$WordMaker: org.apache.fop.area.AreaTreeParser$Handler this$0>;
+        $r2 = staticinvoke <org.apache.fop.area.AreaTreeParser$Handler: org.xml.sax.Attributes access$5800(org.apache.fop.area.AreaTreeParser$Handler)>($r1);
+        offset = staticinvoke <org.apache.fop.area.AreaTreeParser$Handler: int access$4000(org.apache.fop.area.AreaTreeParser$Handler,org.xml.sax.Attributes,java.lang.String,int)>($r0, $r2, "offset", 0);
+        $r1 = this.<org.apache.fop.area.AreaTreeParser$Handler$WordMaker: org.apache.fop.area.AreaTreeParser$Handler this$0>;
+        $r2 = staticinvoke <org.apache.fop.area.AreaTreeParser$Handler: org.xml.sax.Attributes access$5800(org.apache.fop.area.AreaTreeParser$Handler)>($r1);
+        $r3 = interfaceinvoke $r2.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("letter-adjust");
+        letterAdjust = specialinvoke this.<org.apache.fop.area.AreaTreeParser$Handler$WordMaker: int[] toIntArray(java.lang.String)>($r3);
+        $r0 = this.<org.apache.fop.area.AreaTreeParser$Handler$WordMaker: org.apache.fop.area.AreaTreeParser$Handler this$0>;
+        $r4 = staticinvoke <org.apache.fop.area.AreaTreeParser$Handler: java.lang.StringBuffer access$5900(org.apache.fop.area.AreaTreeParser$Handler)>($r0);
+        txt = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r5 = new org.apache.fop.area.inline.WordArea;
+        specialinvoke $r5.<org.apache.fop.area.inline.WordArea: void <init>(java.lang.String,int,int[])>(txt, offset, letterAdjust);
+        word = $r5;
+        $r0 = this.<org.apache.fop.area.AreaTreeParser$Handler$WordMaker: org.apache.fop.area.AreaTreeParser$Handler this$0>;
+        text = staticinvoke <org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.area.inline.AbstractTextArea access$5600(org.apache.fop.area.AreaTreeParser$Handler)>($r0);
+        virtualinvoke word.<org.apache.fop.area.inline.WordArea: void setParentArea(org.apache.fop.area.Area)>(text);
+        virtualinvoke text.<org.apache.fop.area.inline.AbstractTextArea: void addChildArea(org.apache.fop.area.Area)>(word);
+        return;
+    }
+
+    void <init>(org.apache.fop.area.AreaTreeParser$Handler, org.apache.fop.area.AreaTreeParser$1)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler$WordMaker this;
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        org.apache.fop.area.AreaTreeParser$1 x1;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler$WordMaker;
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        x1 := @parameter1: org.apache.fop.area.AreaTreeParser$1;
+        specialinvoke this.<org.apache.fop.area.AreaTreeParser$Handler$WordMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler)>(x0);
+        return;
+    }
+}

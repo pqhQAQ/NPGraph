@@ -1,0 +1,401 @@
+public class org.apache.fop.render.print.PrintRenderer extends org.apache.fop.render.java2d.Java2DRenderer implements java.awt.print.Pageable
+{
+    private static final int EVEN_AND_ALL;
+    private static final int EVEN;
+    private static final int ODD;
+    private int startNumber;
+    private int endNumber;
+    private int mode;
+    private int copies;
+    private java.awt.print.PrinterJob printerJob;
+
+    public void <init>()
+    {
+        org.apache.fop.render.print.PrintRenderer this;
+
+        this := @this: org.apache.fop.render.print.PrintRenderer;
+        specialinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void <init>()>();
+        this.<org.apache.fop.render.print.PrintRenderer: int startNumber> = 0;
+        this.<org.apache.fop.render.print.PrintRenderer: int endNumber> = -1;
+        this.<org.apache.fop.render.print.PrintRenderer: int mode> = 0;
+        this.<org.apache.fop.render.print.PrintRenderer: int copies> = 1;
+        specialinvoke this.<org.apache.fop.render.print.PrintRenderer: void initializePrinterJob()>();
+        return;
+    }
+
+    public void <init>(java.awt.print.PrinterJob)
+    {
+        org.apache.fop.render.print.PrintRenderer this;
+        java.awt.print.PrinterJob printerJob;
+
+        this := @this: org.apache.fop.render.print.PrintRenderer;
+        printerJob := @parameter0: java.awt.print.PrinterJob;
+        specialinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void <init>()>();
+        this.<org.apache.fop.render.print.PrintRenderer: int startNumber> = 0;
+        this.<org.apache.fop.render.print.PrintRenderer: int endNumber> = -1;
+        this.<org.apache.fop.render.print.PrintRenderer: int mode> = 0;
+        this.<org.apache.fop.render.print.PrintRenderer: int copies> = 1;
+        this.<org.apache.fop.render.print.PrintRenderer: java.awt.print.PrinterJob printerJob> = printerJob;
+        virtualinvoke printerJob.<java.awt.print.PrinterJob: void setPageable(java.awt.print.Pageable)>(this);
+        return;
+    }
+
+    private void initializePrinterJob() throws java.lang.IllegalArgumentException
+    {
+        org.apache.fop.render.print.PrintRenderer this;
+        java.lang.String str, $r4;
+        int $i0;
+        java.lang.Boolean $r1;
+        boolean $z0, $z1;
+        byte $b1;
+        java.awt.print.PrinterJob $r2, $r3;
+        java.lang.IllegalArgumentException $r5;
+
+        this := @this: org.apache.fop.render.print.PrintRenderer;
+        $i0 = staticinvoke <org.apache.fop.render.print.PrintRenderer: int getIntProperty(java.lang.String,int)>("copies", 1);
+        this.<org.apache.fop.render.print.PrintRenderer: int copies> = $i0;
+        $i0 = staticinvoke <org.apache.fop.render.print.PrintRenderer: int getIntProperty(java.lang.String,int)>("start", 1);
+        $i0 = $i0 - 1;
+        this.<org.apache.fop.render.print.PrintRenderer: int startNumber> = $i0;
+        $i0 = staticinvoke <org.apache.fop.render.print.PrintRenderer: int getIntProperty(java.lang.String,int)>("end", -1);
+        this.<org.apache.fop.render.print.PrintRenderer: int endNumber> = $i0;
+        str = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("even");
+        if str == null goto label2;
+
+        $r1 = staticinvoke <java.lang.Boolean: java.lang.Boolean valueOf(java.lang.String)>(str);
+        $z0 = virtualinvoke $r1.<java.lang.Boolean: boolean booleanValue()>();
+        if $z0 == 0 goto label0;
+
+        $b1 = 1;
+        goto label1;
+
+     label0:
+        $b1 = 2;
+
+     label1:
+        this.<org.apache.fop.render.print.PrintRenderer: int mode> = $b1;
+
+     label2:
+        $r2 = staticinvoke <java.awt.print.PrinterJob: java.awt.print.PrinterJob getPrinterJob()>();
+        this.<org.apache.fop.render.print.PrintRenderer: java.awt.print.PrinterJob printerJob> = $r2;
+        $r3 = this.<org.apache.fop.render.print.PrintRenderer: java.awt.print.PrinterJob printerJob>;
+        virtualinvoke $r3.<java.awt.print.PrinterJob: void setJobName(java.lang.String)>("FOP Document");
+        $r3 = this.<org.apache.fop.render.print.PrintRenderer: java.awt.print.PrinterJob printerJob>;
+        $i0 = this.<org.apache.fop.render.print.PrintRenderer: int copies>;
+        virtualinvoke $r3.<java.awt.print.PrinterJob: void setCopies(int)>($i0);
+        $r4 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("dialog");
+        if $r4 == null goto label3;
+
+        $r3 = this.<org.apache.fop.render.print.PrintRenderer: java.awt.print.PrinterJob printerJob>;
+        $z1 = virtualinvoke $r3.<java.awt.print.PrinterJob: boolean printDialog()>();
+        if $z1 != 0 goto label3;
+
+        $r5 = new java.lang.IllegalArgumentException;
+        specialinvoke $r5.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Printing cancelled by operator");
+        throw $r5;
+
+     label3:
+        $r3 = this.<org.apache.fop.render.print.PrintRenderer: java.awt.print.PrinterJob printerJob>;
+        virtualinvoke $r3.<java.awt.print.PrinterJob: void setPageable(java.awt.print.Pageable)>(this);
+        return;
+    }
+
+    public java.awt.print.PrinterJob getPrinterJob()
+    {
+        org.apache.fop.render.print.PrintRenderer this;
+        java.awt.print.PrinterJob $r0;
+
+        this := @this: org.apache.fop.render.print.PrintRenderer;
+        $r0 = this.<org.apache.fop.render.print.PrintRenderer: java.awt.print.PrinterJob printerJob>;
+        return $r0;
+    }
+
+    public int getEndNumber()
+    {
+        org.apache.fop.render.print.PrintRenderer this;
+        int $i0;
+
+        this := @this: org.apache.fop.render.print.PrintRenderer;
+        $i0 = this.<org.apache.fop.render.print.PrintRenderer: int endNumber>;
+        return $i0;
+    }
+
+    public void setEndPage(int)
+    {
+        org.apache.fop.render.print.PrintRenderer this;
+        int end;
+
+        this := @this: org.apache.fop.render.print.PrintRenderer;
+        end := @parameter0: int;
+        this.<org.apache.fop.render.print.PrintRenderer: int endNumber> = end;
+        return;
+    }
+
+    public int getStartPage()
+    {
+        org.apache.fop.render.print.PrintRenderer this;
+        int $i0;
+
+        this := @this: org.apache.fop.render.print.PrintRenderer;
+        $i0 = this.<org.apache.fop.render.print.PrintRenderer: int startNumber>;
+        return $i0;
+    }
+
+    public void setStartPage(int)
+    {
+        org.apache.fop.render.print.PrintRenderer this;
+        int start;
+
+        this := @this: org.apache.fop.render.print.PrintRenderer;
+        start := @parameter0: int;
+        this.<org.apache.fop.render.print.PrintRenderer: int startNumber> = start;
+        return;
+    }
+
+    public void stopRenderer() throws java.io.IOException
+    {
+        org.apache.fop.render.print.PrintRenderer this;
+        java.util.Vector numbers;
+        int i, $i0, $i1;
+        java.awt.print.PrinterException e, $r2;
+        java.lang.StringBuffer $r0;
+        java.awt.print.PrinterJob $r1;
+        org.apache.commons.logging.Log $r3;
+        java.io.IOException $r4;
+        java.lang.Class $r5;
+        java.lang.String $r6, $r7;
+
+        this := @this: org.apache.fop.render.print.PrintRenderer;
+        specialinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void stopRenderer()>();
+        $i0 = this.<org.apache.fop.render.print.PrintRenderer: int endNumber>;
+        if $i0 != -1 goto label0;
+
+        $i1 = virtualinvoke this.<org.apache.fop.render.print.PrintRenderer: int getNumberOfPages()>();
+        this.<org.apache.fop.render.print.PrintRenderer: int endNumber> = $i1;
+
+     label0:
+        numbers = specialinvoke this.<org.apache.fop.render.print.PrintRenderer: java.util.Vector getInvalidPageNumbers()>();
+        $i0 = virtualinvoke numbers.<java.util.Vector: int size()>();
+        i = $i0 - 1;
+
+     label1:
+        if i <= -1 goto label2;
+
+        i = i + -1;
+        goto label1;
+
+     label2:
+        $r1 = this.<org.apache.fop.render.print.PrintRenderer: java.awt.print.PrinterJob printerJob>;
+        virtualinvoke $r1.<java.awt.print.PrinterJob: void print()>();
+
+     label3:
+        goto label5;
+
+     label4:
+        $r2 := @caughtexception;
+        e = $r2;
+        $r3 = <org.apache.fop.render.print.PrintRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void error(java.lang.Object)>(e);
+        $r4 = new java.io.IOException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unable to print: ");
+        $r5 = virtualinvoke e.<java.lang.Object: java.lang.Class getClass()>();
+        $r6 = virtualinvoke $r5.<java.lang.Class: java.lang.String getName()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": ");
+        $r6 = virtualinvoke e.<java.awt.print.PrinterException: java.lang.String getMessage()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r7 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r4.<java.io.IOException: void <init>(java.lang.String)>($r7);
+        throw $r4;
+
+     label5:
+        virtualinvoke this.<org.apache.fop.render.print.PrintRenderer: void clearViewportList()>();
+        return;
+
+        catch java.awt.print.PrinterException from label2 to label3 with label4;
+    }
+
+    public static int getIntProperty(java.lang.String, int)
+    {
+        java.lang.String name, propValue;
+        int def, $i0;
+        java.lang.Exception e, $r0;
+
+        name := @parameter0: java.lang.String;
+        def := @parameter1: int;
+        propValue = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>(name);
+        if propValue == null goto label3;
+
+     label0:
+        $i0 = staticinvoke <java.lang.Integer: int parseInt(java.lang.String)>(propValue);
+
+     label1:
+        return $i0;
+
+     label2:
+        $r0 := @caughtexception;
+        e = $r0;
+        return def;
+
+     label3:
+        return def;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+
+    private java.util.Vector getInvalidPageNumbers()
+    {
+        org.apache.fop.render.print.PrintRenderer this;
+        java.util.Vector $r0, vec;
+        int max, i, $i0, $i1;
+        boolean isValid;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.render.print.PrintRenderer;
+        $r0 = new java.util.Vector;
+        specialinvoke $r0.<java.util.Vector: void <init>()>();
+        vec = $r0;
+        max = virtualinvoke this.<org.apache.fop.render.print.PrintRenderer: int getNumberOfPages()>();
+        i = 0;
+
+     label0:
+        if i >= max goto label6;
+
+        isValid = 1;
+        $i0 = this.<org.apache.fop.render.print.PrintRenderer: int startNumber>;
+        if i < $i0 goto label1;
+
+        $i0 = this.<org.apache.fop.render.print.PrintRenderer: int endNumber>;
+        if i <= $i0 goto label2;
+
+     label1:
+        isValid = 0;
+        goto label4;
+
+     label2:
+        $i1 = this.<org.apache.fop.render.print.PrintRenderer: int mode>;
+        if $i1 == 0 goto label4;
+
+        $i1 = this.<org.apache.fop.render.print.PrintRenderer: int mode>;
+        if $i1 != 1 goto label3;
+
+        $i1 = i + 1;
+        $i1 = $i1 % 2;
+        if $i1 == 0 goto label3;
+
+        isValid = 0;
+        goto label4;
+
+     label3:
+        $i1 = this.<org.apache.fop.render.print.PrintRenderer: int mode>;
+        if $i1 != 2 goto label4;
+
+        $i1 = i + 1;
+        $i1 = $i1 % 2;
+        if $i1 == 1 goto label4;
+
+        isValid = 0;
+
+     label4:
+        if isValid != 0 goto label5;
+
+        $r1 = staticinvoke <java.lang.Integer: java.lang.String toString(int)>(i);
+        virtualinvoke vec.<java.util.Vector: boolean add(java.lang.Object)>($r1);
+
+     label5:
+        i = i + 1;
+        goto label0;
+
+     label6:
+        return vec;
+    }
+
+    public java.awt.print.PageFormat getPageFormat(int) throws java.lang.IndexOutOfBoundsException
+    {
+        org.apache.fop.render.print.PrintRenderer this;
+        int pageIndex, $i0;
+        java.awt.print.PageFormat pageFormat, $r0;
+        java.awt.print.Paper paper, $r1;
+        java.awt.geom.Rectangle2D dim;
+        double width, height, $d0, $d1, $d2, $d3;
+        org.apache.fop.apps.FOPException fopEx, $r3;
+        null_type $n0;
+        org.apache.fop.area.PageViewport $r2;
+        byte $b1;
+        java.lang.IndexOutOfBoundsException $r4;
+        java.lang.String $r5;
+
+        this := @this: org.apache.fop.render.print.PrintRenderer;
+        pageIndex := @parameter0: int;
+
+     label0:
+        $i0 = virtualinvoke this.<org.apache.fop.render.print.PrintRenderer: int getNumberOfPages()>();
+        if pageIndex < $i0 goto label2;
+
+        $n0 = null;
+
+     label1:
+        return $n0;
+
+     label2:
+        $r0 = new java.awt.print.PageFormat;
+        specialinvoke $r0.<java.awt.print.PageFormat: void <init>()>();
+        pageFormat = $r0;
+        $r1 = new java.awt.print.Paper;
+        specialinvoke $r1.<java.awt.print.Paper: void <init>()>();
+        paper = $r1;
+        $r2 = virtualinvoke this.<org.apache.fop.render.print.PrintRenderer: org.apache.fop.area.PageViewport getPageViewport(int)>(pageIndex);
+        dim = virtualinvoke $r2.<org.apache.fop.area.PageViewport: java.awt.geom.Rectangle2D getViewArea()>();
+        width = virtualinvoke dim.<java.awt.geom.Rectangle2D: double getWidth()>();
+        height = virtualinvoke dim.<java.awt.geom.Rectangle2D: double getHeight()>();
+        $b1 = width cmpl height;
+        if $b1 <= 0 goto label3;
+
+        $d0 = height / 1000.0;
+        $d1 = width / 1000.0;
+        virtualinvoke paper.<java.awt.print.Paper: void setImageableArea(double,double,double,double)>(0.0, 0.0, $d0, $d1);
+        $d2 = height / 1000.0;
+        $d3 = width / 1000.0;
+        virtualinvoke paper.<java.awt.print.Paper: void setSize(double,double)>($d2, $d3);
+        virtualinvoke pageFormat.<java.awt.print.PageFormat: void setOrientation(int)>(0);
+        goto label4;
+
+     label3:
+        $d0 = width / 1000.0;
+        $d1 = height / 1000.0;
+        virtualinvoke paper.<java.awt.print.Paper: void setImageableArea(double,double,double,double)>(0.0, 0.0, $d0, $d1);
+        $d2 = width / 1000.0;
+        $d3 = height / 1000.0;
+        virtualinvoke paper.<java.awt.print.Paper: void setSize(double,double)>($d2, $d3);
+        virtualinvoke pageFormat.<java.awt.print.PageFormat: void setOrientation(int)>(1);
+
+     label4:
+        virtualinvoke pageFormat.<java.awt.print.PageFormat: void setPaper(java.awt.print.Paper)>(paper);
+
+     label5:
+        return pageFormat;
+
+     label6:
+        $r3 := @caughtexception;
+        fopEx = $r3;
+        $r4 = new java.lang.IndexOutOfBoundsException;
+        $r5 = virtualinvoke fopEx.<org.apache.fop.apps.FOPException: java.lang.String getMessage()>();
+        specialinvoke $r4.<java.lang.IndexOutOfBoundsException: void <init>(java.lang.String)>($r5);
+        throw $r4;
+
+        catch org.apache.fop.apps.FOPException from label0 to label1 with label6;
+        catch org.apache.fop.apps.FOPException from label2 to label5 with label6;
+    }
+
+    public java.awt.print.Printable getPrintable(int) throws java.lang.IndexOutOfBoundsException
+    {
+        org.apache.fop.render.print.PrintRenderer this;
+        int pageIndex;
+
+        this := @this: org.apache.fop.render.print.PrintRenderer;
+        pageIndex := @parameter0: int;
+        return this;
+    }
+}

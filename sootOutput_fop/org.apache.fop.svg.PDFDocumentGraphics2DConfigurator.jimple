@@ -1,0 +1,67 @@
+public class org.apache.fop.svg.PDFDocumentGraphics2DConfigurator extends java.lang.Object
+{
+
+    public void <init>()
+    {
+        org.apache.fop.svg.PDFDocumentGraphics2DConfigurator this;
+
+        this := @this: org.apache.fop.svg.PDFDocumentGraphics2DConfigurator;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public void configure(org.apache.fop.svg.PDFDocumentGraphics2D, org.apache.avalon.framework.configuration.Configuration) throws org.apache.avalon.framework.configuration.ConfigurationException
+    {
+        org.apache.fop.svg.PDFDocumentGraphics2DConfigurator this;
+        org.apache.fop.svg.PDFDocumentGraphics2D graphics;
+        org.apache.avalon.framework.configuration.Configuration cfg;
+        org.apache.fop.pdf.PDFDocument pdfDoc;
+        org.apache.fop.fonts.FontResolver fontResolver;
+        org.apache.fop.fonts.FontCache fontCache, $r1;
+        java.util.List fontList;
+        org.apache.fop.fonts.FontInfo fontInfo, $r2;
+        org.apache.fop.apps.FOPException e, $r3;
+        java.util.Map $r0;
+        org.apache.avalon.framework.configuration.ConfigurationException $r4;
+
+        this := @this: org.apache.fop.svg.PDFDocumentGraphics2DConfigurator;
+        graphics := @parameter0: org.apache.fop.svg.PDFDocumentGraphics2D;
+        cfg := @parameter1: org.apache.avalon.framework.configuration.Configuration;
+        pdfDoc = virtualinvoke graphics.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.pdf.PDFDocument getPDFDocument()>();
+        $r0 = staticinvoke <org.apache.fop.render.pdf.PDFRendererConfigurator: java.util.Map buildFilterMapFromConfiguration(org.apache.avalon.framework.configuration.Configuration)>(cfg);
+        virtualinvoke pdfDoc.<org.apache.fop.pdf.PDFDocument: void setFilterMap(java.util.Map)>($r0);
+
+     label0:
+        fontResolver = staticinvoke <org.apache.fop.fonts.FontSetup: org.apache.fop.fonts.FontResolver createMinimalFontResolver()>();
+        fontCache = staticinvoke <org.apache.fop.fonts.FontCache: org.apache.fop.fonts.FontCache load()>();
+        if fontCache != null goto label1;
+
+        $r1 = new org.apache.fop.fonts.FontCache;
+        specialinvoke $r1.<org.apache.fop.fonts.FontCache: void <init>()>();
+        fontCache = $r1;
+
+     label1:
+        fontList = staticinvoke <org.apache.fop.render.PrintRendererConfigurator: java.util.List buildFontListFromConfiguration(org.apache.avalon.framework.configuration.Configuration,java.lang.String,org.apache.fop.fonts.FontResolver,boolean,org.apache.fop.fonts.FontCache)>(cfg, null, fontResolver, 0, fontCache);
+        virtualinvoke fontCache.<org.apache.fop.fonts.FontCache: void save()>();
+        $r2 = new org.apache.fop.fonts.FontInfo;
+        specialinvoke $r2.<org.apache.fop.fonts.FontInfo: void <init>()>();
+        fontInfo = $r2;
+        staticinvoke <org.apache.fop.fonts.FontSetup: void setup(org.apache.fop.fonts.FontInfo,java.util.List,org.apache.fop.fonts.FontResolver)>(fontInfo, fontList, fontResolver);
+        virtualinvoke graphics.<org.apache.fop.svg.PDFDocumentGraphics2D: void setFontInfo(org.apache.fop.fonts.FontInfo)>(fontInfo);
+
+     label2:
+        goto label4;
+
+     label3:
+        $r3 := @caughtexception;
+        e = $r3;
+        $r4 = new org.apache.avalon.framework.configuration.ConfigurationException;
+        specialinvoke $r4.<org.apache.avalon.framework.configuration.ConfigurationException: void <init>(java.lang.String,java.lang.Throwable)>("Error while setting up fonts", e);
+        throw $r4;
+
+     label4:
+        return;
+
+        catch org.apache.fop.apps.FOPException from label0 to label2 with label3;
+    }
+}

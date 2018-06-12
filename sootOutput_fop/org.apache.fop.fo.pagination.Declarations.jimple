@@ -1,0 +1,194 @@
+public class org.apache.fop.fo.pagination.Declarations extends org.apache.fop.fo.FObj
+{
+    private java.util.Map colorProfiles;
+
+    public void <init>(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.pagination.Declarations this;
+        org.apache.fop.fo.FONode parent;
+        org.apache.fop.fo.pagination.Root $r0;
+
+        this := @this: org.apache.fop.fo.pagination.Declarations;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        specialinvoke this.<org.apache.fop.fo.FObj: void <init>(org.apache.fop.fo.FONode)>(parent);
+        this.<org.apache.fop.fo.pagination.Declarations: java.util.Map colorProfiles> = null;
+        $r0 = (org.apache.fop.fo.pagination.Root) parent;
+        virtualinvoke $r0.<org.apache.fop.fo.pagination.Root: void setDeclarations(org.apache.fop.fo.pagination.Declarations)>(this);
+        return;
+    }
+
+    public void bind(org.apache.fop.fo.PropertyList) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.pagination.Declarations this;
+        org.apache.fop.fo.PropertyList pList;
+
+        this := @this: org.apache.fop.fo.pagination.Declarations;
+        pList := @parameter0: org.apache.fop.fo.PropertyList;
+        return;
+    }
+
+    protected void validateChildNode(org.xml.sax.Locator, java.lang.String, java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.pagination.Declarations this;
+        org.xml.sax.Locator loc;
+        java.lang.String nsURI, localName, $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.pagination.Declarations;
+        loc := @parameter0: org.xml.sax.Locator;
+        nsURI := @parameter1: java.lang.String;
+        localName := @parameter2: java.lang.String;
+        $r0 = "http://www.w3.org/1999/XSL/Format";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(nsURI);
+        if $z0 == 0 goto label0;
+
+        $z0 = virtualinvoke localName.<java.lang.String: boolean equals(java.lang.Object)>("color-profile");
+        if $z0 != 0 goto label0;
+
+        virtualinvoke this.<org.apache.fop.fo.pagination.Declarations: void invalidChildError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, nsURI, localName);
+
+     label0:
+        return;
+    }
+
+    protected void endOfNode() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.pagination.Declarations this;
+        org.apache.fop.fo.FONode$FONodeIterator iter;
+        org.apache.fop.fo.FONode node, $r0;
+        org.apache.fop.fo.pagination.ColorProfile cp;
+        boolean $z0;
+        java.lang.String $r1, $r2, $r5;
+        org.apache.commons.logging.Log $r3;
+        java.lang.StringBuffer $r4;
+
+        this := @this: org.apache.fop.fo.pagination.Declarations;
+        $r0 = this.<org.apache.fop.fo.pagination.Declarations: org.apache.fop.fo.FONode firstChild>;
+        if $r0 == null goto label5;
+
+        iter = virtualinvoke this.<org.apache.fop.fo.pagination.Declarations: org.apache.fop.fo.FONode$FONodeIterator getChildNodes()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<org.apache.fop.fo.FONode$FONodeIterator: boolean hasNext()>();
+        if $z0 == 0 goto label5;
+
+        node = interfaceinvoke iter.<org.apache.fop.fo.FONode$FONodeIterator: org.apache.fop.fo.FONode nextNode()>();
+        $r1 = virtualinvoke node.<org.apache.fop.fo.FONode: java.lang.String getName()>();
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>("fo:color-profile");
+        if $z0 == 0 goto label3;
+
+        cp = (org.apache.fop.fo.pagination.ColorProfile) node;
+        $r1 = "";
+        $r2 = virtualinvoke cp.<org.apache.fop.fo.pagination.ColorProfile: java.lang.String getColorProfileName()>();
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>($r2);
+        if $z0 != 0 goto label1;
+
+        specialinvoke this.<org.apache.fop.fo.pagination.Declarations: void addColorProfile(org.apache.fop.fo.pagination.ColorProfile)>(cp);
+        goto label2;
+
+     label1:
+        $r3 = <org.apache.fop.fo.pagination.Declarations: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void warn(java.lang.Object)>("color-profile-name required for color profile");
+
+     label2:
+        goto label4;
+
+     label3:
+        $r3 = <org.apache.fop.fo.pagination.Declarations: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Ignoring element ");
+        $r5 = virtualinvoke node.<org.apache.fop.fo.FONode: java.lang.String getName()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" inside fo:declarations.");
+        $r2 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r2);
+
+     label4:
+        goto label0;
+
+     label5:
+        this.<org.apache.fop.fo.pagination.Declarations: org.apache.fop.fo.FONode firstChild> = null;
+        return;
+    }
+
+    private void addColorProfile(org.apache.fop.fo.pagination.ColorProfile)
+    {
+        org.apache.fop.fo.pagination.Declarations this;
+        org.apache.fop.fo.pagination.ColorProfile cp;
+        java.util.HashMap $r0;
+        java.util.Map $r1;
+        java.lang.String $r2, $r6;
+        java.lang.Object $r3;
+        org.apache.commons.logging.Log $r4;
+        java.lang.StringBuffer $r5;
+
+        this := @this: org.apache.fop.fo.pagination.Declarations;
+        cp := @parameter0: org.apache.fop.fo.pagination.ColorProfile;
+        $r1 = this.<org.apache.fop.fo.pagination.Declarations: java.util.Map colorProfiles>;
+        if $r1 != null goto label0;
+
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.fo.pagination.Declarations: java.util.Map colorProfiles> = $r0;
+
+     label0:
+        $r1 = this.<org.apache.fop.fo.pagination.Declarations: java.util.Map colorProfiles>;
+        $r2 = virtualinvoke cp.<org.apache.fop.fo.pagination.ColorProfile: java.lang.String getColorProfileName()>();
+        $r3 = interfaceinvoke $r1.<java.util.Map: java.lang.Object get(java.lang.Object)>($r2);
+        if $r3 == null goto label1;
+
+        $r4 = <org.apache.fop.fo.pagination.Declarations: org.apache.commons.logging.Log log>;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Duplicate fo:color-profile profile name: ");
+        $r6 = virtualinvoke cp.<org.apache.fop.fo.pagination.ColorProfile: java.lang.String getColorProfileName()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r2 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r4.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r2);
+
+     label1:
+        $r1 = this.<org.apache.fop.fo.pagination.Declarations: java.util.Map colorProfiles>;
+        $r2 = virtualinvoke cp.<org.apache.fop.fo.pagination.ColorProfile: java.lang.String getColorProfileName()>();
+        interfaceinvoke $r1.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r2, cp);
+        return;
+    }
+
+    public java.lang.String getLocalName()
+    {
+        org.apache.fop.fo.pagination.Declarations this;
+
+        this := @this: org.apache.fop.fo.pagination.Declarations;
+        return "declarations";
+    }
+
+    public int getNameId()
+    {
+        org.apache.fop.fo.pagination.Declarations this;
+
+        this := @this: org.apache.fop.fo.pagination.Declarations;
+        return 8;
+    }
+
+    public org.apache.fop.fo.pagination.ColorProfile getColorProfile(java.lang.String)
+    {
+        org.apache.fop.fo.pagination.Declarations this;
+        java.lang.String cpName;
+        org.apache.fop.fo.pagination.ColorProfile profile;
+        java.util.Map $r0;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.fo.pagination.Declarations;
+        cpName := @parameter0: java.lang.String;
+        profile = null;
+        $r0 = this.<org.apache.fop.fo.pagination.Declarations: java.util.Map colorProfiles>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.fo.pagination.Declarations: java.util.Map colorProfiles>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>(cpName);
+        profile = (org.apache.fop.fo.pagination.ColorProfile) $r1;
+
+     label0:
+        return profile;
+    }
+}

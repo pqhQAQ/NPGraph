@@ -1,0 +1,475 @@
+public class org.apache.fop.render.pdf.PDFSVGHandler extends org.apache.fop.render.AbstractGenericSVGHandler implements org.apache.fop.render.pdf.PDFRendererContextConstants
+{
+    private static org.apache.commons.logging.Log log;
+    static java.lang.Class class$org$apache$fop$render$pdf$PDFSVGHandler;
+
+    public void <init>()
+    {
+        org.apache.fop.render.pdf.PDFSVGHandler this;
+
+        this := @this: org.apache.fop.render.pdf.PDFSVGHandler;
+        specialinvoke this.<org.apache.fop.render.AbstractGenericSVGHandler: void <init>()>();
+        return;
+    }
+
+    public static org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo getPDFInfo(org.apache.fop.render.RendererContext)
+    {
+        org.apache.fop.render.RendererContext context;
+        org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo $r0, pdfi;
+        java.util.Map foreign;
+        org.apache.fop.util.QName qName, $r13;
+        java.lang.Object $r1, $r12;
+        org.apache.fop.pdf.PDFDocument $r2;
+        java.io.OutputStream $r3;
+        org.apache.fop.pdf.PDFState $r4;
+        org.apache.fop.pdf.PDFPage $r5;
+        org.apache.fop.pdf.PDFResourceContext $r6;
+        org.apache.fop.pdf.PDFStream $r7;
+        java.lang.Integer $r8;
+        int $i0;
+        org.apache.fop.fonts.FontInfo $r9;
+        java.lang.String $r10, $r14;
+        org.apache.avalon.framework.configuration.Configuration $r11;
+        boolean $z0;
+
+        context := @parameter0: org.apache.fop.render.RendererContext;
+        $r0 = new org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo;
+        specialinvoke $r0.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: void <init>()>();
+        pdfi = $r0;
+        $r1 = virtualinvoke context.<org.apache.fop.render.RendererContext: java.lang.Object getProperty(java.lang.String)>("pdfDoc");
+        $r2 = (org.apache.fop.pdf.PDFDocument) $r1;
+        pdfi.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.pdf.PDFDocument pdfDoc> = $r2;
+        $r1 = virtualinvoke context.<org.apache.fop.render.RendererContext: java.lang.Object getProperty(java.lang.String)>("outputStream");
+        $r3 = (java.io.OutputStream) $r1;
+        pdfi.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: java.io.OutputStream outputStream> = $r3;
+        $r1 = virtualinvoke context.<org.apache.fop.render.RendererContext: java.lang.Object getProperty(java.lang.String)>("pdfState");
+        $r4 = (org.apache.fop.pdf.PDFState) $r1;
+        pdfi.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.pdf.PDFState pdfState> = $r4;
+        $r1 = virtualinvoke context.<org.apache.fop.render.RendererContext: java.lang.Object getProperty(java.lang.String)>("pdfPage");
+        $r5 = (org.apache.fop.pdf.PDFPage) $r1;
+        pdfi.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.pdf.PDFPage pdfPage> = $r5;
+        $r1 = virtualinvoke context.<org.apache.fop.render.RendererContext: java.lang.Object getProperty(java.lang.String)>("pdfContext");
+        $r6 = (org.apache.fop.pdf.PDFResourceContext) $r1;
+        pdfi.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.pdf.PDFResourceContext pdfContext> = $r6;
+        $r1 = virtualinvoke context.<org.apache.fop.render.RendererContext: java.lang.Object getProperty(java.lang.String)>("pdfStream");
+        $r7 = (org.apache.fop.pdf.PDFStream) $r1;
+        pdfi.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.pdf.PDFStream currentStream> = $r7;
+        $r1 = virtualinvoke context.<org.apache.fop.render.RendererContext: java.lang.Object getProperty(java.lang.String)>("width");
+        $r8 = (java.lang.Integer) $r1;
+        $i0 = virtualinvoke $r8.<java.lang.Integer: int intValue()>();
+        pdfi.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: int width> = $i0;
+        $r1 = virtualinvoke context.<org.apache.fop.render.RendererContext: java.lang.Object getProperty(java.lang.String)>("height");
+        $r8 = (java.lang.Integer) $r1;
+        $i0 = virtualinvoke $r8.<java.lang.Integer: int intValue()>();
+        pdfi.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: int height> = $i0;
+        $r1 = virtualinvoke context.<org.apache.fop.render.RendererContext: java.lang.Object getProperty(java.lang.String)>("fontInfo");
+        $r9 = (org.apache.fop.fonts.FontInfo) $r1;
+        pdfi.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.fonts.FontInfo fi> = $r9;
+        $r1 = virtualinvoke context.<org.apache.fop.render.RendererContext: java.lang.Object getProperty(java.lang.String)>("fontName");
+        $r10 = (java.lang.String) $r1;
+        pdfi.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: java.lang.String currentFontName> = $r10;
+        $r1 = virtualinvoke context.<org.apache.fop.render.RendererContext: java.lang.Object getProperty(java.lang.String)>("fontSize");
+        $r8 = (java.lang.Integer) $r1;
+        $i0 = virtualinvoke $r8.<java.lang.Integer: int intValue()>();
+        pdfi.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: int currentFontSize> = $i0;
+        $r1 = virtualinvoke context.<org.apache.fop.render.RendererContext: java.lang.Object getProperty(java.lang.String)>("xpos");
+        $r8 = (java.lang.Integer) $r1;
+        $i0 = virtualinvoke $r8.<java.lang.Integer: int intValue()>();
+        pdfi.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: int currentXPosition> = $i0;
+        $r1 = virtualinvoke context.<org.apache.fop.render.RendererContext: java.lang.Object getProperty(java.lang.String)>("ypos");
+        $r8 = (java.lang.Integer) $r1;
+        $i0 = virtualinvoke $r8.<java.lang.Integer: int intValue()>();
+        pdfi.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: int currentYPosition> = $i0;
+        $r1 = virtualinvoke context.<org.apache.fop.render.RendererContext: java.lang.Object getProperty(java.lang.String)>("cfg");
+        $r11 = (org.apache.avalon.framework.configuration.Configuration) $r1;
+        pdfi.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.avalon.framework.configuration.Configuration cfg> = $r11;
+        $r12 = virtualinvoke context.<org.apache.fop.render.RendererContext: java.lang.Object getProperty(java.lang.String)>("foreign-attributes");
+        foreign = (java.util.Map) $r12;
+        $r13 = new org.apache.fop.util.QName;
+        specialinvoke $r13.<org.apache.fop.util.QName: void <init>(java.lang.String,java.lang.String,java.lang.String)>("http://xmlgraphics.apache.org/fop/extensions", null, "conversion-mode");
+        qName = $r13;
+        if foreign == null goto label0;
+
+        $r14 = "bitmap";
+        $r1 = interfaceinvoke foreign.<java.util.Map: java.lang.Object get(java.lang.Object)>(qName);
+        $r10 = (java.lang.String) $r1;
+        $z0 = virtualinvoke $r14.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>($r10);
+        if $z0 == 0 goto label0;
+
+        pdfi.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: boolean paintAsBitmap> = 1;
+
+     label0:
+        return pdfi;
+    }
+
+    protected void renderSVGDocument(org.apache.fop.render.RendererContext, org.w3c.dom.Document)
+    {
+        org.apache.fop.render.pdf.PDFSVGHandler this;
+        org.apache.fop.render.RendererContext context;
+        org.w3c.dom.Document doc;
+        org.apache.fop.render.pdf.PDFRenderer renderer;
+        org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo pdfInfo;
+        java.io.IOException ioe, $r2;
+        int xOffset, yOffset, $i0, $i1;
+        org.apache.fop.apps.FOUserAgent userAgent;
+        float deviceResolution, uaResolution, w, h, sx, sy, $f0, $f1, $f2, $f3, $f4;
+        org.apache.fop.svg.SVGUserAgent ua, $r7;
+        double s, $d0, $d1, $d2;
+        java.awt.geom.AffineTransform resolutionScaling, $r0, scaling, imageTransform, $r8, $r9, $r35;
+        org.apache.batik.bridge.GVTBuilder builder, $r10;
+        boolean strokeText, $z0;
+        org.apache.avalon.framework.configuration.Configuration cfg, $r11;
+        org.apache.fop.svg.PDFBridgeContext ctx, $r12;
+        org.apache.batik.gvt.GraphicsNode root;
+        java.lang.Exception e, $r19, $r37;
+        org.apache.fop.svg.PDFGraphics2D graphics, $r25;
+        org.apache.fop.svg.PDFAElementBridge aBridge;
+        org.apache.fop.render.AbstractRenderer $r1;
+        org.apache.commons.logging.Log $r3;
+        java.lang.StringBuffer $r4;
+        java.lang.String $r5, $r6, $r29, $r30;
+        org.apache.fop.fonts.FontInfo $r15;
+        org.apache.fop.apps.FopFactory $r16;
+        org.apache.xmlgraphics.image.loader.ImageManager $r17;
+        org.apache.xmlgraphics.image.loader.ImageSessionContext $r18;
+        null_type builder;
+        java.awt.geom.Dimension2D $r20;
+        org.apache.fop.pdf.PDFStream $r21;
+        java.awt.Color $r22;
+        org.apache.fop.pdf.PDFResourceContext $r23, $r27;
+        org.apache.fop.pdf.PDFPage $r24, $r28;
+        org.apache.fop.pdf.PDFDocument $r26;
+        org.apache.xmlgraphics.java2d.GraphicContext $r31;
+        org.apache.fop.pdf.PDFState $r32, $r34;
+        org.apache.batik.bridge.Bridge $r33;
+        java.io.OutputStream $r36;
+
+        this := @this: org.apache.fop.render.pdf.PDFSVGHandler;
+        context := @parameter0: org.apache.fop.render.RendererContext;
+        doc := @parameter1: org.w3c.dom.Document;
+        $r1 = virtualinvoke context.<org.apache.fop.render.RendererContext: org.apache.fop.render.AbstractRenderer getRenderer()>();
+        renderer = (org.apache.fop.render.pdf.PDFRenderer) $r1;
+        pdfInfo = staticinvoke <org.apache.fop.render.pdf.PDFSVGHandler: org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo getPDFInfo(org.apache.fop.render.RendererContext)>(context);
+        $z0 = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: boolean paintAsBitmap>;
+        if $z0 == 0 goto label4;
+
+     label0:
+        specialinvoke this.<org.apache.fop.render.AbstractGenericSVGHandler: void renderSVGDocument(org.apache.fop.render.RendererContext,org.w3c.dom.Document)>(context, doc);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r2 := @caughtexception;
+        ioe = $r2;
+        $r3 = <org.apache.fop.render.pdf.PDFSVGHandler: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("I/O error while rendering SVG graphic: ");
+        $r5 = virtualinvoke ioe.<java.io.IOException: java.lang.String getMessage()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r6 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r6, ioe);
+
+     label3:
+        return;
+
+     label4:
+        xOffset = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: int currentXPosition>;
+        yOffset = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: int currentYPosition>;
+        userAgent = virtualinvoke context.<org.apache.fop.render.RendererContext: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        $r3 = <org.apache.fop.render.pdf.PDFSVGHandler: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Generating SVG at ");
+        $f0 = virtualinvoke userAgent.<org.apache.fop.apps.FOUserAgent: float getTargetResolution()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(float)>($f0);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("dpi.");
+        $r6 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r6);
+        deviceResolution = virtualinvoke userAgent.<org.apache.fop.apps.FOUserAgent: float getTargetResolution()>();
+        $r3 = <org.apache.fop.render.pdf.PDFSVGHandler: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Generating SVG at ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(float)>(deviceResolution);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("dpi.");
+        $r6 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r6);
+        $r3 = <org.apache.fop.render.pdf.PDFSVGHandler: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Generating SVG at ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(float)>(deviceResolution);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("dpi.");
+        $r6 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r6);
+        uaResolution = virtualinvoke userAgent.<org.apache.fop.apps.FOUserAgent: float getSourceResolution()>();
+        $r7 = new org.apache.fop.svg.SVGUserAgent;
+        $f0 = 25.4F / uaResolution;
+        $r8 = new java.awt.geom.AffineTransform;
+        specialinvoke $r8.<java.awt.geom.AffineTransform: void <init>()>();
+        specialinvoke $r7.<org.apache.fop.svg.SVGUserAgent: void <init>(float,java.awt.geom.AffineTransform)>($f0, $r8);
+        ua = $r7;
+        $f1 = uaResolution / deviceResolution;
+        s = (double) $f1;
+        $r9 = new java.awt.geom.AffineTransform;
+        specialinvoke $r9.<java.awt.geom.AffineTransform: void <init>()>();
+        resolutionScaling = $r9;
+        virtualinvoke resolutionScaling.<java.awt.geom.AffineTransform: void scale(double,double)>(s, s);
+        $r10 = new org.apache.batik.bridge.GVTBuilder;
+        specialinvoke $r10.<org.apache.batik.bridge.GVTBuilder: void <init>()>();
+        builder = $r10;
+        strokeText = 0;
+        cfg = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.avalon.framework.configuration.Configuration cfg>;
+        if cfg == null goto label5;
+
+        $r11 = interfaceinvoke cfg.<org.apache.avalon.framework.configuration.Configuration: org.apache.avalon.framework.configuration.Configuration getChild(java.lang.String,boolean)>("stroke-text", 1);
+        strokeText = interfaceinvoke $r11.<org.apache.avalon.framework.configuration.Configuration: boolean getValueAsBoolean(boolean)>(strokeText);
+
+     label5:
+        $r12 = new org.apache.fop.svg.PDFBridgeContext;
+        if strokeText == 0 goto label6;
+
+        $r15 = null;
+        goto label7;
+
+     label6:
+        $r15 = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.fonts.FontInfo fi>;
+
+     label7:
+        $r16 = virtualinvoke userAgent.<org.apache.fop.apps.FOUserAgent: org.apache.fop.apps.FopFactory getFactory()>();
+        $r17 = virtualinvoke $r16.<org.apache.fop.apps.FopFactory: org.apache.xmlgraphics.image.loader.ImageManager getImageManager()>();
+        $r18 = virtualinvoke userAgent.<org.apache.fop.apps.FOUserAgent: org.apache.xmlgraphics.image.loader.ImageSessionContext getImageSessionContext()>();
+        $r0 = new java.awt.geom.AffineTransform;
+        specialinvoke $r0.<java.awt.geom.AffineTransform: void <init>()>();
+        specialinvoke $r12.<org.apache.fop.svg.PDFBridgeContext: void <init>(org.apache.batik.bridge.UserAgent,org.apache.fop.fonts.FontInfo,org.apache.xmlgraphics.image.loader.ImageManager,org.apache.xmlgraphics.image.loader.ImageSessionContext,java.awt.geom.AffineTransform)>(ua, $r15, $r17, $r18, $r0);
+        ctx = $r12;
+
+     label8:
+        root = virtualinvoke builder.<org.apache.batik.bridge.GVTBuilder: org.apache.batik.gvt.GraphicsNode build(org.apache.batik.bridge.BridgeContext,org.w3c.dom.Document)>(ctx, doc);
+        builder = null;
+
+     label9:
+        goto label11;
+
+     label10:
+        $r19 := @caughtexception;
+        e = $r19;
+        $r3 = <org.apache.fop.render.pdf.PDFSVGHandler: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("svg graphic could not be built: ");
+        $r5 = virtualinvoke e.<java.lang.Exception: java.lang.String getMessage()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r6 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r6, e);
+        return;
+
+     label11:
+        $r20 = virtualinvoke ctx.<org.apache.batik.bridge.BridgeContext: java.awt.geom.Dimension2D getDocumentSize()>();
+        $d0 = virtualinvoke $r20.<java.awt.geom.Dimension2D: double getWidth()>();
+        $f1 = (float) $d0;
+        w = $f1 * 1000.0F;
+        $r20 = virtualinvoke ctx.<org.apache.batik.bridge.BridgeContext: java.awt.geom.Dimension2D getDocumentSize()>();
+        $d0 = virtualinvoke $r20.<java.awt.geom.Dimension2D: double getHeight()>();
+        $f1 = (float) $d0;
+        h = $f1 * 1000.0F;
+        $i0 = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: int width>;
+        $f1 = (float) $i0;
+        sx = $f1 / w;
+        $i0 = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: int height>;
+        $f1 = (float) $i0;
+        sy = $f1 / h;
+        $r9 = new java.awt.geom.AffineTransform;
+        $f2 = (float) xOffset;
+        $f2 = $f2 / 1000.0F;
+        $f3 = (float) yOffset;
+        $f3 = $f3 / 1000.0F;
+        specialinvoke $r9.<java.awt.geom.AffineTransform: void <init>(float,float,float,float,float,float)>(sx, 0.0F, 0.0F, sy, $f2, $f3);
+        scaling = $r9;
+        $r9 = new java.awt.geom.AffineTransform;
+        specialinvoke $r9.<java.awt.geom.AffineTransform: void <init>()>();
+        imageTransform = $r9;
+        virtualinvoke imageTransform.<java.awt.geom.AffineTransform: void concatenate(java.awt.geom.AffineTransform)>(scaling);
+        virtualinvoke imageTransform.<java.awt.geom.AffineTransform: void concatenate(java.awt.geom.AffineTransform)>(resolutionScaling);
+        $r21 = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.pdf.PDFStream currentStream>;
+        virtualinvoke $r21.<org.apache.fop.pdf.PDFStream: void add(java.lang.String)>("%SVG setup\n");
+        virtualinvoke renderer.<org.apache.fop.render.pdf.PDFRenderer: void saveGraphicsState()>();
+        $r22 = <java.awt.Color: java.awt.Color black>;
+        virtualinvoke renderer.<org.apache.fop.render.pdf.PDFRenderer: void setColor(java.awt.Color,boolean,java.lang.StringBuffer)>($r22, 0, null);
+        $r22 = <java.awt.Color: java.awt.Color black>;
+        virtualinvoke renderer.<org.apache.fop.render.pdf.PDFRenderer: void setColor(java.awt.Color,boolean,java.lang.StringBuffer)>($r22, 1, null);
+        $z0 = virtualinvoke scaling.<java.awt.geom.AffineTransform: boolean isIdentity()>();
+        if $z0 != 0 goto label12;
+
+        $r21 = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.pdf.PDFStream currentStream>;
+        virtualinvoke $r21.<org.apache.fop.pdf.PDFStream: void add(java.lang.String)>("%viewbox\n");
+        $r21 = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.pdf.PDFStream currentStream>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r5 = staticinvoke <org.apache.fop.render.pdf.CTMHelper: java.lang.String toPDFString(java.awt.geom.AffineTransform,boolean)>(scaling, 0);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" cm\n");
+        $r6 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r21.<org.apache.fop.pdf.PDFStream: void add(java.lang.String)>($r6);
+
+     label12:
+        $r23 = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.pdf.PDFResourceContext pdfContext>;
+        if $r23 != null goto label13;
+
+        $r24 = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.pdf.PDFPage pdfPage>;
+        pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.pdf.PDFResourceContext pdfContext> = $r24;
+
+     label13:
+        $r25 = new org.apache.fop.svg.PDFGraphics2D;
+        $r15 = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.fonts.FontInfo fi>;
+        $r26 = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.pdf.PDFDocument pdfDoc>;
+        $r27 = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.pdf.PDFResourceContext pdfContext>;
+        $r28 = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.pdf.PDFPage pdfPage>;
+        $r29 = virtualinvoke $r28.<org.apache.fop.pdf.PDFPage: java.lang.String referencePDF()>();
+        $r30 = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: java.lang.String currentFontName>;
+        $i1 = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: int currentFontSize>;
+        $f4 = (float) $i1;
+        specialinvoke $r25.<org.apache.fop.svg.PDFGraphics2D: void <init>(boolean,org.apache.fop.fonts.FontInfo,org.apache.fop.pdf.PDFDocument,org.apache.fop.pdf.PDFResourceContext,java.lang.String,java.lang.String,float)>(1, $r15, $r26, $r27, $r29, $r30, $f4);
+        graphics = $r25;
+        $r31 = new org.apache.xmlgraphics.java2d.GraphicContext;
+        specialinvoke $r31.<org.apache.xmlgraphics.java2d.GraphicContext: void <init>()>();
+        virtualinvoke graphics.<org.apache.fop.svg.PDFGraphics2D: void setGraphicContext(org.apache.xmlgraphics.java2d.GraphicContext)>($r31);
+        $z0 = virtualinvoke resolutionScaling.<java.awt.geom.AffineTransform: boolean isIdentity()>();
+        if $z0 != 0 goto label14;
+
+        $r21 = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.pdf.PDFStream currentStream>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("%resolution scaling for ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(float)>(uaResolution);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" -> ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(float)>(deviceResolution);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\n");
+        $r6 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r21.<org.apache.fop.pdf.PDFStream: void add(java.lang.String)>($r6);
+        $r21 = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.pdf.PDFStream currentStream>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r5 = staticinvoke <org.apache.fop.render.pdf.CTMHelper: java.lang.String toPDFString(java.awt.geom.AffineTransform,boolean)>(resolutionScaling, 0);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" cm\n");
+        $r6 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r21.<org.apache.fop.pdf.PDFStream: void add(java.lang.String)>($r6);
+        $d1 = 1.0 / s;
+        $d2 = 1.0 / s;
+        virtualinvoke graphics.<org.apache.fop.svg.PDFGraphics2D: void scale(double,double)>($d1, $d2);
+
+     label14:
+        $r21 = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.pdf.PDFStream currentStream>;
+        virtualinvoke $r21.<org.apache.fop.pdf.PDFStream: void add(java.lang.String)>("%SVG start\n");
+        $r32 = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.pdf.PDFState pdfState>;
+        virtualinvoke $r32.<org.apache.fop.pdf.PDFState: void push()>();
+        $r32 = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.pdf.PDFState pdfState>;
+        virtualinvoke $r32.<org.apache.fop.pdf.PDFState: void concatenate(java.awt.geom.AffineTransform)>(imageTransform);
+        $r33 = virtualinvoke ctx.<org.apache.batik.bridge.BridgeContext: org.apache.batik.bridge.Bridge getBridge(java.lang.String,java.lang.String)>("http://www.w3.org/2000/svg", "a");
+        aBridge = (org.apache.fop.svg.PDFAElementBridge) $r33;
+        $r9 = virtualinvoke aBridge.<org.apache.fop.svg.PDFAElementBridge: java.awt.geom.AffineTransform getCurrentTransform()>();
+        $r34 = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.pdf.PDFState pdfState>;
+        $r35 = virtualinvoke $r34.<org.apache.fop.pdf.PDFState: java.awt.geom.AffineTransform getTransform()>();
+        virtualinvoke $r9.<java.awt.geom.AffineTransform: void setTransform(java.awt.geom.AffineTransform)>($r35);
+        $r34 = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.pdf.PDFState pdfState>;
+        virtualinvoke graphics.<org.apache.fop.svg.PDFGraphics2D: void setPDFState(org.apache.fop.pdf.PDFState)>($r34);
+        $r36 = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: java.io.OutputStream outputStream>;
+        virtualinvoke graphics.<org.apache.fop.svg.PDFGraphics2D: void setOutputStream(java.io.OutputStream)>($r36);
+
+     label15:
+        interfaceinvoke root.<org.apache.batik.gvt.GraphicsNode: void paint(java.awt.Graphics2D)>(graphics);
+        $r21 = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.pdf.PDFStream currentStream>;
+        $r6 = virtualinvoke graphics.<org.apache.fop.svg.PDFGraphics2D: java.lang.String getString()>();
+        virtualinvoke $r21.<org.apache.fop.pdf.PDFStream: void add(java.lang.String)>($r6);
+
+     label16:
+        goto label18;
+
+     label17:
+        $r37 := @caughtexception;
+        e = $r37;
+        $r3 = <org.apache.fop.render.pdf.PDFSVGHandler: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("svg graphic could not be rendered: ");
+        $r5 = virtualinvoke e.<java.lang.Exception: java.lang.String getMessage()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r6 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r6, e);
+
+     label18:
+        $r32 = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.pdf.PDFState pdfState>;
+        virtualinvoke $r32.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data pop()>();
+        virtualinvoke renderer.<org.apache.fop.render.pdf.PDFRenderer: void restoreGraphicsState()>();
+        $r21 = pdfInfo.<org.apache.fop.render.pdf.PDFSVGHandler$PDFInfo: org.apache.fop.pdf.PDFStream currentStream>;
+        virtualinvoke $r21.<org.apache.fop.pdf.PDFStream: void add(java.lang.String)>("%SVG end\n");
+        return;
+
+        catch java.io.IOException from label0 to label1 with label2;
+        catch java.lang.Exception from label8 to label9 with label10;
+        catch java.lang.Exception from label15 to label16 with label17;
+    }
+
+    public boolean supportsRenderer(org.apache.fop.render.Renderer)
+    {
+        org.apache.fop.render.pdf.PDFSVGHandler this;
+        org.apache.fop.render.Renderer renderer;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.pdf.PDFSVGHandler;
+        renderer := @parameter0: org.apache.fop.render.Renderer;
+        $z0 = renderer instanceof org.apache.fop.render.pdf.PDFRenderer;
+        return $z0;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.render.pdf.PDFSVGHandler: java.lang.Class class$org$apache$fop$render$pdf$PDFSVGHandler>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.render.pdf.PDFSVGHandler: java.lang.Class class$(java.lang.String)>("org.apache.fop.render.pdf.PDFSVGHandler");
+        <org.apache.fop.render.pdf.PDFSVGHandler: java.lang.Class class$org$apache$fop$render$pdf$PDFSVGHandler> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.render.pdf.PDFSVGHandler: java.lang.Class class$org$apache$fop$render$pdf$PDFSVGHandler>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.render.pdf.PDFSVGHandler: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

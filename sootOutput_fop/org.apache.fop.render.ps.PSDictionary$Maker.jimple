@@ -1,0 +1,377 @@
+class org.apache.fop.render.ps.PSDictionary$Maker extends java.lang.Object
+{
+    private static final java.lang.String[][] BRACES;
+    private static final int OPENING;
+    private static final int CLOSING;
+    private static final int DICTIONARY;
+    private static final int ARRAY;
+    private static final int PROCEDURE;
+
+    private void <init>()
+    {
+        org.apache.fop.render.ps.PSDictionary$Maker this;
+
+        this := @this: org.apache.fop.render.ps.PSDictionary$Maker;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    protected org.apache.fop.render.ps.PSDictionary$Maker$Token nextToken(java.lang.String, int)
+    {
+        org.apache.fop.render.ps.PSDictionary$Maker this;
+        java.lang.String str, $r1;
+        int fromIndex, i, $i0, $i2, $i3, $i4;
+        org.apache.fop.render.ps.PSDictionary$Maker$Token t, $r0;
+        boolean isWhitespace;
+        char $c1;
+
+        this := @this: org.apache.fop.render.ps.PSDictionary$Maker;
+        str := @parameter0: java.lang.String;
+        fromIndex := @parameter1: int;
+        t = null;
+        i = fromIndex;
+
+     label0:
+        $i0 = virtualinvoke str.<java.lang.String: int length()>();
+        if i >= $i0 goto label3;
+
+        $c1 = virtualinvoke str.<java.lang.String: char charAt(int)>(i);
+        isWhitespace = staticinvoke <java.lang.Character: boolean isWhitespace(char)>($c1);
+        if t != null goto label1;
+
+        if isWhitespace != 0 goto label1;
+
+        $r0 = new org.apache.fop.render.ps.PSDictionary$Maker$Token;
+        specialinvoke $r0.<org.apache.fop.render.ps.PSDictionary$Maker$Token: void <init>(org.apache.fop.render.ps.PSDictionary$Maker,org.apache.fop.render.ps.PSDictionary$1)>(this, null);
+        t = $r0;
+        staticinvoke <org.apache.fop.render.ps.PSDictionary$Maker$Token: int access$102(org.apache.fop.render.ps.PSDictionary$Maker$Token,int)>(t, i);
+        goto label2;
+
+     label1:
+        if t == null goto label2;
+
+        if isWhitespace == 0 goto label2;
+
+        staticinvoke <org.apache.fop.render.ps.PSDictionary$Maker$Token: int access$202(org.apache.fop.render.ps.PSDictionary$Maker$Token,int)>(t, i);
+        goto label3;
+
+     label2:
+        i = i + 1;
+        goto label0;
+
+     label3:
+        if t == null goto label5;
+
+        $i2 = staticinvoke <org.apache.fop.render.ps.PSDictionary$Maker$Token: int access$200(org.apache.fop.render.ps.PSDictionary$Maker$Token)>(t);
+        if $i2 != -1 goto label4;
+
+        $i0 = virtualinvoke str.<java.lang.String: int length()>();
+        staticinvoke <org.apache.fop.render.ps.PSDictionary$Maker$Token: int access$202(org.apache.fop.render.ps.PSDictionary$Maker$Token,int)>(t, $i0);
+
+     label4:
+        $i3 = staticinvoke <org.apache.fop.render.ps.PSDictionary$Maker$Token: int access$100(org.apache.fop.render.ps.PSDictionary$Maker$Token)>(t);
+        $i4 = staticinvoke <org.apache.fop.render.ps.PSDictionary$Maker$Token: int access$200(org.apache.fop.render.ps.PSDictionary$Maker$Token)>(t);
+        $r1 = virtualinvoke str.<java.lang.String: java.lang.String substring(int,int)>($i3, $i4);
+        staticinvoke <org.apache.fop.render.ps.PSDictionary$Maker$Token: java.lang.String access$302(org.apache.fop.render.ps.PSDictionary$Maker$Token,java.lang.String)>(t, $r1);
+
+     label5:
+        return t;
+    }
+
+    private int indexOfMatchingBrace(java.lang.String, java.lang.String[], int) throws org.apache.fop.render.ps.PSDictionaryFormatException
+    {
+        org.apache.fop.render.ps.PSDictionary$Maker this;
+        java.lang.String str, $r1;
+        java.lang.String[] braces;
+        int fromIndex, len, openCnt, closeCnt, $i0;
+        org.apache.fop.render.ps.PSDictionaryFormatException $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.ps.PSDictionary$Maker;
+        str := @parameter0: java.lang.String;
+        braces := @parameter1: java.lang.String[];
+        fromIndex := @parameter2: int;
+        len = virtualinvoke str.<java.lang.String: int length()>();
+        $i0 = lengthof braces;
+        if $i0 == 2 goto label0;
+
+        $r0 = new org.apache.fop.render.ps.PSDictionaryFormatException;
+        specialinvoke $r0.<org.apache.fop.render.ps.PSDictionaryFormatException: void <init>(java.lang.String)>("Wrong number of braces");
+        throw $r0;
+
+     label0:
+        openCnt = 0;
+        closeCnt = 0;
+
+     label1:
+        if fromIndex >= len goto label4;
+
+        $r1 = braces[0];
+        $z0 = virtualinvoke str.<java.lang.String: boolean startsWith(java.lang.String,int)>($r1, fromIndex);
+        if $z0 == 0 goto label2;
+
+        openCnt = openCnt + 1;
+        goto label3;
+
+     label2:
+        $r1 = braces[1];
+        $z0 = virtualinvoke str.<java.lang.String: boolean startsWith(java.lang.String,int)>($r1, fromIndex);
+        if $z0 == 0 goto label3;
+
+        closeCnt = closeCnt + 1;
+        if openCnt <= 0 goto label3;
+
+        if openCnt != closeCnt goto label3;
+
+        return fromIndex;
+
+     label3:
+        fromIndex = fromIndex + 1;
+        goto label1;
+
+     label4:
+        return -1;
+    }
+
+    private java.lang.String stripBraces(java.lang.String, java.lang.String[]) throws org.apache.fop.render.ps.PSDictionaryFormatException
+    {
+        org.apache.fop.render.ps.PSDictionary$Maker this;
+        java.lang.String str, $r0, $r3, $r4, $r5, str;
+        java.lang.String[] braces;
+        int firstIndex, lastIndex, braceLen, $i0;
+        org.apache.fop.render.ps.PSDictionaryFormatException $r1;
+        java.lang.StringBuffer $r2;
+
+        this := @this: org.apache.fop.render.ps.PSDictionary$Maker;
+        str := @parameter0: java.lang.String;
+        braces := @parameter1: java.lang.String[];
+        $r0 = braces[0];
+        firstIndex = virtualinvoke str.<java.lang.String: int indexOf(java.lang.String)>($r0);
+        if firstIndex != -1 goto label0;
+
+        $r1 = new org.apache.fop.render.ps.PSDictionaryFormatException;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Failed to find opening parameter \'");
+        $r3 = braces[0];
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("");
+        $r4 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r1.<org.apache.fop.render.ps.PSDictionaryFormatException: void <init>(java.lang.String)>($r4);
+        throw $r1;
+
+     label0:
+        lastIndex = specialinvoke this.<org.apache.fop.render.ps.PSDictionary$Maker: int indexOfMatchingBrace(java.lang.String,java.lang.String[],int)>(str, braces, firstIndex);
+        if lastIndex != -1 goto label1;
+
+        $r1 = new org.apache.fop.render.ps.PSDictionaryFormatException;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Failed to find matching closing parameter \'");
+        $r3 = braces[1];
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\'");
+        $r4 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r1.<org.apache.fop.render.ps.PSDictionaryFormatException: void <init>(java.lang.String)>($r4);
+        throw $r1;
+
+     label1:
+        $r5 = braces[0];
+        braceLen = virtualinvoke $r5.<java.lang.String: int length()>();
+        $i0 = firstIndex + braceLen;
+        $r5 = virtualinvoke str.<java.lang.String: java.lang.String substring(int,int)>($i0, lastIndex);
+        str = virtualinvoke $r5.<java.lang.String: java.lang.String trim()>();
+        return str;
+    }
+
+    public org.apache.fop.render.ps.PSDictionary parseDictionary(java.lang.String) throws org.apache.fop.render.ps.PSDictionaryFormatException
+    {
+        org.apache.fop.render.ps.PSDictionary$Maker this;
+        java.lang.String str, objString, $r2, str, $r5, $r10, $r12;
+        org.apache.fop.render.ps.PSDictionary $r0, dictionary;
+        java.lang.String[][] $r1, $r7, $r9;
+        int len, currIndex, i, $i0, $i1, $i2, $i3, $i4;
+        org.apache.fop.render.ps.PSDictionary$Maker$Token keyToken, valueToken, $r4;
+        java.lang.String[] braces, $r3, $r8, $r13;
+        java.io.Serializable obj;
+        java.util.ArrayList objList, $r14;
+        java.util.StringTokenizer tokenizer, $r15;
+        org.apache.fop.render.ps.PSDictionaryFormatException $r6;
+        boolean $z0;
+        java.lang.StringBuffer $r11;
+
+        this := @this: org.apache.fop.render.ps.PSDictionary$Maker;
+        str := @parameter0: java.lang.String;
+        $r0 = new org.apache.fop.render.ps.PSDictionary;
+        specialinvoke $r0.<org.apache.fop.render.ps.PSDictionary: void <init>()>();
+        dictionary = $r0;
+        $r2 = virtualinvoke str.<java.lang.String: java.lang.String trim()>();
+        $r1 = <org.apache.fop.render.ps.PSDictionary$Maker: java.lang.String[][] BRACES>;
+        $r3 = $r1[0];
+        str = specialinvoke this.<org.apache.fop.render.ps.PSDictionary$Maker: java.lang.String stripBraces(java.lang.String,java.lang.String[])>($r2, $r3);
+        len = virtualinvoke str.<java.lang.String: int length()>();
+        currIndex = 0;
+
+     label0:
+        $r4 = virtualinvoke this.<org.apache.fop.render.ps.PSDictionary$Maker: org.apache.fop.render.ps.PSDictionary$Maker$Token nextToken(java.lang.String,int)>(str, currIndex);
+        keyToken = $r4;
+        if $r4 == null goto label13;
+
+        if currIndex > len goto label13;
+
+        $r5 = staticinvoke <org.apache.fop.render.ps.PSDictionary$Maker$Token: java.lang.String access$300(org.apache.fop.render.ps.PSDictionary$Maker$Token)>(keyToken);
+        if $r5 != null goto label1;
+
+        $r6 = new org.apache.fop.render.ps.PSDictionaryFormatException;
+        specialinvoke $r6.<org.apache.fop.render.ps.PSDictionaryFormatException: void <init>(java.lang.String)>("Failed to parse object key");
+        throw $r6;
+
+     label1:
+        $i0 = staticinvoke <org.apache.fop.render.ps.PSDictionary$Maker$Token: int access$200(org.apache.fop.render.ps.PSDictionary$Maker$Token)>(keyToken);
+        $i0 = $i0 + 1;
+        valueToken = virtualinvoke this.<org.apache.fop.render.ps.PSDictionary$Maker: org.apache.fop.render.ps.PSDictionary$Maker$Token nextToken(java.lang.String,int)>(str, $i0);
+        braces = null;
+        i = 0;
+
+     label2:
+        $r7 = <org.apache.fop.render.ps.PSDictionary$Maker: java.lang.String[][] BRACES>;
+        $i1 = lengthof $r7;
+        if i >= $i1 goto label4;
+
+        $r5 = staticinvoke <org.apache.fop.render.ps.PSDictionary$Maker$Token: java.lang.String access$300(org.apache.fop.render.ps.PSDictionary$Maker$Token)>(valueToken);
+        $r7 = <org.apache.fop.render.ps.PSDictionary$Maker: java.lang.String[][] BRACES>;
+        $r8 = $r7[i];
+        $r2 = $r8[0];
+        $z0 = virtualinvoke $r5.<java.lang.String: boolean startsWith(java.lang.String)>($r2);
+        if $z0 == 0 goto label3;
+
+        $r9 = <org.apache.fop.render.ps.PSDictionary$Maker: java.lang.String[][] BRACES>;
+        braces = $r9[i];
+        goto label4;
+
+     label3:
+        i = i + 1;
+        goto label2;
+
+     label4:
+        obj = null;
+        if braces == null goto label6;
+
+        $i2 = staticinvoke <org.apache.fop.render.ps.PSDictionary$Maker$Token: int access$100(org.apache.fop.render.ps.PSDictionary$Maker$Token)>(valueToken);
+        $i1 = specialinvoke this.<org.apache.fop.render.ps.PSDictionary$Maker: int indexOfMatchingBrace(java.lang.String,java.lang.String[],int)>(str, braces, $i2);
+        $r10 = braces[0];
+        $i0 = virtualinvoke $r10.<java.lang.String: int length()>();
+        $i1 = $i1 + $i0;
+        staticinvoke <org.apache.fop.render.ps.PSDictionary$Maker$Token: int access$202(org.apache.fop.render.ps.PSDictionary$Maker$Token,int)>(valueToken, $i1);
+        $i3 = staticinvoke <org.apache.fop.render.ps.PSDictionary$Maker$Token: int access$200(org.apache.fop.render.ps.PSDictionary$Maker$Token)>(valueToken);
+        if $i3 >= 0 goto label5;
+
+        $r6 = new org.apache.fop.render.ps.PSDictionaryFormatException;
+        $r11 = new java.lang.StringBuffer;
+        specialinvoke $r11.<java.lang.StringBuffer: void <init>()>();
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Closing value brace \'");
+        $r12 = braces[1];
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r12);
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\' not found for key \'");
+        $r12 = staticinvoke <org.apache.fop.render.ps.PSDictionary$Maker$Token: java.lang.String access$300(org.apache.fop.render.ps.PSDictionary$Maker$Token)>(keyToken);
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r12);
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\'");
+        $r10 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r6.<org.apache.fop.render.ps.PSDictionaryFormatException: void <init>(java.lang.String)>($r10);
+        throw $r6;
+
+     label5:
+        $i0 = staticinvoke <org.apache.fop.render.ps.PSDictionary$Maker$Token: int access$100(org.apache.fop.render.ps.PSDictionary$Maker$Token)>(valueToken);
+        $i4 = staticinvoke <org.apache.fop.render.ps.PSDictionary$Maker$Token: int access$200(org.apache.fop.render.ps.PSDictionary$Maker$Token)>(valueToken);
+        $r2 = virtualinvoke str.<java.lang.String: java.lang.String substring(int,int)>($i0, $i4);
+        staticinvoke <org.apache.fop.render.ps.PSDictionary$Maker$Token: java.lang.String access$302(org.apache.fop.render.ps.PSDictionary$Maker$Token,java.lang.String)>(valueToken, $r2);
+
+     label6:
+        if braces == null goto label7;
+
+        $r7 = <org.apache.fop.render.ps.PSDictionary$Maker: java.lang.String[][] BRACES>;
+        $r8 = $r7[2];
+        if braces != $r8 goto label8;
+
+     label7:
+        obj = staticinvoke <org.apache.fop.render.ps.PSDictionary$Maker$Token: java.lang.String access$300(org.apache.fop.render.ps.PSDictionary$Maker$Token)>(valueToken);
+        goto label12;
+
+     label8:
+        $r9 = <org.apache.fop.render.ps.PSDictionary$Maker: java.lang.String[][] BRACES>;
+        $r13 = $r9[1];
+        if $r13 != braces goto label11;
+
+        $r14 = new java.util.ArrayList;
+        specialinvoke $r14.<java.util.ArrayList: void <init>()>();
+        objList = $r14;
+        $r2 = staticinvoke <org.apache.fop.render.ps.PSDictionary$Maker$Token: java.lang.String access$300(org.apache.fop.render.ps.PSDictionary$Maker$Token)>(valueToken);
+        objString = specialinvoke this.<org.apache.fop.render.ps.PSDictionary$Maker: java.lang.String stripBraces(java.lang.String,java.lang.String[])>($r2, braces);
+        $r15 = new java.util.StringTokenizer;
+        specialinvoke $r15.<java.util.StringTokenizer: void <init>(java.lang.String,java.lang.String)>(objString, ",");
+        tokenizer = $r15;
+
+     label9:
+        $z0 = virtualinvoke tokenizer.<java.util.StringTokenizer: boolean hasMoreTokens()>();
+        if $z0 == 0 goto label10;
+
+        $r2 = virtualinvoke tokenizer.<java.util.StringTokenizer: java.lang.String nextToken()>();
+        interfaceinvoke objList.<java.util.List: boolean add(java.lang.Object)>($r2);
+        goto label9;
+
+     label10:
+        obj = objList;
+        goto label12;
+
+     label11:
+        $r9 = <org.apache.fop.render.ps.PSDictionary$Maker: java.lang.String[][] BRACES>;
+        $r13 = $r9[0];
+        if $r13 != braces goto label12;
+
+        $r2 = staticinvoke <org.apache.fop.render.ps.PSDictionary$Maker$Token: java.lang.String access$300(org.apache.fop.render.ps.PSDictionary$Maker$Token)>(valueToken);
+        obj = virtualinvoke this.<org.apache.fop.render.ps.PSDictionary$Maker: org.apache.fop.render.ps.PSDictionary parseDictionary(java.lang.String)>($r2);
+
+     label12:
+        $r2 = staticinvoke <org.apache.fop.render.ps.PSDictionary$Maker$Token: java.lang.String access$300(org.apache.fop.render.ps.PSDictionary$Maker$Token)>(keyToken);
+        virtualinvoke dictionary.<org.apache.fop.render.ps.PSDictionary: java.lang.Object put(java.lang.Object,java.lang.Object)>($r2, obj);
+        $i3 = staticinvoke <org.apache.fop.render.ps.PSDictionary$Maker$Token: int access$200(org.apache.fop.render.ps.PSDictionary$Maker$Token)>(valueToken);
+        currIndex = $i3 + 1;
+        goto label0;
+
+     label13:
+        return dictionary;
+    }
+
+    void <init>(org.apache.fop.render.ps.PSDictionary$1)
+    {
+        org.apache.fop.render.ps.PSDictionary$Maker this;
+        org.apache.fop.render.ps.PSDictionary$1 x0;
+
+        this := @this: org.apache.fop.render.ps.PSDictionary$Maker;
+        x0 := @parameter0: org.apache.fop.render.ps.PSDictionary$1;
+        specialinvoke this.<org.apache.fop.render.ps.PSDictionary$Maker: void <init>()>();
+        return;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.String[][] $r0;
+        java.lang.String[] $r1;
+
+        $r0 = newarray (java.lang.String[])[3];
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "<<";
+        $r1[1] = ">>";
+        $r0[0] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "[";
+        $r1[1] = "]";
+        $r0[1] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "{";
+        $r1[1] = "}";
+        $r0[2] = $r1;
+        <org.apache.fop.render.ps.PSDictionary$Maker: java.lang.String[][] BRACES> = $r0;
+        return;
+    }
+}

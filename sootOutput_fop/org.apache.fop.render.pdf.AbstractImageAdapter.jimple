@@ -1,0 +1,382 @@
+public abstract class org.apache.fop.render.pdf.AbstractImageAdapter extends java.lang.Object implements org.apache.fop.pdf.PDFImage
+{
+    private static org.apache.commons.logging.Log log;
+    private java.lang.String key;
+    protected org.apache.xmlgraphics.image.loader.Image image;
+    private org.apache.fop.pdf.PDFICCStream pdfICCStream;
+    static java.lang.Class class$org$apache$fop$render$pdf$AbstractImageAdapter;
+
+    public void <init>(org.apache.xmlgraphics.image.loader.Image, java.lang.String)
+    {
+        org.apache.fop.render.pdf.AbstractImageAdapter this;
+        org.apache.xmlgraphics.image.loader.Image image;
+        java.lang.String key, $r2;
+        org.apache.commons.logging.Log $r0;
+        boolean $z0;
+        java.lang.StringBuffer $r1;
+
+        this := @this: org.apache.fop.render.pdf.AbstractImageAdapter;
+        image := @parameter0: org.apache.xmlgraphics.image.loader.Image;
+        key := @parameter1: java.lang.String;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.render.pdf.AbstractImageAdapter: org.apache.fop.pdf.PDFICCStream pdfICCStream> = null;
+        this.<org.apache.fop.render.pdf.AbstractImageAdapter: org.apache.xmlgraphics.image.loader.Image image> = image;
+        this.<org.apache.fop.render.pdf.AbstractImageAdapter: java.lang.String key> = key;
+        $r0 = <org.apache.fop.render.pdf.AbstractImageAdapter: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = <org.apache.fop.render.pdf.AbstractImageAdapter: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("New ImageAdapter created for key: ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(key);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r2);
+
+     label0:
+        return;
+    }
+
+    public java.lang.String getKey()
+    {
+        org.apache.fop.render.pdf.AbstractImageAdapter this;
+        java.lang.String $r0;
+
+        this := @this: org.apache.fop.render.pdf.AbstractImageAdapter;
+        $r0 = this.<org.apache.fop.render.pdf.AbstractImageAdapter: java.lang.String key>;
+        return $r0;
+    }
+
+    protected java.awt.color.ColorSpace getImageColorSpace()
+    {
+        org.apache.fop.render.pdf.AbstractImageAdapter this;
+        org.apache.xmlgraphics.image.loader.Image $r0;
+        java.awt.color.ColorSpace $r1;
+
+        this := @this: org.apache.fop.render.pdf.AbstractImageAdapter;
+        $r0 = this.<org.apache.fop.render.pdf.AbstractImageAdapter: org.apache.xmlgraphics.image.loader.Image image>;
+        $r1 = interfaceinvoke $r0.<org.apache.xmlgraphics.image.loader.Image: java.awt.color.ColorSpace getColorSpace()>();
+        return $r1;
+    }
+
+    public void setup(org.apache.fop.pdf.PDFDocument)
+    {
+        org.apache.fop.render.pdf.AbstractImageAdapter this;
+        org.apache.fop.pdf.PDFDocument doc;
+        java.awt.color.ICC_Profile prof;
+        org.apache.fop.pdf.PDFDeviceColorSpace pdfCS;
+        org.apache.xmlgraphics.image.loader.Image $r0, $r7;
+        java.awt.color.ColorSpace $r1;
+        org.apache.fop.pdf.PDFICCStream $r2;
+        org.apache.fop.pdf.PDFProfile $r3;
+        org.apache.fop.pdf.PDFAMode $r4;
+        boolean $z0;
+        int $i0;
+        org.apache.fop.pdf.PDFConformanceException $r5;
+        java.lang.StringBuffer $r6;
+        org.apache.xmlgraphics.image.loader.ImageInfo $r8;
+        java.lang.String $r9;
+
+        this := @this: org.apache.fop.render.pdf.AbstractImageAdapter;
+        doc := @parameter0: org.apache.fop.pdf.PDFDocument;
+        $r0 = this.<org.apache.fop.render.pdf.AbstractImageAdapter: org.apache.xmlgraphics.image.loader.Image image>;
+        prof = interfaceinvoke $r0.<org.apache.xmlgraphics.image.loader.Image: java.awt.color.ICC_Profile getICCProfile()>();
+        $r1 = virtualinvoke this.<org.apache.fop.render.pdf.AbstractImageAdapter: java.awt.color.ColorSpace getImageColorSpace()>();
+        pdfCS = staticinvoke <org.apache.fop.render.pdf.AbstractImageAdapter: org.apache.fop.pdf.PDFDeviceColorSpace toPDFColorSpace(java.awt.color.ColorSpace)>($r1);
+        if prof == null goto label0;
+
+        $r2 = staticinvoke <org.apache.fop.render.pdf.AbstractImageAdapter: org.apache.fop.pdf.PDFICCStream setupColorProfile(org.apache.fop.pdf.PDFDocument,java.awt.color.ICC_Profile,org.apache.fop.pdf.PDFDeviceColorSpace)>(doc, prof, pdfCS);
+        this.<org.apache.fop.render.pdf.AbstractImageAdapter: org.apache.fop.pdf.PDFICCStream pdfICCStream> = $r2;
+
+     label0:
+        $r3 = virtualinvoke doc.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFProfile getProfile()>();
+        $r4 = virtualinvoke $r3.<org.apache.fop.pdf.PDFProfile: org.apache.fop.pdf.PDFAMode getPDFAMode()>();
+        $z0 = virtualinvoke $r4.<org.apache.fop.pdf.PDFAMode: boolean isPDFA1LevelB()>();
+        if $z0 == 0 goto label1;
+
+        if pdfCS == null goto label1;
+
+        $i0 = virtualinvoke pdfCS.<org.apache.fop.pdf.PDFDeviceColorSpace: int getColorSpace()>();
+        if $i0 == 2 goto label1;
+
+        $i0 = virtualinvoke pdfCS.<org.apache.fop.pdf.PDFDeviceColorSpace: int getColorSpace()>();
+        if $i0 == 1 goto label1;
+
+        if prof != null goto label1;
+
+        $r5 = new org.apache.fop.pdf.PDFConformanceException;
+        $r6 = new java.lang.StringBuffer;
+        specialinvoke $r6.<java.lang.StringBuffer: void <init>()>();
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("PDF/A-1 does not allow mixing DeviceRGB and DeviceCMYK: ");
+        $r7 = this.<org.apache.fop.render.pdf.AbstractImageAdapter: org.apache.xmlgraphics.image.loader.Image image>;
+        $r8 = interfaceinvoke $r7.<org.apache.xmlgraphics.image.loader.Image: org.apache.xmlgraphics.image.loader.ImageInfo getInfo()>();
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r8);
+        $r9 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r5.<org.apache.fop.pdf.PDFConformanceException: void <init>(java.lang.String)>($r9);
+        throw $r5;
+
+     label1:
+        return;
+    }
+
+    private static org.apache.fop.pdf.PDFICCStream setupColorProfile(org.apache.fop.pdf.PDFDocument, java.awt.color.ICC_Profile, org.apache.fop.pdf.PDFDeviceColorSpace)
+    {
+        org.apache.fop.pdf.PDFDocument doc;
+        java.awt.color.ICC_Profile prof;
+        org.apache.fop.pdf.PDFDeviceColorSpace pdfCS;
+        boolean defaultsRGB, $z0;
+        java.lang.String desc, $r2;
+        java.lang.StringBuffer $r0;
+        org.apache.fop.pdf.PDFICCBasedColorSpace cs;
+        org.apache.fop.pdf.PDFICCStream pdfICCStream;
+        org.apache.commons.logging.Log $r1;
+        org.apache.fop.pdf.PDFResources $r3;
+        org.apache.fop.pdf.PDFFactory $r4;
+
+        doc := @parameter0: org.apache.fop.pdf.PDFDocument;
+        prof := @parameter1: java.awt.color.ICC_Profile;
+        pdfCS := @parameter2: org.apache.fop.pdf.PDFDeviceColorSpace;
+        defaultsRGB = staticinvoke <org.apache.fop.util.ColorProfileUtil: boolean isDefaultsRGB(java.awt.color.ICC_Profile)>(prof);
+        desc = staticinvoke <org.apache.fop.util.ColorProfileUtil: java.lang.String getICCProfileDescription(java.awt.color.ICC_Profile)>(prof);
+        $r1 = <org.apache.fop.render.pdf.AbstractImageAdapter: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r1 = <org.apache.fop.render.pdf.AbstractImageAdapter: org.apache.commons.logging.Log log>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Image returns ICC profile: ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(desc);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", default sRGB=");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(boolean)>(defaultsRGB);
+        $r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r2);
+
+     label0:
+        $r3 = virtualinvoke doc.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFResources getResources()>();
+        cs = virtualinvoke $r3.<org.apache.fop.pdf.PDFResources: org.apache.fop.pdf.PDFICCBasedColorSpace getICCColorSpaceByProfileName(java.lang.String)>(desc);
+        if defaultsRGB != 0 goto label2;
+
+        if cs != null goto label1;
+
+        $r4 = virtualinvoke doc.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFFactory getFactory()>();
+        pdfICCStream = virtualinvoke $r4.<org.apache.fop.pdf.PDFFactory: org.apache.fop.pdf.PDFICCStream makePDFICCStream()>();
+        virtualinvoke pdfICCStream.<org.apache.fop.pdf.PDFICCStream: void setColorSpace(java.awt.color.ICC_Profile,org.apache.fop.pdf.PDFDeviceColorSpace)>(prof, pdfCS);
+        $r4 = virtualinvoke doc.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFFactory getFactory()>();
+        virtualinvoke $r4.<org.apache.fop.pdf.PDFFactory: org.apache.fop.pdf.PDFICCBasedColorSpace makeICCBasedColorSpace(org.apache.fop.pdf.PDFResourceContext,java.lang.String,org.apache.fop.pdf.PDFICCStream)>(null, null, pdfICCStream);
+        goto label4;
+
+     label1:
+        pdfICCStream = virtualinvoke cs.<org.apache.fop.pdf.PDFICCBasedColorSpace: org.apache.fop.pdf.PDFICCStream getICCStream()>();
+        goto label4;
+
+     label2:
+        if cs != null goto label3;
+
+        $z0 = virtualinvoke desc.<java.lang.String: boolean startsWith(java.lang.String)>("sRGB");
+        if $z0 == 0 goto label3;
+
+        $r3 = virtualinvoke doc.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFResources getResources()>();
+        cs = virtualinvoke $r3.<org.apache.fop.pdf.PDFResources: org.apache.fop.pdf.PDFICCBasedColorSpace getColorSpace(java.lang.String)>("DefaultRGB");
+        if cs != null goto label3;
+
+        cs = staticinvoke <org.apache.fop.pdf.PDFICCBasedColorSpace: org.apache.fop.pdf.PDFICCBasedColorSpace setupsRGBColorSpace(org.apache.fop.pdf.PDFDocument)>(doc);
+
+     label3:
+        pdfICCStream = virtualinvoke cs.<org.apache.fop.pdf.PDFICCBasedColorSpace: org.apache.fop.pdf.PDFICCStream getICCStream()>();
+
+     label4:
+        return pdfICCStream;
+    }
+
+    public int getWidth()
+    {
+        org.apache.fop.render.pdf.AbstractImageAdapter this;
+        org.apache.xmlgraphics.image.loader.Image $r0;
+        org.apache.xmlgraphics.image.loader.ImageSize $r1;
+        int $i0;
+
+        this := @this: org.apache.fop.render.pdf.AbstractImageAdapter;
+        $r0 = this.<org.apache.fop.render.pdf.AbstractImageAdapter: org.apache.xmlgraphics.image.loader.Image image>;
+        $r1 = interfaceinvoke $r0.<org.apache.xmlgraphics.image.loader.Image: org.apache.xmlgraphics.image.loader.ImageSize getSize()>();
+        $i0 = virtualinvoke $r1.<org.apache.xmlgraphics.image.loader.ImageSize: int getWidthPx()>();
+        return $i0;
+    }
+
+    public int getHeight()
+    {
+        org.apache.fop.render.pdf.AbstractImageAdapter this;
+        org.apache.xmlgraphics.image.loader.Image $r0;
+        org.apache.xmlgraphics.image.loader.ImageSize $r1;
+        int $i0;
+
+        this := @this: org.apache.fop.render.pdf.AbstractImageAdapter;
+        $r0 = this.<org.apache.fop.render.pdf.AbstractImageAdapter: org.apache.xmlgraphics.image.loader.Image image>;
+        $r1 = interfaceinvoke $r0.<org.apache.xmlgraphics.image.loader.Image: org.apache.xmlgraphics.image.loader.ImageSize getSize()>();
+        $i0 = virtualinvoke $r1.<org.apache.xmlgraphics.image.loader.ImageSize: int getHeightPx()>();
+        return $i0;
+    }
+
+    public boolean isTransparent()
+    {
+        org.apache.fop.render.pdf.AbstractImageAdapter this;
+
+        this := @this: org.apache.fop.render.pdf.AbstractImageAdapter;
+        return 0;
+    }
+
+    public org.apache.fop.pdf.PDFColor getTransparentColor()
+    {
+        org.apache.fop.render.pdf.AbstractImageAdapter this;
+
+        this := @this: org.apache.fop.render.pdf.AbstractImageAdapter;
+        return null;
+    }
+
+    public java.lang.String getMask()
+    {
+        org.apache.fop.render.pdf.AbstractImageAdapter this;
+
+        this := @this: org.apache.fop.render.pdf.AbstractImageAdapter;
+        return null;
+    }
+
+    public java.lang.String getSoftMask()
+    {
+        org.apache.fop.render.pdf.AbstractImageAdapter this;
+
+        this := @this: org.apache.fop.render.pdf.AbstractImageAdapter;
+        return null;
+    }
+
+    public org.apache.fop.pdf.PDFReference getSoftMaskReference()
+    {
+        org.apache.fop.render.pdf.AbstractImageAdapter this;
+
+        this := @this: org.apache.fop.render.pdf.AbstractImageAdapter;
+        return null;
+    }
+
+    public boolean isInverted()
+    {
+        org.apache.fop.render.pdf.AbstractImageAdapter this;
+
+        this := @this: org.apache.fop.render.pdf.AbstractImageAdapter;
+        return 0;
+    }
+
+    public boolean isPS()
+    {
+        org.apache.fop.render.pdf.AbstractImageAdapter this;
+
+        this := @this: org.apache.fop.render.pdf.AbstractImageAdapter;
+        return 0;
+    }
+
+    public org.apache.fop.pdf.PDFICCStream getICCStream()
+    {
+        org.apache.fop.render.pdf.AbstractImageAdapter this;
+        org.apache.fop.pdf.PDFICCStream $r0;
+
+        this := @this: org.apache.fop.render.pdf.AbstractImageAdapter;
+        $r0 = this.<org.apache.fop.render.pdf.AbstractImageAdapter: org.apache.fop.pdf.PDFICCStream pdfICCStream>;
+        return $r0;
+    }
+
+    public void populateXObjectDictionary(org.apache.fop.pdf.PDFDictionary)
+    {
+        org.apache.fop.render.pdf.AbstractImageAdapter this;
+        org.apache.fop.pdf.PDFDictionary dict;
+
+        this := @this: org.apache.fop.render.pdf.AbstractImageAdapter;
+        dict := @parameter0: org.apache.fop.pdf.PDFDictionary;
+        return;
+    }
+
+    public static org.apache.fop.pdf.PDFDeviceColorSpace toPDFColorSpace(java.awt.color.ColorSpace)
+    {
+        java.awt.color.ColorSpace cs;
+        org.apache.fop.pdf.PDFDeviceColorSpace pdfCS, $r0;
+        int $i0;
+
+        cs := @parameter0: java.awt.color.ColorSpace;
+        if cs != null goto label0;
+
+        return null;
+
+     label0:
+        $r0 = new org.apache.fop.pdf.PDFDeviceColorSpace;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFDeviceColorSpace: void <init>(int)>(0);
+        pdfCS = $r0;
+        $i0 = virtualinvoke cs.<java.awt.color.ColorSpace: int getType()>();
+        lookupswitch($i0)
+        {
+            case 6: goto label2;
+            case 9: goto label1;
+            default: goto label3;
+        };
+
+     label1:
+        virtualinvoke pdfCS.<org.apache.fop.pdf.PDFDeviceColorSpace: void setColorSpace(int)>(3);
+        goto label4;
+
+     label2:
+        virtualinvoke pdfCS.<org.apache.fop.pdf.PDFDeviceColorSpace: void setColorSpace(int)>(1);
+        goto label4;
+
+     label3:
+        virtualinvoke pdfCS.<org.apache.fop.pdf.PDFDeviceColorSpace: void setColorSpace(int)>(2);
+
+     label4:
+        return pdfCS;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.render.pdf.AbstractImageAdapter: java.lang.Class class$org$apache$fop$render$pdf$AbstractImageAdapter>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.render.pdf.AbstractImageAdapter: java.lang.Class class$(java.lang.String)>("org.apache.fop.render.pdf.AbstractImageAdapter");
+        <org.apache.fop.render.pdf.AbstractImageAdapter: java.lang.Class class$org$apache$fop$render$pdf$AbstractImageAdapter> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.render.pdf.AbstractImageAdapter: java.lang.Class class$org$apache$fop$render$pdf$AbstractImageAdapter>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.render.pdf.AbstractImageAdapter: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

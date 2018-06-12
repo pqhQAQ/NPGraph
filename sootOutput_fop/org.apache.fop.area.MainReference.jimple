@@ -1,0 +1,192 @@
+public class org.apache.fop.area.MainReference extends org.apache.fop.area.Area
+{
+    private org.apache.fop.area.BodyRegion parent;
+    private java.util.List spanAreas;
+    private boolean isEmpty;
+
+    public void <init>(org.apache.fop.area.BodyRegion)
+    {
+        org.apache.fop.area.MainReference this;
+        org.apache.fop.area.BodyRegion parent;
+        java.util.ArrayList $r0;
+        java.lang.Integer $r1;
+        java.lang.Boolean $r2;
+
+        this := @this: org.apache.fop.area.MainReference;
+        parent := @parameter0: org.apache.fop.area.BodyRegion;
+        specialinvoke this.<org.apache.fop.area.Area: void <init>()>();
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.area.MainReference: java.util.List spanAreas> = $r0;
+        this.<org.apache.fop.area.MainReference: boolean isEmpty> = 1;
+        this.<org.apache.fop.area.MainReference: org.apache.fop.area.BodyRegion parent> = parent;
+        $r1 = <org.apache.fop.area.Trait: java.lang.Integer IS_REFERENCE_AREA>;
+        $r2 = <java.lang.Boolean: java.lang.Boolean TRUE>;
+        virtualinvoke this.<org.apache.fop.area.MainReference: void addTrait(java.lang.Object,java.lang.Object)>($r1, $r2);
+        return;
+    }
+
+    public org.apache.fop.area.Span createSpan(boolean)
+    {
+        org.apache.fop.area.MainReference this;
+        boolean spanAll, $z0;
+        org.apache.fop.area.RegionViewport rv;
+        int ipdWidth, $i0, $i1, $i2, $i3;
+        org.apache.fop.area.Span newSpan, $r1, $r5;
+        java.util.List $r0, $r2;
+        org.apache.fop.area.BodyRegion $r4;
+
+        this := @this: org.apache.fop.area.MainReference;
+        spanAll := @parameter0: boolean;
+        $r0 = this.<org.apache.fop.area.MainReference: java.util.List spanAreas>;
+        $i0 = interfaceinvoke $r0.<java.util.List: int size()>();
+        if $i0 <= 0 goto label0;
+
+        $r1 = virtualinvoke this.<org.apache.fop.area.MainReference: org.apache.fop.area.Span getCurrentSpan()>();
+        $z0 = virtualinvoke $r1.<org.apache.fop.area.Span: boolean isEmpty()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = this.<org.apache.fop.area.MainReference: java.util.List spanAreas>;
+        $r2 = this.<org.apache.fop.area.MainReference: java.util.List spanAreas>;
+        $i1 = interfaceinvoke $r2.<java.util.List: int size()>();
+        $i1 = $i1 - 1;
+        interfaceinvoke $r0.<java.util.List: java.lang.Object remove(int)>($i1);
+
+     label0:
+        $r4 = this.<org.apache.fop.area.MainReference: org.apache.fop.area.BodyRegion parent>;
+        rv = virtualinvoke $r4.<org.apache.fop.area.BodyRegion: org.apache.fop.area.RegionViewport getRegionViewport()>();
+        $r4 = this.<org.apache.fop.area.MainReference: org.apache.fop.area.BodyRegion parent>;
+        $i0 = virtualinvoke $r4.<org.apache.fop.area.BodyRegion: int getIPD()>();
+        $i1 = virtualinvoke rv.<org.apache.fop.area.RegionViewport: int getBorderAndPaddingWidthStart()>();
+        $i0 = $i0 - $i1;
+        $i1 = virtualinvoke rv.<org.apache.fop.area.RegionViewport: int getBorderAndPaddingWidthEnd()>();
+        ipdWidth = $i0 - $i1;
+        $r1 = new org.apache.fop.area.Span;
+        $r5 = $r1;
+        if spanAll == 0 goto label1;
+
+        $i2 = 1;
+        goto label2;
+
+     label1:
+        $i2 = virtualinvoke this.<org.apache.fop.area.MainReference: int getColumnCount()>();
+
+     label2:
+        $i3 = virtualinvoke this.<org.apache.fop.area.MainReference: int getColumnGap()>();
+        specialinvoke $r5.<org.apache.fop.area.Span: void <init>(int,int,int)>($i2, $i3, ipdWidth);
+        newSpan = $r1;
+        $r0 = this.<org.apache.fop.area.MainReference: java.util.List spanAreas>;
+        interfaceinvoke $r0.<java.util.List: boolean add(java.lang.Object)>(newSpan);
+        $r1 = virtualinvoke this.<org.apache.fop.area.MainReference: org.apache.fop.area.Span getCurrentSpan()>();
+        return $r1;
+    }
+
+    public java.util.List getSpans()
+    {
+        org.apache.fop.area.MainReference this;
+        java.util.List $r0;
+
+        this := @this: org.apache.fop.area.MainReference;
+        $r0 = this.<org.apache.fop.area.MainReference: java.util.List spanAreas>;
+        return $r0;
+    }
+
+    public org.apache.fop.area.Span getCurrentSpan()
+    {
+        org.apache.fop.area.MainReference this;
+        java.util.List $r0, $r1;
+        int $i0;
+        java.lang.Object $r2;
+        org.apache.fop.area.Span $r3;
+
+        this := @this: org.apache.fop.area.MainReference;
+        $r0 = this.<org.apache.fop.area.MainReference: java.util.List spanAreas>;
+        $r1 = this.<org.apache.fop.area.MainReference: java.util.List spanAreas>;
+        $i0 = interfaceinvoke $r1.<java.util.List: int size()>();
+        $i0 = $i0 - 1;
+        $r2 = interfaceinvoke $r0.<java.util.List: java.lang.Object get(int)>($i0);
+        $r3 = (org.apache.fop.area.Span) $r2;
+        return $r3;
+    }
+
+    public boolean isEmpty()
+    {
+        org.apache.fop.area.MainReference this;
+        boolean nonEmptyFound, $z0, $z1;
+        java.util.Iterator spaniter;
+        org.apache.fop.area.Span spanArea;
+        java.util.List $r0;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.area.MainReference;
+        $z0 = this.<org.apache.fop.area.MainReference: boolean isEmpty>;
+        if $z0 == 0 goto label6;
+
+        nonEmptyFound = 0;
+        $r0 = this.<org.apache.fop.area.MainReference: java.util.List spanAreas>;
+        if $r0 == null goto label3;
+
+        $r0 = this.<org.apache.fop.area.MainReference: java.util.List spanAreas>;
+        spaniter = interfaceinvoke $r0.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke spaniter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label3;
+
+        $r1 = interfaceinvoke spaniter.<java.util.Iterator: java.lang.Object next()>();
+        spanArea = (org.apache.fop.area.Span) $r1;
+        $z0 = nonEmptyFound;
+        $z1 = virtualinvoke spanArea.<org.apache.fop.area.Span: boolean isEmpty()>();
+        if $z1 != 0 goto label1;
+
+        $z1 = 1;
+        goto label2;
+
+     label1:
+        $z1 = 0;
+
+     label2:
+        nonEmptyFound = $z0 | $z1;
+        goto label0;
+
+     label3:
+        if nonEmptyFound != 0 goto label4;
+
+        $z1 = 1;
+        goto label5;
+
+     label4:
+        $z1 = 0;
+
+     label5:
+        this.<org.apache.fop.area.MainReference: boolean isEmpty> = $z1;
+
+     label6:
+        $z0 = this.<org.apache.fop.area.MainReference: boolean isEmpty>;
+        return $z0;
+    }
+
+    public int getColumnCount()
+    {
+        org.apache.fop.area.MainReference this;
+        org.apache.fop.area.BodyRegion $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.area.MainReference;
+        $r0 = this.<org.apache.fop.area.MainReference: org.apache.fop.area.BodyRegion parent>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.area.BodyRegion: int getColumnCount()>();
+        return $i0;
+    }
+
+    public int getColumnGap()
+    {
+        org.apache.fop.area.MainReference this;
+        org.apache.fop.area.BodyRegion $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.area.MainReference;
+        $r0 = this.<org.apache.fop.area.MainReference: org.apache.fop.area.BodyRegion parent>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.area.BodyRegion: int getColumnGap()>();
+        return $i0;
+    }
+}

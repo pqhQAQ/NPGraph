@@ -1,0 +1,764 @@
+public class org.apache.fop.fonts.FontReader extends org.xml.sax.helpers.DefaultHandler
+{
+    private org.xml.sax.Locator locator;
+    private boolean isCID;
+    private org.apache.fop.fonts.CustomFont returnFont;
+    private org.apache.fop.fonts.MultiByteFont multiFont;
+    private org.apache.fop.fonts.SingleByteFont singleFont;
+    private java.lang.StringBuffer text;
+    private java.util.List cidWidths;
+    private int cidWidthIndex;
+    private java.util.Map currentKerning;
+    private java.util.List bfranges;
+
+    private void createFont(org.xml.sax.InputSource) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fonts.FontReader this;
+        org.xml.sax.InputSource source;
+        null_type parser;
+        javax.xml.parsers.SAXParserFactory factory;
+        java.lang.Exception e, $r1;
+        javax.xml.parsers.SAXParser $r0;
+        org.xml.sax.XMLReader parser;
+        org.apache.fop.apps.FOPException $r2;
+        org.xml.sax.SAXException $r3, e, $r4;
+        java.io.IOException $r5, e;
+
+        this := @this: org.apache.fop.fonts.FontReader;
+        source := @parameter0: org.xml.sax.InputSource;
+        parser = null;
+
+     label0:
+        factory = staticinvoke <javax.xml.parsers.SAXParserFactory: javax.xml.parsers.SAXParserFactory newInstance()>();
+        virtualinvoke factory.<javax.xml.parsers.SAXParserFactory: void setNamespaceAware(boolean)>(1);
+        $r0 = virtualinvoke factory.<javax.xml.parsers.SAXParserFactory: javax.xml.parsers.SAXParser newSAXParser()>();
+        parser = virtualinvoke $r0.<javax.xml.parsers.SAXParser: org.xml.sax.XMLReader getXMLReader()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r1 := @caughtexception;
+        e = $r1;
+        $r2 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r2.<org.apache.fop.apps.FOPException: void <init>(java.lang.Exception)>(e);
+        throw $r2;
+
+     label3:
+        if parser != null goto label4;
+
+        $r2 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r2.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("Unable to create SAX parser");
+        throw $r2;
+
+     label4:
+        interfaceinvoke parser.<org.xml.sax.XMLReader: void setFeature(java.lang.String,boolean)>("http://xml.org/sax/features/namespace-prefixes", 0);
+
+     label5:
+        goto label7;
+
+     label6:
+        $r3 := @caughtexception;
+        e = $r3;
+        $r2 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r2.<org.apache.fop.apps.FOPException: void <init>(java.lang.String,java.lang.Exception)>("You need a SAX parser which supports SAX version 2", e);
+        throw $r2;
+
+     label7:
+        interfaceinvoke parser.<org.xml.sax.XMLReader: void setContentHandler(org.xml.sax.ContentHandler)>(this);
+
+     label8:
+        interfaceinvoke parser.<org.xml.sax.XMLReader: void parse(org.xml.sax.InputSource)>(source);
+
+     label9:
+        goto label12;
+
+     label10:
+        $r4 := @caughtexception;
+        e = $r4;
+        $r2 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r2.<org.apache.fop.apps.FOPException: void <init>(java.lang.Exception)>(e);
+        throw $r2;
+
+     label11:
+        $r5 := @caughtexception;
+        e = $r5;
+        $r2 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r2.<org.apache.fop.apps.FOPException: void <init>(java.lang.Exception)>(e);
+        throw $r2;
+
+     label12:
+        return;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+        catch org.xml.sax.SAXException from label4 to label5 with label6;
+        catch org.xml.sax.SAXException from label8 to label9 with label10;
+        catch java.io.IOException from label8 to label9 with label11;
+    }
+
+    public void setFontEmbedPath(java.lang.String)
+    {
+        org.apache.fop.fonts.FontReader this;
+        java.lang.String path;
+        org.apache.fop.fonts.CustomFont $r0;
+
+        this := @this: org.apache.fop.fonts.FontReader;
+        path := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        virtualinvoke $r0.<org.apache.fop.fonts.CustomFont: void setEmbedFileName(java.lang.String)>(path);
+        return;
+    }
+
+    public void setKerningEnabled(boolean)
+    {
+        org.apache.fop.fonts.FontReader this;
+        boolean enabled;
+        org.apache.fop.fonts.CustomFont $r0;
+
+        this := @this: org.apache.fop.fonts.FontReader;
+        enabled := @parameter0: boolean;
+        $r0 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        virtualinvoke $r0.<org.apache.fop.fonts.CustomFont: void setKerningEnabled(boolean)>(enabled);
+        return;
+    }
+
+    public void setResolver(org.apache.fop.fonts.FontResolver)
+    {
+        org.apache.fop.fonts.FontReader this;
+        org.apache.fop.fonts.FontResolver resolver;
+        org.apache.fop.fonts.CustomFont $r0;
+
+        this := @this: org.apache.fop.fonts.FontReader;
+        resolver := @parameter0: org.apache.fop.fonts.FontResolver;
+        $r0 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        virtualinvoke $r0.<org.apache.fop.fonts.CustomFont: void setResolver(org.apache.fop.fonts.FontResolver)>(resolver);
+        return;
+    }
+
+    public org.apache.fop.fonts.Typeface getFont()
+    {
+        org.apache.fop.fonts.FontReader this;
+        org.apache.fop.fonts.CustomFont $r0;
+
+        this := @this: org.apache.fop.fonts.FontReader;
+        $r0 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        return $r0;
+    }
+
+    public void <init>(org.xml.sax.InputSource) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fonts.FontReader this;
+        org.xml.sax.InputSource source;
+        java.lang.StringBuffer $r0;
+
+        this := @this: org.apache.fop.fonts.FontReader;
+        source := @parameter0: org.xml.sax.InputSource;
+        specialinvoke this.<org.xml.sax.helpers.DefaultHandler: void <init>()>();
+        this.<org.apache.fop.fonts.FontReader: org.xml.sax.Locator locator> = null;
+        this.<org.apache.fop.fonts.FontReader: boolean isCID> = 0;
+        this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont> = null;
+        this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.MultiByteFont multiFont> = null;
+        this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.SingleByteFont singleFont> = null;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        this.<org.apache.fop.fonts.FontReader: java.lang.StringBuffer text> = $r0;
+        this.<org.apache.fop.fonts.FontReader: java.util.List cidWidths> = null;
+        this.<org.apache.fop.fonts.FontReader: int cidWidthIndex> = 0;
+        this.<org.apache.fop.fonts.FontReader: java.util.Map currentKerning> = null;
+        this.<org.apache.fop.fonts.FontReader: java.util.List bfranges> = null;
+        specialinvoke this.<org.apache.fop.fonts.FontReader: void createFont(org.xml.sax.InputSource)>(source);
+        return;
+    }
+
+    public void startDocument()
+    {
+        org.apache.fop.fonts.FontReader this;
+
+        this := @this: org.apache.fop.fonts.FontReader;
+        return;
+    }
+
+    public void setDocumentLocator(org.xml.sax.Locator)
+    {
+        org.apache.fop.fonts.FontReader this;
+        org.xml.sax.Locator locator;
+
+        this := @this: org.apache.fop.fonts.FontReader;
+        locator := @parameter0: org.xml.sax.Locator;
+        this.<org.apache.fop.fonts.FontReader: org.xml.sax.Locator locator> = locator;
+        return;
+    }
+
+    public void startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes) throws org.xml.sax.SAXException
+    {
+        org.apache.fop.fonts.FontReader this;
+        java.lang.String uri, localName, qName, $r0, $r1, $r7, $r11, $r14, $r15;
+        org.xml.sax.Attributes attributes;
+        org.apache.fop.fonts.BFEntry entry, $r13;
+        java.lang.NumberFormatException ne, $r17;
+        boolean $z0;
+        org.apache.fop.fonts.MultiByteFont $r2;
+        org.apache.fop.fonts.SingleByteFont $r3, $r4;
+        org.apache.fop.fonts.FontType $r5;
+        org.apache.fop.fonts.CustomFont $r6;
+        int $i0, $i1, $i2, $i3;
+        java.util.ArrayList $r8;
+        java.util.HashMap $r9;
+        java.lang.Integer $r10, $r21;
+        java.util.Map $r12, $r20;
+        java.util.List $r16;
+        org.xml.sax.SAXException $r18;
+        java.lang.StringBuffer $r19;
+
+        this := @this: org.apache.fop.fonts.FontReader;
+        uri := @parameter0: java.lang.String;
+        localName := @parameter1: java.lang.String;
+        qName := @parameter2: java.lang.String;
+        attributes := @parameter3: org.xml.sax.Attributes;
+        $z0 = virtualinvoke localName.<java.lang.String: boolean equals(java.lang.Object)>("font-metrics");
+        if $z0 == 0 goto label2;
+
+        $r0 = "TYPE0";
+        $r1 = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("type");
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>($r1);
+        if $z0 == 0 goto label0;
+
+        $r2 = new org.apache.fop.fonts.MultiByteFont;
+        specialinvoke $r2.<org.apache.fop.fonts.MultiByteFont: void <init>()>();
+        this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.MultiByteFont multiFont> = $r2;
+        $r2 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.MultiByteFont multiFont>;
+        this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont> = $r2;
+        this.<org.apache.fop.fonts.FontReader: boolean isCID> = 1;
+        staticinvoke <org.apache.fop.fonts.apps.TTFReader: void checkMetricsVersion(org.xml.sax.Attributes)>(attributes);
+        goto label14;
+
+     label0:
+        $r0 = "TRUETYPE";
+        $r1 = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("type");
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>($r1);
+        if $z0 == 0 goto label1;
+
+        $r3 = new org.apache.fop.fonts.SingleByteFont;
+        specialinvoke $r3.<org.apache.fop.fonts.SingleByteFont: void <init>()>();
+        this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.SingleByteFont singleFont> = $r3;
+        $r4 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.SingleByteFont singleFont>;
+        $r5 = <org.apache.fop.fonts.FontType: org.apache.fop.fonts.FontType TRUETYPE>;
+        virtualinvoke $r4.<org.apache.fop.fonts.SingleByteFont: void setFontType(org.apache.fop.fonts.FontType)>($r5);
+        $r3 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.SingleByteFont singleFont>;
+        this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont> = $r3;
+        this.<org.apache.fop.fonts.FontReader: boolean isCID> = 0;
+        staticinvoke <org.apache.fop.fonts.apps.TTFReader: void checkMetricsVersion(org.xml.sax.Attributes)>(attributes);
+        goto label14;
+
+     label1:
+        $r3 = new org.apache.fop.fonts.SingleByteFont;
+        specialinvoke $r3.<org.apache.fop.fonts.SingleByteFont: void <init>()>();
+        this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.SingleByteFont singleFont> = $r3;
+        $r4 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.SingleByteFont singleFont>;
+        $r5 = <org.apache.fop.fonts.FontType: org.apache.fop.fonts.FontType TYPE1>;
+        virtualinvoke $r4.<org.apache.fop.fonts.SingleByteFont: void setFontType(org.apache.fop.fonts.FontType)>($r5);
+        $r3 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.SingleByteFont singleFont>;
+        this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont> = $r3;
+        this.<org.apache.fop.fonts.FontReader: boolean isCID> = 0;
+        goto label14;
+
+     label2:
+        $r0 = "embed";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label3;
+
+        $r6 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        $r1 = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("file");
+        virtualinvoke $r6.<org.apache.fop.fonts.CustomFont: void setEmbedFileName(java.lang.String)>($r1);
+        $r6 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        $r1 = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("class");
+        virtualinvoke $r6.<org.apache.fop.fonts.CustomFont: void setEmbedResourceName(java.lang.String)>($r1);
+        goto label14;
+
+     label3:
+        $r0 = "cid-widths";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label4;
+
+        $r7 = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("start-index");
+        $i0 = specialinvoke this.<org.apache.fop.fonts.FontReader: int getInt(java.lang.String)>($r7);
+        this.<org.apache.fop.fonts.FontReader: int cidWidthIndex> = $i0;
+        $r8 = new java.util.ArrayList;
+        specialinvoke $r8.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.fonts.FontReader: java.util.List cidWidths> = $r8;
+        goto label14;
+
+     label4:
+        $r0 = "kerning";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label5;
+
+        $r9 = new java.util.HashMap;
+        specialinvoke $r9.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.fonts.FontReader: java.util.Map currentKerning> = $r9;
+        $r6 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        $r10 = new java.lang.Integer;
+        $r11 = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("kpx1");
+        specialinvoke $r10.<java.lang.Integer: void <init>(java.lang.String)>($r11);
+        $r12 = this.<org.apache.fop.fonts.FontReader: java.util.Map currentKerning>;
+        virtualinvoke $r6.<org.apache.fop.fonts.CustomFont: void putKerningEntry(java.lang.Integer,java.util.Map)>($r10, $r12);
+        goto label14;
+
+     label5:
+        $r0 = "bfranges";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label6;
+
+        $r8 = new java.util.ArrayList;
+        specialinvoke $r8.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.fonts.FontReader: java.util.List bfranges> = $r8;
+        goto label14;
+
+     label6:
+        $r0 = "bf";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label7;
+
+        $r13 = new org.apache.fop.fonts.BFEntry;
+        $r11 = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("us");
+        $i1 = specialinvoke this.<org.apache.fop.fonts.FontReader: int getInt(java.lang.String)>($r11);
+        $r14 = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("ue");
+        $i2 = specialinvoke this.<org.apache.fop.fonts.FontReader: int getInt(java.lang.String)>($r14);
+        $r15 = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("gi");
+        $i3 = specialinvoke this.<org.apache.fop.fonts.FontReader: int getInt(java.lang.String)>($r15);
+        specialinvoke $r13.<org.apache.fop.fonts.BFEntry: void <init>(int,int,int)>($i1, $i2, $i3);
+        entry = $r13;
+        $r16 = this.<org.apache.fop.fonts.FontReader: java.util.List bfranges>;
+        interfaceinvoke $r16.<java.util.List: boolean add(java.lang.Object)>(entry);
+        goto label14;
+
+     label7:
+        $r0 = "wx";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label8;
+
+        $r16 = this.<org.apache.fop.fonts.FontReader: java.util.List cidWidths>;
+        $r10 = new java.lang.Integer;
+        $r11 = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("w");
+        specialinvoke $r10.<java.lang.Integer: void <init>(java.lang.String)>($r11);
+        interfaceinvoke $r16.<java.util.List: boolean add(java.lang.Object)>($r10);
+        goto label14;
+
+     label8:
+        $r0 = "widths";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label9;
+
+        goto label14;
+
+     label9:
+        $r0 = "char";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label13;
+
+     label10:
+        $r4 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.SingleByteFont singleFont>;
+        $r1 = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("idx");
+        $i0 = staticinvoke <java.lang.Integer: int parseInt(java.lang.String)>($r1);
+        $r7 = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("wdt");
+        $i1 = staticinvoke <java.lang.Integer: int parseInt(java.lang.String)>($r7);
+        virtualinvoke $r4.<org.apache.fop.fonts.SingleByteFont: void setWidth(int,int)>($i0, $i1);
+
+     label11:
+        goto label14;
+
+     label12:
+        $r17 := @caughtexception;
+        ne = $r17;
+        $r18 = new org.xml.sax.SAXException;
+        $r19 = new java.lang.StringBuffer;
+        specialinvoke $r19.<java.lang.StringBuffer: void <init>()>();
+        $r19 = virtualinvoke $r19.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Malformed width in metric file: ");
+        $r11 = virtualinvoke ne.<java.lang.NumberFormatException: java.lang.String getMessage()>();
+        $r19 = virtualinvoke $r19.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r11);
+        $r7 = virtualinvoke $r19.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r18.<org.xml.sax.SAXException: void <init>(java.lang.String,java.lang.Exception)>($r7, ne);
+        throw $r18;
+
+     label13:
+        $r0 = "pair";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label14;
+
+        $r20 = this.<org.apache.fop.fonts.FontReader: java.util.Map currentKerning>;
+        $r10 = new java.lang.Integer;
+        $r11 = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("kpx2");
+        specialinvoke $r10.<java.lang.Integer: void <init>(java.lang.String)>($r11);
+        $r21 = new java.lang.Integer;
+        $r14 = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("kern");
+        specialinvoke $r21.<java.lang.Integer: void <init>(java.lang.String)>($r14);
+        interfaceinvoke $r20.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r10, $r21);
+
+     label14:
+        return;
+
+        catch java.lang.NumberFormatException from label10 to label11 with label12;
+    }
+
+    private int getInt(java.lang.String) throws org.xml.sax.SAXException
+    {
+        org.apache.fop.fonts.FontReader this;
+        java.lang.String str, $r3;
+        boolean 'ret';
+        java.lang.Exception e, $r1;
+        java.lang.StringBuffer $r0;
+        int 'ret';
+        org.xml.sax.SAXException $r2;
+
+        this := @this: org.apache.fop.fonts.FontReader;
+        str := @parameter0: java.lang.String;
+        'ret' = 0;
+
+     label0:
+        'ret' = staticinvoke <java.lang.Integer: int parseInt(java.lang.String)>(str);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r1 := @caughtexception;
+        e = $r1;
+        $r2 = new org.xml.sax.SAXException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Error while parsing integer value: ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(str);
+        $r3 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<org.xml.sax.SAXException: void <init>(java.lang.String,java.lang.Exception)>($r3, e);
+        throw $r2;
+
+     label3:
+        return 'ret';
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+
+    public void endElement(java.lang.String, java.lang.String, java.lang.String) throws org.xml.sax.SAXException
+    {
+        org.apache.fop.fonts.FontReader this;
+        java.lang.String uri, localName, qName, content, $r1;
+        java.util.HashSet s, $r3;
+        int[] bbox, wds;
+        int j, count, $i0, $i1, $i2;
+        java.lang.Integer i;
+        java.lang.StringBuffer $r0;
+        boolean $z0;
+        org.apache.fop.fonts.CustomFont $r2;
+        org.apache.fop.fonts.MultiByteFont $r4;
+        org.apache.fop.fonts.SingleByteFont $r5;
+        org.apache.fop.fonts.FontType $r6, $r7;
+        org.apache.fop.fonts.CIDFontType $r8;
+        java.util.List $r9, $r10;
+        java.lang.Object $r11;
+        org.apache.fop.fonts.BFEntry[] $r12, $r14;
+        java.lang.Object[] $r13;
+
+        this := @this: org.apache.fop.fonts.FontReader;
+        uri := @parameter0: java.lang.String;
+        localName := @parameter1: java.lang.String;
+        qName := @parameter2: java.lang.String;
+        $r0 = this.<org.apache.fop.fonts.FontReader: java.lang.StringBuffer text>;
+        $r1 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        content = virtualinvoke $r1.<java.lang.String: java.lang.String trim()>();
+        $r1 = "font-name";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label0;
+
+        $r2 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        virtualinvoke $r2.<org.apache.fop.fonts.CustomFont: void setFontName(java.lang.String)>(content);
+        goto label24;
+
+     label0:
+        $r1 = "full-name";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label1;
+
+        $r2 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        virtualinvoke $r2.<org.apache.fop.fonts.CustomFont: void setFullName(java.lang.String)>(content);
+        goto label24;
+
+     label1:
+        $r1 = "family-name";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label2;
+
+        $r3 = new java.util.HashSet;
+        specialinvoke $r3.<java.util.HashSet: void <init>()>();
+        s = $r3;
+        interfaceinvoke s.<java.util.Set: boolean add(java.lang.Object)>(content);
+        $r2 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        virtualinvoke $r2.<org.apache.fop.fonts.CustomFont: void setFamilyNames(java.util.Set)>(s);
+        goto label24;
+
+     label2:
+        $r1 = "ttc-name";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label3;
+
+        $z0 = this.<org.apache.fop.fonts.FontReader: boolean isCID>;
+        if $z0 == 0 goto label3;
+
+        $r4 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.MultiByteFont multiFont>;
+        virtualinvoke $r4.<org.apache.fop.fonts.MultiByteFont: void setTTCName(java.lang.String)>(content);
+        goto label24;
+
+     label3:
+        $r1 = "encoding";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label4;
+
+        $r5 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.SingleByteFont singleFont>;
+        if $r5 == null goto label24;
+
+        $r5 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.SingleByteFont singleFont>;
+        $r6 = virtualinvoke $r5.<org.apache.fop.fonts.SingleByteFont: org.apache.fop.fonts.FontType getFontType()>();
+        $r7 = <org.apache.fop.fonts.FontType: org.apache.fop.fonts.FontType TYPE1>;
+        if $r6 != $r7 goto label24;
+
+        $r5 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.SingleByteFont singleFont>;
+        virtualinvoke $r5.<org.apache.fop.fonts.SingleByteFont: void setEncoding(java.lang.String)>(content);
+        goto label24;
+
+     label4:
+        $r1 = "cap-height";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label5;
+
+        $r2 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i0 = specialinvoke this.<org.apache.fop.fonts.FontReader: int getInt(java.lang.String)>(content);
+        virtualinvoke $r2.<org.apache.fop.fonts.CustomFont: void setCapHeight(int)>($i0);
+        goto label24;
+
+     label5:
+        $r1 = "x-height";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label6;
+
+        $r2 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i0 = specialinvoke this.<org.apache.fop.fonts.FontReader: int getInt(java.lang.String)>(content);
+        virtualinvoke $r2.<org.apache.fop.fonts.CustomFont: void setXHeight(int)>($i0);
+        goto label24;
+
+     label6:
+        $r1 = "ascender";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label7;
+
+        $r2 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i0 = specialinvoke this.<org.apache.fop.fonts.FontReader: int getInt(java.lang.String)>(content);
+        virtualinvoke $r2.<org.apache.fop.fonts.CustomFont: void setAscender(int)>($i0);
+        goto label24;
+
+     label7:
+        $r1 = "descender";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label8;
+
+        $r2 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i0 = specialinvoke this.<org.apache.fop.fonts.FontReader: int getInt(java.lang.String)>(content);
+        virtualinvoke $r2.<org.apache.fop.fonts.CustomFont: void setDescender(int)>($i0);
+        goto label24;
+
+     label8:
+        $r1 = "left";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label9;
+
+        $r2 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        bbox = virtualinvoke $r2.<org.apache.fop.fonts.CustomFont: int[] getFontBBox()>();
+        $i1 = specialinvoke this.<org.apache.fop.fonts.FontReader: int getInt(java.lang.String)>(content);
+        bbox[0] = $i1;
+        $r2 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        virtualinvoke $r2.<org.apache.fop.fonts.CustomFont: void setFontBBox(int[])>(bbox);
+        goto label24;
+
+     label9:
+        $r1 = "bottom";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label10;
+
+        $r2 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        bbox = virtualinvoke $r2.<org.apache.fop.fonts.CustomFont: int[] getFontBBox()>();
+        $i1 = specialinvoke this.<org.apache.fop.fonts.FontReader: int getInt(java.lang.String)>(content);
+        bbox[1] = $i1;
+        $r2 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        virtualinvoke $r2.<org.apache.fop.fonts.CustomFont: void setFontBBox(int[])>(bbox);
+        goto label24;
+
+     label10:
+        $r1 = "right";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label11;
+
+        $r2 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        bbox = virtualinvoke $r2.<org.apache.fop.fonts.CustomFont: int[] getFontBBox()>();
+        $i1 = specialinvoke this.<org.apache.fop.fonts.FontReader: int getInt(java.lang.String)>(content);
+        bbox[2] = $i1;
+        $r2 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        virtualinvoke $r2.<org.apache.fop.fonts.CustomFont: void setFontBBox(int[])>(bbox);
+        goto label24;
+
+     label11:
+        $r1 = "top";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label12;
+
+        $r2 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        bbox = virtualinvoke $r2.<org.apache.fop.fonts.CustomFont: int[] getFontBBox()>();
+        $i1 = specialinvoke this.<org.apache.fop.fonts.FontReader: int getInt(java.lang.String)>(content);
+        bbox[3] = $i1;
+        $r2 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        virtualinvoke $r2.<org.apache.fop.fonts.CustomFont: void setFontBBox(int[])>(bbox);
+        goto label24;
+
+     label12:
+        $r1 = "first-char";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label13;
+
+        $r2 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i0 = specialinvoke this.<org.apache.fop.fonts.FontReader: int getInt(java.lang.String)>(content);
+        virtualinvoke $r2.<org.apache.fop.fonts.CustomFont: void setFirstChar(int)>($i0);
+        goto label24;
+
+     label13:
+        $r1 = "last-char";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label14;
+
+        $r2 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i0 = specialinvoke this.<org.apache.fop.fonts.FontReader: int getInt(java.lang.String)>(content);
+        virtualinvoke $r2.<org.apache.fop.fonts.CustomFont: void setLastChar(int)>($i0);
+        goto label24;
+
+     label14:
+        $r1 = "flags";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label15;
+
+        $r2 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i0 = specialinvoke this.<org.apache.fop.fonts.FontReader: int getInt(java.lang.String)>(content);
+        virtualinvoke $r2.<org.apache.fop.fonts.CustomFont: void setFlags(int)>($i0);
+        goto label24;
+
+     label15:
+        $r1 = "stemv";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label16;
+
+        $r2 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i0 = specialinvoke this.<org.apache.fop.fonts.FontReader: int getInt(java.lang.String)>(content);
+        virtualinvoke $r2.<org.apache.fop.fonts.CustomFont: void setStemV(int)>($i0);
+        goto label24;
+
+     label16:
+        $r1 = "italic-angle";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label17;
+
+        $r2 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i0 = specialinvoke this.<org.apache.fop.fonts.FontReader: int getInt(java.lang.String)>(content);
+        virtualinvoke $r2.<org.apache.fop.fonts.CustomFont: void setItalicAngle(int)>($i0);
+        goto label24;
+
+     label17:
+        $r1 = "missing-width";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label18;
+
+        $r2 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i0 = specialinvoke this.<org.apache.fop.fonts.FontReader: int getInt(java.lang.String)>(content);
+        virtualinvoke $r2.<org.apache.fop.fonts.CustomFont: void setMissingWidth(int)>($i0);
+        goto label24;
+
+     label18:
+        $r1 = "cid-type";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label19;
+
+        $r4 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.MultiByteFont multiFont>;
+        $r8 = staticinvoke <org.apache.fop.fonts.CIDFontType: org.apache.fop.fonts.CIDFontType byName(java.lang.String)>(content);
+        virtualinvoke $r4.<org.apache.fop.fonts.MultiByteFont: void setCIDType(org.apache.fop.fonts.CIDFontType)>($r8);
+        goto label24;
+
+     label19:
+        $r1 = "default-width";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label20;
+
+        $r4 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.MultiByteFont multiFont>;
+        $i0 = specialinvoke this.<org.apache.fop.fonts.FontReader: int getInt(java.lang.String)>(content);
+        virtualinvoke $r4.<org.apache.fop.fonts.MultiByteFont: void setDefaultWidth(int)>($i0);
+        goto label24;
+
+     label20:
+        $r1 = "cid-widths";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label23;
+
+        $r9 = this.<org.apache.fop.fonts.FontReader: java.util.List cidWidths>;
+        $i2 = interfaceinvoke $r9.<java.util.List: int size()>();
+        wds = newarray (int)[$i2];
+        j = 0;
+        count = 0;
+
+     label21:
+        $r10 = this.<org.apache.fop.fonts.FontReader: java.util.List cidWidths>;
+        $i0 = interfaceinvoke $r10.<java.util.List: int size()>();
+        if count >= $i0 goto label22;
+
+        $r9 = this.<org.apache.fop.fonts.FontReader: java.util.List cidWidths>;
+        $r11 = interfaceinvoke $r9.<java.util.List: java.lang.Object get(int)>(count);
+        i = (java.lang.Integer) $r11;
+        $i0 = j;
+        j = j + 1;
+        $i1 = virtualinvoke i.<java.lang.Integer: int intValue()>();
+        wds[$i0] = $i1;
+        count = count + 1;
+        goto label21;
+
+     label22:
+        $r4 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.MultiByteFont multiFont>;
+        virtualinvoke $r4.<org.apache.fop.fonts.MultiByteFont: void setWidthArray(int[])>(wds);
+        goto label24;
+
+     label23:
+        $r1 = "bfranges";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label24;
+
+        $r4 = this.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.MultiByteFont multiFont>;
+        $r10 = this.<org.apache.fop.fonts.FontReader: java.util.List bfranges>;
+        $r12 = newarray (org.apache.fop.fonts.BFEntry)[0];
+        $r13 = interfaceinvoke $r10.<java.util.List: java.lang.Object[] toArray(java.lang.Object[])>($r12);
+        $r14 = (org.apache.fop.fonts.BFEntry[]) $r13;
+        $r14 = (org.apache.fop.fonts.BFEntry[]) $r14;
+        virtualinvoke $r4.<org.apache.fop.fonts.MultiByteFont: void setBFEntries(org.apache.fop.fonts.BFEntry[])>($r14);
+
+     label24:
+        $r0 = this.<org.apache.fop.fonts.FontReader: java.lang.StringBuffer text>;
+        virtualinvoke $r0.<java.lang.StringBuffer: void setLength(int)>(0);
+        return;
+    }
+
+    public void characters(char[], int, int)
+    {
+        org.apache.fop.fonts.FontReader this;
+        char[] ch;
+        int start, length;
+        java.lang.StringBuffer $r0;
+
+        this := @this: org.apache.fop.fonts.FontReader;
+        ch := @parameter0: char[];
+        start := @parameter1: int;
+        length := @parameter2: int;
+        $r0 = this.<org.apache.fop.fonts.FontReader: java.lang.StringBuffer text>;
+        virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(char[],int,int)>(ch, start, length);
+        return;
+    }
+}

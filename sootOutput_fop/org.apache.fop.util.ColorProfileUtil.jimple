@@ -1,0 +1,87 @@
+public class org.apache.fop.util.ColorProfileUtil extends java.lang.Object
+{
+
+    public void <init>()
+    {
+        org.apache.fop.util.ColorProfileUtil this;
+
+        this := @this: org.apache.fop.util.ColorProfileUtil;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public static java.lang.String getICCProfileDescription(java.awt.color.ICC_Profile)
+    {
+        java.awt.color.ICC_Profile profile;
+        byte[] data;
+        int length, $i1, $i3;
+        java.io.UnsupportedEncodingException e, $r1;
+        byte $b0, $b2;
+        java.lang.String $r0;
+        java.lang.UnsupportedOperationException $r2;
+
+        profile := @parameter0: java.awt.color.ICC_Profile;
+        data = virtualinvoke profile.<java.awt.color.ICC_Profile: byte[] getData(int)>(1684370275);
+        if data != null goto label0;
+
+        return null;
+
+     label0:
+        $b0 = data[8];
+        $i1 = $b0 << 24;
+        $b2 = data[9];
+        $i3 = $b2 << 16;
+        $i1 = $i1 | $i3;
+        $b2 = data[10];
+        $i3 = $b2 << 8;
+        $i1 = $i1 | $i3;
+        $b2 = data[11];
+        length = $i1 | $b2;
+        length = length + -1;
+
+     label1:
+        $r0 = new java.lang.String;
+        specialinvoke $r0.<java.lang.String: void <init>(byte[],int,int,java.lang.String)>(data, 12, length, "US-ASCII");
+
+     label2:
+        return $r0;
+
+     label3:
+        $r1 := @caughtexception;
+        e = $r1;
+        $r2 = new java.lang.UnsupportedOperationException;
+        specialinvoke $r2.<java.lang.UnsupportedOperationException: void <init>(java.lang.String)>("Incompatible VM");
+        throw $r2;
+
+        catch java.io.UnsupportedEncodingException from label1 to label2 with label3;
+    }
+
+    public static boolean isDefaultsRGB(java.awt.color.ICC_Profile)
+    {
+        java.awt.color.ICC_Profile profile, sRGBProfile;
+        java.awt.color.ColorSpace sRGB;
+        boolean $z0;
+        java.awt.color.ICC_ColorSpace $r0;
+
+        profile := @parameter0: java.awt.color.ICC_Profile;
+        sRGB = staticinvoke <java.awt.color.ColorSpace: java.awt.color.ColorSpace getInstance(int)>(1000);
+        sRGBProfile = null;
+        $z0 = sRGB instanceof java.awt.color.ICC_ColorSpace;
+        if $z0 == 0 goto label0;
+
+        $r0 = (java.awt.color.ICC_ColorSpace) sRGB;
+        sRGBProfile = virtualinvoke $r0.<java.awt.color.ICC_ColorSpace: java.awt.color.ICC_Profile getProfile()>();
+
+     label0:
+        if profile != sRGBProfile goto label1;
+
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+}

@@ -1,0 +1,622 @@
+public class org.apache.fop.render.afp.modca.PresentationTextData extends org.apache.fop.render.afp.modca.AbstractAFPObject
+{
+    private static final int MAX_SIZE;
+    private java.io.ByteArrayOutputStream _baos;
+    private int _currentXCoordinate;
+    private int _currentYCoordinate;
+    private java.lang.String _currentFont;
+    private int _currentOrientation;
+    private java.awt.Color _currentColor;
+    private int _currentVariableSpaceCharacterIncrement;
+    private int _currentInterCharacterAdjustment;
+
+    public void <init>()
+    {
+        org.apache.fop.render.afp.modca.PresentationTextData this;
+
+        this := @this: org.apache.fop.render.afp.modca.PresentationTextData;
+        specialinvoke this.<org.apache.fop.render.afp.modca.PresentationTextData: void <init>(boolean)>(0);
+        return;
+    }
+
+    public void <init>(boolean)
+    {
+        org.apache.fop.render.afp.modca.PresentationTextData this;
+        boolean controlInd;
+        java.io.ByteArrayOutputStream $r0, $r2;
+        java.awt.Color $r1;
+        byte[] $r3;
+
+        this := @this: org.apache.fop.render.afp.modca.PresentationTextData;
+        controlInd := @parameter0: boolean;
+        specialinvoke this.<org.apache.fop.render.afp.modca.AbstractAFPObject: void <init>()>();
+        $r0 = new java.io.ByteArrayOutputStream;
+        specialinvoke $r0.<java.io.ByteArrayOutputStream: void <init>(int)>(1024);
+        this.<org.apache.fop.render.afp.modca.PresentationTextData: java.io.ByteArrayOutputStream _baos> = $r0;
+        this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentXCoordinate> = -1;
+        this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentYCoordinate> = -1;
+        this.<org.apache.fop.render.afp.modca.PresentationTextData: java.lang.String _currentFont> = "";
+        this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentOrientation> = 0;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(0, 0, 0);
+        this.<org.apache.fop.render.afp.modca.PresentationTextData: java.awt.Color _currentColor> = $r1;
+        this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentVariableSpaceCharacterIncrement> = 0;
+        this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentInterCharacterAdjustment> = 0;
+        $r2 = this.<org.apache.fop.render.afp.modca.PresentationTextData: java.io.ByteArrayOutputStream _baos>;
+        $r3 = newarray (byte)[9];
+        $r3[0] = 90;
+        $r3[1] = 0;
+        $r3[2] = 0;
+        $r3[3] = -45;
+        $r3[4] = -18;
+        $r3[5] = -101;
+        $r3[6] = 0;
+        $r3[7] = 0;
+        $r3[8] = 0;
+        virtualinvoke $r2.<java.io.ByteArrayOutputStream: void write(byte[],int,int)>($r3, 0, 9);
+        if controlInd == 0 goto label0;
+
+        $r2 = this.<org.apache.fop.render.afp.modca.PresentationTextData: java.io.ByteArrayOutputStream _baos>;
+        $r3 = newarray (byte)[2];
+        $r3[0] = 43;
+        $r3[1] = -45;
+        virtualinvoke $r2.<java.io.ByteArrayOutputStream: void write(byte[],int,int)>($r3, 0, 2);
+
+     label0:
+        return;
+    }
+
+    private void setCodedFont(byte, java.io.ByteArrayOutputStream)
+    {
+        org.apache.fop.render.afp.modca.PresentationTextData this;
+        byte font;
+        java.io.ByteArrayOutputStream afpdata;
+        java.lang.String $r0, $r1;
+        boolean $z0;
+        byte[] $r2;
+
+        this := @this: org.apache.fop.render.afp.modca.PresentationTextData;
+        font := @parameter0: byte;
+        afpdata := @parameter1: java.io.ByteArrayOutputStream;
+        $r0 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>(font);
+        $r1 = this.<org.apache.fop.render.afp.modca.PresentationTextData: java.lang.String _currentFont>;
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>($r1);
+        if $z0 == 0 goto label0;
+
+        return;
+
+     label0:
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>(font);
+        this.<org.apache.fop.render.afp.modca.PresentationTextData: java.lang.String _currentFont> = $r1;
+        $r2 = newarray (byte)[3];
+        $r2[0] = 3;
+        $r2[1] = -15;
+        $r2[2] = font;
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(byte[],int,int)>($r2, 0, 3);
+        return;
+    }
+
+    private void absoluteMoveInline(int, java.io.ByteArrayOutputStream)
+    {
+        org.apache.fop.render.afp.modca.PresentationTextData this;
+        int coordinate;
+        java.io.ByteArrayOutputStream afpdata;
+        byte[] b, $r0;
+        byte $b0;
+
+        this := @this: org.apache.fop.render.afp.modca.PresentationTextData;
+        coordinate := @parameter0: int;
+        afpdata := @parameter1: java.io.ByteArrayOutputStream;
+        b = staticinvoke <org.apache.fop.render.afp.tools.BinaryUtils: byte[] convert(int,int)>(coordinate, 2);
+        $r0 = newarray (byte)[4];
+        $r0[0] = 4;
+        $r0[1] = -57;
+        $b0 = b[0];
+        $r0[2] = $b0;
+        $b0 = b[1];
+        $r0[3] = $b0;
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(byte[],int,int)>($r0, 0, 4);
+        this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentXCoordinate> = coordinate;
+        return;
+    }
+
+    private void absoluteMoveBaseline(int, java.io.ByteArrayOutputStream)
+    {
+        org.apache.fop.render.afp.modca.PresentationTextData this;
+        int coordinate;
+        java.io.ByteArrayOutputStream afpdata;
+        byte[] b, $r0;
+        byte $b0;
+
+        this := @this: org.apache.fop.render.afp.modca.PresentationTextData;
+        coordinate := @parameter0: int;
+        afpdata := @parameter1: java.io.ByteArrayOutputStream;
+        b = staticinvoke <org.apache.fop.render.afp.tools.BinaryUtils: byte[] convert(int,int)>(coordinate, 2);
+        $r0 = newarray (byte)[4];
+        $r0[0] = 4;
+        $r0[1] = -45;
+        $b0 = b[0];
+        $r0[2] = $b0;
+        $b0 = b[1];
+        $r0[3] = $b0;
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(byte[],int,int)>($r0, 0, 4);
+        this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentYCoordinate> = coordinate;
+        return;
+    }
+
+    private void addTransparentData(byte[], java.io.ByteArrayOutputStream)
+    {
+        org.apache.fop.render.afp.modca.PresentationTextData this;
+        byte[] data, $r3, $r4;
+        java.io.ByteArrayOutputStream afpdata;
+        int l, $i0, $i2;
+        java.lang.StringBuffer $r0;
+        java.lang.IllegalArgumentException $r1;
+        java.lang.String $r2;
+        byte $b1;
+
+        this := @this: org.apache.fop.render.afp.modca.PresentationTextData;
+        data := @parameter0: byte[];
+        afpdata := @parameter1: java.io.ByteArrayOutputStream;
+        $i0 = lengthof data;
+        l = $i0 + 2;
+        if l <= 255 goto label0;
+
+        $r1 = new java.lang.IllegalArgumentException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Transparent data is longer than 253 bytes: ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(data);
+        $r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r1.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r2);
+        throw $r1;
+
+     label0:
+        $r3 = newarray (byte)[2];
+        $r4 = staticinvoke <org.apache.fop.render.afp.tools.BinaryUtils: byte[] convert(int)>(l);
+        $b1 = $r4[0];
+        $r3[0] = $b1;
+        $r3[1] = -37;
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(byte[],int,int)>($r3, 0, 2);
+        $i2 = lengthof data;
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(byte[],int,int)>(data, 0, $i2);
+        return;
+    }
+
+    private void drawBaxisRule(int, int, java.io.ByteArrayOutputStream)
+    {
+        org.apache.fop.render.afp.modca.PresentationTextData this;
+        int length, width, $i1;
+        java.io.ByteArrayOutputStream afpdata;
+        byte[] data1, data2, $r0;
+        short $s0;
+
+        this := @this: org.apache.fop.render.afp.modca.PresentationTextData;
+        length := @parameter0: int;
+        width := @parameter1: int;
+        afpdata := @parameter2: java.io.ByteArrayOutputStream;
+        $r0 = newarray (byte)[2];
+        $r0[0] = 7;
+        $r0[1] = -25;
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(byte[],int,int)>($r0, 0, 2);
+        $s0 = (short) length;
+        data1 = staticinvoke <org.apache.fop.render.afp.tools.BinaryUtils: byte[] shortToByteArray(short)>($s0);
+        $i1 = lengthof data1;
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(byte[],int,int)>(data1, 0, $i1);
+        $s0 = (short) width;
+        data2 = staticinvoke <org.apache.fop.render.afp.tools.BinaryUtils: byte[] shortToByteArray(short)>($s0);
+        $i1 = lengthof data2;
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(byte[],int,int)>(data2, 0, $i1);
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(int)>(0);
+        return;
+    }
+
+    private void drawIaxisRule(int, int, java.io.ByteArrayOutputStream)
+    {
+        org.apache.fop.render.afp.modca.PresentationTextData this;
+        int length, width, $i1;
+        java.io.ByteArrayOutputStream afpdata;
+        byte[] data1, data2, $r0;
+        short $s0;
+
+        this := @this: org.apache.fop.render.afp.modca.PresentationTextData;
+        length := @parameter0: int;
+        width := @parameter1: int;
+        afpdata := @parameter2: java.io.ByteArrayOutputStream;
+        $r0 = newarray (byte)[2];
+        $r0[0] = 7;
+        $r0[1] = -27;
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(byte[],int,int)>($r0, 0, 2);
+        $s0 = (short) length;
+        data1 = staticinvoke <org.apache.fop.render.afp.tools.BinaryUtils: byte[] shortToByteArray(short)>($s0);
+        $i1 = lengthof data1;
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(byte[],int,int)>(data1, 0, $i1);
+        $s0 = (short) width;
+        data2 = staticinvoke <org.apache.fop.render.afp.tools.BinaryUtils: byte[] shortToByteArray(short)>($s0);
+        $i1 = lengthof data2;
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(byte[],int,int)>(data2, 0, $i1);
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(int)>(0);
+        return;
+    }
+
+    public void createTextData(int, int, int, int, java.awt.Color, int, int, byte[]) throws org.apache.fop.render.afp.modca.MaximumSizeExceededException
+    {
+        org.apache.fop.render.afp.modca.PresentationTextData this;
+        int fontNumber, x, y, orientation, vsci, ica, s, $i0, $i1, $i3;
+        java.awt.Color col, $r1;
+        byte[] data, outputdata, $r2;
+        java.io.ByteArrayOutputStream $r0, afpdata;
+        boolean $z0;
+        byte $b2;
+        org.apache.fop.render.afp.modca.MaximumSizeExceededException $r3;
+
+        this := @this: org.apache.fop.render.afp.modca.PresentationTextData;
+        fontNumber := @parameter0: int;
+        x := @parameter1: int;
+        y := @parameter2: int;
+        orientation := @parameter3: int;
+        col := @parameter4: java.awt.Color;
+        vsci := @parameter5: int;
+        ica := @parameter6: int;
+        data := @parameter7: byte[];
+        $r0 = new java.io.ByteArrayOutputStream;
+        specialinvoke $r0.<java.io.ByteArrayOutputStream: void <init>()>();
+        afpdata = $r0;
+        $i0 = this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentOrientation>;
+        if $i0 == orientation goto label0;
+
+        specialinvoke this.<org.apache.fop.render.afp.modca.PresentationTextData: void setTextOrientation(int,java.io.ByteArrayOutputStream)>(orientation, afpdata);
+        this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentOrientation> = orientation;
+        this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentXCoordinate> = -1;
+        this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentYCoordinate> = -1;
+
+     label0:
+        $i1 = this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentYCoordinate>;
+        if y == $i1 goto label1;
+
+        specialinvoke this.<org.apache.fop.render.afp.modca.PresentationTextData: void absoluteMoveBaseline(int,java.io.ByteArrayOutputStream)>(y, afpdata);
+        this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentXCoordinate> = -1;
+
+     label1:
+        $i1 = this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentXCoordinate>;
+        if x == $i1 goto label2;
+
+        specialinvoke this.<org.apache.fop.render.afp.modca.PresentationTextData: void absoluteMoveInline(int,java.io.ByteArrayOutputStream)>(x, afpdata);
+
+     label2:
+        $i1 = this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentVariableSpaceCharacterIncrement>;
+        if vsci == $i1 goto label3;
+
+        specialinvoke this.<org.apache.fop.render.afp.modca.PresentationTextData: void setVariableSpaceCharacterIncrement(int,java.io.ByteArrayOutputStream)>(vsci, afpdata);
+        this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentVariableSpaceCharacterIncrement> = vsci;
+
+     label3:
+        $i1 = this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentInterCharacterAdjustment>;
+        if ica == $i1 goto label4;
+
+        specialinvoke this.<org.apache.fop.render.afp.modca.PresentationTextData: void setInterCharacterAdjustment(int,java.io.ByteArrayOutputStream)>(ica, afpdata);
+        this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentInterCharacterAdjustment> = ica;
+
+     label4:
+        $r1 = this.<org.apache.fop.render.afp.modca.PresentationTextData: java.awt.Color _currentColor>;
+        $z0 = virtualinvoke col.<java.awt.Color: boolean equals(java.lang.Object)>($r1);
+        if $z0 != 0 goto label5;
+
+        specialinvoke this.<org.apache.fop.render.afp.modca.PresentationTextData: void setExtendedTextColor(java.awt.Color,java.io.ByteArrayOutputStream)>(col, afpdata);
+        this.<org.apache.fop.render.afp.modca.PresentationTextData: java.awt.Color _currentColor> = col;
+
+     label5:
+        $r2 = staticinvoke <org.apache.fop.render.afp.tools.BinaryUtils: byte[] convert(int)>(fontNumber);
+        $b2 = $r2[0];
+        specialinvoke this.<org.apache.fop.render.afp.modca.PresentationTextData: void setCodedFont(byte,java.io.ByteArrayOutputStream)>($b2, afpdata);
+        specialinvoke this.<org.apache.fop.render.afp.modca.PresentationTextData: void addTransparentData(byte[],java.io.ByteArrayOutputStream)>(data, afpdata);
+        this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentXCoordinate> = -1;
+        s = virtualinvoke afpdata.<java.io.ByteArrayOutputStream: int size()>();
+        $r0 = this.<org.apache.fop.render.afp.modca.PresentationTextData: java.io.ByteArrayOutputStream _baos>;
+        $i0 = virtualinvoke $r0.<java.io.ByteArrayOutputStream: int size()>();
+        $i0 = $i0 + s;
+        if $i0 <= 8192 goto label6;
+
+        this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentXCoordinate> = -1;
+        this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentYCoordinate> = -1;
+        $r3 = new org.apache.fop.render.afp.modca.MaximumSizeExceededException;
+        specialinvoke $r3.<org.apache.fop.render.afp.modca.MaximumSizeExceededException: void <init>()>();
+        throw $r3;
+
+     label6:
+        outputdata = virtualinvoke afpdata.<java.io.ByteArrayOutputStream: byte[] toByteArray()>();
+        $r0 = this.<org.apache.fop.render.afp.modca.PresentationTextData: java.io.ByteArrayOutputStream _baos>;
+        $i3 = lengthof outputdata;
+        virtualinvoke $r0.<java.io.ByteArrayOutputStream: void write(byte[],int,int)>(outputdata, 0, $i3);
+        return;
+    }
+
+    public void createLineData(int, int, int, int, int, int, java.awt.Color) throws org.apache.fop.render.afp.modca.MaximumSizeExceededException
+    {
+        org.apache.fop.render.afp.modca.PresentationTextData this;
+        int x1, y1, x2, y2, thickness, orientation, s, $i0, $i1, $i2;
+        java.awt.Color col, $r1;
+        java.io.ByteArrayOutputStream $r0, afpdata;
+        byte[] outputdata;
+        boolean $z0;
+        org.apache.fop.render.afp.modca.MaximumSizeExceededException $r2;
+
+        this := @this: org.apache.fop.render.afp.modca.PresentationTextData;
+        x1 := @parameter0: int;
+        y1 := @parameter1: int;
+        x2 := @parameter2: int;
+        y2 := @parameter3: int;
+        thickness := @parameter4: int;
+        orientation := @parameter5: int;
+        col := @parameter6: java.awt.Color;
+        $r0 = new java.io.ByteArrayOutputStream;
+        specialinvoke $r0.<java.io.ByteArrayOutputStream: void <init>()>();
+        afpdata = $r0;
+        $i0 = this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentOrientation>;
+        if $i0 == orientation goto label0;
+
+        specialinvoke this.<org.apache.fop.render.afp.modca.PresentationTextData: void setTextOrientation(int,java.io.ByteArrayOutputStream)>(orientation, afpdata);
+        this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentOrientation> = orientation;
+
+     label0:
+        $i1 = this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentYCoordinate>;
+        if y1 == $i1 goto label1;
+
+        specialinvoke this.<org.apache.fop.render.afp.modca.PresentationTextData: void absoluteMoveBaseline(int,java.io.ByteArrayOutputStream)>(y1, afpdata);
+
+     label1:
+        $i1 = this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentXCoordinate>;
+        if x1 == $i1 goto label2;
+
+        specialinvoke this.<org.apache.fop.render.afp.modca.PresentationTextData: void absoluteMoveInline(int,java.io.ByteArrayOutputStream)>(x1, afpdata);
+
+     label2:
+        $r1 = this.<org.apache.fop.render.afp.modca.PresentationTextData: java.awt.Color _currentColor>;
+        $z0 = virtualinvoke col.<java.awt.Color: boolean equals(java.lang.Object)>($r1);
+        if $z0 != 0 goto label3;
+
+        specialinvoke this.<org.apache.fop.render.afp.modca.PresentationTextData: void setExtendedTextColor(java.awt.Color,java.io.ByteArrayOutputStream)>(col, afpdata);
+        this.<org.apache.fop.render.afp.modca.PresentationTextData: java.awt.Color _currentColor> = col;
+
+     label3:
+        if y1 != y2 goto label4;
+
+        $i1 = x2 - x1;
+        specialinvoke this.<org.apache.fop.render.afp.modca.PresentationTextData: void drawIaxisRule(int,int,java.io.ByteArrayOutputStream)>($i1, thickness, afpdata);
+        goto label6;
+
+     label4:
+        if x1 != x2 goto label5;
+
+        $i1 = y2 - y1;
+        specialinvoke this.<org.apache.fop.render.afp.modca.PresentationTextData: void drawBaxisRule(int,int,java.io.ByteArrayOutputStream)>($i1, thickness, afpdata);
+        goto label6;
+
+     label5:
+        return;
+
+     label6:
+        s = virtualinvoke afpdata.<java.io.ByteArrayOutputStream: int size()>();
+        $r0 = this.<org.apache.fop.render.afp.modca.PresentationTextData: java.io.ByteArrayOutputStream _baos>;
+        $i0 = virtualinvoke $r0.<java.io.ByteArrayOutputStream: int size()>();
+        $i0 = $i0 + s;
+        if $i0 <= 8192 goto label7;
+
+        this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentXCoordinate> = -1;
+        this.<org.apache.fop.render.afp.modca.PresentationTextData: int _currentYCoordinate> = -1;
+        $r2 = new org.apache.fop.render.afp.modca.MaximumSizeExceededException;
+        specialinvoke $r2.<org.apache.fop.render.afp.modca.MaximumSizeExceededException: void <init>()>();
+        throw $r2;
+
+     label7:
+        outputdata = virtualinvoke afpdata.<java.io.ByteArrayOutputStream: byte[] toByteArray()>();
+        $r0 = this.<org.apache.fop.render.afp.modca.PresentationTextData: java.io.ByteArrayOutputStream _baos>;
+        $i2 = lengthof outputdata;
+        virtualinvoke $r0.<java.io.ByteArrayOutputStream: void write(byte[],int,int)>(outputdata, 0, $i2);
+        return;
+    }
+
+    private void setTextOrientation(int, java.io.ByteArrayOutputStream)
+    {
+        org.apache.fop.render.afp.modca.PresentationTextData this;
+        int orientation;
+        java.io.ByteArrayOutputStream afpdata;
+        byte[] $r0;
+
+        this := @this: org.apache.fop.render.afp.modca.PresentationTextData;
+        orientation := @parameter0: int;
+        afpdata := @parameter1: java.io.ByteArrayOutputStream;
+        $r0 = newarray (byte)[2];
+        $r0[0] = 6;
+        $r0[1] = -9;
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(byte[],int,int)>($r0, 0, 2);
+        lookupswitch(orientation)
+        {
+            case 90: goto label0;
+            case 180: goto label1;
+            case 270: goto label2;
+            default: goto label3;
+        };
+
+     label0:
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(int)>(45);
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(int)>(0);
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(int)>(90);
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(int)>(0);
+        goto label4;
+
+     label1:
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(int)>(90);
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(int)>(0);
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(int)>(135);
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(int)>(0);
+        goto label4;
+
+     label2:
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(int)>(135);
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(int)>(0);
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(int)>(0);
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(int)>(0);
+        goto label4;
+
+     label3:
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(int)>(0);
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(int)>(0);
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(int)>(45);
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(int)>(0);
+
+     label4:
+        return;
+    }
+
+    private void setExtendedTextColor(java.awt.Color, java.io.ByteArrayOutputStream)
+    {
+        org.apache.fop.render.afp.modca.PresentationTextData this;
+        java.awt.Color col;
+        java.io.ByteArrayOutputStream afpdata;
+        byte[] $r0;
+        int $i0;
+        byte $b1;
+
+        this := @this: org.apache.fop.render.afp.modca.PresentationTextData;
+        col := @parameter0: java.awt.Color;
+        afpdata := @parameter1: java.io.ByteArrayOutputStream;
+        $r0 = newarray (byte)[15];
+        $r0[0] = 15;
+        $r0[1] = -127;
+        $r0[2] = 0;
+        $r0[3] = 1;
+        $r0[4] = 0;
+        $r0[5] = 0;
+        $r0[6] = 0;
+        $r0[7] = 0;
+        $r0[8] = 8;
+        $r0[9] = 8;
+        $r0[10] = 8;
+        $r0[11] = 0;
+        $i0 = virtualinvoke col.<java.awt.Color: int getRed()>();
+        $b1 = (byte) $i0;
+        $r0[12] = $b1;
+        $i0 = virtualinvoke col.<java.awt.Color: int getGreen()>();
+        $b1 = (byte) $i0;
+        $r0[13] = $b1;
+        $i0 = virtualinvoke col.<java.awt.Color: int getBlue()>();
+        $b1 = (byte) $i0;
+        $r0[14] = $b1;
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(byte[],int,int)>($r0, 0, 15);
+        return;
+    }
+
+    private void setVariableSpaceCharacterIncrement(int, java.io.ByteArrayOutputStream)
+    {
+        org.apache.fop.render.afp.modca.PresentationTextData this;
+        int incr;
+        java.io.ByteArrayOutputStream afpdata;
+        byte[] b, $r0;
+        byte $b0;
+
+        this := @this: org.apache.fop.render.afp.modca.PresentationTextData;
+        incr := @parameter0: int;
+        afpdata := @parameter1: java.io.ByteArrayOutputStream;
+        b = staticinvoke <org.apache.fop.render.afp.tools.BinaryUtils: byte[] convert(int,int)>(incr, 2);
+        $r0 = newarray (byte)[4];
+        $r0[0] = 4;
+        $r0[1] = -59;
+        $b0 = b[0];
+        $r0[2] = $b0;
+        $b0 = b[1];
+        $r0[3] = $b0;
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(byte[],int,int)>($r0, 0, 4);
+        return;
+    }
+
+    private void setInterCharacterAdjustment(int, java.io.ByteArrayOutputStream)
+    {
+        org.apache.fop.render.afp.modca.PresentationTextData this;
+        int incr, $i0;
+        java.io.ByteArrayOutputStream afpdata;
+        byte[] b, $r1;
+        byte $b1, $b2;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.afp.modca.PresentationTextData;
+        incr := @parameter0: int;
+        afpdata := @parameter1: java.io.ByteArrayOutputStream;
+        $i0 = staticinvoke <java.lang.Math: int abs(int)>(incr);
+        b = staticinvoke <org.apache.fop.render.afp.tools.BinaryUtils: byte[] convert(int,int)>($i0, 2);
+        $r1 = newarray (byte)[5];
+        $r1[0] = 5;
+        $r1[1] = -61;
+        $b1 = b[0];
+        $r1[2] = $b1;
+        $b1 = b[1];
+        $r1[3] = $b1;
+        $b2 = 4;
+        if incr < 0 goto label0;
+
+        $z0 = 0;
+        goto label1;
+
+     label0:
+        $z0 = 1;
+
+     label1:
+        $b1 = (byte) $z0;
+        $r1[$b2] = $b1;
+        virtualinvoke afpdata.<java.io.ByteArrayOutputStream: void write(byte[],int,int)>($r1, 0, 5);
+        return;
+    }
+
+    public void writeDataStream(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.render.afp.modca.PresentationTextData this;
+        java.io.OutputStream os;
+        byte[] data, size;
+        java.io.ByteArrayOutputStream $r0;
+        int $i0;
+        byte $b1;
+
+        this := @this: org.apache.fop.render.afp.modca.PresentationTextData;
+        os := @parameter0: java.io.OutputStream;
+        $r0 = this.<org.apache.fop.render.afp.modca.PresentationTextData: java.io.ByteArrayOutputStream _baos>;
+        data = virtualinvoke $r0.<java.io.ByteArrayOutputStream: byte[] toByteArray()>();
+        $i0 = lengthof data;
+        $i0 = $i0 - 1;
+        size = staticinvoke <org.apache.fop.render.afp.tools.BinaryUtils: byte[] convert(int,int)>($i0, 2);
+        $b1 = size[0];
+        data[1] = $b1;
+        $b1 = size[1];
+        data[2] = $b1;
+        virtualinvoke os.<java.io.OutputStream: void write(byte[])>(data);
+        return;
+    }
+
+    public void endControlSequence() throws org.apache.fop.render.afp.modca.MaximumSizeExceededException
+    {
+        org.apache.fop.render.afp.modca.PresentationTextData this;
+        byte[] data;
+        int $i0, $i1, $i2;
+        java.io.ByteArrayOutputStream $r0, $r2;
+        org.apache.fop.render.afp.modca.MaximumSizeExceededException $r1;
+
+        this := @this: org.apache.fop.render.afp.modca.PresentationTextData;
+        data = newarray (byte)[2];
+        data[0] = 2;
+        data[1] = -8;
+        $i0 = lengthof data;
+        $r0 = this.<org.apache.fop.render.afp.modca.PresentationTextData: java.io.ByteArrayOutputStream _baos>;
+        $i1 = virtualinvoke $r0.<java.io.ByteArrayOutputStream: int size()>();
+        $i0 = $i0 + $i1;
+        if $i0 <= 8192 goto label0;
+
+        $r1 = new org.apache.fop.render.afp.modca.MaximumSizeExceededException;
+        specialinvoke $r1.<org.apache.fop.render.afp.modca.MaximumSizeExceededException: void <init>()>();
+        throw $r1;
+
+     label0:
+        $r2 = this.<org.apache.fop.render.afp.modca.PresentationTextData: java.io.ByteArrayOutputStream _baos>;
+        $i2 = lengthof data;
+        virtualinvoke $r2.<java.io.ByteArrayOutputStream: void write(byte[],int,int)>(data, 0, $i2);
+        return;
+    }
+}

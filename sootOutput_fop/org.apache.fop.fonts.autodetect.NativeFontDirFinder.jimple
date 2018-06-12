@@ -1,0 +1,57 @@
+public abstract class org.apache.fop.fonts.autodetect.NativeFontDirFinder extends java.lang.Object implements org.apache.fop.fonts.autodetect.FontFinder
+{
+
+    public void <init>()
+    {
+        org.apache.fop.fonts.autodetect.NativeFontDirFinder this;
+
+        this := @this: org.apache.fop.fonts.autodetect.NativeFontDirFinder;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public java.util.List find()
+    {
+        org.apache.fop.fonts.autodetect.NativeFontDirFinder this;
+        java.util.ArrayList $r0, fontDirList;
+        java.lang.String[] searchableDirectories;
+        int i, $i0;
+        java.io.File fontDir, $r1;
+        java.lang.String $r2;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.autodetect.NativeFontDirFinder;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        fontDirList = $r0;
+        searchableDirectories = virtualinvoke this.<org.apache.fop.fonts.autodetect.NativeFontDirFinder: java.lang.String[] getSearchableDirectories()>();
+        if searchableDirectories == null goto label2;
+
+        i = 0;
+
+     label0:
+        $i0 = lengthof searchableDirectories;
+        if i >= $i0 goto label2;
+
+        $r1 = new java.io.File;
+        $r2 = searchableDirectories[i];
+        specialinvoke $r1.<java.io.File: void <init>(java.lang.String)>($r2);
+        fontDir = $r1;
+        $z0 = virtualinvoke fontDir.<java.io.File: boolean exists()>();
+        if $z0 == 0 goto label1;
+
+        $z0 = virtualinvoke fontDir.<java.io.File: boolean canRead()>();
+        if $z0 == 0 goto label1;
+
+        interfaceinvoke fontDirList.<java.util.List: boolean add(java.lang.Object)>(fontDir);
+
+     label1:
+        i = i + 1;
+        goto label0;
+
+     label2:
+        return fontDirList;
+    }
+
+    protected abstract java.lang.String[] getSearchableDirectories();
+}

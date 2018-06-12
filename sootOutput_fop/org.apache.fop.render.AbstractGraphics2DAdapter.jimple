@@ -1,0 +1,202 @@
+public abstract class org.apache.fop.render.AbstractGraphics2DAdapter extends java.lang.Object implements org.apache.fop.render.Graphics2DAdapter
+{
+
+    public void <init>()
+    {
+        org.apache.fop.render.AbstractGraphics2DAdapter this;
+
+        this := @this: org.apache.fop.render.AbstractGraphics2DAdapter;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    protected java.awt.image.BufferedImage paintToBufferedImage(org.apache.xmlgraphics.java2d.Graphics2DImagePainter, org.apache.fop.render.RendererContext$RendererContextWrapper, int, boolean, boolean)
+    {
+        org.apache.fop.render.AbstractGraphics2DAdapter this;
+        org.apache.xmlgraphics.java2d.Graphics2DImagePainter painter;
+        org.apache.fop.render.RendererContext$RendererContextWrapper context;
+        int resolution, bmw, bmh, $i0, $i1, $i2, $i3;
+        boolean gray, withAlpha;
+        java.awt.image.BufferedImage bi, $r0;
+        java.awt.Graphics2D g2d;
+        double sx, sy, $d0, $d1, $d2, $d3;
+        java.awt.geom.Rectangle2D$Double area, $r4;
+        java.lang.Throwable l15, $r5;
+        java.awt.RenderingHints$Key $r1;
+        java.lang.Object $r2;
+        java.awt.Color $r3;
+
+        this := @this: org.apache.fop.render.AbstractGraphics2DAdapter;
+        painter := @parameter0: org.apache.xmlgraphics.java2d.Graphics2DImagePainter;
+        context := @parameter1: org.apache.fop.render.RendererContext$RendererContextWrapper;
+        resolution := @parameter2: int;
+        gray := @parameter3: boolean;
+        withAlpha := @parameter4: boolean;
+        $i0 = virtualinvoke context.<org.apache.fop.render.RendererContext$RendererContextWrapper: int getWidth()>();
+        $d0 = (double) $i0;
+        $d0 = staticinvoke <org.apache.fop.util.UnitConv: double mpt2px(double,int)>($d0, resolution);
+        $d0 = staticinvoke <java.lang.Math: double ceil(double)>($d0);
+        bmw = (int) $d0;
+        $i0 = virtualinvoke context.<org.apache.fop.render.RendererContext$RendererContextWrapper: int getHeight()>();
+        $d0 = (double) $i0;
+        $d0 = staticinvoke <org.apache.fop.util.UnitConv: double mpt2px(double,int)>($d0, resolution);
+        $d0 = staticinvoke <java.lang.Math: double ceil(double)>($d0);
+        bmh = (int) $d0;
+        if gray == 0 goto label1;
+
+        if withAlpha == 0 goto label0;
+
+        bi = staticinvoke <org.apache.fop.render.AbstractGraphics2DAdapter: java.awt.image.BufferedImage createGrayBufferedImageWithAlpha(int,int)>(bmw, bmh);
+        goto label3;
+
+     label0:
+        $r0 = new java.awt.image.BufferedImage;
+        specialinvoke $r0.<java.awt.image.BufferedImage: void <init>(int,int,int)>(bmw, bmh, 10);
+        bi = $r0;
+        goto label3;
+
+     label1:
+        if withAlpha == 0 goto label2;
+
+        $r0 = new java.awt.image.BufferedImage;
+        specialinvoke $r0.<java.awt.image.BufferedImage: void <init>(int,int,int)>(bmw, bmh, 2);
+        bi = $r0;
+        goto label3;
+
+     label2:
+        $r0 = new java.awt.image.BufferedImage;
+        specialinvoke $r0.<java.awt.image.BufferedImage: void <init>(int,int,int)>(bmw, bmh, 1);
+        bi = $r0;
+
+     label3:
+        g2d = virtualinvoke bi.<java.awt.image.BufferedImage: java.awt.Graphics2D createGraphics()>();
+
+     label4:
+        $r1 = <java.awt.RenderingHints: java.awt.RenderingHints$Key KEY_FRACTIONALMETRICS>;
+        $r2 = <java.awt.RenderingHints: java.lang.Object VALUE_FRACTIONALMETRICS_ON>;
+        virtualinvoke g2d.<java.awt.Graphics2D: void setRenderingHint(java.awt.RenderingHints$Key,java.lang.Object)>($r1, $r2);
+        virtualinvoke this.<org.apache.fop.render.AbstractGraphics2DAdapter: void setRenderingHintsForBufferedImage(java.awt.Graphics2D)>(g2d);
+        $r3 = <java.awt.Color: java.awt.Color white>;
+        virtualinvoke g2d.<java.awt.Graphics2D: void setBackground(java.awt.Color)>($r3);
+        $r3 = <java.awt.Color: java.awt.Color black>;
+        virtualinvoke g2d.<java.awt.Graphics2D: void setColor(java.awt.Color)>($r3);
+        if withAlpha != 0 goto label5;
+
+        virtualinvoke g2d.<java.awt.Graphics2D: void clearRect(int,int,int,int)>(0, 0, bmw, bmh);
+
+     label5:
+        $d0 = (double) bmw;
+        $i1 = virtualinvoke context.<org.apache.fop.render.RendererContext$RendererContextWrapper: int getWidth()>();
+        $d1 = (double) $i1;
+        sx = $d0 / $d1;
+        $d0 = (double) bmh;
+        $i1 = virtualinvoke context.<org.apache.fop.render.RendererContext$RendererContextWrapper: int getHeight()>();
+        $d1 = (double) $i1;
+        sy = $d0 / $d1;
+        virtualinvoke g2d.<java.awt.Graphics2D: void scale(double,double)>(sx, sy);
+        $r4 = new java.awt.geom.Rectangle2D$Double;
+        $i2 = virtualinvoke context.<org.apache.fop.render.RendererContext$RendererContextWrapper: int getWidth()>();
+        $d2 = (double) $i2;
+        $i3 = virtualinvoke context.<org.apache.fop.render.RendererContext$RendererContextWrapper: int getHeight()>();
+        $d3 = (double) $i3;
+        specialinvoke $r4.<java.awt.geom.Rectangle2D$Double: void <init>(double,double,double,double)>(0.0, 0.0, $d2, $d3);
+        area = $r4;
+        interfaceinvoke painter.<org.apache.xmlgraphics.java2d.Graphics2DImagePainter: void paint(java.awt.Graphics2D,java.awt.geom.Rectangle2D)>(g2d, area);
+
+     label6:
+        virtualinvoke g2d.<java.awt.Graphics2D: void dispose()>();
+        goto label10;
+
+     label7:
+        $r5 := @caughtexception;
+
+     label8:
+        l15 = $r5;
+
+     label9:
+        virtualinvoke g2d.<java.awt.Graphics2D: void dispose()>();
+        throw l15;
+
+     label10:
+        return bi;
+
+        catch java.lang.Throwable from label4 to label6 with label7;
+        catch java.lang.Throwable from label8 to label9 with label7;
+    }
+
+    private static java.awt.image.BufferedImage createGrayBufferedImageWithAlpha(int, int)
+    {
+        int width, height, i;
+        boolean alphaPremultiplied;
+        byte bands;
+        int[] bits;
+        java.awt.image.ComponentColorModel cm, $r0;
+        java.awt.image.WritableRaster wr;
+        java.awt.image.BufferedImage bi, $r3;
+        java.awt.color.ColorSpace $r1;
+        java.awt.Point $r2;
+
+        width := @parameter0: int;
+        height := @parameter1: int;
+        alphaPremultiplied = 1;
+        bands = 2;
+        bits = newarray (int)[bands];
+        i = 0;
+
+     label0:
+        if i >= bands goto label1;
+
+        bits[i] = 8;
+        i = i + 1;
+        goto label0;
+
+     label1:
+        $r0 = new java.awt.image.ComponentColorModel;
+        $r1 = staticinvoke <java.awt.color.ColorSpace: java.awt.color.ColorSpace getInstance(int)>(1003);
+        specialinvoke $r0.<java.awt.image.ComponentColorModel: void <init>(java.awt.color.ColorSpace,int[],boolean,boolean,int,int)>($r1, bits, 1, alphaPremultiplied, 3, 0);
+        cm = $r0;
+        $r2 = new java.awt.Point;
+        specialinvoke $r2.<java.awt.Point: void <init>(int,int)>(0, 0);
+        wr = staticinvoke <java.awt.image.Raster: java.awt.image.WritableRaster createInterleavedRaster(int,int,int,int,java.awt.Point)>(0, width, height, bands, $r2);
+        $r3 = new java.awt.image.BufferedImage;
+        specialinvoke $r3.<java.awt.image.BufferedImage: void <init>(java.awt.image.ColorModel,java.awt.image.WritableRaster,boolean,java.util.Hashtable)>(cm, wr, alphaPremultiplied, null);
+        bi = $r3;
+        return bi;
+    }
+
+    protected void setRenderingHintsForBufferedImage(java.awt.Graphics2D)
+    {
+        org.apache.fop.render.AbstractGraphics2DAdapter this;
+        java.awt.Graphics2D g2d;
+        java.awt.RenderingHints$Key $r0;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.render.AbstractGraphics2DAdapter;
+        g2d := @parameter0: java.awt.Graphics2D;
+        $r0 = <java.awt.RenderingHints: java.awt.RenderingHints$Key KEY_ANTIALIASING>;
+        $r1 = <java.awt.RenderingHints: java.lang.Object VALUE_ANTIALIAS_OFF>;
+        virtualinvoke g2d.<java.awt.Graphics2D: void setRenderingHint(java.awt.RenderingHints$Key,java.lang.Object)>($r0, $r1);
+        $r0 = <java.awt.RenderingHints: java.awt.RenderingHints$Key KEY_TEXT_ANTIALIASING>;
+        $r1 = <java.awt.RenderingHints: java.lang.Object VALUE_TEXT_ANTIALIAS_OFF>;
+        virtualinvoke g2d.<java.awt.Graphics2D: void setRenderingHint(java.awt.RenderingHints$Key,java.lang.Object)>($r0, $r1);
+        return;
+    }
+
+    public void paintImage(org.apache.fop.render.Graphics2DImagePainter, org.apache.fop.render.RendererContext, int, int, int, int) throws java.io.IOException
+    {
+        org.apache.fop.render.AbstractGraphics2DAdapter this;
+        org.apache.fop.render.Graphics2DImagePainter painter;
+        org.apache.fop.render.RendererContext context;
+        int x, y, width, height;
+
+        this := @this: org.apache.fop.render.AbstractGraphics2DAdapter;
+        painter := @parameter0: org.apache.fop.render.Graphics2DImagePainter;
+        context := @parameter1: org.apache.fop.render.RendererContext;
+        x := @parameter2: int;
+        y := @parameter3: int;
+        width := @parameter4: int;
+        height := @parameter5: int;
+        virtualinvoke this.<org.apache.fop.render.AbstractGraphics2DAdapter: void paintImage(org.apache.xmlgraphics.java2d.Graphics2DImagePainter,org.apache.fop.render.RendererContext,int,int,int,int)>(painter, context, x, y, width, height);
+        return;
+    }
+}

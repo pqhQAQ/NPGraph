@@ -1,0 +1,119 @@
+class funcs.ScriptFunction$checkNewFile extends java.lang.Thread
+{
+    final funcs.ScriptFunction this$0;
+
+    void <init>(funcs.ScriptFunction)
+    {
+        funcs.ScriptFunction$checkNewFile this;
+        funcs.ScriptFunction l1;
+
+        this := @this: funcs.ScriptFunction$checkNewFile;
+        l1 := @parameter0: funcs.ScriptFunction;
+        this.<funcs.ScriptFunction$checkNewFile: funcs.ScriptFunction this$0> = l1;
+        specialinvoke this.<java.lang.Thread: void <init>()>();
+        return;
+    }
+
+    public void run()
+    {
+        funcs.ScriptFunction$checkNewFile this;
+        java.io.File $r0, f;
+        funcs.FileSelect $r1;
+        java.lang.String[] $r2;
+        java.io.File[] scriptFiles, l5;
+        int l4, l3;
+        boolean isInList, $z0;
+        java.util.Iterator l8;
+        data.MyScript script, $r10;
+        java.lang.String $r3, $r8, $r9, $r12, $r13;
+        java.lang.Exception e, $r14;
+        funcs.ScriptFunction $r5;
+        java.util.ArrayList $r6;
+        java.lang.Object $r7;
+        java.lang.StringBuilder $r11;
+        java.lang.InterruptedException $r15, e;
+
+        this := @this: funcs.ScriptFunction$checkNewFile;
+        $r0 = staticinvoke <funcs.ScriptFunction: java.io.File access$0()>();
+        $r1 = new funcs.FileSelect;
+        $r2 = staticinvoke <funcs.ScriptFunction: java.lang.String[] access$1()>();
+        specialinvoke $r1.<funcs.FileSelect: void <init>(java.lang.String[])>($r2);
+        scriptFiles = virtualinvoke $r0.<java.io.File: java.io.File[] listFiles(java.io.FilenameFilter)>($r1);
+        l5 = scriptFiles;
+        l4 = lengthof scriptFiles;
+        l3 = 0;
+        goto label8;
+
+     label0:
+        f = l5[l3];
+
+     label1:
+        isInList = 0;
+        $r5 = this.<funcs.ScriptFunction$checkNewFile: funcs.ScriptFunction this$0>;
+        $r6 = staticinvoke <funcs.ScriptFunction: java.util.ArrayList access$2(funcs.ScriptFunction)>($r5);
+        l8 = virtualinvoke $r6.<java.util.ArrayList: java.util.Iterator iterator()>();
+        goto label3;
+
+     label2:
+        $r7 = interfaceinvoke l8.<java.util.Iterator: java.lang.Object next()>();
+        script = (data.MyScript) $r7;
+        $r8 = virtualinvoke f.<java.io.File: java.lang.String getAbsolutePath()>();
+        $r9 = script.<data.MyScript: java.lang.String scriptpath>;
+        $z0 = virtualinvoke $r8.<java.lang.String: boolean equals(java.lang.Object)>($r9);
+        if $z0 == 0 goto label3;
+
+        isInList = 1;
+        goto label4;
+
+     label3:
+        $z0 = interfaceinvoke l8.<java.util.Iterator: boolean hasNext()>();
+        if $z0 != 0 goto label2;
+
+     label4:
+        if isInList != 0 goto label7;
+
+        $r5 = this.<funcs.ScriptFunction$checkNewFile: funcs.ScriptFunction this$0>;
+        $r6 = staticinvoke <funcs.ScriptFunction: java.util.ArrayList access$2(funcs.ScriptFunction)>($r5);
+        $r10 = new data.MyScript;
+        $r11 = new java.lang.StringBuilder;
+        $r3 = staticinvoke <funcs.ScriptFunction: java.lang.String access$3()>();
+        $r3 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r3);
+        specialinvoke $r11.<java.lang.StringBuilder: void <init>(java.lang.String)>($r3);
+        $r12 = virtualinvoke f.<java.io.File: java.lang.String getName()>();
+        $r11 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r12);
+        $r13 = virtualinvoke $r11.<java.lang.StringBuilder: java.lang.String toString()>();
+        specialinvoke $r10.<data.MyScript: void <init>(java.lang.String)>($r13);
+        virtualinvoke $r6.<java.util.ArrayList: boolean add(java.lang.Object)>($r10);
+
+     label5:
+        goto label7;
+
+     label6:
+        $r14 := @caughtexception;
+        e = $r14;
+        virtualinvoke e.<java.lang.Exception: void printStackTrace()>();
+
+     label7:
+        l3 = l3 + 1;
+
+     label8:
+        if l3 < l4 goto label0;
+
+     label9:
+        staticinvoke <java.lang.Thread: void sleep(long)>(2000L);
+
+     label10:
+        goto label12;
+
+     label11:
+        $r15 := @caughtexception;
+        e = $r15;
+        virtualinvoke e.<java.lang.InterruptedException: void printStackTrace()>();
+
+     label12:
+        return;
+
+        catch java.lang.Exception from label1 to label5 with label6;
+        catch java.lang.InterruptedException from label9 to label10 with label11;
+    }
+}

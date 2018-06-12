@@ -1,0 +1,351 @@
+public class org.apache.fop.fonts.SingleByteFont extends org.apache.fop.fonts.CustomFont
+{
+    private static org.apache.commons.logging.Log log;
+    private org.apache.fop.fonts.CodePointMapping mapping;
+    private int[] width;
+    private java.util.Set warnedChars;
+    static java.lang.Class class$org$apache$fop$fonts$SingleByteFont;
+
+    public void <init>()
+    {
+        org.apache.fop.fonts.SingleByteFont this;
+
+        this := @this: org.apache.fop.fonts.SingleByteFont;
+        specialinvoke this.<org.apache.fop.fonts.CustomFont: void <init>()>();
+        this.<org.apache.fop.fonts.SingleByteFont: int[] width> = null;
+        virtualinvoke this.<org.apache.fop.fonts.SingleByteFont: void setEncoding(java.lang.String)>("WinAnsiEncoding");
+        return;
+    }
+
+    public boolean isEmbeddable()
+    {
+        org.apache.fop.fonts.SingleByteFont this;
+        java.lang.String $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.SingleByteFont;
+        $r0 = virtualinvoke this.<org.apache.fop.fonts.SingleByteFont: java.lang.String getEmbedFileName()>();
+        if $r0 != null goto label0;
+
+        $r0 = virtualinvoke this.<org.apache.fop.fonts.SingleByteFont: java.lang.String getEmbedResourceName()>();
+        if $r0 != null goto label0;
+
+        $z0 = 0;
+        goto label1;
+
+     label0:
+        $z0 = 1;
+
+     label1:
+        return $z0;
+    }
+
+    public java.lang.String getEncoding()
+    {
+        org.apache.fop.fonts.SingleByteFont this;
+        org.apache.fop.fonts.CodePointMapping $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.fonts.SingleByteFont;
+        $r0 = this.<org.apache.fop.fonts.SingleByteFont: org.apache.fop.fonts.CodePointMapping mapping>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fonts.CodePointMapping: java.lang.String getName()>();
+        return $r1;
+    }
+
+    public org.apache.fop.fonts.CodePointMapping getCodePointMapping()
+    {
+        org.apache.fop.fonts.SingleByteFont this;
+        org.apache.fop.fonts.CodePointMapping $r0;
+
+        this := @this: org.apache.fop.fonts.SingleByteFont;
+        $r0 = this.<org.apache.fop.fonts.SingleByteFont: org.apache.fop.fonts.CodePointMapping mapping>;
+        return $r0;
+    }
+
+    public int getWidth(int, int)
+    {
+        org.apache.fop.fonts.SingleByteFont this;
+        int i, size, idx, $i0, $i1, $i2, $i3;
+        int[] $r0;
+
+        this := @this: org.apache.fop.fonts.SingleByteFont;
+        i := @parameter0: int;
+        size := @parameter1: int;
+        $i0 = virtualinvoke this.<org.apache.fop.fonts.SingleByteFont: int getFirstChar()>();
+        idx = i - $i0;
+        if idx < 0 goto label0;
+
+        $r0 = this.<org.apache.fop.fonts.SingleByteFont: int[] width>;
+        $i0 = lengthof $r0;
+        if idx >= $i0 goto label0;
+
+        $r0 = this.<org.apache.fop.fonts.SingleByteFont: int[] width>;
+        $i1 = virtualinvoke this.<org.apache.fop.fonts.SingleByteFont: int getFirstChar()>();
+        $i2 = i - $i1;
+        $i0 = $r0[$i2];
+        $i3 = size * $i0;
+        return $i3;
+
+     label0:
+        return 0;
+    }
+
+    public int[] getWidths()
+    {
+        org.apache.fop.fonts.SingleByteFont this;
+        int[] arr, $r0, $r1;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.fonts.SingleByteFont;
+        $r0 = this.<org.apache.fop.fonts.SingleByteFont: int[] width>;
+        $i0 = lengthof $r0;
+        arr = newarray (int)[$i0];
+        $r0 = this.<org.apache.fop.fonts.SingleByteFont: int[] width>;
+        $r1 = this.<org.apache.fop.fonts.SingleByteFont: int[] width>;
+        $i1 = lengthof $r1;
+        $i1 = $i1 - 1;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r0, 0, arr, 0, $i1);
+        return arr;
+    }
+
+    public char mapChar(char)
+    {
+        org.apache.fop.fonts.SingleByteFont this;
+        char c, d;
+        java.lang.Character ch, $r1;
+        org.apache.fop.fonts.CodePointMapping $r0;
+        java.util.Set $r2;
+        java.util.HashSet $r3;
+        int $i0;
+        boolean $z0;
+        org.apache.commons.logging.Log $r4;
+        java.lang.StringBuffer $r5;
+        java.lang.String $r6, $r7;
+
+        this := @this: org.apache.fop.fonts.SingleByteFont;
+        c := @parameter0: char;
+        virtualinvoke this.<org.apache.fop.fonts.SingleByteFont: void notifyMapOperation()>();
+        $r0 = this.<org.apache.fop.fonts.SingleByteFont: org.apache.fop.fonts.CodePointMapping mapping>;
+        d = virtualinvoke $r0.<org.apache.fop.fonts.CodePointMapping: char mapChar(char)>(c);
+        if d == 0 goto label0;
+
+        return d;
+
+     label0:
+        $r1 = new java.lang.Character;
+        specialinvoke $r1.<java.lang.Character: void <init>(char)>(c);
+        ch = $r1;
+        $r2 = this.<org.apache.fop.fonts.SingleByteFont: java.util.Set warnedChars>;
+        if $r2 != null goto label1;
+
+        $r3 = new java.util.HashSet;
+        specialinvoke $r3.<java.util.HashSet: void <init>()>();
+        this.<org.apache.fop.fonts.SingleByteFont: java.util.Set warnedChars> = $r3;
+
+     label1:
+        $r2 = this.<org.apache.fop.fonts.SingleByteFont: java.util.Set warnedChars>;
+        $i0 = interfaceinvoke $r2.<java.util.Set: int size()>();
+        if $i0 >= 8 goto label3;
+
+        $r2 = this.<org.apache.fop.fonts.SingleByteFont: java.util.Set warnedChars>;
+        $z0 = interfaceinvoke $r2.<java.util.Set: boolean contains(java.lang.Object)>(ch);
+        if $z0 != 0 goto label3;
+
+        $r2 = this.<org.apache.fop.fonts.SingleByteFont: java.util.Set warnedChars>;
+        interfaceinvoke $r2.<java.util.Set: boolean add(java.lang.Object)>(ch);
+        $r2 = this.<org.apache.fop.fonts.SingleByteFont: java.util.Set warnedChars>;
+        $i0 = interfaceinvoke $r2.<java.util.Set: int size()>();
+        if $i0 != 8 goto label2;
+
+        $r4 = <org.apache.fop.fonts.SingleByteFont: org.apache.commons.logging.Log log>;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Many requested glyphs are not available in font ");
+        $r6 = virtualinvoke this.<org.apache.fop.fonts.SingleByteFont: java.lang.String getFontName()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r7 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r4.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r7);
+        goto label3;
+
+     label2:
+        $r4 = <org.apache.fop.fonts.SingleByteFont: org.apache.commons.logging.Log log>;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Glyph ");
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(c);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" (0x");
+        $r6 = staticinvoke <java.lang.Integer: java.lang.String toHexString(int)>(c);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", ");
+        $r6 = staticinvoke <org.apache.xmlgraphics.fonts.Glyphs: java.lang.String charToGlyphName(char)>(c);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(") not available in font ");
+        $r6 = virtualinvoke this.<org.apache.fop.fonts.SingleByteFont: java.lang.String getFontName()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r7 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r4.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r7);
+
+     label3:
+        return 35;
+    }
+
+    public boolean hasChar(char)
+    {
+        org.apache.fop.fonts.SingleByteFont this;
+        char c, $c0;
+        org.apache.fop.fonts.CodePointMapping $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.SingleByteFont;
+        c := @parameter0: char;
+        $r0 = this.<org.apache.fop.fonts.SingleByteFont: org.apache.fop.fonts.CodePointMapping mapping>;
+        $c0 = virtualinvoke $r0.<org.apache.fop.fonts.CodePointMapping: char mapChar(char)>(c);
+        if $c0 <= 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    protected void updateMapping(java.lang.String)
+    {
+        org.apache.fop.fonts.SingleByteFont this;
+        java.lang.String encoding, $r4, $r5;
+        java.lang.UnsupportedOperationException e, $r1;
+        org.apache.fop.fonts.CodePointMapping $r0;
+        org.apache.commons.logging.Log $r2;
+        java.lang.StringBuffer $r3;
+
+        this := @this: org.apache.fop.fonts.SingleByteFont;
+        encoding := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <org.apache.fop.fonts.CodePointMapping: org.apache.fop.fonts.CodePointMapping getMapping(java.lang.String)>(encoding);
+        this.<org.apache.fop.fonts.SingleByteFont: org.apache.fop.fonts.CodePointMapping mapping> = $r0;
+
+     label1:
+        goto label3;
+
+     label2:
+        $r1 := @caughtexception;
+        e = $r1;
+        $r2 = <org.apache.fop.fonts.SingleByteFont: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Font \'");
+        $r4 = specialinvoke this.<org.apache.fop.fonts.CustomFont: java.lang.String getFontName()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\': ");
+        $r4 = virtualinvoke e.<java.lang.UnsupportedOperationException: java.lang.String getMessage()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r5 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r5);
+
+     label3:
+        return;
+
+        catch java.lang.UnsupportedOperationException from label0 to label1 with label2;
+    }
+
+    public void setEncoding(java.lang.String)
+    {
+        org.apache.fop.fonts.SingleByteFont this;
+        java.lang.String encoding;
+
+        this := @this: org.apache.fop.fonts.SingleByteFont;
+        encoding := @parameter0: java.lang.String;
+        virtualinvoke this.<org.apache.fop.fonts.SingleByteFont: void updateMapping(java.lang.String)>(encoding);
+        return;
+    }
+
+    public void setEncoding(org.apache.fop.fonts.CodePointMapping)
+    {
+        org.apache.fop.fonts.SingleByteFont this;
+        org.apache.fop.fonts.CodePointMapping encoding;
+
+        this := @this: org.apache.fop.fonts.SingleByteFont;
+        encoding := @parameter0: org.apache.fop.fonts.CodePointMapping;
+        this.<org.apache.fop.fonts.SingleByteFont: org.apache.fop.fonts.CodePointMapping mapping> = encoding;
+        return;
+    }
+
+    public void setWidth(int, int)
+    {
+        org.apache.fop.fonts.SingleByteFont this;
+        int index, width, $i0, $i1;
+        int[] $r0, $r1;
+
+        this := @this: org.apache.fop.fonts.SingleByteFont;
+        index := @parameter0: int;
+        width := @parameter1: int;
+        $r0 = this.<org.apache.fop.fonts.SingleByteFont: int[] width>;
+        if $r0 != null goto label0;
+
+        $i0 = virtualinvoke this.<org.apache.fop.fonts.SingleByteFont: int getLastChar()>();
+        $i1 = virtualinvoke this.<org.apache.fop.fonts.SingleByteFont: int getFirstChar()>();
+        $i0 = $i0 - $i1;
+        $i0 = $i0 + 1;
+        $r1 = newarray (int)[$i0];
+        this.<org.apache.fop.fonts.SingleByteFont: int[] width> = $r1;
+
+     label0:
+        $r0 = this.<org.apache.fop.fonts.SingleByteFont: int[] width>;
+        $i1 = virtualinvoke this.<org.apache.fop.fonts.SingleByteFont: int getFirstChar()>();
+        $i0 = index - $i1;
+        $r0[$i0] = width;
+        return;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.fonts.SingleByteFont: java.lang.Class class$org$apache$fop$fonts$SingleByteFont>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.fonts.SingleByteFont: java.lang.Class class$(java.lang.String)>("org.apache.fop.fonts.SingleByteFont");
+        <org.apache.fop.fonts.SingleByteFont: java.lang.Class class$org$apache$fop$fonts$SingleByteFont> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.fonts.SingleByteFont: java.lang.Class class$org$apache$fop$fonts$SingleByteFont>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.fonts.SingleByteFont: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

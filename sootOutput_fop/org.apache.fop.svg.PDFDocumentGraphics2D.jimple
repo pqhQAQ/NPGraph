@@ -1,0 +1,567 @@
+public class org.apache.fop.svg.PDFDocumentGraphics2D extends org.apache.fop.svg.PDFGraphics2D
+{
+    private org.apache.fop.svg.PDFContext pdfContext;
+    private int width;
+    private int height;
+    private float svgWidth;
+    private float svgHeight;
+    public static final int NORMAL_PDF_RESOLUTION;
+    public static final int DEFAULT_NATIVE_DPI;
+    private float deviceDPI;
+    protected java.awt.Shape initialClip;
+    protected java.awt.geom.AffineTransform initialTransform;
+
+    public void <init>(boolean)
+    {
+        org.apache.fop.svg.PDFDocumentGraphics2D this;
+        boolean textAsShapes;
+        java.lang.StringBuffer $r0;
+        org.apache.fop.pdf.PDFDocument $r1;
+        java.lang.String $r2, $r3;
+        org.apache.fop.svg.PDFContext $r4;
+
+        this := @this: org.apache.fop.svg.PDFDocumentGraphics2D;
+        textAsShapes := @parameter0: boolean;
+        specialinvoke this.<org.apache.fop.svg.PDFGraphics2D: void <init>(boolean)>(textAsShapes);
+        this.<org.apache.fop.svg.PDFDocumentGraphics2D: float deviceDPI> = 300.0F;
+        $r1 = new org.apache.fop.pdf.PDFDocument;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Apache FOP Version ");
+        $r2 = staticinvoke <org.apache.fop.Version: java.lang.String getVersion()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": PDFDocumentGraphics2D");
+        $r3 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r1.<org.apache.fop.pdf.PDFDocument: void <init>(java.lang.String)>($r3);
+        this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.pdf.PDFDocument pdfDoc> = $r1;
+        $r4 = new org.apache.fop.svg.PDFContext;
+        specialinvoke $r4.<org.apache.fop.svg.PDFContext: void <init>()>();
+        this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.svg.PDFContext pdfContext> = $r4;
+        return;
+    }
+
+    public void <init>(boolean, java.io.OutputStream, int, int) throws java.io.IOException
+    {
+        org.apache.fop.svg.PDFDocumentGraphics2D this;
+        boolean textAsShapes;
+        java.io.OutputStream stream;
+        int width, height;
+
+        this := @this: org.apache.fop.svg.PDFDocumentGraphics2D;
+        textAsShapes := @parameter0: boolean;
+        stream := @parameter1: java.io.OutputStream;
+        width := @parameter2: int;
+        height := @parameter3: int;
+        specialinvoke this.<org.apache.fop.svg.PDFDocumentGraphics2D: void <init>(boolean)>(textAsShapes);
+        virtualinvoke this.<org.apache.fop.svg.PDFDocumentGraphics2D: void setupDocument(java.io.OutputStream,int,int)>(stream, width, height);
+        return;
+    }
+
+    public void <init>()
+    {
+        org.apache.fop.svg.PDFDocumentGraphics2D this;
+
+        this := @this: org.apache.fop.svg.PDFDocumentGraphics2D;
+        specialinvoke this.<org.apache.fop.svg.PDFDocumentGraphics2D: void <init>(boolean)>(0);
+        return;
+    }
+
+    public void setupDocument(java.io.OutputStream, int, int) throws java.io.IOException
+    {
+        org.apache.fop.svg.PDFDocumentGraphics2D this;
+        java.io.OutputStream stream;
+        int width, height;
+        org.apache.fop.pdf.PDFDocument $r0;
+
+        this := @this: org.apache.fop.svg.PDFDocumentGraphics2D;
+        stream := @parameter0: java.io.OutputStream;
+        width := @parameter1: int;
+        height := @parameter2: int;
+        this.<org.apache.fop.svg.PDFDocumentGraphics2D: int width> = width;
+        this.<org.apache.fop.svg.PDFDocumentGraphics2D: int height> = height;
+        $r0 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.pdf.PDFDocument pdfDoc>;
+        virtualinvoke $r0.<org.apache.fop.pdf.PDFDocument: void outputHeader(java.io.OutputStream)>(stream);
+        virtualinvoke this.<org.apache.fop.svg.PDFDocumentGraphics2D: void setOutputStream(java.io.OutputStream)>(stream);
+        return;
+    }
+
+    public void setupDefaultFontInfo()
+    {
+        org.apache.fop.svg.PDFDocumentGraphics2D this;
+        org.apache.fop.fonts.FontInfo fontInfo, $r0;
+
+        this := @this: org.apache.fop.svg.PDFDocumentGraphics2D;
+        $r0 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.fonts.FontInfo fontInfo>;
+        if $r0 != null goto label0;
+
+        $r0 = new org.apache.fop.fonts.FontInfo;
+        specialinvoke $r0.<org.apache.fop.fonts.FontInfo: void <init>()>();
+        fontInfo = $r0;
+        staticinvoke <org.apache.fop.fonts.FontSetup: void setup(org.apache.fop.fonts.FontInfo,java.util.List,org.apache.fop.fonts.FontResolver)>(fontInfo, null, null);
+        virtualinvoke this.<org.apache.fop.svg.PDFDocumentGraphics2D: void setFontInfo(org.apache.fop.fonts.FontInfo)>(fontInfo);
+
+     label0:
+        return;
+    }
+
+    public void setDeviceDPI(float)
+    {
+        org.apache.fop.svg.PDFDocumentGraphics2D this;
+        float deviceDPI;
+
+        this := @this: org.apache.fop.svg.PDFDocumentGraphics2D;
+        deviceDPI := @parameter0: float;
+        this.<org.apache.fop.svg.PDFDocumentGraphics2D: float deviceDPI> = deviceDPI;
+        return;
+    }
+
+    public float getDeviceDPI()
+    {
+        org.apache.fop.svg.PDFDocumentGraphics2D this;
+        float $f0;
+
+        this := @this: org.apache.fop.svg.PDFDocumentGraphics2D;
+        $f0 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: float deviceDPI>;
+        return $f0;
+    }
+
+    public void setFontInfo(org.apache.fop.fonts.FontInfo)
+    {
+        org.apache.fop.svg.PDFDocumentGraphics2D this;
+        org.apache.fop.fonts.FontInfo fontInfo;
+
+        this := @this: org.apache.fop.svg.PDFDocumentGraphics2D;
+        fontInfo := @parameter0: org.apache.fop.fonts.FontInfo;
+        this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.fonts.FontInfo fontInfo> = fontInfo;
+        return;
+    }
+
+    public org.apache.fop.fonts.FontInfo getFontInfo()
+    {
+        org.apache.fop.svg.PDFDocumentGraphics2D this;
+        org.apache.fop.fonts.FontInfo $r0;
+
+        this := @this: org.apache.fop.svg.PDFDocumentGraphics2D;
+        $r0 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.fonts.FontInfo fontInfo>;
+        return $r0;
+    }
+
+    public org.apache.fop.pdf.PDFDocument getPDFDocument()
+    {
+        org.apache.fop.svg.PDFDocumentGraphics2D this;
+        org.apache.fop.pdf.PDFDocument $r0;
+
+        this := @this: org.apache.fop.svg.PDFDocumentGraphics2D;
+        $r0 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.pdf.PDFDocument pdfDoc>;
+        return $r0;
+    }
+
+    public org.apache.fop.svg.PDFContext getPDFContext()
+    {
+        org.apache.fop.svg.PDFDocumentGraphics2D this;
+        org.apache.fop.svg.PDFContext $r0;
+
+        this := @this: org.apache.fop.svg.PDFDocumentGraphics2D;
+        $r0 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.svg.PDFContext pdfContext>;
+        return $r0;
+    }
+
+    public void setSVGDimension(float, float)
+    {
+        org.apache.fop.svg.PDFDocumentGraphics2D this;
+        float w, h;
+
+        this := @this: org.apache.fop.svg.PDFDocumentGraphics2D;
+        w := @parameter0: float;
+        h := @parameter1: float;
+        this.<org.apache.fop.svg.PDFDocumentGraphics2D: float svgWidth> = w;
+        this.<org.apache.fop.svg.PDFDocumentGraphics2D: float svgHeight> = h;
+        return;
+    }
+
+    public void setBackgroundColor(java.awt.Color)
+    {
+        org.apache.fop.svg.PDFDocumentGraphics2D this;
+        java.awt.Color col, c;
+        org.apache.fop.pdf.PDFColor currentColour, $r0;
+        int $i0, $i1, $i2;
+        java.io.StringWriter $r1;
+        java.lang.String $r2;
+        java.lang.StringBuffer $r3;
+
+        this := @this: org.apache.fop.svg.PDFDocumentGraphics2D;
+        col := @parameter0: java.awt.Color;
+        c = col;
+        $r0 = new org.apache.fop.pdf.PDFColor;
+        $i0 = virtualinvoke c.<java.awt.Color: int getRed()>();
+        $i1 = virtualinvoke c.<java.awt.Color: int getGreen()>();
+        $i2 = virtualinvoke c.<java.awt.Color: int getBlue()>();
+        specialinvoke $r0.<org.apache.fop.pdf.PDFColor: void <init>(int,int,int)>($i0, $i1, $i2);
+        currentColour = $r0;
+        $r1 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: java.io.StringWriter currentStream>;
+        virtualinvoke $r1.<java.io.StringWriter: void write(java.lang.String)>("q\n");
+        $r1 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: java.io.StringWriter currentStream>;
+        $r2 = virtualinvoke currentColour.<org.apache.fop.pdf.PDFColor: java.lang.String getColorSpaceOut(boolean)>(1);
+        virtualinvoke $r1.<java.io.StringWriter: void write(java.lang.String)>($r2);
+        $r1 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: java.io.StringWriter currentStream>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("0 0 ");
+        $i0 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: int width>;
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $i0 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: int height>;
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" re\n");
+        $r2 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r1.<java.io.StringWriter: void write(java.lang.String)>($r2);
+        $r1 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: java.io.StringWriter currentStream>;
+        virtualinvoke $r1.<java.io.StringWriter: void write(java.lang.String)>("f\n");
+        $r1 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: java.io.StringWriter currentStream>;
+        virtualinvoke $r1.<java.io.StringWriter: void write(java.lang.String)>("Q\n");
+        return;
+    }
+
+    public void nextPage()
+    {
+        org.apache.fop.svg.PDFDocumentGraphics2D this;
+
+        this := @this: org.apache.fop.svg.PDFDocumentGraphics2D;
+        virtualinvoke this.<org.apache.fop.svg.PDFDocumentGraphics2D: void closePage()>();
+        return;
+    }
+
+    protected void closePage()
+    {
+        org.apache.fop.svg.PDFDocumentGraphics2D this;
+        org.apache.fop.pdf.PDFStream pdfStream;
+        org.apache.fop.pdf.PDFAnnotList annots;
+        org.apache.fop.svg.PDFContext $r0, $r6;
+        boolean $z0;
+        org.apache.fop.pdf.PDFDocument $r1;
+        org.apache.fop.pdf.PDFFactory $r2;
+        java.lang.String $r3;
+        org.apache.fop.pdf.PDFPage $r5, $r7;
+
+        this := @this: org.apache.fop.svg.PDFDocumentGraphics2D;
+        $r0 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.svg.PDFContext pdfContext>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.svg.PDFContext: boolean isPagePending()>();
+        if $z0 != 0 goto label0;
+
+        return;
+
+     label0:
+        $r1 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.pdf.PDFDocument pdfDoc>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFFactory getFactory()>();
+        pdfStream = virtualinvoke $r2.<org.apache.fop.pdf.PDFFactory: org.apache.fop.pdf.PDFStream makeStream(java.lang.String,boolean)>("content", 0);
+        $r3 = virtualinvoke this.<org.apache.fop.svg.PDFDocumentGraphics2D: java.lang.String getString()>();
+        virtualinvoke pdfStream.<org.apache.fop.pdf.PDFStream: void add(java.lang.String)>($r3);
+        this.<org.apache.fop.svg.PDFDocumentGraphics2D: java.io.StringWriter currentStream> = null;
+        $r1 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.pdf.PDFDocument pdfDoc>;
+        virtualinvoke $r1.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFObject registerObject(org.apache.fop.pdf.PDFObject)>(pdfStream);
+        $r0 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.svg.PDFContext pdfContext>;
+        $r5 = virtualinvoke $r0.<org.apache.fop.svg.PDFContext: org.apache.fop.pdf.PDFPage getCurrentPage()>();
+        virtualinvoke $r5.<org.apache.fop.pdf.PDFPage: void setContents(org.apache.fop.pdf.PDFStream)>(pdfStream);
+        $r0 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.svg.PDFContext pdfContext>;
+        $r5 = virtualinvoke $r0.<org.apache.fop.svg.PDFContext: org.apache.fop.pdf.PDFPage getCurrentPage()>();
+        annots = virtualinvoke $r5.<org.apache.fop.pdf.PDFPage: org.apache.fop.pdf.PDFAnnotList getAnnotations()>();
+        if annots == null goto label1;
+
+        $r1 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.pdf.PDFDocument pdfDoc>;
+        virtualinvoke $r1.<org.apache.fop.pdf.PDFDocument: void addObject(org.apache.fop.pdf.PDFObject)>(annots);
+
+     label1:
+        $r1 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.pdf.PDFDocument pdfDoc>;
+        $r6 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.svg.PDFContext pdfContext>;
+        $r7 = virtualinvoke $r6.<org.apache.fop.svg.PDFContext: org.apache.fop.pdf.PDFPage getCurrentPage()>();
+        virtualinvoke $r1.<org.apache.fop.pdf.PDFDocument: void addObject(org.apache.fop.pdf.PDFObject)>($r7);
+        $r0 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.svg.PDFContext pdfContext>;
+        virtualinvoke $r0.<org.apache.fop.svg.PDFContext: void clearCurrentPage()>();
+        return;
+    }
+
+    protected void preparePainting()
+    {
+        org.apache.fop.svg.PDFDocumentGraphics2D this;
+        java.io.IOException ioe, $r2;
+        org.apache.fop.svg.PDFContext $r0;
+        boolean $z0;
+        org.apache.fop.fonts.FontInfo $r1;
+
+        this := @this: org.apache.fop.svg.PDFDocumentGraphics2D;
+        $r0 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.svg.PDFContext pdfContext>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.svg.PDFContext: boolean isPagePending()>();
+        if $z0 == 0 goto label0;
+
+        return;
+
+     label0:
+        $z0 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: boolean textAsShapes>;
+        if $z0 != 0 goto label1;
+
+        $r1 = virtualinvoke this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.fonts.FontInfo getFontInfo()>();
+        if $r1 != null goto label1;
+
+        virtualinvoke this.<org.apache.fop.svg.PDFDocumentGraphics2D: void setupDefaultFontInfo()>();
+
+     label1:
+        virtualinvoke this.<org.apache.fop.svg.PDFDocumentGraphics2D: void startPage()>();
+
+     label2:
+        goto label4;
+
+     label3:
+        $r2 := @caughtexception;
+        ioe = $r2;
+        virtualinvoke this.<org.apache.fop.svg.PDFDocumentGraphics2D: void handleIOException(java.io.IOException)>(ioe);
+
+     label4:
+        return;
+
+        catch java.io.IOException from label1 to label2 with label3;
+    }
+
+    protected void startPage() throws java.io.IOException
+    {
+        org.apache.fop.svg.PDFDocumentGraphics2D this;
+        org.apache.fop.pdf.PDFResources pdfResources;
+        org.apache.fop.pdf.PDFPage page;
+        java.awt.geom.AffineTransform at, $r3, $r4;
+        double scaleX, scaleY, s, $d0, $d1, $d2;
+        org.apache.fop.svg.PDFContext $r0;
+        boolean $z0;
+        java.lang.IllegalStateException $r1;
+        org.apache.fop.pdf.PDFState $r2, $r13;
+        java.awt.Shape $r5;
+        java.io.StringWriter $r6, $r7;
+        org.apache.fop.pdf.PDFDocument $r8;
+        org.apache.fop.pdf.PDFFactory $r9;
+        int $i0, $i1, $i2, $i4;
+        java.lang.String $r10, $r12;
+        java.lang.StringBuffer $r11;
+        float $f0, $f1;
+        byte $b3;
+
+        this := @this: org.apache.fop.svg.PDFDocumentGraphics2D;
+        $r0 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.svg.PDFContext pdfContext>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.svg.PDFContext: boolean isPagePending()>();
+        if $z0 == 0 goto label0;
+
+        $r1 = new java.lang.IllegalStateException;
+        specialinvoke $r1.<java.lang.IllegalStateException: void <init>(java.lang.String)>("Close page first before starting another");
+        throw $r1;
+
+     label0:
+        $r2 = new org.apache.fop.pdf.PDFState;
+        specialinvoke $r2.<org.apache.fop.pdf.PDFState: void <init>()>();
+        this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.pdf.PDFState graphicsState> = $r2;
+        $r3 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: java.awt.geom.AffineTransform initialTransform>;
+        if $r3 != null goto label1;
+
+        $r4 = virtualinvoke this.<org.apache.fop.svg.PDFDocumentGraphics2D: java.awt.geom.AffineTransform getTransform()>();
+        this.<org.apache.fop.svg.PDFDocumentGraphics2D: java.awt.geom.AffineTransform initialTransform> = $r4;
+        $r5 = virtualinvoke this.<org.apache.fop.svg.PDFDocumentGraphics2D: java.awt.Shape getClip()>();
+        this.<org.apache.fop.svg.PDFDocumentGraphics2D: java.awt.Shape initialClip> = $r5;
+        goto label2;
+
+     label1:
+        $r4 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: java.awt.geom.AffineTransform initialTransform>;
+        virtualinvoke this.<org.apache.fop.svg.PDFDocumentGraphics2D: void setTransform(java.awt.geom.AffineTransform)>($r4);
+        $r5 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: java.awt.Shape initialClip>;
+        virtualinvoke this.<org.apache.fop.svg.PDFDocumentGraphics2D: void setClip(java.awt.Shape)>($r5);
+
+     label2:
+        this.<org.apache.fop.svg.PDFDocumentGraphics2D: java.lang.String currentFontName> = "";
+        this.<org.apache.fop.svg.PDFDocumentGraphics2D: float currentFontSize> = 0.0F;
+        $r6 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: java.io.StringWriter currentStream>;
+        if $r6 != null goto label3;
+
+        $r7 = new java.io.StringWriter;
+        specialinvoke $r7.<java.io.StringWriter: void <init>()>();
+        this.<org.apache.fop.svg.PDFDocumentGraphics2D: java.io.StringWriter currentStream> = $r7;
+
+     label3:
+        $r8 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.pdf.PDFDocument pdfDoc>;
+        pdfResources = virtualinvoke $r8.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFResources getResources()>();
+        $r8 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.pdf.PDFDocument pdfDoc>;
+        $r9 = virtualinvoke $r8.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFFactory getFactory()>();
+        $i0 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: int width>;
+        $i1 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: int height>;
+        page = virtualinvoke $r9.<org.apache.fop.pdf.PDFFactory: org.apache.fop.pdf.PDFPage makePage(org.apache.fop.pdf.PDFResources,int,int)>(pdfResources, $i0, $i1);
+        this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.pdf.PDFResourceContext resourceContext> = page;
+        $r0 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.svg.PDFContext pdfContext>;
+        virtualinvoke $r0.<org.apache.fop.svg.PDFContext: void setCurrentPage(org.apache.fop.pdf.PDFPage)>(page);
+        $r10 = virtualinvoke page.<org.apache.fop.pdf.PDFPage: java.lang.String referencePDF()>();
+        this.<org.apache.fop.svg.PDFDocumentGraphics2D: java.lang.String pageRef> = $r10;
+        $r3 = new java.awt.geom.AffineTransform;
+        $i2 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: int height>;
+        $d0 = (double) $i2;
+        specialinvoke $r3.<java.awt.geom.AffineTransform: void <init>(double,double,double,double,double,double)>(1.0, 0.0, 0.0, -1.0, 0.0, $d0);
+        at = $r3;
+        $r6 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: java.io.StringWriter currentStream>;
+        $r11 = new java.lang.StringBuffer;
+        specialinvoke $r11.<java.lang.StringBuffer: void <init>()>();
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("1 0 0 -1 0 ");
+        $i0 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: int height>;
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" cm\n");
+        $r10 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r6.<java.io.StringWriter: void write(java.lang.String)>($r10);
+        $f0 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: float svgWidth>;
+        $b3 = $f0 cmpl 0.0F;
+        if $b3 == 0 goto label4;
+
+        $i4 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: int width>;
+        $f0 = (float) $i4;
+        $f1 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: float svgWidth>;
+        $f0 = $f0 / $f1;
+        scaleX = (double) $f0;
+        $i4 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: int height>;
+        $f0 = (float) $i4;
+        $f1 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: float svgHeight>;
+        $f0 = $f0 / $f1;
+        scaleY = (double) $f0;
+        virtualinvoke at.<java.awt.geom.AffineTransform: void scale(double,double)>(scaleX, scaleY);
+        $r6 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: java.io.StringWriter currentStream>;
+        $r11 = new java.lang.StringBuffer;
+        specialinvoke $r11.<java.lang.StringBuffer: void <init>()>();
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("");
+        $r12 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double)>(scaleX);
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r12);
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" 0 0 ");
+        $r12 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double)>(scaleY);
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r12);
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" 0 0 cm\n");
+        $r10 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r6.<java.io.StringWriter: void write(java.lang.String)>($r10);
+
+     label4:
+        $f0 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: float deviceDPI>;
+        $b3 = $f0 cmpl 72.0F;
+        if $b3 == 0 goto label5;
+
+        $f1 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: float deviceDPI>;
+        $f0 = 72.0F / $f1;
+        s = (double) $f0;
+        virtualinvoke at.<java.awt.geom.AffineTransform: void scale(double,double)>(s, s);
+        $r6 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: java.io.StringWriter currentStream>;
+        $r11 = new java.lang.StringBuffer;
+        specialinvoke $r11.<java.lang.StringBuffer: void <init>()>();
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("");
+        $r12 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double)>(s);
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r12);
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" 0 0 ");
+        $r12 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double)>(s);
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r12);
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" 0 0 cm\n");
+        $r10 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r6.<java.io.StringWriter: void write(java.lang.String)>($r10);
+        $d1 = 1.0 / s;
+        $d2 = 1.0 / s;
+        virtualinvoke this.<org.apache.fop.svg.PDFDocumentGraphics2D: void scale(double,double)>($d1, $d2);
+
+     label5:
+        $r13 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.pdf.PDFState graphicsState>;
+        virtualinvoke $r13.<org.apache.fop.pdf.PDFState: void concatenate(java.awt.geom.AffineTransform)>(at);
+        $r0 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.svg.PDFContext pdfContext>;
+        virtualinvoke $r0.<org.apache.fop.svg.PDFContext: void increasePageCount()>();
+        return;
+    }
+
+    public void finish() throws java.io.IOException
+    {
+        org.apache.fop.svg.PDFDocumentGraphics2D this;
+        org.apache.fop.fonts.FontInfo $r0, $r4;
+        org.apache.fop.pdf.PDFDocument $r1, $r3;
+        org.apache.fop.pdf.PDFResources $r2;
+        java.io.OutputStream $r5, $r6;
+
+        this := @this: org.apache.fop.svg.PDFDocumentGraphics2D;
+        virtualinvoke this.<org.apache.fop.svg.PDFDocumentGraphics2D: void closePage()>();
+        $r0 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.fonts.FontInfo fontInfo>;
+        if $r0 == null goto label0;
+
+        $r1 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.pdf.PDFDocument pdfDoc>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFResources getResources()>();
+        $r3 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.pdf.PDFDocument pdfDoc>;
+        $r4 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.fonts.FontInfo fontInfo>;
+        virtualinvoke $r2.<org.apache.fop.pdf.PDFResources: void addFonts(org.apache.fop.pdf.PDFDocument,org.apache.fop.fonts.FontInfo)>($r3, $r4);
+
+     label0:
+        $r1 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.pdf.PDFDocument pdfDoc>;
+        $r5 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: java.io.OutputStream outputStream>;
+        virtualinvoke $r1.<org.apache.fop.pdf.PDFDocument: void output(java.io.OutputStream)>($r5);
+        $r1 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.pdf.PDFDocument pdfDoc>;
+        $r5 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: java.io.OutputStream outputStream>;
+        virtualinvoke $r1.<org.apache.fop.pdf.PDFDocument: void outputTrailer(java.io.OutputStream)>($r5);
+        $r6 = this.<org.apache.fop.svg.PDFDocumentGraphics2D: java.io.OutputStream outputStream>;
+        virtualinvoke $r6.<java.io.OutputStream: void flush()>();
+        return;
+    }
+
+    public void <init>(org.apache.fop.svg.PDFDocumentGraphics2D)
+    {
+        org.apache.fop.svg.PDFDocumentGraphics2D this, g;
+        org.apache.fop.svg.PDFContext $r0;
+        int $i0;
+        float $f0;
+
+        this := @this: org.apache.fop.svg.PDFDocumentGraphics2D;
+        g := @parameter0: org.apache.fop.svg.PDFDocumentGraphics2D;
+        specialinvoke this.<org.apache.fop.svg.PDFGraphics2D: void <init>(org.apache.fop.svg.PDFGraphics2D)>(g);
+        this.<org.apache.fop.svg.PDFDocumentGraphics2D: float deviceDPI> = 300.0F;
+        $r0 = g.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.svg.PDFContext pdfContext>;
+        this.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.svg.PDFContext pdfContext> = $r0;
+        $i0 = g.<org.apache.fop.svg.PDFDocumentGraphics2D: int width>;
+        this.<org.apache.fop.svg.PDFDocumentGraphics2D: int width> = $i0;
+        $i0 = g.<org.apache.fop.svg.PDFDocumentGraphics2D: int height>;
+        this.<org.apache.fop.svg.PDFDocumentGraphics2D: int height> = $i0;
+        $f0 = g.<org.apache.fop.svg.PDFDocumentGraphics2D: float svgWidth>;
+        this.<org.apache.fop.svg.PDFDocumentGraphics2D: float svgWidth> = $f0;
+        $f0 = g.<org.apache.fop.svg.PDFDocumentGraphics2D: float svgHeight>;
+        this.<org.apache.fop.svg.PDFDocumentGraphics2D: float svgHeight> = $f0;
+        return;
+    }
+
+    public java.awt.Graphics create()
+    {
+        org.apache.fop.svg.PDFDocumentGraphics2D this, $r0;
+
+        this := @this: org.apache.fop.svg.PDFDocumentGraphics2D;
+        $r0 = new org.apache.fop.svg.PDFDocumentGraphics2D;
+        specialinvoke $r0.<org.apache.fop.svg.PDFDocumentGraphics2D: void <init>(org.apache.fop.svg.PDFDocumentGraphics2D)>(this);
+        return $r0;
+    }
+
+    public void drawString(java.lang.String, float, float)
+    {
+        org.apache.fop.svg.PDFDocumentGraphics2D this;
+        java.lang.String s;
+        float x, y;
+        java.awt.Font font;
+        java.awt.font.FontRenderContext frc;
+        java.awt.font.GlyphVector gv;
+        java.awt.Shape glyphOutline;
+        boolean $z0;
+
+        this := @this: org.apache.fop.svg.PDFDocumentGraphics2D;
+        s := @parameter0: java.lang.String;
+        x := @parameter1: float;
+        y := @parameter2: float;
+        $z0 = this.<org.apache.fop.svg.PDFGraphics2D: boolean textAsShapes>;
+        if $z0 == 0 goto label0;
+
+        font = specialinvoke this.<org.apache.fop.svg.PDFGraphics2D: java.awt.Font getFont()>();
+        frc = specialinvoke this.<org.apache.fop.svg.PDFGraphics2D: java.awt.font.FontRenderContext getFontRenderContext()>();
+        gv = virtualinvoke font.<java.awt.Font: java.awt.font.GlyphVector createGlyphVector(java.awt.font.FontRenderContext,java.lang.String)>(frc, s);
+        glyphOutline = virtualinvoke gv.<java.awt.font.GlyphVector: java.awt.Shape getOutline(float,float)>(x, y);
+        specialinvoke this.<org.apache.fop.svg.PDFGraphics2D: void fill(java.awt.Shape)>(glyphOutline);
+        goto label1;
+
+     label0:
+        specialinvoke this.<org.apache.fop.svg.PDFGraphics2D: void drawString(java.lang.String,float,float)>(s, x, y);
+
+     label1:
+        return;
+    }
+}

@@ -1,0 +1,142 @@
+public class org.apache.fop.hyphenation.HyphenationTreeCache extends java.lang.Object
+{
+    private java.util.Hashtable hyphenTrees;
+    private java.util.Set missingHyphenationTrees;
+
+    public void <init>()
+    {
+        org.apache.fop.hyphenation.HyphenationTreeCache this;
+        java.util.Hashtable $r0;
+
+        this := @this: org.apache.fop.hyphenation.HyphenationTreeCache;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $r0 = new java.util.Hashtable;
+        specialinvoke $r0.<java.util.Hashtable: void <init>()>();
+        this.<org.apache.fop.hyphenation.HyphenationTreeCache: java.util.Hashtable hyphenTrees> = $r0;
+        return;
+    }
+
+    public org.apache.fop.hyphenation.HyphenationTree getHyphenationTree(java.lang.String, java.lang.String)
+    {
+        org.apache.fop.hyphenation.HyphenationTreeCache this;
+        java.lang.String lang, country, key;
+        java.util.Hashtable $r0;
+        boolean $z0;
+        java.lang.Object $r1;
+        org.apache.fop.hyphenation.HyphenationTree $r2;
+
+        this := @this: org.apache.fop.hyphenation.HyphenationTreeCache;
+        lang := @parameter0: java.lang.String;
+        country := @parameter1: java.lang.String;
+        key = staticinvoke <org.apache.fop.hyphenation.HyphenationTreeCache: java.lang.String constructKey(java.lang.String,java.lang.String)>(lang, country);
+        $r0 = this.<org.apache.fop.hyphenation.HyphenationTreeCache: java.util.Hashtable hyphenTrees>;
+        $z0 = virtualinvoke $r0.<java.util.Hashtable: boolean containsKey(java.lang.Object)>(key);
+        if $z0 == 0 goto label0;
+
+        $r0 = this.<org.apache.fop.hyphenation.HyphenationTreeCache: java.util.Hashtable hyphenTrees>;
+        $r1 = virtualinvoke $r0.<java.util.Hashtable: java.lang.Object get(java.lang.Object)>(key);
+        $r2 = (org.apache.fop.hyphenation.HyphenationTree) $r1;
+        return $r2;
+
+     label0:
+        $r0 = this.<org.apache.fop.hyphenation.HyphenationTreeCache: java.util.Hashtable hyphenTrees>;
+        $z0 = virtualinvoke $r0.<java.util.Hashtable: boolean containsKey(java.lang.Object)>(lang);
+        if $z0 == 0 goto label1;
+
+        $r0 = this.<org.apache.fop.hyphenation.HyphenationTreeCache: java.util.Hashtable hyphenTrees>;
+        $r1 = virtualinvoke $r0.<java.util.Hashtable: java.lang.Object get(java.lang.Object)>(lang);
+        $r2 = (org.apache.fop.hyphenation.HyphenationTree) $r1;
+        return $r2;
+
+     label1:
+        return null;
+    }
+
+    public static java.lang.String constructKey(java.lang.String, java.lang.String)
+    {
+        java.lang.String lang, country, key;
+        boolean $z0;
+        java.lang.StringBuffer $r0;
+
+        lang := @parameter0: java.lang.String;
+        country := @parameter1: java.lang.String;
+        key = lang;
+        if country == null goto label0;
+
+        $z0 = virtualinvoke country.<java.lang.String: boolean equals(java.lang.Object)>("none");
+        if $z0 != 0 goto label0;
+
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(key);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("_");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(country);
+        key = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+
+     label0:
+        return key;
+    }
+
+    public void cache(java.lang.String, org.apache.fop.hyphenation.HyphenationTree)
+    {
+        org.apache.fop.hyphenation.HyphenationTreeCache this;
+        java.lang.String key;
+        org.apache.fop.hyphenation.HyphenationTree hTree;
+        java.util.Hashtable $r0;
+
+        this := @this: org.apache.fop.hyphenation.HyphenationTreeCache;
+        key := @parameter0: java.lang.String;
+        hTree := @parameter1: org.apache.fop.hyphenation.HyphenationTree;
+        $r0 = this.<org.apache.fop.hyphenation.HyphenationTreeCache: java.util.Hashtable hyphenTrees>;
+        virtualinvoke $r0.<java.util.Hashtable: java.lang.Object put(java.lang.Object,java.lang.Object)>(key, hTree);
+        return;
+    }
+
+    public void noteMissing(java.lang.String)
+    {
+        org.apache.fop.hyphenation.HyphenationTreeCache this;
+        java.lang.String key;
+        java.util.HashSet $r0;
+        java.util.Set $r1;
+
+        this := @this: org.apache.fop.hyphenation.HyphenationTreeCache;
+        key := @parameter0: java.lang.String;
+        $r1 = this.<org.apache.fop.hyphenation.HyphenationTreeCache: java.util.Set missingHyphenationTrees>;
+        if $r1 != null goto label0;
+
+        $r0 = new java.util.HashSet;
+        specialinvoke $r0.<java.util.HashSet: void <init>()>();
+        this.<org.apache.fop.hyphenation.HyphenationTreeCache: java.util.Set missingHyphenationTrees> = $r0;
+
+     label0:
+        $r1 = this.<org.apache.fop.hyphenation.HyphenationTreeCache: java.util.Set missingHyphenationTrees>;
+        interfaceinvoke $r1.<java.util.Set: boolean add(java.lang.Object)>(key);
+        return;
+    }
+
+    public boolean isMissing(java.lang.String)
+    {
+        org.apache.fop.hyphenation.HyphenationTreeCache this;
+        java.lang.String key;
+        java.util.Set $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.hyphenation.HyphenationTreeCache;
+        key := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.hyphenation.HyphenationTreeCache: java.util.Set missingHyphenationTrees>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.hyphenation.HyphenationTreeCache: java.util.Set missingHyphenationTrees>;
+        $z0 = interfaceinvoke $r0.<java.util.Set: boolean contains(java.lang.Object)>(key);
+        if $z0 == 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+}

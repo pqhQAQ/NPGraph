@@ -1,0 +1,126 @@
+method: org.apache.fop.render.pcl.PCLGenerator.paintBitmap:1795430180
+534770783:this := @this: org.apache.fop.render.pcl.PCLGenerator
+673487186:img := @parameter0: java.awt.image.RenderedImage
+2060315412:targetDim := @parameter1: java.awt.Dimension
+1694805256:sourceTransparency := @parameter2: boolean
+1519672446:$i0 = interfaceinvoke img.<java.awt.image.RenderedImage: int getWidth()>()
+1111786151:$d0 = (double) $i0
+409620122:$i1 = targetDim.<java.awt.Dimension: int width>
+1800301819:$d1 = (double) $i1
+1775569350:$d1 = staticinvoke <org.apache.fop.util.UnitConv: double mpt2in(double)>($d1)
+2134167942:targetResolution = $d0 / $d1
+1324424248:$l2 = staticinvoke <java.lang.Math: long round(double)>(targetResolution)
+311591860:resolution = (int) $l2
+971348502:effResolution = specialinvoke this.<org.apache.fop.render.pcl.PCLGenerator: int calculatePCLResolution(int,boolean)>(resolution, 1)
+283588620:$r0 = new java.awt.Dimension
+1258306970:$i1 = interfaceinvoke img.<java.awt.image.RenderedImage: int getWidth()>()
+1372090525:$i3 = interfaceinvoke img.<java.awt.image.RenderedImage: int getHeight()>()
+1046052189:specialinvoke $r0.<java.awt.Dimension: void <init>(int,int)>($i1, $i3)
+1698006181:orgDim = $r0
+1657488235:effDim = specialinvoke this.<org.apache.fop.render.pcl.PCLGenerator: java.awt.Dimension getAdjustedDimension(java.awt.Dimension,double,int)>(orgDim, targetResolution, effResolution)
+1807433798:$z0 = virtualinvoke orgDim.<java.awt.Dimension: boolean equals(java.lang.Object)>(effDim)
+1383656171:if $z0 != 0 goto $z0 = 0
+8852634:$z0 = 1
+609847995:goto [?= scaled = $z0]
+1923288481:$z0 = 0
+785645523:scaled = $z0
+1154273293:monochrome = staticinvoke <org.apache.fop.render.pcl.PCLGenerator: boolean isMonochromeImage(java.awt.image.RenderedImage)>(img)
+1876790872:if monochrome != 0 goto effImg = img
+236575888:transparencyDisabled = 1
+76290269:mask = null
+517773690:if mask == null goto src = null
+2021480975:virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void pushCursorPos()>()
+1856484345:virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void selectCurrentPattern(int,int)>(0, 1)
+1606464527:virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void setTransparencyMode(boolean,boolean)>(1, 1)
+513015717:virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void paintMonochromeBitmap(java.awt.image.RenderedImage,int)>(mask, effResolution)
+1496496589:virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void popCursorPos()>()
+603127064:src = null
+2078424583:$z0 = img instanceof java.awt.image.BufferedImage
+1112964379:if $z0 == 0 goto (branch)
+1494203187:if scaled != 0 goto (branch)
+546426809:$z0 = staticinvoke <org.apache.fop.render.pcl.PCLGenerator: boolean isGrayscaleImage(java.awt.image.RenderedImage)>(img)
+1155304291:if $z0 == 0 goto $r2 = new java.awt.image.BufferedImage
+151287822:$r1 = interfaceinvoke img.<java.awt.image.RenderedImage: java.awt.image.ColorModel getColorModel()>()
+73786306:$z0 = virtualinvoke $r1.<java.awt.image.ColorModel: boolean hasAlpha()>()
+1028380623:if $z0 == 0 goto src = (java.awt.image.BufferedImage) img
+1044739705:$r2 = new java.awt.image.BufferedImage
+872885458:$i1 = effDim.<java.awt.Dimension: int width>
+961331008:$i3 = effDim.<java.awt.Dimension: int height>
+1000212954:specialinvoke $r2.<java.awt.image.BufferedImage: void <init>(int,int,int)>($i1, $i3, 10)
+77129162:src = $r2
+1377186593:$r3 = new java.awt.image.ColorConvertOp
+701035496:$r4 = staticinvoke <java.awt.color.ColorSpace: java.awt.color.ColorSpace getInstance(int)>(1003)
+1189034778:specialinvoke $r3.<java.awt.image.ColorConvertOp: void <init>(java.awt.color.ColorSpace,java.awt.RenderingHints)>($r4, null)
+1772178511:op = $r3
+1699237745:$r5 = (java.awt.image.BufferedImage) img
+1940622009:virtualinvoke op.<java.awt.image.ColorConvertOp: java.awt.image.BufferedImage filter(java.awt.image.BufferedImage,java.awt.image.BufferedImage)>($r5, src)
+1961843305:goto [?= (branch)]
+1225555691:src = (java.awt.image.BufferedImage) img
+1804766111:if src != null goto converter = specialinvoke this.<org.apache.fop.render.pcl.PCLGenerator: org.apache.fop.render.pcl.MonochromeBitmapConverter createMonochromeBitmapConverter()>()
+1644997349:$r2 = new java.awt.image.BufferedImage
+1935141580:$i1 = effDim.<java.awt.Dimension: int width>
+380259199:$i3 = effDim.<java.awt.Dimension: int height>
+2056327460:specialinvoke $r2.<java.awt.image.BufferedImage: void <init>(int,int,int)>($i1, $i3, 10)
+1241289049:src = $r2
+1732614260:g2d = virtualinvoke src.<java.awt.image.BufferedImage: java.awt.Graphics2D createGraphics()>()
+169614500:$r6 = new java.awt.geom.AffineTransform
+358649248:specialinvoke $r6.<java.awt.geom.AffineTransform: void <init>()>()
+1978797654:at = $r6
+1267114944:$d0 = virtualinvoke effDim.<java.awt.Dimension: double getWidth()>()
+122217497:$d1 = virtualinvoke orgDim.<java.awt.Dimension: double getWidth()>()
+489141060:sx = $d0 / $d1
+262860089:$d0 = virtualinvoke effDim.<java.awt.Dimension: double getHeight()>()
+1499321163:$d1 = virtualinvoke orgDim.<java.awt.Dimension: double getHeight()>()
+1067856904:sy = $d0 / $d1
+1921925109:virtualinvoke at.<java.awt.geom.AffineTransform: void scale(double,double)>(sx, sy)
+1696167734:virtualinvoke g2d.<java.awt.Graphics2D: void drawRenderedImage(java.awt.image.RenderedImage,java.awt.geom.AffineTransform)>(img, at)
+107731422:virtualinvoke g2d.<java.awt.Graphics2D: void dispose()>()
+313295133:goto [?= converter = specialinvoke this.<org.apache.fop.render.pcl.PCLGenerator: org.apache.fop.render.pcl.MonochromeBitmapConverter createMonochromeBitmapConverter()>()]
+1045720793:$r7 := @caughtexception
+2068881534:l21 = $r7
+1959795266:virtualinvoke g2d.<java.awt.Graphics2D: void dispose()>()
+1080373536:throw l21
+1632661657:converter = specialinvoke this.<org.apache.fop.render.pcl.PCLGenerator: org.apache.fop.render.pcl.MonochromeBitmapConverter createMonochromeBitmapConverter()>()
+793296158:interfaceinvoke converter.<org.apache.fop.render.pcl.MonochromeBitmapConverter: void setHint(java.lang.String,java.lang.String)>("quality", "false")
+132439581:$r8 = interfaceinvoke converter.<org.apache.fop.render.pcl.MonochromeBitmapConverter: java.awt.image.RenderedImage convertToMonochrome(java.awt.image.BufferedImage)>(src)
+1175420246:buf = (java.awt.image.BufferedImage) $r8
+638954441:red = buf
+1412451092:virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void selectCurrentPattern(int,int)>(0, 0)
+977935102:if sourceTransparency != 0 goto $z1 = 1
+568313658:if mask == null goto $z1 = 0
+1787871797:$z1 = 1
+1170103355:goto [?= virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void setTransparencyMode(boolean,boolean)>($z1, 1)]
+1419331906:$z1 = 0
+1194568581:virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void setTransparencyMode(boolean,boolean)>($z1, 1)
+573931359:virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void paintMonochromeBitmap(java.awt.image.RenderedImage,int)>(red, effResolution)
+1715292036:goto [?= return]
+934216124:effImg = img
+1285573742:if scaled == 0 goto virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void setSourceTransparencyMode(boolean)>(sourceTransparency)
+804909327:$r2 = new java.awt.image.BufferedImage
+785168034:$i1 = effDim.<java.awt.Dimension: int width>
+1101827364:$i3 = effDim.<java.awt.Dimension: int height>
+807830338:specialinvoke $r2.<java.awt.image.BufferedImage: void <init>(int,int,int)>($i1, $i3, 12)
+812874432:buf = $r2
+205008727:g2d = virtualinvoke buf.<java.awt.image.BufferedImage: java.awt.Graphics2D createGraphics()>()
+1017904901:$r6 = new java.awt.geom.AffineTransform
+467353876:specialinvoke $r6.<java.awt.geom.AffineTransform: void <init>()>()
+1468896853:at = $r6
+116130776:$d0 = virtualinvoke effDim.<java.awt.Dimension: double getWidth()>()
+881304729:$d1 = virtualinvoke orgDim.<java.awt.Dimension: double getWidth()>()
+1573617043:sx = $d0 / $d1
+473755772:$d0 = virtualinvoke effDim.<java.awt.Dimension: double getHeight()>()
+792288686:$d1 = virtualinvoke orgDim.<java.awt.Dimension: double getHeight()>()
+702861867:sy = $d0 / $d1
+50491350:virtualinvoke at.<java.awt.geom.AffineTransform: void scale(double,double)>(sx, sy)
+726908292:virtualinvoke g2d.<java.awt.Graphics2D: void drawRenderedImage(java.awt.image.RenderedImage,java.awt.geom.AffineTransform)>(img, at)
+1959808232:virtualinvoke g2d.<java.awt.Graphics2D: void dispose()>()
+392777538:goto [?= effImg = buf]
+1547929077:$r10 := @caughtexception
+47350288:l22 = $r10
+325261968:virtualinvoke g2d.<java.awt.Graphics2D: void dispose()>()
+1799190399:throw l22
+1144352676:effImg = buf
+974374464:virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void setSourceTransparencyMode(boolean)>(sourceTransparency)
+980197840:virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void selectCurrentPattern(int,int)>(0, 0)
+1346644124:virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void paintMonochromeBitmap(java.awt.image.RenderedImage,int)>(effImg, effResolution)
+717636335:return

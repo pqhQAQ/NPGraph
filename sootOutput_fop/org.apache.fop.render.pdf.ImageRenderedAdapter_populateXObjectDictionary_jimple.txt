@@ -1,0 +1,77 @@
+method: org.apache.fop.render.pdf.ImageRenderedAdapter.populateXObjectDictionary:5344384
+990960766:this := @this: org.apache.fop.render.pdf.ImageRenderedAdapter
+1341911677:dict := @parameter0: org.apache.fop.pdf.PDFDictionary
+122110986:cm = specialinvoke this.<org.apache.fop.render.pdf.ImageRenderedAdapter: java.awt.image.ColorModel getEffectiveColorModel()>()
+13789291:$z0 = cm instanceof java.awt.image.IndexColorModel
+1975863608:if $z0 == 0 goto return
+292660858:icm = (java.awt.image.IndexColorModel) cm
+1013488776:$r0 = new org.apache.fop.pdf.PDFArray
+280310737:specialinvoke $r0.<org.apache.fop.pdf.PDFArray: void <init>(org.apache.fop.pdf.PDFObject)>(dict)
+1750918888:indexed = $r0
+1601190053:$r1 = new org.apache.fop.pdf.PDFName
+1916730794:specialinvoke $r1.<org.apache.fop.pdf.PDFName: void <init>(java.lang.String)>("Indexed")
+92266111:virtualinvoke indexed.<org.apache.fop.pdf.PDFArray: void add(java.lang.Object)>($r1)
+346844079:$r2 = virtualinvoke icm.<java.awt.image.IndexColorModel: java.awt.color.ColorSpace getColorSpace()>()
+1137817795:$i0 = virtualinvoke $r2.<java.awt.color.ColorSpace: int getType()>()
+137942663:if $i0 == 5 goto $r1 = new org.apache.fop.pdf.PDFName
+1267481928:$r3 = <org.apache.fop.render.pdf.ImageRenderedAdapter: org.apache.commons.logging.Log log>
+1678469303:$r4 = new java.lang.StringBuffer
+1251600514:specialinvoke $r4.<java.lang.StringBuffer: void <init>()>()
+537751325:$r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Indexed color space is not using RGB as base color space. The image may not be handled correctly. Base color space: ")
+1850179432:$r5 = virtualinvoke icm.<java.awt.image.IndexColorModel: java.awt.color.ColorSpace getColorSpace()>()
+402505064:$r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r5)
+1793113561:$r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" Image: ")
+1510661112:$r6 = this.<org.apache.fop.render.pdf.ImageRenderedAdapter: org.apache.xmlgraphics.image.loader.Image image>
+2129634550:$r7 = interfaceinvoke $r6.<org.apache.xmlgraphics.image.loader.Image: org.apache.xmlgraphics.image.loader.ImageInfo getInfo()>()
+657937301:$r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r7)
+558919504:$r8 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>()
+666631750:interfaceinvoke $r3.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r8)
+1934900295:$r1 = new org.apache.fop.pdf.PDFName
+1758230415:$r9 = virtualinvoke icm.<java.awt.image.IndexColorModel: java.awt.color.ColorSpace getColorSpace()>()
+1203602185:$r10 = staticinvoke <org.apache.fop.render.pdf.ImageRenderedAdapter: org.apache.fop.pdf.PDFDeviceColorSpace toPDFColorSpace(java.awt.color.ColorSpace)>($r9)
+1793452202:$r11 = virtualinvoke $r10.<org.apache.fop.pdf.PDFDeviceColorSpace: java.lang.String getName()>()
+470689722:specialinvoke $r1.<org.apache.fop.pdf.PDFName: void <init>(java.lang.String)>($r11)
+1699885753:virtualinvoke indexed.<org.apache.fop.pdf.PDFArray: void add(java.lang.Object)>($r1)
+193942835:c = virtualinvoke icm.<java.awt.image.IndexColorModel: int getMapSize()>()
+1843309248:hival = c - 1
+515663238:if hival <= 255 goto $r13 = new java.lang.Integer
+1655525421:$r12 = new java.lang.UnsupportedOperationException
+293717840:specialinvoke $r12.<java.lang.UnsupportedOperationException: void <init>(java.lang.String)>("hival must not go beyond 255")
+1598316074:throw $r12
+274081659:$r13 = new java.lang.Integer
+550709787:specialinvoke $r13.<java.lang.Integer: void <init>(int)>(hival)
+124871539:virtualinvoke indexed.<org.apache.fop.pdf.PDFArray: void add(java.lang.Object)>($r13)
+985876794:palette = newarray (int)[c]
+1234752418:virtualinvoke icm.<java.awt.image.IndexColorModel: void getRGBs(int[])>(palette)
+1349408365:$r14 = new org.apache.commons.io.output.ByteArrayOutputStream
+1361475308:specialinvoke $r14.<org.apache.commons.io.output.ByteArrayOutputStream: void <init>()>()
+877242771:baout = $r14
+1636215248:i = 0
+1386128101:if i >= c goto $r15 = virtualinvoke baout.<org.apache.commons.io.output.ByteArrayOutputStream: byte[] toByteArray()>()
+829895566:entry = palette[i]
+1779374058:$i1 = entry & 16711680
+1865411673:$i1 = $i1 >> 16
+860225558:virtualinvoke baout.<org.apache.commons.io.output.ByteArrayOutputStream: void write(int)>($i1)
+1418676609:$i1 = entry & 65280
+511761440:$i1 = $i1 >> 8
+502515845:virtualinvoke baout.<org.apache.commons.io.output.ByteArrayOutputStream: void write(int)>($i1)
+1294661184:$i1 = entry & 255
+1066208084:virtualinvoke baout.<org.apache.commons.io.output.ByteArrayOutputStream: void write(int)>($i1)
+1155717220:i = i + 1
+149729425:goto [?= (branch)]
+900229575:$r15 = virtualinvoke baout.<org.apache.commons.io.output.ByteArrayOutputStream: byte[] toByteArray()>()
+1136173910:virtualinvoke indexed.<org.apache.fop.pdf.PDFArray: void add(java.lang.Object)>($r15)
+1523599269:virtualinvoke dict.<org.apache.fop.pdf.PDFDictionary: void put(java.lang.String,java.lang.Object)>("ColorSpace", indexed)
+1557614767:$i2 = virtualinvoke icm.<java.awt.image.IndexColorModel: int getPixelSize()>()
+1005732039:virtualinvoke dict.<org.apache.fop.pdf.PDFDictionary: void put(java.lang.String,int)>("BitsPerComponent", $i2)
+1878568462:$r16 = virtualinvoke this.<org.apache.fop.render.pdf.ImageRenderedAdapter: org.apache.xmlgraphics.image.loader.impl.ImageRendered getImage()>()
+795562640:$r17 = virtualinvoke $r16.<org.apache.xmlgraphics.image.loader.impl.ImageRendered: java.awt.image.RenderedImage getRenderedImage()>()
+2136613157:index = staticinvoke <org.apache.fop.render.pdf.ImageRenderedAdapter: java.lang.Integer getIndexOfFirstTransparentColorInPalette(java.awt.image.RenderedImage)>($r17)
+1695153997:if index == null goto return
+1935166477:$r0 = new org.apache.fop.pdf.PDFArray
+761524238:specialinvoke $r0.<org.apache.fop.pdf.PDFArray: void <init>(org.apache.fop.pdf.PDFObject)>(dict)
+2082815593:mask = $r0
+475891380:virtualinvoke mask.<org.apache.fop.pdf.PDFArray: void add(java.lang.Object)>(index)
+1105393567:virtualinvoke mask.<org.apache.fop.pdf.PDFArray: void add(java.lang.Object)>(index)
+712711551:virtualinvoke dict.<org.apache.fop.pdf.PDFDictionary: void put(java.lang.String,java.lang.Object)>("Mask", mask)
+2026738338:return

@@ -1,0 +1,143 @@
+public class org.apache.fop.render.afp.modca.IncludePageOverlay extends org.apache.fop.render.afp.modca.AbstractNamedAFPObject
+{
+    private int x;
+    private int y;
+    private int orientation;
+
+    public void <init>(java.lang.String, int, int, int)
+    {
+        org.apache.fop.render.afp.modca.IncludePageOverlay this;
+        java.lang.String overlayName;
+        int x, y, orientation;
+
+        this := @this: org.apache.fop.render.afp.modca.IncludePageOverlay;
+        overlayName := @parameter0: java.lang.String;
+        x := @parameter1: int;
+        y := @parameter2: int;
+        orientation := @parameter3: int;
+        specialinvoke this.<org.apache.fop.render.afp.modca.AbstractNamedAFPObject: void <init>(java.lang.String)>(overlayName);
+        this.<org.apache.fop.render.afp.modca.IncludePageOverlay: int x> = 0;
+        this.<org.apache.fop.render.afp.modca.IncludePageOverlay: int y> = 0;
+        this.<org.apache.fop.render.afp.modca.IncludePageOverlay: int orientation> = 0;
+        this.<org.apache.fop.render.afp.modca.IncludePageOverlay: int x> = x;
+        this.<org.apache.fop.render.afp.modca.IncludePageOverlay: int y> = y;
+        virtualinvoke this.<org.apache.fop.render.afp.modca.IncludePageOverlay: void setOrientation(int)>(orientation);
+        return;
+    }
+
+    public void setOrientation(int)
+    {
+        org.apache.fop.render.afp.modca.IncludePageOverlay this;
+        int orientation;
+        java.lang.IllegalArgumentException $r0;
+
+        this := @this: org.apache.fop.render.afp.modca.IncludePageOverlay;
+        orientation := @parameter0: int;
+        if orientation == 0 goto label0;
+
+        if orientation == 90 goto label0;
+
+        if orientation == 180 goto label0;
+
+        if orientation != 270 goto label1;
+
+     label0:
+        this.<org.apache.fop.render.afp.modca.IncludePageOverlay: int orientation> = orientation;
+        goto label2;
+
+     label1:
+        $r0 = new java.lang.IllegalArgumentException;
+        specialinvoke $r0.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("The orientation must be one of the values 0, 90, 180, 270");
+        throw $r0;
+
+     label2:
+        return;
+    }
+
+    public void writeDataStream(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.render.afp.modca.IncludePageOverlay this;
+        java.io.OutputStream os;
+        byte[] data, len, xcoord, ycoord, $r0, $r1;
+        int i, $i1, $i2;
+        byte $b0;
+
+        this := @this: org.apache.fop.render.afp.modca.IncludePageOverlay;
+        os := @parameter0: java.io.OutputStream;
+        data = newarray (byte)[25];
+        data[0] = 90;
+        len = staticinvoke <org.apache.fop.render.afp.tools.BinaryUtils: byte[] convert(int,int)>(24, 2);
+        $b0 = len[0];
+        data[1] = $b0;
+        $b0 = len[1];
+        data[2] = $b0;
+        data[3] = -45;
+        data[4] = -81;
+        data[5] = -40;
+        data[6] = 0;
+        data[7] = 0;
+        data[8] = 0;
+        i = 0;
+
+     label0:
+        $r0 = this.<org.apache.fop.render.afp.modca.IncludePageOverlay: byte[] nameBytes>;
+        $i1 = lengthof $r0;
+        if i >= $i1 goto label1;
+
+        $i1 = 9 + i;
+        $r1 = this.<org.apache.fop.render.afp.modca.IncludePageOverlay: byte[] nameBytes>;
+        $b0 = $r1[i];
+        data[$i1] = $b0;
+        i = i + 1;
+        goto label0;
+
+     label1:
+        $i2 = this.<org.apache.fop.render.afp.modca.IncludePageOverlay: int x>;
+        xcoord = staticinvoke <org.apache.fop.render.afp.tools.BinaryUtils: byte[] convert(int,int)>($i2, 3);
+        $b0 = xcoord[0];
+        data[17] = $b0;
+        $b0 = xcoord[1];
+        data[18] = $b0;
+        $b0 = xcoord[2];
+        data[19] = $b0;
+        $i2 = this.<org.apache.fop.render.afp.modca.IncludePageOverlay: int y>;
+        ycoord = staticinvoke <org.apache.fop.render.afp.tools.BinaryUtils: byte[] convert(int,int)>($i2, 3);
+        $b0 = ycoord[0];
+        data[20] = $b0;
+        $b0 = ycoord[1];
+        data[21] = $b0;
+        $b0 = ycoord[2];
+        data[22] = $b0;
+        $i2 = this.<org.apache.fop.render.afp.modca.IncludePageOverlay: int orientation>;
+        lookupswitch($i2)
+        {
+            case 90: goto label2;
+            case 180: goto label3;
+            case 270: goto label4;
+            default: goto label5;
+        };
+
+     label2:
+        data[23] = 45;
+        data[24] = 0;
+        goto label6;
+
+     label3:
+        data[23] = 90;
+        data[24] = 0;
+        goto label6;
+
+     label4:
+        data[23] = -121;
+        data[24] = 0;
+        goto label6;
+
+     label5:
+        data[23] = 0;
+        data[24] = 0;
+
+     label6:
+        virtualinvoke os.<java.io.OutputStream: void write(byte[])>(data);
+        return;
+    }
+}

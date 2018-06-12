@@ -1,0 +1,722 @@
+public class org.apache.fop.layoutmgr.inline.LeaderLayoutManager extends org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager
+{
+    private org.apache.fop.fo.flow.Leader fobj;
+    private org.apache.fop.fonts.Font font;
+    private java.util.LinkedList contentList;
+    private org.apache.fop.layoutmgr.inline.ContentLayoutManager clm;
+    private int contentAreaIPD;
+
+    public void <init>(org.apache.fop.fo.flow.Leader)
+    {
+        org.apache.fop.layoutmgr.inline.LeaderLayoutManager this;
+        org.apache.fop.fo.flow.Leader node;
+
+        this := @this: org.apache.fop.layoutmgr.inline.LeaderLayoutManager;
+        node := @parameter0: org.apache.fop.fo.flow.Leader;
+        specialinvoke this.<org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager: void <init>(org.apache.fop.fo.FObj)>(node);
+        this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fonts.Font font> = null;
+        this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: java.util.LinkedList contentList> = null;
+        this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.inline.ContentLayoutManager clm> = null;
+        this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: int contentAreaIPD> = 0;
+        this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj> = node;
+        return;
+    }
+
+    public void initialize()
+    {
+        org.apache.fop.layoutmgr.inline.LeaderLayoutManager this;
+        org.apache.fop.fonts.FontInfo fi;
+        org.apache.fop.fonts.FontTriplet[] fontkeys;
+        org.apache.fop.fo.flow.Leader $r0, $r4, $r8;
+        org.apache.fop.fo.FOEventHandler $r1;
+        org.apache.fop.fo.properties.CommonFont $r2, $r5;
+        org.apache.fop.fonts.FontTriplet $r3;
+        org.apache.fop.datatypes.Length $r6;
+        int $i0;
+        org.apache.fop.fonts.Font $r7;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground $r9;
+
+        this := @this: org.apache.fop.layoutmgr.inline.LeaderLayoutManager;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.Leader: org.apache.fop.fo.FOEventHandler getFOEventHandler()>();
+        fi = virtualinvoke $r1.<org.apache.fop.fo.FOEventHandler: org.apache.fop.fonts.FontInfo getFontInfo()>();
+        $r0 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $r2 = virtualinvoke $r0.<org.apache.fop.fo.flow.Leader: org.apache.fop.fo.properties.CommonFont getCommonFont()>();
+        fontkeys = virtualinvoke $r2.<org.apache.fop.fo.properties.CommonFont: org.apache.fop.fonts.FontTriplet[] getFontState(org.apache.fop.fonts.FontInfo)>(fi);
+        $r3 = fontkeys[0];
+        $r4 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $r5 = virtualinvoke $r4.<org.apache.fop.fo.flow.Leader: org.apache.fop.fo.properties.CommonFont getCommonFont()>();
+        $r6 = $r5.<org.apache.fop.fo.properties.CommonFont: org.apache.fop.datatypes.Length fontSize>;
+        $i0 = interfaceinvoke $r6.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $r7 = virtualinvoke fi.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.Font getFontInstance(org.apache.fop.fonts.FontTriplet,int)>($r3, $i0);
+        this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fonts.Font font> = $r7;
+        $r8 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $r9 = virtualinvoke $r8.<org.apache.fop.fo.flow.Leader: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: void setCommonBorderPaddingBackground(org.apache.fop.fo.properties.CommonBorderPaddingBackground)>($r9);
+        return;
+    }
+
+    public org.apache.fop.area.inline.InlineArea get(org.apache.fop.layoutmgr.LayoutContext)
+    {
+        org.apache.fop.layoutmgr.inline.LeaderLayoutManager this;
+        org.apache.fop.layoutmgr.LayoutContext context;
+        org.apache.fop.area.inline.InlineArea $r0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.LeaderLayoutManager;
+        context := @parameter0: org.apache.fop.layoutmgr.LayoutContext;
+        $r0 = specialinvoke this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.area.inline.InlineArea getLeaderInlineArea(org.apache.fop.layoutmgr.LayoutContext)>(context);
+        return $r0;
+    }
+
+    protected org.apache.fop.traits.MinOptMax getAllocationIPD(int)
+    {
+        org.apache.fop.layoutmgr.inline.LeaderLayoutManager this;
+        int refIPD;
+        org.apache.fop.traits.MinOptMax $r0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.LeaderLayoutManager;
+        refIPD := @parameter0: int;
+        $r0 = specialinvoke this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.traits.MinOptMax getLeaderAllocIPD(int)>(refIPD);
+        return $r0;
+    }
+
+    private org.apache.fop.traits.MinOptMax getLeaderAllocIPD(int)
+    {
+        org.apache.fop.layoutmgr.inline.LeaderLayoutManager this;
+        int ipd, borderPaddingWidth, opt, min, max, $i0, $i1;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground $r0;
+        org.apache.fop.fo.flow.Leader $r1;
+        org.apache.fop.fo.properties.LengthRangeProperty $r2;
+        org.apache.fop.fo.properties.Property $r3;
+        org.apache.fop.datatypes.Length $r4;
+        org.apache.fop.traits.MinOptMax $r5;
+
+        this := @this: org.apache.fop.layoutmgr.inline.LeaderLayoutManager;
+        ipd := @parameter0: int;
+        borderPaddingWidth = 0;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground commonBorderPaddingBackground>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground commonBorderPaddingBackground>;
+        borderPaddingWidth = virtualinvoke $r0.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getIPPaddingAndBorder(boolean,org.apache.fop.datatypes.PercentBaseContext)>(0, this);
+
+     label0:
+        $i0 = ipd - borderPaddingWidth;
+        specialinvoke this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: void setContentAreaIPD(int)>($i0);
+        $r1 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.flow.Leader: org.apache.fop.fo.properties.LengthRangeProperty getLeaderLength()>();
+        $r3 = virtualinvoke $r2.<org.apache.fop.fo.properties.LengthRangeProperty: org.apache.fop.fo.properties.Property getOptimum(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $r4 = virtualinvoke $r3.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        $i1 = interfaceinvoke $r4.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        opt = $i1 - borderPaddingWidth;
+        $r1 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.flow.Leader: org.apache.fop.fo.properties.LengthRangeProperty getLeaderLength()>();
+        $r3 = virtualinvoke $r2.<org.apache.fop.fo.properties.LengthRangeProperty: org.apache.fop.fo.properties.Property getMinimum(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $r4 = virtualinvoke $r3.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        $i1 = interfaceinvoke $r4.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        min = $i1 - borderPaddingWidth;
+        $r1 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.flow.Leader: org.apache.fop.fo.properties.LengthRangeProperty getLeaderLength()>();
+        $r3 = virtualinvoke $r2.<org.apache.fop.fo.properties.LengthRangeProperty: org.apache.fop.fo.properties.Property getMaximum(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $r4 = virtualinvoke $r3.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        $i1 = interfaceinvoke $r4.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        max = $i1 - borderPaddingWidth;
+        $r5 = new org.apache.fop.traits.MinOptMax;
+        specialinvoke $r5.<org.apache.fop.traits.MinOptMax: void <init>(int,int,int)>(min, opt, max);
+        return $r5;
+    }
+
+    private org.apache.fop.area.inline.InlineArea getLeaderInlineArea(org.apache.fop.layoutmgr.LayoutContext)
+    {
+        org.apache.fop.layoutmgr.inline.LeaderLayoutManager this;
+        org.apache.fop.layoutmgr.LayoutContext context, childContext, $r20;
+        org.apache.fop.area.inline.InlineArea leaderArea;
+        org.apache.fop.area.inline.Leader leader, $r1;
+        org.apache.fop.area.inline.TextArea t, $r8;
+        char dot;
+        int width, $i0, $i1;
+        org.apache.fop.area.inline.Space spacer, $r4;
+        org.apache.fop.area.inline.FilledArea fa, $r14;
+        org.apache.fop.layoutmgr.inline.InlineLayoutManager lm, $r18;
+        org.apache.fop.fo.flow.Leader $r0, $r2, $r6;
+        org.apache.fop.datatypes.Length $r3, $r13;
+        java.lang.Integer $r5;
+        java.awt.Color $r7;
+        org.apache.fop.fonts.Font $r9, $r12;
+        java.lang.StringBuffer $r10;
+        java.lang.String $r11;
+        org.apache.fop.fo.FONode$FONodeIterator $r15;
+        org.apache.commons.logging.Log $r16;
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager $r17, $r19;
+        org.apache.fop.layoutmgr.inline.AlignmentContext $r21;
+        java.util.LinkedList $r22;
+
+        this := @this: org.apache.fop.layoutmgr.inline.LeaderLayoutManager;
+        context := @parameter0: org.apache.fop.layoutmgr.LayoutContext;
+        leaderArea = null;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fo.flow.Leader: int getLeaderPattern()>();
+        if $i0 != 123 goto label2;
+
+        $r0 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fo.flow.Leader: int getRuleStyle()>();
+        if $i0 == 95 goto label0;
+
+        $r1 = new org.apache.fop.area.inline.Leader;
+        specialinvoke $r1.<org.apache.fop.area.inline.Leader: void <init>()>();
+        leader = $r1;
+        $r2 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $i1 = virtualinvoke $r2.<org.apache.fop.fo.flow.Leader: int getRuleStyle()>();
+        virtualinvoke leader.<org.apache.fop.area.inline.Leader: void setRuleStyle(int)>($i1);
+        $r2 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.fo.flow.Leader: org.apache.fop.datatypes.Length getRuleThickness()>();
+        $i1 = interfaceinvoke $r3.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        virtualinvoke leader.<org.apache.fop.area.inline.Leader: void setRuleThickness(int)>($i1);
+        $r2 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.fo.flow.Leader: org.apache.fop.datatypes.Length getRuleThickness()>();
+        $i1 = interfaceinvoke $r3.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        virtualinvoke leader.<org.apache.fop.area.inline.Leader: void setBPD(int)>($i1);
+        leaderArea = leader;
+        goto label1;
+
+     label0:
+        $r4 = new org.apache.fop.area.inline.Space;
+        specialinvoke $r4.<org.apache.fop.area.inline.Space: void <init>()>();
+        leaderArea = $r4;
+        virtualinvoke leaderArea.<org.apache.fop.area.inline.InlineArea: void setBPD(int)>(1);
+
+     label1:
+        $r5 = <org.apache.fop.area.Trait: java.lang.Integer COLOR>;
+        $r6 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $r7 = virtualinvoke $r6.<org.apache.fop.fo.flow.Leader: java.awt.Color getColor()>();
+        virtualinvoke leaderArea.<org.apache.fop.area.inline.InlineArea: void addTrait(java.lang.Object,java.lang.Object)>($r5, $r7);
+        goto label10;
+
+     label2:
+        $r0 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fo.flow.Leader: int getLeaderPattern()>();
+        if $i0 != 134 goto label3;
+
+        $r4 = new org.apache.fop.area.inline.Space;
+        specialinvoke $r4.<org.apache.fop.area.inline.Space: void <init>()>();
+        leaderArea = $r4;
+        virtualinvoke leaderArea.<org.apache.fop.area.inline.InlineArea: void setBPD(int)>(1);
+        goto label10;
+
+     label3:
+        $r0 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fo.flow.Leader: int getLeaderPattern()>();
+        if $i0 != 35 goto label6;
+
+        $r8 = new org.apache.fop.area.inline.TextArea;
+        specialinvoke $r8.<org.apache.fop.area.inline.TextArea: void <init>()>();
+        t = $r8;
+        dot = 46;
+        $r9 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fonts.Font font>;
+        width = virtualinvoke $r9.<org.apache.fop.fonts.Font: int getCharWidth(char)>(dot);
+        $r10 = new java.lang.StringBuffer;
+        specialinvoke $r10.<java.lang.StringBuffer: void <init>()>();
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("");
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(dot);
+        $r11 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke t.<org.apache.fop.area.inline.TextArea: void addWord(java.lang.String,int)>($r11, 0);
+        virtualinvoke t.<org.apache.fop.area.inline.TextArea: void setIPD(int)>(width);
+        virtualinvoke t.<org.apache.fop.area.inline.TextArea: void setBPD(int)>(width);
+        virtualinvoke t.<org.apache.fop.area.inline.TextArea: void setBaselineOffset(int)>(width);
+        $r12 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fonts.Font font>;
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addFontTraits(org.apache.fop.area.Area,org.apache.fop.fonts.Font)>(t, $r12);
+        $r5 = <org.apache.fop.area.Trait: java.lang.Integer COLOR>;
+        $r6 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $r7 = virtualinvoke $r6.<org.apache.fop.fo.flow.Leader: java.awt.Color getColor()>();
+        virtualinvoke t.<org.apache.fop.area.inline.TextArea: void addTrait(java.lang.Object,java.lang.Object)>($r5, $r7);
+        spacer = null;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $r13 = virtualinvoke $r0.<org.apache.fop.fo.flow.Leader: org.apache.fop.datatypes.Length getLeaderPatternWidth()>();
+        $i0 = interfaceinvoke $r13.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        if $i0 <= width goto label4;
+
+        $r4 = new org.apache.fop.area.inline.Space;
+        specialinvoke $r4.<org.apache.fop.area.inline.Space: void <init>()>();
+        spacer = $r4;
+        $r2 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.fo.flow.Leader: org.apache.fop.datatypes.Length getLeaderPatternWidth()>();
+        $i1 = interfaceinvoke $r3.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $i1 = $i1 - width;
+        virtualinvoke spacer.<org.apache.fop.area.inline.Space: void setIPD(int)>($i1);
+        $r0 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $r13 = virtualinvoke $r0.<org.apache.fop.fo.flow.Leader: org.apache.fop.datatypes.Length getLeaderPatternWidth()>();
+        width = interfaceinvoke $r13.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+
+     label4:
+        $r14 = new org.apache.fop.area.inline.FilledArea;
+        specialinvoke $r14.<org.apache.fop.area.inline.FilledArea: void <init>()>();
+        fa = $r14;
+        virtualinvoke fa.<org.apache.fop.area.inline.FilledArea: void setUnitWidth(int)>(width);
+        virtualinvoke fa.<org.apache.fop.area.inline.FilledArea: void addChildArea(org.apache.fop.area.Area)>(t);
+        if spacer == null goto label5;
+
+        virtualinvoke fa.<org.apache.fop.area.inline.FilledArea: void addChildArea(org.apache.fop.area.Area)>(spacer);
+
+     label5:
+        $i1 = virtualinvoke t.<org.apache.fop.area.inline.TextArea: int getBPD()>();
+        virtualinvoke fa.<org.apache.fop.area.inline.FilledArea: void setBPD(int)>($i1);
+        leaderArea = fa;
+        goto label10;
+
+     label6:
+        $r0 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fo.flow.Leader: int getLeaderPattern()>();
+        if $i0 != 158 goto label10;
+
+        $r0 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $r15 = virtualinvoke $r0.<org.apache.fop.fo.flow.Leader: org.apache.fop.fo.FONode$FONodeIterator getChildNodes()>();
+        if $r15 != null goto label7;
+
+        $r0 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $r16 = virtualinvoke $r0.<org.apache.fop.fo.flow.Leader: org.apache.commons.logging.Log getLogger()>();
+        interfaceinvoke $r16.<org.apache.commons.logging.Log: void error(java.lang.Object)>("Leader use-content with no content");
+        return null;
+
+     label7:
+        this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: java.util.ListIterator fobjIter> = null;
+        $r14 = new org.apache.fop.area.inline.FilledArea;
+        specialinvoke $r14.<org.apache.fop.area.inline.FilledArea: void <init>()>();
+        fa = $r14;
+        $r17 = new org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        specialinvoke $r17.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: void <init>(org.apache.fop.area.Area,org.apache.fop.layoutmgr.LayoutManager)>(fa, this);
+        this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.inline.ContentLayoutManager clm> = $r17;
+        $r17 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.inline.ContentLayoutManager clm>;
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: void addChildLM(org.apache.fop.layoutmgr.LayoutManager)>($r17);
+        $r18 = new org.apache.fop.layoutmgr.inline.InlineLayoutManager;
+        $r6 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        specialinvoke $r18.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: void <init>(org.apache.fop.fo.flow.InlineLevel)>($r6);
+        lm = $r18;
+        $r19 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.inline.ContentLayoutManager clm>;
+        virtualinvoke $r19.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: void addChildLM(org.apache.fop.layoutmgr.LayoutManager)>(lm);
+        virtualinvoke lm.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: void initialize()>();
+        $r20 = new org.apache.fop.layoutmgr.LayoutContext;
+        specialinvoke $r20.<org.apache.fop.layoutmgr.LayoutContext: void <init>(int)>(0);
+        childContext = $r20;
+        $r21 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: org.apache.fop.layoutmgr.inline.AlignmentContext getAlignmentContext()>();
+        virtualinvoke childContext.<org.apache.fop.layoutmgr.LayoutContext: void setAlignmentContext(org.apache.fop.layoutmgr.inline.AlignmentContext)>($r21);
+        $r17 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.inline.ContentLayoutManager clm>;
+        $r22 = virtualinvoke $r17.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: java.util.LinkedList getNextKnuthElements(org.apache.fop.layoutmgr.LayoutContext,int)>(childContext, 0);
+        this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: java.util.LinkedList contentList> = $r22;
+        $r19 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.inline.ContentLayoutManager clm>;
+        width = virtualinvoke $r19.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: int getStackingSize()>();
+        spacer = null;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $r13 = virtualinvoke $r0.<org.apache.fop.fo.flow.Leader: org.apache.fop.datatypes.Length getLeaderPatternWidth()>();
+        $i0 = interfaceinvoke $r13.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        if $i0 <= width goto label8;
+
+        $r4 = new org.apache.fop.area.inline.Space;
+        specialinvoke $r4.<org.apache.fop.area.inline.Space: void <init>()>();
+        spacer = $r4;
+        $r2 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.fo.flow.Leader: org.apache.fop.datatypes.Length getLeaderPatternWidth()>();
+        $i1 = interfaceinvoke $r3.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $i1 = $i1 - width;
+        virtualinvoke spacer.<org.apache.fop.area.inline.Space: void setIPD(int)>($i1);
+        $r0 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $r13 = virtualinvoke $r0.<org.apache.fop.fo.flow.Leader: org.apache.fop.datatypes.Length getLeaderPatternWidth()>();
+        width = interfaceinvoke $r13.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+
+     label8:
+        virtualinvoke fa.<org.apache.fop.area.inline.FilledArea: void setUnitWidth(int)>(width);
+        if spacer == null goto label9;
+
+        virtualinvoke fa.<org.apache.fop.area.inline.FilledArea: void addChildArea(org.apache.fop.area.Area)>(spacer);
+
+     label9:
+        leaderArea = fa;
+
+     label10:
+        $r2 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $r11 = virtualinvoke $r2.<org.apache.fop.fo.flow.Leader: java.lang.String getId()>();
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void setProducerID(org.apache.fop.area.Area,java.lang.String)>(leaderArea, $r11);
+        return leaderArea;
+    }
+
+    public void addAreas(org.apache.fop.layoutmgr.PositionIterator, org.apache.fop.layoutmgr.LayoutContext)
+    {
+        org.apache.fop.layoutmgr.inline.LeaderLayoutManager this;
+        org.apache.fop.layoutmgr.PositionIterator posIter;
+        org.apache.fop.layoutmgr.LayoutContext context;
+        org.apache.fop.layoutmgr.KnuthPossPosIter contentIter, $r5;
+        org.apache.fop.fo.flow.Leader $r0;
+        int $i0, $i1;
+        org.apache.fop.area.inline.InlineArea $r1, $r3;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground $r2, $r4;
+        java.util.LinkedList $r6, $r7;
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager $r8;
+        org.apache.fop.layoutmgr.LayoutManager $r9;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.LeaderLayoutManager;
+        posIter := @parameter0: org.apache.fop.layoutmgr.PositionIterator;
+        context := @parameter1: org.apache.fop.layoutmgr.LayoutContext;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fo.flow.Leader: int getLeaderPattern()>();
+        if $i0 == 158 goto label0;
+
+        specialinvoke this.<org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager: void addAreas(org.apache.fop.layoutmgr.PositionIterator,org.apache.fop.layoutmgr.LayoutContext)>(posIter, context);
+        goto label3;
+
+     label0:
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: void addId()>();
+        $r1 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.area.inline.InlineArea curArea>;
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: void widthAdjustArea(org.apache.fop.area.inline.InlineArea,org.apache.fop.layoutmgr.LayoutContext)>($r1, context);
+        $r2 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground commonBorderPaddingBackground>;
+        if $r2 == null goto label1;
+
+        $r3 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.area.inline.InlineArea curArea>;
+        $r4 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground commonBorderPaddingBackground>;
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void setBorderPaddingTraits(org.apache.fop.area.Area,org.apache.fop.fo.properties.CommonBorderPaddingBackground,boolean,boolean,org.apache.fop.datatypes.PercentBaseContext)>($r3, $r4, 0, 0, this);
+        $r3 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.area.inline.InlineArea curArea>;
+        $r4 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground commonBorderPaddingBackground>;
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addBackground(org.apache.fop.area.Area,org.apache.fop.fo.properties.CommonBorderPaddingBackground,org.apache.fop.datatypes.PercentBaseContext)>($r3, $r4, this);
+
+     label1:
+        $r5 = new org.apache.fop.layoutmgr.KnuthPossPosIter;
+        $r6 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: java.util.LinkedList contentList>;
+        $r7 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: java.util.LinkedList contentList>;
+        $i1 = virtualinvoke $r7.<java.util.LinkedList: int size()>();
+        specialinvoke $r5.<org.apache.fop.layoutmgr.KnuthPossPosIter: void <init>(java.util.List,int,int)>($r6, 0, $i1);
+        contentIter = $r5;
+        $r8 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.inline.ContentLayoutManager clm>;
+        virtualinvoke $r8.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: void addAreas(org.apache.fop.layoutmgr.PositionIterator,org.apache.fop.layoutmgr.LayoutContext)>(contentIter, context);
+        $r9 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.LayoutManager parentLM>;
+        $r1 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.area.inline.InlineArea curArea>;
+        interfaceinvoke $r9.<org.apache.fop.layoutmgr.LayoutManager: void addChildArea(org.apache.fop.area.Area)>($r1);
+
+     label2:
+        $z0 = virtualinvoke posIter.<org.apache.fop.layoutmgr.PositionIterator: boolean hasNext()>();
+        if $z0 == 0 goto label3;
+
+        virtualinvoke posIter.<org.apache.fop.layoutmgr.PositionIterator: java.lang.Object next()>();
+        goto label2;
+
+     label3:
+        return;
+    }
+
+    public java.util.LinkedList getNextKnuthElements(org.apache.fop.layoutmgr.LayoutContext, int)
+    {
+        org.apache.fop.layoutmgr.inline.LeaderLayoutManager this;
+        org.apache.fop.layoutmgr.LayoutContext context;
+        int alignment, unitWidth, $i0, $i1, $i2, $i3, $i4, $i5, $i6, $i7;
+        org.apache.fop.layoutmgr.InlineKnuthSequence seq, $r1;
+        org.apache.fop.traits.MinOptMax ipd, $r23, $r25, $r27, $r29;
+        java.util.LinkedList returnList, $r30;
+        org.apache.fop.area.inline.InlineArea $r0, $r2, $r4;
+        org.apache.fop.layoutmgr.inline.AlignmentContext $r3, $r11, $r15, $r17;
+        org.apache.fop.fo.flow.Leader $r5, $r7, $r8, $r10, $r12;
+        org.apache.fop.datatypes.Length $r6, $r9;
+        boolean $z0;
+        org.apache.fop.area.inline.FilledArea $r13;
+        org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo $r14, $r22, $r24, $r26, $r28;
+        org.apache.fop.layoutmgr.inline.KnuthInlineBox $r16;
+        org.apache.fop.layoutmgr.LeafPosition $r18, $r20;
+        org.apache.fop.layoutmgr.KnuthPenalty $r19;
+        org.apache.fop.layoutmgr.KnuthGlue $r21;
+
+        this := @this: org.apache.fop.layoutmgr.inline.LeaderLayoutManager;
+        context := @parameter0: org.apache.fop.layoutmgr.LayoutContext;
+        alignment := @parameter1: int;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.area.inline.InlineArea get(org.apache.fop.layoutmgr.LayoutContext)>(context);
+        this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.area.inline.InlineArea curArea> = $r0;
+        $r1 = new org.apache.fop.layoutmgr.InlineKnuthSequence;
+        specialinvoke $r1.<org.apache.fop.layoutmgr.InlineKnuthSequence: void <init>()>();
+        seq = $r1;
+        $r2 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.area.inline.InlineArea curArea>;
+        if $r2 != null goto label0;
+
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: void setFinished(boolean)>(1);
+        return null;
+
+     label0:
+        $r3 = new org.apache.fop.layoutmgr.inline.AlignmentContext;
+        $r4 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.area.inline.InlineArea curArea>;
+        $i0 = virtualinvoke $r4.<org.apache.fop.area.inline.InlineArea: int getBPD()>();
+        $r5 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $r6 = virtualinvoke $r5.<org.apache.fop.fo.flow.Leader: org.apache.fop.datatypes.Length getAlignmentAdjust()>();
+        $r7 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $i1 = virtualinvoke $r7.<org.apache.fop.fo.flow.Leader: int getAlignmentBaseline()>();
+        $r8 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $r9 = virtualinvoke $r8.<org.apache.fop.fo.flow.Leader: org.apache.fop.datatypes.Length getBaselineShift()>();
+        $r10 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $i2 = virtualinvoke $r10.<org.apache.fop.fo.flow.Leader: int getDominantBaseline()>();
+        $r11 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: org.apache.fop.layoutmgr.inline.AlignmentContext getAlignmentContext()>();
+        specialinvoke $r3.<org.apache.fop.layoutmgr.inline.AlignmentContext: void <init>(int,org.apache.fop.datatypes.Length,int,org.apache.fop.datatypes.Length,int,org.apache.fop.layoutmgr.inline.AlignmentContext)>($i0, $r6, $i1, $r9, $i2, $r11);
+        this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.inline.AlignmentContext alignmentContext> = $r3;
+        $i3 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: int getRefIPD()>();
+        ipd = virtualinvoke this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.traits.MinOptMax getAllocationIPD(int)>($i3);
+        $r12 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $i4 = virtualinvoke $r12.<org.apache.fop.fo.flow.Leader: int getLeaderPattern()>();
+        if $i4 != 158 goto label1;
+
+        $r2 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.area.inline.InlineArea curArea>;
+        $z0 = $r2 instanceof org.apache.fop.area.inline.FilledArea;
+        if $z0 == 0 goto label1;
+
+        $r2 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.area.inline.InlineArea curArea>;
+        $r13 = (org.apache.fop.area.inline.FilledArea) $r2;
+        unitWidth = virtualinvoke $r13.<org.apache.fop.area.inline.FilledArea: int getUnitWidth()>();
+        $i4 = ipd.<org.apache.fop.traits.MinOptMax: int opt>;
+        if $i4 >= unitWidth goto label1;
+
+        $i4 = ipd.<org.apache.fop.traits.MinOptMax: int max>;
+        if $i4 < unitWidth goto label1;
+
+        ipd.<org.apache.fop.traits.MinOptMax: int opt> = unitWidth;
+
+     label1:
+        $r14 = new org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo;
+        $r15 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: org.apache.fop.layoutmgr.inline.AlignmentContext getAlignmentContext()>();
+        specialinvoke $r14.<org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo: void <init>(org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager,short,org.apache.fop.traits.MinOptMax,boolean,org.apache.fop.layoutmgr.inline.AlignmentContext)>(this, 0, ipd, 0, $r15);
+        this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo areaInfo> = $r14;
+        $r2 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.area.inline.InlineArea curArea>;
+        $i3 = ipd.<org.apache.fop.traits.MinOptMax: int max>;
+        $i5 = ipd.<org.apache.fop.traits.MinOptMax: int opt>;
+        $i3 = $i3 - $i5;
+        $i5 = ipd.<org.apache.fop.traits.MinOptMax: int opt>;
+        $i0 = ipd.<org.apache.fop.traits.MinOptMax: int min>;
+        $i5 = $i5 - $i0;
+        virtualinvoke $r2.<org.apache.fop.area.inline.InlineArea: void setAdjustingInfo(int,int,int)>($i3, $i5, 0);
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: void addKnuthElementsForBorderPaddingStart(java.util.List)>(seq);
+        $r16 = new org.apache.fop.layoutmgr.inline.KnuthInlineBox;
+        $r17 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.inline.AlignmentContext alignmentContext>;
+        $r18 = new org.apache.fop.layoutmgr.LeafPosition;
+        specialinvoke $r18.<org.apache.fop.layoutmgr.LeafPosition: void <init>(org.apache.fop.layoutmgr.LayoutManager,int)>(this, -1);
+        specialinvoke $r16.<org.apache.fop.layoutmgr.inline.KnuthInlineBox: void <init>(int,org.apache.fop.layoutmgr.inline.AlignmentContext,org.apache.fop.layoutmgr.Position,boolean)>(0, $r17, $r18, 1);
+        virtualinvoke seq.<org.apache.fop.layoutmgr.KnuthSequence: boolean add(java.lang.Object)>($r16);
+        $r19 = new org.apache.fop.layoutmgr.KnuthPenalty;
+        $r20 = new org.apache.fop.layoutmgr.LeafPosition;
+        specialinvoke $r20.<org.apache.fop.layoutmgr.LeafPosition: void <init>(org.apache.fop.layoutmgr.LayoutManager,int)>(this, -1);
+        specialinvoke $r19.<org.apache.fop.layoutmgr.KnuthPenalty: void <init>(int,int,boolean,org.apache.fop.layoutmgr.Position,boolean)>(0, 1000, 0, $r20, 1);
+        virtualinvoke seq.<org.apache.fop.layoutmgr.KnuthSequence: boolean add(java.lang.Object)>($r19);
+        if alignment == 70 goto label2;
+
+        if alignment != 0 goto label3;
+
+     label2:
+        $r21 = new org.apache.fop.layoutmgr.KnuthGlue;
+        $r22 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo areaInfo>;
+        $r23 = $r22.<org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo: org.apache.fop.traits.MinOptMax ipdArea>;
+        $i0 = $r23.<org.apache.fop.traits.MinOptMax: int opt>;
+        $r24 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo areaInfo>;
+        $r25 = $r24.<org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo: org.apache.fop.traits.MinOptMax ipdArea>;
+        $i6 = $r25.<org.apache.fop.traits.MinOptMax: int max>;
+        $r26 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo areaInfo>;
+        $r27 = $r26.<org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo: org.apache.fop.traits.MinOptMax ipdArea>;
+        $i1 = $r27.<org.apache.fop.traits.MinOptMax: int opt>;
+        $i6 = $i6 - $i1;
+        $r26 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo areaInfo>;
+        $r27 = $r26.<org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo: org.apache.fop.traits.MinOptMax ipdArea>;
+        $i1 = $r27.<org.apache.fop.traits.MinOptMax: int opt>;
+        $r28 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo areaInfo>;
+        $r29 = $r28.<org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo: org.apache.fop.traits.MinOptMax ipdArea>;
+        $i7 = $r29.<org.apache.fop.traits.MinOptMax: int min>;
+        $i1 = $i1 - $i7;
+        $r20 = new org.apache.fop.layoutmgr.LeafPosition;
+        specialinvoke $r20.<org.apache.fop.layoutmgr.LeafPosition: void <init>(org.apache.fop.layoutmgr.LayoutManager,int)>(this, 0);
+        specialinvoke $r21.<org.apache.fop.layoutmgr.KnuthGlue: void <init>(int,int,int,org.apache.fop.layoutmgr.Position,boolean)>($i0, $i6, $i1, $r20, 0);
+        virtualinvoke seq.<org.apache.fop.layoutmgr.KnuthSequence: boolean add(java.lang.Object)>($r21);
+        goto label4;
+
+     label3:
+        $r21 = new org.apache.fop.layoutmgr.KnuthGlue;
+        $r22 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo areaInfo>;
+        $r23 = $r22.<org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo: org.apache.fop.traits.MinOptMax ipdArea>;
+        $i0 = $r23.<org.apache.fop.traits.MinOptMax: int opt>;
+        $r20 = new org.apache.fop.layoutmgr.LeafPosition;
+        specialinvoke $r20.<org.apache.fop.layoutmgr.LeafPosition: void <init>(org.apache.fop.layoutmgr.LayoutManager,int)>(this, 0);
+        specialinvoke $r21.<org.apache.fop.layoutmgr.KnuthGlue: void <init>(int,int,int,org.apache.fop.layoutmgr.Position,boolean)>($i0, 0, 0, $r20, 0);
+        virtualinvoke seq.<org.apache.fop.layoutmgr.KnuthSequence: boolean add(java.lang.Object)>($r21);
+
+     label4:
+        $r16 = new org.apache.fop.layoutmgr.inline.KnuthInlineBox;
+        $r17 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.inline.AlignmentContext alignmentContext>;
+        $r18 = new org.apache.fop.layoutmgr.LeafPosition;
+        specialinvoke $r18.<org.apache.fop.layoutmgr.LeafPosition: void <init>(org.apache.fop.layoutmgr.LayoutManager,int)>(this, -1);
+        specialinvoke $r16.<org.apache.fop.layoutmgr.inline.KnuthInlineBox: void <init>(int,org.apache.fop.layoutmgr.inline.AlignmentContext,org.apache.fop.layoutmgr.Position,boolean)>(0, $r17, $r18, 1);
+        virtualinvoke seq.<org.apache.fop.layoutmgr.KnuthSequence: boolean add(java.lang.Object)>($r16);
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: void addKnuthElementsForBorderPaddingEnd(java.util.List)>(seq);
+        $r30 = new java.util.LinkedList;
+        specialinvoke $r30.<java.util.LinkedList: void <init>()>();
+        returnList = $r30;
+        virtualinvoke returnList.<java.util.LinkedList: boolean add(java.lang.Object)>(seq);
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: void setFinished(boolean)>(1);
+        return returnList;
+    }
+
+    public void hyphenate(org.apache.fop.layoutmgr.Position, org.apache.fop.layoutmgr.inline.HyphContext)
+    {
+        org.apache.fop.layoutmgr.inline.LeaderLayoutManager this;
+        org.apache.fop.layoutmgr.Position pos;
+        org.apache.fop.layoutmgr.inline.HyphContext hc;
+
+        this := @this: org.apache.fop.layoutmgr.inline.LeaderLayoutManager;
+        pos := @parameter0: org.apache.fop.layoutmgr.Position;
+        hc := @parameter1: org.apache.fop.layoutmgr.inline.HyphContext;
+        specialinvoke this.<org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager: void hyphenate(org.apache.fop.layoutmgr.Position,org.apache.fop.layoutmgr.inline.HyphContext)>(pos, hc);
+        return;
+    }
+
+    public boolean applyChanges(java.util.List)
+    {
+        org.apache.fop.layoutmgr.inline.LeaderLayoutManager this;
+        java.util.List oldList;
+
+        this := @this: org.apache.fop.layoutmgr.inline.LeaderLayoutManager;
+        oldList := @parameter0: java.util.List;
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: void setFinished(boolean)>(0);
+        return 0;
+    }
+
+    public java.util.LinkedList getChangedKnuthElements(java.util.List, int)
+    {
+        org.apache.fop.layoutmgr.inline.LeaderLayoutManager this;
+        java.util.List oldList;
+        int alignment, $i0, $i1, $i2, $i3;
+        java.util.LinkedList returnList, $r1;
+        org.apache.fop.layoutmgr.LeafPosition $r0, $r6;
+        boolean $z0;
+        org.apache.fop.layoutmgr.inline.KnuthInlineBox $r2;
+        org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo $r3, $r8, $r11, $r13;
+        org.apache.fop.layoutmgr.inline.AlignmentContext $r4;
+        org.apache.fop.layoutmgr.KnuthPenalty $r5;
+        org.apache.fop.layoutmgr.KnuthGlue $r7;
+        org.apache.fop.traits.MinOptMax $r9, $r10, $r12, $r14;
+
+        this := @this: org.apache.fop.layoutmgr.inline.LeaderLayoutManager;
+        oldList := @parameter0: java.util.List;
+        alignment := @parameter1: int;
+        $z0 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: boolean isFinished()>();
+        if $z0 == 0 goto label0;
+
+        return null;
+
+     label0:
+        $r1 = new java.util.LinkedList;
+        specialinvoke $r1.<java.util.LinkedList: void <init>()>();
+        returnList = $r1;
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: void addKnuthElementsForBorderPaddingStart(java.util.List)>(returnList);
+        $r2 = new org.apache.fop.layoutmgr.inline.KnuthInlineBox;
+        $r3 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo areaInfo>;
+        $r4 = $r3.<org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo: org.apache.fop.layoutmgr.inline.AlignmentContext alignmentContext>;
+        $r0 = new org.apache.fop.layoutmgr.LeafPosition;
+        specialinvoke $r0.<org.apache.fop.layoutmgr.LeafPosition: void <init>(org.apache.fop.layoutmgr.LayoutManager,int)>(this, -1);
+        specialinvoke $r2.<org.apache.fop.layoutmgr.inline.KnuthInlineBox: void <init>(int,org.apache.fop.layoutmgr.inline.AlignmentContext,org.apache.fop.layoutmgr.Position,boolean)>(0, $r4, $r0, 1);
+        virtualinvoke returnList.<java.util.LinkedList: boolean add(java.lang.Object)>($r2);
+        $r5 = new org.apache.fop.layoutmgr.KnuthPenalty;
+        $r6 = new org.apache.fop.layoutmgr.LeafPosition;
+        specialinvoke $r6.<org.apache.fop.layoutmgr.LeafPosition: void <init>(org.apache.fop.layoutmgr.LayoutManager,int)>(this, -1);
+        specialinvoke $r5.<org.apache.fop.layoutmgr.KnuthPenalty: void <init>(int,int,boolean,org.apache.fop.layoutmgr.Position,boolean)>(0, 1000, 0, $r6, 1);
+        virtualinvoke returnList.<java.util.LinkedList: boolean add(java.lang.Object)>($r5);
+        if alignment == 70 goto label1;
+
+        if alignment != 0 goto label2;
+
+     label1:
+        $r7 = new org.apache.fop.layoutmgr.KnuthGlue;
+        $r8 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo areaInfo>;
+        $r9 = $r8.<org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo: org.apache.fop.traits.MinOptMax ipdArea>;
+        $i0 = $r9.<org.apache.fop.traits.MinOptMax: int opt>;
+        $r3 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo areaInfo>;
+        $r10 = $r3.<org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo: org.apache.fop.traits.MinOptMax ipdArea>;
+        $i1 = $r10.<org.apache.fop.traits.MinOptMax: int max>;
+        $r11 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo areaInfo>;
+        $r12 = $r11.<org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo: org.apache.fop.traits.MinOptMax ipdArea>;
+        $i2 = $r12.<org.apache.fop.traits.MinOptMax: int opt>;
+        $i1 = $i1 - $i2;
+        $r11 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo areaInfo>;
+        $r12 = $r11.<org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo: org.apache.fop.traits.MinOptMax ipdArea>;
+        $i2 = $r12.<org.apache.fop.traits.MinOptMax: int opt>;
+        $r13 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo areaInfo>;
+        $r14 = $r13.<org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo: org.apache.fop.traits.MinOptMax ipdArea>;
+        $i3 = $r14.<org.apache.fop.traits.MinOptMax: int min>;
+        $i2 = $i2 - $i3;
+        $r6 = new org.apache.fop.layoutmgr.LeafPosition;
+        specialinvoke $r6.<org.apache.fop.layoutmgr.LeafPosition: void <init>(org.apache.fop.layoutmgr.LayoutManager,int)>(this, 0);
+        specialinvoke $r7.<org.apache.fop.layoutmgr.KnuthGlue: void <init>(int,int,int,org.apache.fop.layoutmgr.Position,boolean)>($i0, $i1, $i2, $r6, 0);
+        virtualinvoke returnList.<java.util.LinkedList: boolean add(java.lang.Object)>($r7);
+        goto label3;
+
+     label2:
+        $r7 = new org.apache.fop.layoutmgr.KnuthGlue;
+        $r8 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo areaInfo>;
+        $r9 = $r8.<org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo: org.apache.fop.traits.MinOptMax ipdArea>;
+        $i0 = $r9.<org.apache.fop.traits.MinOptMax: int opt>;
+        $r6 = new org.apache.fop.layoutmgr.LeafPosition;
+        specialinvoke $r6.<org.apache.fop.layoutmgr.LeafPosition: void <init>(org.apache.fop.layoutmgr.LayoutManager,int)>(this, 0);
+        specialinvoke $r7.<org.apache.fop.layoutmgr.KnuthGlue: void <init>(int,int,int,org.apache.fop.layoutmgr.Position,boolean)>($i0, 0, 0, $r6, 0);
+        virtualinvoke returnList.<java.util.LinkedList: boolean add(java.lang.Object)>($r7);
+
+     label3:
+        $r2 = new org.apache.fop.layoutmgr.inline.KnuthInlineBox;
+        $r3 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo areaInfo>;
+        $r4 = $r3.<org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager$AreaInfo: org.apache.fop.layoutmgr.inline.AlignmentContext alignmentContext>;
+        $r0 = new org.apache.fop.layoutmgr.LeafPosition;
+        specialinvoke $r0.<org.apache.fop.layoutmgr.LeafPosition: void <init>(org.apache.fop.layoutmgr.LayoutManager,int)>(this, -1);
+        specialinvoke $r2.<org.apache.fop.layoutmgr.inline.KnuthInlineBox: void <init>(int,org.apache.fop.layoutmgr.inline.AlignmentContext,org.apache.fop.layoutmgr.Position,boolean)>(0, $r4, $r0, 1);
+        virtualinvoke returnList.<java.util.LinkedList: boolean add(java.lang.Object)>($r2);
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: void addKnuthElementsForBorderPaddingEnd(java.util.List)>(returnList);
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: void setFinished(boolean)>(1);
+        return returnList;
+    }
+
+    protected void addId()
+    {
+        org.apache.fop.layoutmgr.inline.LeaderLayoutManager this;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager $r0;
+        org.apache.fop.fo.flow.Leader $r1;
+        java.lang.String $r2;
+
+        this := @this: org.apache.fop.layoutmgr.inline.LeaderLayoutManager;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.PageSequenceLayoutManager getPSLM()>();
+        $r1 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.fo.flow.Leader fobj>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.flow.Leader: java.lang.String getId()>();
+        virtualinvoke $r0.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: void addIDToPage(java.lang.String)>($r2);
+        return;
+    }
+
+    public int getBaseLength(int, org.apache.fop.fo.FObj)
+    {
+        org.apache.fop.layoutmgr.inline.LeaderLayoutManager this;
+        int lengthBase, $i0;
+        org.apache.fop.fo.FObj fobj, $r2;
+        org.apache.fop.layoutmgr.LayoutManager $r0, $r1;
+
+        this := @this: org.apache.fop.layoutmgr.inline.LeaderLayoutManager;
+        lengthBase := @parameter0: int;
+        fobj := @parameter1: org.apache.fop.fo.FObj;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.LayoutManager getParent()>();
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: org.apache.fop.layoutmgr.LayoutManager getParent()>();
+        $r2 = interfaceinvoke $r1.<org.apache.fop.layoutmgr.LayoutManager: org.apache.fop.fo.FObj getFObj()>();
+        $i0 = interfaceinvoke $r0.<org.apache.fop.layoutmgr.LayoutManager: int getBaseLength(int,org.apache.fop.fo.FObj)>(lengthBase, $r2);
+        return $i0;
+    }
+
+    public int getContentAreaIPD()
+    {
+        org.apache.fop.layoutmgr.inline.LeaderLayoutManager this;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.LeaderLayoutManager;
+        $i0 = this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: int contentAreaIPD>;
+        return $i0;
+    }
+
+    private void setContentAreaIPD(int)
+    {
+        org.apache.fop.layoutmgr.inline.LeaderLayoutManager this;
+        int contentAreaIPD;
+
+        this := @this: org.apache.fop.layoutmgr.inline.LeaderLayoutManager;
+        contentAreaIPD := @parameter0: int;
+        this.<org.apache.fop.layoutmgr.inline.LeaderLayoutManager: int contentAreaIPD> = contentAreaIPD;
+        return;
+    }
+}

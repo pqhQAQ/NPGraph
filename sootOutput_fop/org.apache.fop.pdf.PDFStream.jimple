@@ -1,0 +1,155 @@
+public class org.apache.fop.pdf.PDFStream extends org.apache.fop.pdf.AbstractPDFStream
+{
+    protected org.apache.fop.pdf.StreamCache data;
+
+    public void <init>()
+    {
+        org.apache.fop.pdf.PDFStream this;
+        org.apache.fop.pdf.StreamCacheFactory $r0;
+        java.io.IOException ex, $r2;
+        org.apache.fop.pdf.StreamCache $r1;
+
+        this := @this: org.apache.fop.pdf.PDFStream;
+        specialinvoke this.<org.apache.fop.pdf.AbstractPDFStream: void <init>()>();
+
+     label0:
+        $r0 = staticinvoke <org.apache.fop.pdf.StreamCacheFactory: org.apache.fop.pdf.StreamCacheFactory getInstance()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.pdf.StreamCacheFactory: org.apache.fop.pdf.StreamCache createStreamCache()>();
+        this.<org.apache.fop.pdf.PDFStream: org.apache.fop.pdf.StreamCache data> = $r1;
+
+     label1:
+        goto label3;
+
+     label2:
+        $r2 := @caughtexception;
+        ex = $r2;
+        virtualinvoke ex.<java.io.IOException: void printStackTrace()>();
+
+     label3:
+        return;
+
+        catch java.io.IOException from label0 to label1 with label2;
+    }
+
+    public void add(java.lang.String)
+    {
+        org.apache.fop.pdf.PDFStream this;
+        java.lang.String s;
+        java.io.IOException ex, $r3;
+        org.apache.fop.pdf.StreamCache $r0;
+        java.io.OutputStream $r1;
+        byte[] $r2;
+
+        this := @this: org.apache.fop.pdf.PDFStream;
+        s := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = this.<org.apache.fop.pdf.PDFStream: org.apache.fop.pdf.StreamCache data>;
+        $r1 = interfaceinvoke $r0.<org.apache.fop.pdf.StreamCache: java.io.OutputStream getOutputStream()>();
+        $r2 = staticinvoke <org.apache.fop.pdf.PDFDocument: byte[] encode(java.lang.String)>(s);
+        virtualinvoke $r1.<java.io.OutputStream: void write(byte[])>($r2);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r3 := @caughtexception;
+        ex = $r3;
+        virtualinvoke ex.<java.io.IOException: void printStackTrace()>();
+
+     label3:
+        return;
+
+        catch java.io.IOException from label0 to label1 with label2;
+    }
+
+    public java.io.OutputStream getBufferOutputStream() throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFStream this;
+        org.apache.fop.pdf.StreamCache $r0;
+        java.io.OutputStream $r1;
+
+        this := @this: org.apache.fop.pdf.PDFStream;
+        $r0 = this.<org.apache.fop.pdf.PDFStream: org.apache.fop.pdf.StreamCache data>;
+        $r1 = interfaceinvoke $r0.<org.apache.fop.pdf.StreamCache: java.io.OutputStream getOutputStream()>();
+        return $r1;
+    }
+
+    public void setData(byte[]) throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFStream this;
+        byte[] data;
+        org.apache.fop.pdf.StreamCache $r0;
+
+        this := @this: org.apache.fop.pdf.PDFStream;
+        data := @parameter0: byte[];
+        $r0 = this.<org.apache.fop.pdf.PDFStream: org.apache.fop.pdf.StreamCache data>;
+        interfaceinvoke $r0.<org.apache.fop.pdf.StreamCache: void clear()>();
+        $r0 = this.<org.apache.fop.pdf.PDFStream: org.apache.fop.pdf.StreamCache data>;
+        interfaceinvoke $r0.<org.apache.fop.pdf.StreamCache: void write(byte[])>(data);
+        return;
+    }
+
+    public int getDataLength()
+    {
+        org.apache.fop.pdf.PDFStream this;
+        java.lang.Exception e, $r1;
+        org.apache.fop.pdf.StreamCache $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.pdf.PDFStream;
+
+     label0:
+        $r0 = this.<org.apache.fop.pdf.PDFStream: org.apache.fop.pdf.StreamCache data>;
+        $i0 = interfaceinvoke $r0.<org.apache.fop.pdf.StreamCache: int getSize()>();
+
+     label1:
+        return $i0;
+
+     label2:
+        $r1 := @caughtexception;
+        e = $r1;
+        virtualinvoke e.<java.lang.Exception: void printStackTrace()>();
+        return 0;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+
+    protected int getSizeHint() throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFStream this;
+        org.apache.fop.pdf.StreamCache $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.pdf.PDFStream;
+        $r0 = this.<org.apache.fop.pdf.PDFStream: org.apache.fop.pdf.StreamCache data>;
+        $i0 = interfaceinvoke $r0.<org.apache.fop.pdf.StreamCache: int getSize()>();
+        return $i0;
+    }
+
+    protected void outputRawStreamData(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFStream this;
+        java.io.OutputStream out;
+        org.apache.fop.pdf.StreamCache $r0;
+
+        this := @this: org.apache.fop.pdf.PDFStream;
+        out := @parameter0: java.io.OutputStream;
+        $r0 = this.<org.apache.fop.pdf.PDFStream: org.apache.fop.pdf.StreamCache data>;
+        interfaceinvoke $r0.<org.apache.fop.pdf.StreamCache: int outputContents(java.io.OutputStream)>(out);
+        return;
+    }
+
+    protected int output(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFStream this;
+        java.io.OutputStream stream;
+        int len;
+
+        this := @this: org.apache.fop.pdf.PDFStream;
+        stream := @parameter0: java.io.OutputStream;
+        len = specialinvoke this.<org.apache.fop.pdf.AbstractPDFStream: int output(java.io.OutputStream)>(stream);
+        this.<org.apache.fop.pdf.PDFStream: org.apache.fop.pdf.StreamCache data> = null;
+        return len;
+    }
+}

@@ -1,0 +1,186 @@
+public class org.apache.fop.fo.extensions.svg.SVGElement extends org.apache.fop.fo.extensions.svg.SVGObj
+{
+
+    public void <init>(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.extensions.svg.SVGElement this;
+        org.apache.fop.fo.FONode parent;
+
+        this := @this: org.apache.fop.fo.extensions.svg.SVGElement;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        specialinvoke this.<org.apache.fop.fo.extensions.svg.SVGObj: void <init>(org.apache.fop.fo.FONode)>(parent);
+        return;
+    }
+
+    public org.apache.fop.util.ContentHandlerFactory getContentHandlerFactory()
+    {
+        org.apache.fop.fo.extensions.svg.SVGElement this;
+        org.apache.fop.util.DOMBuilderContentHandlerFactory $r0;
+        org.w3c.dom.DOMImplementation $r1;
+        java.lang.String $r2;
+
+        this := @this: org.apache.fop.fo.extensions.svg.SVGElement;
+        $r0 = new org.apache.fop.util.DOMBuilderContentHandlerFactory;
+        $r2 = virtualinvoke this.<org.apache.fop.fo.extensions.svg.SVGElement: java.lang.String getNamespaceURI()>();
+        $r1 = staticinvoke <org.apache.batik.dom.svg.SVGDOMImplementation: org.w3c.dom.DOMImplementation getDOMImplementation()>();
+        specialinvoke $r0.<org.apache.fop.util.DOMBuilderContentHandlerFactory: void <init>(java.lang.String,org.w3c.dom.DOMImplementation)>($r2, $r1);
+        return $r0;
+    }
+
+    public void processNode(java.lang.String, org.xml.sax.Locator, org.xml.sax.Attributes, org.apache.fop.fo.PropertyList) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.extensions.svg.SVGElement this;
+        java.lang.String elementName;
+        org.xml.sax.Locator locator;
+        org.xml.sax.Attributes attlist;
+        org.apache.fop.fo.PropertyList propertyList;
+
+        this := @this: org.apache.fop.fo.extensions.svg.SVGElement;
+        elementName := @parameter0: java.lang.String;
+        locator := @parameter1: org.xml.sax.Locator;
+        attlist := @parameter2: org.xml.sax.Attributes;
+        propertyList := @parameter3: org.apache.fop.fo.PropertyList;
+        specialinvoke this.<org.apache.fop.fo.extensions.svg.SVGObj: void processNode(java.lang.String,org.xml.sax.Locator,org.xml.sax.Attributes,org.apache.fop.fo.PropertyList)>(elementName, locator, attlist, propertyList);
+        specialinvoke this.<org.apache.fop.fo.extensions.svg.SVGElement: void init()>();
+        return;
+    }
+
+    public java.awt.geom.Point2D getDimension(java.awt.geom.Point2D)
+    {
+        org.apache.fop.fo.extensions.svg.SVGElement this;
+        java.awt.geom.Point2D view, p2d;
+        org.w3c.dom.Element svgRoot;
+        java.net.URL baseURL, $r1, $r5;
+        org.apache.batik.dom.svg.SVGOMDocument svgdoc;
+        java.lang.Exception e, $r7;
+        float ptmm, $f0;
+        org.apache.fop.fo.extensions.svg.SVGElement$1 dc, $r11;
+        byte fontSize;
+        org.apache.fop.apps.FOUserAgent $r2, $r10;
+        java.lang.String $r3;
+        java.io.File $r4;
+        org.w3c.dom.Document $r6;
+        org.apache.commons.logging.Log $r8;
+        org.w3c.dom.svg.SVGDocument $r9;
+        org.w3c.dom.svg.SVGSVGElement e;
+        org.apache.batik.dom.svg.SVGOMElement $r12;
+
+        this := @this: org.apache.fop.fo.extensions.svg.SVGElement;
+        view := @parameter0: java.awt.geom.Point2D;
+        svgRoot = this.<org.apache.fop.fo.extensions.svg.SVGElement: org.w3c.dom.Element element>;
+
+     label0:
+        $r1 = new java.net.URL;
+        $r2 = virtualinvoke this.<org.apache.fop.fo.extensions.svg.SVGElement: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        $r3 = virtualinvoke $r2.<org.apache.fop.apps.FOUserAgent: java.lang.String getBaseURL()>();
+        if $r3 != null goto label1;
+
+        $r4 = new java.io.File;
+        specialinvoke $r4.<java.io.File: void <init>(java.lang.String)>("");
+        $r5 = virtualinvoke $r4.<java.io.File: java.net.URL toURL()>();
+        $r3 = virtualinvoke $r5.<java.net.URL: java.lang.String toExternalForm()>();
+        goto label2;
+
+     label1:
+        $r2 = virtualinvoke this.<org.apache.fop.fo.extensions.svg.SVGElement: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        $r3 = virtualinvoke $r2.<org.apache.fop.apps.FOUserAgent: java.lang.String getBaseURL()>();
+
+     label2:
+        specialinvoke $r1.<java.net.URL: void <init>(java.lang.String)>($r3);
+        baseURL = $r1;
+        if baseURL == null goto label3;
+
+        $r6 = this.<org.apache.fop.fo.extensions.svg.SVGElement: org.w3c.dom.Document doc>;
+        svgdoc = (org.apache.batik.dom.svg.SVGOMDocument) $r6;
+        virtualinvoke svgdoc.<org.apache.batik.dom.svg.SVGOMDocument: void setURLObject(java.net.URL)>(baseURL);
+
+     label3:
+        goto label5;
+
+     label4:
+        $r7 := @caughtexception;
+        e = $r7;
+        $r8 = <org.apache.fop.fo.extensions.svg.SVGElement: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r8.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("Could not set base URL for svg", e);
+
+     label5:
+        $r6 = this.<org.apache.fop.fo.extensions.svg.SVGElement: org.w3c.dom.Document doc>;
+        $r9 = (org.w3c.dom.svg.SVGDocument) $r6;
+        e = interfaceinvoke $r9.<org.w3c.dom.svg.SVGDocument: org.w3c.dom.svg.SVGSVGElement getRootElement()>();
+        $r10 = virtualinvoke this.<org.apache.fop.fo.extensions.svg.SVGElement: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        ptmm = virtualinvoke $r10.<org.apache.fop.apps.FOUserAgent: float getSourcePixelUnitToMillimeter()>();
+        $r11 = new org.apache.fop.fo.extensions.svg.SVGElement$1;
+        specialinvoke $r11.<org.apache.fop.fo.extensions.svg.SVGElement$1: void <init>(org.apache.fop.fo.extensions.svg.SVGElement,float,java.awt.geom.Point2D)>(this, ptmm, view);
+        dc = $r11;
+        $r12 = (org.apache.batik.dom.svg.SVGOMElement) e;
+        virtualinvoke $r12.<org.apache.batik.dom.svg.SVGOMElement: void setSVGContext(org.apache.batik.dom.svg.SVGContext)>(dc);
+        interfaceinvoke e.<org.w3c.dom.Element: void setAttributeNS(java.lang.String,java.lang.String,java.lang.String)>("http://www.w3.org/2000/xmlns/", "xmlns", "http://www.w3.org/2000/svg");
+        fontSize = 12;
+        $r2 = virtualinvoke this.<org.apache.fop.fo.extensions.svg.SVGElement: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        $f0 = virtualinvoke $r2.<org.apache.fop.apps.FOUserAgent: float getSourcePixelUnitToMillimeter()>();
+        p2d = staticinvoke <org.apache.fop.fo.extensions.svg.SVGElement: java.awt.geom.Point2D getSize(int,org.w3c.dom.Element,float)>(fontSize, svgRoot, $f0);
+        $r12 = (org.apache.batik.dom.svg.SVGOMElement) e;
+        virtualinvoke $r12.<org.apache.batik.dom.svg.SVGOMElement: void setSVGContext(org.apache.batik.dom.svg.SVGContext)>(null);
+        return p2d;
+
+        catch java.lang.Exception from label0 to label3 with label4;
+    }
+
+    private void init()
+    {
+        org.apache.fop.fo.extensions.svg.SVGElement this;
+        org.w3c.dom.DOMImplementation impl;
+        java.lang.String svgNS;
+        org.w3c.dom.Document $r0;
+        org.w3c.dom.Element $r1, $r2;
+
+        this := @this: org.apache.fop.fo.extensions.svg.SVGElement;
+        impl = staticinvoke <org.apache.batik.dom.svg.SVGDOMImplementation: org.w3c.dom.DOMImplementation getDOMImplementation()>();
+        svgNS = "http://www.w3.org/2000/svg";
+        $r0 = interfaceinvoke impl.<org.w3c.dom.DOMImplementation: org.w3c.dom.Document createDocument(java.lang.String,java.lang.String,org.w3c.dom.DocumentType)>(svgNS, "svg", null);
+        this.<org.apache.fop.fo.extensions.svg.SVGElement: org.w3c.dom.Document doc> = $r0;
+        $r0 = this.<org.apache.fop.fo.extensions.svg.SVGElement: org.w3c.dom.Document doc>;
+        $r1 = interfaceinvoke $r0.<org.w3c.dom.Document: org.w3c.dom.Element getDocumentElement()>();
+        this.<org.apache.fop.fo.extensions.svg.SVGElement: org.w3c.dom.Element element> = $r1;
+        $r0 = this.<org.apache.fop.fo.extensions.svg.SVGElement: org.w3c.dom.Document doc>;
+        $r2 = this.<org.apache.fop.fo.extensions.svg.SVGElement: org.w3c.dom.Element element>;
+        virtualinvoke this.<org.apache.fop.fo.extensions.svg.SVGElement: void buildTopLevel(org.w3c.dom.Document,org.w3c.dom.Element)>($r0, $r2);
+        return;
+    }
+
+    public static java.awt.geom.Point2D getSize(int, org.w3c.dom.Element, float)
+    {
+        int size, $i0;
+        org.w3c.dom.Element svgRoot;
+        float ptmm, width, height;
+        org.apache.fop.fo.extensions.svg.SVGElement$PDFUnitContext $r0, ctx;
+        java.lang.String str;
+        java.awt.geom.Point2D$Float $r1;
+
+        size := @parameter0: int;
+        svgRoot := @parameter1: org.w3c.dom.Element;
+        ptmm := @parameter2: float;
+        $r0 = new org.apache.fop.fo.extensions.svg.SVGElement$PDFUnitContext;
+        specialinvoke $r0.<org.apache.fop.fo.extensions.svg.SVGElement$PDFUnitContext: void <init>(int,org.w3c.dom.Element,float)>(size, svgRoot, ptmm);
+        ctx = $r0;
+        str = interfaceinvoke svgRoot.<org.w3c.dom.Element: java.lang.String getAttributeNS(java.lang.String,java.lang.String)>(null, "width");
+        $i0 = virtualinvoke str.<java.lang.String: int length()>();
+        if $i0 != 0 goto label0;
+
+        str = "100%";
+
+     label0:
+        width = staticinvoke <org.apache.batik.bridge.UnitProcessor: float svgHorizontalLengthToUserSpace(java.lang.String,java.lang.String,org.apache.batik.parser.UnitProcessor$Context)>(str, "width", ctx);
+        str = interfaceinvoke svgRoot.<org.w3c.dom.Element: java.lang.String getAttributeNS(java.lang.String,java.lang.String)>(null, "height");
+        $i0 = virtualinvoke str.<java.lang.String: int length()>();
+        if $i0 != 0 goto label1;
+
+        str = "100%";
+
+     label1:
+        height = staticinvoke <org.apache.batik.bridge.UnitProcessor: float svgVerticalLengthToUserSpace(java.lang.String,java.lang.String,org.apache.batik.parser.UnitProcessor$Context)>(str, "height", ctx);
+        $r1 = new java.awt.geom.Point2D$Float;
+        specialinvoke $r1.<java.awt.geom.Point2D$Float: void <init>(float,float)>(width, height);
+        return $r1;
+    }
+}

@@ -1,0 +1,344 @@
+public class org.apache.fop.fo.pagination.LayoutMasterSet extends org.apache.fop.fo.FObj
+{
+    private java.util.Map simplePageMasters;
+    private java.util.Map pageSequenceMasters;
+
+    public void <init>(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.pagination.LayoutMasterSet this;
+        org.apache.fop.fo.FONode parent;
+
+        this := @this: org.apache.fop.fo.pagination.LayoutMasterSet;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        specialinvoke this.<org.apache.fop.fo.FObj: void <init>(org.apache.fop.fo.FONode)>(parent);
+        return;
+    }
+
+    public void bind(org.apache.fop.fo.PropertyList) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.pagination.LayoutMasterSet this;
+        org.apache.fop.fo.PropertyList pList;
+
+        this := @this: org.apache.fop.fo.pagination.LayoutMasterSet;
+        pList := @parameter0: org.apache.fop.fo.PropertyList;
+        return;
+    }
+
+    protected void startOfNode() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.pagination.LayoutMasterSet this;
+        org.apache.fop.fo.pagination.Root $r0;
+        java.util.HashMap $r1;
+
+        this := @this: org.apache.fop.fo.pagination.LayoutMasterSet;
+        $r0 = virtualinvoke this.<org.apache.fop.fo.pagination.LayoutMasterSet: org.apache.fop.fo.pagination.Root getRoot()>();
+        virtualinvoke $r0.<org.apache.fop.fo.pagination.Root: void setLayoutMasterSet(org.apache.fop.fo.pagination.LayoutMasterSet)>(this);
+        $r1 = new java.util.HashMap;
+        specialinvoke $r1.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.fo.pagination.LayoutMasterSet: java.util.Map simplePageMasters> = $r1;
+        $r1 = new java.util.HashMap;
+        specialinvoke $r1.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.fo.pagination.LayoutMasterSet: java.util.Map pageSequenceMasters> = $r1;
+        return;
+    }
+
+    protected void endOfNode() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.pagination.LayoutMasterSet this;
+        org.apache.fop.fo.FONode $r0;
+
+        this := @this: org.apache.fop.fo.pagination.LayoutMasterSet;
+        $r0 = this.<org.apache.fop.fo.pagination.LayoutMasterSet: org.apache.fop.fo.FONode firstChild>;
+        if $r0 != null goto label0;
+
+        virtualinvoke this.<org.apache.fop.fo.pagination.LayoutMasterSet: void missingChildElementError(java.lang.String)>("(simple-page-master|page-sequence-master)+");
+
+     label0:
+        specialinvoke this.<org.apache.fop.fo.pagination.LayoutMasterSet: void checkRegionNames()>();
+        return;
+    }
+
+    protected void validateChildNode(org.xml.sax.Locator, java.lang.String, java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.pagination.LayoutMasterSet this;
+        org.xml.sax.Locator loc;
+        java.lang.String nsURI, localName, $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.pagination.LayoutMasterSet;
+        loc := @parameter0: org.xml.sax.Locator;
+        nsURI := @parameter1: java.lang.String;
+        localName := @parameter2: java.lang.String;
+        $r0 = "http://www.w3.org/1999/XSL/Format";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(nsURI);
+        if $z0 == 0 goto label0;
+
+        $z0 = virtualinvoke localName.<java.lang.String: boolean equals(java.lang.Object)>("simple-page-master");
+        if $z0 != 0 goto label1;
+
+        $z0 = virtualinvoke localName.<java.lang.String: boolean equals(java.lang.Object)>("page-sequence-master");
+        if $z0 != 0 goto label1;
+
+        virtualinvoke this.<org.apache.fop.fo.pagination.LayoutMasterSet: void invalidChildError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, nsURI, localName);
+        goto label1;
+
+     label0:
+        virtualinvoke this.<org.apache.fop.fo.pagination.LayoutMasterSet: void invalidChildError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, nsURI, localName);
+
+     label1:
+        return;
+    }
+
+    private void checkRegionNames() throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.pagination.LayoutMasterSet this;
+        java.util.HashMap $r0, allRegions;
+        java.util.Iterator spm, e;
+        org.apache.fop.fo.pagination.SimplePageMaster simplePageMaster;
+        java.util.Map spmRegions, $r2;
+        org.apache.fop.fo.pagination.Region region;
+        java.lang.String defaultRegionName, $r5, $r7, $r8;
+        java.lang.StringBuffer $r1;
+        java.util.Collection $r3;
+        boolean $z0;
+        java.lang.Object $r4;
+        org.apache.fop.fo.ValidationException $r6;
+        org.xml.sax.Locator $r9;
+
+        this := @this: org.apache.fop.fo.pagination.LayoutMasterSet;
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        allRegions = $r0;
+        $r2 = this.<org.apache.fop.fo.pagination.LayoutMasterSet: java.util.Map simplePageMasters>;
+        $r3 = interfaceinvoke $r2.<java.util.Map: java.util.Collection values()>();
+        spm = interfaceinvoke $r3.<java.util.Collection: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke spm.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label4;
+
+        $r4 = interfaceinvoke spm.<java.util.Iterator: java.lang.Object next()>();
+        simplePageMaster = (org.apache.fop.fo.pagination.SimplePageMaster) $r4;
+        spmRegions = virtualinvoke simplePageMaster.<org.apache.fop.fo.pagination.SimplePageMaster: java.util.Map getRegions()>();
+        $r3 = interfaceinvoke spmRegions.<java.util.Map: java.util.Collection values()>();
+        e = interfaceinvoke $r3.<java.util.Collection: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke e.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label3;
+
+        $r4 = interfaceinvoke e.<java.util.Iterator: java.lang.Object next()>();
+        region = (org.apache.fop.fo.pagination.Region) $r4;
+        $r5 = virtualinvoke region.<org.apache.fop.fo.pagination.Region: java.lang.String getRegionName()>();
+        $z0 = interfaceinvoke allRegions.<java.util.Map: boolean containsKey(java.lang.Object)>($r5);
+        if $z0 == 0 goto label2;
+
+        $r5 = virtualinvoke region.<org.apache.fop.fo.pagination.Region: java.lang.String getRegionName()>();
+        $r4 = interfaceinvoke allRegions.<java.util.Map: java.lang.Object get(java.lang.Object)>($r5);
+        defaultRegionName = (java.lang.String) $r4;
+        $r5 = virtualinvoke region.<org.apache.fop.fo.pagination.Region: java.lang.String getDefaultRegionName()>();
+        $z0 = virtualinvoke defaultRegionName.<java.lang.String: boolean equals(java.lang.Object)>($r5);
+        if $z0 != 0 goto label2;
+
+        $r6 = new org.apache.fop.fo.ValidationException;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Region-name (");
+        $r7 = virtualinvoke region.<org.apache.fop.fo.pagination.Region: java.lang.String getRegionName()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r7);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(") is being mapped to multiple region-classes (");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(defaultRegionName);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" and ");
+        $r7 = virtualinvoke region.<org.apache.fop.fo.pagination.Region: java.lang.String getDefaultRegionName()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r7);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(")");
+        $r8 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r9 = this.<org.apache.fop.fo.pagination.LayoutMasterSet: org.xml.sax.Locator locator>;
+        specialinvoke $r6.<org.apache.fop.fo.ValidationException: void <init>(java.lang.String,org.xml.sax.Locator)>($r8, $r9);
+        throw $r6;
+
+     label2:
+        $r5 = virtualinvoke region.<org.apache.fop.fo.pagination.Region: java.lang.String getRegionName()>();
+        $r8 = virtualinvoke region.<org.apache.fop.fo.pagination.Region: java.lang.String getDefaultRegionName()>();
+        interfaceinvoke allRegions.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r5, $r8);
+        goto label1;
+
+     label3:
+        goto label0;
+
+     label4:
+        return;
+    }
+
+    protected void addSimplePageMaster(org.apache.fop.fo.pagination.SimplePageMaster) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.pagination.LayoutMasterSet this;
+        org.apache.fop.fo.pagination.SimplePageMaster sPM;
+        java.lang.String masterName, $r2;
+        java.lang.StringBuffer $r0;
+        boolean $z0;
+        org.apache.fop.fo.ValidationException $r1;
+        org.xml.sax.Locator $r3;
+        java.util.Map $r4;
+
+        this := @this: org.apache.fop.fo.pagination.LayoutMasterSet;
+        sPM := @parameter0: org.apache.fop.fo.pagination.SimplePageMaster;
+        masterName = virtualinvoke sPM.<org.apache.fop.fo.pagination.SimplePageMaster: java.lang.String getMasterName()>();
+        $z0 = specialinvoke this.<org.apache.fop.fo.pagination.LayoutMasterSet: boolean existsName(java.lang.String)>(masterName);
+        if $z0 == 0 goto label0;
+
+        $r1 = new org.apache.fop.fo.ValidationException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\'master-name\' (");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(masterName);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(") must be unique across page-masters and page-sequence-masters");
+        $r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r3 = virtualinvoke sPM.<org.apache.fop.fo.pagination.SimplePageMaster: org.xml.sax.Locator getLocator()>();
+        specialinvoke $r1.<org.apache.fop.fo.ValidationException: void <init>(java.lang.String,org.xml.sax.Locator)>($r2, $r3);
+        throw $r1;
+
+     label0:
+        $r4 = this.<org.apache.fop.fo.pagination.LayoutMasterSet: java.util.Map simplePageMasters>;
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(masterName, sPM);
+        return;
+    }
+
+    private boolean existsName(java.lang.String)
+    {
+        org.apache.fop.fo.pagination.LayoutMasterSet this;
+        java.lang.String masterName;
+        java.util.Map $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.pagination.LayoutMasterSet;
+        masterName := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.fo.pagination.LayoutMasterSet: java.util.Map simplePageMasters>;
+        $z0 = interfaceinvoke $r0.<java.util.Map: boolean containsKey(java.lang.Object)>(masterName);
+        if $z0 != 0 goto label0;
+
+        $r0 = this.<org.apache.fop.fo.pagination.LayoutMasterSet: java.util.Map pageSequenceMasters>;
+        $z0 = interfaceinvoke $r0.<java.util.Map: boolean containsKey(java.lang.Object)>(masterName);
+        if $z0 == 0 goto label1;
+
+     label0:
+        return 1;
+
+     label1:
+        return 0;
+    }
+
+    public org.apache.fop.fo.pagination.SimplePageMaster getSimplePageMaster(java.lang.String)
+    {
+        org.apache.fop.fo.pagination.LayoutMasterSet this;
+        java.lang.String masterName;
+        java.util.Map $r0;
+        java.lang.Object $r1;
+        org.apache.fop.fo.pagination.SimplePageMaster $r2;
+
+        this := @this: org.apache.fop.fo.pagination.LayoutMasterSet;
+        masterName := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.fo.pagination.LayoutMasterSet: java.util.Map simplePageMasters>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>(masterName);
+        $r2 = (org.apache.fop.fo.pagination.SimplePageMaster) $r1;
+        return $r2;
+    }
+
+    protected void addPageSequenceMaster(java.lang.String, org.apache.fop.fo.pagination.PageSequenceMaster) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.pagination.LayoutMasterSet this;
+        java.lang.String masterName, $r2;
+        org.apache.fop.fo.pagination.PageSequenceMaster pSM;
+        java.lang.StringBuffer $r0;
+        boolean $z0;
+        org.apache.fop.fo.ValidationException $r1;
+        org.xml.sax.Locator $r3;
+        java.util.Map $r4;
+
+        this := @this: org.apache.fop.fo.pagination.LayoutMasterSet;
+        masterName := @parameter0: java.lang.String;
+        pSM := @parameter1: org.apache.fop.fo.pagination.PageSequenceMaster;
+        $z0 = specialinvoke this.<org.apache.fop.fo.pagination.LayoutMasterSet: boolean existsName(java.lang.String)>(masterName);
+        if $z0 == 0 goto label0;
+
+        $r1 = new org.apache.fop.fo.ValidationException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\'master-name\' (");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(masterName);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(") must be unique across page-masters and page-sequence-masters");
+        $r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r3 = virtualinvoke pSM.<org.apache.fop.fo.pagination.PageSequenceMaster: org.xml.sax.Locator getLocator()>();
+        specialinvoke $r1.<org.apache.fop.fo.ValidationException: void <init>(java.lang.String,org.xml.sax.Locator)>($r2, $r3);
+        throw $r1;
+
+     label0:
+        $r4 = this.<org.apache.fop.fo.pagination.LayoutMasterSet: java.util.Map pageSequenceMasters>;
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(masterName, pSM);
+        return;
+    }
+
+    public org.apache.fop.fo.pagination.PageSequenceMaster getPageSequenceMaster(java.lang.String)
+    {
+        org.apache.fop.fo.pagination.LayoutMasterSet this;
+        java.lang.String masterName;
+        java.util.Map $r0;
+        java.lang.Object $r1;
+        org.apache.fop.fo.pagination.PageSequenceMaster $r2;
+
+        this := @this: org.apache.fop.fo.pagination.LayoutMasterSet;
+        masterName := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.fo.pagination.LayoutMasterSet: java.util.Map pageSequenceMasters>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>(masterName);
+        $r2 = (org.apache.fop.fo.pagination.PageSequenceMaster) $r1;
+        return $r2;
+    }
+
+    public boolean regionNameExists(java.lang.String)
+    {
+        org.apache.fop.fo.pagination.LayoutMasterSet this;
+        java.lang.String regionName;
+        java.util.Iterator e;
+        java.util.Map $r0;
+        java.util.Collection $r1;
+        boolean $z0;
+        java.lang.Object $r2;
+        org.apache.fop.fo.pagination.SimplePageMaster $r3;
+
+        this := @this: org.apache.fop.fo.pagination.LayoutMasterSet;
+        regionName := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.fo.pagination.LayoutMasterSet: java.util.Map simplePageMasters>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.util.Collection values()>();
+        e = interfaceinvoke $r1.<java.util.Collection: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke e.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r2 = interfaceinvoke e.<java.util.Iterator: java.lang.Object next()>();
+        $r3 = (org.apache.fop.fo.pagination.SimplePageMaster) $r2;
+        $z0 = virtualinvoke $r3.<org.apache.fop.fo.pagination.SimplePageMaster: boolean regionNameExists(java.lang.String)>(regionName);
+        if $z0 == 0 goto label0;
+
+        return 1;
+
+     label1:
+        return 0;
+    }
+
+    public java.lang.String getLocalName()
+    {
+        org.apache.fop.fo.pagination.LayoutMasterSet this;
+
+        this := @this: org.apache.fop.fo.pagination.LayoutMasterSet;
+        return "layout-master-set";
+    }
+
+    public int getNameId()
+    {
+        org.apache.fop.fo.pagination.LayoutMasterSet this;
+
+        this := @this: org.apache.fop.fo.pagination.LayoutMasterSet;
+        return 18;
+    }
+}

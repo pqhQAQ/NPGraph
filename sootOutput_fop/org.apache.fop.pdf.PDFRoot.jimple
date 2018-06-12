@@ -1,0 +1,400 @@
+public class org.apache.fop.pdf.PDFRoot extends org.apache.fop.pdf.PDFDictionary
+{
+    public static final int PAGEMODE_USENONE;
+    public static final int PAGEMODE_USEOUTLINES;
+    public static final int PAGEMODE_USETHUMBS;
+    public static final int PAGEMODE_FULLSCREEN;
+    private static final org.apache.fop.pdf.PDFName[] PAGEMODE_NAMES;
+
+    public void <init>(int, org.apache.fop.pdf.PDFPages)
+    {
+        org.apache.fop.pdf.PDFRoot this;
+        int objnum;
+        org.apache.fop.pdf.PDFPages pages;
+        org.apache.fop.pdf.PDFName $r0;
+
+        this := @this: org.apache.fop.pdf.PDFRoot;
+        objnum := @parameter0: int;
+        pages := @parameter1: org.apache.fop.pdf.PDFPages;
+        specialinvoke this.<org.apache.fop.pdf.PDFDictionary: void <init>()>();
+        virtualinvoke this.<org.apache.fop.pdf.PDFRoot: void setObjectNumber(int)>(objnum);
+        $r0 = new org.apache.fop.pdf.PDFName;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFName: void <init>(java.lang.String)>("Catalog");
+        virtualinvoke this.<org.apache.fop.pdf.PDFRoot: void put(java.lang.String,java.lang.Object)>("Type", $r0);
+        virtualinvoke this.<org.apache.fop.pdf.PDFRoot: void setRootPages(org.apache.fop.pdf.PDFPages)>(pages);
+        return;
+    }
+
+    public void setPageMode(int)
+    {
+        org.apache.fop.pdf.PDFRoot this;
+        int mode;
+        org.apache.fop.pdf.PDFName[] $r0;
+        org.apache.fop.pdf.PDFName $r1;
+
+        this := @this: org.apache.fop.pdf.PDFRoot;
+        mode := @parameter0: int;
+        $r0 = <org.apache.fop.pdf.PDFRoot: org.apache.fop.pdf.PDFName[] PAGEMODE_NAMES>;
+        $r1 = $r0[mode];
+        virtualinvoke this.<org.apache.fop.pdf.PDFRoot: void put(java.lang.String,java.lang.Object)>("PageMode", $r1);
+        return;
+    }
+
+    public int getPageMode()
+    {
+        org.apache.fop.pdf.PDFRoot this;
+        org.apache.fop.pdf.PDFName mode, $r4;
+        int i, $i0;
+        java.lang.StringBuffer $r0;
+        java.lang.Object $r1;
+        org.apache.fop.pdf.PDFName[] $r2, $r3;
+        boolean $z0;
+        java.lang.IllegalStateException $r5;
+        java.lang.String $r6;
+
+        this := @this: org.apache.fop.pdf.PDFRoot;
+        $r1 = virtualinvoke this.<org.apache.fop.pdf.PDFRoot: java.lang.Object get(java.lang.String)>("PageMode");
+        mode = (org.apache.fop.pdf.PDFName) $r1;
+        if mode == null goto label3;
+
+        i = 0;
+
+     label0:
+        $r2 = <org.apache.fop.pdf.PDFRoot: org.apache.fop.pdf.PDFName[] PAGEMODE_NAMES>;
+        $i0 = lengthof $r2;
+        if i >= $i0 goto label2;
+
+        $r3 = <org.apache.fop.pdf.PDFRoot: org.apache.fop.pdf.PDFName[] PAGEMODE_NAMES>;
+        $r4 = $r3[i];
+        $z0 = virtualinvoke $r4.<java.lang.Object: boolean equals(java.lang.Object)>(mode);
+        if $z0 == 0 goto label1;
+
+        return i;
+
+     label1:
+        i = i + 1;
+        goto label0;
+
+     label2:
+        $r5 = new java.lang.IllegalStateException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unknown /PageMode encountered: ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(mode);
+        $r6 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r5.<java.lang.IllegalStateException: void <init>(java.lang.String)>($r6);
+        throw $r5;
+
+     label3:
+        return 0;
+    }
+
+    public void addPage(org.apache.fop.pdf.PDFPage)
+    {
+        org.apache.fop.pdf.PDFRoot this;
+        org.apache.fop.pdf.PDFPage page;
+        org.apache.fop.pdf.PDFPages pages;
+
+        this := @this: org.apache.fop.pdf.PDFRoot;
+        page := @parameter0: org.apache.fop.pdf.PDFPage;
+        pages = virtualinvoke this.<org.apache.fop.pdf.PDFRoot: org.apache.fop.pdf.PDFPages getRootPages()>();
+        virtualinvoke pages.<org.apache.fop.pdf.PDFPages: void addPage(org.apache.fop.pdf.PDFPage)>(page);
+        return;
+    }
+
+    public void setRootPages(org.apache.fop.pdf.PDFPages)
+    {
+        org.apache.fop.pdf.PDFRoot this;
+        org.apache.fop.pdf.PDFPages pages;
+        org.apache.fop.pdf.PDFReference $r0;
+
+        this := @this: org.apache.fop.pdf.PDFRoot;
+        pages := @parameter0: org.apache.fop.pdf.PDFPages;
+        $r0 = virtualinvoke pages.<org.apache.fop.pdf.PDFPages: org.apache.fop.pdf.PDFReference makeReference()>();
+        virtualinvoke this.<org.apache.fop.pdf.PDFRoot: void put(java.lang.String,java.lang.Object)>("Pages", $r0);
+        return;
+    }
+
+    public org.apache.fop.pdf.PDFPages getRootPages()
+    {
+        org.apache.fop.pdf.PDFRoot this;
+        org.apache.fop.pdf.PDFReference ref;
+        java.lang.Object $r0;
+        org.apache.fop.pdf.PDFObject $r1;
+        org.apache.fop.pdf.PDFPages $r2;
+
+        this := @this: org.apache.fop.pdf.PDFRoot;
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFRoot: java.lang.Object get(java.lang.String)>("Pages");
+        ref = (org.apache.fop.pdf.PDFReference) $r0;
+        if ref == null goto label0;
+
+        $r1 = virtualinvoke ref.<org.apache.fop.pdf.PDFReference: org.apache.fop.pdf.PDFObject getObject()>();
+        $r2 = (org.apache.fop.pdf.PDFPages) $r1;
+        goto label1;
+
+     label0:
+        $r2 = null;
+
+     label1:
+        return $r2;
+    }
+
+    public void setPageLabels(org.apache.fop.pdf.PDFPageLabels)
+    {
+        org.apache.fop.pdf.PDFRoot this;
+        org.apache.fop.pdf.PDFPageLabels pageLabels;
+        org.apache.fop.pdf.PDFReference $r0;
+
+        this := @this: org.apache.fop.pdf.PDFRoot;
+        pageLabels := @parameter0: org.apache.fop.pdf.PDFPageLabels;
+        $r0 = virtualinvoke pageLabels.<org.apache.fop.pdf.PDFPageLabels: org.apache.fop.pdf.PDFReference makeReference()>();
+        virtualinvoke this.<org.apache.fop.pdf.PDFRoot: void put(java.lang.String,java.lang.Object)>("PageLabels", $r0);
+        return;
+    }
+
+    public org.apache.fop.pdf.PDFPageLabels getPageLabels()
+    {
+        org.apache.fop.pdf.PDFRoot this;
+        org.apache.fop.pdf.PDFReference ref;
+        java.lang.Object $r0;
+        org.apache.fop.pdf.PDFObject $r1;
+        org.apache.fop.pdf.PDFPageLabels $r2;
+
+        this := @this: org.apache.fop.pdf.PDFRoot;
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFRoot: java.lang.Object get(java.lang.String)>("PageLabels");
+        ref = (org.apache.fop.pdf.PDFReference) $r0;
+        if ref == null goto label0;
+
+        $r1 = virtualinvoke ref.<org.apache.fop.pdf.PDFReference: org.apache.fop.pdf.PDFObject getObject()>();
+        $r2 = (org.apache.fop.pdf.PDFPageLabels) $r1;
+        goto label1;
+
+     label0:
+        $r2 = null;
+
+     label1:
+        return $r2;
+    }
+
+    public void setRootOutline(org.apache.fop.pdf.PDFOutline)
+    {
+        org.apache.fop.pdf.PDFRoot this;
+        org.apache.fop.pdf.PDFOutline out;
+        org.apache.fop.pdf.PDFName mode;
+        org.apache.fop.pdf.PDFReference $r0;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.pdf.PDFRoot;
+        out := @parameter0: org.apache.fop.pdf.PDFOutline;
+        $r0 = virtualinvoke out.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFReference makeReference()>();
+        virtualinvoke this.<org.apache.fop.pdf.PDFRoot: void put(java.lang.String,java.lang.Object)>("Outlines", $r0);
+        $r1 = virtualinvoke this.<org.apache.fop.pdf.PDFRoot: java.lang.Object get(java.lang.String)>("PageMode");
+        mode = (org.apache.fop.pdf.PDFName) $r1;
+        if mode != null goto label0;
+
+        virtualinvoke this.<org.apache.fop.pdf.PDFRoot: void setPageMode(int)>(1);
+
+     label0:
+        return;
+    }
+
+    public org.apache.fop.pdf.PDFOutline getRootOutline()
+    {
+        org.apache.fop.pdf.PDFRoot this;
+        org.apache.fop.pdf.PDFReference ref;
+        java.lang.Object $r0;
+        org.apache.fop.pdf.PDFObject $r1;
+        org.apache.fop.pdf.PDFOutline $r2;
+
+        this := @this: org.apache.fop.pdf.PDFRoot;
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFRoot: java.lang.Object get(java.lang.String)>("Outlines");
+        ref = (org.apache.fop.pdf.PDFReference) $r0;
+        if ref == null goto label0;
+
+        $r1 = virtualinvoke ref.<org.apache.fop.pdf.PDFReference: org.apache.fop.pdf.PDFObject getObject()>();
+        $r2 = (org.apache.fop.pdf.PDFOutline) $r1;
+        goto label1;
+
+     label0:
+        $r2 = null;
+
+     label1:
+        return $r2;
+    }
+
+    public void setNames(org.apache.fop.pdf.PDFNames)
+    {
+        org.apache.fop.pdf.PDFRoot this;
+        org.apache.fop.pdf.PDFNames names;
+        org.apache.fop.pdf.PDFReference $r0;
+
+        this := @this: org.apache.fop.pdf.PDFRoot;
+        names := @parameter0: org.apache.fop.pdf.PDFNames;
+        $r0 = virtualinvoke names.<org.apache.fop.pdf.PDFNames: org.apache.fop.pdf.PDFReference makeReference()>();
+        virtualinvoke this.<org.apache.fop.pdf.PDFRoot: void put(java.lang.String,java.lang.Object)>("Names", $r0);
+        return;
+    }
+
+    public org.apache.fop.pdf.PDFNames getNames()
+    {
+        org.apache.fop.pdf.PDFRoot this;
+        org.apache.fop.pdf.PDFReference ref;
+        java.lang.Object $r0;
+        org.apache.fop.pdf.PDFObject $r1;
+        org.apache.fop.pdf.PDFNames $r2;
+
+        this := @this: org.apache.fop.pdf.PDFRoot;
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFRoot: java.lang.Object get(java.lang.String)>("Names");
+        ref = (org.apache.fop.pdf.PDFReference) $r0;
+        if ref == null goto label0;
+
+        $r1 = virtualinvoke ref.<org.apache.fop.pdf.PDFReference: org.apache.fop.pdf.PDFObject getObject()>();
+        $r2 = (org.apache.fop.pdf.PDFNames) $r1;
+        goto label1;
+
+     label0:
+        $r2 = null;
+
+     label1:
+        return $r2;
+    }
+
+    public void setMetadata(org.apache.fop.pdf.PDFMetadata)
+    {
+        org.apache.fop.pdf.PDFRoot this;
+        org.apache.fop.pdf.PDFMetadata meta;
+        org.apache.fop.pdf.PDFDocument $r0;
+        int $i0;
+        org.apache.fop.pdf.PDFReference $r1;
+
+        this := @this: org.apache.fop.pdf.PDFRoot;
+        meta := @parameter0: org.apache.fop.pdf.PDFMetadata;
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFRoot: org.apache.fop.pdf.PDFDocument getDocumentSafely()>();
+        $i0 = virtualinvoke $r0.<org.apache.fop.pdf.PDFDocument: int getPDFVersion()>();
+        if $i0 < 4 goto label0;
+
+        $r1 = virtualinvoke meta.<org.apache.fop.pdf.PDFMetadata: org.apache.fop.pdf.PDFReference makeReference()>();
+        virtualinvoke this.<org.apache.fop.pdf.PDFRoot: void put(java.lang.String,java.lang.Object)>("Metadata", $r1);
+
+     label0:
+        return;
+    }
+
+    public org.apache.fop.pdf.PDFMetadata getMetadata()
+    {
+        org.apache.fop.pdf.PDFRoot this;
+        org.apache.fop.pdf.PDFReference ref;
+        java.lang.Object $r0;
+        org.apache.fop.pdf.PDFObject $r1;
+        org.apache.fop.pdf.PDFMetadata $r2;
+
+        this := @this: org.apache.fop.pdf.PDFRoot;
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFRoot: java.lang.Object get(java.lang.String)>("Metadata");
+        ref = (org.apache.fop.pdf.PDFReference) $r0;
+        if ref == null goto label0;
+
+        $r1 = virtualinvoke ref.<org.apache.fop.pdf.PDFReference: org.apache.fop.pdf.PDFObject getObject()>();
+        $r2 = (org.apache.fop.pdf.PDFMetadata) $r1;
+        goto label1;
+
+     label0:
+        $r2 = null;
+
+     label1:
+        return $r2;
+    }
+
+    public org.apache.fop.pdf.PDFArray getOutputIntents()
+    {
+        org.apache.fop.pdf.PDFRoot this;
+        java.lang.Object $r0;
+        org.apache.fop.pdf.PDFArray $r1;
+
+        this := @this: org.apache.fop.pdf.PDFRoot;
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFRoot: java.lang.Object get(java.lang.String)>("OutputIntents");
+        $r1 = (org.apache.fop.pdf.PDFArray) $r0;
+        return $r1;
+    }
+
+    public void addOutputIntent(org.apache.fop.pdf.PDFOutputIntent)
+    {
+        org.apache.fop.pdf.PDFRoot this;
+        org.apache.fop.pdf.PDFOutputIntent outputIntent;
+        org.apache.fop.pdf.PDFArray outputIntents, $r1;
+        org.apache.fop.pdf.PDFDocument $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.pdf.PDFRoot;
+        outputIntent := @parameter0: org.apache.fop.pdf.PDFOutputIntent;
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFRoot: org.apache.fop.pdf.PDFDocument getDocumentSafely()>();
+        $i0 = virtualinvoke $r0.<org.apache.fop.pdf.PDFDocument: int getPDFVersion()>();
+        if $i0 < 4 goto label1;
+
+        outputIntents = virtualinvoke this.<org.apache.fop.pdf.PDFRoot: org.apache.fop.pdf.PDFArray getOutputIntents()>();
+        if outputIntents != null goto label0;
+
+        $r1 = new org.apache.fop.pdf.PDFArray;
+        specialinvoke $r1.<org.apache.fop.pdf.PDFArray: void <init>(org.apache.fop.pdf.PDFObject)>(this);
+        outputIntents = $r1;
+        virtualinvoke this.<org.apache.fop.pdf.PDFRoot: void put(java.lang.String,java.lang.Object)>("OutputIntents", outputIntents);
+
+     label0:
+        virtualinvoke outputIntents.<org.apache.fop.pdf.PDFArray: void add(java.lang.Object)>(outputIntent);
+
+     label1:
+        return;
+    }
+
+    public java.lang.String getLanguage()
+    {
+        org.apache.fop.pdf.PDFRoot this;
+        java.lang.Object $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.pdf.PDFRoot;
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFRoot: java.lang.Object get(java.lang.String)>("Lang");
+        $r1 = (java.lang.String) $r0;
+        return $r1;
+    }
+
+    public void setLanguage(java.lang.String)
+    {
+        org.apache.fop.pdf.PDFRoot this;
+        java.lang.String lang;
+        java.lang.NullPointerException $r0;
+
+        this := @this: org.apache.fop.pdf.PDFRoot;
+        lang := @parameter0: java.lang.String;
+        if lang != null goto label0;
+
+        $r0 = new java.lang.NullPointerException;
+        specialinvoke $r0.<java.lang.NullPointerException: void <init>(java.lang.String)>("lang must not be null");
+        throw $r0;
+
+     label0:
+        virtualinvoke this.<org.apache.fop.pdf.PDFRoot: void put(java.lang.String,java.lang.Object)>("Lang", lang);
+        return;
+    }
+
+    static void <clinit>()
+    {
+        org.apache.fop.pdf.PDFName $r0;
+        org.apache.fop.pdf.PDFName[] $r1;
+
+        $r1 = newarray (org.apache.fop.pdf.PDFName)[4];
+        $r0 = new org.apache.fop.pdf.PDFName;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFName: void <init>(java.lang.String)>("UseNone");
+        $r1[0] = $r0;
+        $r0 = new org.apache.fop.pdf.PDFName;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFName: void <init>(java.lang.String)>("UseOutlines");
+        $r1[1] = $r0;
+        $r0 = new org.apache.fop.pdf.PDFName;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFName: void <init>(java.lang.String)>("UseThumbs");
+        $r1[2] = $r0;
+        $r0 = new org.apache.fop.pdf.PDFName;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFName: void <init>(java.lang.String)>("FullScreen");
+        $r1[3] = $r0;
+        <org.apache.fop.pdf.PDFRoot: org.apache.fop.pdf.PDFName[] PAGEMODE_NAMES> = $r1;
+        return;
+    }
+}

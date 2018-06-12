@@ -1,0 +1,162 @@
+class org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator extends java.lang.Object implements java.util.Iterator
+{
+    private org.apache.commons.logging.Log log;
+    private int count;
+    private int current;
+    private final org.apache.fop.render.bitmap.TIFFRenderer this$0;
+
+    public void <init>(org.apache.fop.render.bitmap.TIFFRenderer, int, org.apache.commons.logging.Log)
+    {
+        org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator this;
+        org.apache.fop.render.bitmap.TIFFRenderer l1;
+        int c;
+        org.apache.commons.logging.Log log;
+
+        this := @this: org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator;
+        l1 := @parameter0: org.apache.fop.render.bitmap.TIFFRenderer;
+        c := @parameter1: int;
+        log := @parameter2: org.apache.commons.logging.Log;
+        this.<org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator: org.apache.fop.render.bitmap.TIFFRenderer this$0> = l1;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator: int current> = 0;
+        this.<org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator: int count> = c;
+        this.<org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator: org.apache.commons.logging.Log log> = log;
+        return;
+    }
+
+    public boolean hasNext()
+    {
+        org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator this;
+        int $i0, $i1;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator;
+        $i0 = this.<org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator: int current>;
+        $i1 = this.<org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator: int count>;
+        if $i0 >= $i1 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public java.lang.Object next()
+    {
+        org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator this;
+        java.lang.StringBuffer $r0;
+        null_type pageImage;
+        org.apache.fop.apps.FOPException e, $r5;
+        java.awt.image.SinglePixelPackedSampleModel sppsm;
+        int bands, w, h, i, $i0, $i1, $i2, $i3;
+        int[] off;
+        java.awt.image.PixelInterleavedSampleModel sm, $r10;
+        org.apache.xmlgraphics.image.rendered.FormatRed rimg, $r11;
+        org.apache.commons.logging.Log $r1;
+        boolean $z0;
+        java.lang.String $r2, $r6;
+        org.apache.fop.render.bitmap.TIFFRenderer $r3, $r7;
+        java.awt.image.BufferedImage pageImage;
+        org.apache.xmlgraphics.image.writer.ImageWriterParams $r8;
+        java.awt.image.SampleModel $r9;
+        org.apache.xmlgraphics.image.rendered.CachableRed $r12;
+
+        this := @this: org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator;
+        $r1 = this.<org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r1 = this.<org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator: org.apache.commons.logging.Log log>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("[");
+        $i0 = this.<org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator: int current>;
+        $i0 = $i0 + 1;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("]");
+        $r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r2);
+
+     label0:
+        pageImage = null;
+
+     label1:
+        $r3 = this.<org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator: org.apache.fop.render.bitmap.TIFFRenderer this$0>;
+        $i1 = this.<org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator: int current>;
+        $i2 = $i1 + 1;
+        this.<org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator: int current> = $i2;
+        pageImage = virtualinvoke $r3.<org.apache.fop.render.bitmap.TIFFRenderer: java.awt.image.BufferedImage getPageImage(int)>($i1);
+
+     label2:
+        goto label4;
+
+     label3:
+        $r5 := @caughtexception;
+        e = $r5;
+        $r1 = this.<org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void error(java.lang.Object)>(e);
+        return null;
+
+     label4:
+        $r6 = "CCITT T.4";
+        $r7 = this.<org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator: org.apache.fop.render.bitmap.TIFFRenderer this$0>;
+        $r8 = staticinvoke <org.apache.fop.render.bitmap.TIFFRenderer: org.apache.xmlgraphics.image.writer.ImageWriterParams access$000(org.apache.fop.render.bitmap.TIFFRenderer)>($r7);
+        $r2 = virtualinvoke $r8.<org.apache.xmlgraphics.image.writer.ImageWriterParams: java.lang.String getCompressionMethod()>();
+        $z0 = virtualinvoke $r6.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>($r2);
+        if $z0 != 0 goto label5;
+
+        $r6 = "CCITT T.6";
+        $r7 = this.<org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator: org.apache.fop.render.bitmap.TIFFRenderer this$0>;
+        $r8 = staticinvoke <org.apache.fop.render.bitmap.TIFFRenderer: org.apache.xmlgraphics.image.writer.ImageWriterParams access$000(org.apache.fop.render.bitmap.TIFFRenderer)>($r7);
+        $r2 = virtualinvoke $r8.<org.apache.xmlgraphics.image.writer.ImageWriterParams: java.lang.String getCompressionMethod()>();
+        $z0 = virtualinvoke $r6.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>($r2);
+        if $z0 == 0 goto label6;
+
+     label5:
+        return pageImage;
+
+     label6:
+        $r9 = virtualinvoke pageImage.<java.awt.image.BufferedImage: java.awt.image.SampleModel getSampleModel()>();
+        sppsm = (java.awt.image.SinglePixelPackedSampleModel) $r9;
+        bands = virtualinvoke sppsm.<java.awt.image.SinglePixelPackedSampleModel: int getNumBands()>();
+        off = newarray (int)[bands];
+        w = virtualinvoke pageImage.<java.awt.image.BufferedImage: int getWidth()>();
+        h = virtualinvoke pageImage.<java.awt.image.BufferedImage: int getHeight()>();
+        i = 0;
+
+     label7:
+        if i >= bands goto label8;
+
+        off[i] = i;
+        i = i + 1;
+        goto label7;
+
+     label8:
+        $r10 = new java.awt.image.PixelInterleavedSampleModel;
+        $i3 = w * bands;
+        specialinvoke $r10.<java.awt.image.PixelInterleavedSampleModel: void <init>(int,int,int,int,int,int[])>(0, w, h, bands, $i3, off);
+        sm = $r10;
+        $r11 = new org.apache.xmlgraphics.image.rendered.FormatRed;
+        $r12 = staticinvoke <org.apache.xmlgraphics.image.GraphicsUtil: org.apache.xmlgraphics.image.rendered.CachableRed wrap(java.awt.image.RenderedImage)>(pageImage);
+        specialinvoke $r11.<org.apache.xmlgraphics.image.rendered.FormatRed: void <init>(org.apache.xmlgraphics.image.rendered.CachableRed,java.awt.image.SampleModel)>($r12, sm);
+        rimg = $r11;
+        return rimg;
+
+        catch org.apache.fop.apps.FOPException from label1 to label2 with label3;
+    }
+
+    public void remove()
+    {
+        org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator this;
+        java.lang.UnsupportedOperationException $r0;
+
+        this := @this: org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator;
+        $r0 = new java.lang.UnsupportedOperationException;
+        specialinvoke $r0.<java.lang.UnsupportedOperationException: void <init>(java.lang.String)>("Method \'remove\' is not supported.");
+        throw $r0;
+    }
+}

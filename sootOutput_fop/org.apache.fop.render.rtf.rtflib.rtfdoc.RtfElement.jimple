@@ -1,0 +1,539 @@
+public abstract class org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement extends java.lang.Object
+{
+    protected final java.io.Writer writer;
+    protected final org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer parent;
+    protected final org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes attrib;
+    private boolean written;
+    private boolean closed;
+    private final int id;
+    private static int idCounter;
+
+    void <init>(org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer, java.io.Writer) throws java.io.IOException
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement this;
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer parent;
+        java.io.Writer w;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement;
+        parent := @parameter0: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer;
+        w := @parameter1: java.io.Writer;
+        specialinvoke this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: void <init>(org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer,java.io.Writer,org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes)>(parent, w, null);
+        return;
+    }
+
+    void <init>(org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer, java.io.Writer, org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes) throws java.io.IOException
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement this;
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer parent, $r2;
+        java.io.Writer w;
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes attr, $r1;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement;
+        parent := @parameter0: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer;
+        w := @parameter1: java.io.Writer;
+        attr := @parameter2: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $i0 = <org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: int idCounter>;
+        $i1 = $i0 + 1;
+        <org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: int idCounter> = $i1;
+        this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: int id> = $i0;
+        this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer parent> = parent;
+        if attr == null goto label0;
+
+        $r1 = attr;
+        goto label1;
+
+     label0:
+        $r1 = new org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes;
+        specialinvoke $r1.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes: void <init>()>();
+
+     label1:
+        this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes attrib> = $r1;
+        $r2 = this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer parent>;
+        if $r2 == null goto label2;
+
+        $r2 = this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer parent>;
+        virtualinvoke $r2.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer: void addChild(org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement)>(this);
+
+     label2:
+        this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: java.io.Writer writer> = w;
+        this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: boolean written> = 0;
+        return;
+    }
+
+    public final void close() throws java.io.IOException
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement this;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement;
+        this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: boolean closed> = 1;
+        return;
+    }
+
+    public final void writeRtf() throws java.io.IOException
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement this;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement;
+        $z0 = this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: boolean written>;
+        if $z0 != 0 goto label0;
+
+        this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: boolean written> = 1;
+        $z0 = virtualinvoke this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: boolean okToWriteRtf()>();
+        if $z0 == 0 goto label0;
+
+        virtualinvoke this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: void writeRtfPrefix()>();
+        virtualinvoke this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: void writeRtfContent()>();
+        virtualinvoke this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: void writeRtfSuffix()>();
+
+     label0:
+        return;
+    }
+
+    public void newLine() throws java.io.IOException
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement this;
+        java.io.Writer $r0;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement;
+        $r0 = this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: java.io.Writer writer>;
+        virtualinvoke $r0.<java.io.Writer: void write(java.lang.String)>("\n");
+        return;
+    }
+
+    protected final void writeControlWord(java.lang.String) throws java.io.IOException
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement this;
+        java.lang.String word;
+        java.io.Writer $r0;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement;
+        word := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: java.io.Writer writer>;
+        virtualinvoke $r0.<java.io.Writer: void write(int)>(92);
+        $r0 = this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: java.io.Writer writer>;
+        virtualinvoke $r0.<java.io.Writer: void write(java.lang.String)>(word);
+        $r0 = this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: java.io.Writer writer>;
+        virtualinvoke $r0.<java.io.Writer: void write(int)>(32);
+        return;
+    }
+
+    protected final void writeStarControlWord(java.lang.String) throws java.io.IOException
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement this;
+        java.lang.String word;
+        java.io.Writer $r0;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement;
+        word := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: java.io.Writer writer>;
+        virtualinvoke $r0.<java.io.Writer: void write(java.lang.String)>("\\*\\");
+        $r0 = this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: java.io.Writer writer>;
+        virtualinvoke $r0.<java.io.Writer: void write(java.lang.String)>(word);
+        $r0 = this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: java.io.Writer writer>;
+        virtualinvoke $r0.<java.io.Writer: void write(int)>(32);
+        return;
+    }
+
+    protected final void writeStarControlWordNS(java.lang.String) throws java.io.IOException
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement this;
+        java.lang.String word;
+        java.io.Writer $r0;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement;
+        word := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: java.io.Writer writer>;
+        virtualinvoke $r0.<java.io.Writer: void write(java.lang.String)>("\\*\\");
+        $r0 = this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: java.io.Writer writer>;
+        virtualinvoke $r0.<java.io.Writer: void write(java.lang.String)>(word);
+        return;
+    }
+
+    protected final void writeControlWordNS(java.lang.String) throws java.io.IOException
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement this;
+        java.lang.String word;
+        java.io.Writer $r0;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement;
+        word := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: java.io.Writer writer>;
+        virtualinvoke $r0.<java.io.Writer: void write(int)>(92);
+        $r0 = this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: java.io.Writer writer>;
+        virtualinvoke $r0.<java.io.Writer: void write(java.lang.String)>(word);
+        return;
+    }
+
+    protected void writeRtfPrefix() throws java.io.IOException
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement this;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement;
+        return;
+    }
+
+    protected abstract void writeRtfContent() throws java.io.IOException;
+
+    protected void writeRtfSuffix() throws java.io.IOException
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement this;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement;
+        return;
+    }
+
+    protected final void writeGroupMark(boolean) throws java.io.IOException
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement this;
+        boolean isStart;
+        java.io.Writer $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement;
+        isStart := @parameter0: boolean;
+        $r0 = this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: java.io.Writer writer>;
+        if isStart == 0 goto label0;
+
+        $r1 = "{";
+        goto label1;
+
+     label0:
+        $r1 = "}";
+
+     label1:
+        virtualinvoke $r0.<java.io.Writer: void write(java.lang.String)>($r1);
+        return;
+    }
+
+    protected void writeAttributes(org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes, java.lang.String[]) throws java.io.IOException
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement this;
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes attr;
+        java.lang.String[] nameList;
+        int i, $i0;
+        java.lang.String name;
+        java.util.Iterator it;
+        boolean $z0;
+        java.lang.Object $r0, $r1;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement;
+        attr := @parameter0: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes;
+        nameList := @parameter1: java.lang.String[];
+        if attr != null goto label0;
+
+        return;
+
+     label0:
+        if nameList == null goto label4;
+
+        i = 0;
+
+     label1:
+        $i0 = lengthof nameList;
+        if i >= $i0 goto label3;
+
+        name = nameList[i];
+        $z0 = virtualinvoke attr.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes: boolean isSet(java.lang.String)>(name);
+        if $z0 == 0 goto label2;
+
+        $r0 = virtualinvoke attr.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes: java.lang.Object getValue(java.lang.String)>(name);
+        virtualinvoke this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: void writeOneAttribute(java.lang.String,java.lang.Object)>(name, $r0);
+
+     label2:
+        i = i + 1;
+        goto label1;
+
+     label3:
+        goto label7;
+
+     label4:
+        it = virtualinvoke attr.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes: java.util.Iterator nameIterator()>();
+
+     label5:
+        $z0 = interfaceinvoke it.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label7;
+
+        $r1 = interfaceinvoke it.<java.util.Iterator: java.lang.Object next()>();
+        name = (java.lang.String) $r1;
+        $z0 = virtualinvoke attr.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes: boolean isSet(java.lang.String)>(name);
+        if $z0 == 0 goto label6;
+
+        $r0 = virtualinvoke attr.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes: java.lang.Object getValue(java.lang.String)>(name);
+        virtualinvoke this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: void writeOneAttribute(java.lang.String,java.lang.Object)>(name, $r0);
+
+     label6:
+        goto label5;
+
+     label7:
+        return;
+    }
+
+    protected void writeOneAttribute(java.lang.String, java.lang.Object) throws java.io.IOException
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement this;
+        java.lang.String name, cw;
+        java.lang.Object value;
+        boolean $z0;
+        java.lang.StringBuffer $r0;
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes $r1;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement;
+        name := @parameter0: java.lang.String;
+        value := @parameter1: java.lang.Object;
+        cw = name;
+        $z0 = value instanceof java.lang.Integer;
+        if $z0 == 0 goto label0;
+
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(cw);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(value);
+        cw = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        goto label2;
+
+     label0:
+        $z0 = value instanceof java.lang.String;
+        if $z0 == 0 goto label1;
+
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(cw);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(value);
+        cw = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        goto label2;
+
+     label1:
+        $z0 = value instanceof org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes;
+        if $z0 == 0 goto label2;
+
+        virtualinvoke this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: void writeControlWord(java.lang.String)>(cw);
+        $r1 = (org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes) value;
+        virtualinvoke this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: void writeAttributes(org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes,java.lang.String[])>($r1, null);
+        return;
+
+     label2:
+        virtualinvoke this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: void writeControlWord(java.lang.String)>(cw);
+        return;
+    }
+
+    protected void writeOneAttributeNS(java.lang.String, java.lang.Object) throws java.io.IOException
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement this;
+        java.lang.String name, cw;
+        java.lang.Object value;
+        boolean $z0;
+        java.lang.StringBuffer $r0;
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes $r1;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement;
+        name := @parameter0: java.lang.String;
+        value := @parameter1: java.lang.Object;
+        cw = name;
+        $z0 = value instanceof java.lang.Integer;
+        if $z0 == 0 goto label0;
+
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(cw);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(value);
+        cw = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        goto label2;
+
+     label0:
+        $z0 = value instanceof java.lang.String;
+        if $z0 == 0 goto label1;
+
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(cw);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(value);
+        cw = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        goto label2;
+
+     label1:
+        $z0 = value instanceof org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes;
+        if $z0 == 0 goto label2;
+
+        virtualinvoke this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: void writeControlWord(java.lang.String)>(cw);
+        $r1 = (org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes) value;
+        virtualinvoke this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: void writeAttributes(org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes,java.lang.String[])>($r1, null);
+        return;
+
+     label2:
+        virtualinvoke this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: void writeControlWordNS(java.lang.String)>(cw);
+        return;
+    }
+
+    protected boolean okToWriteRtf()
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement this;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement;
+        return 1;
+    }
+
+    void dump(java.io.Writer, int) throws java.io.IOException
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement this;
+        java.io.Writer w;
+        int indent, i;
+        java.lang.String $r0;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement;
+        w := @parameter0: java.io.Writer;
+        indent := @parameter1: int;
+        i = 0;
+
+     label0:
+        if i >= indent goto label1;
+
+        virtualinvoke w.<java.io.Writer: void write(int)>(32);
+        i = i + 1;
+        goto label0;
+
+     label1:
+        $r0 = virtualinvoke this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: java.lang.String toString()>();
+        virtualinvoke w.<java.io.Writer: void write(java.lang.String)>($r0);
+        virtualinvoke w.<java.io.Writer: void write(int)>(10);
+        virtualinvoke w.<java.io.Writer: void flush()>();
+        return;
+    }
+
+    public java.lang.String toString()
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement this;
+        java.lang.String $r0, $r3;
+        java.lang.StringBuffer $r1;
+        java.lang.Class $r2;
+        int $i0;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement;
+        if this != null goto label0;
+
+        $r0 = "null";
+        goto label1;
+
+     label0:
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke this.<java.lang.Object: java.lang.Class getClass()>();
+        $r3 = virtualinvoke $r2.<java.lang.Class: java.lang.String getName()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" #");
+        $i0 = this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: int id>;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r0 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+
+     label1:
+        return $r0;
+    }
+
+    boolean isClosed()
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement this;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement;
+        $z0 = this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: boolean closed>;
+        return $z0;
+    }
+
+    org.apache.fop.render.rtf.rtflib.rtfdoc.RtfFile getRtfFile()
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement this, result;
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer $r0;
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfFile $r1;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement;
+        result = this;
+
+     label0:
+        $r0 = result.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer parent>;
+        if $r0 == null goto label1;
+
+        result = result.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer parent>;
+        goto label0;
+
+     label1:
+        $r1 = (org.apache.fop.render.rtf.rtflib.rtfdoc.RtfFile) result;
+        return $r1;
+    }
+
+    org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement getParentOfClass(java.lang.Class)
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement this, result, current;
+        java.lang.Class c, $r1;
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement;
+        c := @parameter0: java.lang.Class;
+        result = null;
+        current = this;
+
+     label0:
+        $r0 = current.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer parent>;
+        if $r0 == null goto label1;
+
+        current = current.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer parent>;
+        $r1 = virtualinvoke current.<java.lang.Object: java.lang.Class getClass()>();
+        $z0 = virtualinvoke c.<java.lang.Class: boolean isAssignableFrom(java.lang.Class)>($r1);
+        if $z0 == 0 goto label0;
+
+        result = current;
+        goto label1;
+
+     label1:
+        return result;
+    }
+
+    public abstract boolean isEmpty();
+
+    protected void writeExceptionInRtf(java.lang.Exception) throws java.io.IOException
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement this;
+        java.lang.Exception ie;
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter $r0;
+        java.io.Writer $r1;
+        java.lang.Class $r2;
+        java.lang.String $r3, $r5;
+        java.lang.StringBuffer $r4;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement;
+        ie := @parameter0: java.lang.Exception;
+        virtualinvoke this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: void writeGroupMark(boolean)>(1);
+        virtualinvoke this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: void writeControlWord(java.lang.String)>("par");
+        virtualinvoke this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: void writeControlWord(java.lang.String)>("fs48");
+        $r0 = staticinvoke <org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter getInstance()>();
+        $r1 = this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: java.io.Writer writer>;
+        $r2 = virtualinvoke ie.<java.lang.Object: java.lang.Class getClass()>();
+        $r3 = virtualinvoke $r2.<java.lang.Class: java.lang.String getName()>();
+        virtualinvoke $r0.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter: void writeRtfString(java.io.Writer,java.lang.String)>($r1, $r3);
+        virtualinvoke this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: void writeControlWord(java.lang.String)>("fs20");
+        $r0 = staticinvoke <org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter getInstance()>();
+        $r1 = this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: java.io.Writer writer>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $r5 = virtualinvoke ie.<java.lang.Exception: java.lang.String toString()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r3 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r0.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter: void writeRtfString(java.io.Writer,java.lang.String)>($r1, $r3);
+        virtualinvoke this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: void writeControlWord(java.lang.String)>("par");
+        virtualinvoke this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: void writeGroupMark(boolean)>(0);
+        return;
+    }
+
+    public org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes getRtfAttributes()
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement this;
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes $r0;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement;
+        $r0 = this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfElement: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes attrib>;
+        return $r0;
+    }
+}

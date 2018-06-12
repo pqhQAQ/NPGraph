@@ -1,0 +1,990 @@
+public abstract class org.apache.fop.fo.FONode extends java.lang.Object implements java.lang.Cloneable
+{
+    protected static final java.lang.String FO_URI;
+    protected static final java.lang.String FOX_URI;
+    protected org.apache.fop.fo.FONode parent;
+    protected org.apache.fop.fo.FONode[] siblings;
+    protected org.xml.sax.Locator locator;
+    protected static org.apache.commons.logging.Log log;
+    static java.lang.Class class$org$apache$fop$fo$FONode;
+
+    protected void <init>(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.FONode this, parent;
+
+        this := @this: org.apache.fop.fo.FONode;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode parent> = parent;
+        return;
+    }
+
+    public org.apache.fop.fo.FONode clone(org.apache.fop.fo.FONode, boolean) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.FONode this, cloneparent, foNode;
+        boolean removeChildren;
+        java.lang.Object $r0;
+
+        this := @this: org.apache.fop.fo.FONode;
+        cloneparent := @parameter0: org.apache.fop.fo.FONode;
+        removeChildren := @parameter1: boolean;
+        $r0 = virtualinvoke this.<org.apache.fop.fo.FONode: java.lang.Object clone()>();
+        foNode = (org.apache.fop.fo.FONode) $r0;
+        foNode.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode parent> = cloneparent;
+        foNode.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode[] siblings> = null;
+        return foNode;
+    }
+
+    protected java.lang.Object clone()
+    {
+        org.apache.fop.fo.FONode this;
+        java.lang.CloneNotSupportedException e, $r1;
+        java.lang.Object $r0;
+
+        this := @this: org.apache.fop.fo.FONode;
+
+     label0:
+        $r0 = specialinvoke this.<java.lang.Object: java.lang.Object clone()>();
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        e = $r1;
+        return null;
+
+        catch java.lang.CloneNotSupportedException from label0 to label1 with label2;
+    }
+
+    public void bind(org.apache.fop.fo.PropertyList) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.FONode this;
+        org.apache.fop.fo.PropertyList propertyList;
+
+        this := @this: org.apache.fop.fo.FONode;
+        propertyList := @parameter0: org.apache.fop.fo.PropertyList;
+        return;
+    }
+
+    public void setLocator(org.xml.sax.Locator)
+    {
+        org.apache.fop.fo.FONode this;
+        org.xml.sax.Locator locator;
+        org.xml.sax.helpers.LocatorImpl $r0;
+
+        this := @this: org.apache.fop.fo.FONode;
+        locator := @parameter0: org.xml.sax.Locator;
+        if locator == null goto label0;
+
+        $r0 = new org.xml.sax.helpers.LocatorImpl;
+        specialinvoke $r0.<org.xml.sax.helpers.LocatorImpl: void <init>(org.xml.sax.Locator)>(locator);
+        this.<org.apache.fop.fo.FONode: org.xml.sax.Locator locator> = $r0;
+
+     label0:
+        return;
+    }
+
+    public org.xml.sax.Locator getLocator()
+    {
+        org.apache.fop.fo.FONode this;
+        org.xml.sax.Locator $r0;
+
+        this := @this: org.apache.fop.fo.FONode;
+        $r0 = this.<org.apache.fop.fo.FONode: org.xml.sax.Locator locator>;
+        return $r0;
+    }
+
+    public org.apache.fop.fo.FOEventHandler getFOEventHandler()
+    {
+        org.apache.fop.fo.FONode this, $r0;
+        org.apache.fop.fo.FOEventHandler $r1;
+
+        this := @this: org.apache.fop.fo.FONode;
+        $r0 = this.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode parent>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.FONode: org.apache.fop.fo.FOEventHandler getFOEventHandler()>();
+        return $r1;
+    }
+
+    protected boolean inMarker()
+    {
+        org.apache.fop.fo.FONode this;
+        org.apache.fop.fo.FOEventHandler $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.FONode;
+        $r0 = virtualinvoke this.<org.apache.fop.fo.FONode: org.apache.fop.fo.FOEventHandler getFOEventHandler()>();
+        $z0 = virtualinvoke $r0.<org.apache.fop.fo.FOEventHandler: boolean inMarker()>();
+        return $z0;
+    }
+
+    public org.apache.fop.apps.FOUserAgent getUserAgent()
+    {
+        org.apache.fop.fo.FONode this;
+        org.apache.fop.fo.FOEventHandler $r0;
+        org.apache.fop.apps.FOUserAgent $r1;
+
+        this := @this: org.apache.fop.fo.FONode;
+        $r0 = virtualinvoke this.<org.apache.fop.fo.FONode: org.apache.fop.fo.FOEventHandler getFOEventHandler()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.FOEventHandler: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        return $r1;
+    }
+
+    public org.apache.commons.logging.Log getLogger()
+    {
+        org.apache.fop.fo.FONode this;
+        org.apache.commons.logging.Log $r0;
+
+        this := @this: org.apache.fop.fo.FONode;
+        $r0 = <org.apache.fop.fo.FONode: org.apache.commons.logging.Log log>;
+        return $r0;
+    }
+
+    public void processNode(java.lang.String, org.xml.sax.Locator, org.xml.sax.Attributes, org.apache.fop.fo.PropertyList) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.FONode this;
+        java.lang.String elementName, $r3, $r4, $r5;
+        org.xml.sax.Locator locator;
+        org.xml.sax.Attributes attlist;
+        org.apache.fop.fo.PropertyList pList;
+        org.apache.commons.logging.Log $r0;
+        java.lang.StringBuffer $r1, $r2;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.FONode;
+        elementName := @parameter0: java.lang.String;
+        locator := @parameter1: org.xml.sax.Locator;
+        attlist := @parameter2: org.xml.sax.Attributes;
+        pList := @parameter3: org.apache.fop.fo.PropertyList;
+        $r0 = <org.apache.fop.fo.FONode: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label2;
+
+        $r0 = <org.apache.fop.fo.FONode: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unhandled element: ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(elementName);
+        if locator == null goto label0;
+
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" at ");
+        $r3 = staticinvoke <org.apache.fop.fo.FONode: java.lang.String getLocatorString(org.xml.sax.Locator)>(locator);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r4 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        goto label1;
+
+     label0:
+        $r4 = "";
+
+     label1:
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r5 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r5);
+
+     label2:
+        return;
+    }
+
+    protected org.apache.fop.fo.PropertyList createPropertyList(org.apache.fop.fo.PropertyList, org.apache.fop.fo.FOEventHandler) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.FONode this;
+        org.apache.fop.fo.PropertyList pList;
+        org.apache.fop.fo.FOEventHandler foEventHandler;
+
+        this := @this: org.apache.fop.fo.FONode;
+        pList := @parameter0: org.apache.fop.fo.PropertyList;
+        foEventHandler := @parameter1: org.apache.fop.fo.FOEventHandler;
+        return null;
+    }
+
+    protected void validateChildNode(org.xml.sax.Locator, java.lang.String, java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.FONode this;
+        org.xml.sax.Locator loc;
+        java.lang.String namespaceURI, localName;
+
+        this := @this: org.apache.fop.fo.FONode;
+        loc := @parameter0: org.xml.sax.Locator;
+        namespaceURI := @parameter1: java.lang.String;
+        localName := @parameter2: java.lang.String;
+        return;
+    }
+
+    protected static void validateChildNode(org.apache.fop.fo.FONode, org.xml.sax.Locator, java.lang.String, java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.FONode fo;
+        org.xml.sax.Locator loc;
+        java.lang.String namespaceURI, localName;
+
+        fo := @parameter0: org.apache.fop.fo.FONode;
+        loc := @parameter1: org.xml.sax.Locator;
+        namespaceURI := @parameter2: java.lang.String;
+        localName := @parameter3: java.lang.String;
+        virtualinvoke fo.<org.apache.fop.fo.FONode: void validateChildNode(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, namespaceURI, localName);
+        return;
+    }
+
+    protected void addCharacters(char[], int, int, org.apache.fop.fo.PropertyList, org.xml.sax.Locator) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.FONode this;
+        char[] data;
+        int start, end;
+        org.apache.fop.fo.PropertyList pList;
+        org.xml.sax.Locator locator;
+
+        this := @this: org.apache.fop.fo.FONode;
+        data := @parameter0: char[];
+        start := @parameter1: int;
+        end := @parameter2: int;
+        pList := @parameter3: org.apache.fop.fo.PropertyList;
+        locator := @parameter4: org.xml.sax.Locator;
+        return;
+    }
+
+    protected void startOfNode() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.FONode this;
+
+        this := @this: org.apache.fop.fo.FONode;
+        return;
+    }
+
+    protected void endOfNode() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.FONode this;
+
+        this := @this: org.apache.fop.fo.FONode;
+        return;
+    }
+
+    protected void addChildNode(org.apache.fop.fo.FONode) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.FONode this, child;
+
+        this := @this: org.apache.fop.fo.FONode;
+        child := @parameter0: org.apache.fop.fo.FONode;
+        return;
+    }
+
+    public void removeChild(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.FONode this, child;
+
+        this := @this: org.apache.fop.fo.FONode;
+        child := @parameter0: org.apache.fop.fo.FONode;
+        return;
+    }
+
+    public org.apache.fop.fo.FONode getParent()
+    {
+        org.apache.fop.fo.FONode this, $r0;
+
+        this := @this: org.apache.fop.fo.FONode;
+        $r0 = this.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode parent>;
+        return $r0;
+    }
+
+    public org.apache.fop.fo.FONode$FONodeIterator getChildNodes()
+    {
+        org.apache.fop.fo.FONode this;
+
+        this := @this: org.apache.fop.fo.FONode;
+        return null;
+    }
+
+    public org.apache.fop.fo.FONode$FONodeIterator getChildNodes(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.FONode this, childNode;
+
+        this := @this: org.apache.fop.fo.FONode;
+        childNode := @parameter0: org.apache.fop.fo.FONode;
+        return null;
+    }
+
+    public org.apache.fop.fo.CharIterator charIterator()
+    {
+        org.apache.fop.fo.FONode this;
+        org.apache.fop.fo.OneCharIterator $r0;
+
+        this := @this: org.apache.fop.fo.FONode;
+        $r0 = new org.apache.fop.fo.OneCharIterator;
+        specialinvoke $r0.<org.apache.fop.fo.OneCharIterator: void <init>(char)>(0);
+        return $r0;
+    }
+
+    public static java.lang.String getNodeString(java.lang.String, java.lang.String)
+    {
+        java.lang.String namespaceURI, localName, $r1;
+        boolean $z0;
+        java.lang.StringBuffer $r0;
+
+        namespaceURI := @parameter0: java.lang.String;
+        localName := @parameter1: java.lang.String;
+        $z0 = virtualinvoke namespaceURI.<java.lang.String: boolean equals(java.lang.Object)>("http://www.w3.org/1999/XSL/Format");
+        if $z0 == 0 goto label0;
+
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("fo:");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(localName);
+        $r1 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r1;
+
+     label0:
+        $z0 = virtualinvoke namespaceURI.<java.lang.String: boolean equals(java.lang.Object)>("http://xmlgraphics.apache.org/fop/extensions");
+        if $z0 == 0 goto label1;
+
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("fox:");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(localName);
+        $r1 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r1;
+
+     label1:
+        $z0 = virtualinvoke namespaceURI.<java.lang.String: boolean equals(java.lang.Object)>("http://www.w3.org/2000/svg");
+        if $z0 == 0 goto label2;
+
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("svg:");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(localName);
+        $r1 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r1;
+
+     label2:
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("(Namespace URI: \"");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(namespaceURI);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\", Local Name: \"");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(localName);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\")");
+        $r1 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r1;
+    }
+
+    protected void attributeError(java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.FONode this;
+        java.lang.String problem, $r3, $r4;
+        org.apache.fop.fo.ValidationException $r0;
+        java.lang.StringBuffer $r1;
+        org.xml.sax.Locator $r2;
+
+        this := @this: org.apache.fop.fo.FONode;
+        problem := @parameter0: java.lang.String;
+        $r0 = new org.apache.fop.fo.ValidationException;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r2 = this.<org.apache.fop.fo.FONode: org.xml.sax.Locator locator>;
+        $r3 = staticinvoke <org.apache.fop.fo.FONode: java.lang.String errorText(org.xml.sax.Locator)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r3 = virtualinvoke this.<org.apache.fop.fo.FONode: java.lang.String getName()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(problem);
+        $r4 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r2 = this.<org.apache.fop.fo.FONode: org.xml.sax.Locator locator>;
+        specialinvoke $r0.<org.apache.fop.fo.ValidationException: void <init>(java.lang.String,org.xml.sax.Locator)>($r4, $r2);
+        throw $r0;
+    }
+
+    public void attributeWarning(java.lang.String)
+    {
+        org.apache.fop.fo.FONode this;
+        java.lang.String problem, $r3, $r4;
+        org.apache.commons.logging.Log $r0;
+        java.lang.StringBuffer $r1;
+        org.xml.sax.Locator $r2;
+
+        this := @this: org.apache.fop.fo.FONode;
+        problem := @parameter0: java.lang.String;
+        $r0 = <org.apache.fop.fo.FONode: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r2 = this.<org.apache.fop.fo.FONode: org.xml.sax.Locator locator>;
+        $r3 = staticinvoke <org.apache.fop.fo.FONode: java.lang.String warningText(org.xml.sax.Locator)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r3 = virtualinvoke this.<org.apache.fop.fo.FONode: java.lang.String getName()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(problem);
+        $r4 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r4);
+        return;
+    }
+
+    protected void tooManyNodesError(org.xml.sax.Locator, java.lang.String, java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.FONode this;
+        org.xml.sax.Locator loc;
+        java.lang.String nsURI, lName, $r2, $r3;
+        org.apache.fop.fo.ValidationException $r0;
+        java.lang.StringBuffer $r1;
+
+        this := @this: org.apache.fop.fo.FONode;
+        loc := @parameter0: org.xml.sax.Locator;
+        nsURI := @parameter1: java.lang.String;
+        lName := @parameter2: java.lang.String;
+        $r0 = new org.apache.fop.fo.ValidationException;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r2 = staticinvoke <org.apache.fop.fo.FONode: java.lang.String errorText(org.xml.sax.Locator)>(loc);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("For ");
+        $r2 = virtualinvoke this.<org.apache.fop.fo.FONode: java.lang.String getName()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", only one ");
+        $r2 = staticinvoke <org.apache.fop.fo.FONode: java.lang.String getNodeString(java.lang.String,java.lang.String)>(nsURI, lName);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" may be declared.");
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r0.<org.apache.fop.fo.ValidationException: void <init>(java.lang.String,org.xml.sax.Locator)>($r3, loc);
+        throw $r0;
+    }
+
+    protected void tooManyNodesError(org.xml.sax.Locator, java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.FONode this;
+        org.xml.sax.Locator loc;
+        java.lang.String offendingNode, $r2, $r3;
+        org.apache.fop.fo.ValidationException $r0;
+        java.lang.StringBuffer $r1;
+
+        this := @this: org.apache.fop.fo.FONode;
+        loc := @parameter0: org.xml.sax.Locator;
+        offendingNode := @parameter1: java.lang.String;
+        $r0 = new org.apache.fop.fo.ValidationException;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r2 = staticinvoke <org.apache.fop.fo.FONode: java.lang.String errorText(org.xml.sax.Locator)>(loc);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("For ");
+        $r2 = virtualinvoke this.<org.apache.fop.fo.FONode: java.lang.String getName()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", only one ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(offendingNode);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" may be declared.");
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r0.<org.apache.fop.fo.ValidationException: void <init>(java.lang.String,org.xml.sax.Locator)>($r3, loc);
+        throw $r0;
+    }
+
+    protected void nodesOutOfOrderError(org.xml.sax.Locator, java.lang.String, java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.FONode this;
+        org.xml.sax.Locator loc;
+        java.lang.String tooLateNode, tooEarlyNode, $r2, $r3;
+        org.apache.fop.fo.ValidationException $r0;
+        java.lang.StringBuffer $r1;
+
+        this := @this: org.apache.fop.fo.FONode;
+        loc := @parameter0: org.xml.sax.Locator;
+        tooLateNode := @parameter1: java.lang.String;
+        tooEarlyNode := @parameter2: java.lang.String;
+        $r0 = new org.apache.fop.fo.ValidationException;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r2 = staticinvoke <org.apache.fop.fo.FONode: java.lang.String errorText(org.xml.sax.Locator)>(loc);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("For ");
+        $r2 = virtualinvoke this.<org.apache.fop.fo.FONode: java.lang.String getName()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(tooLateNode);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" must be declared before ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(tooEarlyNode);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(".");
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r0.<org.apache.fop.fo.ValidationException: void <init>(java.lang.String,org.xml.sax.Locator)>($r3, loc);
+        throw $r0;
+    }
+
+    protected void invalidChildError(org.xml.sax.Locator, java.lang.String, java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.FONode this;
+        org.xml.sax.Locator loc;
+        java.lang.String nsURI, lName;
+
+        this := @this: org.apache.fop.fo.FONode;
+        loc := @parameter0: org.xml.sax.Locator;
+        nsURI := @parameter1: java.lang.String;
+        lName := @parameter2: java.lang.String;
+        virtualinvoke this.<org.apache.fop.fo.FONode: void invalidChildError(org.xml.sax.Locator,java.lang.String,java.lang.String,java.lang.String)>(loc, nsURI, lName, null);
+        return;
+    }
+
+    protected void invalidChildError(org.xml.sax.Locator, java.lang.String, java.lang.String, java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.FONode this;
+        org.xml.sax.Locator loc;
+        java.lang.String nsURI, lName, ruleViolated, $r3, $r5;
+        org.apache.fop.fo.ValidationException $r0;
+        java.lang.StringBuffer $r2, $r4;
+
+        this := @this: org.apache.fop.fo.FONode;
+        loc := @parameter0: org.xml.sax.Locator;
+        nsURI := @parameter1: java.lang.String;
+        lName := @parameter2: java.lang.String;
+        ruleViolated := @parameter3: java.lang.String;
+        $r0 = new org.apache.fop.fo.ValidationException;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r3 = staticinvoke <org.apache.fop.fo.FONode: java.lang.String errorText(org.xml.sax.Locator)>(loc);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r3 = staticinvoke <org.apache.fop.fo.FONode: java.lang.String getNodeString(java.lang.String,java.lang.String)>(nsURI, lName);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" is not a valid child element of ");
+        $r3 = virtualinvoke this.<org.apache.fop.fo.FONode: java.lang.String getName()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        if ruleViolated == null goto label0;
+
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(ruleViolated);
+        $r3 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        goto label1;
+
+     label0:
+        $r3 = ".";
+
+     label1:
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r5 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r0.<org.apache.fop.fo.ValidationException: void <init>(java.lang.String,org.xml.sax.Locator)>($r5, loc);
+        throw $r0;
+    }
+
+    protected void missingChildElementError(java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.FONode this;
+        java.lang.String contentModel, $r3, $r4;
+        org.apache.fop.fo.ValidationException $r0;
+        java.lang.StringBuffer $r1;
+        org.xml.sax.Locator $r2;
+
+        this := @this: org.apache.fop.fo.FONode;
+        contentModel := @parameter0: java.lang.String;
+        $r0 = new org.apache.fop.fo.ValidationException;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r2 = this.<org.apache.fop.fo.FONode: org.xml.sax.Locator locator>;
+        $r3 = staticinvoke <org.apache.fop.fo.FONode: java.lang.String errorText(org.xml.sax.Locator)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r3 = virtualinvoke this.<org.apache.fop.fo.FONode: java.lang.String getName()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" is missing child elements. \nRequired Content Model: ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(contentModel);
+        $r4 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r2 = this.<org.apache.fop.fo.FONode: org.xml.sax.Locator locator>;
+        specialinvoke $r0.<org.apache.fop.fo.ValidationException: void <init>(java.lang.String,org.xml.sax.Locator)>($r4, $r2);
+        throw $r0;
+    }
+
+    protected void missingPropertyError(java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.FONode this;
+        java.lang.String propertyName, $r3, $r4;
+        org.apache.fop.fo.ValidationException $r0;
+        java.lang.StringBuffer $r1;
+        org.xml.sax.Locator $r2;
+
+        this := @this: org.apache.fop.fo.FONode;
+        propertyName := @parameter0: java.lang.String;
+        $r0 = new org.apache.fop.fo.ValidationException;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r2 = this.<org.apache.fop.fo.FONode: org.xml.sax.Locator locator>;
+        $r3 = staticinvoke <org.apache.fop.fo.FONode: java.lang.String errorText(org.xml.sax.Locator)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r3 = virtualinvoke this.<org.apache.fop.fo.FONode: java.lang.String getName()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" is missing required \"");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(propertyName);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\" property.");
+        $r4 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r2 = this.<org.apache.fop.fo.FONode: org.xml.sax.Locator locator>;
+        specialinvoke $r0.<org.apache.fop.fo.ValidationException: void <init>(java.lang.String,org.xml.sax.Locator)>($r4, $r2);
+        throw $r0;
+    }
+
+    protected static java.lang.String errorText(org.xml.sax.Locator)
+    {
+        org.xml.sax.Locator loc;
+        java.lang.StringBuffer $r0;
+        java.lang.String $r1, $r2;
+
+        loc := @parameter0: org.xml.sax.Locator;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Error(");
+        $r1 = staticinvoke <org.apache.fop.fo.FONode: java.lang.String getLocatorString(org.xml.sax.Locator)>(loc);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("): ");
+        $r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r2;
+    }
+
+    protected static java.lang.String warningText(org.xml.sax.Locator)
+    {
+        org.xml.sax.Locator loc;
+        java.lang.StringBuffer $r0;
+        java.lang.String $r1, $r2;
+
+        loc := @parameter0: org.xml.sax.Locator;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Warning(");
+        $r1 = staticinvoke <org.apache.fop.fo.FONode: java.lang.String getLocatorString(org.xml.sax.Locator)>(loc);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("): ");
+        $r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r2;
+    }
+
+    public static java.lang.String getLocatorString(org.xml.sax.Locator)
+    {
+        org.xml.sax.Locator loc;
+        java.lang.StringBuffer $r0;
+        int $i0;
+        java.lang.String $r1;
+
+        loc := @parameter0: org.xml.sax.Locator;
+        if loc != null goto label0;
+
+        return "Unknown location";
+
+     label0:
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $i0 = interfaceinvoke loc.<org.xml.sax.Locator: int getLineNumber()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("/");
+        $i0 = interfaceinvoke loc.<org.xml.sax.Locator: int getColumnNumber()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r1 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r1;
+    }
+
+    public static java.lang.String decorateWithContextInfo(java.lang.String, org.apache.fop.fo.FONode)
+    {
+        java.lang.String text, $r1, $r2;
+        org.apache.fop.fo.FONode node;
+        java.lang.StringBuffer sb, $r0;
+
+        text := @parameter0: java.lang.String;
+        node := @parameter1: org.apache.fop.fo.FONode;
+        if node == null goto label0;
+
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>(java.lang.String)>(text);
+        sb = $r0;
+        $r0 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" (");
+        $r1 = virtualinvoke node.<org.apache.fop.fo.FONode: java.lang.String getContextInfo()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(")");
+        $r2 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r2;
+
+     label0:
+        return text;
+    }
+
+    public java.lang.String getContextInfo()
+    {
+        org.apache.fop.fo.FONode this;
+        java.lang.StringBuffer $r0, sb;
+        java.lang.String s, $r1, $r2;
+        org.xml.sax.Locator $r3, $r4;
+        int $i0;
+
+        this := @this: org.apache.fop.fo.FONode;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        sb = $r0;
+        $r1 = virtualinvoke this.<org.apache.fop.fo.FONode: java.lang.String getLocalName()>();
+        if $r1 == null goto label0;
+
+        $r2 = virtualinvoke this.<org.apache.fop.fo.FONode: java.lang.String getName()>();
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", ");
+
+     label0:
+        $r3 = this.<org.apache.fop.fo.FONode: org.xml.sax.Locator locator>;
+        if $r3 == null goto label1;
+
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("location: ");
+        $r4 = this.<org.apache.fop.fo.FONode: org.xml.sax.Locator locator>;
+        $r2 = staticinvoke <org.apache.fop.fo.FONode: java.lang.String getLocatorString(org.xml.sax.Locator)>($r4);
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        goto label3;
+
+     label1:
+        s = virtualinvoke this.<org.apache.fop.fo.FONode: java.lang.String gatherContextInfo()>();
+        if s == null goto label2;
+
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\"");
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(s);
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\"");
+        goto label3;
+
+     label2:
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("no context info available");
+
+     label3:
+        $i0 = virtualinvoke sb.<java.lang.StringBuffer: int length()>();
+        if $i0 <= 80 goto label4;
+
+        virtualinvoke sb.<java.lang.StringBuffer: void setLength(int)>(80);
+
+     label4:
+        $r1 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r1;
+    }
+
+    protected java.lang.String gatherContextInfo()
+    {
+        org.apache.fop.fo.FONode this;
+
+        this := @this: org.apache.fop.fo.FONode;
+        return null;
+    }
+
+    public org.apache.fop.fo.pagination.Root getRoot()
+    {
+        org.apache.fop.fo.FONode this, $r0;
+        org.apache.fop.fo.pagination.Root $r1;
+
+        this := @this: org.apache.fop.fo.FONode;
+        $r0 = this.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode parent>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.FONode: org.apache.fop.fo.pagination.Root getRoot()>();
+        return $r1;
+    }
+
+    public java.lang.String getName()
+    {
+        org.apache.fop.fo.FONode this;
+        java.lang.String $r0, $r1;
+
+        this := @this: org.apache.fop.fo.FONode;
+        $r0 = virtualinvoke this.<org.apache.fop.fo.FONode: java.lang.String getNormalNamespacePrefix()>();
+        $r1 = virtualinvoke this.<org.apache.fop.fo.FONode: java.lang.String getName(java.lang.String)>($r0);
+        return $r1;
+    }
+
+    public java.lang.String getName(java.lang.String)
+    {
+        org.apache.fop.fo.FONode this;
+        java.lang.String prefix, $r1, $r2;
+        java.lang.StringBuffer sb, $r0;
+
+        this := @this: org.apache.fop.fo.FONode;
+        prefix := @parameter0: java.lang.String;
+        if prefix == null goto label0;
+
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        sb = $r0;
+        $r0 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(prefix);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(58);
+        $r1 = virtualinvoke this.<org.apache.fop.fo.FONode: java.lang.String getLocalName()>();
+        virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r2 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r2;
+
+     label0:
+        $r2 = virtualinvoke this.<org.apache.fop.fo.FONode: java.lang.String getLocalName()>();
+        return $r2;
+    }
+
+    public abstract java.lang.String getLocalName();
+
+    public abstract java.lang.String getNormalNamespacePrefix();
+
+    public java.lang.String getNamespaceURI()
+    {
+        org.apache.fop.fo.FONode this;
+
+        this := @this: org.apache.fop.fo.FONode;
+        return null;
+    }
+
+    public int getNameId()
+    {
+        org.apache.fop.fo.FONode this;
+
+        this := @this: org.apache.fop.fo.FONode;
+        return 0;
+    }
+
+    public org.apache.fop.fo.extensions.ExtensionAttachment getExtensionAttachment()
+    {
+        org.apache.fop.fo.FONode this;
+
+        this := @this: org.apache.fop.fo.FONode;
+        return null;
+    }
+
+    public org.apache.fop.util.ContentHandlerFactory getContentHandlerFactory()
+    {
+        org.apache.fop.fo.FONode this;
+
+        this := @this: org.apache.fop.fo.FONode;
+        return null;
+    }
+
+    protected boolean canHaveMarkers()
+    {
+        org.apache.fop.fo.FONode this;
+        int foId;
+
+        this := @this: org.apache.fop.fo.FONode;
+        foId = virtualinvoke this.<org.apache.fop.fo.FONode: int getNameId()>();
+        tableswitch(foId)
+        {
+            case 1: goto label0;
+            case 2: goto label0;
+            case 3: goto label0;
+            case 4: goto label0;
+            case 5: goto label1;
+            case 6: goto label1;
+            case 7: goto label1;
+            case 8: goto label1;
+            case 9: goto label1;
+            case 10: goto label1;
+            case 11: goto label0;
+            case 12: goto label1;
+            case 13: goto label1;
+            case 14: goto label1;
+            case 15: goto label0;
+            case 16: goto label0;
+            case 17: goto label1;
+            case 18: goto label1;
+            case 19: goto label1;
+            case 20: goto label0;
+            case 21: goto label0;
+            case 22: goto label0;
+            case 23: goto label0;
+            case 24: goto label1;
+            case 25: goto label1;
+            case 26: goto label1;
+            case 27: goto label1;
+            case 28: goto label1;
+            case 29: goto label1;
+            case 30: goto label1;
+            case 31: goto label1;
+            case 32: goto label1;
+            case 33: goto label1;
+            case 34: goto label1;
+            case 35: goto label1;
+            case 36: goto label1;
+            case 37: goto label1;
+            case 38: goto label1;
+            case 39: goto label1;
+            case 40: goto label1;
+            case 41: goto label1;
+            case 42: goto label1;
+            case 43: goto label1;
+            case 44: goto label1;
+            case 45: goto label1;
+            case 46: goto label0;
+            case 47: goto label0;
+            case 48: goto label0;
+            case 49: goto label0;
+            case 50: goto label0;
+            case 51: goto label1;
+            case 52: goto label0;
+            case 53: goto label0;
+            case 54: goto label1;
+            case 55: goto label1;
+            case 56: goto label0;
+            default: goto label1;
+        };
+
+     label0:
+        return 1;
+
+     label1:
+        return 0;
+    }
+
+    protected static void attachSiblings(org.apache.fop.fo.FONode, org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.FONode precedingSibling, followingSibling;
+        org.apache.fop.fo.FONode[] $r0, $r1;
+
+        precedingSibling := @parameter0: org.apache.fop.fo.FONode;
+        followingSibling := @parameter1: org.apache.fop.fo.FONode;
+        $r0 = precedingSibling.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode[] siblings>;
+        if $r0 != null goto label0;
+
+        $r1 = newarray (org.apache.fop.fo.FONode)[2];
+        precedingSibling.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode[] siblings> = $r1;
+
+     label0:
+        $r0 = followingSibling.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode[] siblings>;
+        if $r0 != null goto label1;
+
+        $r1 = newarray (org.apache.fop.fo.FONode)[2];
+        followingSibling.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode[] siblings> = $r1;
+
+     label1:
+        $r0 = precedingSibling.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode[] siblings>;
+        $r0[1] = followingSibling;
+        $r0 = followingSibling.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode[] siblings>;
+        $r0[0] = precedingSibling;
+        return;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.fo.FONode: java.lang.Class class$org$apache$fop$fo$FONode>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.fo.FONode: java.lang.Class class$(java.lang.String)>("org.apache.fop.fo.FONode");
+        <org.apache.fop.fo.FONode: java.lang.Class class$org$apache$fop$fo$FONode> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.fo.FONode: java.lang.Class class$org$apache$fop$fo$FONode>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.fo.FONode: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

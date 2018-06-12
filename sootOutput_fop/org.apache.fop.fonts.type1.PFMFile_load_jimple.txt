@@ -1,0 +1,44 @@
+method: org.apache.fop.fonts.type1.PFMFile.load:1087717511
+1827252197:this := @this: org.apache.fop.fonts.type1.PFMFile
+1611522879:inStream := @parameter0: java.io.InputStream
+454112359:pfmBytes = staticinvoke <org.apache.commons.io.IOUtils: byte[] toByteArray(java.io.InputStream)>(inStream)
+582688446:bufin = inStream
+719281602:$r0 = new java.io.ByteArrayInputStream
+1348984064:specialinvoke $r0.<java.io.ByteArrayInputStream: void <init>(byte[])>(pfmBytes)
+1390302269:bufin = $r0
+40672076:$r1 = new org.apache.fop.fonts.type1.PFMInputStream
+193962609:specialinvoke $r1.<org.apache.fop.fonts.type1.PFMInputStream: void <init>(java.io.InputStream)>(bufin)
+49393317:in = $r1
+442524250:virtualinvoke bufin.<java.io.InputStream: void mark(int)>(512)
+1074526584:sh1 = virtualinvoke in.<org.apache.fop.fonts.type1.PFMInputStream: short readByte()>()
+1525676397:sh2 = virtualinvoke in.<org.apache.fop.fonts.type1.PFMInputStream: short readByte()>()
+1117856346:if sh1 != 128 goto virtualinvoke bufin.<java.io.InputStream: void reset()>()
+1046023270:if sh2 != 1 goto virtualinvoke bufin.<java.io.InputStream: void reset()>()
+1211964548:$r2 = new java.io.IOException
+1676106290:specialinvoke $r2.<java.io.IOException: void <init>(java.lang.String)>("Cannot parse PFM file. You probably specified the PFB file of a Type 1 font as parameter instead of the PFM.")
+1775418331:throw $r2
+619703219:virtualinvoke bufin.<java.io.InputStream: void reset()>()
+983105637:b = newarray (byte)[16]
+1712344003:virtualinvoke bufin.<java.io.InputStream: int read(byte[])>(b)
+663187732:$r3 = new java.lang.String
+1657456076:specialinvoke $r3.<java.lang.String: void <init>(byte[],java.lang.String)>(b, "US-ASCII")
+389750342:$z0 = virtualinvoke $r3.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>("StartFontMetrics")
+708874644:if $z0 == 0 goto virtualinvoke bufin.<java.io.InputStream: void reset()>()
+1964351799:$r2 = new java.io.IOException
+2121258896:specialinvoke $r2.<java.io.IOException: void <init>(java.lang.String)>("Cannot parse PFM file. You probably specified the AFM file of a Type 1 font as parameter instead of the PFM.")
+1622241225:throw $r2
+1226557791:virtualinvoke bufin.<java.io.InputStream: void reset()>()
+1845511425:version = virtualinvoke in.<org.apache.fop.fonts.type1.PFMInputStream: int readShort()>()
+1936471687:if version == 256 goto virtualinvoke bufin.<java.io.InputStream: void reset()>()
+1094885369:$r4 = this.<org.apache.fop.fonts.type1.PFMFile: org.apache.commons.logging.Log log>
+2098509287:$r5 = new java.lang.StringBuffer
+21201773:specialinvoke $r5.<java.lang.StringBuffer: void <init>()>()
+698218879:$r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("PFM version expected to be \'256\' but got \'")
+2111966469:$r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(version)
+2071876922:$r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\'. Please make sure you specify the PFM as parameter and not the PFB or the AFM.")
+588091949:$r6 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>()
+1341643349:interfaceinvoke $r4.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r6)
+1298046595:virtualinvoke bufin.<java.io.InputStream: void reset()>()
+1372544430:specialinvoke this.<org.apache.fop.fonts.type1.PFMFile: void loadHeader(org.apache.fop.fonts.type1.PFMInputStream)>(in)
+552221618:specialinvoke this.<org.apache.fop.fonts.type1.PFMFile: void loadExtension(org.apache.fop.fonts.type1.PFMInputStream)>(in)
+1911895039:return

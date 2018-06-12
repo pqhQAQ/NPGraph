@@ -1,0 +1,96 @@
+public abstract class org.apache.fop.fo.pagination.RegionBA extends org.apache.fop.fo.pagination.SideRegion
+{
+    private int precedence;
+
+    protected void <init>(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.pagination.RegionBA this;
+        org.apache.fop.fo.FONode parent;
+
+        this := @this: org.apache.fop.fo.pagination.RegionBA;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        specialinvoke this.<org.apache.fop.fo.pagination.SideRegion: void <init>(org.apache.fop.fo.FONode)>(parent);
+        return;
+    }
+
+    public void bind(org.apache.fop.fo.PropertyList) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.pagination.RegionBA this;
+        org.apache.fop.fo.PropertyList pList;
+        org.apache.fop.fo.properties.Property $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.fo.pagination.RegionBA;
+        pList := @parameter0: org.apache.fop.fo.PropertyList;
+        specialinvoke this.<org.apache.fop.fo.pagination.SideRegion: void bind(org.apache.fop.fo.PropertyList)>(pList);
+        $r0 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(176);
+        $i0 = virtualinvoke $r0.<org.apache.fop.fo.properties.Property: int getEnum()>();
+        this.<org.apache.fop.fo.pagination.RegionBA: int precedence> = $i0;
+        return;
+    }
+
+    public int getPrecedence()
+    {
+        org.apache.fop.fo.pagination.RegionBA this;
+        int $i0;
+
+        this := @this: org.apache.fop.fo.pagination.RegionBA;
+        $i0 = this.<org.apache.fop.fo.pagination.RegionBA: int precedence>;
+        return $i0;
+    }
+
+    protected void adjustIPD(java.awt.Rectangle, int, org.apache.fop.datatypes.PercentBaseContext)
+    {
+        org.apache.fop.fo.pagination.RegionBA this;
+        java.awt.Rectangle vpRefRect;
+        int wm, offset, $i0;
+        org.apache.fop.datatypes.PercentBaseContext siblingContext;
+        org.apache.fop.fo.pagination.RegionStart start;
+        org.apache.fop.fo.pagination.RegionEnd end;
+        org.apache.fop.fo.pagination.Region $r0;
+        org.apache.fop.datatypes.Length $r1, $r2;
+
+        this := @this: org.apache.fop.fo.pagination.RegionBA;
+        vpRefRect := @parameter0: java.awt.Rectangle;
+        wm := @parameter1: int;
+        siblingContext := @parameter2: org.apache.fop.datatypes.PercentBaseContext;
+        offset = 0;
+        $r0 = virtualinvoke this.<org.apache.fop.fo.pagination.RegionBA: org.apache.fop.fo.pagination.Region getSiblingRegion(int)>(38);
+        start = (org.apache.fop.fo.pagination.RegionStart) $r0;
+        if start == null goto label0;
+
+        $r1 = virtualinvoke start.<org.apache.fop.fo.pagination.RegionStart: org.apache.fop.datatypes.Length getExtent()>();
+        offset = interfaceinvoke $r1.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(siblingContext);
+        virtualinvoke vpRefRect.<java.awt.Rectangle: void translate(int,int)>(offset, 0);
+
+     label0:
+        $r0 = virtualinvoke this.<org.apache.fop.fo.pagination.RegionBA: org.apache.fop.fo.pagination.Region getSiblingRegion(int)>(37);
+        end = (org.apache.fop.fo.pagination.RegionEnd) $r0;
+        if end == null goto label1;
+
+        $r2 = virtualinvoke end.<org.apache.fop.fo.pagination.RegionEnd: org.apache.fop.datatypes.Length getExtent()>();
+        $i0 = interfaceinvoke $r2.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(siblingContext);
+        offset = offset + $i0;
+
+     label1:
+        if offset <= 0 goto label4;
+
+        if wm == 79 goto label2;
+
+        if wm != 121 goto label3;
+
+     label2:
+        $i0 = vpRefRect.<java.awt.Rectangle: int width>;
+        $i0 = $i0 - offset;
+        vpRefRect.<java.awt.Rectangle: int width> = $i0;
+        goto label4;
+
+     label3:
+        $i0 = vpRefRect.<java.awt.Rectangle: int height>;
+        $i0 = $i0 - offset;
+        vpRefRect.<java.awt.Rectangle: int height> = $i0;
+
+     label4:
+        return;
+    }
+}

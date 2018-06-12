@@ -1,0 +1,138 @@
+public class org.apache.fop.area.inline.TextArea extends org.apache.fop.area.inline.AbstractTextArea
+{
+
+    public void <init>()
+    {
+        org.apache.fop.area.inline.TextArea this;
+
+        this := @this: org.apache.fop.area.inline.TextArea;
+        specialinvoke this.<org.apache.fop.area.inline.AbstractTextArea: void <init>()>();
+        return;
+    }
+
+    public void <init>(int, int, int)
+    {
+        org.apache.fop.area.inline.TextArea this;
+        int stretch, shrink, adj;
+
+        this := @this: org.apache.fop.area.inline.TextArea;
+        stretch := @parameter0: int;
+        shrink := @parameter1: int;
+        adj := @parameter2: int;
+        specialinvoke this.<org.apache.fop.area.inline.AbstractTextArea: void <init>(int,int,int)>(stretch, shrink, adj);
+        return;
+    }
+
+    public void removeText()
+    {
+        org.apache.fop.area.inline.TextArea this;
+        java.util.List $r0;
+
+        this := @this: org.apache.fop.area.inline.TextArea;
+        $r0 = this.<org.apache.fop.area.inline.TextArea: java.util.List inlines>;
+        interfaceinvoke $r0.<java.util.List: void clear()>();
+        return;
+    }
+
+    public void addWord(java.lang.String, int)
+    {
+        org.apache.fop.area.inline.TextArea this;
+        java.lang.String word;
+        int offset;
+
+        this := @this: org.apache.fop.area.inline.TextArea;
+        word := @parameter0: java.lang.String;
+        offset := @parameter1: int;
+        virtualinvoke this.<org.apache.fop.area.inline.TextArea: void addWord(java.lang.String,int,int[])>(word, offset, null);
+        return;
+    }
+
+    public void addWord(java.lang.String, int, int[])
+    {
+        org.apache.fop.area.inline.TextArea this;
+        java.lang.String word;
+        int offset;
+        int[] letterAdjust;
+        org.apache.fop.area.inline.WordArea $r0, wordArea;
+
+        this := @this: org.apache.fop.area.inline.TextArea;
+        word := @parameter0: java.lang.String;
+        offset := @parameter1: int;
+        letterAdjust := @parameter2: int[];
+        $r0 = new org.apache.fop.area.inline.WordArea;
+        specialinvoke $r0.<org.apache.fop.area.inline.WordArea: void <init>(java.lang.String,int,int[])>(word, offset, letterAdjust);
+        wordArea = $r0;
+        virtualinvoke this.<org.apache.fop.area.inline.TextArea: void addChildArea(org.apache.fop.area.Area)>(wordArea);
+        virtualinvoke wordArea.<org.apache.fop.area.inline.WordArea: void setParentArea(org.apache.fop.area.Area)>(this);
+        return;
+    }
+
+    public void addSpace(char, int, boolean)
+    {
+        org.apache.fop.area.inline.TextArea this;
+        char space;
+        int offset;
+        boolean adjustable;
+        org.apache.fop.area.inline.SpaceArea $r0, spaceArea;
+
+        this := @this: org.apache.fop.area.inline.TextArea;
+        space := @parameter0: char;
+        offset := @parameter1: int;
+        adjustable := @parameter2: boolean;
+        $r0 = new org.apache.fop.area.inline.SpaceArea;
+        specialinvoke $r0.<org.apache.fop.area.inline.SpaceArea: void <init>(char,int,boolean)>(space, offset, adjustable);
+        spaceArea = $r0;
+        virtualinvoke this.<org.apache.fop.area.inline.TextArea: void addChildArea(org.apache.fop.area.Area)>(spaceArea);
+        virtualinvoke spaceArea.<org.apache.fop.area.inline.SpaceArea: void setParentArea(org.apache.fop.area.Area)>(this);
+        return;
+    }
+
+    public java.lang.String getText()
+    {
+        org.apache.fop.area.inline.TextArea this;
+        java.lang.StringBuffer $r0, text;
+        int i, $i0;
+        org.apache.fop.area.inline.InlineArea child;
+        java.util.List $r1, $r2;
+        java.lang.Object $r3;
+        boolean $z0;
+        org.apache.fop.area.inline.WordArea $r4;
+        java.lang.String $r5, $r7;
+        org.apache.fop.area.inline.SpaceArea $r6;
+
+        this := @this: org.apache.fop.area.inline.TextArea;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        text = $r0;
+        i = 0;
+
+     label0:
+        $r1 = this.<org.apache.fop.area.inline.TextArea: java.util.List inlines>;
+        $i0 = interfaceinvoke $r1.<java.util.List: int size()>();
+        if i >= $i0 goto label3;
+
+        $r2 = this.<org.apache.fop.area.inline.TextArea: java.util.List inlines>;
+        $r3 = interfaceinvoke $r2.<java.util.List: java.lang.Object get(int)>(i);
+        child = (org.apache.fop.area.inline.InlineArea) $r3;
+        $z0 = child instanceof org.apache.fop.area.inline.WordArea;
+        if $z0 == 0 goto label1;
+
+        $r4 = (org.apache.fop.area.inline.WordArea) child;
+        $r5 = virtualinvoke $r4.<org.apache.fop.area.inline.WordArea: java.lang.String getWord()>();
+        virtualinvoke text.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        goto label2;
+
+     label1:
+        $r6 = (org.apache.fop.area.inline.SpaceArea) child;
+        $r5 = virtualinvoke $r6.<org.apache.fop.area.inline.SpaceArea: java.lang.String getSpace()>();
+        virtualinvoke text.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+
+     label2:
+        i = i + 1;
+        goto label0;
+
+     label3:
+        $r7 = virtualinvoke text.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r7;
+    }
+}

@@ -1,0 +1,362 @@
+public class org.apache.fop.svg.PDFTranscoder extends org.apache.fop.svg.AbstractFOPTranscoder implements org.apache.avalon.framework.configuration.Configurable
+{
+    public static final org.apache.batik.transcoder.TranscodingHints$Key KEY_DEVICE_RESOLUTION;
+    public static final org.apache.batik.transcoder.TranscodingHints$Key KEY_AUTO_FONTS;
+    private org.apache.avalon.framework.configuration.Configuration cfg;
+    protected org.apache.fop.svg.PDFDocumentGraphics2D graphics;
+    private org.apache.xmlgraphics.image.loader.ImageManager imageManager;
+    private org.apache.xmlgraphics.image.loader.ImageSessionContext imageSessionContext;
+
+    public void <init>()
+    {
+        org.apache.fop.svg.PDFTranscoder this;
+        org.apache.fop.svg.AbstractFOPTranscoder$FOPErrorHandler $r0;
+
+        this := @this: org.apache.fop.svg.PDFTranscoder;
+        specialinvoke this.<org.apache.fop.svg.AbstractFOPTranscoder: void <init>()>();
+        this.<org.apache.fop.svg.PDFTranscoder: org.apache.avalon.framework.configuration.Configuration cfg> = null;
+        this.<org.apache.fop.svg.PDFTranscoder: org.apache.fop.svg.PDFDocumentGraphics2D graphics> = null;
+        $r0 = new org.apache.fop.svg.AbstractFOPTranscoder$FOPErrorHandler;
+        specialinvoke $r0.<org.apache.fop.svg.AbstractFOPTranscoder$FOPErrorHandler: void <init>(org.apache.fop.svg.AbstractFOPTranscoder)>(this);
+        this.<org.apache.fop.svg.PDFTranscoder: org.apache.batik.transcoder.ErrorHandler handler> = $r0;
+        return;
+    }
+
+    protected org.apache.batik.bridge.UserAgent createUserAgent()
+    {
+        org.apache.fop.svg.PDFTranscoder this;
+        org.apache.fop.svg.PDFTranscoder$1 $r0;
+
+        this := @this: org.apache.fop.svg.PDFTranscoder;
+        $r0 = new org.apache.fop.svg.PDFTranscoder$1;
+        specialinvoke $r0.<org.apache.fop.svg.PDFTranscoder$1: void <init>(org.apache.fop.svg.PDFTranscoder)>(this);
+        return $r0;
+    }
+
+    public void configure(org.apache.avalon.framework.configuration.Configuration) throws org.apache.avalon.framework.configuration.ConfigurationException
+    {
+        org.apache.fop.svg.PDFTranscoder this;
+        org.apache.avalon.framework.configuration.Configuration cfg;
+
+        this := @this: org.apache.fop.svg.PDFTranscoder;
+        cfg := @parameter0: org.apache.avalon.framework.configuration.Configuration;
+        this.<org.apache.fop.svg.PDFTranscoder: org.apache.avalon.framework.configuration.Configuration cfg> = cfg;
+        return;
+    }
+
+    protected void transcode(org.w3c.dom.Document, java.lang.String, org.apache.batik.transcoder.TranscoderOutput) throws org.apache.batik.transcoder.TranscoderException
+    {
+        org.apache.fop.svg.PDFTranscoder this;
+        org.w3c.dom.Document document;
+        java.lang.String uri, $r5, $r6;
+        org.apache.batik.transcoder.TranscoderOutput output;
+        org.apache.fop.svg.PDFDocumentGraphics2D $r0, $r1;
+        org.apache.avalon.framework.configuration.Configuration effCfg;
+        boolean autoFonts, $z0, $z1;
+        org.apache.avalon.framework.configuration.DefaultConfiguration c, fonts, autodetect, $r15;
+        org.apache.fop.svg.PDFDocumentGraphics2DConfigurator configurator, $r16;
+        java.lang.Exception e, $r17;
+        org.apache.batik.parser.UnitProcessor$Context uctx;
+        float widthInPt, heightInPt, $f0, $f1, $f2;
+        int w, h;
+        java.io.OutputStream out;
+        java.io.IOException ex, $r28;
+        org.apache.fop.pdf.PDFDocument $r2;
+        org.apache.fop.pdf.PDFInfo $r3;
+        java.lang.StringBuffer $r4;
+        org.apache.batik.transcoder.TranscodingHints $r7, $r9;
+        org.apache.batik.transcoder.TranscodingHints$Key $r8, $r10;
+        java.lang.Object $r11, $r13;
+        java.lang.Float $r12;
+        java.lang.Boolean $r14;
+        org.apache.batik.transcoder.TranscoderException $r18;
+        org.apache.commons.logging.Log $r19;
+        org.apache.batik.bridge.BridgeContext $r20;
+        org.w3c.dom.Element $r21;
+        double $d0;
+        java.io.BufferedOutputStream $r22;
+        java.awt.Color $r23;
+        org.apache.xmlgraphics.java2d.GraphicContext $r24;
+        java.awt.geom.AffineTransform $r25;
+        java.awt.RenderingHints$Key $r26;
+        org.apache.batik.gvt.GraphicsNode $r27;
+
+        this := @this: org.apache.fop.svg.PDFTranscoder;
+        document := @parameter0: org.w3c.dom.Document;
+        uri := @parameter1: java.lang.String;
+        output := @parameter2: org.apache.batik.transcoder.TranscoderOutput;
+        $r0 = new org.apache.fop.svg.PDFDocumentGraphics2D;
+        $z0 = virtualinvoke this.<org.apache.fop.svg.PDFTranscoder: boolean isTextStroked()>();
+        specialinvoke $r0.<org.apache.fop.svg.PDFDocumentGraphics2D: void <init>(boolean)>($z0);
+        this.<org.apache.fop.svg.PDFTranscoder: org.apache.fop.svg.PDFDocumentGraphics2D graphics> = $r0;
+        $r1 = this.<org.apache.fop.svg.PDFTranscoder: org.apache.fop.svg.PDFDocumentGraphics2D graphics>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.pdf.PDFDocument getPDFDocument()>();
+        $r3 = virtualinvoke $r2.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFInfo getInfo()>();
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Apache FOP Version ");
+        $r5 = staticinvoke <org.apache.fop.Version: java.lang.String getVersion()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": PDF Transcoder for Batik");
+        $r6 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<org.apache.fop.pdf.PDFInfo: void setProducer(java.lang.String)>($r6);
+        $r7 = this.<org.apache.fop.svg.PDFTranscoder: org.apache.batik.transcoder.TranscodingHints hints>;
+        $r8 = <org.apache.fop.svg.PDFTranscoder: org.apache.batik.transcoder.TranscodingHints$Key KEY_DEVICE_RESOLUTION>;
+        $z1 = virtualinvoke $r7.<org.apache.batik.transcoder.TranscodingHints: boolean containsKey(java.lang.Object)>($r8);
+        if $z1 == 0 goto label0;
+
+        $r1 = this.<org.apache.fop.svg.PDFTranscoder: org.apache.fop.svg.PDFDocumentGraphics2D graphics>;
+        $r9 = this.<org.apache.fop.svg.PDFTranscoder: org.apache.batik.transcoder.TranscodingHints hints>;
+        $r10 = <org.apache.fop.svg.PDFTranscoder: org.apache.batik.transcoder.TranscodingHints$Key KEY_DEVICE_RESOLUTION>;
+        $r11 = virtualinvoke $r9.<org.apache.batik.transcoder.TranscodingHints: java.lang.Object get(java.lang.Object)>($r10);
+        $r12 = (java.lang.Float) $r11;
+        $f0 = virtualinvoke $r12.<java.lang.Float: float floatValue()>();
+        virtualinvoke $r1.<org.apache.fop.svg.PDFDocumentGraphics2D: void setDeviceDPI(float)>($f0);
+
+     label0:
+        specialinvoke this.<org.apache.fop.svg.PDFTranscoder: void setupImageInfrastructure(java.lang.String)>(uri);
+
+     label1:
+        effCfg = this.<org.apache.fop.svg.PDFTranscoder: org.apache.avalon.framework.configuration.Configuration cfg>;
+        if effCfg != null goto label3;
+
+        autoFonts = 1;
+        $r7 = this.<org.apache.fop.svg.PDFTranscoder: org.apache.batik.transcoder.TranscodingHints hints>;
+        $r8 = <org.apache.fop.svg.PDFTranscoder: org.apache.batik.transcoder.TranscodingHints$Key KEY_AUTO_FONTS>;
+        $z1 = virtualinvoke $r7.<org.apache.batik.transcoder.TranscodingHints: boolean containsKey(java.lang.Object)>($r8);
+        if $z1 == 0 goto label2;
+
+        $r7 = this.<org.apache.fop.svg.PDFTranscoder: org.apache.batik.transcoder.TranscodingHints hints>;
+        $r8 = <org.apache.fop.svg.PDFTranscoder: org.apache.batik.transcoder.TranscodingHints$Key KEY_AUTO_FONTS>;
+        $r13 = virtualinvoke $r7.<org.apache.batik.transcoder.TranscodingHints: java.lang.Object get(java.lang.Object)>($r8);
+        $r14 = (java.lang.Boolean) $r13;
+        autoFonts = virtualinvoke $r14.<java.lang.Boolean: boolean booleanValue()>();
+
+     label2:
+        if autoFonts == 0 goto label3;
+
+        $r15 = new org.apache.avalon.framework.configuration.DefaultConfiguration;
+        specialinvoke $r15.<org.apache.avalon.framework.configuration.DefaultConfiguration: void <init>(java.lang.String)>("pdf-transcoder");
+        c = $r15;
+        $r15 = new org.apache.avalon.framework.configuration.DefaultConfiguration;
+        specialinvoke $r15.<org.apache.avalon.framework.configuration.DefaultConfiguration: void <init>(java.lang.String)>("fonts");
+        fonts = $r15;
+        virtualinvoke c.<org.apache.avalon.framework.configuration.DefaultConfiguration: void addChild(org.apache.avalon.framework.configuration.Configuration)>(fonts);
+        $r15 = new org.apache.avalon.framework.configuration.DefaultConfiguration;
+        specialinvoke $r15.<org.apache.avalon.framework.configuration.DefaultConfiguration: void <init>(java.lang.String)>("auto-detect");
+        autodetect = $r15;
+        virtualinvoke fonts.<org.apache.avalon.framework.configuration.DefaultConfiguration: void addChild(org.apache.avalon.framework.configuration.Configuration)>(autodetect);
+        effCfg = c;
+
+     label3:
+        if effCfg == null goto label4;
+
+        $r16 = new org.apache.fop.svg.PDFDocumentGraphics2DConfigurator;
+        specialinvoke $r16.<org.apache.fop.svg.PDFDocumentGraphics2DConfigurator: void <init>()>();
+        configurator = $r16;
+        $r0 = this.<org.apache.fop.svg.PDFTranscoder: org.apache.fop.svg.PDFDocumentGraphics2D graphics>;
+        virtualinvoke configurator.<org.apache.fop.svg.PDFDocumentGraphics2DConfigurator: void configure(org.apache.fop.svg.PDFDocumentGraphics2D,org.apache.avalon.framework.configuration.Configuration)>($r0, effCfg);
+        goto label5;
+
+     label4:
+        $r1 = this.<org.apache.fop.svg.PDFTranscoder: org.apache.fop.svg.PDFDocumentGraphics2D graphics>;
+        virtualinvoke $r1.<org.apache.fop.svg.PDFDocumentGraphics2D: void setupDefaultFontInfo()>();
+
+     label5:
+        goto label7;
+
+     label6:
+        $r17 := @caughtexception;
+        e = $r17;
+        $r18 = new org.apache.batik.transcoder.TranscoderException;
+        specialinvoke $r18.<org.apache.batik.transcoder.TranscoderException: void <init>(java.lang.String,java.lang.Exception)>("Error while setting up PDFDocumentGraphics2D", e);
+        throw $r18;
+
+     label7:
+        specialinvoke this.<org.apache.fop.svg.AbstractFOPTranscoder: void transcode(org.w3c.dom.Document,java.lang.String,org.apache.batik.transcoder.TranscoderOutput)>(document, uri, output);
+        $r19 = virtualinvoke this.<org.apache.fop.svg.PDFTranscoder: org.apache.commons.logging.Log getLogger()>();
+        $z1 = interfaceinvoke $r19.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z1 == 0 goto label8;
+
+        $r19 = virtualinvoke this.<org.apache.fop.svg.PDFTranscoder: org.apache.commons.logging.Log getLogger()>();
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("document size: ");
+        $f1 = this.<org.apache.fop.svg.PDFTranscoder: float width>;
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(float)>($f1);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" x ");
+        $f1 = this.<org.apache.fop.svg.PDFTranscoder: float height>;
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(float)>($f1);
+        $r6 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r19.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r6);
+
+     label8:
+        $r20 = this.<org.apache.fop.svg.PDFTranscoder: org.apache.batik.bridge.BridgeContext ctx>;
+        $r21 = interfaceinvoke document.<org.w3c.dom.Document: org.w3c.dom.Element getDocumentElement()>();
+        uctx = staticinvoke <org.apache.batik.bridge.UnitProcessor: org.apache.batik.parser.UnitProcessor$Context createContext(org.apache.batik.bridge.BridgeContext,org.w3c.dom.Element)>($r20, $r21);
+        $f2 = this.<org.apache.fop.svg.PDFTranscoder: float width>;
+        widthInPt = staticinvoke <org.apache.batik.bridge.UnitProcessor: float userSpaceToSVG(float,short,short,org.apache.batik.parser.UnitProcessor$Context)>($f2, 9, 2, uctx);
+        $d0 = (double) widthInPt;
+        $d0 = $d0 + 0.5;
+        w = (int) $d0;
+        $f2 = this.<org.apache.fop.svg.PDFTranscoder: float height>;
+        heightInPt = staticinvoke <org.apache.batik.bridge.UnitProcessor: float userSpaceToSVG(float,short,short,org.apache.batik.parser.UnitProcessor$Context)>($f2, 9, 2, uctx);
+        $d0 = (double) heightInPt;
+        $d0 = $d0 + 0.5;
+        h = (int) $d0;
+        $r19 = virtualinvoke this.<org.apache.fop.svg.PDFTranscoder: org.apache.commons.logging.Log getLogger()>();
+        $z1 = interfaceinvoke $r19.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z1 == 0 goto label9;
+
+        $r19 = virtualinvoke this.<org.apache.fop.svg.PDFTranscoder: org.apache.commons.logging.Log getLogger()>();
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("document size: ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(w);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("pt x ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(h);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("pt");
+        $r6 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r19.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r6);
+
+     label9:
+        out = virtualinvoke output.<org.apache.batik.transcoder.TranscoderOutput: java.io.OutputStream getOutputStream()>();
+        $z1 = out instanceof java.io.BufferedOutputStream;
+        if $z1 != 0 goto label10;
+
+        $r22 = new java.io.BufferedOutputStream;
+        specialinvoke $r22.<java.io.BufferedOutputStream: void <init>(java.io.OutputStream)>(out);
+        out = $r22;
+
+     label10:
+        $r1 = this.<org.apache.fop.svg.PDFTranscoder: org.apache.fop.svg.PDFDocumentGraphics2D graphics>;
+        virtualinvoke $r1.<org.apache.fop.svg.PDFDocumentGraphics2D: void setupDocument(java.io.OutputStream,int,int)>(out, w, h);
+        $r1 = this.<org.apache.fop.svg.PDFTranscoder: org.apache.fop.svg.PDFDocumentGraphics2D graphics>;
+        $f0 = this.<org.apache.fop.svg.PDFTranscoder: float width>;
+        $f1 = this.<org.apache.fop.svg.PDFTranscoder: float height>;
+        virtualinvoke $r1.<org.apache.fop.svg.PDFDocumentGraphics2D: void setSVGDimension(float,float)>($f0, $f1);
+        $r7 = this.<org.apache.fop.svg.PDFTranscoder: org.apache.batik.transcoder.TranscodingHints hints>;
+        $r8 = <org.apache.batik.transcoder.image.ImageTranscoder: org.apache.batik.transcoder.TranscodingHints$Key KEY_BACKGROUND_COLOR>;
+        $z1 = virtualinvoke $r7.<org.apache.batik.transcoder.TranscodingHints: boolean containsKey(java.lang.Object)>($r8);
+        if $z1 == 0 goto label11;
+
+        $r1 = this.<org.apache.fop.svg.PDFTranscoder: org.apache.fop.svg.PDFDocumentGraphics2D graphics>;
+        $r9 = this.<org.apache.fop.svg.PDFTranscoder: org.apache.batik.transcoder.TranscodingHints hints>;
+        $r10 = <org.apache.batik.transcoder.image.ImageTranscoder: org.apache.batik.transcoder.TranscodingHints$Key KEY_BACKGROUND_COLOR>;
+        $r11 = virtualinvoke $r9.<org.apache.batik.transcoder.TranscodingHints: java.lang.Object get(java.lang.Object)>($r10);
+        $r23 = (java.awt.Color) $r11;
+        virtualinvoke $r1.<org.apache.fop.svg.PDFDocumentGraphics2D: void setBackgroundColor(java.awt.Color)>($r23);
+
+     label11:
+        $r1 = this.<org.apache.fop.svg.PDFTranscoder: org.apache.fop.svg.PDFDocumentGraphics2D graphics>;
+        $r24 = new org.apache.xmlgraphics.java2d.GraphicContext;
+        specialinvoke $r24.<org.apache.xmlgraphics.java2d.GraphicContext: void <init>()>();
+        virtualinvoke $r1.<org.apache.fop.svg.PDFDocumentGraphics2D: void setGraphicContext(org.apache.xmlgraphics.java2d.GraphicContext)>($r24);
+        $r1 = this.<org.apache.fop.svg.PDFTranscoder: org.apache.fop.svg.PDFDocumentGraphics2D graphics>;
+        virtualinvoke $r1.<org.apache.fop.svg.PDFDocumentGraphics2D: void preparePainting()>();
+        $r1 = this.<org.apache.fop.svg.PDFTranscoder: org.apache.fop.svg.PDFDocumentGraphics2D graphics>;
+        $r25 = this.<org.apache.fop.svg.PDFTranscoder: java.awt.geom.AffineTransform curTxf>;
+        virtualinvoke $r1.<org.apache.fop.svg.PDFDocumentGraphics2D: void transform(java.awt.geom.AffineTransform)>($r25);
+        $r1 = this.<org.apache.fop.svg.PDFTranscoder: org.apache.fop.svg.PDFDocumentGraphics2D graphics>;
+        $r26 = <org.apache.batik.ext.awt.RenderingHintsKeyExt: java.awt.RenderingHints$Key KEY_TRANSCODING>;
+        virtualinvoke $r1.<org.apache.fop.svg.PDFDocumentGraphics2D: void setRenderingHint(java.awt.RenderingHints$Key,java.lang.Object)>($r26, "Vector");
+        $r27 = this.<org.apache.fop.svg.PDFTranscoder: org.apache.batik.gvt.GraphicsNode root>;
+        $r0 = this.<org.apache.fop.svg.PDFTranscoder: org.apache.fop.svg.PDFDocumentGraphics2D graphics>;
+        interfaceinvoke $r27.<org.apache.batik.gvt.GraphicsNode: void paint(java.awt.Graphics2D)>($r0);
+        $r1 = this.<org.apache.fop.svg.PDFTranscoder: org.apache.fop.svg.PDFDocumentGraphics2D graphics>;
+        virtualinvoke $r1.<org.apache.fop.svg.PDFDocumentGraphics2D: void finish()>();
+
+     label12:
+        goto label14;
+
+     label13:
+        $r28 := @caughtexception;
+        ex = $r28;
+        $r18 = new org.apache.batik.transcoder.TranscoderException;
+        specialinvoke $r18.<org.apache.batik.transcoder.TranscoderException: void <init>(java.lang.Exception)>(ex);
+        throw $r18;
+
+     label14:
+        return;
+
+        catch java.lang.Exception from label1 to label5 with label6;
+        catch java.io.IOException from label9 to label12 with label13;
+    }
+
+    private void setupImageInfrastructure(java.lang.String)
+    {
+        org.apache.fop.svg.PDFTranscoder this;
+        java.lang.String baseURI;
+        org.apache.fop.svg.PDFTranscoder$2 $r0, imageContext;
+        org.apache.xmlgraphics.image.loader.ImageManager $r1;
+        org.apache.fop.svg.PDFTranscoder$3 $r2;
+
+        this := @this: org.apache.fop.svg.PDFTranscoder;
+        baseURI := @parameter0: java.lang.String;
+        $r0 = new org.apache.fop.svg.PDFTranscoder$2;
+        specialinvoke $r0.<org.apache.fop.svg.PDFTranscoder$2: void <init>(org.apache.fop.svg.PDFTranscoder)>(this);
+        imageContext = $r0;
+        $r1 = new org.apache.xmlgraphics.image.loader.ImageManager;
+        specialinvoke $r1.<org.apache.xmlgraphics.image.loader.ImageManager: void <init>(org.apache.xmlgraphics.image.loader.ImageContext)>(imageContext);
+        this.<org.apache.fop.svg.PDFTranscoder: org.apache.xmlgraphics.image.loader.ImageManager imageManager> = $r1;
+        $r2 = new org.apache.fop.svg.PDFTranscoder$3;
+        specialinvoke $r2.<org.apache.fop.svg.PDFTranscoder$3: void <init>(org.apache.fop.svg.PDFTranscoder,org.apache.xmlgraphics.image.loader.ImageContext,java.lang.String)>(this, imageContext, baseURI);
+        this.<org.apache.fop.svg.PDFTranscoder: org.apache.xmlgraphics.image.loader.ImageSessionContext imageSessionContext> = $r2;
+        return;
+    }
+
+    protected org.apache.batik.bridge.BridgeContext createBridgeContext()
+    {
+        org.apache.fop.svg.PDFTranscoder this;
+        org.apache.batik.bridge.BridgeContext $r0;
+
+        this := @this: org.apache.fop.svg.PDFTranscoder;
+        $r0 = virtualinvoke this.<org.apache.fop.svg.PDFTranscoder: org.apache.batik.bridge.BridgeContext createBridgeContext(java.lang.String)>("1.x");
+        return $r0;
+    }
+
+    public org.apache.batik.bridge.BridgeContext createBridgeContext(java.lang.String)
+    {
+        org.apache.fop.svg.PDFTranscoder this;
+        java.lang.String version;
+        org.apache.fop.fonts.FontInfo fontInfo;
+        org.apache.fop.svg.PDFBridgeContext ctx, $r1;
+        org.apache.fop.svg.PDFDocumentGraphics2D $r0;
+        boolean $z0;
+        org.apache.batik.bridge.UserAgent $r2;
+        org.apache.xmlgraphics.image.loader.ImageManager $r3;
+        org.apache.xmlgraphics.image.loader.ImageSessionContext $r4;
+
+        this := @this: org.apache.fop.svg.PDFTranscoder;
+        version := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.svg.PDFTranscoder: org.apache.fop.svg.PDFDocumentGraphics2D graphics>;
+        fontInfo = virtualinvoke $r0.<org.apache.fop.svg.PDFDocumentGraphics2D: org.apache.fop.fonts.FontInfo getFontInfo()>();
+        $z0 = virtualinvoke this.<org.apache.fop.svg.PDFTranscoder: boolean isTextStroked()>();
+        if $z0 == 0 goto label0;
+
+        fontInfo = null;
+
+     label0:
+        $r1 = new org.apache.fop.svg.PDFBridgeContext;
+        $r2 = this.<org.apache.fop.svg.PDFTranscoder: org.apache.batik.bridge.UserAgent userAgent>;
+        $r3 = this.<org.apache.fop.svg.PDFTranscoder: org.apache.xmlgraphics.image.loader.ImageManager imageManager>;
+        $r4 = this.<org.apache.fop.svg.PDFTranscoder: org.apache.xmlgraphics.image.loader.ImageSessionContext imageSessionContext>;
+        specialinvoke $r1.<org.apache.fop.svg.PDFBridgeContext: void <init>(org.apache.batik.bridge.UserAgent,org.apache.fop.fonts.FontInfo,org.apache.xmlgraphics.image.loader.ImageManager,org.apache.xmlgraphics.image.loader.ImageSessionContext)>($r2, fontInfo, $r3, $r4);
+        ctx = $r1;
+        return ctx;
+    }
+
+    static void <clinit>()
+    {
+        org.apache.batik.transcoder.keys.FloatKey $r0;
+        org.apache.batik.transcoder.keys.BooleanKey $r1;
+
+        $r0 = new org.apache.batik.transcoder.keys.FloatKey;
+        specialinvoke $r0.<org.apache.batik.transcoder.keys.FloatKey: void <init>()>();
+        <org.apache.fop.svg.PDFTranscoder: org.apache.batik.transcoder.TranscodingHints$Key KEY_DEVICE_RESOLUTION> = $r0;
+        $r1 = new org.apache.batik.transcoder.keys.BooleanKey;
+        specialinvoke $r1.<org.apache.batik.transcoder.keys.BooleanKey: void <init>()>();
+        <org.apache.fop.svg.PDFTranscoder: org.apache.batik.transcoder.TranscodingHints$Key KEY_AUTO_FONTS> = $r1;
+        return;
+    }
+}

@@ -1,0 +1,323 @@
+public class org.apache.fop.area.CachedRenderPagesModel extends org.apache.fop.area.RenderPagesModel
+{
+    private java.util.Map pageMap;
+    protected java.io.File baseDir;
+
+    public void <init>(org.apache.fop.apps.FOUserAgent, java.lang.String, org.apache.fop.fonts.FontInfo, java.io.OutputStream) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.area.CachedRenderPagesModel this;
+        org.apache.fop.apps.FOUserAgent userAgent;
+        java.lang.String outputFormat, $r2;
+        org.apache.fop.fonts.FontInfo fontInfo;
+        java.io.OutputStream stream;
+        java.util.HashMap $r0;
+        java.io.File $r1;
+
+        this := @this: org.apache.fop.area.CachedRenderPagesModel;
+        userAgent := @parameter0: org.apache.fop.apps.FOUserAgent;
+        outputFormat := @parameter1: java.lang.String;
+        fontInfo := @parameter2: org.apache.fop.fonts.FontInfo;
+        stream := @parameter3: java.io.OutputStream;
+        specialinvoke this.<org.apache.fop.area.RenderPagesModel: void <init>(org.apache.fop.apps.FOUserAgent,java.lang.String,org.apache.fop.fonts.FontInfo,java.io.OutputStream)>(userAgent, outputFormat, fontInfo, stream);
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.area.CachedRenderPagesModel: java.util.Map pageMap> = $r0;
+        $r1 = new java.io.File;
+        $r2 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("java.io.tmpdir");
+        specialinvoke $r1.<java.io.File: void <init>(java.lang.String)>($r2);
+        this.<org.apache.fop.area.CachedRenderPagesModel: java.io.File baseDir> = $r1;
+        return;
+    }
+
+    protected boolean checkPreparedPages(org.apache.fop.area.PageViewport, boolean)
+    {
+        org.apache.fop.area.CachedRenderPagesModel this;
+        org.apache.fop.area.PageViewport newpage, p;
+        boolean renderUnresolved, $z0;
+        java.util.Iterator iter;
+        java.lang.String name, $r8, $r14;
+        java.io.File tempFile, $r4, $r5;
+        java.io.FileInputStream $r0;
+        java.io.ObjectInputStream in, $r9;
+        java.lang.Throwable l8, $r11;
+        java.lang.Exception e, $r12, $r15;
+        java.lang.String[] idrefs;
+        int count, $i0;
+        java.util.List $r1;
+        java.lang.Object $r2;
+        java.util.Map $r3;
+        org.apache.commons.logging.Log $r6;
+        java.lang.StringBuffer $r7;
+        java.io.BufferedInputStream $r10;
+        org.apache.fop.render.Renderer $r13;
+        org.apache.fop.area.Page $r16;
+
+        this := @this: org.apache.fop.area.CachedRenderPagesModel;
+        newpage := @parameter0: org.apache.fop.area.PageViewport;
+        renderUnresolved := @parameter1: boolean;
+        $r1 = this.<org.apache.fop.area.CachedRenderPagesModel: java.util.List prepared>;
+        iter = interfaceinvoke $r1.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label19;
+
+        $r2 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        p = (org.apache.fop.area.PageViewport) $r2;
+        $z0 = virtualinvoke p.<org.apache.fop.area.PageViewport: boolean isResolved()>();
+        if $z0 != 0 goto label1;
+
+        if renderUnresolved == 0 goto label17;
+
+     label1:
+        if p == newpage goto label12;
+
+     label2:
+        $r3 = this.<org.apache.fop.area.CachedRenderPagesModel: java.util.Map pageMap>;
+        $r2 = interfaceinvoke $r3.<java.util.Map: java.lang.Object get(java.lang.Object)>(p);
+        name = (java.lang.String) $r2;
+        $r4 = new java.io.File;
+        $r5 = this.<org.apache.fop.area.CachedRenderPagesModel: java.io.File baseDir>;
+        specialinvoke $r4.<java.io.File: void <init>(java.io.File,java.lang.String)>($r5, name);
+        tempFile = $r4;
+        $r6 = <org.apache.fop.area.CachedRenderPagesModel: org.apache.commons.logging.Log log>;
+        $r7 = new java.lang.StringBuffer;
+        specialinvoke $r7.<java.lang.StringBuffer: void <init>()>();
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Loading page from: ");
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(tempFile);
+        $r8 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r6.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r8);
+        $r9 = new java.io.ObjectInputStream;
+        $r10 = new java.io.BufferedInputStream;
+        $r0 = new java.io.FileInputStream;
+        specialinvoke $r0.<java.io.FileInputStream: void <init>(java.io.File)>(tempFile);
+        specialinvoke $r10.<java.io.BufferedInputStream: void <init>(java.io.InputStream)>($r0);
+        specialinvoke $r9.<java.io.ObjectInputStream: void <init>(java.io.InputStream)>($r10);
+        in = $r9;
+
+     label3:
+        virtualinvoke p.<org.apache.fop.area.PageViewport: void loadPage(java.io.ObjectInputStream)>(in);
+
+     label4:
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.InputStream)>(in);
+        goto label8;
+
+     label5:
+        $r11 := @caughtexception;
+
+     label6:
+        l8 = $r11;
+
+     label7:
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.InputStream)>(in);
+        throw l8;
+
+     label8:
+        $z0 = virtualinvoke tempFile.<java.io.File: boolean delete()>();
+        if $z0 != 0 goto label9;
+
+        $r6 = <org.apache.fop.area.CachedRenderPagesModel: org.apache.commons.logging.Log log>;
+        $r7 = new java.lang.StringBuffer;
+        specialinvoke $r7.<java.lang.StringBuffer: void <init>()>();
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Temporary file could not be deleted: ");
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(tempFile);
+        $r8 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r6.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r8);
+
+     label9:
+        $r3 = this.<org.apache.fop.area.CachedRenderPagesModel: java.util.Map pageMap>;
+        interfaceinvoke $r3.<java.util.Map: java.lang.Object remove(java.lang.Object)>(p);
+
+     label10:
+        goto label12;
+
+     label11:
+        $r12 := @caughtexception;
+        e = $r12;
+        $r6 = <org.apache.fop.area.CachedRenderPagesModel: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r6.<org.apache.commons.logging.Log: void error(java.lang.Object)>(e);
+
+     label12:
+        $r13 = this.<org.apache.fop.area.CachedRenderPagesModel: org.apache.fop.render.Renderer renderer>;
+        interfaceinvoke $r13.<org.apache.fop.render.Renderer: void renderPage(org.apache.fop.area.PageViewport)>(p);
+        $z0 = virtualinvoke p.<org.apache.fop.area.PageViewport: boolean isResolved()>();
+        if $z0 != 0 goto label14;
+
+        idrefs = virtualinvoke p.<org.apache.fop.area.PageViewport: java.lang.String[] getIDRefs()>();
+        count = 0;
+
+     label13:
+        $i0 = lengthof idrefs;
+        if count >= $i0 goto label14;
+
+        $r6 = <org.apache.fop.area.CachedRenderPagesModel: org.apache.commons.logging.Log log>;
+        $r7 = new java.lang.StringBuffer;
+        specialinvoke $r7.<java.lang.StringBuffer: void <init>()>();
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Page ");
+        $r14 = virtualinvoke p.<org.apache.fop.area.PageViewport: java.lang.String getPageNumberString()>();
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r14);
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": Unresolved id reference \"");
+        $r14 = idrefs[count];
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r14);
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\" found.");
+        $r8 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r6.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r8);
+        count = count + 1;
+        goto label13;
+
+     label14:
+        goto label16;
+
+     label15:
+        $r15 := @caughtexception;
+        e = $r15;
+        $r6 = <org.apache.fop.area.CachedRenderPagesModel: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r6.<org.apache.commons.logging.Log: void error(java.lang.Object)>(e);
+
+     label16:
+        virtualinvoke p.<org.apache.fop.area.PageViewport: void clear()>();
+        interfaceinvoke iter.<java.util.Iterator: void remove()>();
+        goto label18;
+
+     label17:
+        $r13 = this.<org.apache.fop.area.CachedRenderPagesModel: org.apache.fop.render.Renderer renderer>;
+        $z0 = interfaceinvoke $r13.<org.apache.fop.render.Renderer: boolean supportsOutOfOrder()>();
+        if $z0 != 0 goto label18;
+
+        goto label19;
+
+     label18:
+        goto label0;
+
+     label19:
+        if newpage == null goto label20;
+
+        $r16 = virtualinvoke newpage.<org.apache.fop.area.PageViewport: org.apache.fop.area.Page getPage()>();
+        if $r16 == null goto label20;
+
+        virtualinvoke this.<org.apache.fop.area.CachedRenderPagesModel: void savePage(org.apache.fop.area.PageViewport)>(newpage);
+        virtualinvoke newpage.<org.apache.fop.area.PageViewport: void clear()>();
+
+     label20:
+        $r13 = this.<org.apache.fop.area.CachedRenderPagesModel: org.apache.fop.render.Renderer renderer>;
+        $z0 = interfaceinvoke $r13.<org.apache.fop.render.Renderer: boolean supportsOutOfOrder()>();
+        if $z0 != 0 goto label21;
+
+        $r1 = this.<org.apache.fop.area.CachedRenderPagesModel: java.util.List prepared>;
+        $z0 = interfaceinvoke $r1.<java.util.List: boolean isEmpty()>();
+        if $z0 == 0 goto label22;
+
+     label21:
+        $z0 = 1;
+        goto label23;
+
+     label22:
+        $z0 = 0;
+
+     label23:
+        return $z0;
+
+        catch java.lang.Throwable from label3 to label4 with label5;
+        catch java.lang.Throwable from label6 to label7 with label5;
+        catch java.lang.Exception from label2 to label10 with label11;
+        catch java.lang.Exception from label12 to label14 with label15;
+    }
+
+    protected void savePage(org.apache.fop.area.PageViewport)
+    {
+        org.apache.fop.area.CachedRenderPagesModel this;
+        org.apache.fop.area.PageViewport page;
+        java.lang.StringBuffer $r0, $r11;
+        java.lang.String fname, $r2;
+        java.io.File tempFile, $r3, $r4;
+        java.io.FileOutputStream $r1;
+        java.io.ObjectOutputStream tempstream, $r5;
+        java.lang.Throwable l5, $r7;
+        java.lang.Exception e, $r12;
+        java.io.BufferedOutputStream $r6;
+        java.util.Map $r8;
+        org.apache.commons.logging.Log $r10;
+        boolean $z0;
+
+        this := @this: org.apache.fop.area.CachedRenderPagesModel;
+        page := @parameter0: org.apache.fop.area.PageViewport;
+
+     label0:
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("fop-page-");
+        $r2 = virtualinvoke page.<org.apache.fop.area.PageViewport: java.lang.String toString()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(".ser");
+        fname = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r3 = new java.io.File;
+        $r4 = this.<org.apache.fop.area.CachedRenderPagesModel: java.io.File baseDir>;
+        specialinvoke $r3.<java.io.File: void <init>(java.io.File,java.lang.String)>($r4, fname);
+        tempFile = $r3;
+        virtualinvoke tempFile.<java.io.File: void deleteOnExit()>();
+        $r5 = new java.io.ObjectOutputStream;
+        $r6 = new java.io.BufferedOutputStream;
+        $r1 = new java.io.FileOutputStream;
+        specialinvoke $r1.<java.io.FileOutputStream: void <init>(java.io.File)>(tempFile);
+        specialinvoke $r6.<java.io.BufferedOutputStream: void <init>(java.io.OutputStream)>($r1);
+        specialinvoke $r5.<java.io.ObjectOutputStream: void <init>(java.io.OutputStream)>($r6);
+        tempstream = $r5;
+
+     label1:
+        virtualinvoke page.<org.apache.fop.area.PageViewport: void savePage(java.io.ObjectOutputStream)>(tempstream);
+
+     label2:
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.OutputStream)>(tempstream);
+        goto label6;
+
+     label3:
+        $r7 := @caughtexception;
+
+     label4:
+        l5 = $r7;
+
+     label5:
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.OutputStream)>(tempstream);
+        throw l5;
+
+     label6:
+        $r8 = this.<org.apache.fop.area.CachedRenderPagesModel: java.util.Map pageMap>;
+        interfaceinvoke $r8.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(page, fname);
+        $r10 = <org.apache.fop.area.CachedRenderPagesModel: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r10.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label7;
+
+        $r10 = <org.apache.fop.area.CachedRenderPagesModel: org.apache.commons.logging.Log log>;
+        $r11 = new java.lang.StringBuffer;
+        specialinvoke $r11.<java.lang.StringBuffer: void <init>()>();
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Page saved to temporary file: ");
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(tempFile);
+        $r2 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r10.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r2);
+
+     label7:
+        goto label9;
+
+     label8:
+        $r12 := @caughtexception;
+        e = $r12;
+        $r10 = <org.apache.fop.area.CachedRenderPagesModel: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r10.<org.apache.commons.logging.Log: void error(java.lang.Object)>(e);
+
+     label9:
+        return;
+
+        catch java.lang.Throwable from label1 to label2 with label3;
+        catch java.lang.Throwable from label4 to label5 with label3;
+        catch java.lang.Exception from label0 to label7 with label8;
+    }
+
+    public void endDocument() throws org.xml.sax.SAXException
+    {
+        org.apache.fop.area.CachedRenderPagesModel this;
+
+        this := @this: org.apache.fop.area.CachedRenderPagesModel;
+        specialinvoke this.<org.apache.fop.area.RenderPagesModel: void endDocument()>();
+        return;
+    }
+}

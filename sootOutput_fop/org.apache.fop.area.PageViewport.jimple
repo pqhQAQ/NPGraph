@@ -1,0 +1,1289 @@
+public class org.apache.fop.area.PageViewport extends org.apache.fop.area.AreaTreeObject implements org.apache.fop.area.Resolvable, java.lang.Cloneable
+{
+    private org.apache.fop.area.Page page;
+    private java.awt.geom.Rectangle2D viewArea;
+    private java.lang.String simplePageMasterName;
+    private java.lang.String pageKey;
+    private int pageNumber;
+    private java.lang.String pageNumberString;
+    private int pageIndex;
+    private boolean blank;
+    private transient org.apache.fop.area.PageSequence pageSequence;
+    private java.util.Set idFirsts;
+    private java.util.Map unresolvedIDRefs;
+    private java.util.Map pendingResolved;
+    private java.util.Map markerFirstStart;
+    private java.util.Map markerLastStart;
+    private java.util.Map markerFirstAny;
+    private java.util.Map markerLastEnd;
+    private java.util.Map markerLastAny;
+    private java.util.List extensionAttachments;
+    protected static org.apache.commons.logging.Log log;
+    static java.lang.Class class$org$apache$fop$area$PageViewport;
+
+    public void <init>(org.apache.fop.fo.pagination.SimplePageMaster, int, java.lang.String, boolean)
+    {
+        org.apache.fop.area.PageViewport this;
+        org.apache.fop.fo.pagination.SimplePageMaster spm;
+        int pageNumber, pageWidth, pageHeight;
+        java.lang.String pageStr, $r2;
+        boolean blank;
+        java.util.HashSet $r0;
+        java.util.HashMap $r1;
+        java.util.List $r3;
+        org.apache.fop.datatypes.Length $r4;
+        java.awt.Rectangle $r5;
+        org.apache.fop.area.Page $r6;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        spm := @parameter0: org.apache.fop.fo.pagination.SimplePageMaster;
+        pageNumber := @parameter1: int;
+        pageStr := @parameter2: java.lang.String;
+        blank := @parameter3: boolean;
+        specialinvoke this.<org.apache.fop.area.AreaTreeObject: void <init>()>();
+        this.<org.apache.fop.area.PageViewport: int pageNumber> = -1;
+        this.<org.apache.fop.area.PageViewport: java.lang.String pageNumberString> = null;
+        this.<org.apache.fop.area.PageViewport: int pageIndex> = -1;
+        $r0 = new java.util.HashSet;
+        specialinvoke $r0.<java.util.HashSet: void <init>()>();
+        this.<org.apache.fop.area.PageViewport: java.util.Set idFirsts> = $r0;
+        $r1 = new java.util.HashMap;
+        specialinvoke $r1.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.area.PageViewport: java.util.Map unresolvedIDRefs> = $r1;
+        this.<org.apache.fop.area.PageViewport: java.util.Map pendingResolved> = null;
+        this.<org.apache.fop.area.PageViewport: java.util.Map markerFirstStart> = null;
+        this.<org.apache.fop.area.PageViewport: java.util.Map markerLastStart> = null;
+        this.<org.apache.fop.area.PageViewport: java.util.Map markerFirstAny> = null;
+        this.<org.apache.fop.area.PageViewport: java.util.Map markerLastEnd> = null;
+        this.<org.apache.fop.area.PageViewport: java.util.Map markerLastAny> = null;
+        this.<org.apache.fop.area.PageViewport: java.util.List extensionAttachments> = null;
+        $r2 = virtualinvoke spm.<org.apache.fop.fo.pagination.SimplePageMaster: java.lang.String getMasterName()>();
+        this.<org.apache.fop.area.PageViewport: java.lang.String simplePageMasterName> = $r2;
+        $r3 = virtualinvoke spm.<org.apache.fop.fo.pagination.SimplePageMaster: java.util.List getExtensionAttachments()>();
+        this.<org.apache.fop.area.PageViewport: java.util.List extensionAttachments> = $r3;
+        this.<org.apache.fop.area.PageViewport: boolean blank> = blank;
+        $r4 = virtualinvoke spm.<org.apache.fop.fo.pagination.SimplePageMaster: org.apache.fop.datatypes.Length getPageWidth()>();
+        pageWidth = interfaceinvoke $r4.<org.apache.fop.datatypes.Length: int getValue()>();
+        $r4 = virtualinvoke spm.<org.apache.fop.fo.pagination.SimplePageMaster: org.apache.fop.datatypes.Length getPageHeight()>();
+        pageHeight = interfaceinvoke $r4.<org.apache.fop.datatypes.Length: int getValue()>();
+        this.<org.apache.fop.area.PageViewport: int pageNumber> = pageNumber;
+        this.<org.apache.fop.area.PageViewport: java.lang.String pageNumberString> = pageStr;
+        $r5 = new java.awt.Rectangle;
+        specialinvoke $r5.<java.awt.Rectangle: void <init>(int,int,int,int)>(0, 0, pageWidth, pageHeight);
+        this.<org.apache.fop.area.PageViewport: java.awt.geom.Rectangle2D viewArea> = $r5;
+        $r6 = new org.apache.fop.area.Page;
+        specialinvoke $r6.<org.apache.fop.area.Page: void <init>(org.apache.fop.fo.pagination.SimplePageMaster)>(spm);
+        this.<org.apache.fop.area.PageViewport: org.apache.fop.area.Page page> = $r6;
+        virtualinvoke this.<org.apache.fop.area.PageViewport: org.apache.fop.area.Span createSpan(boolean)>(0);
+        return;
+    }
+
+    public void <init>(org.apache.fop.area.PageViewport)
+    {
+        org.apache.fop.area.PageViewport this, original;
+        java.util.HashSet $r0;
+        java.util.HashMap $r1;
+        java.util.List $r2, $r4;
+        java.util.ArrayList $r3;
+        int $i0;
+        java.lang.String $r5;
+        org.apache.fop.area.Page $r6;
+        java.lang.Object $r7;
+        java.awt.geom.Rectangle2D $r8;
+        boolean $z0;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        original := @parameter0: org.apache.fop.area.PageViewport;
+        specialinvoke this.<org.apache.fop.area.AreaTreeObject: void <init>()>();
+        this.<org.apache.fop.area.PageViewport: int pageNumber> = -1;
+        this.<org.apache.fop.area.PageViewport: java.lang.String pageNumberString> = null;
+        this.<org.apache.fop.area.PageViewport: int pageIndex> = -1;
+        $r0 = new java.util.HashSet;
+        specialinvoke $r0.<java.util.HashSet: void <init>()>();
+        this.<org.apache.fop.area.PageViewport: java.util.Set idFirsts> = $r0;
+        $r1 = new java.util.HashMap;
+        specialinvoke $r1.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.area.PageViewport: java.util.Map unresolvedIDRefs> = $r1;
+        this.<org.apache.fop.area.PageViewport: java.util.Map pendingResolved> = null;
+        this.<org.apache.fop.area.PageViewport: java.util.Map markerFirstStart> = null;
+        this.<org.apache.fop.area.PageViewport: java.util.Map markerLastStart> = null;
+        this.<org.apache.fop.area.PageViewport: java.util.Map markerFirstAny> = null;
+        this.<org.apache.fop.area.PageViewport: java.util.Map markerLastEnd> = null;
+        this.<org.apache.fop.area.PageViewport: java.util.Map markerLastAny> = null;
+        this.<org.apache.fop.area.PageViewport: java.util.List extensionAttachments> = null;
+        $r2 = original.<org.apache.fop.area.PageViewport: java.util.List extensionAttachments>;
+        if $r2 == null goto label0;
+
+        $r3 = new java.util.ArrayList;
+        $r4 = original.<org.apache.fop.area.PageViewport: java.util.List extensionAttachments>;
+        specialinvoke $r3.<java.util.ArrayList: void <init>(java.util.Collection)>($r4);
+        this.<org.apache.fop.area.PageViewport: java.util.List extensionAttachments> = $r3;
+
+     label0:
+        $i0 = original.<org.apache.fop.area.PageViewport: int pageNumber>;
+        this.<org.apache.fop.area.PageViewport: int pageNumber> = $i0;
+        $r5 = original.<org.apache.fop.area.PageViewport: java.lang.String pageNumberString>;
+        this.<org.apache.fop.area.PageViewport: java.lang.String pageNumberString> = $r5;
+        $r6 = original.<org.apache.fop.area.PageViewport: org.apache.fop.area.Page page>;
+        $r7 = virtualinvoke $r6.<org.apache.fop.area.Page: java.lang.Object clone()>();
+        $r6 = (org.apache.fop.area.Page) $r7;
+        this.<org.apache.fop.area.PageViewport: org.apache.fop.area.Page page> = $r6;
+        $r8 = original.<org.apache.fop.area.PageViewport: java.awt.geom.Rectangle2D viewArea>;
+        $r7 = virtualinvoke $r8.<java.awt.geom.Rectangle2D: java.lang.Object clone()>();
+        $r8 = (java.awt.geom.Rectangle2D) $r7;
+        this.<org.apache.fop.area.PageViewport: java.awt.geom.Rectangle2D viewArea> = $r8;
+        $r5 = original.<org.apache.fop.area.PageViewport: java.lang.String simplePageMasterName>;
+        this.<org.apache.fop.area.PageViewport: java.lang.String simplePageMasterName> = $r5;
+        $z0 = original.<org.apache.fop.area.PageViewport: boolean blank>;
+        this.<org.apache.fop.area.PageViewport: boolean blank> = $z0;
+        return;
+    }
+
+    public void <init>(java.awt.geom.Rectangle2D, int, java.lang.String, java.lang.String, boolean)
+    {
+        org.apache.fop.area.PageViewport this;
+        java.awt.geom.Rectangle2D viewArea;
+        int pageNumber;
+        java.lang.String pageStr, simplePageMasterName;
+        boolean blank;
+        java.util.HashSet $r0;
+        java.util.HashMap $r1;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        viewArea := @parameter0: java.awt.geom.Rectangle2D;
+        pageNumber := @parameter1: int;
+        pageStr := @parameter2: java.lang.String;
+        simplePageMasterName := @parameter3: java.lang.String;
+        blank := @parameter4: boolean;
+        specialinvoke this.<org.apache.fop.area.AreaTreeObject: void <init>()>();
+        this.<org.apache.fop.area.PageViewport: int pageNumber> = -1;
+        this.<org.apache.fop.area.PageViewport: java.lang.String pageNumberString> = null;
+        this.<org.apache.fop.area.PageViewport: int pageIndex> = -1;
+        $r0 = new java.util.HashSet;
+        specialinvoke $r0.<java.util.HashSet: void <init>()>();
+        this.<org.apache.fop.area.PageViewport: java.util.Set idFirsts> = $r0;
+        $r1 = new java.util.HashMap;
+        specialinvoke $r1.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.area.PageViewport: java.util.Map unresolvedIDRefs> = $r1;
+        this.<org.apache.fop.area.PageViewport: java.util.Map pendingResolved> = null;
+        this.<org.apache.fop.area.PageViewport: java.util.Map markerFirstStart> = null;
+        this.<org.apache.fop.area.PageViewport: java.util.Map markerLastStart> = null;
+        this.<org.apache.fop.area.PageViewport: java.util.Map markerFirstAny> = null;
+        this.<org.apache.fop.area.PageViewport: java.util.Map markerLastEnd> = null;
+        this.<org.apache.fop.area.PageViewport: java.util.Map markerLastAny> = null;
+        this.<org.apache.fop.area.PageViewport: java.util.List extensionAttachments> = null;
+        this.<org.apache.fop.area.PageViewport: java.awt.geom.Rectangle2D viewArea> = viewArea;
+        this.<org.apache.fop.area.PageViewport: int pageNumber> = pageNumber;
+        this.<org.apache.fop.area.PageViewport: java.lang.String pageNumberString> = pageStr;
+        this.<org.apache.fop.area.PageViewport: java.lang.String simplePageMasterName> = simplePageMasterName;
+        this.<org.apache.fop.area.PageViewport: boolean blank> = blank;
+        return;
+    }
+
+    public void setPageSequence(org.apache.fop.area.PageSequence)
+    {
+        org.apache.fop.area.PageViewport this;
+        org.apache.fop.area.PageSequence seq;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        seq := @parameter0: org.apache.fop.area.PageSequence;
+        this.<org.apache.fop.area.PageViewport: org.apache.fop.area.PageSequence pageSequence> = seq;
+        return;
+    }
+
+    public org.apache.fop.area.PageSequence getPageSequence()
+    {
+        org.apache.fop.area.PageViewport this;
+        org.apache.fop.area.PageSequence $r0;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        $r0 = this.<org.apache.fop.area.PageViewport: org.apache.fop.area.PageSequence pageSequence>;
+        return $r0;
+    }
+
+    public java.awt.geom.Rectangle2D getViewArea()
+    {
+        org.apache.fop.area.PageViewport this;
+        java.awt.geom.Rectangle2D $r0;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        $r0 = this.<org.apache.fop.area.PageViewport: java.awt.geom.Rectangle2D viewArea>;
+        return $r0;
+    }
+
+    public org.apache.fop.area.Page getPage()
+    {
+        org.apache.fop.area.PageViewport this;
+        org.apache.fop.area.Page $r0;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        $r0 = this.<org.apache.fop.area.PageViewport: org.apache.fop.area.Page page>;
+        return $r0;
+    }
+
+    public void setPage(org.apache.fop.area.Page)
+    {
+        org.apache.fop.area.PageViewport this;
+        org.apache.fop.area.Page page;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        page := @parameter0: org.apache.fop.area.Page;
+        this.<org.apache.fop.area.PageViewport: org.apache.fop.area.Page page> = page;
+        return;
+    }
+
+    public int getPageNumber()
+    {
+        org.apache.fop.area.PageViewport this;
+        int $i0;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        $i0 = this.<org.apache.fop.area.PageViewport: int pageNumber>;
+        return $i0;
+    }
+
+    public java.lang.String getPageNumberString()
+    {
+        org.apache.fop.area.PageViewport this;
+        java.lang.String $r0;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        $r0 = this.<org.apache.fop.area.PageViewport: java.lang.String pageNumberString>;
+        return $r0;
+    }
+
+    public void setPageIndex(int)
+    {
+        org.apache.fop.area.PageViewport this;
+        int index;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        index := @parameter0: int;
+        this.<org.apache.fop.area.PageViewport: int pageIndex> = index;
+        return;
+    }
+
+    public int getPageIndex()
+    {
+        org.apache.fop.area.PageViewport this;
+        int $i0;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        $i0 = this.<org.apache.fop.area.PageViewport: int pageIndex>;
+        return $i0;
+    }
+
+    public void setKey(java.lang.String)
+    {
+        org.apache.fop.area.PageViewport this;
+        java.lang.String key;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        key := @parameter0: java.lang.String;
+        this.<org.apache.fop.area.PageViewport: java.lang.String pageKey> = key;
+        return;
+    }
+
+    public java.lang.String getKey()
+    {
+        org.apache.fop.area.PageViewport this;
+        java.lang.StringBuffer $r0;
+        java.lang.String $r1, $r3, $r4;
+        java.lang.IllegalStateException $r2;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        $r1 = this.<org.apache.fop.area.PageViewport: java.lang.String pageKey>;
+        if $r1 != null goto label0;
+
+        $r2 = new java.lang.IllegalStateException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("No page key set on the PageViewport: ");
+        $r3 = virtualinvoke this.<org.apache.fop.area.PageViewport: java.lang.String toString()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r4 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.IllegalStateException: void <init>(java.lang.String)>($r4);
+        throw $r2;
+
+     label0:
+        $r1 = this.<org.apache.fop.area.PageViewport: java.lang.String pageKey>;
+        return $r1;
+    }
+
+    public void setFirstWithID(java.lang.String)
+    {
+        org.apache.fop.area.PageViewport this;
+        java.lang.String id;
+        java.util.Set $r0;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        id := @parameter0: java.lang.String;
+        if id == null goto label0;
+
+        $r0 = this.<org.apache.fop.area.PageViewport: java.util.Set idFirsts>;
+        interfaceinvoke $r0.<java.util.Set: boolean add(java.lang.Object)>(id);
+
+     label0:
+        return;
+    }
+
+    public boolean isFirstWithID(java.lang.String)
+    {
+        org.apache.fop.area.PageViewport this;
+        java.lang.String id;
+        java.util.Set $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        id := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.area.PageViewport: java.util.Set idFirsts>;
+        $z0 = interfaceinvoke $r0.<java.util.Set: boolean contains(java.lang.Object)>(id);
+        return $z0;
+    }
+
+    public void addUnresolvedIDRef(java.lang.String, org.apache.fop.area.Resolvable)
+    {
+        org.apache.fop.area.PageViewport this;
+        java.lang.String idref;
+        org.apache.fop.area.Resolvable res;
+        java.util.HashMap $r0;
+        java.util.List list;
+        java.util.Map $r1;
+        java.lang.Object $r2;
+        java.util.ArrayList $r3;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        idref := @parameter0: java.lang.String;
+        res := @parameter1: org.apache.fop.area.Resolvable;
+        $r1 = this.<org.apache.fop.area.PageViewport: java.util.Map unresolvedIDRefs>;
+        if $r1 != null goto label0;
+
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.area.PageViewport: java.util.Map unresolvedIDRefs> = $r0;
+
+     label0:
+        $r1 = this.<org.apache.fop.area.PageViewport: java.util.Map unresolvedIDRefs>;
+        $r2 = interfaceinvoke $r1.<java.util.Map: java.lang.Object get(java.lang.Object)>(idref);
+        list = (java.util.List) $r2;
+        if list != null goto label1;
+
+        $r3 = new java.util.ArrayList;
+        specialinvoke $r3.<java.util.ArrayList: void <init>()>();
+        list = $r3;
+        $r1 = this.<org.apache.fop.area.PageViewport: java.util.Map unresolvedIDRefs>;
+        interfaceinvoke $r1.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(idref, list);
+
+     label1:
+        interfaceinvoke list.<java.util.List: boolean add(java.lang.Object)>(res);
+        return;
+    }
+
+    public boolean isResolved()
+    {
+        org.apache.fop.area.PageViewport this;
+        java.util.Map $r0;
+        int $i0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        $r0 = this.<org.apache.fop.area.PageViewport: java.util.Map unresolvedIDRefs>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.area.PageViewport: java.util.Map unresolvedIDRefs>;
+        $i0 = interfaceinvoke $r0.<java.util.Map: int size()>();
+        if $i0 != 0 goto label1;
+
+     label0:
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    public java.lang.String[] getIDRefs()
+    {
+        org.apache.fop.area.PageViewport this;
+        java.util.Map $r0;
+        java.lang.String[] $r1, $r3;
+        java.util.Set $r2;
+        java.lang.Object[] $r4;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        $r0 = this.<org.apache.fop.area.PageViewport: java.util.Map unresolvedIDRefs>;
+        if $r0 != null goto label0;
+
+        $r1 = null;
+        goto label1;
+
+     label0:
+        $r0 = this.<org.apache.fop.area.PageViewport: java.util.Map unresolvedIDRefs>;
+        $r2 = interfaceinvoke $r0.<java.util.Map: java.util.Set keySet()>();
+        $r3 = newarray (java.lang.String)[0];
+        $r4 = interfaceinvoke $r2.<java.util.Set: java.lang.Object[] toArray(java.lang.Object[])>($r3);
+        $r1 = (java.lang.String[]) $r4;
+        $r1 = (java.lang.String[]) $r1;
+
+     label1:
+        return $r1;
+    }
+
+    public void resolveIDRef(java.lang.String, java.util.List)
+    {
+        org.apache.fop.area.PageViewport this;
+        java.lang.String id;
+        java.util.List pages, todo;
+        java.util.HashMap $r0;
+        int count, $i0;
+        org.apache.fop.area.Resolvable res;
+        org.apache.fop.area.Page $r1;
+        java.util.Map $r2;
+        java.lang.Object $r3;
+        boolean $z0;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        id := @parameter0: java.lang.String;
+        pages := @parameter1: java.util.List;
+        $r1 = this.<org.apache.fop.area.PageViewport: org.apache.fop.area.Page page>;
+        if $r1 != null goto label1;
+
+        $r2 = this.<org.apache.fop.area.PageViewport: java.util.Map pendingResolved>;
+        if $r2 != null goto label0;
+
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.area.PageViewport: java.util.Map pendingResolved> = $r0;
+
+     label0:
+        $r2 = this.<org.apache.fop.area.PageViewport: java.util.Map pendingResolved>;
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(id, pages);
+        goto label3;
+
+     label1:
+        $r2 = this.<org.apache.fop.area.PageViewport: java.util.Map unresolvedIDRefs>;
+        if $r2 == null goto label3;
+
+        $r2 = this.<org.apache.fop.area.PageViewport: java.util.Map unresolvedIDRefs>;
+        $r3 = interfaceinvoke $r2.<java.util.Map: java.lang.Object get(java.lang.Object)>(id);
+        todo = (java.util.List) $r3;
+        if todo == null goto label3;
+
+        count = 0;
+
+     label2:
+        $i0 = interfaceinvoke todo.<java.util.List: int size()>();
+        if count >= $i0 goto label3;
+
+        $r3 = interfaceinvoke todo.<java.util.List: java.lang.Object get(int)>(count);
+        res = (org.apache.fop.area.Resolvable) $r3;
+        interfaceinvoke res.<org.apache.fop.area.Resolvable: void resolveIDRef(java.lang.String,java.util.List)>(id, pages);
+        count = count + 1;
+        goto label2;
+
+     label3:
+        $r2 = this.<org.apache.fop.area.PageViewport: java.util.Map unresolvedIDRefs>;
+        if $r2 == null goto label4;
+
+        if pages == null goto label4;
+
+        $r2 = this.<org.apache.fop.area.PageViewport: java.util.Map unresolvedIDRefs>;
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object remove(java.lang.Object)>(id);
+        $r2 = this.<org.apache.fop.area.PageViewport: java.util.Map unresolvedIDRefs>;
+        $z0 = interfaceinvoke $r2.<java.util.Map: boolean isEmpty()>();
+        if $z0 == 0 goto label4;
+
+        this.<org.apache.fop.area.PageViewport: java.util.Map unresolvedIDRefs> = null;
+
+     label4:
+        return;
+    }
+
+    public void addMarkers(java.util.Map, boolean, boolean, boolean)
+    {
+        org.apache.fop.area.PageViewport this;
+        java.util.Map marks, $r5;
+        boolean starting, isfirst, islast, $z0;
+        java.lang.StringBuffer $r0;
+        java.util.Iterator iter;
+        java.lang.Object key, $r8;
+        org.apache.commons.logging.Log $r1;
+        java.util.Set $r2, $r7;
+        java.lang.String $r3, $r4;
+        java.util.HashMap $r6;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        marks := @parameter0: java.util.Map;
+        starting := @parameter1: boolean;
+        isfirst := @parameter2: boolean;
+        islast := @parameter3: boolean;
+        if marks != null goto label0;
+
+        return;
+
+     label0:
+        $r1 = <org.apache.fop.area.PageViewport: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label7;
+
+        $r1 = <org.apache.fop.area.PageViewport: org.apache.commons.logging.Log log>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("--");
+        $r2 = interfaceinvoke marks.<java.util.Map: java.util.Set keySet()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r2);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": ");
+        if starting == 0 goto label1;
+
+        $r3 = "starting";
+        goto label2;
+
+     label1:
+        $r3 = "ending";
+
+     label2:
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        if isfirst == 0 goto label3;
+
+        $r3 = ", first";
+        goto label4;
+
+     label3:
+        $r3 = "";
+
+     label4:
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        if islast == 0 goto label5;
+
+        $r3 = ", last";
+        goto label6;
+
+     label5:
+        $r3 = "";
+
+     label6:
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r4 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r4);
+
+     label7:
+        if starting == 0 goto label20;
+
+        if isfirst == 0 goto label15;
+
+        $r5 = this.<org.apache.fop.area.PageViewport: java.util.Map markerFirstStart>;
+        if $r5 != null goto label8;
+
+        $r6 = new java.util.HashMap;
+        specialinvoke $r6.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.area.PageViewport: java.util.Map markerFirstStart> = $r6;
+
+     label8:
+        $r5 = this.<org.apache.fop.area.PageViewport: java.util.Map markerFirstAny>;
+        if $r5 != null goto label9;
+
+        $r6 = new java.util.HashMap;
+        specialinvoke $r6.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.area.PageViewport: java.util.Map markerFirstAny> = $r6;
+
+     label9:
+        $r7 = interfaceinvoke marks.<java.util.Map: java.util.Set keySet()>();
+        iter = interfaceinvoke $r7.<java.util.Set: java.util.Iterator iterator()>();
+
+     label10:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label13;
+
+        key = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        $r5 = this.<org.apache.fop.area.PageViewport: java.util.Map markerFirstStart>;
+        $z0 = interfaceinvoke $r5.<java.util.Map: boolean containsKey(java.lang.Object)>(key);
+        if $z0 != 0 goto label11;
+
+        $r5 = this.<org.apache.fop.area.PageViewport: java.util.Map markerFirstStart>;
+        $r8 = interfaceinvoke marks.<java.util.Map: java.lang.Object get(java.lang.Object)>(key);
+        interfaceinvoke $r5.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(key, $r8);
+        $r1 = <org.apache.fop.area.PageViewport: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label11;
+
+        $r1 = <org.apache.fop.area.PageViewport: org.apache.commons.logging.Log log>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("page ");
+        $r3 = this.<org.apache.fop.area.PageViewport: java.lang.String pageNumberString>;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": Adding marker ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(key);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" to FirstStart");
+        $r4 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r4);
+
+     label11:
+        $r5 = this.<org.apache.fop.area.PageViewport: java.util.Map markerFirstAny>;
+        $z0 = interfaceinvoke $r5.<java.util.Map: boolean containsKey(java.lang.Object)>(key);
+        if $z0 != 0 goto label12;
+
+        $r5 = this.<org.apache.fop.area.PageViewport: java.util.Map markerFirstAny>;
+        $r8 = interfaceinvoke marks.<java.util.Map: java.lang.Object get(java.lang.Object)>(key);
+        interfaceinvoke $r5.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(key, $r8);
+        $r1 = <org.apache.fop.area.PageViewport: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label12;
+
+        $r1 = <org.apache.fop.area.PageViewport: org.apache.commons.logging.Log log>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("page ");
+        $r3 = this.<org.apache.fop.area.PageViewport: java.lang.String pageNumberString>;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": Adding marker ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(key);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" to FirstAny");
+        $r4 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r4);
+
+     label12:
+        goto label10;
+
+     label13:
+        $r5 = this.<org.apache.fop.area.PageViewport: java.util.Map markerLastStart>;
+        if $r5 != null goto label14;
+
+        $r6 = new java.util.HashMap;
+        specialinvoke $r6.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.area.PageViewport: java.util.Map markerLastStart> = $r6;
+
+     label14:
+        $r5 = this.<org.apache.fop.area.PageViewport: java.util.Map markerLastStart>;
+        interfaceinvoke $r5.<java.util.Map: void putAll(java.util.Map)>(marks);
+        $r1 = <org.apache.fop.area.PageViewport: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label24;
+
+        $r1 = <org.apache.fop.area.PageViewport: org.apache.commons.logging.Log log>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("page ");
+        $r3 = this.<org.apache.fop.area.PageViewport: java.lang.String pageNumberString>;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": Adding all markers to LastStart");
+        $r4 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r4);
+        goto label24;
+
+     label15:
+        $r5 = this.<org.apache.fop.area.PageViewport: java.util.Map markerFirstAny>;
+        if $r5 != null goto label16;
+
+        $r6 = new java.util.HashMap;
+        specialinvoke $r6.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.area.PageViewport: java.util.Map markerFirstAny> = $r6;
+
+     label16:
+        $r7 = interfaceinvoke marks.<java.util.Map: java.util.Set keySet()>();
+        iter = interfaceinvoke $r7.<java.util.Set: java.util.Iterator iterator()>();
+
+     label17:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label19;
+
+        key = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        $r5 = this.<org.apache.fop.area.PageViewport: java.util.Map markerFirstAny>;
+        $z0 = interfaceinvoke $r5.<java.util.Map: boolean containsKey(java.lang.Object)>(key);
+        if $z0 != 0 goto label18;
+
+        $r5 = this.<org.apache.fop.area.PageViewport: java.util.Map markerFirstAny>;
+        $r8 = interfaceinvoke marks.<java.util.Map: java.lang.Object get(java.lang.Object)>(key);
+        interfaceinvoke $r5.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(key, $r8);
+        $r1 = <org.apache.fop.area.PageViewport: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label18;
+
+        $r1 = <org.apache.fop.area.PageViewport: org.apache.commons.logging.Log log>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("page ");
+        $r3 = this.<org.apache.fop.area.PageViewport: java.lang.String pageNumberString>;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": Adding marker ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(key);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" to FirstAny");
+        $r4 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r4);
+
+     label18:
+        goto label17;
+
+     label19:
+        goto label24;
+
+     label20:
+        if islast == 0 goto label22;
+
+        $r5 = this.<org.apache.fop.area.PageViewport: java.util.Map markerLastEnd>;
+        if $r5 != null goto label21;
+
+        $r6 = new java.util.HashMap;
+        specialinvoke $r6.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.area.PageViewport: java.util.Map markerLastEnd> = $r6;
+
+     label21:
+        $r5 = this.<org.apache.fop.area.PageViewport: java.util.Map markerLastEnd>;
+        interfaceinvoke $r5.<java.util.Map: void putAll(java.util.Map)>(marks);
+        $r1 = <org.apache.fop.area.PageViewport: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label22;
+
+        $r1 = <org.apache.fop.area.PageViewport: org.apache.commons.logging.Log log>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("page ");
+        $r3 = this.<org.apache.fop.area.PageViewport: java.lang.String pageNumberString>;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": Adding all markers to LastEnd");
+        $r4 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r4);
+
+     label22:
+        $r5 = this.<org.apache.fop.area.PageViewport: java.util.Map markerLastAny>;
+        if $r5 != null goto label23;
+
+        $r6 = new java.util.HashMap;
+        specialinvoke $r6.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.area.PageViewport: java.util.Map markerLastAny> = $r6;
+
+     label23:
+        $r5 = this.<org.apache.fop.area.PageViewport: java.util.Map markerLastAny>;
+        interfaceinvoke $r5.<java.util.Map: void putAll(java.util.Map)>(marks);
+        $r1 = <org.apache.fop.area.PageViewport: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label24;
+
+        $r1 = <org.apache.fop.area.PageViewport: org.apache.commons.logging.Log log>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("page ");
+        $r3 = this.<org.apache.fop.area.PageViewport: java.lang.String pageNumberString>;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": Adding all markers to LastAny");
+        $r4 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r4);
+
+     label24:
+        return;
+    }
+
+    public java.lang.Object getMarker(java.lang.String, int)
+    {
+        org.apache.fop.area.PageViewport this;
+        java.lang.String name, posName, $r5, $r6;
+        int pos;
+        java.lang.Object mark;
+        java.util.Map $r0;
+        java.lang.StringBuffer $r1, $r4;
+        java.lang.RuntimeException $r2;
+        org.apache.commons.logging.Log $r3;
+        boolean $z0;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        name := @parameter0: java.lang.String;
+        pos := @parameter1: int;
+        mark = null;
+        posName = null;
+        lookupswitch(pos)
+        {
+            case 49: goto label2;
+            case 54: goto label0;
+            case 74: goto label5;
+            case 81: goto label3;
+            default: goto label7;
+        };
+
+     label0:
+        $r0 = this.<org.apache.fop.area.PageViewport: java.util.Map markerFirstStart>;
+        if $r0 == null goto label1;
+
+        $r0 = this.<org.apache.fop.area.PageViewport: java.util.Map markerFirstStart>;
+        mark = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>(name);
+        posName = "FSWP";
+
+     label1:
+        if mark != null goto label8;
+
+        $r0 = this.<org.apache.fop.area.PageViewport: java.util.Map markerFirstAny>;
+        if $r0 == null goto label8;
+
+        $r0 = this.<org.apache.fop.area.PageViewport: java.util.Map markerFirstAny>;
+        mark = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>(name);
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("FirstAny after ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(posName);
+        posName = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        goto label8;
+
+     label2:
+        $r0 = this.<org.apache.fop.area.PageViewport: java.util.Map markerFirstAny>;
+        if $r0 == null goto label8;
+
+        $r0 = this.<org.apache.fop.area.PageViewport: java.util.Map markerFirstAny>;
+        mark = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>(name);
+        posName = "FIC";
+        goto label8;
+
+     label3:
+        $r0 = this.<org.apache.fop.area.PageViewport: java.util.Map markerLastStart>;
+        if $r0 == null goto label4;
+
+        $r0 = this.<org.apache.fop.area.PageViewport: java.util.Map markerLastStart>;
+        mark = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>(name);
+        posName = "LSWP";
+
+     label4:
+        if mark != null goto label8;
+
+        $r0 = this.<org.apache.fop.area.PageViewport: java.util.Map markerLastAny>;
+        if $r0 == null goto label8;
+
+        $r0 = this.<org.apache.fop.area.PageViewport: java.util.Map markerLastAny>;
+        mark = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>(name);
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("LastAny after ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(posName);
+        posName = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        goto label8;
+
+     label5:
+        $r0 = this.<org.apache.fop.area.PageViewport: java.util.Map markerLastEnd>;
+        if $r0 == null goto label6;
+
+        $r0 = this.<org.apache.fop.area.PageViewport: java.util.Map markerLastEnd>;
+        mark = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>(name);
+        posName = "LEWP";
+
+     label6:
+        if mark != null goto label8;
+
+        $r0 = this.<org.apache.fop.area.PageViewport: java.util.Map markerLastAny>;
+        if $r0 == null goto label8;
+
+        $r0 = this.<org.apache.fop.area.PageViewport: java.util.Map markerLastAny>;
+        mark = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>(name);
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("LastAny after ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(posName);
+        posName = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        goto label8;
+
+     label7:
+        $r2 = new java.lang.RuntimeException;
+        specialinvoke $r2.<java.lang.RuntimeException: void <init>()>();
+        throw $r2;
+
+     label8:
+        $r3 = <org.apache.fop.area.PageViewport: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r3.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label9;
+
+        $r3 = <org.apache.fop.area.PageViewport: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("page ");
+        $r5 = this.<org.apache.fop.area.PageViewport: java.lang.String pageNumberString>;
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": Retrieving marker ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(name);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" at position ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(posName);
+        $r6 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r6);
+
+     label9:
+        return mark;
+    }
+
+    public void dumpMarkers()
+    {
+        org.apache.fop.area.PageViewport this;
+        org.apache.commons.logging.Log $r0;
+        java.lang.StringBuffer $r1;
+        boolean $z0;
+        java.util.Map $r2;
+        java.lang.String $r3;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        $r0 = <org.apache.fop.area.PageViewport: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = <org.apache.fop.area.PageViewport: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("FirstAny: ");
+        $r2 = this.<org.apache.fop.area.PageViewport: java.util.Map markerFirstAny>;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r2);
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r3);
+        $r0 = <org.apache.fop.area.PageViewport: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("FirstStart: ");
+        $r2 = this.<org.apache.fop.area.PageViewport: java.util.Map markerFirstStart>;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r2);
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r3);
+        $r0 = <org.apache.fop.area.PageViewport: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("LastAny: ");
+        $r2 = this.<org.apache.fop.area.PageViewport: java.util.Map markerLastAny>;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r2);
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r3);
+        $r0 = <org.apache.fop.area.PageViewport: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("LastEnd: ");
+        $r2 = this.<org.apache.fop.area.PageViewport: java.util.Map markerLastEnd>;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r2);
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r3);
+        $r0 = <org.apache.fop.area.PageViewport: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("LastStart: ");
+        $r2 = this.<org.apache.fop.area.PageViewport: java.util.Map markerLastStart>;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r2);
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r3);
+
+     label0:
+        return;
+    }
+
+    public void savePage(java.io.ObjectOutputStream) throws java.lang.Exception
+    {
+        org.apache.fop.area.PageViewport this;
+        java.io.ObjectOutputStream out;
+        org.apache.fop.area.Page $r0, $r2;
+        java.util.Map $r1;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        out := @parameter0: java.io.ObjectOutputStream;
+        $r0 = this.<org.apache.fop.area.PageViewport: org.apache.fop.area.Page page>;
+        $r1 = this.<org.apache.fop.area.PageViewport: java.util.Map unresolvedIDRefs>;
+        virtualinvoke $r0.<org.apache.fop.area.Page: void setUnresolvedReferences(java.util.Map)>($r1);
+        $r2 = this.<org.apache.fop.area.PageViewport: org.apache.fop.area.Page page>;
+        virtualinvoke out.<java.io.ObjectOutputStream: void writeObject(java.lang.Object)>($r2);
+        this.<org.apache.fop.area.PageViewport: org.apache.fop.area.Page page> = null;
+        return;
+    }
+
+    public void loadPage(java.io.ObjectInputStream) throws java.lang.Exception
+    {
+        org.apache.fop.area.PageViewport this;
+        java.io.ObjectInputStream in;
+        java.util.Iterator iter;
+        java.lang.String id;
+        java.lang.Object $r0, $r5, $r7;
+        org.apache.fop.area.Page $r1;
+        java.util.Map $r2, $r3, $r6;
+        java.util.Set $r4;
+        boolean $z0;
+        java.util.List $r8;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        in := @parameter0: java.io.ObjectInputStream;
+        $r0 = virtualinvoke in.<java.io.ObjectInputStream: java.lang.Object readObject()>();
+        $r1 = (org.apache.fop.area.Page) $r0;
+        this.<org.apache.fop.area.PageViewport: org.apache.fop.area.Page page> = $r1;
+        $r1 = this.<org.apache.fop.area.PageViewport: org.apache.fop.area.Page page>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.area.Page: java.util.Map getUnresolvedReferences()>();
+        this.<org.apache.fop.area.PageViewport: java.util.Map unresolvedIDRefs> = $r2;
+        $r3 = this.<org.apache.fop.area.PageViewport: java.util.Map unresolvedIDRefs>;
+        if $r3 == null goto label2;
+
+        $r3 = this.<org.apache.fop.area.PageViewport: java.util.Map pendingResolved>;
+        if $r3 == null goto label2;
+
+        $r3 = this.<org.apache.fop.area.PageViewport: java.util.Map pendingResolved>;
+        $r4 = interfaceinvoke $r3.<java.util.Map: java.util.Set keySet()>();
+        iter = interfaceinvoke $r4.<java.util.Set: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r5 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        id = (java.lang.String) $r5;
+        $r6 = this.<org.apache.fop.area.PageViewport: java.util.Map pendingResolved>;
+        $r7 = interfaceinvoke $r6.<java.util.Map: java.lang.Object get(java.lang.Object)>(id);
+        $r8 = (java.util.List) $r7;
+        virtualinvoke this.<org.apache.fop.area.PageViewport: void resolveIDRef(java.lang.String,java.util.List)>(id, $r8);
+        goto label0;
+
+     label1:
+        this.<org.apache.fop.area.PageViewport: java.util.Map pendingResolved> = null;
+
+     label2:
+        return;
+    }
+
+    public java.lang.Object clone()
+    {
+        org.apache.fop.area.PageViewport this, $r0;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        $r0 = new org.apache.fop.area.PageViewport;
+        specialinvoke $r0.<org.apache.fop.area.PageViewport: void <init>(org.apache.fop.area.PageViewport)>(this);
+        return $r0;
+    }
+
+    public void clear()
+    {
+        org.apache.fop.area.PageViewport this;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        this.<org.apache.fop.area.PageViewport: org.apache.fop.area.Page page> = null;
+        return;
+    }
+
+    public java.lang.String toString()
+    {
+        org.apache.fop.area.PageViewport this;
+        java.lang.StringBuffer $r0, sb;
+        java.lang.String $r1, $r2;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>(int)>(64);
+        sb = $r0;
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("PageViewport: page=");
+        $r1 = virtualinvoke this.<org.apache.fop.area.PageViewport: java.lang.String getPageNumberString()>();
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r2 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r2;
+    }
+
+    public java.lang.String getSimplePageMasterName()
+    {
+        org.apache.fop.area.PageViewport this;
+        java.lang.String $r0;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        $r0 = this.<org.apache.fop.area.PageViewport: java.lang.String simplePageMasterName>;
+        return $r0;
+    }
+
+    public void addExtensionAttachment(org.apache.fop.fo.extensions.ExtensionAttachment)
+    {
+        org.apache.fop.area.PageViewport this;
+        org.apache.fop.fo.extensions.ExtensionAttachment attachment;
+        java.util.ArrayList $r0;
+        java.util.List $r1;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        attachment := @parameter0: org.apache.fop.fo.extensions.ExtensionAttachment;
+        $r1 = this.<org.apache.fop.area.PageViewport: java.util.List extensionAttachments>;
+        if $r1 != null goto label0;
+
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.area.PageViewport: java.util.List extensionAttachments> = $r0;
+
+     label0:
+        $r1 = this.<org.apache.fop.area.PageViewport: java.util.List extensionAttachments>;
+        interfaceinvoke $r1.<java.util.List: boolean add(java.lang.Object)>(attachment);
+        return;
+    }
+
+    public java.util.List getExtensionAttachments()
+    {
+        org.apache.fop.area.PageViewport this;
+        java.util.List $r0;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        $r0 = this.<org.apache.fop.area.PageViewport: java.util.List extensionAttachments>;
+        if $r0 != null goto label0;
+
+        $r0 = <java.util.Collections: java.util.List EMPTY_LIST>;
+        return $r0;
+
+     label0:
+        $r0 = this.<org.apache.fop.area.PageViewport: java.util.List extensionAttachments>;
+        return $r0;
+    }
+
+    public boolean isBlank()
+    {
+        org.apache.fop.area.PageViewport this;
+        boolean $z0;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        $z0 = this.<org.apache.fop.area.PageViewport: boolean blank>;
+        return $z0;
+    }
+
+    public org.apache.fop.area.BodyRegion getBodyRegion()
+    {
+        org.apache.fop.area.PageViewport this;
+        org.apache.fop.area.Page $r0;
+        org.apache.fop.area.RegionViewport $r1;
+        org.apache.fop.area.RegionReference $r2;
+        org.apache.fop.area.BodyRegion $r3;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        $r0 = virtualinvoke this.<org.apache.fop.area.PageViewport: org.apache.fop.area.Page getPage()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport getRegionViewport(int)>(36);
+        $r2 = virtualinvoke $r1.<org.apache.fop.area.RegionViewport: org.apache.fop.area.RegionReference getRegionReference()>();
+        $r3 = (org.apache.fop.area.BodyRegion) $r2;
+        return $r3;
+    }
+
+    public org.apache.fop.area.Span createSpan(boolean)
+    {
+        org.apache.fop.area.PageViewport this;
+        boolean spanAll;
+        org.apache.fop.area.BodyRegion $r0;
+        org.apache.fop.area.MainReference $r1;
+        org.apache.fop.area.Span $r2;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        spanAll := @parameter0: boolean;
+        $r0 = virtualinvoke this.<org.apache.fop.area.PageViewport: org.apache.fop.area.BodyRegion getBodyRegion()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.area.BodyRegion: org.apache.fop.area.MainReference getMainReference()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.area.MainReference: org.apache.fop.area.Span createSpan(boolean)>(spanAll);
+        return $r2;
+    }
+
+    public org.apache.fop.area.Span getCurrentSpan()
+    {
+        org.apache.fop.area.PageViewport this;
+        org.apache.fop.area.BodyRegion $r0;
+        org.apache.fop.area.MainReference $r1;
+        org.apache.fop.area.Span $r2;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        $r0 = virtualinvoke this.<org.apache.fop.area.PageViewport: org.apache.fop.area.BodyRegion getBodyRegion()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.area.BodyRegion: org.apache.fop.area.MainReference getMainReference()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.area.MainReference: org.apache.fop.area.Span getCurrentSpan()>();
+        return $r2;
+    }
+
+    public org.apache.fop.area.NormalFlow getCurrentFlow()
+    {
+        org.apache.fop.area.PageViewport this;
+        org.apache.fop.area.Span $r0;
+        org.apache.fop.area.NormalFlow $r1;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        $r0 = virtualinvoke this.<org.apache.fop.area.PageViewport: org.apache.fop.area.Span getCurrentSpan()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.area.Span: org.apache.fop.area.NormalFlow getCurrentFlow()>();
+        return $r1;
+    }
+
+    public org.apache.fop.area.NormalFlow moveToNextFlow()
+    {
+        org.apache.fop.area.PageViewport this;
+        org.apache.fop.area.Span $r0;
+        org.apache.fop.area.NormalFlow $r1;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        $r0 = virtualinvoke this.<org.apache.fop.area.PageViewport: org.apache.fop.area.Span getCurrentSpan()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.area.Span: org.apache.fop.area.NormalFlow moveToNextFlow()>();
+        return $r1;
+    }
+
+    public org.apache.fop.area.RegionReference getRegionReference(int)
+    {
+        org.apache.fop.area.PageViewport this;
+        int id;
+        org.apache.fop.area.Page $r0;
+        org.apache.fop.area.RegionViewport $r1;
+        org.apache.fop.area.RegionReference $r2;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        id := @parameter0: int;
+        $r0 = virtualinvoke this.<org.apache.fop.area.PageViewport: org.apache.fop.area.Page getPage()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport getRegionViewport(int)>(id);
+        $r2 = virtualinvoke $r1.<org.apache.fop.area.RegionViewport: org.apache.fop.area.RegionReference getRegionReference()>();
+        return $r2;
+    }
+
+    public boolean hasExtensionAttachments()
+    {
+        org.apache.fop.area.PageViewport this;
+        java.util.List $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.area.PageViewport;
+        $r0 = this.<org.apache.fop.area.PageViewport: java.util.List extensionAttachments>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.area.PageViewport: java.util.List extensionAttachments>;
+        $z0 = interfaceinvoke $r0.<java.util.List: boolean isEmpty()>();
+        if $z0 != 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.area.PageViewport: java.lang.Class class$org$apache$fop$area$PageViewport>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.area.PageViewport: java.lang.Class class$(java.lang.String)>("org.apache.fop.area.PageViewport");
+        <org.apache.fop.area.PageViewport: java.lang.Class class$org$apache$fop$area$PageViewport> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.area.PageViewport: java.lang.Class class$org$apache$fop$area$PageViewport>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.area.PageViewport: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

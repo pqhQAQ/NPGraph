@@ -1,0 +1,76 @@
+public class org.apache.fop.render.bitmap.TIFFRendererConfigurator extends org.apache.fop.render.PrintRendererConfigurator
+{
+
+    public void <init>(org.apache.fop.apps.FOUserAgent)
+    {
+        org.apache.fop.render.bitmap.TIFFRendererConfigurator this;
+        org.apache.fop.apps.FOUserAgent userAgent;
+
+        this := @this: org.apache.fop.render.bitmap.TIFFRendererConfigurator;
+        userAgent := @parameter0: org.apache.fop.apps.FOUserAgent;
+        specialinvoke this.<org.apache.fop.render.PrintRendererConfigurator: void <init>(org.apache.fop.apps.FOUserAgent)>(userAgent);
+        return;
+    }
+
+    public void configure(org.apache.fop.render.Renderer) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.render.bitmap.TIFFRendererConfigurator this;
+        org.apache.fop.render.Renderer renderer;
+        org.apache.avalon.framework.configuration.Configuration cfg, $r0;
+        org.apache.fop.render.bitmap.TIFFRenderer tiffRenderer;
+        java.lang.String name, $r1, $r5;
+        boolean $z0;
+        org.apache.xmlgraphics.image.writer.ImageWriterParams $r2;
+        org.apache.commons.logging.Log $r3;
+        java.lang.StringBuffer $r4;
+
+        this := @this: org.apache.fop.render.bitmap.TIFFRendererConfigurator;
+        renderer := @parameter0: org.apache.fop.render.Renderer;
+        cfg = specialinvoke this.<org.apache.fop.render.PrintRendererConfigurator: org.apache.avalon.framework.configuration.Configuration getRendererConfig(org.apache.fop.render.Renderer)>(renderer);
+        if cfg == null goto label4;
+
+        tiffRenderer = (org.apache.fop.render.bitmap.TIFFRenderer) renderer;
+        $r0 = interfaceinvoke cfg.<org.apache.avalon.framework.configuration.Configuration: org.apache.avalon.framework.configuration.Configuration getChild(java.lang.String)>("compression");
+        name = interfaceinvoke $r0.<org.apache.avalon.framework.configuration.Configuration: java.lang.String getValue(java.lang.String)>("PackBits");
+        $z0 = virtualinvoke name.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>("CCITT T.6");
+        if $z0 == 0 goto label0;
+
+        virtualinvoke tiffRenderer.<org.apache.fop.render.bitmap.TIFFRenderer: void setBufferedImageType(int)>(12);
+        goto label2;
+
+     label0:
+        $z0 = virtualinvoke name.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>("CCITT T.4");
+        if $z0 == 0 goto label1;
+
+        virtualinvoke tiffRenderer.<org.apache.fop.render.bitmap.TIFFRenderer: void setBufferedImageType(int)>(12);
+        goto label2;
+
+     label1:
+        virtualinvoke tiffRenderer.<org.apache.fop.render.bitmap.TIFFRenderer: void setBufferedImageType(int)>(2);
+
+     label2:
+        $r1 = "NONE";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>(name);
+        if $z0 != 0 goto label3;
+
+        $r2 = virtualinvoke tiffRenderer.<org.apache.fop.render.bitmap.TIFFRenderer: org.apache.xmlgraphics.image.writer.ImageWriterParams getWriterParams()>();
+        virtualinvoke $r2.<org.apache.xmlgraphics.image.writer.ImageWriterParams: void setCompressionMethod(java.lang.String)>(name);
+
+     label3:
+        $r3 = <org.apache.fop.render.bitmap.TIFFRendererConfigurator: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r3.<org.apache.commons.logging.Log: boolean isInfoEnabled()>();
+        if $z0 == 0 goto label4;
+
+        $r3 = <org.apache.fop.render.bitmap.TIFFRendererConfigurator: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("TIFF compression set to ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(name);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void info(java.lang.Object)>($r5);
+
+     label4:
+        specialinvoke this.<org.apache.fop.render.PrintRendererConfigurator: void configure(org.apache.fop.render.Renderer)>(renderer);
+        return;
+    }
+}

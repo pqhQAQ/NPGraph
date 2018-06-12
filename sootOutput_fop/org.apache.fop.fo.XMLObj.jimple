@@ -1,0 +1,340 @@
+public abstract class org.apache.fop.fo.XMLObj extends org.apache.fop.fo.FONode implements org.apache.fop.util.ContentHandlerFactory$ObjectBuiltListener
+{
+    private static final java.lang.String XMLNS_NAMESPACE_URI;
+    private org.xml.sax.Attributes attr;
+    protected org.w3c.dom.Element element;
+    protected org.w3c.dom.Document doc;
+    protected java.lang.String name;
+    private static java.util.HashMap ns;
+
+    public void <init>(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.XMLObj this;
+        org.apache.fop.fo.FONode parent;
+
+        this := @this: org.apache.fop.fo.XMLObj;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        specialinvoke this.<org.apache.fop.fo.FONode: void <init>(org.apache.fop.fo.FONode)>(parent);
+        this.<org.apache.fop.fo.XMLObj: org.xml.sax.Attributes attr> = null;
+        return;
+    }
+
+    protected void validateChildNode(org.xml.sax.Locator, java.lang.String, java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.XMLObj this;
+        org.xml.sax.Locator loc;
+        java.lang.String nsURI, localName, $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.XMLObj;
+        loc := @parameter0: org.xml.sax.Locator;
+        nsURI := @parameter1: java.lang.String;
+        localName := @parameter2: java.lang.String;
+        $r0 = "http://www.w3.org/1999/XSL/Format";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(nsURI);
+        if $z0 == 0 goto label0;
+
+        virtualinvoke this.<org.apache.fop.fo.XMLObj: void invalidChildError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, nsURI, localName);
+
+     label0:
+        return;
+    }
+
+    public void processNode(java.lang.String, org.xml.sax.Locator, org.xml.sax.Attributes, org.apache.fop.fo.PropertyList) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.XMLObj this;
+        java.lang.String elementName;
+        org.xml.sax.Locator locator;
+        org.xml.sax.Attributes attlist;
+        org.apache.fop.fo.PropertyList propertyList;
+
+        this := @this: org.apache.fop.fo.XMLObj;
+        elementName := @parameter0: java.lang.String;
+        locator := @parameter1: org.xml.sax.Locator;
+        attlist := @parameter2: org.xml.sax.Attributes;
+        propertyList := @parameter3: org.apache.fop.fo.PropertyList;
+        virtualinvoke this.<org.apache.fop.fo.XMLObj: void setLocator(org.xml.sax.Locator)>(locator);
+        this.<org.apache.fop.fo.XMLObj: java.lang.String name> = elementName;
+        this.<org.apache.fop.fo.XMLObj: org.xml.sax.Attributes attr> = attlist;
+        return;
+    }
+
+    public org.w3c.dom.Document getDOMDocument()
+    {
+        org.apache.fop.fo.XMLObj this;
+        org.w3c.dom.Document $r0;
+
+        this := @this: org.apache.fop.fo.XMLObj;
+        $r0 = this.<org.apache.fop.fo.XMLObj: org.w3c.dom.Document doc>;
+        return $r0;
+    }
+
+    public java.awt.geom.Point2D getDimension(java.awt.geom.Point2D)
+    {
+        org.apache.fop.fo.XMLObj this;
+        java.awt.geom.Point2D view;
+
+        this := @this: org.apache.fop.fo.XMLObj;
+        view := @parameter0: java.awt.geom.Point2D;
+        return null;
+    }
+
+    public org.apache.fop.datatypes.Length getIntrinsicAlignmentAdjust()
+    {
+        org.apache.fop.fo.XMLObj this;
+
+        this := @this: org.apache.fop.fo.XMLObj;
+        return null;
+    }
+
+    public java.lang.String getLocalName()
+    {
+        org.apache.fop.fo.XMLObj this;
+        java.lang.String $r0;
+
+        this := @this: org.apache.fop.fo.XMLObj;
+        $r0 = this.<org.apache.fop.fo.XMLObj: java.lang.String name>;
+        return $r0;
+    }
+
+    public void addElement(org.w3c.dom.Document, org.w3c.dom.Element)
+    {
+        org.apache.fop.fo.XMLObj this;
+        org.w3c.dom.Document doc;
+        org.w3c.dom.Element parent, $r2, $r3;
+        java.lang.String $r0, $r1;
+        org.xml.sax.Attributes $r4;
+
+        this := @this: org.apache.fop.fo.XMLObj;
+        doc := @parameter0: org.w3c.dom.Document;
+        parent := @parameter1: org.w3c.dom.Element;
+        this.<org.apache.fop.fo.XMLObj: org.w3c.dom.Document doc> = doc;
+        $r0 = virtualinvoke this.<org.apache.fop.fo.XMLObj: java.lang.String getNamespaceURI()>();
+        $r1 = this.<org.apache.fop.fo.XMLObj: java.lang.String name>;
+        $r2 = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElementNS(java.lang.String,java.lang.String)>($r0, $r1);
+        this.<org.apache.fop.fo.XMLObj: org.w3c.dom.Element element> = $r2;
+        $r3 = this.<org.apache.fop.fo.XMLObj: org.w3c.dom.Element element>;
+        $r4 = this.<org.apache.fop.fo.XMLObj: org.xml.sax.Attributes attr>;
+        staticinvoke <org.apache.fop.fo.XMLObj: void setAttributes(org.w3c.dom.Element,org.xml.sax.Attributes)>($r3, $r4);
+        this.<org.apache.fop.fo.XMLObj: org.xml.sax.Attributes attr> = null;
+        $r2 = this.<org.apache.fop.fo.XMLObj: org.w3c.dom.Element element>;
+        interfaceinvoke parent.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>($r2);
+        return;
+    }
+
+    private static void setAttributes(org.w3c.dom.Element, org.xml.sax.Attributes)
+    {
+        org.w3c.dom.Element element;
+        org.xml.sax.Attributes attr;
+        int count, idx, $i0;
+        java.lang.String rf, qname, pref, tail, $r4;
+        boolean $z0;
+        java.util.HashMap $r0, $r2;
+        java.lang.Object $r3;
+
+        element := @parameter0: org.w3c.dom.Element;
+        attr := @parameter1: org.xml.sax.Attributes;
+        count = 0;
+
+     label0:
+        $i0 = interfaceinvoke attr.<org.xml.sax.Attributes: int getLength()>();
+        if count >= $i0 goto label4;
+
+        rf = interfaceinvoke attr.<org.xml.sax.Attributes: java.lang.String getValue(int)>(count);
+        qname = interfaceinvoke attr.<org.xml.sax.Attributes: java.lang.String getQName(int)>(count);
+        idx = virtualinvoke qname.<java.lang.String: int indexOf(java.lang.String)>(":");
+        if idx != -1 goto label1;
+
+        interfaceinvoke element.<org.w3c.dom.Element: void setAttribute(java.lang.String,java.lang.String)>(qname, rf);
+        goto label3;
+
+     label1:
+        pref = virtualinvoke qname.<java.lang.String: java.lang.String substring(int,int)>(0, idx);
+        $i0 = idx + 1;
+        tail = virtualinvoke qname.<java.lang.String: java.lang.String substring(int)>($i0);
+        $z0 = virtualinvoke pref.<java.lang.String: boolean equals(java.lang.Object)>("xmlns");
+        if $z0 == 0 goto label2;
+
+        $r0 = <org.apache.fop.fo.XMLObj: java.util.HashMap ns>;
+        virtualinvoke $r0.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>(tail, rf);
+        goto label3;
+
+     label2:
+        $r2 = <org.apache.fop.fo.XMLObj: java.util.HashMap ns>;
+        $r3 = virtualinvoke $r2.<java.util.HashMap: java.lang.Object get(java.lang.Object)>(pref);
+        $r4 = (java.lang.String) $r3;
+        interfaceinvoke element.<org.w3c.dom.Element: void setAttributeNS(java.lang.String,java.lang.String,java.lang.String)>($r4, tail, rf);
+
+     label3:
+        count = count + 1;
+        goto label0;
+
+     label4:
+        return;
+    }
+
+    public void buildTopLevel(org.w3c.dom.Document, org.w3c.dom.Element)
+    {
+        org.apache.fop.fo.XMLObj this;
+        org.w3c.dom.Document doc;
+        org.w3c.dom.Element svgRoot, $r0;
+        org.xml.sax.Attributes $r1;
+
+        this := @this: org.apache.fop.fo.XMLObj;
+        doc := @parameter0: org.w3c.dom.Document;
+        svgRoot := @parameter1: org.w3c.dom.Element;
+        $r0 = this.<org.apache.fop.fo.XMLObj: org.w3c.dom.Element element>;
+        $r1 = this.<org.apache.fop.fo.XMLObj: org.xml.sax.Attributes attr>;
+        staticinvoke <org.apache.fop.fo.XMLObj: void setAttributes(org.w3c.dom.Element,org.xml.sax.Attributes)>($r0, $r1);
+        return;
+    }
+
+    public org.w3c.dom.Document createBasicDocument()
+    {
+        org.apache.fop.fo.XMLObj this;
+        javax.xml.parsers.DocumentBuilderFactory fact;
+        org.w3c.dom.Element el, $r6, $r7, $r8;
+        java.lang.Exception e, $r10;
+        javax.xml.parsers.DocumentBuilder $r0;
+        org.w3c.dom.Document $r1, $r2;
+        java.lang.String $r3, $r4, $r9;
+        boolean $z0;
+        org.apache.commons.logging.Log $r11;
+
+        this := @this: org.apache.fop.fo.XMLObj;
+        this.<org.apache.fop.fo.XMLObj: org.w3c.dom.Document doc> = null;
+        this.<org.apache.fop.fo.XMLObj: org.w3c.dom.Element element> = null;
+
+     label0:
+        fact = staticinvoke <javax.xml.parsers.DocumentBuilderFactory: javax.xml.parsers.DocumentBuilderFactory newInstance()>();
+        virtualinvoke fact.<javax.xml.parsers.DocumentBuilderFactory: void setNamespaceAware(boolean)>(1);
+        $r0 = virtualinvoke fact.<javax.xml.parsers.DocumentBuilderFactory: javax.xml.parsers.DocumentBuilder newDocumentBuilder()>();
+        $r1 = virtualinvoke $r0.<javax.xml.parsers.DocumentBuilder: org.w3c.dom.Document newDocument()>();
+        this.<org.apache.fop.fo.XMLObj: org.w3c.dom.Document doc> = $r1;
+        $r2 = this.<org.apache.fop.fo.XMLObj: org.w3c.dom.Document doc>;
+        $r3 = virtualinvoke this.<org.apache.fop.fo.XMLObj: java.lang.String getNamespaceURI()>();
+        $r4 = this.<org.apache.fop.fo.XMLObj: java.lang.String name>;
+        el = interfaceinvoke $r2.<org.w3c.dom.Document: org.w3c.dom.Element createElementNS(java.lang.String,java.lang.String)>($r3, $r4);
+        $r2 = this.<org.apache.fop.fo.XMLObj: org.w3c.dom.Document doc>;
+        interfaceinvoke $r2.<org.w3c.dom.Document: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(el);
+        $r1 = this.<org.apache.fop.fo.XMLObj: org.w3c.dom.Document doc>;
+        $r6 = interfaceinvoke $r1.<org.w3c.dom.Document: org.w3c.dom.Element getDocumentElement()>();
+        this.<org.apache.fop.fo.XMLObj: org.w3c.dom.Element element> = $r6;
+        $r1 = this.<org.apache.fop.fo.XMLObj: org.w3c.dom.Document doc>;
+        $r7 = this.<org.apache.fop.fo.XMLObj: org.w3c.dom.Element element>;
+        virtualinvoke this.<org.apache.fop.fo.XMLObj: void buildTopLevel(org.w3c.dom.Document,org.w3c.dom.Element)>($r1, $r7);
+        $r8 = this.<org.apache.fop.fo.XMLObj: org.w3c.dom.Element element>;
+        $z0 = interfaceinvoke $r8.<org.w3c.dom.Element: boolean hasAttributeNS(java.lang.String,java.lang.String)>("http://www.w3.org/2000/xmlns/", "xmlns");
+        if $z0 != 0 goto label1;
+
+        $r8 = this.<org.apache.fop.fo.XMLObj: org.w3c.dom.Element element>;
+        $r9 = virtualinvoke this.<org.apache.fop.fo.XMLObj: java.lang.String getNamespaceURI()>();
+        interfaceinvoke $r8.<org.w3c.dom.Element: void setAttributeNS(java.lang.String,java.lang.String,java.lang.String)>("http://www.w3.org/2000/xmlns/", "xmlns", $r9);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r10 := @caughtexception;
+        e = $r10;
+        $r11 = <org.apache.fop.fo.XMLObj: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r11.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("Error while trying to instantiate a DOM Document", e);
+
+     label3:
+        $r2 = this.<org.apache.fop.fo.XMLObj: org.w3c.dom.Document doc>;
+        return $r2;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+
+    protected void addChildNode(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.XMLObj this, $r0;
+        org.apache.fop.fo.FONode child;
+        boolean $z0;
+        org.w3c.dom.Document $r1;
+        org.w3c.dom.Element $r2;
+        org.apache.commons.logging.Log $r3;
+        java.lang.StringBuffer $r4;
+        java.lang.String $r5, $r6;
+
+        this := @this: org.apache.fop.fo.XMLObj;
+        child := @parameter0: org.apache.fop.fo.FONode;
+        $z0 = child instanceof org.apache.fop.fo.XMLObj;
+        if $z0 == 0 goto label0;
+
+        $r0 = (org.apache.fop.fo.XMLObj) child;
+        $r1 = this.<org.apache.fop.fo.XMLObj: org.w3c.dom.Document doc>;
+        $r2 = this.<org.apache.fop.fo.XMLObj: org.w3c.dom.Element element>;
+        virtualinvoke $r0.<org.apache.fop.fo.XMLObj: void addElement(org.w3c.dom.Document,org.w3c.dom.Element)>($r1, $r2);
+        goto label1;
+
+     label0:
+        $r3 = <org.apache.fop.fo.XMLObj: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Invalid element: ");
+        $r5 = virtualinvoke child.<org.apache.fop.fo.FONode: java.lang.String getName()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" inside foreign xml markup");
+        $r6 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r6);
+
+     label1:
+        return;
+    }
+
+    protected void addCharacters(char[], int, int, org.apache.fop.fo.PropertyList, org.xml.sax.Locator)
+    {
+        org.apache.fop.fo.XMLObj this;
+        char[] data;
+        int start, length, $i0;
+        org.apache.fop.fo.PropertyList pList;
+        org.xml.sax.Locator locator;
+        java.lang.String $r0, str;
+        org.w3c.dom.Text text;
+        org.w3c.dom.Document $r1;
+        org.w3c.dom.Element $r2;
+
+        this := @this: org.apache.fop.fo.XMLObj;
+        data := @parameter0: char[];
+        start := @parameter1: int;
+        length := @parameter2: int;
+        pList := @parameter3: org.apache.fop.fo.PropertyList;
+        locator := @parameter4: org.xml.sax.Locator;
+        $r0 = new java.lang.String;
+        $i0 = length - start;
+        specialinvoke $r0.<java.lang.String: void <init>(char[],int,int)>(data, start, $i0);
+        str = $r0;
+        $r1 = this.<org.apache.fop.fo.XMLObj: org.w3c.dom.Document doc>;
+        text = interfaceinvoke $r1.<org.w3c.dom.Document: org.w3c.dom.Text createTextNode(java.lang.String)>(str);
+        $r2 = this.<org.apache.fop.fo.XMLObj: org.w3c.dom.Element element>;
+        interfaceinvoke $r2.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(text);
+        return;
+    }
+
+    public void notifyObjectBuilt(java.lang.Object)
+    {
+        org.apache.fop.fo.XMLObj this;
+        java.lang.Object obj;
+        org.w3c.dom.Document $r0;
+
+        this := @this: org.apache.fop.fo.XMLObj;
+        obj := @parameter0: java.lang.Object;
+        $r0 = (org.w3c.dom.Document) obj;
+        this.<org.apache.fop.fo.XMLObj: org.w3c.dom.Document doc> = $r0;
+        return;
+    }
+
+    static void <clinit>()
+    {
+        java.util.HashMap $r0;
+
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        <org.apache.fop.fo.XMLObj: java.util.HashMap ns> = $r0;
+        $r0 = <org.apache.fop.fo.XMLObj: java.util.HashMap ns>;
+        virtualinvoke $r0.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>("xlink", "http://www.w3.org/1999/xlink");
+        return;
+    }
+}

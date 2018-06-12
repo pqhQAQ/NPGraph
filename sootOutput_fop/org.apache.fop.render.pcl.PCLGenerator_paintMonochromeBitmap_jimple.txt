@@ -1,0 +1,120 @@
+method: org.apache.fop.render.pcl.PCLGenerator.paintMonochromeBitmap:1502311263
+52474627:this := @this: org.apache.fop.render.pcl.PCLGenerator
+1472760719:img := @parameter0: java.awt.image.RenderedImage
+792888911:resolution := @parameter1: int
+131048096:$z0 = specialinvoke this.<org.apache.fop.render.pcl.PCLGenerator: boolean isValidPCLResolution(int)>(resolution)
+1354611297:if $z0 != 0 goto virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void setRasterGraphicsResolution(int)>(resolution)
+1477926832:$r1 = new java.lang.IllegalArgumentException
+1113935946:$r0 = new java.lang.StringBuffer
+1009329064:specialinvoke $r0.<java.lang.StringBuffer: void <init>()>()
+1260942872:$r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Invalid PCL resolution: ")
+768308636:$r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(resolution)
+144075841:$r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>()
+1268589518:specialinvoke $r1.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r2)
+966381610:throw $r1
+1690939241:virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void setRasterGraphicsResolution(int)>(resolution)
+1386467680:$r3 = new java.lang.StringBuffer
+2059838843:specialinvoke $r3.<java.lang.StringBuffer: void <init>()>()
+729282592:$r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("*r0f")
+178230715:$i0 = interfaceinvoke img.<java.awt.image.RenderedImage: int getHeight()>()
+1931423087:$r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0)
+1788051023:$r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("t")
+1401331155:$i0 = interfaceinvoke img.<java.awt.image.RenderedImage: int getWidth()>()
+719565436:$r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0)
+1880579449:$r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("s1A")
+234482797:$r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>()
+319876934:virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r4)
+1670375871:raster = interfaceinvoke img.<java.awt.image.RenderedImage: java.awt.image.Raster getData()>()
+416105577:monochrome = staticinvoke <org.apache.fop.render.pcl.PCLGenerator: boolean isMonochromeImage(java.awt.image.RenderedImage)>(img)
+499538944:if monochrome != 0 goto x = 0
+1237455685:$r1 = new java.lang.IllegalArgumentException
+1216550658:specialinvoke $r1.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("img must be a monochrome image")
+375105919:throw $r1
+1942763337:x = 0
+503835489:y = 0
+2145630625:imgw = interfaceinvoke img.<java.awt.image.RenderedImage: int getWidth()>()
+1534711032:imgh = interfaceinvoke img.<java.awt.image.RenderedImage: int getHeight()>()
+625289257:bytewidth = imgw / 8
+1074982931:$i1 = imgw % 8
+458199106:if $i1 == 0 goto $i1 = bytewidth * 2
+76016400:bytewidth = bytewidth + 1
+889286988:$i1 = bytewidth * 2
+914867591:rle = newarray (byte)[$i1]
+1854027603:uncompressed = newarray (byte)[bytewidth]
+118103717:lastcount = -1
+1515407186:lastbyte = 0
+821841391:rlewidth = 0
+1667828253:y = 0
+1018002581:if y >= imgh goto virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("*rB")
+1779779540:ib = 0
+159046652:x = 0
+1564444684:if x >= imgw goto (branch)
+137323903:sample = virtualinvoke raster.<java.awt.image.Raster: int getSample(int,int,int)>(x, y, 0)
+987427393:if sample != 0 goto $i1 = x % 8
+1136765090:$i2 = x % 8
+1596343918:$i0 = 7 - $i2
+1239027855:$i3 = 1 << $i0
+192234026:$i1 = ib | $i3
+1258201888:ib = (byte) $i1
+2080136650:$i1 = x % 8
+2097094119:if $i1 == 7 goto (branch)
+988496068:$i1 = x + 1
+800875790:if $i1 != imgw goto x = x + 1
+732617847:if rlewidth >= bytewidth goto $i3 = x / 8
+319091546:if lastcount < 0 goto lastbyte = ib
+912769168:if ib != lastbyte goto rlewidth = rlewidth + 1
+1435716055:lastcount = lastcount + 1
+953478693:goto [?= (branch)]
+65206564:rlewidth = rlewidth + 1
+1718955550:$i0 = lastcount & 255
+388425759:$b4 = (byte) $i0
+2068928280:rle[rlewidth] = $b4
+1305274747:rlewidth = rlewidth + 1
+299597412:rle[rlewidth] = lastbyte
+1949693728:lastbyte = ib
+1154753472:lastcount = 0
+1131885965:goto [?= (branch)]
+572075213:lastbyte = ib
+364107361:lastcount = 0
+1765206380:if lastcount == 255 goto rlewidth = rlewidth + 1
+1075090995:$i1 = x + 1
+1148765878:if $i1 != imgw goto $i3 = x / 8
+800689777:rlewidth = rlewidth + 1
+1993625689:$i0 = lastcount & 255
+1827094529:$b4 = (byte) $i0
+1109080450:rle[rlewidth] = $b4
+1637375620:rlewidth = rlewidth + 1
+889800131:rle[rlewidth] = lastbyte
+260359992:lastbyte = 0
+1006423489:lastcount = -1
+1520660:$i3 = x / 8
+543136812:uncompressed[$i3] = ib
+1953374130:ib = 0
+1776491221:x = x + 1
+1022807106:goto [?= (branch)]
+1873678414:if rlewidth >= bytewidth goto $r3 = new java.lang.StringBuffer
+578007528:$r3 = new java.lang.StringBuffer
+1639000815:specialinvoke $r3.<java.lang.StringBuffer: void <init>()>()
+2082944908:$r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("*b1m")
+48084090:$r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(rlewidth)
+1811352932:$r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("W")
+680548252:$r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>()
+476567442:virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r4)
+476154389:$r5 = this.<org.apache.fop.render.pcl.PCLGenerator: java.io.OutputStream out>
+710343331:virtualinvoke $r5.<java.io.OutputStream: void write(byte[],int,int)>(rle, 0, rlewidth)
+878770444:goto [?= lastcount = -1]
+1050867116:$r3 = new java.lang.StringBuffer
+152531692:specialinvoke $r3.<java.lang.StringBuffer: void <init>()>()
+831966701:$r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("*b0m")
+1413703376:$r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(bytewidth)
+364142119:$r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("W")
+1955683730:$r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>()
+1939232775:virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r4)
+1971893292:$r5 = this.<org.apache.fop.render.pcl.PCLGenerator: java.io.OutputStream out>
+180445854:virtualinvoke $r5.<java.io.OutputStream: void write(byte[])>(uncompressed)
+1105448790:lastcount = -1
+1593732374:rlewidth = 0
+296480787:y = y + 1
+790526069:goto [?= (branch)]
+151006902:virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("*rB")
+1794814807:return

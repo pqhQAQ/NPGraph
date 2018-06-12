@@ -1,0 +1,70 @@
+method: org.apache.fop.pdf.PDFText.escapeText:907558745
+44169142:text := @parameter0: java.lang.String
+1468911379:forceHexMode := @parameter1: boolean
+1657831980:if text == null goto return "()"
+1636824523:$i0 = virtualinvoke text.<java.lang.String: int length()>()
+844239991:if $i0 <= 0 goto return "()"
+167818492:unicode = 0
+530861477:hexMode = 0
+1062992205:if forceHexMode == 0 goto i = 0
+985968024:hexMode = 1
+1180759116:goto [?= (branch)]
+963189910:i = 0
+602487396:c = virtualinvoke text.<java.lang.String: int length()>()
+2089558654:if i >= c goto (branch)
+2340662:$c1 = virtualinvoke text.<java.lang.String: char charAt(int)>(i)
+1078618243:if $c1 < 128 goto i = i + 1
+2008086628:unicode = 1
+959901741:hexMode = 1
+1171404723:goto [?= (branch)]
+1816587412:i = i + 1
+609624085:goto [?= (branch)]
+1588497024:if hexMode == 0 goto $r3 = new java.lang.StringBuffer
+1326300049:uniBytes = virtualinvoke text.<java.lang.String: byte[] getBytes(java.lang.String)>("UTF-16")
+244667683:goto [?= $r2 = staticinvoke <org.apache.fop.pdf.PDFText: java.lang.String toHex(byte[])>(uniBytes)]
+291274702:$r0 := @caughtexception
+1846047823:uee = $r0
+1829512952:$r1 = new org.apache.avalon.framework.CascadingRuntimeException
+1697498084:specialinvoke $r1.<org.apache.avalon.framework.CascadingRuntimeException: void <init>(java.lang.String,java.lang.Throwable)>("Incompatible VM", uee)
+530047393:throw $r1
+1473756990:$r2 = staticinvoke <org.apache.fop.pdf.PDFText: java.lang.String toHex(byte[])>(uniBytes)
+357346432:return $r2
+1557205612:$r3 = new java.lang.StringBuffer
+384773020:$i2 = virtualinvoke text.<java.lang.String: int length()>()
+2121641403:$i2 = $i2 * 2
+1608585433:specialinvoke $r3.<java.lang.StringBuffer: void <init>(int)>($i2)
+823740348:result = $r3
+334332922:virtualinvoke result.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("(")
+1142562756:l = virtualinvoke text.<java.lang.String: int length()>()
+1586990725:if unicode == 0 goto i = 0
+1316199502:virtualinvoke result.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\\376\\377")
+1838731741:i = 0
+1263878710:if i >= l goto (branch)
+164795541:ch = virtualinvoke text.<java.lang.String: char charAt(int)>(i)
+1833113104:$c1 = ch & 65280
+1219464593:high = $c1 >>> 8
+978018582:low = ch & 255
+135982367:virtualinvoke result.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\\")
+1805659932:$r4 = staticinvoke <java.lang.Integer: java.lang.String toOctalString(int)>(high)
+533041761:virtualinvoke result.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4)
+1678585490:virtualinvoke result.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\\")
+2084737489:$r4 = staticinvoke <java.lang.Integer: java.lang.String toOctalString(int)>(low)
+493659791:virtualinvoke result.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4)
+145834623:i = i + 1
+763667534:goto [?= (branch)]
+1597969466:goto [?= virtualinvoke result.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(")")]
+167410291:i = 0
+1867922661:if i >= l goto virtualinvoke result.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(")")
+1912227760:ch = virtualinvoke text.<java.lang.String: char charAt(int)>(i)
+1514162096:if ch >= 256 goto $r5 = new java.lang.IllegalStateException
+866696122:staticinvoke <org.apache.fop.pdf.PDFText: void escapeStringChar(char,java.lang.StringBuffer)>(ch, result)
+180144853:goto [?= i = i + 1]
+1890085748:$r5 = new java.lang.IllegalStateException
+1275133654:specialinvoke $r5.<java.lang.IllegalStateException: void <init>(java.lang.String)>("Can only treat text in 8-bit ASCII/PDFEncoding")
+1432009365:throw $r5
+932165626:i = i + 1
+1014471317:goto [?= (branch)]
+1210778976:virtualinvoke result.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(")")
+265227566:$r2 = virtualinvoke result.<java.lang.StringBuffer: java.lang.String toString()>()
+1651134237:return $r2
+993070398:return "()"

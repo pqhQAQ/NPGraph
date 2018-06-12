@@ -1,0 +1,85 @@
+method: org.apache.fop.render.pdf.PDFRenderer.escapeText:97125957
+1055892808:this := @this: org.apache.fop.render.pdf.PDFRenderer
+1733048895:s := @parameter0: java.lang.String
+1032074004:letterAdjust := @parameter1: int[]
+842368409:fs := @parameter2: org.apache.fop.fonts.Font
+1473649039:parentArea := @parameter3: org.apache.fop.area.inline.AbstractTextArea
+690497622:useMultiByte := @parameter4: boolean
+191904566:pdf := @parameter5: java.lang.StringBuffer
+313992740:if useMultiByte == 0 goto $r0 = "("
+908660501:$r0 = "<"
+1100826490:goto [?= startText = $r0]
+1019198525:$r0 = "("
+1340041203:startText = $r0
+1853981962:if useMultiByte == 0 goto $r0 = ") "
+2034601011:$r0 = "> "
+1157080696:goto [?= endText = $r0]
+1590834087:$r0 = ") "
+977095059:endText = $r0
+1870179085:l = virtualinvoke s.<java.lang.String: int length()>()
+585211825:$i0 = virtualinvoke fs.<org.apache.fop.fonts.Font: int getFontSize()>()
+180039515:$f0 = (float) $i0
+1587876290:fontSize = $f0 / 1000.0F
+67810665:startPending = 1
+1903995977:i = 0
+1415475350:if i >= l goto (branch)
+25534768:orgChar = virtualinvoke s.<java.lang.String: char charAt(int)>(i)
+1940184690:glyphAdjust = 0.0F
+1729412951:$z0 = virtualinvoke fs.<org.apache.fop.fonts.Font: boolean hasChar(char)>(orgChar)
+52305312:if $z0 == 0 goto $z0 = staticinvoke <org.apache.fop.util.CharUtilities: boolean isFixedWidthSpace(char)>(orgChar)
+534932110:ch = virtualinvoke fs.<org.apache.fop.fonts.Font: char mapChar(char)>(orgChar)
+1764349126:$i1 = l - 1
+961562906:if i >= $i1 goto $i0 = 0
+1751821115:$i0 = virtualinvoke parentArea.<org.apache.fop.area.inline.AbstractTextArea: int getTextLetterSpaceAdjust()>()
+856679435:goto [?= tls = $i0]
+1480894557:$i0 = 0
+59350769:tls = $i0
+2003104005:$f1 = (float) tls
+511998355:glyphAdjust = glyphAdjust - $f1
+189378956:goto [?= (branch)]
+2132670308:$z0 = staticinvoke <org.apache.fop.util.CharUtilities: boolean isFixedWidthSpace(char)>(orgChar)
+140314479:if $z0 == 0 goto ch = virtualinvoke fs.<org.apache.fop.fonts.Font: char mapChar(char)>(orgChar)
+653092844:ch = virtualinvoke fs.<org.apache.fop.fonts.Font: char mapChar(char)>(32)
+1747816696:$i0 = virtualinvoke fs.<org.apache.fop.fonts.Font: int getCharWidth(char)>(ch)
+1543908549:$i1 = virtualinvoke fs.<org.apache.fop.fonts.Font: int getCharWidth(char)>(orgChar)
+426076342:$i0 = $i0 - $i1
+1303117225:glyphAdjust = (float) $i0
+1452968469:goto [?= (branch)]
+2120558789:ch = virtualinvoke fs.<org.apache.fop.fonts.Font: char mapChar(char)>(orgChar)
+1573270497:if letterAdjust == null goto (branch)
+688539:$i1 = l - 1
+834856738:if i >= $i1 goto (branch)
+2016906241:$i2 = i + 1
+113824592:$i1 = letterAdjust[$i2]
+1789471914:$f1 = (float) $i1
+1099250067:glyphAdjust = glyphAdjust - $f1
+922145149:if startPending == 0 goto (branch)
+1897193877:virtualinvoke pdf.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(startText)
+1076824831:startPending = 0
+1046637987:if useMultiByte != 0 goto $r2 = staticinvoke <org.apache.fop.pdf.PDFText: java.lang.String toUnicodeHex(char)>(ch)
+834718300:if ch < 32 goto virtualinvoke pdf.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\\")
+29185170:if ch <= 127 goto (branch)
+300300083:virtualinvoke pdf.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\\")
+261573245:$r2 = staticinvoke <java.lang.Integer: java.lang.String toOctalString(int)>(ch)
+556924531:virtualinvoke pdf.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2)
+141358893:goto [?= adjust = glyphAdjust / fontSize]
+256810065:lookupswitch(ch) {     case 40: goto virtualinvoke pdf.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\\");     case 41: goto virtualinvoke pdf.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\\");     case 92: goto virtualinvoke pdf.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\\");     default: goto virtualinvoke pdf.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(ch); }
+1496858891:virtualinvoke pdf.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\\")
+1867644214:goto [?= virtualinvoke pdf.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(ch)]
+2083940079:virtualinvoke pdf.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(ch)
+776534764:goto [?= adjust = glyphAdjust / fontSize]
+1176529172:$r2 = staticinvoke <org.apache.fop.pdf.PDFText: java.lang.String toUnicodeHex(char)>(ch)
+1470108830:virtualinvoke pdf.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2)
+413136894:adjust = glyphAdjust / fontSize
+1936010817:$b3 = adjust cmpl 0.0F
+2009065622:if $b3 == 0 goto i = i + 1
+1336325034:$r1 = virtualinvoke pdf.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(endText)
+456772833:$r2 = staticinvoke <org.apache.fop.render.pdf.PDFRenderer: java.lang.String format(float)>(adjust)
+1874449853:$r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2)
+1319747075:virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(32)
+1826341847:startPending = 1
+1343655958:i = i + 1
+2035137901:goto [?= (branch)]
+137151263:if startPending != 0 goto return
+1777983309:virtualinvoke pdf.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(endText)
+1065366337:return

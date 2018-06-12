@@ -1,0 +1,96 @@
+class org.apache.fop.svg.PDFTranscoder$3 extends org.apache.xmlgraphics.image.loader.impl.AbstractImageSessionContext
+{
+    private final org.apache.xmlgraphics.image.loader.ImageContext val$imageContext;
+    private final java.lang.String val$baseURI;
+    private final org.apache.fop.svg.PDFTranscoder this$0;
+
+    void <init>(org.apache.fop.svg.PDFTranscoder, org.apache.xmlgraphics.image.loader.ImageContext, java.lang.String)
+    {
+        org.apache.fop.svg.PDFTranscoder$3 this;
+        org.apache.fop.svg.PDFTranscoder this$0;
+        org.apache.xmlgraphics.image.loader.ImageContext l2;
+        java.lang.String l3;
+
+        this := @this: org.apache.fop.svg.PDFTranscoder$3;
+        this$0 := @parameter0: org.apache.fop.svg.PDFTranscoder;
+        l2 := @parameter1: org.apache.xmlgraphics.image.loader.ImageContext;
+        l3 := @parameter2: java.lang.String;
+        this.<org.apache.fop.svg.PDFTranscoder$3: org.apache.fop.svg.PDFTranscoder this$0> = this$0;
+        this.<org.apache.fop.svg.PDFTranscoder$3: org.apache.xmlgraphics.image.loader.ImageContext val$imageContext> = l2;
+        this.<org.apache.fop.svg.PDFTranscoder$3: java.lang.String val$baseURI> = l3;
+        specialinvoke this.<org.apache.xmlgraphics.image.loader.impl.AbstractImageSessionContext: void <init>()>();
+        return;
+    }
+
+    public org.apache.xmlgraphics.image.loader.ImageContext getParentContext()
+    {
+        org.apache.fop.svg.PDFTranscoder$3 this;
+        org.apache.xmlgraphics.image.loader.ImageContext $r0;
+
+        this := @this: org.apache.fop.svg.PDFTranscoder$3;
+        $r0 = this.<org.apache.fop.svg.PDFTranscoder$3: org.apache.xmlgraphics.image.loader.ImageContext val$imageContext>;
+        return $r0;
+    }
+
+    public float getTargetResolution()
+    {
+        org.apache.fop.svg.PDFTranscoder$3 this;
+        org.apache.fop.svg.PDFTranscoder $r0;
+        org.apache.fop.svg.PDFDocumentGraphics2D $r1;
+        float $f0;
+
+        this := @this: org.apache.fop.svg.PDFTranscoder$3;
+        $r0 = this.<org.apache.fop.svg.PDFTranscoder$3: org.apache.fop.svg.PDFTranscoder this$0>;
+        $r1 = $r0.<org.apache.fop.svg.PDFTranscoder: org.apache.fop.svg.PDFDocumentGraphics2D graphics>;
+        $f0 = virtualinvoke $r1.<org.apache.fop.svg.PDFDocumentGraphics2D: float getDeviceDPI()>();
+        return $f0;
+    }
+
+    public javax.xml.transform.Source resolveURI(java.lang.String)
+    {
+        org.apache.fop.svg.PDFTranscoder$3 this;
+        java.lang.String uri, $r2, $r4, $r6;
+        java.io.PrintStream $r0;
+        java.lang.StringBuffer $r1;
+        org.apache.batik.util.ParsedURL url, $r3;
+        java.io.InputStream in;
+        javax.xml.transform.stream.StreamSource source, $r5;
+        java.io.IOException ioe, $r7;
+        org.apache.fop.svg.PDFTranscoder $r8;
+        org.apache.batik.bridge.UserAgent $r9;
+
+        this := @this: org.apache.fop.svg.PDFTranscoder$3;
+        uri := @parameter0: java.lang.String;
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("resolve ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(uri);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>($r2);
+
+     label0:
+        $r3 = new org.apache.batik.util.ParsedURL;
+        $r4 = this.<org.apache.fop.svg.PDFTranscoder$3: java.lang.String val$baseURI>;
+        specialinvoke $r3.<org.apache.batik.util.ParsedURL: void <init>(java.lang.String,java.lang.String)>($r4, uri);
+        url = $r3;
+        in = virtualinvoke url.<org.apache.batik.util.ParsedURL: java.io.InputStream openStream()>();
+        $r5 = new javax.xml.transform.stream.StreamSource;
+        $r6 = virtualinvoke url.<org.apache.batik.util.ParsedURL: java.lang.String toString()>();
+        specialinvoke $r5.<javax.xml.transform.stream.StreamSource: void <init>(java.io.InputStream,java.lang.String)>(in, $r6);
+        source = $r5;
+
+     label1:
+        return source;
+
+     label2:
+        $r7 := @caughtexception;
+        ioe = $r7;
+        $r8 = this.<org.apache.fop.svg.PDFTranscoder$3: org.apache.fop.svg.PDFTranscoder this$0>;
+        $r9 = $r8.<org.apache.fop.svg.PDFTranscoder: org.apache.batik.bridge.UserAgent userAgent>;
+        interfaceinvoke $r9.<org.apache.batik.bridge.UserAgent: void displayError(java.lang.Exception)>(ioe);
+        return null;
+
+        catch java.io.IOException from label0 to label1 with label2;
+    }
+}

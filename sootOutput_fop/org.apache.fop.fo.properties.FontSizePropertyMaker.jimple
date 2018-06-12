@@ -1,0 +1,158 @@
+public class org.apache.fop.fo.properties.FontSizePropertyMaker extends org.apache.fop.fo.properties.LengthProperty$Maker implements org.apache.fop.fo.Constants
+{
+    private static final int FONT_SIZE_NORMAL;
+    private static final double FONT_SIZE_GROWTH_FACTOR;
+
+    public void <init>(int)
+    {
+        org.apache.fop.fo.properties.FontSizePropertyMaker this;
+        int propId;
+
+        this := @this: org.apache.fop.fo.properties.FontSizePropertyMaker;
+        propId := @parameter0: int;
+        specialinvoke this.<org.apache.fop.fo.properties.LengthProperty$Maker: void <init>(int)>(propId);
+        return;
+    }
+
+    public org.apache.fop.fo.properties.Property make(org.apache.fop.fo.PropertyList, java.lang.String, org.apache.fop.fo.FObj) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.properties.FontSizePropertyMaker this;
+        org.apache.fop.fo.PropertyList propertyList;
+        java.lang.String value;
+        org.apache.fop.fo.FObj fo;
+        org.apache.fop.fo.properties.Property p, pp;
+        boolean $z0;
+        int $i0, $i1;
+        org.apache.fop.datatypes.Length $r0;
+        double $d0, $d1;
+        org.apache.fop.fo.properties.PercentLength $r1;
+
+        this := @this: org.apache.fop.fo.properties.FontSizePropertyMaker;
+        propertyList := @parameter0: org.apache.fop.fo.PropertyList;
+        value := @parameter1: java.lang.String;
+        fo := @parameter2: org.apache.fop.fo.FObj;
+        p = specialinvoke this.<org.apache.fop.fo.properties.LengthProperty$Maker: org.apache.fop.fo.properties.Property make(org.apache.fop.fo.PropertyList,java.lang.String,org.apache.fop.fo.FObj)>(propertyList, value, fo);
+        $z0 = p instanceof org.apache.fop.fo.properties.PercentLength;
+        if $z0 == 0 goto label0;
+
+        $i0 = this.<org.apache.fop.fo.properties.FontSizePropertyMaker: int propId>;
+        pp = virtualinvoke propertyList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property getFromParent(int)>($i0);
+        $r0 = virtualinvoke pp.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        $i1 = interfaceinvoke $r0.<org.apache.fop.datatypes.Length: int getValue()>();
+        $d0 = (double) $i1;
+        $r1 = (org.apache.fop.fo.properties.PercentLength) p;
+        $d1 = virtualinvoke $r1.<org.apache.fop.fo.properties.PercentLength: double getPercentage()>();
+        $d0 = $d0 * $d1;
+        $d0 = $d0 / 100.0;
+        p = staticinvoke <org.apache.fop.fo.properties.FixedLength: org.apache.fop.fo.properties.FixedLength getInstance(double)>($d0);
+
+     label0:
+        return p;
+    }
+
+    public org.apache.fop.fo.properties.Property convertProperty(org.apache.fop.fo.properties.Property, org.apache.fop.fo.PropertyList, org.apache.fop.fo.FObj) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.properties.FontSizePropertyMaker this;
+        org.apache.fop.fo.properties.Property p, pp, $r2;
+        org.apache.fop.fo.PropertyList propertyList;
+        org.apache.fop.fo.FObj fo;
+        int baseFontSize, $i0, $i1;
+        org.apache.fop.datatypes.Length $r0;
+        double $d0;
+        long $l2;
+        org.apache.fop.fo.properties.FixedLength $r1;
+
+        this := @this: org.apache.fop.fo.properties.FontSizePropertyMaker;
+        p := @parameter0: org.apache.fop.fo.properties.Property;
+        propertyList := @parameter1: org.apache.fop.fo.PropertyList;
+        fo := @parameter2: org.apache.fop.fo.FObj;
+        $i0 = virtualinvoke p.<org.apache.fop.fo.properties.Property: int getEnum()>();
+        if $i0 == 71 goto label0;
+
+        $i0 = virtualinvoke p.<org.apache.fop.fo.properties.Property: int getEnum()>();
+        if $i0 != 132 goto label2;
+
+     label0:
+        $i1 = this.<org.apache.fop.fo.properties.FontSizePropertyMaker: int propId>;
+        pp = virtualinvoke propertyList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property getFromParent(int)>($i1);
+        $r0 = virtualinvoke pp.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        $i1 = interfaceinvoke $r0.<org.apache.fop.datatypes.Length: int getValue()>();
+        baseFontSize = specialinvoke this.<org.apache.fop.fo.properties.FontSizePropertyMaker: int computeClosestAbsoluteFontSize(int)>($i1);
+        $i0 = virtualinvoke p.<org.apache.fop.fo.properties.Property: int getEnum()>();
+        if $i0 != 71 goto label1;
+
+        $d0 = (double) baseFontSize;
+        $d0 = $d0 * 1.2;
+        $l2 = staticinvoke <java.lang.Math: long round(double)>($d0);
+        $d0 = (double) $l2;
+        $r1 = staticinvoke <org.apache.fop.fo.properties.FixedLength: org.apache.fop.fo.properties.FixedLength getInstance(double)>($d0);
+        return $r1;
+
+     label1:
+        $d0 = (double) baseFontSize;
+        $d0 = $d0 / 1.2;
+        $l2 = staticinvoke <java.lang.Math: long round(double)>($d0);
+        $d0 = (double) $l2;
+        $r1 = staticinvoke <org.apache.fop.fo.properties.FixedLength: org.apache.fop.fo.properties.FixedLength getInstance(double)>($d0);
+        return $r1;
+
+     label2:
+        $r2 = specialinvoke this.<org.apache.fop.fo.properties.LengthProperty$Maker: org.apache.fop.fo.properties.Property convertProperty(org.apache.fop.fo.properties.Property,org.apache.fop.fo.PropertyList,org.apache.fop.fo.FObj)>(p, propertyList, fo);
+        return $r2;
+    }
+
+    private int computeClosestAbsoluteFontSize(int)
+    {
+        org.apache.fop.fo.properties.FontSizePropertyMaker this;
+        int baseFontSize, lastStepFontSize, nextStepFontSize, $i2, $i3;
+        double scale, $d0;
+        long $l0;
+        byte $b1;
+
+        this := @this: org.apache.fop.fo.properties.FontSizePropertyMaker;
+        baseFontSize := @parameter0: int;
+        scale = 1.2;
+        lastStepFontSize = 12000;
+        if baseFontSize >= 12000 goto label0;
+
+        scale = 0.8333333333333334;
+
+     label0:
+        $d0 = (double) lastStepFontSize;
+        $d0 = $d0 * scale;
+        $l0 = staticinvoke <java.lang.Math: long round(double)>($d0);
+        nextStepFontSize = (int) $l0;
+
+     label1:
+        $b1 = scale cmpg 1.0;
+        if $b1 >= 0 goto label2;
+
+        if nextStepFontSize > baseFontSize goto label3;
+
+     label2:
+        $b1 = scale cmpl 1.0;
+        if $b1 <= 0 goto label4;
+
+        if nextStepFontSize >= baseFontSize goto label4;
+
+     label3:
+        lastStepFontSize = nextStepFontSize;
+        $d0 = (double) lastStepFontSize;
+        $d0 = $d0 * scale;
+        $l0 = staticinvoke <java.lang.Math: long round(double)>($d0);
+        nextStepFontSize = (int) $l0;
+        goto label1;
+
+     label4:
+        $i2 = lastStepFontSize - baseFontSize;
+        $i2 = staticinvoke <java.lang.Math: int abs(int)>($i2);
+        $i3 = baseFontSize - nextStepFontSize;
+        $i3 = staticinvoke <java.lang.Math: int abs(int)>($i3);
+        if $i2 > $i3 goto label5;
+
+        return lastStepFontSize;
+
+     label5:
+        return nextStepFontSize;
+    }
+}

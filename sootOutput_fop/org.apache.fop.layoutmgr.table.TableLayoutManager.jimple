@@ -1,0 +1,1008 @@
+public class org.apache.fop.layoutmgr.table.TableLayoutManager extends org.apache.fop.layoutmgr.BlockStackingLayoutManager implements org.apache.fop.layoutmgr.ConditionalElementListener
+{
+    private static org.apache.commons.logging.Log log;
+    private org.apache.fop.layoutmgr.table.TableContentLayoutManager contentLM;
+    private org.apache.fop.layoutmgr.table.ColumnSetup columns;
+    private org.apache.fop.area.Block curBlockArea;
+    private double tableUnit;
+    private boolean autoLayout;
+    private boolean discardBorderBefore;
+    private boolean discardBorderAfter;
+    private boolean discardPaddingBefore;
+    private boolean discardPaddingAfter;
+    private org.apache.fop.traits.MinOptMax effSpaceBefore;
+    private org.apache.fop.traits.MinOptMax effSpaceAfter;
+    private int halfBorderSeparationBPD;
+    private int halfBorderSeparationIPD;
+    private java.util.List columnBackgroundAreas;
+    static java.lang.Class class$org$apache$fop$layoutmgr$table$TableLayoutManager;
+
+    public void <init>(org.apache.fop.fo.flow.table.Table)
+    {
+        org.apache.fop.layoutmgr.table.TableLayoutManager this;
+        org.apache.fop.fo.flow.table.Table node;
+        org.apache.fop.layoutmgr.table.ColumnSetup $r0;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableLayoutManager;
+        node := @parameter0: org.apache.fop.fo.flow.table.Table;
+        specialinvoke this.<org.apache.fop.layoutmgr.BlockStackingLayoutManager: void <init>(org.apache.fop.fo.FObj)>(node);
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.layoutmgr.table.ColumnSetup columns> = null;
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: boolean autoLayout> = 1;
+        $r0 = new org.apache.fop.layoutmgr.table.ColumnSetup;
+        specialinvoke $r0.<org.apache.fop.layoutmgr.table.ColumnSetup: void <init>(org.apache.fop.fo.flow.table.Table)>(node);
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.layoutmgr.table.ColumnSetup columns> = $r0;
+        return;
+    }
+
+    public org.apache.fop.fo.flow.table.Table getTable()
+    {
+        org.apache.fop.layoutmgr.table.TableLayoutManager this;
+        org.apache.fop.fo.FObj $r0;
+        org.apache.fop.fo.flow.table.Table $r1;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableLayoutManager;
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.FObj fobj>;
+        $r1 = (org.apache.fop.fo.flow.table.Table) $r0;
+        return $r1;
+    }
+
+    public org.apache.fop.layoutmgr.table.ColumnSetup getColumns()
+    {
+        org.apache.fop.layoutmgr.table.TableLayoutManager this;
+        org.apache.fop.layoutmgr.table.ColumnSetup $r0;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableLayoutManager;
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.layoutmgr.table.ColumnSetup columns>;
+        return $r0;
+    }
+
+    public void initialize()
+    {
+        org.apache.fop.layoutmgr.table.TableLayoutManager this;
+        org.apache.fop.traits.SpaceVal $r0;
+        org.apache.fop.fo.flow.table.Table $r1, $r5, $r8;
+        org.apache.fop.fo.properties.CommonMarginBlock $r2, $r6;
+        org.apache.fop.fo.properties.SpaceProperty $r3;
+        org.apache.fop.traits.MinOptMax $r4;
+        org.apache.fop.datatypes.Length $r7;
+        int $i0, $i1;
+        boolean $z0;
+        org.apache.fop.fo.properties.LengthPairProperty $r9;
+        org.apache.fop.fo.properties.Property $r10, $r12;
+        org.apache.fop.fo.properties.LengthRangeProperty $r11;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableLayoutManager;
+        $r0 = new org.apache.fop.traits.SpaceVal;
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.properties.CommonMarginBlock getCommonMarginBlock()>();
+        $r3 = $r2.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.fo.properties.SpaceProperty spaceBefore>;
+        specialinvoke $r0.<org.apache.fop.traits.SpaceVal: void <init>(org.apache.fop.fo.properties.SpaceProperty,org.apache.fop.datatypes.PercentBaseContext)>($r3, this);
+        $r4 = virtualinvoke $r0.<org.apache.fop.traits.SpaceVal: org.apache.fop.traits.MinOptMax getSpace()>();
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.traits.MinOptMax foSpaceBefore> = $r4;
+        $r0 = new org.apache.fop.traits.SpaceVal;
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.properties.CommonMarginBlock getCommonMarginBlock()>();
+        $r3 = $r2.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.fo.properties.SpaceProperty spaceAfter>;
+        specialinvoke $r0.<org.apache.fop.traits.SpaceVal: void <init>(org.apache.fop.fo.properties.SpaceProperty,org.apache.fop.datatypes.PercentBaseContext)>($r3, this);
+        $r4 = virtualinvoke $r0.<org.apache.fop.traits.SpaceVal: org.apache.fop.traits.MinOptMax getSpace()>();
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.traits.MinOptMax foSpaceAfter> = $r4;
+        $r5 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r6 = virtualinvoke $r5.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.properties.CommonMarginBlock getCommonMarginBlock()>();
+        $r7 = $r6.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.datatypes.Length startIndent>;
+        $i0 = interfaceinvoke $r7.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: int startIndent> = $i0;
+        $r5 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r6 = virtualinvoke $r5.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.properties.CommonMarginBlock getCommonMarginBlock()>();
+        $r7 = $r6.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.datatypes.Length endIndent>;
+        $i0 = interfaceinvoke $r7.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: int endIndent> = $i0;
+        $r8 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $z0 = virtualinvoke $r8.<org.apache.fop.fo.flow.table.Table: boolean isSeparateBorderModel()>();
+        if $z0 == 0 goto label0;
+
+        $r5 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r9 = virtualinvoke $r5.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.properties.LengthPairProperty getBorderSeparation()>();
+        $r10 = virtualinvoke $r9.<org.apache.fop.fo.properties.LengthPairProperty: org.apache.fop.fo.properties.Property getBPD()>();
+        $r7 = virtualinvoke $r10.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        $i0 = interfaceinvoke $r7.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $i0 = $i0 / 2;
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: int halfBorderSeparationBPD> = $i0;
+        $r5 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r9 = virtualinvoke $r5.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.properties.LengthPairProperty getBorderSeparation()>();
+        $r10 = virtualinvoke $r9.<org.apache.fop.fo.properties.LengthPairProperty: org.apache.fop.fo.properties.Property getIPD()>();
+        $r7 = virtualinvoke $r10.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        $i0 = interfaceinvoke $r7.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $i0 = $i0 / 2;
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: int halfBorderSeparationIPD> = $i0;
+        goto label1;
+
+     label0:
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: int halfBorderSeparationBPD> = 0;
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: int halfBorderSeparationIPD> = 0;
+
+     label1:
+        $r8 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $z0 = virtualinvoke $r8.<org.apache.fop.fo.flow.table.Table: boolean isAutoLayout()>();
+        if $z0 != 0 goto label2;
+
+        $r8 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r11 = virtualinvoke $r8.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.properties.LengthRangeProperty getInlineProgressionDimension()>();
+        $r12 = virtualinvoke $r11.<org.apache.fop.fo.properties.LengthRangeProperty: org.apache.fop.fo.properties.Property getOptimum(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $i1 = virtualinvoke $r12.<org.apache.fop.fo.properties.Property: int getEnum()>();
+        if $i1 == 9 goto label2;
+
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: boolean autoLayout> = 0;
+
+     label2:
+        return;
+    }
+
+    private void resetSpaces()
+    {
+        org.apache.fop.layoutmgr.table.TableLayoutManager this;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableLayoutManager;
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: boolean discardBorderBefore> = 0;
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: boolean discardBorderAfter> = 0;
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: boolean discardPaddingBefore> = 0;
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: boolean discardPaddingAfter> = 0;
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.traits.MinOptMax effSpaceBefore> = null;
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.traits.MinOptMax effSpaceAfter> = null;
+        return;
+    }
+
+    public int getHalfBorderSeparationBPD()
+    {
+        org.apache.fop.layoutmgr.table.TableLayoutManager this;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableLayoutManager;
+        $i0 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: int halfBorderSeparationBPD>;
+        return $i0;
+    }
+
+    public int getHalfBorderSeparationIPD()
+    {
+        org.apache.fop.layoutmgr.table.TableLayoutManager this;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableLayoutManager;
+        $i0 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: int halfBorderSeparationIPD>;
+        return $i0;
+    }
+
+    public java.util.LinkedList getNextKnuthElements(org.apache.fop.layoutmgr.LayoutContext, int)
+    {
+        org.apache.fop.layoutmgr.table.TableLayoutManager this;
+        org.apache.fop.layoutmgr.LayoutContext context, childLC, $r14;
+        int alignment, contentIPD, sumOfColumns, availableIPD, breakBefore, breakAfter, $i0, $i1, $i2;
+        java.util.LinkedList $r0, returnList, contentKnuthElements;
+        null_type contentKnuthElements;
+        java.util.Iterator iter;
+        org.apache.fop.layoutmgr.ListElement el;
+        org.apache.fop.fo.flow.table.Table $r1, $r7;
+        org.apache.fop.fo.properties.LengthRangeProperty $r2;
+        org.apache.fop.fo.properties.Property $r3;
+        org.apache.fop.datatypes.Length $r4;
+        boolean $z0, $z1;
+        org.apache.commons.logging.Log $r5;
+        org.apache.fop.layoutmgr.table.ColumnSetup $r6, $r10;
+        java.lang.String $r8;
+        java.lang.StringBuffer $r9;
+        double $d0, $d1;
+        byte $b3;
+        org.apache.fop.layoutmgr.table.TableContentLayoutManager $r13, $r15;
+        java.lang.Object $r16;
+        org.apache.fop.layoutmgr.Position $r17, $r20;
+        org.apache.fop.layoutmgr.BreakElement $r19;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableLayoutManager;
+        context := @parameter0: org.apache.fop.layoutmgr.LayoutContext;
+        alignment := @parameter1: int;
+        $r0 = new java.util.LinkedList;
+        specialinvoke $r0.<java.util.LinkedList: void <init>()>();
+        returnList = $r0;
+        $i0 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: int getRefIPD()>();
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: int referenceIPD> = $i0;
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.properties.LengthRangeProperty getInlineProgressionDimension()>();
+        $r3 = virtualinvoke $r2.<org.apache.fop.fo.properties.LengthRangeProperty: org.apache.fop.fo.properties.Property getOptimum(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $i1 = virtualinvoke $r3.<org.apache.fop.fo.properties.Property: int getEnum()>();
+        if $i1 == 9 goto label0;
+
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.properties.LengthRangeProperty getInlineProgressionDimension()>();
+        $r3 = virtualinvoke $r2.<org.apache.fop.fo.properties.LengthRangeProperty: org.apache.fop.fo.properties.Property getOptimum(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $r4 = virtualinvoke $r3.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        contentIPD = interfaceinvoke $r4.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: int updateContentAreaIPDwithOverconstrainedAdjust(int)>(contentIPD);
+        goto label2;
+
+     label0:
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $z0 = virtualinvoke $r1.<org.apache.fop.fo.flow.table.Table: boolean isAutoLayout()>();
+        if $z0 != 0 goto label1;
+
+        $r5 = <org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void info(java.lang.Object)>("table-layout=\"fixed\" and width=\"auto\", but auto-layout not supported => assuming width=\"100%\"");
+
+     label1:
+        virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: int updateContentAreaIPDwithOverconstrainedAdjust()>();
+
+     label2:
+        $r6 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.layoutmgr.table.ColumnSetup columns>;
+        sumOfColumns = virtualinvoke $r6.<org.apache.fop.layoutmgr.table.ColumnSetup: int getSumOfColumnWidths(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $z0 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: boolean autoLayout>;
+        if $z0 != 0 goto label3;
+
+        $i0 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: int getContentAreaIPD()>();
+        if sumOfColumns <= $i0 goto label3;
+
+        $r5 = <org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.commons.logging.Log log>;
+        $r7 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r8 = staticinvoke <org.apache.fop.fo.FONode: java.lang.String decorateWithContextInfo(java.lang.String,org.apache.fop.fo.FONode)>("The sum of all column widths is larger than the specified table width.", $r7);
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r8);
+        virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: int updateContentAreaIPDwithOverconstrainedAdjust(int)>(sumOfColumns);
+
+     label3:
+        $i1 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: int referenceIPD>;
+        $i0 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: int getIPIndents()>();
+        availableIPD = $i1 - $i0;
+        $i1 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: int getContentAreaIPD()>();
+        if $i1 <= availableIPD goto label4;
+
+        $r5 = <org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.commons.logging.Log log>;
+        $r9 = new java.lang.StringBuffer;
+        specialinvoke $r9.<java.lang.StringBuffer: void <init>()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("The extent in inline-progression-direction (width) of a table is bigger than the available space (");
+        $i2 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: int getContentAreaIPD()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i2);
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("mpt > ");
+        $i2 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: int getRefIPD()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i2);
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("mpt)");
+        $r8 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r7 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r8 = staticinvoke <org.apache.fop.fo.FONode: java.lang.String decorateWithContextInfo(java.lang.String,org.apache.fop.fo.FONode)>($r8, $r7);
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r8);
+
+     label4:
+        $d0 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: double tableUnit>;
+        $b3 = $d0 cmpl 0.0;
+        if $b3 != 0 goto label5;
+
+        $r10 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.layoutmgr.table.ColumnSetup columns>;
+        $d1 = virtualinvoke $r10.<org.apache.fop.layoutmgr.table.ColumnSetup: double computeTableUnit(org.apache.fop.layoutmgr.table.TableLayoutManager)>(this);
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: double tableUnit> = $d1;
+
+     label5:
+        $z0 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: boolean firstVisibleMarkServed>;
+        if $z0 != 0 goto label6;
+
+        virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: void addKnuthElementsForSpaceBefore(java.util.LinkedList,int)>(returnList, alignment);
+
+     label6:
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $z0 = virtualinvoke $r1.<org.apache.fop.fo.flow.table.Table: boolean isSeparateBorderModel()>();
+        if $z0 == 0 goto label9;
+
+        $z1 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: boolean firstVisibleMarkServed>;
+        if $z1 != 0 goto label7;
+
+        $z1 = 1;
+        goto label8;
+
+     label7:
+        $z1 = 0;
+
+     label8:
+        virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: void addKnuthElementsForBorderPaddingBefore(java.util.LinkedList,boolean)>(returnList, $z1);
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: boolean firstVisibleMarkServed> = 1;
+        virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: void addPendingMarks(org.apache.fop.layoutmgr.LayoutContext)>(context);
+
+     label9:
+        contentKnuthElements = null;
+        $r13 = new org.apache.fop.layoutmgr.table.TableContentLayoutManager;
+        specialinvoke $r13.<org.apache.fop.layoutmgr.table.TableContentLayoutManager: void <init>(org.apache.fop.layoutmgr.table.TableLayoutManager)>(this);
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.layoutmgr.table.TableContentLayoutManager contentLM> = $r13;
+        $r14 = new org.apache.fop.layoutmgr.LayoutContext;
+        specialinvoke $r14.<org.apache.fop.layoutmgr.LayoutContext: void <init>(int)>(0);
+        childLC = $r14;
+        $i0 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: int getRefIPD()>();
+        virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: void setRefIPD(int)>($i0);
+        virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: void copyPendingMarksFrom(org.apache.fop.layoutmgr.LayoutContext)>(context);
+        $r15 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.layoutmgr.table.TableContentLayoutManager contentLM>;
+        contentKnuthElements = virtualinvoke $r15.<org.apache.fop.layoutmgr.table.TableContentLayoutManager: java.util.LinkedList getNextKnuthElements(org.apache.fop.layoutmgr.LayoutContext,int)>(childLC, alignment);
+        iter = virtualinvoke contentKnuthElements.<java.util.LinkedList: java.util.Iterator iterator()>();
+
+     label10:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label11;
+
+        $r16 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        el = (org.apache.fop.layoutmgr.ListElement) $r16;
+        $r17 = virtualinvoke el.<org.apache.fop.layoutmgr.ListElement: org.apache.fop.layoutmgr.Position getPosition()>();
+        virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.layoutmgr.Position notifyPos(org.apache.fop.layoutmgr.Position)>($r17);
+        goto label10;
+
+     label11:
+        $r5 = <org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void debug(java.lang.Object)>(contentKnuthElements);
+        virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: void wrapPositionElements(java.util.List,java.util.List)>(contentKnuthElements, returnList);
+        $z0 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: boolean mustKeepWithPrevious()>();
+        if $z0 != 0 goto label12;
+
+        $z0 = virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: boolean isKeepWithPreviousPending()>();
+        if $z0 == 0 goto label13;
+
+     label12:
+        virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int)>(1024);
+
+     label13:
+        $z0 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: boolean mustKeepWithNext()>();
+        if $z0 != 0 goto label14;
+
+        $z0 = virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: boolean isKeepWithNextPending()>();
+        if $z0 == 0 goto label15;
+
+     label14:
+        virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int)>(512);
+
+     label15:
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $z0 = virtualinvoke $r1.<org.apache.fop.fo.flow.table.Table: boolean isSeparateBorderModel()>();
+        if $z0 == 0 goto label16;
+
+        virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: void addKnuthElementsForBorderPaddingAfter(java.util.LinkedList,boolean)>(returnList, 1);
+
+     label16:
+        virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: void addKnuthElementsForSpaceAfter(java.util.LinkedList,int)>(returnList, alignment);
+        $z0 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: boolean suppressBreakBefore()>();
+        if $z0 != 0 goto label17;
+
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $i1 = virtualinvoke $r1.<org.apache.fop.fo.flow.table.Table: int getBreakBefore()>();
+        $i0 = virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: int getBreakBefore()>();
+        breakBefore = staticinvoke <org.apache.fop.util.BreakUtil: int compareBreakClasses(int,int)>($i1, $i0);
+        if breakBefore == 9 goto label17;
+
+        $r19 = new org.apache.fop.layoutmgr.BreakElement;
+        $r20 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.layoutmgr.Position getAuxiliaryPosition()>();
+        specialinvoke $r19.<org.apache.fop.layoutmgr.BreakElement: void <init>(org.apache.fop.layoutmgr.Position,int,int,int,org.apache.fop.layoutmgr.LayoutContext)>($r20, 0, -1000, breakBefore, context);
+        virtualinvoke returnList.<java.util.LinkedList: void addFirst(java.lang.Object)>($r19);
+
+     label17:
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $i1 = virtualinvoke $r1.<org.apache.fop.fo.flow.table.Table: int getBreakAfter()>();
+        $i0 = virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: int getBreakAfter()>();
+        breakAfter = staticinvoke <org.apache.fop.util.BreakUtil: int compareBreakClasses(int,int)>($i1, $i0);
+        if breakAfter == 9 goto label18;
+
+        $r19 = new org.apache.fop.layoutmgr.BreakElement;
+        $r20 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.layoutmgr.Position getAuxiliaryPosition()>();
+        specialinvoke $r19.<org.apache.fop.layoutmgr.BreakElement: void <init>(org.apache.fop.layoutmgr.Position,int,int,int,org.apache.fop.layoutmgr.LayoutContext)>($r20, 0, -1000, breakAfter, context);
+        virtualinvoke returnList.<java.util.LinkedList: boolean add(java.lang.Object)>($r19);
+
+     label18:
+        virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: void setFinished(boolean)>(1);
+        specialinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: void resetSpaces()>();
+        return returnList;
+    }
+
+    void registerColumnBackgroundArea(org.apache.fop.fo.flow.table.TableColumn, org.apache.fop.area.Block, int)
+    {
+        org.apache.fop.layoutmgr.table.TableLayoutManager this;
+        org.apache.fop.fo.flow.table.TableColumn column;
+        org.apache.fop.area.Block backgroundArea;
+        int xShift;
+        java.util.List $r0;
+        java.util.ArrayList $r1;
+        org.apache.fop.layoutmgr.table.TableLayoutManager$ColumnBackgroundInfo $r2;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableLayoutManager;
+        column := @parameter0: org.apache.fop.fo.flow.table.TableColumn;
+        backgroundArea := @parameter1: org.apache.fop.area.Block;
+        xShift := @parameter2: int;
+        virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: void addBackgroundArea(org.apache.fop.area.Block)>(backgroundArea);
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: java.util.List columnBackgroundAreas>;
+        if $r0 != null goto label0;
+
+        $r1 = new java.util.ArrayList;
+        specialinvoke $r1.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: java.util.List columnBackgroundAreas> = $r1;
+
+     label0:
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: java.util.List columnBackgroundAreas>;
+        $r2 = new org.apache.fop.layoutmgr.table.TableLayoutManager$ColumnBackgroundInfo;
+        specialinvoke $r2.<org.apache.fop.layoutmgr.table.TableLayoutManager$ColumnBackgroundInfo: void <init>(org.apache.fop.fo.flow.table.TableColumn,org.apache.fop.area.Block,int,org.apache.fop.layoutmgr.table.TableLayoutManager$1)>(column, backgroundArea, xShift, null);
+        interfaceinvoke $r0.<java.util.List: boolean add(java.lang.Object)>($r2);
+        return;
+    }
+
+    public void addAreas(org.apache.fop.layoutmgr.PositionIterator, org.apache.fop.layoutmgr.LayoutContext)
+    {
+        org.apache.fop.layoutmgr.table.TableLayoutManager this;
+        org.apache.fop.layoutmgr.PositionIterator parentIter;
+        org.apache.fop.layoutmgr.LayoutContext layoutContext, lc, $r8;
+        org.apache.fop.traits.MinOptMax $r0, $r20;
+        int startXOffset, $i0, $i1, $i2, tableHeight, $i3, $i4, $i5;
+        byte tableHeight;
+        java.util.Iterator iter;
+        org.apache.fop.layoutmgr.table.TableLayoutManager$ColumnBackgroundInfo b;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager $r2;
+        org.apache.fop.fo.flow.table.Table $r3, $r5, $r19;
+        java.lang.String $r4;
+        org.apache.fop.fo.properties.CommonMarginBlock $r6;
+        org.apache.fop.datatypes.Length $r7, $r18;
+        org.apache.fop.layoutmgr.table.TableContentLayoutManager $r9, $r10;
+        org.apache.fop.area.Block $r11, $r16;
+        java.util.List $r12;
+        boolean $z0, $z1, $z2;
+        java.lang.Object $r13;
+        org.apache.fop.fo.flow.table.TableColumn $r14, $r17;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground $r15;
+        double $d0;
+        org.apache.fop.fo.FObj $r21;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableLayoutManager;
+        parentIter := @parameter0: org.apache.fop.layoutmgr.PositionIterator;
+        layoutContext := @parameter1: org.apache.fop.layoutmgr.LayoutContext;
+        virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.area.Area getParentArea(org.apache.fop.area.Area)>(null);
+        $r2 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.layoutmgr.PageSequenceLayoutManager getPSLM()>();
+        $r3 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r4 = virtualinvoke $r3.<org.apache.fop.fo.flow.table.Table: java.lang.String getId()>();
+        virtualinvoke $r2.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: void addIDToPage(java.lang.String)>($r4);
+        $i0 = virtualinvoke layoutContext.<org.apache.fop.layoutmgr.LayoutContext: int getSpaceBefore()>();
+        if $i0 == 0 goto label0;
+
+        $r0 = new org.apache.fop.traits.MinOptMax;
+        $i1 = virtualinvoke layoutContext.<org.apache.fop.layoutmgr.LayoutContext: int getSpaceBefore()>();
+        specialinvoke $r0.<org.apache.fop.traits.MinOptMax: void <init>(int)>($i1);
+        virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: void addBlockSpacing(double,org.apache.fop.traits.MinOptMax)>(0.0, $r0);
+
+     label0:
+        $r5 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r6 = virtualinvoke $r5.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.properties.CommonMarginBlock getCommonMarginBlock()>();
+        $r7 = $r6.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.datatypes.Length startIndent>;
+        startXOffset = interfaceinvoke $r7.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        tableHeight = 0;
+        $r8 = new org.apache.fop.layoutmgr.LayoutContext;
+        specialinvoke $r8.<org.apache.fop.layoutmgr.LayoutContext: void <init>(int)>(0);
+        lc = $r8;
+        $i2 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: int getContentAreaIPD()>();
+        virtualinvoke lc.<org.apache.fop.layoutmgr.LayoutContext: void setRefIPD(int)>($i2);
+        $r9 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.layoutmgr.table.TableContentLayoutManager contentLM>;
+        virtualinvoke $r9.<org.apache.fop.layoutmgr.table.TableContentLayoutManager: void setStartXOffset(int)>(startXOffset);
+        $r9 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.layoutmgr.table.TableContentLayoutManager contentLM>;
+        virtualinvoke $r9.<org.apache.fop.layoutmgr.table.TableContentLayoutManager: void addAreas(org.apache.fop.layoutmgr.PositionIterator,org.apache.fop.layoutmgr.LayoutContext)>(parentIter, lc);
+        $r10 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.layoutmgr.table.TableContentLayoutManager contentLM>;
+        $i2 = virtualinvoke $r10.<org.apache.fop.layoutmgr.table.TableContentLayoutManager: int getUsedBPD()>();
+        tableHeight = tableHeight + $i2;
+        $r11 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        virtualinvoke $r11.<org.apache.fop.area.Block: void setBPD(int)>(tableHeight);
+        $r12 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: java.util.List columnBackgroundAreas>;
+        if $r12 == null goto label3;
+
+        $r12 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: java.util.List columnBackgroundAreas>;
+        iter = interfaceinvoke $r12.<java.util.List: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label2;
+
+        $r13 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        b = (org.apache.fop.layoutmgr.table.TableLayoutManager$ColumnBackgroundInfo) $r13;
+        $r11 = staticinvoke <org.apache.fop.layoutmgr.table.TableLayoutManager$ColumnBackgroundInfo: org.apache.fop.area.Block access$100(org.apache.fop.layoutmgr.table.TableLayoutManager$ColumnBackgroundInfo)>(b);
+        $r14 = staticinvoke <org.apache.fop.layoutmgr.table.TableLayoutManager$ColumnBackgroundInfo: org.apache.fop.fo.flow.table.TableColumn access$200(org.apache.fop.layoutmgr.table.TableLayoutManager$ColumnBackgroundInfo)>(b);
+        $r15 = virtualinvoke $r14.<org.apache.fop.fo.flow.table.TableColumn: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        $i3 = staticinvoke <org.apache.fop.layoutmgr.table.TableLayoutManager$ColumnBackgroundInfo: int access$300(org.apache.fop.layoutmgr.table.TableLayoutManager$ColumnBackgroundInfo)>(b);
+        $r16 = staticinvoke <org.apache.fop.layoutmgr.table.TableLayoutManager$ColumnBackgroundInfo: org.apache.fop.area.Block access$100(org.apache.fop.layoutmgr.table.TableLayoutManager$ColumnBackgroundInfo)>(b);
+        $i4 = virtualinvoke $r16.<org.apache.fop.area.Block: int getYOffset()>();
+        $i4 = neg $i4;
+        $r17 = staticinvoke <org.apache.fop.layoutmgr.table.TableLayoutManager$ColumnBackgroundInfo: org.apache.fop.fo.flow.table.TableColumn access$200(org.apache.fop.layoutmgr.table.TableLayoutManager$ColumnBackgroundInfo)>(b);
+        $r18 = virtualinvoke $r17.<org.apache.fop.fo.flow.table.TableColumn: org.apache.fop.datatypes.Length getColumnWidth()>();
+        $i1 = interfaceinvoke $r18.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addBackground(org.apache.fop.area.Area,org.apache.fop.fo.properties.CommonBorderPaddingBackground,org.apache.fop.datatypes.PercentBaseContext,int,int,int,int)>($r11, $r15, this, $i3, $i4, $i1, tableHeight);
+        goto label1;
+
+     label2:
+        $r12 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: java.util.List columnBackgroundAreas>;
+        interfaceinvoke $r12.<java.util.List: void clear()>();
+
+     label3:
+        $r5 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $z0 = virtualinvoke $r5.<org.apache.fop.fo.flow.table.Table: boolean isSeparateBorderModel()>();
+        if $z0 == 0 goto label4;
+
+        $r11 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        $r3 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r15 = virtualinvoke $r3.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        $z1 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: boolean discardBorderBefore>;
+        $z2 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: boolean discardBorderAfter>;
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addBorders(org.apache.fop.area.Area,org.apache.fop.fo.properties.CommonBorderPaddingBackground,boolean,boolean,boolean,boolean,org.apache.fop.datatypes.PercentBaseContext)>($r11, $r15, $z1, $z2, 0, 0, this);
+        $r11 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        $r3 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r15 = virtualinvoke $r3.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        $z1 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: boolean discardPaddingBefore>;
+        $z2 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: boolean discardPaddingAfter>;
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addPadding(org.apache.fop.area.Area,org.apache.fop.fo.properties.CommonBorderPaddingBackground,boolean,boolean,boolean,boolean,org.apache.fop.datatypes.PercentBaseContext)>($r11, $r15, $z1, $z2, 0, 0, this);
+
+     label4:
+        $r11 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        $r3 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r15 = virtualinvoke $r3.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addBackground(org.apache.fop.area.Area,org.apache.fop.fo.properties.CommonBorderPaddingBackground,org.apache.fop.datatypes.PercentBaseContext)>($r11, $r15, this);
+        $r11 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        $r3 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r15 = virtualinvoke $r3.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        $i5 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: int startIndent>;
+        $i3 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: int endIndent>;
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addMargins(org.apache.fop.area.Area,org.apache.fop.fo.properties.CommonBorderPaddingBackground,int,int,org.apache.fop.datatypes.PercentBaseContext)>($r11, $r15, $i5, $i3, this);
+        $r11 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        $r3 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $i2 = virtualinvoke $r3.<org.apache.fop.fo.flow.table.Table: int getBreakBefore()>();
+        $r19 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $i5 = virtualinvoke $r19.<org.apache.fop.fo.flow.table.Table: int getBreakAfter()>();
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addBreaks(org.apache.fop.area.Area,int,int)>($r11, $i2, $i5);
+        $r11 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        $d0 = virtualinvoke layoutContext.<org.apache.fop.layoutmgr.LayoutContext: double getSpaceAdjust()>();
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.traits.MinOptMax effSpaceBefore>;
+        $r20 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.traits.MinOptMax effSpaceAfter>;
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addSpaceBeforeAfter(org.apache.fop.area.Area,double,org.apache.fop.traits.MinOptMax,org.apache.fop.traits.MinOptMax)>($r11, $d0, $r0, $r20);
+        virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: void flush()>();
+        specialinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: void resetSpaces()>();
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.area.Block curBlockArea> = null;
+        $r2 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.layoutmgr.PageSequenceLayoutManager getPSLM()>();
+        $r21 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.FObj getFObj()>();
+        $r3 = (org.apache.fop.fo.flow.table.Table) $r21;
+        $r4 = virtualinvoke $r3.<org.apache.fop.fo.flow.table.Table: java.lang.String getId()>();
+        virtualinvoke $r2.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: void notifyEndOfLayout(java.lang.String)>($r4);
+        return;
+    }
+
+    public org.apache.fop.area.Area getParentArea(org.apache.fop.area.Area)
+    {
+        org.apache.fop.layoutmgr.table.TableLayoutManager this;
+        org.apache.fop.area.Area childArea;
+        org.apache.fop.area.Block $r0, $r1;
+        org.apache.fop.layoutmgr.LayoutManager $r2;
+        org.apache.fop.fo.flow.table.Table $r4;
+        java.lang.String $r5;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableLayoutManager;
+        childArea := @parameter0: org.apache.fop.area.Area;
+        $r1 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        if $r1 != null goto label0;
+
+        $r0 = new org.apache.fop.area.Block;
+        specialinvoke $r0.<org.apache.fop.area.Block: void <init>()>();
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.area.Block curBlockArea> = $r0;
+        $r2 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.layoutmgr.LayoutManager parentLM>;
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        interfaceinvoke $r2.<org.apache.fop.layoutmgr.LayoutManager: org.apache.fop.area.Area getParentArea(org.apache.fop.area.Area)>($r0);
+        $r1 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        $r4 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r5 = virtualinvoke $r4.<org.apache.fop.fo.flow.table.Table: java.lang.String getId()>();
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void setProducerID(org.apache.fop.area.Area,java.lang.String)>($r1, $r5);
+        $r1 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        $i0 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: int getContentAreaIPD()>();
+        virtualinvoke $r1.<org.apache.fop.area.Block: void setIPD(int)>($i0);
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: void setCurrentArea(org.apache.fop.area.BlockParent)>($r0);
+
+     label0:
+        $r1 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        return $r1;
+    }
+
+    public void addChildArea(org.apache.fop.area.Area)
+    {
+        org.apache.fop.layoutmgr.table.TableLayoutManager this;
+        org.apache.fop.area.Area childArea;
+        org.apache.fop.area.Block $r0, $r1;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableLayoutManager;
+        childArea := @parameter0: org.apache.fop.area.Area;
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        $r1 = (org.apache.fop.area.Block) childArea;
+        virtualinvoke $r0.<org.apache.fop.area.Block: void addBlock(org.apache.fop.area.Block)>($r1);
+
+     label0:
+        return;
+    }
+
+    void addBackgroundArea(org.apache.fop.area.Block)
+    {
+        org.apache.fop.layoutmgr.table.TableLayoutManager this;
+        org.apache.fop.area.Block background, $r0;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableLayoutManager;
+        background := @parameter0: org.apache.fop.area.Block;
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        virtualinvoke $r0.<org.apache.fop.area.Block: void addChildArea(org.apache.fop.area.Area)>(background);
+        return;
+    }
+
+    public int negotiateBPDAdjustment(int, org.apache.fop.layoutmgr.KnuthElement)
+    {
+        org.apache.fop.layoutmgr.table.TableLayoutManager this;
+        int adj;
+        org.apache.fop.layoutmgr.KnuthElement lastElement;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableLayoutManager;
+        adj := @parameter0: int;
+        lastElement := @parameter1: org.apache.fop.layoutmgr.KnuthElement;
+        return 0;
+    }
+
+    public void discardSpace(org.apache.fop.layoutmgr.KnuthGlue)
+    {
+        org.apache.fop.layoutmgr.table.TableLayoutManager this;
+        org.apache.fop.layoutmgr.KnuthGlue spaceGlue;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableLayoutManager;
+        spaceGlue := @parameter0: org.apache.fop.layoutmgr.KnuthGlue;
+        return;
+    }
+
+    public boolean mustKeepTogether()
+    {
+        org.apache.fop.layoutmgr.table.TableLayoutManager this;
+        boolean $z0;
+        org.apache.fop.fo.flow.table.Table $r0;
+        org.apache.fop.fo.properties.KeepProperty $r1;
+        org.apache.fop.fo.properties.Property $r2;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableLayoutManager;
+        $z0 = specialinvoke this.<org.apache.fop.layoutmgr.BlockStackingLayoutManager: boolean mustKeepTogether()>();
+        if $z0 != 0 goto label0;
+
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.properties.KeepProperty getKeepTogether()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.properties.KeepProperty: org.apache.fop.fo.properties.Property getWithinPage()>();
+        $z0 = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: boolean isAuto()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.properties.KeepProperty getKeepTogether()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.properties.KeepProperty: org.apache.fop.fo.properties.Property getWithinColumn()>();
+        $z0 = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: boolean isAuto()>();
+        if $z0 != 0 goto label1;
+
+     label0:
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    public boolean mustKeepWithPrevious()
+    {
+        org.apache.fop.layoutmgr.table.TableLayoutManager this;
+        org.apache.fop.fo.flow.table.Table $r0;
+        org.apache.fop.fo.properties.KeepProperty $r1;
+        org.apache.fop.fo.properties.Property $r2;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableLayoutManager;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.properties.KeepProperty getKeepWithPrevious()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.properties.KeepProperty: org.apache.fop.fo.properties.Property getWithinPage()>();
+        $z0 = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: boolean isAuto()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.properties.KeepProperty getKeepWithPrevious()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.properties.KeepProperty: org.apache.fop.fo.properties.Property getWithinColumn()>();
+        $z0 = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: boolean isAuto()>();
+        if $z0 != 0 goto label1;
+
+     label0:
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    public boolean mustKeepWithNext()
+    {
+        org.apache.fop.layoutmgr.table.TableLayoutManager this;
+        org.apache.fop.fo.flow.table.Table $r0;
+        org.apache.fop.fo.properties.KeepProperty $r1;
+        org.apache.fop.fo.properties.Property $r2;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableLayoutManager;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.properties.KeepProperty getKeepWithNext()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.properties.KeepProperty: org.apache.fop.fo.properties.Property getWithinPage()>();
+        $z0 = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: boolean isAuto()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.properties.KeepProperty getKeepWithNext()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.properties.KeepProperty: org.apache.fop.fo.properties.Property getWithinColumn()>();
+        $z0 = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: boolean isAuto()>();
+        if $z0 != 0 goto label1;
+
+     label0:
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    public int getBaseLength(int, org.apache.fop.fo.FObj)
+    {
+        org.apache.fop.layoutmgr.table.TableLayoutManager this;
+        int lengthBase, $i0;
+        org.apache.fop.fo.FObj fobj, $r1;
+        boolean $z0;
+        org.apache.fop.fo.FONode $r0;
+        double $d0;
+        org.apache.commons.logging.Log $r2;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableLayoutManager;
+        lengthBase := @parameter0: int;
+        fobj := @parameter1: org.apache.fop.fo.FObj;
+        $z0 = fobj instanceof org.apache.fop.fo.flow.table.TableColumn;
+        if $z0 == 0 goto label3;
+
+        $r0 = virtualinvoke fobj.<org.apache.fop.fo.FObj: org.apache.fop.fo.FONode getParent()>();
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.FObj getFObj()>();
+        if $r0 != $r1 goto label3;
+
+        lookupswitch(lengthBase)
+        {
+            case 5: goto label0;
+            case 11: goto label1;
+            default: goto label2;
+        };
+
+     label0:
+        $i0 = virtualinvoke this.<org.apache.fop.layoutmgr.table.TableLayoutManager: int getContentAreaIPD()>();
+        return $i0;
+
+     label1:
+        $d0 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: double tableUnit>;
+        $i0 = (int) $d0;
+        return $i0;
+
+     label2:
+        $r2 = <org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void error(java.lang.Object)>("Unknown base type for LengthBase.");
+        return 0;
+
+     label3:
+        lookupswitch(lengthBase)
+        {
+            case 11: goto label4;
+            default: goto label5;
+        };
+
+     label4:
+        $d0 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: double tableUnit>;
+        $i0 = (int) $d0;
+        return $i0;
+
+     label5:
+        $i0 = specialinvoke this.<org.apache.fop.layoutmgr.BlockStackingLayoutManager: int getBaseLength(int,org.apache.fop.fo.FObj)>(lengthBase, fobj);
+        return $i0;
+    }
+
+    public void notifySpace(org.apache.fop.layoutmgr.RelSide, org.apache.fop.traits.MinOptMax)
+    {
+        org.apache.fop.layoutmgr.table.TableLayoutManager this;
+        org.apache.fop.layoutmgr.RelSide side, $r0;
+        org.apache.fop.traits.MinOptMax effectiveLength, $r3;
+        org.apache.commons.logging.Log $r1;
+        boolean $z0;
+        java.lang.StringBuffer $r2;
+        java.lang.String $r4;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableLayoutManager;
+        side := @parameter0: org.apache.fop.layoutmgr.RelSide;
+        effectiveLength := @parameter1: org.apache.fop.traits.MinOptMax;
+        $r0 = <org.apache.fop.layoutmgr.RelSide: org.apache.fop.layoutmgr.RelSide BEFORE>;
+        if $r0 != side goto label1;
+
+        $r1 = <org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r1 = <org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(this);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": Space ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(side);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", ");
+        $r3 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.traits.MinOptMax effSpaceBefore>;
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r3);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("-> ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(effectiveLength);
+        $r4 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r4);
+
+     label0:
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.traits.MinOptMax effSpaceBefore> = effectiveLength;
+        goto label3;
+
+     label1:
+        $r1 = <org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label2;
+
+        $r1 = <org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(this);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": Space ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(side);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", ");
+        $r3 = this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.traits.MinOptMax effSpaceAfter>;
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r3);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("-> ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(effectiveLength);
+        $r4 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r4);
+
+     label2:
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.traits.MinOptMax effSpaceAfter> = effectiveLength;
+
+     label3:
+        return;
+    }
+
+    public void notifyBorder(org.apache.fop.layoutmgr.RelSide, org.apache.fop.traits.MinOptMax)
+    {
+        org.apache.fop.layoutmgr.table.TableLayoutManager this;
+        org.apache.fop.layoutmgr.RelSide side, $r0;
+        org.apache.fop.traits.MinOptMax effectiveLength;
+        org.apache.commons.logging.Log $r1;
+        boolean $z0;
+        java.lang.StringBuffer $r2;
+        java.lang.String $r3;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableLayoutManager;
+        side := @parameter0: org.apache.fop.layoutmgr.RelSide;
+        effectiveLength := @parameter1: org.apache.fop.traits.MinOptMax;
+        if effectiveLength != null goto label1;
+
+        $r0 = <org.apache.fop.layoutmgr.RelSide: org.apache.fop.layoutmgr.RelSide BEFORE>;
+        if $r0 != side goto label0;
+
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: boolean discardBorderBefore> = 1;
+        goto label1;
+
+     label0:
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: boolean discardBorderAfter> = 1;
+
+     label1:
+        $r1 = <org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label2;
+
+        $r1 = <org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(this);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": Border ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(side);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" -> ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(effectiveLength);
+        $r3 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r3);
+
+     label2:
+        return;
+    }
+
+    public void notifyPadding(org.apache.fop.layoutmgr.RelSide, org.apache.fop.traits.MinOptMax)
+    {
+        org.apache.fop.layoutmgr.table.TableLayoutManager this;
+        org.apache.fop.layoutmgr.RelSide side, $r0;
+        org.apache.fop.traits.MinOptMax effectiveLength;
+        org.apache.commons.logging.Log $r1;
+        boolean $z0;
+        java.lang.StringBuffer $r2;
+        java.lang.String $r3;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableLayoutManager;
+        side := @parameter0: org.apache.fop.layoutmgr.RelSide;
+        effectiveLength := @parameter1: org.apache.fop.traits.MinOptMax;
+        if effectiveLength != null goto label1;
+
+        $r0 = <org.apache.fop.layoutmgr.RelSide: org.apache.fop.layoutmgr.RelSide BEFORE>;
+        if $r0 != side goto label0;
+
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: boolean discardPaddingBefore> = 1;
+        goto label1;
+
+     label0:
+        this.<org.apache.fop.layoutmgr.table.TableLayoutManager: boolean discardPaddingAfter> = 1;
+
+     label1:
+        $r1 = <org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label2;
+
+        $r1 = <org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(this);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": Padding ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(side);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" -> ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(effectiveLength);
+        $r3 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r3);
+
+     label2:
+        return;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.layoutmgr.table.TableLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$table$TableLayoutManager>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.layoutmgr.table.TableLayoutManager: java.lang.Class class$(java.lang.String)>("org.apache.fop.layoutmgr.table.TableLayoutManager");
+        <org.apache.fop.layoutmgr.table.TableLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$table$TableLayoutManager> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.layoutmgr.table.TableLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$table$TableLayoutManager>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

@@ -1,0 +1,87 @@
+method: org.apache.fop.render.afp.AFPRenderer.convertToGrayScaleImage:349674217
+1584134370:io := @parameter0: org.apache.fop.render.afp.modca.ImageObject
+44101084:raw := @parameter1: byte[]
+325060573:width := @parameter2: int
+94652443:height := @parameter3: int
+1685710721:bitsPerPixel := @parameter4: int
+1227121150:pixelsPerByte = 8 / bitsPerPixel
+716303481:bytewidth = width / pixelsPerByte
+1182036979:$i0 = width % pixelsPerByte
+124287656:if $i0 == 0 goto $i0 = height * bytewidth
+1548529508:bytewidth = bytewidth + 1
+1762775445:$i0 = height * bytewidth
+60957604:bw = newarray (byte)[$i0]
+860425880:y = 0
+606331262:if y >= height goto $b10 = (byte) bitsPerPixel
+183684207:ib = 0
+885566803:$i0 = 3 * y
+1086713736:i = $i0 * width
+382760377:x = 0
+2118658802:if x >= width goto y = y + 1
+81769783:$b1 = raw[i]
+843460015:$s2 = $b1 & 255
+492918258:$d0 = (double) $s2
+1632735727:$d1 = 0.212671 * $d0
+1498814116:$i3 = i + 1
+585668302:$b4 = raw[$i3]
+65807287:$s5 = $b4 & 255
+68994404:$d2 = (double) $s5
+2095262295:$d0 = 0.71516 * $d2
+636548559:$d1 = $d1 + $d0
+552176471:$i3 = i + 2
+1153109410:$b4 = raw[$i3]
+598012823:$s5 = $b4 & 255
+578048201:$d2 = (double) $s5
+40095179:$d0 = 0.072169 * $d2
+345453514:greyVal = $d1 + $d0
+296018409:lookupswitch(bitsPerPixel) {     case 1: goto $b6 = greyVal cmpg 128.0;     case 4: goto greyVal = greyVal / 16.0;     case 8: goto $i0 = (int) greyVal;     default: goto $r0 = new java.lang.UnsupportedOperationException; }
+661652862:$b6 = greyVal cmpg 128.0
+729327468:if $b6 >= 0 goto $i0 = x % pixelsPerByte
+2061597940:$i7 = x % 8
+1775416882:$i8 = 7 - $i7
+146260709:$i9 = 1 << $i8
+1482443995:$b10 = (byte) $i9
+330951471:$b6 = ib | $b10
+1026641551:ib = (byte) $b6
+1880927659:goto [?= $i0 = x % pixelsPerByte]
+2016089076:greyVal = greyVal / 16.0
+1814337703:$i9 = (int) greyVal
+1453470568:$b10 = (byte) $i9
+1632196595:$i7 = x % 2
+372065387:$i8 = 1 - $i7
+108686637:$i8 = $i8 * 4
+1335208109:$i9 = $b10 << $i8
+1786060460:$b10 = (byte) $i9
+791733454:$b6 = ib | $b10
+726084097:ib = (byte) $b6
+1293336025:goto [?= $i0 = x % pixelsPerByte]
+116768905:$i0 = (int) greyVal
+1047111964:ib = (byte) $i0
+182291783:goto [?= $i0 = x % pixelsPerByte]
+1466316259:$r0 = new java.lang.UnsupportedOperationException
+917452432:$r1 = new java.lang.StringBuffer
+1356884607:specialinvoke $r1.<java.lang.StringBuffer: void <init>()>()
+2083680590:$r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unsupported bits per pixel: ")
+11698718:$r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(bitsPerPixel)
+1199341549:$r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>()
+1051903301:specialinvoke $r0.<java.lang.UnsupportedOperationException: void <init>(java.lang.String)>($r2)
+1253397803:throw $r0
+1662929269:$i0 = x % pixelsPerByte
+193909355:$i9 = pixelsPerByte - 1
+1301836986:if $i0 == $i9 goto $i9 = y * bytewidth
+541039093:$i0 = x + 1
+1271750162:if $i0 != width goto x = x + 1
+1234734383:$i9 = y * bytewidth
+627066422:$i8 = x / pixelsPerByte
+1403098725:$i9 = $i9 + $i8
+1788846731:bw[$i9] = ib
+693365545:ib = 0
+1148446193:x = x + 1
+352146515:i = i + 3
+61546473:goto [?= (branch)]
+1471937504:y = y + 1
+1989499935:goto [?= (branch)]
+843258122:$b10 = (byte) bitsPerPixel
+1394669901:virtualinvoke io.<org.apache.fop.render.afp.modca.ImageObject: void setImageIDESize(byte)>($b10)
+1934496420:virtualinvoke io.<org.apache.fop.render.afp.modca.ImageObject: void setImageData(byte[])>(bw)
+178915360:return

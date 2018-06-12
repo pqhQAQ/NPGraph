@@ -1,0 +1,30 @@
+method: org.apache.fop.render.pdf.ImageRenderedAdapter.setup:624494082
+101624035:this := @this: org.apache.fop.render.pdf.ImageRenderedAdapter
+745656880:doc := @parameter0: org.apache.fop.pdf.PDFDocument
+1522424888:$r1 = virtualinvoke this.<org.apache.fop.render.pdf.ImageRenderedAdapter: org.apache.xmlgraphics.image.loader.impl.ImageRendered getImage()>()
+819539018:ri = virtualinvoke $r1.<org.apache.xmlgraphics.image.loader.impl.ImageRendered: java.awt.image.RenderedImage getRenderedImage()>()
+68790110:specialinvoke this.<org.apache.fop.render.pdf.ImageRenderedAdapter: java.awt.image.ColorModel getEffectiveColorModel()>()
+1171242284:specialinvoke this.<org.apache.fop.render.pdf.AbstractImageAdapter: void setup(org.apache.fop.pdf.PDFDocument)>(doc)
+795141491:orgcm = interfaceinvoke ri.<java.awt.image.RenderedImage: java.awt.image.ColorModel getColorModel()>()
+2119564915:$z0 = virtualinvoke orgcm.<java.awt.image.ColorModel: boolean hasAlpha()>()
+1068789969:if $z0 == 0 goto return
+1099217885:$i0 = virtualinvoke orgcm.<java.awt.image.ColorModel: int getTransparency()>()
+601959582:if $i0 != 3 goto return
+2078474061:$r2 = virtualinvoke doc.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFProfile getProfile()>()
+1496547829:$r3 = this.<org.apache.fop.render.pdf.ImageRenderedAdapter: org.apache.xmlgraphics.image.loader.Image image>
+1150888339:$r4 = interfaceinvoke $r3.<org.apache.xmlgraphics.image.loader.Image: org.apache.xmlgraphics.image.loader.ImageInfo getInfo()>()
+595105044:$r5 = virtualinvoke $r4.<org.apache.xmlgraphics.image.loader.ImageInfo: java.lang.String getOriginalURI()>()
+1099130429:virtualinvoke $r2.<org.apache.fop.pdf.PDFProfile: void verifyTransparencyAllowed(java.lang.String)>($r5)
+430788709:$r6 = new org.apache.fop.pdf.AlphaRasterImage
+2016294070:$r0 = new java.lang.StringBuffer
+459523716:specialinvoke $r0.<java.lang.StringBuffer: void <init>()>()
+433724033:$r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Mask:")
+2073081164:$r7 = virtualinvoke this.<org.apache.fop.render.pdf.ImageRenderedAdapter: java.lang.String getKey()>()
+1500434420:$r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r7)
+2048313866:$r8 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>()
+765830909:specialinvoke $r6.<org.apache.fop.pdf.AlphaRasterImage: void <init>(java.lang.String,java.awt.image.RenderedImage)>($r8, ri)
+1450591092:alphaImage = $r6
+1502254584:$r9 = virtualinvoke doc.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFImageXObject addImage(org.apache.fop.pdf.PDFResourceContext,org.apache.fop.pdf.PDFImage)>(null, alphaImage)
+427555509:$r10 = virtualinvoke $r9.<org.apache.fop.pdf.PDFImageXObject: org.apache.fop.pdf.PDFReference makeReference()>()
+445156901:this.<org.apache.fop.render.pdf.ImageRenderedAdapter: org.apache.fop.pdf.PDFReference softMask> = $r10
+2066492606:return

@@ -1,0 +1,119 @@
+public final class org.apache.fop.render.rtf.BorderAttributesConverter extends java.lang.Object
+{
+
+    private void <init>()
+    {
+        org.apache.fop.render.rtf.BorderAttributesConverter this;
+
+        this := @this: org.apache.fop.render.rtf.BorderAttributesConverter;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public static void makeBorder(org.apache.fop.fo.properties.CommonBorderPaddingBackground, int, org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes, java.lang.String)
+    {
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground border;
+        int side, styleEnum, padding, $i0, $i1;
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes attributes;
+        java.lang.String controlWord, $r3;
+        org.apache.fop.render.rtf.FOPRtfAttributes attrs, $r0;
+        double paddingPt, $d0;
+        java.awt.Color $r1;
+        long $l2;
+
+        border := @parameter0: org.apache.fop.fo.properties.CommonBorderPaddingBackground;
+        side := @parameter1: int;
+        attributes := @parameter2: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes;
+        controlWord := @parameter3: java.lang.String;
+        styleEnum = virtualinvoke border.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getBorderStyle(int)>(side);
+        if styleEnum == 95 goto label0;
+
+        $r0 = new org.apache.fop.render.rtf.FOPRtfAttributes;
+        specialinvoke $r0.<org.apache.fop.render.rtf.FOPRtfAttributes: void <init>()>();
+        attrs = $r0;
+        $r1 = virtualinvoke border.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: java.awt.Color getBorderColor(int)>(side);
+        virtualinvoke attrs.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes set(java.lang.String,java.awt.Color)>("brdrcf", $r1);
+        $r3 = staticinvoke <org.apache.fop.render.rtf.BorderAttributesConverter: java.lang.String convertAttributetoRtf(int)>(styleEnum);
+        virtualinvoke attrs.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes set(java.lang.String)>($r3);
+        $i0 = virtualinvoke border.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getBorderWidth(int,boolean)>(side, 0);
+        $i0 = $i0 / 50;
+        virtualinvoke attrs.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes set(java.lang.String,int)>("brdrw", $i0);
+        virtualinvoke attributes.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes set(java.lang.String,org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes)>(controlWord, attrs);
+        goto label2;
+
+     label0:
+        $i1 = virtualinvoke border.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPadding(int,boolean,org.apache.fop.datatypes.PercentBaseContext)>(side, 0, null);
+        $d0 = (double) $i1;
+        paddingPt = $d0 / 1000.0;
+        $d0 = paddingPt * 20.0;
+        $l2 = staticinvoke <java.lang.Math: long round(double)>($d0);
+        padding = (int) $l2;
+        if padding == 0 goto label2;
+
+        if side != 0 goto label1;
+
+        virtualinvoke attributes.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes: void addIntegerValue(int,java.lang.String)>(padding, "sb");
+        goto label2;
+
+     label1:
+        if side != 1 goto label2;
+
+        virtualinvoke attributes.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes: void addIntegerValue(int,java.lang.String)>(padding, "sa");
+
+     label2:
+        return;
+    }
+
+    public static java.lang.String convertAttributetoRtf(int)
+    {
+        int iBorderStyle;
+
+        iBorderStyle := @parameter0: int;
+        if iBorderStyle != 95 goto label0;
+
+        return "brdrnil";
+
+     label0:
+        if iBorderStyle != 133 goto label1;
+
+        return "brdrs";
+
+     label1:
+        if iBorderStyle != 37 goto label2;
+
+        return "brdrdb";
+
+     label2:
+        if iBorderStyle != 36 goto label3;
+
+        return "brdrdot";
+
+     label3:
+        if iBorderStyle != 31 goto label4;
+
+        return "brdrdash";
+
+     label4:
+        if iBorderStyle != 55 goto label5;
+
+        return "brdrengrave";
+
+     label5:
+        if iBorderStyle != 119 goto label6;
+
+        return "brdremboss";
+
+     label6:
+        if iBorderStyle != 67 goto label7;
+
+        return "brdrengrave";
+
+     label7:
+        if iBorderStyle != 101 goto label8;
+
+        return "brdremboss";
+
+     label8:
+        return "brdrs";
+    }
+}

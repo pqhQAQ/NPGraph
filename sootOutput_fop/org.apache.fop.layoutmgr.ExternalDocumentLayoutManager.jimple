@@ -1,0 +1,541 @@
+public class org.apache.fop.layoutmgr.ExternalDocumentLayoutManager extends org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager
+{
+    private static org.apache.commons.logging.Log log;
+    private org.apache.fop.layoutmgr.inline.ImageLayout imageLayout;
+    static java.lang.Class class$org$apache$fop$layoutmgr$ExternalDocumentLayoutManager;
+
+    public void <init>(org.apache.fop.area.AreaTreeHandler, org.apache.fop.fo.extensions.ExternalDocument)
+    {
+        org.apache.fop.layoutmgr.ExternalDocumentLayoutManager this;
+        org.apache.fop.area.AreaTreeHandler ath;
+        org.apache.fop.fo.extensions.ExternalDocument document;
+
+        this := @this: org.apache.fop.layoutmgr.ExternalDocumentLayoutManager;
+        ath := @parameter0: org.apache.fop.area.AreaTreeHandler;
+        document := @parameter1: org.apache.fop.fo.extensions.ExternalDocument;
+        specialinvoke this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: void <init>(org.apache.fop.area.AreaTreeHandler,org.apache.fop.fo.pagination.AbstractPageSequence)>(ath, document);
+        return;
+    }
+
+    protected org.apache.fop.fo.extensions.ExternalDocument getExternalDocument()
+    {
+        org.apache.fop.layoutmgr.ExternalDocumentLayoutManager this;
+        org.apache.fop.fo.pagination.AbstractPageSequence $r0;
+        org.apache.fop.fo.extensions.ExternalDocument $r1;
+
+        this := @this: org.apache.fop.layoutmgr.ExternalDocumentLayoutManager;
+        $r0 = this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.fop.fo.pagination.AbstractPageSequence pageSeq>;
+        $r1 = (org.apache.fop.fo.extensions.ExternalDocument) $r0;
+        return $r1;
+    }
+
+    public org.apache.fop.layoutmgr.PageSequenceLayoutManager getPSLM()
+    {
+        org.apache.fop.layoutmgr.ExternalDocumentLayoutManager this;
+        java.lang.IllegalStateException $r0;
+        java.lang.StringBuffer $r1;
+        java.lang.Class $r2;
+        java.lang.String $r3, $r4;
+
+        this := @this: org.apache.fop.layoutmgr.ExternalDocumentLayoutManager;
+        $r0 = new java.lang.IllegalStateException;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("getPSLM() is illegal for ");
+        $r2 = virtualinvoke this.<java.lang.Object: java.lang.Class getClass()>();
+        $r3 = virtualinvoke $r2.<java.lang.Class: java.lang.String getName()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r4 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r0.<java.lang.IllegalStateException: void <init>(java.lang.String)>($r4);
+        throw $r0;
+    }
+
+    public void activateLayout()
+    {
+        org.apache.fop.layoutmgr.ExternalDocumentLayoutManager this;
+        org.apache.fop.apps.FOUserAgent userAgent;
+        org.apache.xmlgraphics.image.loader.ImageManager imageManager;
+        java.lang.String uri, $r15, $r16, $r18, $r19, $r21;
+        java.lang.Integer firstPageIndex;
+        boolean hasPageIndex, hasMoreImages, $z0;
+        org.apache.xmlgraphics.image.loader.ImageInfo info, subinfo;
+        java.lang.Object moreImages, $r5;
+        java.awt.Dimension intrinsicSize;
+        org.apache.fop.layoutmgr.inline.ImageLayout layout, $r8;
+        java.net.URI originalURI, tempURI, $r14;
+        int pageIndex, $i0;
+        java.net.URISyntaxException e, $r22;
+        java.io.IOException ioe, $r23;
+        org.apache.xmlgraphics.image.loader.ImageException ie, $r24;
+        org.apache.fop.fo.pagination.AbstractPageSequence $r0;
+        org.apache.fop.apps.FopFactory $r1;
+        org.apache.fop.fo.extensions.ExternalDocument $r2, $r9;
+        org.apache.xmlgraphics.image.loader.ImageSessionContext $r3;
+        java.util.Map $r4;
+        java.lang.Boolean $r6;
+        org.apache.xmlgraphics.image.loader.ImageSize $r7;
+        org.apache.fop.area.AreaTreeHandler $r10;
+        org.apache.fop.area.AreaTreeModel $r11;
+        org.apache.fop.area.PageSequence $r12;
+        org.apache.commons.logging.Log $r13;
+        java.lang.StringBuffer $r17, $r20;
+
+        this := @this: org.apache.fop.layoutmgr.ExternalDocumentLayoutManager;
+        virtualinvoke this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: void initialize()>();
+        $r0 = this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.fop.fo.pagination.AbstractPageSequence pageSeq>;
+        userAgent = virtualinvoke $r0.<org.apache.fop.fo.pagination.AbstractPageSequence: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        $r1 = virtualinvoke userAgent.<org.apache.fop.apps.FOUserAgent: org.apache.fop.apps.FopFactory getFactory()>();
+        imageManager = virtualinvoke $r1.<org.apache.fop.apps.FopFactory: org.apache.xmlgraphics.image.loader.ImageManager getImageManager()>();
+        $r2 = virtualinvoke this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.fop.fo.extensions.ExternalDocument getExternalDocument()>();
+        uri = virtualinvoke $r2.<org.apache.fop.fo.extensions.ExternalDocument: java.lang.String getSrc()>();
+        firstPageIndex = staticinvoke <org.apache.xmlgraphics.image.loader.util.ImageUtil: java.lang.Integer getPageIndexFromURI(java.lang.String)>(uri);
+        if firstPageIndex == null goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        hasPageIndex = $z0;
+
+     label2:
+        $r3 = virtualinvoke userAgent.<org.apache.fop.apps.FOUserAgent: org.apache.xmlgraphics.image.loader.ImageSessionContext getImageSessionContext()>();
+        info = virtualinvoke imageManager.<org.apache.xmlgraphics.image.loader.ImageManager: org.apache.xmlgraphics.image.loader.ImageInfo getImageInfo(java.lang.String,org.apache.xmlgraphics.image.loader.ImageSessionContext)>(uri, $r3);
+        $r4 = virtualinvoke info.<org.apache.xmlgraphics.image.loader.ImageInfo: java.util.Map getCustomObjects()>();
+        $r5 = <org.apache.xmlgraphics.image.loader.ImageInfo: java.lang.Object HAS_MORE_IMAGES>;
+        moreImages = interfaceinvoke $r4.<java.util.Map: java.lang.Object get(java.lang.Object)>($r5);
+        if moreImages == null goto label3;
+
+        $r6 = <java.lang.Boolean: java.lang.Boolean FALSE>;
+        $z0 = virtualinvoke $r6.<java.lang.Boolean: boolean equals(java.lang.Object)>(moreImages);
+        if $z0 != 0 goto label3;
+
+        $z0 = 1;
+        goto label4;
+
+     label3:
+        $z0 = 0;
+
+     label4:
+        hasMoreImages = $z0;
+        $r7 = virtualinvoke info.<org.apache.xmlgraphics.image.loader.ImageInfo: org.apache.xmlgraphics.image.loader.ImageSize getSize()>();
+        intrinsicSize = virtualinvoke $r7.<org.apache.xmlgraphics.image.loader.ImageSize: java.awt.Dimension getDimensionMpt()>();
+        $r8 = new org.apache.fop.layoutmgr.inline.ImageLayout;
+        $r9 = virtualinvoke this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.fop.fo.extensions.ExternalDocument getExternalDocument()>();
+        specialinvoke $r8.<org.apache.fop.layoutmgr.inline.ImageLayout: void <init>(org.apache.fop.fo.GraphicsProperties,org.apache.fop.datatypes.PercentBaseContext,java.awt.Dimension)>($r9, this, intrinsicSize);
+        layout = $r8;
+        $r10 = this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.fop.area.AreaTreeHandler areaTreeHandler>;
+        $r11 = virtualinvoke $r10.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.AreaTreeModel getAreaTreeModel()>();
+        $r12 = new org.apache.fop.area.PageSequence;
+        specialinvoke $r12.<org.apache.fop.area.PageSequence: void <init>(org.apache.fop.area.LineArea)>(null);
+        virtualinvoke $r11.<org.apache.fop.area.AreaTreeModel: void startPageSequence(org.apache.fop.area.PageSequence)>($r12);
+        $r13 = <org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r13.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label5;
+
+        $r13 = <org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r13.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("Starting layout");
+
+     label5:
+        specialinvoke this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: void makePageForImage(org.apache.xmlgraphics.image.loader.ImageInfo,org.apache.fop.layoutmgr.inline.ImageLayout)>(info, layout);
+        if hasPageIndex != 0 goto label14;
+
+        if hasMoreImages == 0 goto label14;
+
+        $r13 = <org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r13.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label6;
+
+        $r13 = <org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r13.<org.apache.commons.logging.Log: void trace(java.lang.Object)>("Starting multi-page processing...");
+
+     label6:
+        $r14 = new java.net.URI;
+        $r15 = staticinvoke <org.apache.fop.datatypes.URISpecification: java.lang.String escapeURI(java.lang.String)>(uri);
+        specialinvoke $r14.<java.net.URI: void <init>(java.lang.String)>($r15);
+        originalURI = $r14;
+        pageIndex = 1;
+
+     label7:
+        if hasMoreImages == 0 goto label11;
+
+        $r14 = new java.net.URI;
+        $r15 = virtualinvoke originalURI.<java.net.URI: java.lang.String getScheme()>();
+        $r16 = virtualinvoke originalURI.<java.net.URI: java.lang.String getSchemeSpecificPart()>();
+        $r17 = new java.lang.StringBuffer;
+        specialinvoke $r17.<java.lang.StringBuffer: void <init>()>();
+        $r17 = virtualinvoke $r17.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("page=");
+        $i0 = pageIndex + 1;
+        $r18 = staticinvoke <java.lang.Integer: java.lang.String toString(int)>($i0);
+        $r17 = virtualinvoke $r17.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r18);
+        $r19 = virtualinvoke $r17.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r14.<java.net.URI: void <init>(java.lang.String,java.lang.String,java.lang.String)>($r15, $r16, $r19);
+        tempURI = $r14;
+        $r13 = <org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r13.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label8;
+
+        $r13 = <org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.commons.logging.Log log>;
+        $r20 = new java.lang.StringBuffer;
+        specialinvoke $r20.<java.lang.StringBuffer: void <init>()>();
+        $r20 = virtualinvoke $r20.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Subimage: ");
+        $r15 = virtualinvoke tempURI.<java.net.URI: java.lang.String toASCIIString()>();
+        $r20 = virtualinvoke $r20.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r15);
+        $r21 = virtualinvoke $r20.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r13.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r21);
+
+     label8:
+        $r21 = virtualinvoke tempURI.<java.net.URI: java.lang.String toASCIIString()>();
+        $r3 = virtualinvoke userAgent.<org.apache.fop.apps.FOUserAgent: org.apache.xmlgraphics.image.loader.ImageSessionContext getImageSessionContext()>();
+        subinfo = virtualinvoke imageManager.<org.apache.xmlgraphics.image.loader.ImageManager: org.apache.xmlgraphics.image.loader.ImageInfo getImageInfo(java.lang.String,org.apache.xmlgraphics.image.loader.ImageSessionContext)>($r21, $r3);
+        $r4 = virtualinvoke subinfo.<org.apache.xmlgraphics.image.loader.ImageInfo: java.util.Map getCustomObjects()>();
+        $r5 = <org.apache.xmlgraphics.image.loader.ImageInfo: java.lang.Object HAS_MORE_IMAGES>;
+        moreImages = interfaceinvoke $r4.<java.util.Map: java.lang.Object get(java.lang.Object)>($r5);
+        if moreImages == null goto label9;
+
+        $r6 = <java.lang.Boolean: java.lang.Boolean FALSE>;
+        $z0 = virtualinvoke $r6.<java.lang.Boolean: boolean equals(java.lang.Object)>(moreImages);
+        if $z0 != 0 goto label9;
+
+        $z0 = 1;
+        goto label10;
+
+     label9:
+        $z0 = 0;
+
+     label10:
+        hasMoreImages = $z0;
+        $r7 = virtualinvoke subinfo.<org.apache.xmlgraphics.image.loader.ImageInfo: org.apache.xmlgraphics.image.loader.ImageSize getSize()>();
+        intrinsicSize = virtualinvoke $r7.<org.apache.xmlgraphics.image.loader.ImageSize: java.awt.Dimension getDimensionMpt()>();
+        $r8 = new org.apache.fop.layoutmgr.inline.ImageLayout;
+        $r9 = virtualinvoke this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.fop.fo.extensions.ExternalDocument getExternalDocument()>();
+        specialinvoke $r8.<org.apache.fop.layoutmgr.inline.ImageLayout: void <init>(org.apache.fop.fo.GraphicsProperties,org.apache.fop.datatypes.PercentBaseContext,java.awt.Dimension)>($r9, this, intrinsicSize);
+        layout = $r8;
+        specialinvoke this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: void makePageForImage(org.apache.xmlgraphics.image.loader.ImageInfo,org.apache.fop.layoutmgr.inline.ImageLayout)>(subinfo, layout);
+        pageIndex = pageIndex + 1;
+        goto label7;
+
+     label11:
+        goto label14;
+
+     label12:
+        $r22 := @caughtexception;
+        e = $r22;
+        $r13 = <org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.commons.logging.Log log>;
+        $r20 = new java.lang.StringBuffer;
+        specialinvoke $r20.<java.lang.StringBuffer: void <init>()>();
+        $r20 = virtualinvoke $r20.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Error parsing or constructing URIs based on URI: ");
+        $r20 = virtualinvoke $r20.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(uri);
+        $r21 = virtualinvoke $r20.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r13.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r21);
+
+     label13:
+        return;
+
+     label14:
+        goto label17;
+
+     label15:
+        $r23 := @caughtexception;
+        ioe = $r23;
+        $r13 = <org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.commons.logging.Log log>;
+        $r20 = new java.lang.StringBuffer;
+        specialinvoke $r20.<java.lang.StringBuffer: void <init>()>();
+        $r20 = virtualinvoke $r20.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Image not available: ");
+        $r20 = virtualinvoke $r20.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(uri);
+        $r21 = virtualinvoke $r20.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r13.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r21, ioe);
+        goto label17;
+
+     label16:
+        $r24 := @caughtexception;
+        ie = $r24;
+        $r13 = <org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.commons.logging.Log log>;
+        $r20 = new java.lang.StringBuffer;
+        specialinvoke $r20.<java.lang.StringBuffer: void <init>()>();
+        $r20 = virtualinvoke $r20.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Error while inspecting image: ");
+        $r20 = virtualinvoke $r20.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(uri);
+        $r20 = virtualinvoke $r20.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" (");
+        $r15 = virtualinvoke ie.<org.apache.xmlgraphics.image.loader.ImageException: java.lang.String getMessage()>();
+        $r20 = virtualinvoke $r20.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r15);
+        $r20 = virtualinvoke $r20.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(")");
+        $r21 = virtualinvoke $r20.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r13.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r21);
+
+     label17:
+        return;
+
+        catch java.net.URISyntaxException from label6 to label11 with label12;
+        catch java.io.IOException from label2 to label13 with label15;
+        catch org.apache.xmlgraphics.image.loader.ImageException from label2 to label13 with label16;
+    }
+
+    private void makePageForImage(org.apache.xmlgraphics.image.loader.ImageInfo, org.apache.fop.layoutmgr.inline.ImageLayout)
+    {
+        org.apache.fop.layoutmgr.ExternalDocumentLayoutManager this;
+        org.apache.xmlgraphics.image.loader.ImageInfo info;
+        org.apache.fop.layoutmgr.inline.ImageLayout layout;
+        org.apache.fop.layoutmgr.Page $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.layoutmgr.ExternalDocumentLayoutManager;
+        info := @parameter0: org.apache.xmlgraphics.image.loader.ImageInfo;
+        layout := @parameter1: org.apache.fop.layoutmgr.inline.ImageLayout;
+        this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.fop.layoutmgr.inline.ImageLayout imageLayout> = layout;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.fop.layoutmgr.Page makeNewPage(boolean,boolean)>(0, 0);
+        this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.fop.layoutmgr.Page curPage> = $r0;
+        $r1 = virtualinvoke info.<org.apache.xmlgraphics.image.loader.ImageInfo: java.lang.String getOriginalURI()>();
+        specialinvoke this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: void fillPage(java.lang.String)>($r1);
+        virtualinvoke this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: void finishPage()>();
+        return;
+    }
+
+    private void fillPage(java.lang.String)
+    {
+        org.apache.fop.layoutmgr.ExternalDocumentLayoutManager this;
+        java.lang.String uri, $r5;
+        java.awt.Dimension imageSize;
+        org.apache.fop.area.Block blockArea, $r1;
+        org.apache.fop.area.LineArea lineArea, $r2;
+        org.apache.fop.area.inline.Image imageArea, $r3;
+        org.apache.fop.area.inline.Viewport vp, $r6;
+        org.apache.fop.layoutmgr.inline.ImageLayout $r0, $r7;
+        int $i0;
+        org.apache.fop.fo.FObj $r4;
+        java.awt.Rectangle $r8;
+        org.apache.fop.layoutmgr.Page $r9;
+        org.apache.fop.area.PageViewport $r10;
+        org.apache.fop.area.NormalFlow $r11;
+        org.apache.fop.area.Span $r12;
+
+        this := @this: org.apache.fop.layoutmgr.ExternalDocumentLayoutManager;
+        uri := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.fop.layoutmgr.inline.ImageLayout imageLayout>;
+        imageSize = virtualinvoke $r0.<org.apache.fop.layoutmgr.inline.ImageLayout: java.awt.Dimension getViewportSize()>();
+        $r1 = new org.apache.fop.area.Block;
+        specialinvoke $r1.<org.apache.fop.area.Block: void <init>()>();
+        blockArea = $r1;
+        $i0 = imageSize.<java.awt.Dimension: int width>;
+        virtualinvoke blockArea.<org.apache.fop.area.Block: void setIPD(int)>($i0);
+        $r2 = new org.apache.fop.area.LineArea;
+        specialinvoke $r2.<org.apache.fop.area.LineArea: void <init>()>();
+        lineArea = $r2;
+        $r3 = new org.apache.fop.area.inline.Image;
+        specialinvoke $r3.<org.apache.fop.area.inline.Image: void <init>(java.lang.String)>(uri);
+        imageArea = $r3;
+        $r4 = this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.fop.fo.FObj fobj>;
+        $r5 = virtualinvoke $r4.<org.apache.fop.fo.FObj: java.lang.String getId()>();
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void setProducerID(org.apache.fop.area.Area,java.lang.String)>(imageArea, $r5);
+        virtualinvoke this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: void transferForeignAttributes(org.apache.fop.area.Area)>(imageArea);
+        $r6 = new org.apache.fop.area.inline.Viewport;
+        specialinvoke $r6.<org.apache.fop.area.inline.Viewport: void <init>(org.apache.fop.area.Area)>(imageArea);
+        vp = $r6;
+        $r4 = this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.fop.fo.FObj fobj>;
+        $r5 = virtualinvoke $r4.<org.apache.fop.fo.FObj: java.lang.String getId()>();
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void setProducerID(org.apache.fop.area.Area,java.lang.String)>(vp, $r5);
+        $i0 = imageSize.<java.awt.Dimension: int width>;
+        virtualinvoke vp.<org.apache.fop.area.inline.Viewport: void setIPD(int)>($i0);
+        $i0 = imageSize.<java.awt.Dimension: int height>;
+        virtualinvoke vp.<org.apache.fop.area.inline.Viewport: void setBPD(int)>($i0);
+        $r7 = this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.fop.layoutmgr.inline.ImageLayout imageLayout>;
+        $r8 = virtualinvoke $r7.<org.apache.fop.layoutmgr.inline.ImageLayout: java.awt.Rectangle getPlacement()>();
+        virtualinvoke vp.<org.apache.fop.area.inline.Viewport: void setContentPosition(java.awt.geom.Rectangle2D)>($r8);
+        virtualinvoke vp.<org.apache.fop.area.inline.Viewport: void setOffset(int)>(0);
+        virtualinvoke lineArea.<org.apache.fop.area.LineArea: void addInlineArea(org.apache.fop.area.inline.InlineArea)>(vp);
+        virtualinvoke lineArea.<org.apache.fop.area.LineArea: void updateExtentsFromChildren()>();
+        virtualinvoke blockArea.<org.apache.fop.area.Block: void addLineArea(org.apache.fop.area.LineArea)>(lineArea);
+        $r9 = this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.fop.layoutmgr.Page curPage>;
+        $r10 = virtualinvoke $r9.<org.apache.fop.layoutmgr.Page: org.apache.fop.area.PageViewport getPageViewport()>();
+        $r11 = virtualinvoke $r10.<org.apache.fop.area.PageViewport: org.apache.fop.area.NormalFlow getCurrentFlow()>();
+        virtualinvoke $r11.<org.apache.fop.area.NormalFlow: void addBlock(org.apache.fop.area.Block)>(blockArea);
+        $r9 = this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.fop.layoutmgr.Page curPage>;
+        $r10 = virtualinvoke $r9.<org.apache.fop.layoutmgr.Page: org.apache.fop.area.PageViewport getPageViewport()>();
+        $r12 = virtualinvoke $r10.<org.apache.fop.area.PageViewport: org.apache.fop.area.Span getCurrentSpan()>();
+        virtualinvoke $r12.<org.apache.fop.area.Span: void notifyFlowsFinished()>();
+        return;
+    }
+
+    public void finishPageSequence()
+    {
+        org.apache.fop.layoutmgr.ExternalDocumentLayoutManager this;
+        org.apache.fop.fo.pagination.AbstractPageSequence $r0, $r2;
+        boolean $z0;
+        org.apache.fop.area.IDTracker $r1;
+        java.lang.String $r3;
+        org.apache.fop.fo.pagination.Root $r4;
+        int $i0, $i1, $i2;
+        org.apache.fop.area.AreaTreeHandler $r5;
+        org.apache.commons.logging.Log $r6;
+
+        this := @this: org.apache.fop.layoutmgr.ExternalDocumentLayoutManager;
+        $r0 = this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.fop.fo.pagination.AbstractPageSequence pageSeq>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.fo.pagination.AbstractPageSequence: boolean hasId()>();
+        if $z0 == 0 goto label0;
+
+        $r1 = this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.fop.area.IDTracker idTracker>;
+        $r2 = this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.fop.fo.pagination.AbstractPageSequence pageSeq>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.fo.pagination.AbstractPageSequence: java.lang.String getId()>();
+        virtualinvoke $r1.<org.apache.fop.area.IDTracker: void signalIDProcessed(java.lang.String)>($r3);
+
+     label0:
+        $r0 = this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.fop.fo.pagination.AbstractPageSequence pageSeq>;
+        $r4 = virtualinvoke $r0.<org.apache.fop.fo.pagination.AbstractPageSequence: org.apache.fop.fo.pagination.Root getRoot()>();
+        $i0 = this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: int currentPageNum>;
+        $i1 = this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: int currentPageNum>;
+        $i2 = this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: int startPageNum>;
+        $i1 = $i1 - $i2;
+        $i1 = $i1 + 1;
+        virtualinvoke $r4.<org.apache.fop.fo.pagination.Root: void notifyPageSequenceFinished(int,int)>($i0, $i1);
+        $r5 = this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.fop.area.AreaTreeHandler areaTreeHandler>;
+        $r2 = this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.fop.fo.pagination.AbstractPageSequence pageSeq>;
+        $i1 = this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: int currentPageNum>;
+        $i2 = this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: int startPageNum>;
+        $i1 = $i1 - $i2;
+        $i1 = $i1 + 1;
+        virtualinvoke $r5.<org.apache.fop.area.AreaTreeHandler: void notifyPageSequenceFinished(org.apache.fop.fo.pagination.AbstractPageSequence,int)>($r2, $i1);
+        $r6 = <org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r6.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label1;
+
+        $r6 = <org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r6.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("Ending layout");
+
+     label1:
+        return;
+    }
+
+    protected org.apache.fop.layoutmgr.Page createPage(int, boolean)
+    {
+        org.apache.fop.layoutmgr.ExternalDocumentLayoutManager this;
+        int pageNumber, $i0, $i1, $i2, $i3;
+        boolean isBlank;
+        java.lang.String pageNumberString, $r9;
+        java.awt.Dimension imageSize;
+        java.awt.Rectangle referenceRect, $r2;
+        org.apache.fop.datatypes.FODimension reldims, $r3;
+        org.apache.fop.area.CTM pageCTM;
+        org.apache.fop.layoutmgr.Page page, $r4;
+        org.apache.fop.area.PageViewport pv;
+        org.apache.fop.area.Page pageArea, $r5;
+        org.apache.fop.area.RegionViewport rv, $r6;
+        org.apache.fop.area.BodyRegion body, $r7;
+        org.apache.fop.fo.pagination.AbstractPageSequence $r0;
+        org.apache.fop.layoutmgr.inline.ImageLayout $r1;
+        org.apache.fop.area.AreaTreeHandler $r8;
+
+        this := @this: org.apache.fop.layoutmgr.ExternalDocumentLayoutManager;
+        pageNumber := @parameter0: int;
+        isBlank := @parameter1: boolean;
+        $r0 = this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.fop.fo.pagination.AbstractPageSequence pageSeq>;
+        pageNumberString = virtualinvoke $r0.<org.apache.fop.fo.pagination.AbstractPageSequence: java.lang.String makeFormattedPageNumber(int)>(pageNumber);
+        $r1 = this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.fop.layoutmgr.inline.ImageLayout imageLayout>;
+        imageSize = virtualinvoke $r1.<org.apache.fop.layoutmgr.inline.ImageLayout: java.awt.Dimension getViewportSize()>();
+        $r0 = this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.fop.fo.pagination.AbstractPageSequence pageSeq>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fo.pagination.AbstractPageSequence: int getReferenceOrientation()>();
+        $i0 = $i0 % 180;
+        if $i0 != 0 goto label0;
+
+        $r2 = new java.awt.Rectangle;
+        $i1 = imageSize.<java.awt.Dimension: int width>;
+        $i2 = imageSize.<java.awt.Dimension: int height>;
+        specialinvoke $r2.<java.awt.Rectangle: void <init>(int,int,int,int)>(0, 0, $i1, $i2);
+        referenceRect = $r2;
+        goto label1;
+
+     label0:
+        $r2 = new java.awt.Rectangle;
+        $i1 = imageSize.<java.awt.Dimension: int height>;
+        $i2 = imageSize.<java.awt.Dimension: int width>;
+        specialinvoke $r2.<java.awt.Rectangle: void <init>(int,int,int,int)>(0, 0, $i1, $i2);
+        referenceRect = $r2;
+
+     label1:
+        $r3 = new org.apache.fop.datatypes.FODimension;
+        specialinvoke $r3.<org.apache.fop.datatypes.FODimension: void <init>(int,int)>(0, 0);
+        reldims = $r3;
+        $r0 = this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.fop.fo.pagination.AbstractPageSequence pageSeq>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fo.pagination.AbstractPageSequence: int getReferenceOrientation()>();
+        pageCTM = staticinvoke <org.apache.fop.area.CTM: org.apache.fop.area.CTM getCTMandRelDims(int,int,java.awt.geom.Rectangle2D,org.apache.fop.datatypes.FODimension)>($i0, 79, referenceRect, reldims);
+        $r4 = new org.apache.fop.layoutmgr.Page;
+        specialinvoke $r4.<org.apache.fop.layoutmgr.Page: void <init>(java.awt.geom.Rectangle2D,int,java.lang.String,boolean)>(referenceRect, pageNumber, pageNumberString, isBlank);
+        page = $r4;
+        pv = virtualinvoke page.<org.apache.fop.layoutmgr.Page: org.apache.fop.area.PageViewport getPageViewport()>();
+        $r5 = new org.apache.fop.area.Page;
+        specialinvoke $r5.<org.apache.fop.area.Page: void <init>()>();
+        pageArea = $r5;
+        virtualinvoke pv.<org.apache.fop.area.PageViewport: void setPage(org.apache.fop.area.Page)>(pageArea);
+        $r6 = new org.apache.fop.area.RegionViewport;
+        specialinvoke $r6.<org.apache.fop.area.RegionViewport: void <init>(java.awt.geom.Rectangle2D)>(referenceRect);
+        rv = $r6;
+        $i3 = referenceRect.<java.awt.Rectangle: int width>;
+        virtualinvoke rv.<org.apache.fop.area.RegionViewport: void setIPD(int)>($i3);
+        $i3 = referenceRect.<java.awt.Rectangle: int height>;
+        virtualinvoke rv.<org.apache.fop.area.RegionViewport: void setBPD(int)>($i3);
+        virtualinvoke rv.<org.apache.fop.area.RegionViewport: void setClip(boolean)>(1);
+        $r7 = new org.apache.fop.area.BodyRegion;
+        specialinvoke $r7.<org.apache.fop.area.BodyRegion: void <init>(int,java.lang.String,org.apache.fop.area.RegionViewport,int,int)>(36, "fop-image-region", rv, 1, 0);
+        body = $r7;
+        $i3 = imageSize.<java.awt.Dimension: int width>;
+        virtualinvoke body.<org.apache.fop.area.BodyRegion: void setIPD(int)>($i3);
+        $i3 = imageSize.<java.awt.Dimension: int height>;
+        virtualinvoke body.<org.apache.fop.area.BodyRegion: void setBPD(int)>($i3);
+        virtualinvoke body.<org.apache.fop.area.BodyRegion: void setCTM(org.apache.fop.area.CTM)>(pageCTM);
+        virtualinvoke rv.<org.apache.fop.area.RegionViewport: void setRegionReference(org.apache.fop.area.RegionReference)>(body);
+        virtualinvoke pageArea.<org.apache.fop.area.Page: void setRegionViewport(int,org.apache.fop.area.RegionViewport)>(36, rv);
+        $r8 = this.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.fop.area.AreaTreeHandler areaTreeHandler>;
+        $r9 = virtualinvoke $r8.<org.apache.fop.area.AreaTreeHandler: java.lang.String generatePageViewportKey()>();
+        virtualinvoke pv.<org.apache.fop.area.PageViewport: void setKey(java.lang.String)>($r9);
+        virtualinvoke pv.<org.apache.fop.area.PageViewport: org.apache.fop.area.Span createSpan(boolean)>(0);
+        return page;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$ExternalDocumentLayoutManager>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: java.lang.Class class$(java.lang.String)>("org.apache.fop.layoutmgr.ExternalDocumentLayoutManager");
+        <org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$ExternalDocumentLayoutManager> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$ExternalDocumentLayoutManager>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

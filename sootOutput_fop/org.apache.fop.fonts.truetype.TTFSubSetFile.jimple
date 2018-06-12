@@ -1,0 +1,1735 @@
+public class org.apache.fop.fonts.truetype.TTFSubSetFile extends org.apache.fop.fonts.truetype.TTFFile
+{
+    private byte[] output;
+    private int realSize;
+    private int currentPos;
+    private int cvtDirOffset;
+    private int fpgmDirOffset;
+    private int glyfDirOffset;
+    private int headDirOffset;
+    private int hheaDirOffset;
+    private int hmtxDirOffset;
+    private int locaDirOffset;
+    private int maxpDirOffset;
+    private int prepDirOffset;
+    private int checkSumAdjustmentOffset;
+    private int locaOffset;
+
+    public void <init>()
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFFile: void <init>()>();
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output> = null;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = 0;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos> = 0;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int cvtDirOffset> = 0;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int fpgmDirOffset> = 0;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int glyfDirOffset> = 0;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int headDirOffset> = 0;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int hheaDirOffset> = 0;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int hmtxDirOffset> = 0;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int locaDirOffset> = 0;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int maxpDirOffset> = 0;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int prepDirOffset> = 0;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int checkSumAdjustmentOffset> = 0;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int locaOffset> = 0;
+        return;
+    }
+
+    private void init(int)
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        int size;
+        byte[] $r0;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        size := @parameter0: int;
+        $r0 = newarray (byte)[size];
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output> = $r0;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = 0;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos> = 0;
+        return;
+    }
+
+    private int determineTableCount()
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        byte numTables;
+        boolean $z0;
+        java.lang.UnsupportedOperationException $r0;
+        int numTables;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        numTables = 4;
+        $z0 = virtualinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: boolean isCFF()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = new java.lang.UnsupportedOperationException;
+        specialinvoke $r0.<java.lang.UnsupportedOperationException: void <init>(java.lang.String)>("OpenType fonts with CFF glyphs are not supported");
+        throw $r0;
+
+     label0:
+        numTables = numTables + 2;
+        $z0 = specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: boolean hasCvt()>();
+        if $z0 == 0 goto label1;
+
+        numTables = numTables + 1;
+
+     label1:
+        $z0 = specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: boolean hasFpgm()>();
+        if $z0 == 0 goto label2;
+
+        numTables = numTables + 1;
+
+     label2:
+        $z0 = specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: boolean hasPrep()>();
+        if $z0 == 0 goto label3;
+
+        numTables = numTables + 1;
+
+     label3:
+        return numTables;
+    }
+
+    private void createDirectory()
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        int numTables, maxPow, searchRange, $i0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        numTables = specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int determineTableCount()>();
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeByte(byte)>(0);
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeByte(byte)>(1);
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeByte(byte)>(0);
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeByte(byte)>(0);
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        $i0 = $i0 + 4;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = $i0;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeUShort(int)>(numTables);
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        $i0 = $i0 + 2;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = $i0;
+        maxPow = specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int maxPow2(int)>(numTables);
+        searchRange = maxPow * 16;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeUShort(int)>(searchRange);
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        $i0 = $i0 + 2;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = $i0;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeUShort(int)>(maxPow);
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        $i0 = $i0 + 2;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = $i0;
+        $i0 = numTables * 16;
+        $i0 = $i0 - searchRange;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeUShort(int)>($i0);
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        $i0 = $i0 + 2;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = $i0;
+        $z0 = specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: boolean hasCvt()>();
+        if $z0 == 0 goto label0;
+
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int writeString(java.lang.String)>("cvt ");
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int cvtDirOffset> = $i0;
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i0 = $i0 + 12;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos> = $i0;
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        $i0 = $i0 + 16;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = $i0;
+
+     label0:
+        $z0 = specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: boolean hasFpgm()>();
+        if $z0 == 0 goto label1;
+
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int writeString(java.lang.String)>("fpgm");
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int fpgmDirOffset> = $i0;
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i0 = $i0 + 12;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos> = $i0;
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        $i0 = $i0 + 16;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = $i0;
+
+     label1:
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int writeString(java.lang.String)>("glyf");
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int glyfDirOffset> = $i0;
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i0 = $i0 + 12;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos> = $i0;
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        $i0 = $i0 + 16;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = $i0;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int writeString(java.lang.String)>("head");
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int headDirOffset> = $i0;
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i0 = $i0 + 12;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos> = $i0;
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        $i0 = $i0 + 16;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = $i0;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int writeString(java.lang.String)>("hhea");
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int hheaDirOffset> = $i0;
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i0 = $i0 + 12;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos> = $i0;
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        $i0 = $i0 + 16;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = $i0;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int writeString(java.lang.String)>("hmtx");
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int hmtxDirOffset> = $i0;
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i0 = $i0 + 12;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos> = $i0;
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        $i0 = $i0 + 16;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = $i0;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int writeString(java.lang.String)>("loca");
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int locaDirOffset> = $i0;
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i0 = $i0 + 12;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos> = $i0;
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        $i0 = $i0 + 16;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = $i0;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int writeString(java.lang.String)>("maxp");
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int maxpDirOffset> = $i0;
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i0 = $i0 + 12;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos> = $i0;
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        $i0 = $i0 + 16;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = $i0;
+        $z0 = specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: boolean hasPrep()>();
+        if $z0 == 0 goto label2;
+
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int writeString(java.lang.String)>("prep");
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int prepDirOffset> = $i0;
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i0 = $i0 + 12;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos> = $i0;
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        $i0 = $i0 + 16;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = $i0;
+
+     label2:
+        return;
+    }
+
+    private boolean createCvt(org.apache.fop.fonts.truetype.FontFileReader) throws java.io.IOException
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        org.apache.fop.fonts.truetype.FontFileReader in;
+        org.apache.fop.fonts.truetype.TTFDirTabEntry entry;
+        int checksum, $i1, $i3, $i4, $i6;
+        java.util.Map $r0;
+        java.lang.Object $r1;
+        long $l0, $l2, $l5;
+        byte[] $r2, $r3;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        in := @parameter0: org.apache.fop.fonts.truetype.FontFileReader;
+        $r0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: java.util.Map dirTabs>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>("cvt ");
+        entry = (org.apache.fop.fonts.truetype.TTFDirTabEntry) $r1;
+        if entry == null goto label0;
+
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void pad4()>();
+        virtualinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: boolean seekTab(org.apache.fop.fonts.truetype.FontFileReader,java.lang.String,long)>(in, "cvt ", 0L);
+        $l0 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getOffset()>();
+        $i1 = (int) $l0;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        $r2 = virtualinvoke in.<org.apache.fop.fonts.truetype.FontFileReader: byte[] getBytes(int,int)>($i1, $i3);
+        $r3 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i4 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $l5 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i6 = (int) $l5;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r2, 0, $r3, $i4, $i6);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        checksum = specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int getCheckSum(int,int)>($i1, $i3);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int cvtDirOffset>;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, checksum);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int cvtDirOffset>;
+        $i1 = $i1 + 4;
+        $i3 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, $i3);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int cvtDirOffset>;
+        $i1 = $i1 + 8;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, $i3);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        $i1 = $i1 + $i3;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos> = $i1;
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        $i1 = $i1 + $i3;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = $i1;
+        return 1;
+
+     label0:
+        return 0;
+    }
+
+    private boolean hasCvt()
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        java.util.Map $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        $r0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: java.util.Map dirTabs>;
+        $z0 = interfaceinvoke $r0.<java.util.Map: boolean containsKey(java.lang.Object)>("cvt ");
+        return $z0;
+    }
+
+    private boolean hasFpgm()
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        java.util.Map $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        $r0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: java.util.Map dirTabs>;
+        $z0 = interfaceinvoke $r0.<java.util.Map: boolean containsKey(java.lang.Object)>("fpgm");
+        return $z0;
+    }
+
+    private boolean hasPrep()
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        java.util.Map $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        $r0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: java.util.Map dirTabs>;
+        $z0 = interfaceinvoke $r0.<java.util.Map: boolean containsKey(java.lang.Object)>("prep");
+        return $z0;
+    }
+
+    private boolean createFpgm(org.apache.fop.fonts.truetype.FontFileReader) throws java.io.IOException
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        org.apache.fop.fonts.truetype.FontFileReader in;
+        org.apache.fop.fonts.truetype.TTFDirTabEntry entry;
+        int checksum, $i1, $i3, $i4, $i6;
+        java.util.Map $r0;
+        java.lang.Object $r1;
+        long $l0, $l2, $l5;
+        byte[] $r2, $r3;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        in := @parameter0: org.apache.fop.fonts.truetype.FontFileReader;
+        $r0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: java.util.Map dirTabs>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>("fpgm");
+        entry = (org.apache.fop.fonts.truetype.TTFDirTabEntry) $r1;
+        if entry == null goto label0;
+
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void pad4()>();
+        virtualinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: boolean seekTab(org.apache.fop.fonts.truetype.FontFileReader,java.lang.String,long)>(in, "fpgm", 0L);
+        $l0 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getOffset()>();
+        $i1 = (int) $l0;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        $r2 = virtualinvoke in.<org.apache.fop.fonts.truetype.FontFileReader: byte[] getBytes(int,int)>($i1, $i3);
+        $r3 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i4 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $l5 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i6 = (int) $l5;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r2, 0, $r3, $i4, $i6);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        checksum = specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int getCheckSum(int,int)>($i1, $i3);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int fpgmDirOffset>;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, checksum);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int fpgmDirOffset>;
+        $i1 = $i1 + 4;
+        $i3 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, $i3);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int fpgmDirOffset>;
+        $i1 = $i1 + 8;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, $i3);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        $i1 = $i1 + $i3;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos> = $i1;
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        $i1 = $i1 + $i3;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = $i1;
+        return 1;
+
+     label0:
+        return 0;
+    }
+
+    private void createLoca(int) throws java.io.IOException
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        int size, $i0, $i1;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        size := @parameter0: int;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void pad4()>();
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int locaOffset> = $i0;
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int locaDirOffset>;
+        $i0 = $i0 + 4;
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i0, $i1);
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int locaDirOffset>;
+        $i0 = $i0 + 8;
+        $i1 = size * 4;
+        $i1 = $i1 + 4;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i0, $i1);
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i1 = size * 4;
+        $i1 = $i1 + 4;
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos> = $i0;
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        $i1 = size * 4;
+        $i1 = $i1 + 4;
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = $i0;
+        return;
+    }
+
+    private void createMaxp(org.apache.fop.fonts.truetype.FontFileReader, int) throws java.io.IOException
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        org.apache.fop.fonts.truetype.FontFileReader in;
+        int size, checksum, $i1, $i3, $i4, $i6;
+        org.apache.fop.fonts.truetype.TTFDirTabEntry entry;
+        java.util.Map $r0;
+        java.lang.Object $r1;
+        long $l0, $l2, $l5;
+        byte[] $r2, $r3;
+        java.io.IOException $r5;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        in := @parameter0: org.apache.fop.fonts.truetype.FontFileReader;
+        size := @parameter1: int;
+        $r0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: java.util.Map dirTabs>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>("maxp");
+        entry = (org.apache.fop.fonts.truetype.TTFDirTabEntry) $r1;
+        if entry == null goto label0;
+
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void pad4()>();
+        virtualinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: boolean seekTab(org.apache.fop.fonts.truetype.FontFileReader,java.lang.String,long)>(in, "maxp", 0L);
+        $l0 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getOffset()>();
+        $i1 = (int) $l0;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        $r2 = virtualinvoke in.<org.apache.fop.fonts.truetype.FontFileReader: byte[] getBytes(int,int)>($i1, $i3);
+        $r3 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i4 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $l5 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i6 = (int) $l5;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r2, 0, $r3, $i4, $i6);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i1 = $i1 + 4;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeUShort(int,int)>($i1, size);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        checksum = specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int getCheckSum(int,int)>($i1, $i3);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int maxpDirOffset>;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, checksum);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int maxpDirOffset>;
+        $i1 = $i1 + 4;
+        $i3 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, $i3);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int maxpDirOffset>;
+        $i1 = $i1 + 8;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, $i3);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        $i1 = $i1 + $i3;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos> = $i1;
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        $i1 = $i1 + $i3;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = $i1;
+        goto label1;
+
+     label0:
+        $r5 = new java.io.IOException;
+        specialinvoke $r5.<java.io.IOException: void <init>(java.lang.String)>("Can\'t find maxp table");
+        throw $r5;
+
+     label1:
+        return;
+    }
+
+    private boolean createPrep(org.apache.fop.fonts.truetype.FontFileReader) throws java.io.IOException
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        org.apache.fop.fonts.truetype.FontFileReader in;
+        org.apache.fop.fonts.truetype.TTFDirTabEntry entry;
+        int checksum, $i1, $i3, $i4, $i6;
+        java.util.Map $r0;
+        java.lang.Object $r1;
+        long $l0, $l2, $l5;
+        byte[] $r2, $r3;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        in := @parameter0: org.apache.fop.fonts.truetype.FontFileReader;
+        $r0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: java.util.Map dirTabs>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>("prep");
+        entry = (org.apache.fop.fonts.truetype.TTFDirTabEntry) $r1;
+        if entry == null goto label0;
+
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void pad4()>();
+        virtualinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: boolean seekTab(org.apache.fop.fonts.truetype.FontFileReader,java.lang.String,long)>(in, "prep", 0L);
+        $l0 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getOffset()>();
+        $i1 = (int) $l0;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        $r2 = virtualinvoke in.<org.apache.fop.fonts.truetype.FontFileReader: byte[] getBytes(int,int)>($i1, $i3);
+        $r3 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i4 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $l5 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i6 = (int) $l5;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r2, 0, $r3, $i4, $i6);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        checksum = specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int getCheckSum(int,int)>($i1, $i3);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int prepDirOffset>;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, checksum);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int prepDirOffset>;
+        $i1 = $i1 + 4;
+        $i3 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, $i3);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int prepDirOffset>;
+        $i1 = $i1 + 8;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, $i3);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        $i1 = $i1 + $i3;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos> = $i1;
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        $i1 = $i1 + $i3;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = $i1;
+        return 1;
+
+     label0:
+        return 0;
+    }
+
+    private void createHhea(org.apache.fop.fonts.truetype.FontFileReader, int) throws java.io.IOException
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        org.apache.fop.fonts.truetype.FontFileReader in;
+        int size, checksum, $i1, $i3, $i4, $i6;
+        org.apache.fop.fonts.truetype.TTFDirTabEntry entry;
+        java.util.Map $r0;
+        java.lang.Object $r1;
+        long $l0, $l2, $l5;
+        byte[] $r2, $r3;
+        java.io.IOException $r5;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        in := @parameter0: org.apache.fop.fonts.truetype.FontFileReader;
+        size := @parameter1: int;
+        $r0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: java.util.Map dirTabs>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>("hhea");
+        entry = (org.apache.fop.fonts.truetype.TTFDirTabEntry) $r1;
+        if entry == null goto label0;
+
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void pad4()>();
+        virtualinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: boolean seekTab(org.apache.fop.fonts.truetype.FontFileReader,java.lang.String,long)>(in, "hhea", 0L);
+        $l0 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getOffset()>();
+        $i1 = (int) $l0;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        $r2 = virtualinvoke in.<org.apache.fop.fonts.truetype.FontFileReader: byte[] getBytes(int,int)>($i1, $i3);
+        $r3 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i4 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $l5 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i6 = (int) $l5;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r2, 0, $r3, $i4, $i6);
+        $l0 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i1 = (int) $l0;
+        $i3 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i1 = $i1 + $i3;
+        $i1 = $i1 - 2;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeUShort(int,int)>($i1, size);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        checksum = specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int getCheckSum(int,int)>($i1, $i3);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int hheaDirOffset>;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, checksum);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int hheaDirOffset>;
+        $i1 = $i1 + 4;
+        $i3 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, $i3);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int hheaDirOffset>;
+        $i1 = $i1 + 8;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, $i3);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        $i1 = $i1 + $i3;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos> = $i1;
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        $i1 = $i1 + $i3;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = $i1;
+        goto label1;
+
+     label0:
+        $r5 = new java.io.IOException;
+        specialinvoke $r5.<java.io.IOException: void <init>(java.lang.String)>("Can\'t find hhea table");
+        throw $r5;
+
+     label1:
+        return;
+    }
+
+    private void createHead(org.apache.fop.fonts.truetype.FontFileReader) throws java.io.IOException
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        org.apache.fop.fonts.truetype.FontFileReader in;
+        org.apache.fop.fonts.truetype.TTFDirTabEntry entry;
+        int checksum, $i1, $i3, $i4, $i6;
+        java.util.Map $r0;
+        java.lang.Object $r1;
+        long $l0, $l2, $l5;
+        byte[] $r2, $r3;
+        java.io.IOException $r5;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        in := @parameter0: org.apache.fop.fonts.truetype.FontFileReader;
+        $r0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: java.util.Map dirTabs>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>("head");
+        entry = (org.apache.fop.fonts.truetype.TTFDirTabEntry) $r1;
+        if entry == null goto label0;
+
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void pad4()>();
+        virtualinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: boolean seekTab(org.apache.fop.fonts.truetype.FontFileReader,java.lang.String,long)>(in, "head", 0L);
+        $l0 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getOffset()>();
+        $i1 = (int) $l0;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        $r2 = virtualinvoke in.<org.apache.fop.fonts.truetype.FontFileReader: byte[] getBytes(int,int)>($i1, $i3);
+        $r3 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i4 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $l5 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i6 = (int) $l5;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r2, 0, $r3, $i4, $i6);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i1 = $i1 + 8;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int checkSumAdjustmentOffset> = $i1;
+        $r2 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i1 = $i1 + 8;
+        $r2[$i1] = 0;
+        $r2 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i1 = $i1 + 9;
+        $r2[$i1] = 0;
+        $r2 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i1 = $i1 + 10;
+        $r2[$i1] = 0;
+        $r2 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i1 = $i1 + 11;
+        $r2[$i1] = 0;
+        $r2 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i1 = $i1 + 50;
+        $r2[$i1] = 0;
+        $r2 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i1 = $i1 + 51;
+        $r2[$i1] = 1;
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        checksum = specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int getCheckSum(int,int)>($i1, $i3);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int headDirOffset>;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, checksum);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int headDirOffset>;
+        $i1 = $i1 + 4;
+        $i3 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, $i3);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int headDirOffset>;
+        $i1 = $i1 + 8;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, $i3);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        $i1 = $i1 + $i3;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos> = $i1;
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        $l2 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getLength()>();
+        $i3 = (int) $l2;
+        $i1 = $i1 + $i3;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = $i1;
+        goto label1;
+
+     label0:
+        $r5 = new java.io.IOException;
+        specialinvoke $r5.<java.io.IOException: void <init>(java.lang.String)>("Can\'t find head table");
+        throw $r5;
+
+     label1:
+        return;
+    }
+
+    private void createGlyf(org.apache.fop.fonts.truetype.FontFileReader, java.util.Map) throws java.io.IOException
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        org.apache.fop.fonts.truetype.FontFileReader in;
+        java.util.Map glyphs, $r0;
+        org.apache.fop.fonts.truetype.TTFDirTabEntry entry;
+        boolean size, start, glyphLength, nextOffset, $z0;
+        int endOffset, i, origGlyphIndex, checksum, start, $i0, $i1, $i2, nextOffset, glyphLength, $i6, size;
+        int[] origIndexes;
+        java.util.Iterator e;
+        java.lang.Integer origIndex, subsetIndex;
+        java.lang.Object $r1;
+        java.util.Set $r2;
+        org.apache.fop.fonts.truetype.TTFMtxEntry[] $r3, $r4, $r7;
+        long $l3, $l4, $l5;
+        org.apache.fop.fonts.truetype.TTFMtxEntry $r5, $r6, $r8;
+        byte[] $r9, $r10;
+        java.io.IOException $r12;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        in := @parameter0: org.apache.fop.fonts.truetype.FontFileReader;
+        glyphs := @parameter1: java.util.Map;
+        $r0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: java.util.Map dirTabs>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>("glyf");
+        entry = (org.apache.fop.fonts.truetype.TTFDirTabEntry) $r1;
+        size = 0;
+        start = 0;
+        endOffset = 0;
+        if entry == null goto label7;
+
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void pad4()>();
+        start = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i0 = interfaceinvoke glyphs.<java.util.Map: int size()>();
+        origIndexes = newarray (int)[$i0];
+        $r2 = interfaceinvoke glyphs.<java.util.Map: java.util.Set keySet()>();
+        e = interfaceinvoke $r2.<java.util.Set: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke e.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r1 = interfaceinvoke e.<java.util.Iterator: java.lang.Object next()>();
+        origIndex = (java.lang.Integer) $r1;
+        $r1 = interfaceinvoke glyphs.<java.util.Map: java.lang.Object get(java.lang.Object)>(origIndex);
+        subsetIndex = (java.lang.Integer) $r1;
+        $i1 = virtualinvoke subsetIndex.<java.lang.Integer: int intValue()>();
+        $i2 = virtualinvoke origIndex.<java.lang.Integer: int intValue()>();
+        origIndexes[$i1] = $i2;
+        goto label0;
+
+     label1:
+        i = 0;
+
+     label2:
+        $i1 = lengthof origIndexes;
+        if i >= $i1 goto label6;
+
+        glyphLength = 0;
+        nextOffset = 0;
+        origGlyphIndex = origIndexes[i];
+        $r3 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: org.apache.fop.fonts.truetype.TTFMtxEntry[] mtxTab>;
+        $i1 = lengthof $r3;
+        $i1 = $i1 - 1;
+        if origGlyphIndex < $i1 goto label3;
+
+        $l3 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: long lastLoca>;
+        nextOffset = (int) $l3;
+        goto label4;
+
+     label3:
+        $r4 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: org.apache.fop.fonts.truetype.TTFMtxEntry[] mtxTab>;
+        $i1 = origGlyphIndex + 1;
+        $r5 = $r4[$i1];
+        $l3 = virtualinvoke $r5.<org.apache.fop.fonts.truetype.TTFMtxEntry: long getOffset()>();
+        nextOffset = (int) $l3;
+
+     label4:
+        $r3 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: org.apache.fop.fonts.truetype.TTFMtxEntry[] mtxTab>;
+        $r6 = $r3[origGlyphIndex];
+        $l4 = virtualinvoke $r6.<org.apache.fop.fonts.truetype.TTFMtxEntry: long getOffset()>();
+        $i1 = (int) $l4;
+        glyphLength = nextOffset - $i1;
+        $l4 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getOffset()>();
+        $i1 = (int) $l4;
+        $r7 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: org.apache.fop.fonts.truetype.TTFMtxEntry[] mtxTab>;
+        $r8 = $r7[origGlyphIndex];
+        $l5 = virtualinvoke $r8.<org.apache.fop.fonts.truetype.TTFMtxEntry: long getOffset()>();
+        $i2 = (int) $l5;
+        $i1 = $i1 + $i2;
+        $r9 = virtualinvoke in.<org.apache.fop.fonts.truetype.FontFileReader: byte[] getBytes(int,int)>($i1, glyphLength);
+        $r10 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i6 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r9, 0, $r10, $i6, glyphLength);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int locaOffset>;
+        $i2 = i * 4;
+        $i1 = $i1 + $i2;
+        $i2 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i2 = $i2 - start;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, $i2);
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i0 = $i0 - start;
+        $i0 = $i0 + glyphLength;
+        if $i0 <= endOffset goto label5;
+
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i0 = $i0 - start;
+        endOffset = $i0 + glyphLength;
+
+     label5:
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i1 = $i1 + glyphLength;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos> = $i1;
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        $i1 = $i1 + glyphLength;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = $i1;
+        i = i + 1;
+        goto label2;
+
+     label6:
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        size = $i0 - start;
+        checksum = specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int getCheckSum(int,int)>(start, size);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int glyfDirOffset>;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, checksum);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int glyfDirOffset>;
+        $i1 = $i1 + 4;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, start);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int glyfDirOffset>;
+        $i1 = $i1 + 8;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, size);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i1 = $i1 + 12;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos> = $i1;
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        $i1 = $i1 + 12;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = $i1;
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int locaOffset>;
+        $i2 = interfaceinvoke glyphs.<java.util.Map: int size()>();
+        $i2 = $i2 * 4;
+        $i1 = $i1 + $i2;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, endOffset);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int locaOffset>;
+        $i2 = interfaceinvoke glyphs.<java.util.Map: int size()>();
+        $i2 = $i2 * 4;
+        $i2 = $i2 + 4;
+        checksum = specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int getCheckSum(int,int)>($i1, $i2);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int locaDirOffset>;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, checksum);
+        goto label8;
+
+     label7:
+        $r12 = new java.io.IOException;
+        specialinvoke $r12.<java.io.IOException: void <init>(java.lang.String)>("Can\'t find glyf table");
+        throw $r12;
+
+     label8:
+        return;
+    }
+
+    private void createHmtx(org.apache.fop.fonts.truetype.FontFileReader, java.util.Map) throws java.io.IOException
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        org.apache.fop.fonts.truetype.FontFileReader in;
+        java.util.Map glyphs, $r0;
+        org.apache.fop.fonts.truetype.TTFDirTabEntry entry;
+        int longHorMetricSize, leftSideBearingSize, hmtxSize, checksum, $i0, $i1, $i2, $i3;
+        java.util.Iterator e;
+        java.lang.Integer origIndex, subsetIndex;
+        java.lang.Object $r1;
+        java.util.Set $r2;
+        boolean $z0;
+        org.apache.fop.fonts.truetype.TTFMtxEntry[] $r3;
+        org.apache.fop.fonts.truetype.TTFMtxEntry $r4;
+        java.io.IOException $r6;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        in := @parameter0: org.apache.fop.fonts.truetype.FontFileReader;
+        glyphs := @parameter1: java.util.Map;
+        $r0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: java.util.Map dirTabs>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>("hmtx");
+        entry = (org.apache.fop.fonts.truetype.TTFDirTabEntry) $r1;
+        $i0 = interfaceinvoke glyphs.<java.util.Map: int size()>();
+        longHorMetricSize = $i0 * 2;
+        $i0 = interfaceinvoke glyphs.<java.util.Map: int size()>();
+        leftSideBearingSize = $i0 * 2;
+        hmtxSize = longHorMetricSize + leftSideBearingSize;
+        if entry == null goto label2;
+
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void pad4()>();
+        $r2 = interfaceinvoke glyphs.<java.util.Map: java.util.Set keySet()>();
+        e = interfaceinvoke $r2.<java.util.Set: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke e.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r1 = interfaceinvoke e.<java.util.Iterator: java.lang.Object next()>();
+        origIndex = (java.lang.Integer) $r1;
+        $r1 = interfaceinvoke glyphs.<java.util.Map: java.lang.Object get(java.lang.Object)>(origIndex);
+        subsetIndex = (java.lang.Integer) $r1;
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i2 = virtualinvoke subsetIndex.<java.lang.Integer: int intValue()>();
+        $i2 = $i2 * 4;
+        $i1 = $i1 + $i2;
+        $r3 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: org.apache.fop.fonts.truetype.TTFMtxEntry[] mtxTab>;
+        $i3 = virtualinvoke origIndex.<java.lang.Integer: int intValue()>();
+        $r4 = $r3[$i3];
+        $i2 = virtualinvoke $r4.<org.apache.fop.fonts.truetype.TTFMtxEntry: int getWx()>();
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeUShort(int,int)>($i1, $i2);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i2 = virtualinvoke subsetIndex.<java.lang.Integer: int intValue()>();
+        $i2 = $i2 * 4;
+        $i1 = $i1 + $i2;
+        $i1 = $i1 + 2;
+        $r3 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: org.apache.fop.fonts.truetype.TTFMtxEntry[] mtxTab>;
+        $i3 = virtualinvoke origIndex.<java.lang.Integer: int intValue()>();
+        $r4 = $r3[$i3];
+        $i2 = virtualinvoke $r4.<org.apache.fop.fonts.truetype.TTFMtxEntry: int getLsb()>();
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeUShort(int,int)>($i1, $i2);
+        goto label0;
+
+     label1:
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        checksum = specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int getCheckSum(int,int)>($i1, hmtxSize);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int hmtxDirOffset>;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, checksum);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int hmtxDirOffset>;
+        $i1 = $i1 + 4;
+        $i2 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, $i2);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int hmtxDirOffset>;
+        $i1 = $i1 + 8;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i1, hmtxSize);
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i1 = $i1 + hmtxSize;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos> = $i1;
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        $i1 = $i1 + hmtxSize;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = $i1;
+        goto label3;
+
+     label2:
+        $r6 = new java.io.IOException;
+        specialinvoke $r6.<java.io.IOException: void <init>(java.lang.String)>("Can\'t find hmtx table");
+        throw $r6;
+
+     label3:
+        return;
+    }
+
+    private java.util.List getIncludedGlyphs(org.apache.fop.fonts.truetype.FontFileReader, int, java.lang.Integer) throws java.io.IOException
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        org.apache.fop.fonts.truetype.FontFileReader in;
+        int glyphOffset, offset, $i0, $i2, $i3, flags, $i4;
+        java.lang.Integer glyphIdx, $r3, compositeIdx;
+        java.util.ArrayList $r0, 'ret';
+        null_type compositeIdx;
+        boolean flags, moreComposites;
+        org.apache.fop.fonts.truetype.TTFMtxEntry[] $r1;
+        org.apache.fop.fonts.truetype.TTFMtxEntry $r2;
+        long $l1, $l5;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        in := @parameter0: org.apache.fop.fonts.truetype.FontFileReader;
+        glyphOffset := @parameter1: int;
+        glyphIdx := @parameter2: java.lang.Integer;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        'ret' = $r0;
+        interfaceinvoke 'ret'.<java.util.List: boolean add(java.lang.Object)>(glyphIdx);
+        $r1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: org.apache.fop.fonts.truetype.TTFMtxEntry[] mtxTab>;
+        $i0 = virtualinvoke glyphIdx.<java.lang.Integer: int intValue()>();
+        $r2 = $r1[$i0];
+        $l1 = virtualinvoke $r2.<org.apache.fop.fonts.truetype.TTFMtxEntry: long getOffset()>();
+        $i2 = (int) $l1;
+        $i3 = glyphOffset + $i2;
+        offset = $i3 + 10;
+        compositeIdx = null;
+        flags = 0;
+        moreComposites = 1;
+
+     label0:
+        if moreComposites == 0 goto label7;
+
+        $l1 = (long) offset;
+        flags = virtualinvoke in.<org.apache.fop.fonts.truetype.FontFileReader: int readTTFUShort(long)>($l1);
+        $r3 = new java.lang.Integer;
+        $i4 = offset + 2;
+        $l5 = (long) $i4;
+        $i0 = virtualinvoke in.<org.apache.fop.fonts.truetype.FontFileReader: int readTTFUShort(long)>($l5);
+        specialinvoke $r3.<java.lang.Integer: void <init>(int)>($i0);
+        compositeIdx = $r3;
+        interfaceinvoke 'ret'.<java.util.List: boolean add(java.lang.Object)>(compositeIdx);
+        offset = offset + 4;
+        $i3 = flags & 1;
+        if $i3 <= 0 goto label1;
+
+        offset = offset + 4;
+        goto label2;
+
+     label1:
+        offset = offset + 2;
+
+     label2:
+        $i3 = flags & 8;
+        if $i3 <= 0 goto label3;
+
+        offset = offset + 2;
+        goto label5;
+
+     label3:
+        $i3 = flags & 64;
+        if $i3 <= 0 goto label4;
+
+        offset = offset + 4;
+        goto label5;
+
+     label4:
+        $i3 = flags & 128;
+        if $i3 <= 0 goto label5;
+
+        offset = offset + 8;
+
+     label5:
+        $i3 = flags & 32;
+        if $i3 <= 0 goto label6;
+
+        moreComposites = 1;
+        goto label0;
+
+     label6:
+        moreComposites = 0;
+        goto label0;
+
+     label7:
+        return 'ret';
+    }
+
+    private void remapComposite(org.apache.fop.fonts.truetype.FontFileReader, java.util.Map, int, java.lang.Integer) throws java.io.IOException
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        org.apache.fop.fonts.truetype.FontFileReader in;
+        java.util.Map glyphs;
+        int glyphOffset, offset, $i0, $i2, $i3, flags, $i4;
+        java.lang.Integer glyphIdx, newIdx, $r2, compositeIdx;
+        null_type compositeIdx;
+        boolean flags, moreComposites;
+        org.apache.fop.fonts.truetype.TTFMtxEntry[] $r0;
+        org.apache.fop.fonts.truetype.TTFMtxEntry $r1;
+        long $l1, $l5;
+        java.lang.Object $r3;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        in := @parameter0: org.apache.fop.fonts.truetype.FontFileReader;
+        glyphs := @parameter1: java.util.Map;
+        glyphOffset := @parameter2: int;
+        glyphIdx := @parameter3: java.lang.Integer;
+        $r0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: org.apache.fop.fonts.truetype.TTFMtxEntry[] mtxTab>;
+        $i0 = virtualinvoke glyphIdx.<java.lang.Integer: int intValue()>();
+        $r1 = $r0[$i0];
+        $l1 = virtualinvoke $r1.<org.apache.fop.fonts.truetype.TTFMtxEntry: long getOffset()>();
+        $i2 = (int) $l1;
+        $i3 = glyphOffset + $i2;
+        offset = $i3 + 10;
+        compositeIdx = null;
+        flags = 0;
+        moreComposites = 1;
+
+     label0:
+        if moreComposites == 0 goto label9;
+
+        $l1 = (long) offset;
+        flags = virtualinvoke in.<org.apache.fop.fonts.truetype.FontFileReader: int readTTFUShort(long)>($l1);
+        $r2 = new java.lang.Integer;
+        $i4 = offset + 2;
+        $l5 = (long) $i4;
+        $i0 = virtualinvoke in.<org.apache.fop.fonts.truetype.FontFileReader: int readTTFUShort(long)>($l5);
+        specialinvoke $r2.<java.lang.Integer: void <init>(int)>($i0);
+        compositeIdx = $r2;
+        $r3 = interfaceinvoke glyphs.<java.util.Map: java.lang.Object get(java.lang.Object)>(compositeIdx);
+        newIdx = (java.lang.Integer) $r3;
+        if newIdx != null goto label1;
+
+        moreComposites = 0;
+        goto label0;
+
+     label1:
+        $i2 = offset + 2;
+        $i0 = virtualinvoke newIdx.<java.lang.Integer: int intValue()>();
+        virtualinvoke in.<org.apache.fop.fonts.truetype.FontFileReader: void writeTTFUShort(int,int)>($i2, $i0);
+        offset = offset + 4;
+        $i3 = flags & 1;
+        if $i3 <= 0 goto label2;
+
+        offset = offset + 4;
+        goto label3;
+
+     label2:
+        offset = offset + 2;
+
+     label3:
+        $i3 = flags & 8;
+        if $i3 <= 0 goto label4;
+
+        offset = offset + 2;
+        goto label6;
+
+     label4:
+        $i3 = flags & 64;
+        if $i3 <= 0 goto label5;
+
+        offset = offset + 4;
+        goto label6;
+
+     label5:
+        $i3 = flags & 128;
+        if $i3 <= 0 goto label6;
+
+        offset = offset + 8;
+
+     label6:
+        $i3 = flags & 32;
+        if $i3 <= 0 goto label7;
+
+        moreComposites = 1;
+        goto label8;
+
+     label7:
+        moreComposites = 0;
+
+     label8:
+        goto label0;
+
+     label9:
+        return;
+    }
+
+    private void scanGlyphs(org.apache.fop.fonts.truetype.FontFileReader, java.util.Map) throws java.io.IOException
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        org.apache.fop.fonts.truetype.FontFileReader in;
+        java.util.Map glyphs, $r0;
+        org.apache.fop.fonts.truetype.TTFDirTabEntry entry;
+        java.util.HashMap newComposites, allComposites, $r2;
+        int newIndex, $i0, $i2, $i6, $i7;
+        java.util.Iterator e, cps, m, ce;
+        java.lang.Integer origIndex, cIdx, im, $r7, $r9;
+        java.util.List composites;
+        java.lang.Object $r1, $r6, $r8;
+        java.util.Set $r3;
+        boolean $z0;
+        long $l1, $l3, $l5;
+        org.apache.fop.fonts.truetype.TTFMtxEntry[] $r4;
+        org.apache.fop.fonts.truetype.TTFMtxEntry $r5;
+        short $s4;
+        java.io.IOException $r10;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        in := @parameter0: org.apache.fop.fonts.truetype.FontFileReader;
+        glyphs := @parameter1: java.util.Map;
+        $r0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: java.util.Map dirTabs>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>("glyf");
+        entry = (org.apache.fop.fonts.truetype.TTFDirTabEntry) $r1;
+        newComposites = null;
+        $r2 = new java.util.HashMap;
+        specialinvoke $r2.<java.util.HashMap: void <init>()>();
+        allComposites = $r2;
+        newIndex = interfaceinvoke glyphs.<java.util.Map: int size()>();
+        if entry == null goto label12;
+
+     label0:
+        if newComposites == null goto label1;
+
+        $i0 = interfaceinvoke newComposites.<java.util.Map: int size()>();
+        if $i0 <= 0 goto label9;
+
+     label1:
+        $r2 = new java.util.HashMap;
+        specialinvoke $r2.<java.util.HashMap: void <init>()>();
+        newComposites = $r2;
+        $r3 = interfaceinvoke glyphs.<java.util.Map: java.util.Set keySet()>();
+        e = interfaceinvoke $r3.<java.util.Set: java.util.Iterator iterator()>();
+
+     label2:
+        $z0 = interfaceinvoke e.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label6;
+
+        $r1 = interfaceinvoke e.<java.util.Iterator: java.lang.Object next()>();
+        origIndex = (java.lang.Integer) $r1;
+        $l1 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getOffset()>();
+        $r4 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: org.apache.fop.fonts.truetype.TTFMtxEntry[] mtxTab>;
+        $i2 = virtualinvoke origIndex.<java.lang.Integer: int intValue()>();
+        $r5 = $r4[$i2];
+        $l3 = virtualinvoke $r5.<org.apache.fop.fonts.truetype.TTFMtxEntry: long getOffset()>();
+        $l1 = $l1 + $l3;
+        $s4 = virtualinvoke in.<org.apache.fop.fonts.truetype.FontFileReader: short readTTFShort(long)>($l1);
+        if $s4 >= 0 goto label5;
+
+        $r6 = interfaceinvoke glyphs.<java.util.Map: java.lang.Object get(java.lang.Object)>(origIndex);
+        interfaceinvoke allComposites.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(origIndex, $r6);
+        $l5 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getOffset()>();
+        $i6 = (int) $l5;
+        composites = specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: java.util.List getIncludedGlyphs(org.apache.fop.fonts.truetype.FontFileReader,int,java.lang.Integer)>(in, $i6, origIndex);
+        cps = interfaceinvoke composites.<java.util.List: java.util.Iterator iterator()>();
+
+     label3:
+        $z0 = interfaceinvoke cps.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label5;
+
+        $r1 = interfaceinvoke cps.<java.util.Iterator: java.lang.Object next()>();
+        cIdx = (java.lang.Integer) $r1;
+        $r1 = interfaceinvoke glyphs.<java.util.Map: java.lang.Object get(java.lang.Object)>(cIdx);
+        if $r1 != null goto label4;
+
+        $r1 = interfaceinvoke newComposites.<java.util.Map: java.lang.Object get(java.lang.Object)>(cIdx);
+        if $r1 != null goto label4;
+
+        $r7 = new java.lang.Integer;
+        specialinvoke $r7.<java.lang.Integer: void <init>(int)>(newIndex);
+        interfaceinvoke newComposites.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(cIdx, $r7);
+        newIndex = newIndex + 1;
+
+     label4:
+        goto label3;
+
+     label5:
+        goto label2;
+
+     label6:
+        $r3 = interfaceinvoke newComposites.<java.util.Map: java.util.Set keySet()>();
+        m = interfaceinvoke $r3.<java.util.Set: java.util.Iterator iterator()>();
+
+     label7:
+        $z0 = interfaceinvoke m.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label8;
+
+        $r1 = interfaceinvoke m.<java.util.Iterator: java.lang.Object next()>();
+        im = (java.lang.Integer) $r1;
+        $r6 = interfaceinvoke newComposites.<java.util.Map: java.lang.Object get(java.lang.Object)>(im);
+        interfaceinvoke glyphs.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(im, $r6);
+        goto label7;
+
+     label8:
+        goto label0;
+
+     label9:
+        $r3 = interfaceinvoke allComposites.<java.util.Map: java.util.Set keySet()>();
+        ce = interfaceinvoke $r3.<java.util.Set: java.util.Iterator iterator()>();
+
+     label10:
+        $z0 = interfaceinvoke ce.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label11;
+
+        $l3 = virtualinvoke entry.<org.apache.fop.fonts.truetype.TTFDirTabEntry: long getOffset()>();
+        $i7 = (int) $l3;
+        $r8 = interfaceinvoke ce.<java.util.Iterator: java.lang.Object next()>();
+        $r9 = (java.lang.Integer) $r8;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void remapComposite(org.apache.fop.fonts.truetype.FontFileReader,java.util.Map,int,java.lang.Integer)>(in, glyphs, $i7, $r9);
+        goto label10;
+
+     label11:
+        goto label13;
+
+     label12:
+        $r10 = new java.io.IOException;
+        specialinvoke $r10.<java.io.IOException: void <init>(java.lang.String)>("Can\'t find glyf table");
+        throw $r10;
+
+     label13:
+        return;
+    }
+
+    public byte[] readFont(org.apache.fop.fonts.truetype.FontFileReader, java.lang.String, java.util.Map) throws java.io.IOException
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        org.apache.fop.fonts.truetype.FontFileReader in;
+        java.lang.String name;
+        java.util.Map glyphs;
+        boolean optionalTableFound, $z0;
+        byte[] 'ret', $r1, $r3;
+        java.io.IOException $r0;
+        int $i0, $i1, $i2, $i3;
+        org.apache.commons.logging.Log $r2;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        in := @parameter0: org.apache.fop.fonts.truetype.FontFileReader;
+        name := @parameter1: java.lang.String;
+        glyphs := @parameter2: java.util.Map;
+        $z0 = virtualinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: boolean checkTTC(org.apache.fop.fonts.truetype.FontFileReader,java.lang.String)>(in, name);
+        if $z0 != 0 goto label0;
+
+        $r0 = new java.io.IOException;
+        specialinvoke $r0.<java.io.IOException: void <init>(java.lang.String)>("Failed to read font");
+        throw $r0;
+
+     label0:
+        $i0 = virtualinvoke in.<org.apache.fop.fonts.truetype.FontFileReader: int getFileSize()>();
+        $r1 = newarray (byte)[$i0];
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output> = $r1;
+        virtualinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void readDirTabs(org.apache.fop.fonts.truetype.FontFileReader)>(in);
+        virtualinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void readFontHeader(org.apache.fop.fonts.truetype.FontFileReader)>(in);
+        virtualinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void getNumGlyphs(org.apache.fop.fonts.truetype.FontFileReader)>(in);
+        virtualinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void readHorizontalHeader(org.apache.fop.fonts.truetype.FontFileReader)>(in);
+        virtualinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void readHorizontalMetrics(org.apache.fop.fonts.truetype.FontFileReader)>(in);
+        virtualinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void readIndexToLocation(org.apache.fop.fonts.truetype.FontFileReader)>(in);
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void scanGlyphs(org.apache.fop.fonts.truetype.FontFileReader,java.util.Map)>(in, glyphs);
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void createDirectory()>();
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void createHead(org.apache.fop.fonts.truetype.FontFileReader)>(in);
+        $i1 = interfaceinvoke glyphs.<java.util.Map: int size()>();
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void createHhea(org.apache.fop.fonts.truetype.FontFileReader,int)>(in, $i1);
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void createHmtx(org.apache.fop.fonts.truetype.FontFileReader,java.util.Map)>(in, glyphs);
+        $i1 = interfaceinvoke glyphs.<java.util.Map: int size()>();
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void createMaxp(org.apache.fop.fonts.truetype.FontFileReader,int)>(in, $i1);
+        optionalTableFound = specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: boolean createCvt(org.apache.fop.fonts.truetype.FontFileReader)>(in);
+        if optionalTableFound != 0 goto label1;
+
+        $r2 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("TrueType: ctv table not present. Skipped.");
+
+     label1:
+        optionalTableFound = specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: boolean createFpgm(org.apache.fop.fonts.truetype.FontFileReader)>(in);
+        if optionalTableFound != 0 goto label2;
+
+        $r2 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("TrueType: fpgm table not present. Skipped.");
+
+     label2:
+        optionalTableFound = specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: boolean createPrep(org.apache.fop.fonts.truetype.FontFileReader)>(in);
+        if optionalTableFound != 0 goto label3;
+
+        $r2 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("TrueType: prep table not present. Skipped.");
+
+     label3:
+        $i0 = interfaceinvoke glyphs.<java.util.Map: int size()>();
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void createLoca(int)>($i0);
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void createGlyf(org.apache.fop.fonts.truetype.FontFileReader,java.util.Map)>(in, glyphs);
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void pad4()>();
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void createCheckSumAdjustment()>();
+        $i2 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        'ret' = newarray (byte)[$i2];
+        $r3 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i3 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r3, 0, 'ret', 0, $i3);
+        return 'ret';
+    }
+
+    private int writeString(java.lang.String)
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        java.lang.String str;
+        int length, $i0, $i1, $i2;
+        byte[] buf, $r0;
+        java.io.UnsupportedEncodingException l3, $r2;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        str := @parameter0: java.lang.String;
+        length = 0;
+
+     label0:
+        buf = virtualinvoke str.<java.lang.String: byte[] getBytes(java.lang.String)>("ISO-8859-1");
+        $r0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i1 = lengthof buf;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(buf, 0, $r0, $i0, $i1);
+        length = lengthof buf;
+        $i2 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i2 = $i2 + length;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos> = $i2;
+
+     label1:
+        goto label3;
+
+     label2:
+        $r2 := @caughtexception;
+        l3 = $r2;
+
+     label3:
+        return length;
+
+        catch java.io.UnsupportedEncodingException from label0 to label1 with label2;
+    }
+
+    private void writeByte(byte)
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        byte b;
+        int $i0, $i1;
+        byte[] $r1;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        b := @parameter0: byte;
+        $r1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i1 = $i0 + 1;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos> = $i1;
+        $r1[$i0] = b;
+        return;
+    }
+
+    private void writeUShort(int)
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        int s, $i0;
+        byte b1, b2;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        s := @parameter0: int;
+        $i0 = s >> 8;
+        $i0 = $i0 & 255;
+        b1 = (byte) $i0;
+        $i0 = s & 255;
+        b2 = (byte) $i0;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeByte(byte)>(b1);
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeByte(byte)>(b2);
+        return;
+    }
+
+    private void writeUShort(int, int)
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        int pos, s, $i0, $i1;
+        byte b1, b2;
+        byte[] $r0;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        pos := @parameter0: int;
+        s := @parameter1: int;
+        $i0 = s >> 8;
+        $i0 = $i0 & 255;
+        b1 = (byte) $i0;
+        $i0 = s & 255;
+        b2 = (byte) $i0;
+        $r0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $r0[pos] = b1;
+        $r0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i1 = pos + 1;
+        $r0[$i1] = b2;
+        return;
+    }
+
+    private void writeULong(int)
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        int s, $i0;
+        byte b1, b2, b3, b4;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        s := @parameter0: int;
+        $i0 = s >> 24;
+        $i0 = $i0 & 255;
+        b1 = (byte) $i0;
+        $i0 = s >> 16;
+        $i0 = $i0 & 255;
+        b2 = (byte) $i0;
+        $i0 = s >> 8;
+        $i0 = $i0 & 255;
+        b3 = (byte) $i0;
+        $i0 = s & 255;
+        b4 = (byte) $i0;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeByte(byte)>(b1);
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeByte(byte)>(b2);
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeByte(byte)>(b3);
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeByte(byte)>(b4);
+        return;
+    }
+
+    private void writeULong(int, int)
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        int pos, s, $i0, $i1;
+        byte b1, b2, b3, b4;
+        byte[] $r0;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        pos := @parameter0: int;
+        s := @parameter1: int;
+        $i0 = s >> 24;
+        $i0 = $i0 & 255;
+        b1 = (byte) $i0;
+        $i0 = s >> 16;
+        $i0 = $i0 & 255;
+        b2 = (byte) $i0;
+        $i0 = s >> 8;
+        $i0 = $i0 & 255;
+        b3 = (byte) $i0;
+        $i0 = s & 255;
+        b4 = (byte) $i0;
+        $r0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $r0[pos] = b1;
+        $r0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i1 = pos + 1;
+        $r0[$i1] = b2;
+        $r0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i1 = pos + 2;
+        $r0[$i1] = b3;
+        $r0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i1 = pos + 3;
+        $r0[$i1] = b4;
+        return;
+    }
+
+    private short readShort(int)
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        int pos, 'ret';
+        short $s0;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        pos := @parameter0: int;
+        'ret' = specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int readUShort(int)>(pos);
+        $s0 = (short) 'ret';
+        return $s0;
+    }
+
+    private int readUShort(int)
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        int pos, 'ret', $i0, $i2;
+        byte[] $r0, $r1;
+        byte $b1, $b3;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        pos := @parameter0: int;
+        $r0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        'ret' = $r0[pos];
+        if 'ret' >= 0 goto label0;
+
+        'ret' = 'ret' + 256;
+
+     label0:
+        'ret' = 'ret' << 8;
+        $r0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i0 = pos + 1;
+        $b1 = $r0[$i0];
+        if $b1 >= 0 goto label1;
+
+        $r1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i2 = pos + 1;
+        $b3 = $r1[$i2];
+        $i0 = $b3 + 256;
+        'ret' = 'ret' | $i0;
+        goto label2;
+
+     label1:
+        $r1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i2 = pos + 1;
+        $b3 = $r1[$i2];
+        'ret' = 'ret' | $b3;
+
+     label2:
+        return 'ret';
+    }
+
+    private void pad4()
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        int padSize, i, $i0, $i1, $i2, $i3;
+        byte[] $r0;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        $i1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        padSize = $i1 % 4;
+        i = 0;
+
+     label0:
+        if i >= padSize goto label1;
+
+        $r0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos>;
+        $i2 = $i0 + 1;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int currentPos> = $i2;
+        $r0[$i0] = 0;
+        $i3 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        $i3 = $i3 + 1;
+        this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize> = $i3;
+        i = i + 1;
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    private int maxPow2(int)
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        int max, i, $i1;
+        double $d0, $d1;
+        byte $b0;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        max := @parameter0: int;
+        i = 0;
+
+     label0:
+        $d0 = (double) i;
+        $d1 = staticinvoke <java.lang.Math: double pow(double,double)>(2.0, $d0);
+        $d0 = (double) max;
+        $b0 = $d1 cmpg $d0;
+        if $b0 >= 0 goto label1;
+
+        i = i + 1;
+        goto label0;
+
+     label1:
+        $i1 = i - 1;
+        return $i1;
+    }
+
+    private int log2(int)
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        int num, $i0;
+        double $d0, $d1;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        num := @parameter0: int;
+        $d0 = (double) num;
+        $d0 = staticinvoke <java.lang.Math: double log(double)>($d0);
+        $d1 = staticinvoke <java.lang.Math: double log(double)>(2.0);
+        $d0 = $d0 / $d1;
+        $i0 = (int) $d0;
+        return $i0;
+    }
+
+    private int getCheckSum(int, int)
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        int start, size, $i1;
+        long $l0;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        start := @parameter0: int;
+        size := @parameter1: int;
+        $l0 = specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: long getLongCheckSum(int,int)>(start, size);
+        $i1 = (int) $l0;
+        return $i1;
+    }
+
+    private long getLongCheckSum(int, int)
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        int start, size, remainder, i, l, $i0, $i2;
+        long sum, $l4;
+        byte[] $r0, $r1;
+        byte $b1, $b3;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        start := @parameter0: int;
+        size := @parameter1: int;
+        remainder = size % 4;
+        if remainder == 0 goto label0;
+
+        size = size + remainder;
+
+     label0:
+        sum = 0L;
+        i = 0;
+
+     label1:
+        if i >= size goto label3;
+
+        $r0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i0 = start + i;
+        $b1 = $r0[$i0];
+        l = $b1 << 24;
+        $r1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i2 = start + i;
+        $i2 = $i2 + 1;
+        $b3 = $r1[$i2];
+        $i0 = $b3 << 16;
+        l = l + $i0;
+        $r1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i2 = start + i;
+        $i2 = $i2 + 2;
+        $b3 = $r1[$i2];
+        $i0 = $b3 << 16;
+        l = l + $i0;
+        $r1 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: byte[] output>;
+        $i2 = start + i;
+        $i2 = $i2 + 3;
+        $b3 = $r1[$i2];
+        $i0 = $b3 << 16;
+        l = l + $i0;
+        $l4 = (long) l;
+        sum = sum + $l4;
+        $b1 = sum cmp -1L;
+        if $b1 <= 0 goto label2;
+
+        sum = sum - -1L;
+
+     label2:
+        i = i + 4;
+        goto label1;
+
+     label3:
+        return sum;
+    }
+
+    private void createCheckSumAdjustment()
+    {
+        org.apache.fop.fonts.truetype.TTFSubSetFile this;
+        long sum, $l1;
+        int checksum, $i0, $i2;
+
+        this := @this: org.apache.fop.fonts.truetype.TTFSubSetFile;
+        $i0 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int realSize>;
+        sum = specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: long getLongCheckSum(int,int)>(0, $i0);
+        $l1 = -1313820742L - sum;
+        checksum = (int) $l1;
+        $i2 = this.<org.apache.fop.fonts.truetype.TTFSubSetFile: int checkSumAdjustmentOffset>;
+        specialinvoke this.<org.apache.fop.fonts.truetype.TTFSubSetFile: void writeULong(int,int)>($i2, checksum);
+        return;
+    }
+}

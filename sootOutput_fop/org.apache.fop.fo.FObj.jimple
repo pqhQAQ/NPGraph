@@ -1,0 +1,1070 @@
+public abstract class org.apache.fop.fo.FObj extends org.apache.fop.fo.FONode implements org.apache.fop.fo.Constants
+{
+    private static org.apache.fop.fo.properties.PropertyMaker[] propertyListTable;
+    protected org.apache.fop.fo.FONode firstChild;
+    private java.util.List extensionAttachments;
+    private java.util.Map foreignAttributes;
+    private boolean isOutOfLineFODescendant;
+    private java.util.Map markers;
+    private java.lang.String id;
+
+    public void <init>(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.FObj this, $r0;
+        org.apache.fop.fo.FONode parent;
+        int foID;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.FObj;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        specialinvoke this.<org.apache.fop.fo.FONode: void <init>(org.apache.fop.fo.FONode)>(parent);
+        this.<org.apache.fop.fo.FObj: java.util.List extensionAttachments> = null;
+        this.<org.apache.fop.fo.FObj: java.util.Map foreignAttributes> = null;
+        this.<org.apache.fop.fo.FObj: boolean isOutOfLineFODescendant> = 0;
+        this.<org.apache.fop.fo.FObj: java.util.Map markers> = null;
+        this.<org.apache.fop.fo.FObj: java.lang.String id> = null;
+        if parent == null goto label2;
+
+        $z0 = parent instanceof org.apache.fop.fo.FObj;
+        if $z0 == 0 goto label2;
+
+        $r0 = (org.apache.fop.fo.FObj) parent;
+        $z0 = virtualinvoke $r0.<org.apache.fop.fo.FObj: boolean getIsOutOfLineFODescendant()>();
+        if $z0 == 0 goto label0;
+
+        this.<org.apache.fop.fo.FObj: boolean isOutOfLineFODescendant> = 1;
+        goto label2;
+
+     label0:
+        foID = virtualinvoke this.<org.apache.fop.fo.FObj: int getNameId()>();
+        if foID == 10 goto label1;
+
+        if foID == 12 goto label1;
+
+        if foID != 13 goto label2;
+
+     label1:
+        this.<org.apache.fop.fo.FObj: boolean isOutOfLineFODescendant> = 1;
+
+     label2:
+        return;
+    }
+
+    public org.apache.fop.fo.FONode clone(org.apache.fop.fo.FONode, boolean) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.FObj this, fobj;
+        org.apache.fop.fo.FONode parent, $r0;
+        boolean removeChildren;
+
+        this := @this: org.apache.fop.fo.FObj;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        removeChildren := @parameter1: boolean;
+        $r0 = specialinvoke this.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode clone(org.apache.fop.fo.FONode,boolean)>(parent, removeChildren);
+        fobj = (org.apache.fop.fo.FObj) $r0;
+        if removeChildren == 0 goto label0;
+
+        fobj.<org.apache.fop.fo.FObj: org.apache.fop.fo.FONode firstChild> = null;
+
+     label0:
+        return fobj;
+    }
+
+    public static org.apache.fop.fo.properties.PropertyMaker getPropertyMakerFor(int)
+    {
+        int propId;
+        org.apache.fop.fo.properties.PropertyMaker[] $r0;
+        org.apache.fop.fo.properties.PropertyMaker $r1;
+
+        propId := @parameter0: int;
+        $r0 = <org.apache.fop.fo.FObj: org.apache.fop.fo.properties.PropertyMaker[] propertyListTable>;
+        $r1 = $r0[propId];
+        return $r1;
+    }
+
+    public void processNode(java.lang.String, org.xml.sax.Locator, org.xml.sax.Attributes, org.apache.fop.fo.PropertyList) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.FObj this;
+        java.lang.String elementName, $r0;
+        org.xml.sax.Locator locator;
+        org.xml.sax.Attributes attlist;
+        org.apache.fop.fo.PropertyList pList;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.FObj;
+        elementName := @parameter0: java.lang.String;
+        locator := @parameter1: org.xml.sax.Locator;
+        attlist := @parameter2: org.xml.sax.Attributes;
+        pList := @parameter3: org.apache.fop.fo.PropertyList;
+        virtualinvoke this.<org.apache.fop.fo.FObj: void setLocator(org.xml.sax.Locator)>(locator);
+        virtualinvoke pList.<org.apache.fop.fo.PropertyList: void addAttributesToList(org.xml.sax.Attributes)>(attlist);
+        $z0 = virtualinvoke this.<org.apache.fop.fo.FObj: boolean inMarker()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = "marker";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(elementName);
+        if $z0 == 0 goto label1;
+
+     label0:
+        virtualinvoke pList.<org.apache.fop.fo.PropertyList: void setWritingMode()>();
+        virtualinvoke this.<org.apache.fop.fo.FObj: void bind(org.apache.fop.fo.PropertyList)>(pList);
+
+     label1:
+        return;
+    }
+
+    protected org.apache.fop.fo.PropertyList createPropertyList(org.apache.fop.fo.PropertyList, org.apache.fop.fo.FOEventHandler) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.FObj this;
+        org.apache.fop.fo.PropertyList parent, $r1;
+        org.apache.fop.fo.FOEventHandler foEventHandler;
+        org.apache.fop.fo.PropertyListMaker $r0;
+
+        this := @this: org.apache.fop.fo.FObj;
+        parent := @parameter0: org.apache.fop.fo.PropertyList;
+        foEventHandler := @parameter1: org.apache.fop.fo.FOEventHandler;
+        $r0 = virtualinvoke foEventHandler.<org.apache.fop.fo.FOEventHandler: org.apache.fop.fo.PropertyListMaker getPropertyListMaker()>();
+        $r1 = interfaceinvoke $r0.<org.apache.fop.fo.PropertyListMaker: org.apache.fop.fo.PropertyList make(org.apache.fop.fo.FObj,org.apache.fop.fo.PropertyList)>(this, parent);
+        return $r1;
+    }
+
+    public void bind(org.apache.fop.fo.PropertyList) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.FObj this;
+        org.apache.fop.fo.PropertyList pList;
+        org.apache.fop.fo.properties.Property $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.fo.FObj;
+        pList := @parameter0: org.apache.fop.fo.PropertyList;
+        $r0 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(113);
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.properties.Property: java.lang.String getString()>();
+        this.<org.apache.fop.fo.FObj: java.lang.String id> = $r1;
+        return;
+    }
+
+    protected void startOfNode() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.FObj this;
+        java.lang.String $r0, $r1;
+
+        this := @this: org.apache.fop.fo.FObj;
+        $r0 = this.<org.apache.fop.fo.FObj: java.lang.String id>;
+        if $r0 == null goto label0;
+
+        $r1 = this.<org.apache.fop.fo.FObj: java.lang.String id>;
+        specialinvoke this.<org.apache.fop.fo.FObj: void checkId(java.lang.String)>($r1);
+
+     label0:
+        return;
+    }
+
+    private void checkId(java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.FObj this;
+        java.lang.String id, $r4, $r8;
+        java.util.Set idrefs;
+        java.lang.StringBuffer $r0, msg, $r7;
+        boolean $z0;
+        org.apache.fop.fo.FOEventHandler $r1;
+        org.apache.fop.apps.FOUserAgent $r2;
+        org.apache.fop.fo.ValidationException $r3;
+        org.xml.sax.Locator $r5, $r9, $r10;
+        org.apache.commons.logging.Log $r6;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.fo.FObj;
+        id := @parameter0: java.lang.String;
+        $z0 = virtualinvoke this.<org.apache.fop.fo.FObj: boolean inMarker()>();
+        if $z0 != 0 goto label3;
+
+        $z0 = virtualinvoke id.<java.lang.String: boolean equals(java.lang.Object)>("");
+        if $z0 != 0 goto label3;
+
+        $r1 = virtualinvoke this.<org.apache.fop.fo.FObj: org.apache.fop.fo.FOEventHandler getFOEventHandler()>();
+        idrefs = virtualinvoke $r1.<org.apache.fop.fo.FOEventHandler: java.util.Set getIDReferences()>();
+        $z0 = interfaceinvoke idrefs.<java.util.Set: boolean contains(java.lang.Object)>(id);
+        if $z0 != 0 goto label0;
+
+        interfaceinvoke idrefs.<java.util.Set: boolean add(java.lang.Object)>(id);
+        goto label3;
+
+     label0:
+        $r2 = virtualinvoke this.<org.apache.fop.fo.FObj: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        $z0 = virtualinvoke $r2.<org.apache.fop.apps.FOUserAgent: boolean validateStrictly()>();
+        if $z0 == 0 goto label1;
+
+        $r3 = new org.apache.fop.fo.ValidationException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Property id \"");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(id);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\" previously used; id values must be unique in document.");
+        $r4 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r5 = this.<org.apache.fop.fo.FObj: org.xml.sax.Locator locator>;
+        specialinvoke $r3.<org.apache.fop.fo.ValidationException: void <init>(java.lang.String,org.xml.sax.Locator)>($r4, $r5);
+        throw $r3;
+
+     label1:
+        $r6 = <org.apache.fop.fo.FObj: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r6.<org.apache.commons.logging.Log: boolean isWarnEnabled()>();
+        if $z0 == 0 goto label3;
+
+        $r7 = new java.lang.StringBuffer;
+        specialinvoke $r7.<java.lang.StringBuffer: void <init>()>();
+        msg = $r7;
+        $r7 = virtualinvoke msg.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Found non-unique id on ");
+        $r8 = virtualinvoke this.<org.apache.fop.fo.FObj: java.lang.String getName()>();
+        virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r8);
+        $r9 = this.<org.apache.fop.fo.FObj: org.xml.sax.Locator locator>;
+        if $r9 == null goto label2;
+
+        $r9 = this.<org.apache.fop.fo.FObj: org.xml.sax.Locator locator>;
+        $i0 = interfaceinvoke $r9.<org.xml.sax.Locator: int getLineNumber()>();
+        if $i0 == -1 goto label2;
+
+        $r7 = virtualinvoke msg.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" (at ");
+        $r10 = this.<org.apache.fop.fo.FObj: org.xml.sax.Locator locator>;
+        $i1 = interfaceinvoke $r10.<org.xml.sax.Locator: int getLineNumber()>();
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("/");
+        $r10 = this.<org.apache.fop.fo.FObj: org.xml.sax.Locator locator>;
+        $i1 = interfaceinvoke $r10.<org.xml.sax.Locator: int getColumnNumber()>();
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(")");
+
+     label2:
+        virtualinvoke msg.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\nAny reference to it will be considered a reference to the first occurrence in the document.");
+        $r6 = <org.apache.fop.fo.FObj: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r6.<org.apache.commons.logging.Log: void warn(java.lang.Object)>(msg);
+
+     label3:
+        return;
+    }
+
+    public boolean getIsOutOfLineFODescendant()
+    {
+        org.apache.fop.fo.FObj this;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.FObj;
+        $z0 = this.<org.apache.fop.fo.FObj: boolean isOutOfLineFODescendant>;
+        return $z0;
+    }
+
+    protected void addChildNode(org.apache.fop.fo.FONode) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.FObj this;
+        org.apache.fop.fo.FONode child, prevChild, $r1;
+        org.apache.fop.fo.extensions.ExtensionAttachment attachment;
+        boolean $z0;
+        int $i0;
+        org.apache.fop.fo.flow.Marker $r0;
+        org.apache.fop.fo.FONode[] $r2;
+
+        this := @this: org.apache.fop.fo.FObj;
+        child := @parameter0: org.apache.fop.fo.FONode;
+        $z0 = virtualinvoke this.<org.apache.fop.fo.FObj: boolean canHaveMarkers()>();
+        if $z0 == 0 goto label0;
+
+        $i0 = virtualinvoke child.<org.apache.fop.fo.FONode: int getNameId()>();
+        if $i0 != 24 goto label0;
+
+        $r0 = (org.apache.fop.fo.flow.Marker) child;
+        virtualinvoke this.<org.apache.fop.fo.FObj: void addMarker(org.apache.fop.fo.flow.Marker)>($r0);
+        goto label5;
+
+     label0:
+        attachment = virtualinvoke child.<org.apache.fop.fo.FONode: org.apache.fop.fo.extensions.ExtensionAttachment getExtensionAttachment()>();
+        if attachment == null goto label1;
+
+        virtualinvoke this.<org.apache.fop.fo.FObj: void addExtensionAttachment(org.apache.fop.fo.extensions.ExtensionAttachment)>(attachment);
+        goto label5;
+
+     label1:
+        $r1 = this.<org.apache.fop.fo.FObj: org.apache.fop.fo.FONode firstChild>;
+        if $r1 != null goto label2;
+
+        this.<org.apache.fop.fo.FObj: org.apache.fop.fo.FONode firstChild> = child;
+        goto label5;
+
+     label2:
+        prevChild = this.<org.apache.fop.fo.FObj: org.apache.fop.fo.FONode firstChild>;
+
+     label3:
+        $r2 = prevChild.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode[] siblings>;
+        if $r2 == null goto label4;
+
+        $r2 = prevChild.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode[] siblings>;
+        $r1 = $r2[1];
+        if $r1 == null goto label4;
+
+        $r2 = prevChild.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode[] siblings>;
+        prevChild = $r2[1];
+        goto label3;
+
+     label4:
+        staticinvoke <org.apache.fop.fo.FONode: void attachSiblings(org.apache.fop.fo.FONode,org.apache.fop.fo.FONode)>(prevChild, child);
+
+     label5:
+        return;
+    }
+
+    protected static void addChildTo(org.apache.fop.fo.FONode, org.apache.fop.fo.FObj) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.FONode child;
+        org.apache.fop.fo.FObj parent;
+
+        child := @parameter0: org.apache.fop.fo.FONode;
+        parent := @parameter1: org.apache.fop.fo.FObj;
+        virtualinvoke parent.<org.apache.fop.fo.FObj: void addChildNode(org.apache.fop.fo.FONode)>(child);
+        return;
+    }
+
+    public void removeChild(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.FObj this;
+        org.apache.fop.fo.FONode child, nextChild, prevChild, $r1, $r2;
+        org.apache.fop.fo.FONode[] $r0;
+
+        this := @this: org.apache.fop.fo.FObj;
+        child := @parameter0: org.apache.fop.fo.FONode;
+        nextChild = null;
+        $r0 = child.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode[] siblings>;
+        if $r0 == null goto label0;
+
+        $r0 = child.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode[] siblings>;
+        nextChild = $r0[1];
+
+     label0:
+        $r1 = this.<org.apache.fop.fo.FObj: org.apache.fop.fo.FONode firstChild>;
+        if child != $r1 goto label1;
+
+        this.<org.apache.fop.fo.FObj: org.apache.fop.fo.FONode firstChild> = nextChild;
+        $r2 = this.<org.apache.fop.fo.FObj: org.apache.fop.fo.FONode firstChild>;
+        if $r2 == null goto label2;
+
+        $r2 = this.<org.apache.fop.fo.FObj: org.apache.fop.fo.FONode firstChild>;
+        $r0 = $r2.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode[] siblings>;
+        $r0[0] = null;
+        goto label2;
+
+     label1:
+        $r0 = child.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode[] siblings>;
+        prevChild = $r0[0];
+        $r0 = prevChild.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode[] siblings>;
+        $r0[1] = nextChild;
+        if nextChild == null goto label2;
+
+        $r0 = nextChild.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode[] siblings>;
+        $r0[0] = prevChild;
+
+     label2:
+        return;
+    }
+
+    public org.apache.fop.fo.FObj findNearestAncestorFObj()
+    {
+        org.apache.fop.fo.FObj this, $r0;
+        org.apache.fop.fo.FONode par;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.FObj;
+        par = this.<org.apache.fop.fo.FObj: org.apache.fop.fo.FONode parent>;
+
+     label0:
+        if par == null goto label1;
+
+        $z0 = par instanceof org.apache.fop.fo.FObj;
+        if $z0 != 0 goto label1;
+
+        par = par.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode parent>;
+        goto label0;
+
+     label1:
+        $r0 = (org.apache.fop.fo.FObj) par;
+        return $r0;
+    }
+
+    public boolean generatesReferenceAreas()
+    {
+        org.apache.fop.fo.FObj this;
+
+        this := @this: org.apache.fop.fo.FObj;
+        return 0;
+    }
+
+    public org.apache.fop.fo.FONode$FONodeIterator getChildNodes()
+    {
+        org.apache.fop.fo.FObj this;
+        org.apache.fop.fo.FONode $r0;
+        org.apache.fop.fo.FObj$FObjIterator $r1;
+
+        this := @this: org.apache.fop.fo.FObj;
+        $r0 = this.<org.apache.fop.fo.FObj: org.apache.fop.fo.FONode firstChild>;
+        if $r0 == null goto label0;
+
+        $r1 = new org.apache.fop.fo.FObj$FObjIterator;
+        specialinvoke $r1.<org.apache.fop.fo.FObj$FObjIterator: void <init>(org.apache.fop.fo.FObj,org.apache.fop.fo.FObj)>(this, this);
+        return $r1;
+
+     label0:
+        return null;
+    }
+
+    public org.apache.fop.fo.FONode$FONodeIterator getChildNodes(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.FObj this;
+        org.apache.fop.fo.FONode childNode, $r0;
+        org.apache.fop.fo.FONode$FONodeIterator it;
+        boolean $z0;
+        org.apache.fop.fo.FONode[] $r1;
+
+        this := @this: org.apache.fop.fo.FObj;
+        childNode := @parameter0: org.apache.fop.fo.FONode;
+        it = virtualinvoke this.<org.apache.fop.fo.FObj: org.apache.fop.fo.FONode$FONodeIterator getChildNodes()>();
+        if it == null goto label3;
+
+        $r0 = this.<org.apache.fop.fo.FObj: org.apache.fop.fo.FONode firstChild>;
+        if $r0 != childNode goto label0;
+
+        return it;
+
+     label0:
+        $z0 = interfaceinvoke it.<org.apache.fop.fo.FONode$FONodeIterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r0 = interfaceinvoke it.<org.apache.fop.fo.FONode$FONodeIterator: org.apache.fop.fo.FONode nextNode()>();
+        $r1 = $r0.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode[] siblings>;
+        $r0 = $r1[1];
+        if $r0 == childNode goto label1;
+
+        goto label0;
+
+     label1:
+        $z0 = interfaceinvoke it.<org.apache.fop.fo.FONode$FONodeIterator: boolean hasNext()>();
+        if $z0 == 0 goto label2;
+
+        return it;
+
+     label2:
+        return null;
+
+     label3:
+        return null;
+    }
+
+    protected void notifyChildRemoval(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.FObj this;
+        org.apache.fop.fo.FONode node;
+
+        this := @this: org.apache.fop.fo.FObj;
+        node := @parameter0: org.apache.fop.fo.FONode;
+        return;
+    }
+
+    protected void addMarker(org.apache.fop.fo.flow.Marker)
+    {
+        org.apache.fop.fo.FObj this;
+        org.apache.fop.fo.flow.Marker marker;
+        java.lang.String mcname, $r5;
+        org.apache.fop.fo.FONode$FONodeIterator iter;
+        org.apache.fop.fo.FONode node, $r1;
+        java.lang.StringBuffer $r0;
+        boolean $z0;
+        java.lang.Object $r2;
+        org.apache.fop.fo.FOText $r3;
+        org.apache.commons.logging.Log $r4;
+        java.util.Map $r6;
+        java.util.HashMap $r7;
+
+        this := @this: org.apache.fop.fo.FObj;
+        marker := @parameter0: org.apache.fop.fo.flow.Marker;
+        mcname = virtualinvoke marker.<org.apache.fop.fo.flow.Marker: java.lang.String getMarkerClassName()>();
+        $r1 = this.<org.apache.fop.fo.FObj: org.apache.fop.fo.FONode firstChild>;
+        if $r1 == null goto label4;
+
+        iter = virtualinvoke this.<org.apache.fop.fo.FObj: org.apache.fop.fo.FONode$FONodeIterator getChildNodes()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label4;
+
+        $r2 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        node = (org.apache.fop.fo.FONode) $r2;
+        $z0 = node instanceof org.apache.fop.fo.FObj;
+        if $z0 != 0 goto label1;
+
+        $z0 = node instanceof org.apache.fop.fo.FOText;
+        if $z0 == 0 goto label2;
+
+        $r3 = (org.apache.fop.fo.FOText) node;
+        $z0 = virtualinvoke $r3.<org.apache.fop.fo.FOText: boolean willCreateArea()>();
+        if $z0 == 0 goto label2;
+
+     label1:
+        $r4 = <org.apache.fop.fo.FObj: org.apache.commons.logging.Log log>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("fo:marker must be an initial child: ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(mcname);
+        $r5 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r4.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r5);
+        return;
+
+     label2:
+        $z0 = node instanceof org.apache.fop.fo.FOText;
+        if $z0 == 0 goto label3;
+
+        interfaceinvoke iter.<java.util.Iterator: void remove()>();
+        virtualinvoke this.<org.apache.fop.fo.FObj: void notifyChildRemoval(org.apache.fop.fo.FONode)>(node);
+
+     label3:
+        goto label0;
+
+     label4:
+        $r6 = this.<org.apache.fop.fo.FObj: java.util.Map markers>;
+        if $r6 != null goto label5;
+
+        $r7 = new java.util.HashMap;
+        specialinvoke $r7.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.fo.FObj: java.util.Map markers> = $r7;
+
+     label5:
+        $r6 = this.<org.apache.fop.fo.FObj: java.util.Map markers>;
+        $z0 = interfaceinvoke $r6.<java.util.Map: boolean containsKey(java.lang.Object)>(mcname);
+        if $z0 != 0 goto label6;
+
+        $r6 = this.<org.apache.fop.fo.FObj: java.util.Map markers>;
+        interfaceinvoke $r6.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(mcname, marker);
+        goto label7;
+
+     label6:
+        $r4 = <org.apache.fop.fo.FObj: org.apache.commons.logging.Log log>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("fo:marker \'marker-class-name\' must be unique for same parent: ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(mcname);
+        $r5 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r4.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r5);
+
+     label7:
+        return;
+    }
+
+    public boolean hasMarkers()
+    {
+        org.apache.fop.fo.FObj this;
+        java.util.Map $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.FObj;
+        $r0 = this.<org.apache.fop.fo.FObj: java.util.Map markers>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.fo.FObj: java.util.Map markers>;
+        $z0 = interfaceinvoke $r0.<java.util.Map: boolean isEmpty()>();
+        if $z0 != 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public java.util.Map getMarkers()
+    {
+        org.apache.fop.fo.FObj this;
+        java.util.Map $r0;
+
+        this := @this: org.apache.fop.fo.FObj;
+        $r0 = this.<org.apache.fop.fo.FObj: java.util.Map markers>;
+        return $r0;
+    }
+
+    protected java.lang.String gatherContextInfo()
+    {
+        org.apache.fop.fo.FObj this;
+        org.apache.fop.fo.FONode$FONodeIterator iter;
+        java.lang.StringBuffer sb, $r2;
+        org.apache.fop.fo.FONode node;
+        java.lang.String s, $r1;
+        org.xml.sax.Locator $r0;
+        boolean $z0;
+        java.lang.Object $r3;
+        int $i0;
+
+        this := @this: org.apache.fop.fo.FObj;
+        $r0 = virtualinvoke this.<org.apache.fop.fo.FObj: org.xml.sax.Locator getLocator()>();
+        if $r0 == null goto label0;
+
+        $r1 = specialinvoke this.<org.apache.fop.fo.FONode: java.lang.String gatherContextInfo()>();
+        return $r1;
+
+     label0:
+        iter = virtualinvoke this.<org.apache.fop.fo.FObj: org.apache.fop.fo.FONode$FONodeIterator getChildNodes()>();
+        if iter != null goto label1;
+
+        return null;
+
+     label1:
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        sb = $r2;
+
+     label2:
+        $z0 = interfaceinvoke iter.<java.util.ListIterator: boolean hasNext()>();
+        if $z0 == 0 goto label5;
+
+        $r3 = interfaceinvoke iter.<java.util.ListIterator: java.lang.Object next()>();
+        node = (org.apache.fop.fo.FONode) $r3;
+        s = virtualinvoke node.<org.apache.fop.fo.FONode: java.lang.String gatherContextInfo()>();
+        if s == null goto label4;
+
+        $i0 = virtualinvoke sb.<java.lang.StringBuffer: int length()>();
+        if $i0 <= 0 goto label3;
+
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", ");
+
+     label3:
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(s);
+
+     label4:
+        goto label2;
+
+     label5:
+        $i0 = virtualinvoke sb.<java.lang.StringBuffer: int length()>();
+        if $i0 <= 0 goto label6;
+
+        $r1 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        goto label7;
+
+     label6:
+        $r1 = null;
+
+     label7:
+        return $r1;
+    }
+
+    protected boolean isBlockItem(java.lang.String, java.lang.String)
+    {
+        org.apache.fop.fo.FObj this;
+        java.lang.String nsURI, lName, $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.FObj;
+        nsURI := @parameter0: java.lang.String;
+        lName := @parameter1: java.lang.String;
+        $r0 = "http://www.w3.org/1999/XSL/Format";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(nsURI);
+        if $z0 == 0 goto label1;
+
+        $z0 = virtualinvoke lName.<java.lang.String: boolean equals(java.lang.Object)>("block");
+        if $z0 != 0 goto label0;
+
+        $z0 = virtualinvoke lName.<java.lang.String: boolean equals(java.lang.Object)>("table");
+        if $z0 != 0 goto label0;
+
+        $z0 = virtualinvoke lName.<java.lang.String: boolean equals(java.lang.Object)>("table-and-caption");
+        if $z0 != 0 goto label0;
+
+        $z0 = virtualinvoke lName.<java.lang.String: boolean equals(java.lang.Object)>("block-container");
+        if $z0 != 0 goto label0;
+
+        $z0 = virtualinvoke lName.<java.lang.String: boolean equals(java.lang.Object)>("list-block");
+        if $z0 != 0 goto label0;
+
+        $z0 = virtualinvoke lName.<java.lang.String: boolean equals(java.lang.Object)>("float");
+        if $z0 != 0 goto label0;
+
+        $z0 = virtualinvoke this.<org.apache.fop.fo.FObj: boolean isNeutralItem(java.lang.String,java.lang.String)>(nsURI, lName);
+        if $z0 == 0 goto label1;
+
+     label0:
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    protected boolean isInlineItem(java.lang.String, java.lang.String)
+    {
+        org.apache.fop.fo.FObj this;
+        java.lang.String nsURI, lName, $r0;
+        boolean $z0;
+        int $i0;
+
+        this := @this: org.apache.fop.fo.FObj;
+        nsURI := @parameter0: java.lang.String;
+        lName := @parameter1: java.lang.String;
+        $r0 = "http://www.w3.org/1999/XSL/Format";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(nsURI);
+        if $z0 == 0 goto label3;
+
+        $z0 = virtualinvoke lName.<java.lang.String: boolean equals(java.lang.Object)>("bidi-override");
+        if $z0 != 0 goto label2;
+
+        $z0 = virtualinvoke lName.<java.lang.String: boolean equals(java.lang.Object)>("character");
+        if $z0 != 0 goto label2;
+
+        $z0 = virtualinvoke lName.<java.lang.String: boolean equals(java.lang.Object)>("external-graphic");
+        if $z0 != 0 goto label2;
+
+        $z0 = virtualinvoke lName.<java.lang.String: boolean equals(java.lang.Object)>("instream-foreign-object");
+        if $z0 != 0 goto label2;
+
+        $z0 = virtualinvoke lName.<java.lang.String: boolean equals(java.lang.Object)>("inline");
+        if $z0 != 0 goto label2;
+
+        $z0 = virtualinvoke lName.<java.lang.String: boolean equals(java.lang.Object)>("inline-container");
+        if $z0 != 0 goto label2;
+
+        $z0 = virtualinvoke lName.<java.lang.String: boolean equals(java.lang.Object)>("leader");
+        if $z0 != 0 goto label2;
+
+        $z0 = virtualinvoke lName.<java.lang.String: boolean equals(java.lang.Object)>("page-number");
+        if $z0 != 0 goto label2;
+
+        $z0 = virtualinvoke lName.<java.lang.String: boolean equals(java.lang.Object)>("page-number-citation");
+        if $z0 != 0 goto label2;
+
+        $z0 = virtualinvoke lName.<java.lang.String: boolean equals(java.lang.Object)>("page-number-citation-last");
+        if $z0 != 0 goto label2;
+
+        $z0 = virtualinvoke lName.<java.lang.String: boolean equals(java.lang.Object)>("basic-link");
+        if $z0 != 0 goto label2;
+
+        $z0 = virtualinvoke lName.<java.lang.String: boolean equals(java.lang.Object)>("multi-toggle");
+        if $z0 == 0 goto label0;
+
+        $i0 = virtualinvoke this.<org.apache.fop.fo.FObj: int getNameId()>();
+        if $i0 == 25 goto label2;
+
+        $i0 = virtualinvoke this.<org.apache.fop.fo.FObj: int findAncestor(int)>(25);
+        if $i0 > 0 goto label2;
+
+     label0:
+        $z0 = virtualinvoke lName.<java.lang.String: boolean equals(java.lang.Object)>("footnote");
+        if $z0 == 0 goto label1;
+
+        $z0 = this.<org.apache.fop.fo.FObj: boolean isOutOfLineFODescendant>;
+        if $z0 == 0 goto label2;
+
+     label1:
+        $z0 = virtualinvoke this.<org.apache.fop.fo.FObj: boolean isNeutralItem(java.lang.String,java.lang.String)>(nsURI, lName);
+        if $z0 == 0 goto label3;
+
+     label2:
+        $z0 = 1;
+        goto label4;
+
+     label3:
+        $z0 = 0;
+
+     label4:
+        return $z0;
+    }
+
+    protected boolean isBlockOrInlineItem(java.lang.String, java.lang.String)
+    {
+        org.apache.fop.fo.FObj this;
+        java.lang.String nsURI, lName;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.FObj;
+        nsURI := @parameter0: java.lang.String;
+        lName := @parameter1: java.lang.String;
+        $z0 = virtualinvoke this.<org.apache.fop.fo.FObj: boolean isBlockItem(java.lang.String,java.lang.String)>(nsURI, lName);
+        if $z0 != 0 goto label0;
+
+        $z0 = virtualinvoke this.<org.apache.fop.fo.FObj: boolean isInlineItem(java.lang.String,java.lang.String)>(nsURI, lName);
+        if $z0 == 0 goto label1;
+
+     label0:
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    protected boolean isNeutralItem(java.lang.String, java.lang.String)
+    {
+        org.apache.fop.fo.FObj this;
+        java.lang.String nsURI, lName, $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.FObj;
+        nsURI := @parameter0: java.lang.String;
+        lName := @parameter1: java.lang.String;
+        $r0 = "http://www.w3.org/1999/XSL/Format";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(nsURI);
+        if $z0 == 0 goto label2;
+
+        $z0 = virtualinvoke lName.<java.lang.String: boolean equals(java.lang.Object)>("multi-switch");
+        if $z0 != 0 goto label1;
+
+        $z0 = virtualinvoke lName.<java.lang.String: boolean equals(java.lang.Object)>("multi-properties");
+        if $z0 != 0 goto label1;
+
+        $z0 = virtualinvoke lName.<java.lang.String: boolean equals(java.lang.Object)>("wrapper");
+        if $z0 != 0 goto label1;
+
+        $z0 = this.<org.apache.fop.fo.FObj: boolean isOutOfLineFODescendant>;
+        if $z0 != 0 goto label0;
+
+        $z0 = virtualinvoke lName.<java.lang.String: boolean equals(java.lang.Object)>("float");
+        if $z0 != 0 goto label1;
+
+     label0:
+        $z0 = virtualinvoke lName.<java.lang.String: boolean equals(java.lang.Object)>("retrieve-marker");
+        if $z0 == 0 goto label2;
+
+     label1:
+        $z0 = 1;
+        goto label3;
+
+     label2:
+        $z0 = 0;
+
+     label3:
+        return $z0;
+    }
+
+    protected int findAncestor(int)
+    {
+        org.apache.fop.fo.FObj this;
+        int ancestorID, found, $i0;
+        org.apache.fop.fo.FONode temp;
+
+        this := @this: org.apache.fop.fo.FObj;
+        ancestorID := @parameter0: int;
+        found = 1;
+        temp = virtualinvoke this.<org.apache.fop.fo.FObj: org.apache.fop.fo.FONode getParent()>();
+
+     label0:
+        if temp == null goto label2;
+
+        $i0 = virtualinvoke temp.<org.apache.fop.fo.FONode: int getNameId()>();
+        if $i0 != ancestorID goto label1;
+
+        return found;
+
+     label1:
+        found = found + 1;
+        temp = virtualinvoke temp.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode getParent()>();
+        goto label0;
+
+     label2:
+        return -1;
+    }
+
+    public java.lang.String getId()
+    {
+        org.apache.fop.fo.FObj this;
+        java.lang.String $r0;
+
+        this := @this: org.apache.fop.fo.FObj;
+        $r0 = this.<org.apache.fop.fo.FObj: java.lang.String id>;
+        return $r0;
+    }
+
+    public boolean hasId()
+    {
+        org.apache.fop.fo.FObj this;
+        java.lang.String $r0;
+        int $i0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.FObj;
+        $r0 = this.<org.apache.fop.fo.FObj: java.lang.String id>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.fo.FObj: java.lang.String id>;
+        $i0 = virtualinvoke $r0.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public java.lang.String getNamespaceURI()
+    {
+        org.apache.fop.fo.FObj this;
+
+        this := @this: org.apache.fop.fo.FObj;
+        return "http://www.w3.org/1999/XSL/Format";
+    }
+
+    public java.lang.String getNormalNamespacePrefix()
+    {
+        org.apache.fop.fo.FObj this;
+
+        this := @this: org.apache.fop.fo.FObj;
+        return "fo";
+    }
+
+    public void addExtensionAttachment(org.apache.fop.fo.extensions.ExtensionAttachment)
+    {
+        org.apache.fop.fo.FObj this;
+        org.apache.fop.fo.extensions.ExtensionAttachment attachment;
+        java.lang.NullPointerException $r0;
+        java.util.List $r1;
+        java.util.ArrayList $r2;
+        org.apache.commons.logging.Log $r3;
+        boolean $z0;
+        java.lang.StringBuffer $r4;
+        java.lang.String $r5, $r6;
+
+        this := @this: org.apache.fop.fo.FObj;
+        attachment := @parameter0: org.apache.fop.fo.extensions.ExtensionAttachment;
+        if attachment != null goto label0;
+
+        $r0 = new java.lang.NullPointerException;
+        specialinvoke $r0.<java.lang.NullPointerException: void <init>(java.lang.String)>("Parameter attachment must not be null");
+        throw $r0;
+
+     label0:
+        $r1 = this.<org.apache.fop.fo.FObj: java.util.List extensionAttachments>;
+        if $r1 != null goto label1;
+
+        $r2 = new java.util.ArrayList;
+        specialinvoke $r2.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.fo.FObj: java.util.List extensionAttachments> = $r2;
+
+     label1:
+        $r3 = <org.apache.fop.fo.FObj: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r3.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label2;
+
+        $r3 = <org.apache.fop.fo.FObj: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("ExtensionAttachment of category ");
+        $r5 = interfaceinvoke attachment.<org.apache.fop.fo.extensions.ExtensionAttachment: java.lang.String getCategory()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" added to ");
+        $r5 = virtualinvoke this.<org.apache.fop.fo.FObj: java.lang.String getName()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(attachment);
+        $r6 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r6);
+
+     label2:
+        $r1 = this.<org.apache.fop.fo.FObj: java.util.List extensionAttachments>;
+        interfaceinvoke $r1.<java.util.List: boolean add(java.lang.Object)>(attachment);
+        return;
+    }
+
+    public java.util.List getExtensionAttachments()
+    {
+        org.apache.fop.fo.FObj this;
+        java.util.List $r0;
+
+        this := @this: org.apache.fop.fo.FObj;
+        $r0 = this.<org.apache.fop.fo.FObj: java.util.List extensionAttachments>;
+        if $r0 != null goto label0;
+
+        $r0 = <java.util.Collections: java.util.List EMPTY_LIST>;
+        return $r0;
+
+     label0:
+        $r0 = this.<org.apache.fop.fo.FObj: java.util.List extensionAttachments>;
+        return $r0;
+    }
+
+    public void addForeignAttribute(org.apache.fop.util.QName, java.lang.String)
+    {
+        org.apache.fop.fo.FObj this;
+        org.apache.fop.util.QName attributeName;
+        java.lang.String value;
+        java.lang.NullPointerException $r0;
+        java.util.Map $r1;
+        java.util.HashMap $r2;
+
+        this := @this: org.apache.fop.fo.FObj;
+        attributeName := @parameter0: org.apache.fop.util.QName;
+        value := @parameter1: java.lang.String;
+        if attributeName != null goto label0;
+
+        $r0 = new java.lang.NullPointerException;
+        specialinvoke $r0.<java.lang.NullPointerException: void <init>(java.lang.String)>("Parameter attributeName must not be null");
+        throw $r0;
+
+     label0:
+        $r1 = this.<org.apache.fop.fo.FObj: java.util.Map foreignAttributes>;
+        if $r1 != null goto label1;
+
+        $r2 = new java.util.HashMap;
+        specialinvoke $r2.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.fo.FObj: java.util.Map foreignAttributes> = $r2;
+
+     label1:
+        $r1 = this.<org.apache.fop.fo.FObj: java.util.Map foreignAttributes>;
+        interfaceinvoke $r1.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(attributeName, value);
+        return;
+    }
+
+    public java.util.Map getForeignAttributes()
+    {
+        org.apache.fop.fo.FObj this;
+        java.util.Map $r0;
+
+        this := @this: org.apache.fop.fo.FObj;
+        $r0 = this.<org.apache.fop.fo.FObj: java.util.Map foreignAttributes>;
+        if $r0 != null goto label0;
+
+        $r0 = <java.util.Collections: java.util.Map EMPTY_MAP>;
+        return $r0;
+
+     label0:
+        $r0 = this.<org.apache.fop.fo.FObj: java.util.Map foreignAttributes>;
+        return $r0;
+    }
+
+    public java.lang.String toString()
+    {
+        org.apache.fop.fo.FObj this;
+        java.lang.StringBuffer $r0;
+        java.lang.String $r1, $r2;
+
+        this := @this: org.apache.fop.fo.FObj;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r1 = specialinvoke this.<java.lang.Object: java.lang.String toString()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("[@id=");
+        $r1 = this.<org.apache.fop.fo.FObj: java.lang.String id>;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("]");
+        $r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r2;
+    }
+
+    static void <clinit>()
+    {
+        org.apache.fop.fo.properties.PropertyMaker[] $r0;
+
+        $r0 = staticinvoke <org.apache.fop.fo.FOPropertyMapping: org.apache.fop.fo.properties.PropertyMaker[] getGenericMappings()>();
+        <org.apache.fop.fo.FObj: org.apache.fop.fo.properties.PropertyMaker[] propertyListTable> = $r0;
+        return;
+    }
+}

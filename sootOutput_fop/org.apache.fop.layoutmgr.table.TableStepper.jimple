@@ -1,0 +1,1133 @@
+public class org.apache.fop.layoutmgr.table.TableStepper extends java.lang.Object
+{
+    private static org.apache.commons.logging.Log log;
+    private org.apache.fop.layoutmgr.table.TableContentLayoutManager tclm;
+    private org.apache.fop.fo.flow.table.EffRow[] rowGroup;
+    private int columnCount;
+    private int totalHeight;
+    private int previousRowsLength;
+    private int activeRowIndex;
+    private boolean rowFinished;
+    private java.util.List activeCells;
+    private java.util.List nextActiveCells;
+    private boolean delayingNextRow;
+    private int rowFirstStep;
+    private boolean rowHeightSmallerThanFirstStep;
+    private int nextBreakClass;
+    static java.lang.Class class$org$apache$fop$layoutmgr$table$TableStepper;
+    static final boolean $assertionsDisabled;
+
+    public void <init>(org.apache.fop.layoutmgr.table.TableContentLayoutManager)
+    {
+        org.apache.fop.layoutmgr.table.TableStepper this;
+        org.apache.fop.layoutmgr.table.TableContentLayoutManager tclm;
+        java.util.LinkedList $r0;
+        org.apache.fop.layoutmgr.table.TableLayoutManager $r1;
+        org.apache.fop.fo.flow.table.Table $r2;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableStepper;
+        tclm := @parameter0: org.apache.fop.layoutmgr.table.TableContentLayoutManager;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $r0 = new java.util.LinkedList;
+        specialinvoke $r0.<java.util.LinkedList: void <init>()>();
+        this.<org.apache.fop.layoutmgr.table.TableStepper: java.util.List activeCells> = $r0;
+        $r0 = new java.util.LinkedList;
+        specialinvoke $r0.<java.util.LinkedList: void <init>()>();
+        this.<org.apache.fop.layoutmgr.table.TableStepper: java.util.List nextActiveCells> = $r0;
+        this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.layoutmgr.table.TableContentLayoutManager tclm> = tclm;
+        $r1 = virtualinvoke tclm.<org.apache.fop.layoutmgr.table.TableContentLayoutManager: org.apache.fop.layoutmgr.table.TableLayoutManager getTableLM()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $i0 = virtualinvoke $r2.<org.apache.fop.fo.flow.table.Table: int getNumberOfColumns()>();
+        this.<org.apache.fop.layoutmgr.table.TableStepper: int columnCount> = $i0;
+        return;
+    }
+
+    private void setup(org.apache.fop.fo.flow.table.EffRow[])
+    {
+        org.apache.fop.layoutmgr.table.TableStepper this;
+        org.apache.fop.fo.flow.table.EffRow[] rows;
+        java.util.List $r0;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableStepper;
+        rows := @parameter0: org.apache.fop.fo.flow.table.EffRow[];
+        this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.fo.flow.table.EffRow[] rowGroup> = rows;
+        this.<org.apache.fop.layoutmgr.table.TableStepper: int previousRowsLength> = 0;
+        this.<org.apache.fop.layoutmgr.table.TableStepper: int activeRowIndex> = 0;
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableStepper: java.util.List activeCells>;
+        interfaceinvoke $r0.<java.util.List: void clear()>();
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableStepper: java.util.List nextActiveCells>;
+        interfaceinvoke $r0.<java.util.List: void clear()>();
+        this.<org.apache.fop.layoutmgr.table.TableStepper: boolean delayingNextRow> = 0;
+        this.<org.apache.fop.layoutmgr.table.TableStepper: int rowFirstStep> = 0;
+        this.<org.apache.fop.layoutmgr.table.TableStepper: boolean rowHeightSmallerThanFirstStep> = 0;
+        return;
+    }
+
+    private void calcTotalHeight()
+    {
+        org.apache.fop.layoutmgr.table.TableStepper this;
+        int i, $i0, $i1;
+        org.apache.fop.fo.flow.table.EffRow[] $r0, $r2;
+        org.apache.fop.fo.flow.table.EffRow $r3;
+        org.apache.fop.traits.MinOptMax $r4;
+        org.apache.commons.logging.Log $r5;
+        boolean $z0;
+        java.lang.StringBuffer $r6;
+        java.lang.String $r7;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableStepper;
+        this.<org.apache.fop.layoutmgr.table.TableStepper: int totalHeight> = 0;
+        i = 0;
+
+     label0:
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $i0 = lengthof $r0;
+        if i >= $i0 goto label1;
+
+        $i0 = this.<org.apache.fop.layoutmgr.table.TableStepper: int totalHeight>;
+        $r2 = this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $r3 = $r2[i];
+        $r4 = virtualinvoke $r3.<org.apache.fop.fo.flow.table.EffRow: org.apache.fop.traits.MinOptMax getHeight()>();
+        $i1 = $r4.<org.apache.fop.traits.MinOptMax: int opt>;
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.layoutmgr.table.TableStepper: int totalHeight> = $i0;
+        i = i + 1;
+        goto label0;
+
+     label1:
+        $r5 = <org.apache.fop.layoutmgr.table.TableStepper: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r5.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label2;
+
+        $r5 = <org.apache.fop.layoutmgr.table.TableStepper: org.apache.commons.logging.Log log>;
+        $r6 = new java.lang.StringBuffer;
+        specialinvoke $r6.<java.lang.StringBuffer: void <init>()>();
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("totalHeight=");
+        $i1 = this.<org.apache.fop.layoutmgr.table.TableStepper: int totalHeight>;
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r7 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r7);
+
+     label2:
+        return;
+    }
+
+    private int getMaxRemainingHeight()
+    {
+        org.apache.fop.layoutmgr.table.TableStepper this;
+        int maxW, remain, i, $i0, $i1, $i2;
+        java.util.Iterator iter;
+        org.apache.fop.layoutmgr.table.ActiveCell activeCell;
+        org.apache.fop.fo.flow.table.PrimaryGridUnit pgu;
+        java.util.List $r0;
+        boolean $z0;
+        java.lang.Object $r1;
+        org.apache.fop.fo.flow.table.EffRow[] $r2, $r5;
+        org.apache.fop.fo.flow.table.EffRow $r3, $r6;
+        org.apache.fop.fo.flow.table.TableCell $r4;
+        org.apache.fop.traits.MinOptMax $r7;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableStepper;
+        maxW = 0;
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableStepper: java.util.List activeCells>;
+        iter = interfaceinvoke $r0.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label3;
+
+        $r1 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        activeCell = (org.apache.fop.layoutmgr.table.ActiveCell) $r1;
+        remain = virtualinvoke activeCell.<org.apache.fop.layoutmgr.table.ActiveCell: int getRemainingLength()>();
+        pgu = virtualinvoke activeCell.<org.apache.fop.layoutmgr.table.ActiveCell: org.apache.fop.fo.flow.table.PrimaryGridUnit getPrimaryGridUnit()>();
+        $i0 = this.<org.apache.fop.layoutmgr.table.TableStepper: int activeRowIndex>;
+        i = $i0 + 1;
+
+     label1:
+        $i1 = virtualinvoke pgu.<org.apache.fop.fo.flow.table.PrimaryGridUnit: int getRowIndex()>();
+        $r2 = this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $r3 = $r2[0];
+        $i2 = virtualinvoke $r3.<org.apache.fop.fo.flow.table.EffRow: int getIndex()>();
+        $i1 = $i1 - $i2;
+        $r4 = virtualinvoke pgu.<org.apache.fop.fo.flow.table.PrimaryGridUnit: org.apache.fop.fo.flow.table.TableCell getCell()>();
+        $i2 = virtualinvoke $r4.<org.apache.fop.fo.flow.table.TableCell: int getNumberRowsSpanned()>();
+        $i1 = $i1 + $i2;
+        if i >= $i1 goto label2;
+
+        $r5 = this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $r6 = $r5[i];
+        $r7 = virtualinvoke $r6.<org.apache.fop.fo.flow.table.EffRow: org.apache.fop.traits.MinOptMax getHeight()>();
+        $i1 = $r7.<org.apache.fop.traits.MinOptMax: int opt>;
+        remain = remain - $i1;
+        i = i + 1;
+        goto label1;
+
+     label2:
+        maxW = staticinvoke <java.lang.Math: int max(int,int)>(maxW, remain);
+        goto label0;
+
+     label3:
+        $i0 = this.<org.apache.fop.layoutmgr.table.TableStepper: int activeRowIndex>;
+        i = $i0 + 1;
+
+     label4:
+        $r5 = this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $i1 = lengthof $r5;
+        if i >= $i1 goto label5;
+
+        $r5 = this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $r6 = $r5[i];
+        $r7 = virtualinvoke $r6.<org.apache.fop.fo.flow.table.EffRow: org.apache.fop.traits.MinOptMax getHeight()>();
+        $i1 = $r7.<org.apache.fop.traits.MinOptMax: int opt>;
+        maxW = maxW + $i1;
+        i = i + 1;
+        goto label4;
+
+     label5:
+        return maxW;
+    }
+
+    private void activateCells(java.util.List, int)
+    {
+        org.apache.fop.layoutmgr.table.TableStepper this;
+        java.util.List activeCellList;
+        int rowIndex, i, $i0, $i1;
+        org.apache.fop.fo.flow.table.EffRow row;
+        org.apache.fop.fo.flow.table.GridUnit gu;
+        org.apache.fop.fo.flow.table.EffRow[] $r0;
+        boolean $z0;
+        org.apache.fop.layoutmgr.table.ActiveCell $r1;
+        org.apache.fop.fo.flow.table.PrimaryGridUnit $r2;
+        org.apache.fop.layoutmgr.table.TableLayoutManager $r3;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableStepper;
+        activeCellList := @parameter0: java.util.List;
+        rowIndex := @parameter1: int;
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        row = $r0[rowIndex];
+        i = 0;
+
+     label0:
+        $i0 = this.<org.apache.fop.layoutmgr.table.TableStepper: int columnCount>;
+        if i >= $i0 goto label2;
+
+        gu = virtualinvoke row.<org.apache.fop.fo.flow.table.EffRow: org.apache.fop.fo.flow.table.GridUnit getGridUnit(int)>(i);
+        $z0 = virtualinvoke gu.<org.apache.fop.fo.flow.table.GridUnit: boolean isEmpty()>();
+        if $z0 != 0 goto label1;
+
+        $z0 = virtualinvoke gu.<org.apache.fop.fo.flow.table.GridUnit: boolean isPrimary()>();
+        if $z0 == 0 goto label1;
+
+        $r1 = new org.apache.fop.layoutmgr.table.ActiveCell;
+        $r2 = (org.apache.fop.fo.flow.table.PrimaryGridUnit) gu;
+        $i1 = this.<org.apache.fop.layoutmgr.table.TableStepper: int previousRowsLength>;
+        $r3 = specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.layoutmgr.table.TableLayoutManager getTableLM()>();
+        specialinvoke $r1.<org.apache.fop.layoutmgr.table.ActiveCell: void <init>(org.apache.fop.fo.flow.table.PrimaryGridUnit,org.apache.fop.fo.flow.table.EffRow,int,int,org.apache.fop.layoutmgr.table.TableLayoutManager)>($r2, row, rowIndex, $i1, $r3);
+        interfaceinvoke activeCellList.<java.util.List: boolean add(java.lang.Object)>($r1);
+
+     label1:
+        i = i + 1;
+        goto label0;
+
+     label2:
+        return;
+    }
+
+    public java.util.LinkedList getCombinedKnuthElementsForRowGroup(org.apache.fop.layoutmgr.LayoutContext, org.apache.fop.fo.flow.table.EffRow[], int)
+    {
+        org.apache.fop.layoutmgr.table.TableStepper this;
+        org.apache.fop.layoutmgr.LayoutContext context;
+        org.apache.fop.fo.flow.table.EffRow[] rows, $r10, $r12, $r20, $r22;
+        int bodyType, cumulateLength, laststep, step, maxRemainingHeight, penaltyOrGlueLen, boxLen, effPenaltyLen, $i0, $i1, $i2, $i3, $i4, $i5;
+        null_type lastTCPos;
+        java.util.LinkedList returnList, $r1, $r19;
+        java.util.ArrayList cellParts, $r5;
+        java.util.Iterator iter;
+        org.apache.fop.layoutmgr.table.ActiveCell activeCell;
+        org.apache.fop.layoutmgr.table.CellPart part;
+        org.apache.fop.layoutmgr.table.TableContentPosition tcpos, $r8, lastTCPos;
+        org.apache.fop.layoutmgr.table.TableHFPenaltyPosition penaltyPos, $r15;
+        short p;
+        boolean keepWithNext, $z0, $z1;
+        java.util.List $r0, $r6;
+        org.apache.commons.logging.Log $r2;
+        java.lang.StringBuffer $r3;
+        java.lang.String $r4;
+        java.lang.Object $r7;
+        org.apache.fop.layoutmgr.table.TableLayoutManager $r9, $r16;
+        org.apache.fop.fo.flow.table.EffRow $r11, $r13, $r21, $r23;
+        org.apache.fop.layoutmgr.KnuthBox $r14;
+        org.apache.fop.fo.flow.table.Table $r17;
+        org.apache.fop.layoutmgr.table.TableContentLayoutManager $r18;
+        org.apache.fop.layoutmgr.BreakElement $r24;
+        org.apache.fop.layoutmgr.KnuthGlue $r25;
+        org.apache.fop.layoutmgr.Position $r26;
+        java.lang.AssertionError $r27;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableStepper;
+        context := @parameter0: org.apache.fop.layoutmgr.LayoutContext;
+        rows := @parameter1: org.apache.fop.fo.flow.table.EffRow[];
+        bodyType := @parameter2: int;
+        specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: void setup(org.apache.fop.fo.flow.table.EffRow[])>(rows);
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableStepper: java.util.List activeCells>;
+        specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: void activateCells(java.util.List,int)>($r0, 0);
+        specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: void calcTotalHeight()>();
+        cumulateLength = 0;
+        lastTCPos = null;
+        $r1 = new java.util.LinkedList;
+        specialinvoke $r1.<java.util.LinkedList: void <init>()>();
+        returnList = $r1;
+        laststep = 0;
+        step = specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: int getFirstStep()>();
+
+     label0:
+        maxRemainingHeight = specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: int getMaxRemainingHeight()>();
+        $i0 = step + maxRemainingHeight;
+        $i1 = this.<org.apache.fop.layoutmgr.table.TableStepper: int totalHeight>;
+        penaltyOrGlueLen = $i0 - $i1;
+        $i0 = step - cumulateLength;
+        $i1 = staticinvoke <java.lang.Math: int max(int,int)>(0, penaltyOrGlueLen);
+        boxLen = $i0 - $i1;
+        $i2 = neg penaltyOrGlueLen;
+        $i3 = staticinvoke <java.lang.Math: int max(int,int)>(0, $i2);
+        $i1 = boxLen + $i3;
+        cumulateLength = cumulateLength + $i1;
+        $r2 = <org.apache.fop.layoutmgr.table.TableStepper: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r2.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label2;
+
+        $r2 = <org.apache.fop.layoutmgr.table.TableStepper: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Next step: ");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(step);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" (+");
+        $i3 = step - laststep;
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i3);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(")");
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r4);
+        $r2 = <org.apache.fop.layoutmgr.table.TableStepper: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("           max remaining height: ");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(maxRemainingHeight);
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r4);
+        if penaltyOrGlueLen < 0 goto label1;
+
+        $r2 = <org.apache.fop.layoutmgr.table.TableStepper: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("           box = ");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(boxLen);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" penalty = ");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(penaltyOrGlueLen);
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r4);
+        goto label2;
+
+     label1:
+        $r2 = <org.apache.fop.layoutmgr.table.TableStepper: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("           box = ");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(boxLen);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" glue = ");
+        $i3 = neg penaltyOrGlueLen;
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i3);
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r4);
+
+     label2:
+        $r5 = new java.util.ArrayList;
+        $i3 = this.<org.apache.fop.layoutmgr.table.TableStepper: int columnCount>;
+        specialinvoke $r5.<java.util.ArrayList: void <init>(int)>($i3);
+        cellParts = $r5;
+        $r6 = this.<org.apache.fop.layoutmgr.table.TableStepper: java.util.List activeCells>;
+        iter = interfaceinvoke $r6.<java.util.List: java.util.Iterator iterator()>();
+
+     label3:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label4;
+
+        $r7 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        activeCell = (org.apache.fop.layoutmgr.table.ActiveCell) $r7;
+        part = virtualinvoke activeCell.<org.apache.fop.layoutmgr.table.ActiveCell: org.apache.fop.layoutmgr.table.CellPart createCellPart()>();
+        interfaceinvoke cellParts.<java.util.List: boolean add(java.lang.Object)>(part);
+        goto label3;
+
+     label4:
+        $r8 = new org.apache.fop.layoutmgr.table.TableContentPosition;
+        $r9 = specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.layoutmgr.table.TableLayoutManager getTableLM()>();
+        $r10 = this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $i4 = this.<org.apache.fop.layoutmgr.table.TableStepper: int activeRowIndex>;
+        $r11 = $r10[$i4];
+        specialinvoke $r8.<org.apache.fop.layoutmgr.table.TableContentPosition: void <init>(org.apache.fop.layoutmgr.LayoutManager,java.util.List,org.apache.fop.fo.flow.table.EffRow)>($r9, cellParts, $r11);
+        tcpos = $r8;
+        $z0 = this.<org.apache.fop.layoutmgr.table.TableStepper: boolean delayingNextRow>;
+        if $z0 == 0 goto label5;
+
+        $r12 = this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $i3 = this.<org.apache.fop.layoutmgr.table.TableStepper: int activeRowIndex>;
+        $i3 = $i3 + 1;
+        $r13 = $r12[$i3];
+        virtualinvoke tcpos.<org.apache.fop.layoutmgr.table.TableContentPosition: void setNewPageRow(org.apache.fop.fo.flow.table.EffRow)>($r13);
+
+     label5:
+        $i0 = virtualinvoke returnList.<java.util.LinkedList: int size()>();
+        if $i0 != 0 goto label6;
+
+        virtualinvoke tcpos.<org.apache.fop.layoutmgr.table.TableContentPosition: void setFlag(int,boolean)>(1, 1);
+
+     label6:
+        lastTCPos = tcpos;
+        $r14 = new org.apache.fop.layoutmgr.KnuthBox;
+        specialinvoke $r14.<org.apache.fop.layoutmgr.KnuthBox: void <init>(int,org.apache.fop.layoutmgr.Position,boolean)>(boxLen, tcpos, 0);
+        virtualinvoke returnList.<java.util.LinkedList: boolean add(java.lang.Object)>($r14);
+        effPenaltyLen = staticinvoke <java.lang.Math: int max(int,int)>(0, penaltyOrGlueLen);
+        $r15 = new org.apache.fop.layoutmgr.table.TableHFPenaltyPosition;
+        $r9 = specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.layoutmgr.table.TableLayoutManager getTableLM()>();
+        specialinvoke $r15.<org.apache.fop.layoutmgr.table.TableHFPenaltyPosition: void <init>(org.apache.fop.layoutmgr.LayoutManager)>($r9);
+        penaltyPos = $r15;
+        if bodyType != 0 goto label8;
+
+        $r16 = specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.layoutmgr.table.TableLayoutManager getTableLM()>();
+        $r17 = virtualinvoke $r16.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $z0 = virtualinvoke $r17.<org.apache.fop.fo.flow.table.Table: boolean omitHeaderAtBreak()>();
+        if $z0 != 0 goto label7;
+
+        $r18 = this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.layoutmgr.table.TableContentLayoutManager tclm>;
+        $i1 = virtualinvoke $r18.<org.apache.fop.layoutmgr.table.TableContentLayoutManager: int getHeaderNetHeight()>();
+        effPenaltyLen = effPenaltyLen + $i1;
+        $r18 = this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.layoutmgr.table.TableContentLayoutManager tclm>;
+        $r19 = virtualinvoke $r18.<org.apache.fop.layoutmgr.table.TableContentLayoutManager: java.util.LinkedList getHeaderElements()>();
+        penaltyPos.<org.apache.fop.layoutmgr.table.TableHFPenaltyPosition: java.util.List headerElements> = $r19;
+
+     label7:
+        $r16 = specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.layoutmgr.table.TableLayoutManager getTableLM()>();
+        $r17 = virtualinvoke $r16.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $z0 = virtualinvoke $r17.<org.apache.fop.fo.flow.table.Table: boolean omitFooterAtBreak()>();
+        if $z0 != 0 goto label8;
+
+        $r18 = this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.layoutmgr.table.TableContentLayoutManager tclm>;
+        $i1 = virtualinvoke $r18.<org.apache.fop.layoutmgr.table.TableContentLayoutManager: int getFooterNetHeight()>();
+        effPenaltyLen = effPenaltyLen + $i1;
+        $r18 = this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.layoutmgr.table.TableContentLayoutManager tclm>;
+        $r19 = virtualinvoke $r18.<org.apache.fop.layoutmgr.table.TableContentLayoutManager: java.util.LinkedList getFooterElements()>();
+        penaltyPos.<org.apache.fop.layoutmgr.table.TableHFPenaltyPosition: java.util.List footerElements> = $r19;
+
+     label8:
+        p = 0;
+        keepWithNext = 0;
+        $r6 = this.<org.apache.fop.layoutmgr.table.TableStepper: java.util.List activeCells>;
+        iter = interfaceinvoke $r6.<java.util.List: java.util.Iterator iterator()>();
+
+     label9:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label10;
+
+        $r7 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        activeCell = (org.apache.fop.layoutmgr.table.ActiveCell) $r7;
+        $z1 = virtualinvoke activeCell.<org.apache.fop.layoutmgr.table.ActiveCell: boolean keepWithNextSignal()>();
+        keepWithNext = keepWithNext | $z1;
+        goto label9;
+
+     label10:
+        if keepWithNext != 0 goto label11;
+
+        $r16 = specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.layoutmgr.table.TableLayoutManager getTableLM()>();
+        $z0 = virtualinvoke $r16.<org.apache.fop.layoutmgr.table.TableLayoutManager: boolean mustKeepTogether()>();
+        if $z0 == 0 goto label12;
+
+     label11:
+        p = 1000;
+
+     label12:
+        $z0 = this.<org.apache.fop.layoutmgr.table.TableStepper: boolean rowFinished>;
+        if $z0 != 0 goto label13;
+
+        $r20 = this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $i1 = this.<org.apache.fop.layoutmgr.table.TableStepper: int activeRowIndex>;
+        $r21 = $r20[$i1];
+        $z0 = virtualinvoke $r21.<org.apache.fop.fo.flow.table.EffRow: boolean mustKeepTogether()>();
+        if $z0 == 0 goto label16;
+
+        p = 1000;
+        goto label16;
+
+     label13:
+        $i0 = this.<org.apache.fop.layoutmgr.table.TableStepper: int activeRowIndex>;
+        $r12 = this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $i1 = lengthof $r12;
+        $i1 = $i1 - 1;
+        if $i0 >= $i1 goto label16;
+
+        $r20 = this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $i1 = this.<org.apache.fop.layoutmgr.table.TableStepper: int activeRowIndex>;
+        $r21 = $r20[$i1];
+        $z0 = virtualinvoke $r21.<org.apache.fop.fo.flow.table.EffRow: boolean mustKeepWithNext()>();
+        if $z0 != 0 goto label14;
+
+        $r20 = this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $i1 = this.<org.apache.fop.layoutmgr.table.TableStepper: int activeRowIndex>;
+        $i1 = $i1 + 1;
+        $r21 = $r20[$i1];
+        $z0 = virtualinvoke $r21.<org.apache.fop.fo.flow.table.EffRow: boolean mustKeepWithPrevious()>();
+        if $z0 == 0 goto label15;
+
+     label14:
+        p = 1000;
+
+     label15:
+        $i1 = this.<org.apache.fop.layoutmgr.table.TableStepper: int nextBreakClass>;
+        $r22 = this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $i2 = this.<org.apache.fop.layoutmgr.table.TableStepper: int activeRowIndex>;
+        $r23 = $r22[$i2];
+        $i3 = virtualinvoke $r23.<org.apache.fop.fo.flow.table.EffRow: int getBreakAfter()>();
+        $i1 = staticinvoke <org.apache.fop.util.BreakUtil: int compareBreakClasses(int,int)>($i1, $i3);
+        this.<org.apache.fop.layoutmgr.table.TableStepper: int nextBreakClass> = $i1;
+        $i1 = this.<org.apache.fop.layoutmgr.table.TableStepper: int nextBreakClass>;
+        $r22 = this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $i2 = this.<org.apache.fop.layoutmgr.table.TableStepper: int activeRowIndex>;
+        $i2 = $i2 + 1;
+        $r23 = $r22[$i2];
+        $i3 = virtualinvoke $r23.<org.apache.fop.fo.flow.table.EffRow: int getBreakBefore()>();
+        $i1 = staticinvoke <org.apache.fop.util.BreakUtil: int compareBreakClasses(int,int)>($i1, $i3);
+        this.<org.apache.fop.layoutmgr.table.TableStepper: int nextBreakClass> = $i1;
+
+     label16:
+        $i0 = this.<org.apache.fop.layoutmgr.table.TableStepper: int nextBreakClass>;
+        if $i0 == 9 goto label17;
+
+        $r2 = <org.apache.fop.layoutmgr.table.TableStepper: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void trace(java.lang.Object)>("Forced break encountered");
+        p = -1000;
+
+     label17:
+        $z0 = this.<org.apache.fop.layoutmgr.table.TableStepper: boolean rowHeightSmallerThanFirstStep>;
+        if $z0 == 0 goto label18;
+
+        this.<org.apache.fop.layoutmgr.table.TableStepper: boolean rowHeightSmallerThanFirstStep> = 0;
+        p = 1000;
+
+     label18:
+        $r24 = new org.apache.fop.layoutmgr.BreakElement;
+        $i5 = this.<org.apache.fop.layoutmgr.table.TableStepper: int nextBreakClass>;
+        specialinvoke $r24.<org.apache.fop.layoutmgr.BreakElement: void <init>(org.apache.fop.layoutmgr.Position,int,int,int,org.apache.fop.layoutmgr.LayoutContext)>(penaltyPos, effPenaltyLen, p, $i5, context);
+        virtualinvoke returnList.<java.util.LinkedList: boolean add(java.lang.Object)>($r24);
+        if penaltyOrGlueLen >= 0 goto label19;
+
+        $r25 = new org.apache.fop.layoutmgr.KnuthGlue;
+        $i2 = neg penaltyOrGlueLen;
+        $r26 = new org.apache.fop.layoutmgr.Position;
+        specialinvoke $r26.<org.apache.fop.layoutmgr.Position: void <init>(org.apache.fop.layoutmgr.LayoutManager)>(null);
+        specialinvoke $r25.<org.apache.fop.layoutmgr.KnuthGlue: void <init>(int,int,int,org.apache.fop.layoutmgr.Position,boolean)>($i2, 0, 0, $r26, 1);
+        virtualinvoke returnList.<java.util.LinkedList: boolean add(java.lang.Object)>($r25);
+
+     label19:
+        laststep = step;
+        step = specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: int getNextStep()>();
+        if step >= 0 goto label0;
+
+        $z0 = <org.apache.fop.layoutmgr.table.TableStepper: boolean $assertionsDisabled>;
+        if $z0 != 0 goto label20;
+
+        $z0 = virtualinvoke returnList.<java.util.LinkedList: boolean isEmpty()>();
+        if $z0 == 0 goto label20;
+
+        $r27 = new java.lang.AssertionError;
+        specialinvoke $r27.<java.lang.AssertionError: void <init>()>();
+        throw $r27;
+
+     label20:
+        virtualinvoke lastTCPos.<org.apache.fop.layoutmgr.table.TableContentPosition: void setFlag(int,boolean)>(2, 1);
+        return returnList;
+    }
+
+    private int getFirstStep()
+    {
+        org.apache.fop.layoutmgr.table.TableStepper this;
+        int minStep, $i0;
+        java.util.List $r0;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableStepper;
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableStepper: java.util.List activeCells>;
+        specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: void computeRowFirstStep(java.util.List)>($r0);
+        specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: void signalRowFirstStep()>();
+        $i0 = this.<org.apache.fop.layoutmgr.table.TableStepper: int rowFirstStep>;
+        minStep = specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: int considerRowLastStep(int)>($i0);
+        specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: void signalNextStep(int)>(minStep);
+        return minStep;
+    }
+
+    private int getNextStep()
+    {
+        org.apache.fop.layoutmgr.table.TableStepper this;
+        int minStep, $i0, $i1, $i2;
+        boolean $z0;
+        org.apache.fop.fo.flow.table.EffRow[] $r0;
+        org.apache.commons.logging.Log $r1;
+        org.apache.fop.fo.flow.table.EffRow $r2;
+        org.apache.fop.traits.MinOptMax $r3;
+        java.lang.StringBuffer $r4;
+        java.lang.String $r5;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableStepper;
+        $z0 = this.<org.apache.fop.layoutmgr.table.TableStepper: boolean rowFinished>;
+        if $z0 == 0 goto label1;
+
+        $i0 = this.<org.apache.fop.layoutmgr.table.TableStepper: int activeRowIndex>;
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $i1 = lengthof $r0;
+        $i1 = $i1 - 1;
+        if $i0 != $i1 goto label0;
+
+        return -1;
+
+     label0:
+        this.<org.apache.fop.layoutmgr.table.TableStepper: boolean rowFinished> = 0;
+        specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: void removeCellsEndingOnCurrentRow()>();
+        $r1 = <org.apache.fop.layoutmgr.table.TableStepper: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void trace(java.lang.Object)>("Delaying next row");
+        this.<org.apache.fop.layoutmgr.table.TableStepper: boolean delayingNextRow> = 1;
+
+     label1:
+        $z0 = this.<org.apache.fop.layoutmgr.table.TableStepper: boolean delayingNextRow>;
+        if $z0 == 0 goto label5;
+
+        minStep = specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: int computeMinStep()>();
+        if minStep < 0 goto label2;
+
+        $i1 = this.<org.apache.fop.layoutmgr.table.TableStepper: int rowFirstStep>;
+        if minStep >= $i1 goto label2;
+
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $i2 = this.<org.apache.fop.layoutmgr.table.TableStepper: int activeRowIndex>;
+        $r2 = $r0[$i2];
+        $r3 = virtualinvoke $r2.<org.apache.fop.fo.flow.table.EffRow: org.apache.fop.traits.MinOptMax getExplicitHeight()>();
+        $i1 = $r3.<org.apache.fop.traits.MinOptMax: int max>;
+        if minStep <= $i1 goto label4;
+
+     label2:
+        $r1 = <org.apache.fop.layoutmgr.table.TableStepper: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label3;
+
+        $r1 = <org.apache.fop.layoutmgr.table.TableStepper: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Step = ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(minStep);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r5);
+
+     label3:
+        this.<org.apache.fop.layoutmgr.table.TableStepper: boolean delayingNextRow> = 0;
+        minStep = this.<org.apache.fop.layoutmgr.table.TableStepper: int rowFirstStep>;
+        specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: void switchToNextRow()>();
+        specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: void signalRowFirstStep()>();
+        minStep = specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: int considerRowLastStep(int)>(minStep);
+
+     label4:
+        specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: void signalNextStep(int)>(minStep);
+        return minStep;
+
+     label5:
+        minStep = specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: int computeMinStep()>();
+        minStep = specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: int considerRowLastStep(int)>(minStep);
+        specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: void signalNextStep(int)>(minStep);
+        return minStep;
+    }
+
+    private void computeRowFirstStep(java.util.List)
+    {
+        org.apache.fop.layoutmgr.table.TableStepper this;
+        java.util.List cells;
+        java.util.Iterator iter;
+        org.apache.fop.layoutmgr.table.ActiveCell activeCell;
+        boolean $z0;
+        java.lang.Object $r0;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableStepper;
+        cells := @parameter0: java.util.List;
+        iter = interfaceinvoke cells.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r0 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        activeCell = (org.apache.fop.layoutmgr.table.ActiveCell) $r0;
+        $i0 = this.<org.apache.fop.layoutmgr.table.TableStepper: int rowFirstStep>;
+        $i1 = virtualinvoke activeCell.<org.apache.fop.layoutmgr.table.ActiveCell: int getFirstStep()>();
+        $i0 = staticinvoke <java.lang.Math: int max(int,int)>($i0, $i1);
+        this.<org.apache.fop.layoutmgr.table.TableStepper: int rowFirstStep> = $i0;
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    private int computeMinStep()
+    {
+        org.apache.fop.layoutmgr.table.TableStepper this;
+        int minStep, nextStep;
+        boolean stepFound, $z0;
+        java.util.Iterator iter;
+        org.apache.fop.layoutmgr.table.ActiveCell activeCell;
+        java.util.List $r0;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableStepper;
+        minStep = 2147483647;
+        stepFound = 0;
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableStepper: java.util.List activeCells>;
+        iter = interfaceinvoke $r0.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label2;
+
+        $r1 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        activeCell = (org.apache.fop.layoutmgr.table.ActiveCell) $r1;
+        nextStep = virtualinvoke activeCell.<org.apache.fop.layoutmgr.table.ActiveCell: int getNextStep()>();
+        if nextStep < 0 goto label1;
+
+        stepFound = 1;
+        minStep = staticinvoke <java.lang.Math: int min(int,int)>(minStep, nextStep);
+
+     label1:
+        goto label0;
+
+     label2:
+        if stepFound == 0 goto label3;
+
+        return minStep;
+
+     label3:
+        return -1;
+    }
+
+    private void signalRowFirstStep()
+    {
+        org.apache.fop.layoutmgr.table.TableStepper this;
+        java.util.Iterator iter;
+        org.apache.fop.layoutmgr.table.ActiveCell activeCell;
+        java.util.List $r0;
+        boolean $z0;
+        java.lang.Object $r1;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableStepper;
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableStepper: java.util.List activeCells>;
+        iter = interfaceinvoke $r0.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r1 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        activeCell = (org.apache.fop.layoutmgr.table.ActiveCell) $r1;
+        $i0 = this.<org.apache.fop.layoutmgr.table.TableStepper: int rowFirstStep>;
+        virtualinvoke activeCell.<org.apache.fop.layoutmgr.table.ActiveCell: void signalRowFirstStep(int)>($i0);
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    private void signalNextStep(int)
+    {
+        org.apache.fop.layoutmgr.table.TableStepper this;
+        int step, $i0, $i1;
+        java.util.Iterator iter;
+        org.apache.fop.layoutmgr.table.ActiveCell activeCell;
+        java.util.List $r0;
+        boolean $z0;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableStepper;
+        step := @parameter0: int;
+        this.<org.apache.fop.layoutmgr.table.TableStepper: int nextBreakClass> = 9;
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableStepper: java.util.List activeCells>;
+        iter = interfaceinvoke $r0.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r1 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        activeCell = (org.apache.fop.layoutmgr.table.ActiveCell) $r1;
+        $i0 = this.<org.apache.fop.layoutmgr.table.TableStepper: int nextBreakClass>;
+        $i1 = virtualinvoke activeCell.<org.apache.fop.layoutmgr.table.ActiveCell: int signalNextStep(int)>(step);
+        $i0 = staticinvoke <org.apache.fop.util.BreakUtil: int compareBreakClasses(int,int)>($i0, $i1);
+        this.<org.apache.fop.layoutmgr.table.TableStepper: int nextBreakClass> = $i0;
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    private int considerRowLastStep(int)
+    {
+        org.apache.fop.layoutmgr.table.TableStepper this;
+        int step, maxStep, $i0;
+        java.util.Iterator iter;
+        org.apache.fop.layoutmgr.table.ActiveCell activeCell;
+        java.util.List $r0;
+        boolean $z0, $z1, $z2;
+        java.lang.Object $r1;
+        org.apache.commons.logging.Log $r3;
+        java.lang.StringBuffer $r4;
+        java.lang.String $r5;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableStepper;
+        step := @parameter0: int;
+        this.<org.apache.fop.layoutmgr.table.TableStepper: boolean rowFinished> = 1;
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableStepper: java.util.List activeCells>;
+        iter = interfaceinvoke $r0.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label2;
+
+        $r1 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        activeCell = (org.apache.fop.layoutmgr.table.ActiveCell) $r1;
+        $i0 = this.<org.apache.fop.layoutmgr.table.TableStepper: int activeRowIndex>;
+        $z0 = virtualinvoke activeCell.<org.apache.fop.layoutmgr.table.ActiveCell: boolean endsOnRow(int)>($i0);
+        if $z0 == 0 goto label1;
+
+        $z1 = this.<org.apache.fop.layoutmgr.table.TableStepper: boolean rowFinished>;
+        $z2 = virtualinvoke activeCell.<org.apache.fop.layoutmgr.table.ActiveCell: boolean finishes(int)>(step);
+        $z1 = $z1 & $z2;
+        this.<org.apache.fop.layoutmgr.table.TableStepper: boolean rowFinished> = $z1;
+
+     label1:
+        goto label0;
+
+     label2:
+        $z0 = this.<org.apache.fop.layoutmgr.table.TableStepper: boolean rowFinished>;
+        if $z0 == 0 goto label12;
+
+        $r3 = <org.apache.fop.layoutmgr.table.TableStepper: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r3.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label3;
+
+        $r3 = <org.apache.fop.layoutmgr.table.TableStepper: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Step = ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(step);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r5);
+        $r3 = <org.apache.fop.layoutmgr.table.TableStepper: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void trace(java.lang.Object)>("Row finished, computing last step");
+
+     label3:
+        maxStep = 0;
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableStepper: java.util.List activeCells>;
+        iter = interfaceinvoke $r0.<java.util.List: java.util.Iterator iterator()>();
+
+     label4:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label6;
+
+        $r1 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        activeCell = (org.apache.fop.layoutmgr.table.ActiveCell) $r1;
+        $i0 = this.<org.apache.fop.layoutmgr.table.TableStepper: int activeRowIndex>;
+        $z0 = virtualinvoke activeCell.<org.apache.fop.layoutmgr.table.ActiveCell: boolean endsOnRow(int)>($i0);
+        if $z0 == 0 goto label5;
+
+        $i0 = virtualinvoke activeCell.<org.apache.fop.layoutmgr.table.ActiveCell: int getLastStep()>();
+        maxStep = staticinvoke <java.lang.Math: int max(int,int)>(maxStep, $i0);
+
+     label5:
+        goto label4;
+
+     label6:
+        $r3 = <org.apache.fop.layoutmgr.table.TableStepper: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r3.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label7;
+
+        $r3 = <org.apache.fop.layoutmgr.table.TableStepper: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Max step: ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(maxStep);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r5);
+
+     label7:
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableStepper: java.util.List activeCells>;
+        iter = interfaceinvoke $r0.<java.util.List: java.util.Iterator iterator()>();
+
+     label8:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label10;
+
+        $r1 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        activeCell = (org.apache.fop.layoutmgr.table.ActiveCell) $r1;
+        $i0 = this.<org.apache.fop.layoutmgr.table.TableStepper: int activeRowIndex>;
+        virtualinvoke activeCell.<org.apache.fop.layoutmgr.table.ActiveCell: void endRow(int)>($i0);
+        $i0 = this.<org.apache.fop.layoutmgr.table.TableStepper: int activeRowIndex>;
+        $z0 = virtualinvoke activeCell.<org.apache.fop.layoutmgr.table.ActiveCell: boolean endsOnRow(int)>($i0);
+        if $z0 != 0 goto label9;
+
+        virtualinvoke activeCell.<org.apache.fop.layoutmgr.table.ActiveCell: void signalRowLastStep(int)>(maxStep);
+
+     label9:
+        goto label8;
+
+     label10:
+        if maxStep >= step goto label11;
+
+        $r3 = <org.apache.fop.layoutmgr.table.TableStepper: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void trace(java.lang.Object)>("Row height smaller than first step, produced penalty will be infinite");
+        this.<org.apache.fop.layoutmgr.table.TableStepper: boolean rowHeightSmallerThanFirstStep> = 1;
+
+     label11:
+        step = maxStep;
+        specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: void prepareNextRow()>();
+
+     label12:
+        return step;
+    }
+
+    private void prepareNextRow()
+    {
+        org.apache.fop.layoutmgr.table.TableStepper this;
+        int $i0, $i1, $i2, $i3;
+        org.apache.fop.fo.flow.table.EffRow[] $r0, $r2;
+        org.apache.fop.fo.flow.table.EffRow $r3;
+        org.apache.fop.traits.MinOptMax $r4;
+        java.util.List $r5;
+        org.apache.commons.logging.Log $r6;
+        boolean $z0;
+        java.lang.StringBuffer $r7;
+        java.lang.String $r8;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableStepper;
+        $i0 = this.<org.apache.fop.layoutmgr.table.TableStepper: int activeRowIndex>;
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $i1 = lengthof $r0;
+        $i1 = $i1 - 1;
+        if $i0 >= $i1 goto label1;
+
+        $i1 = this.<org.apache.fop.layoutmgr.table.TableStepper: int previousRowsLength>;
+        $r2 = this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $i2 = this.<org.apache.fop.layoutmgr.table.TableStepper: int activeRowIndex>;
+        $r3 = $r2[$i2];
+        $r4 = virtualinvoke $r3.<org.apache.fop.fo.flow.table.EffRow: org.apache.fop.traits.MinOptMax getHeight()>();
+        $i3 = $r4.<org.apache.fop.traits.MinOptMax: int opt>;
+        $i1 = $i1 + $i3;
+        this.<org.apache.fop.layoutmgr.table.TableStepper: int previousRowsLength> = $i1;
+        $r5 = this.<org.apache.fop.layoutmgr.table.TableStepper: java.util.List nextActiveCells>;
+        $i3 = this.<org.apache.fop.layoutmgr.table.TableStepper: int activeRowIndex>;
+        $i3 = $i3 + 1;
+        specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: void activateCells(java.util.List,int)>($r5, $i3);
+        $r6 = <org.apache.fop.layoutmgr.table.TableStepper: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r6.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r6 = <org.apache.fop.layoutmgr.table.TableStepper: org.apache.commons.logging.Log log>;
+        $r7 = new java.lang.StringBuffer;
+        specialinvoke $r7.<java.lang.StringBuffer: void <init>()>();
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Computing first step for row ");
+        $i3 = this.<org.apache.fop.layoutmgr.table.TableStepper: int activeRowIndex>;
+        $i3 = $i3 + 2;
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i3);
+        $r8 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r6.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r8);
+
+     label0:
+        $r5 = this.<org.apache.fop.layoutmgr.table.TableStepper: java.util.List nextActiveCells>;
+        specialinvoke this.<org.apache.fop.layoutmgr.table.TableStepper: void computeRowFirstStep(java.util.List)>($r5);
+        $r6 = <org.apache.fop.layoutmgr.table.TableStepper: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r6.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label1;
+
+        $r6 = <org.apache.fop.layoutmgr.table.TableStepper: org.apache.commons.logging.Log log>;
+        $r7 = new java.lang.StringBuffer;
+        specialinvoke $r7.<java.lang.StringBuffer: void <init>()>();
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Next first step = ");
+        $i3 = this.<org.apache.fop.layoutmgr.table.TableStepper: int rowFirstStep>;
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i3);
+        $r8 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r6.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r8);
+
+     label1:
+        return;
+    }
+
+    private void removeCellsEndingOnCurrentRow()
+    {
+        org.apache.fop.layoutmgr.table.TableStepper this;
+        java.util.Iterator iter;
+        org.apache.fop.layoutmgr.table.ActiveCell activeCell;
+        java.util.List $r0;
+        boolean $z0;
+        java.lang.Object $r1;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableStepper;
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableStepper: java.util.List activeCells>;
+        iter = interfaceinvoke $r0.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label2;
+
+        $r1 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        activeCell = (org.apache.fop.layoutmgr.table.ActiveCell) $r1;
+        $i0 = this.<org.apache.fop.layoutmgr.table.TableStepper: int activeRowIndex>;
+        $z0 = virtualinvoke activeCell.<org.apache.fop.layoutmgr.table.ActiveCell: boolean endsOnRow(int)>($i0);
+        if $z0 == 0 goto label1;
+
+        interfaceinvoke iter.<java.util.Iterator: void remove()>();
+
+     label1:
+        goto label0;
+
+     label2:
+        return;
+    }
+
+    private void switchToNextRow()
+    {
+        org.apache.fop.layoutmgr.table.TableStepper this;
+        java.util.Iterator iter;
+        org.apache.fop.layoutmgr.table.ActiveCell activeCell;
+        int $i0, $i1;
+        org.apache.commons.logging.Log $r1;
+        boolean $z0;
+        java.lang.StringBuffer $r2;
+        java.lang.String $r3;
+        java.util.List $r4, $r6;
+        java.lang.Object $r5;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableStepper;
+        $i0 = this.<org.apache.fop.layoutmgr.table.TableStepper: int activeRowIndex>;
+        $i0 = $i0 + 1;
+        this.<org.apache.fop.layoutmgr.table.TableStepper: int activeRowIndex> = $i0;
+        $r1 = <org.apache.fop.layoutmgr.table.TableStepper: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r1 = <org.apache.fop.layoutmgr.table.TableStepper: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Switching to row ");
+        $i1 = this.<org.apache.fop.layoutmgr.table.TableStepper: int activeRowIndex>;
+        $i1 = $i1 + 1;
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r3 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r3);
+
+     label0:
+        $r4 = this.<org.apache.fop.layoutmgr.table.TableStepper: java.util.List activeCells>;
+        iter = interfaceinvoke $r4.<java.util.List: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label2;
+
+        $r5 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        activeCell = (org.apache.fop.layoutmgr.table.ActiveCell) $r5;
+        virtualinvoke activeCell.<org.apache.fop.layoutmgr.table.ActiveCell: void nextRowStarts()>();
+        goto label1;
+
+     label2:
+        $r4 = this.<org.apache.fop.layoutmgr.table.TableStepper: java.util.List activeCells>;
+        $r6 = this.<org.apache.fop.layoutmgr.table.TableStepper: java.util.List nextActiveCells>;
+        interfaceinvoke $r4.<java.util.List: boolean addAll(java.util.Collection)>($r6);
+        $r4 = this.<org.apache.fop.layoutmgr.table.TableStepper: java.util.List nextActiveCells>;
+        interfaceinvoke $r4.<java.util.List: void clear()>();
+        return;
+    }
+
+    private org.apache.fop.layoutmgr.table.TableLayoutManager getTableLM()
+    {
+        org.apache.fop.layoutmgr.table.TableStepper this;
+        org.apache.fop.layoutmgr.table.TableContentLayoutManager $r0;
+        org.apache.fop.layoutmgr.table.TableLayoutManager $r1;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableStepper;
+        $r0 = this.<org.apache.fop.layoutmgr.table.TableStepper: org.apache.fop.layoutmgr.table.TableContentLayoutManager tclm>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.layoutmgr.table.TableContentLayoutManager: org.apache.fop.layoutmgr.table.TableLayoutManager getTableLM()>();
+        return $r1;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        boolean $z0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.layoutmgr.table.TableStepper: java.lang.Class class$org$apache$fop$layoutmgr$table$TableStepper>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.layoutmgr.table.TableStepper: java.lang.Class class$(java.lang.String)>("org.apache.fop.layoutmgr.table.TableStepper");
+        <org.apache.fop.layoutmgr.table.TableStepper: java.lang.Class class$org$apache$fop$layoutmgr$table$TableStepper> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.layoutmgr.table.TableStepper: java.lang.Class class$org$apache$fop$layoutmgr$table$TableStepper>;
+
+     label1:
+        $z0 = virtualinvoke $r0.<java.lang.Class: boolean desiredAssertionStatus()>();
+        if $z0 != 0 goto label2;
+
+        $z0 = 1;
+        goto label3;
+
+     label2:
+        $z0 = 0;
+
+     label3:
+        <org.apache.fop.layoutmgr.table.TableStepper: boolean $assertionsDisabled> = $z0;
+        $r0 = <org.apache.fop.layoutmgr.table.TableStepper: java.lang.Class class$org$apache$fop$layoutmgr$table$TableStepper>;
+        if $r0 != null goto label4;
+
+        $r0 = staticinvoke <org.apache.fop.layoutmgr.table.TableStepper: java.lang.Class class$(java.lang.String)>("org.apache.fop.layoutmgr.table.TableStepper");
+        <org.apache.fop.layoutmgr.table.TableStepper: java.lang.Class class$org$apache$fop$layoutmgr$table$TableStepper> = $r0;
+        goto label5;
+
+     label4:
+        $r0 = <org.apache.fop.layoutmgr.table.TableStepper: java.lang.Class class$org$apache$fop$layoutmgr$table$TableStepper>;
+
+     label5:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.layoutmgr.table.TableStepper: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

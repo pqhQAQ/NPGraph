@@ -1,0 +1,117 @@
+public class org.apache.fop.render.afp.tools.DTDEntityResolver extends java.lang.Object implements org.xml.sax.EntityResolver
+{
+    public static final java.lang.String AFP_DTD_1_0_ID;
+    public static final java.lang.String AFP_DTD_1_0_RESOURCE;
+    public static final java.lang.String AFP_DTD_1_1_ID;
+    public static final java.lang.String AFP_DTD_1_1_RESOURCE;
+    public static final java.lang.String AFP_DTD_1_2_ID;
+    public static final java.lang.String AFP_DTD_1_2_RESOURCE;
+
+    public void <init>()
+    {
+        org.apache.fop.render.afp.tools.DTDEntityResolver this;
+
+        this := @this: org.apache.fop.render.afp.tools.DTDEntityResolver;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public org.xml.sax.InputSource resolveEntity(java.lang.String, java.lang.String) throws java.io.IOException
+    {
+        org.apache.fop.render.afp.tools.DTDEntityResolver this;
+        java.lang.String publicId, systemId, $r0;
+        null_type resource;
+        org.xml.sax.InputSource inputSource, $r2;
+        boolean $z0;
+        java.net.URL resource;
+        org.apache.fop.render.afp.exceptions.FontRuntimeException $r1;
+        int $i0;
+        java.io.InputStream $r3;
+
+        this := @this: org.apache.fop.render.afp.tools.DTDEntityResolver;
+        publicId := @parameter0: java.lang.String;
+        systemId := @parameter1: java.lang.String;
+        resource = null;
+        $r0 = "-//APACHE/DTD AFP Installed Font Definition DTD 1.2//EN";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(publicId);
+        if $z0 == 0 goto label0;
+
+        resource = specialinvoke this.<org.apache.fop.render.afp.tools.DTDEntityResolver: java.net.URL getResource(java.lang.String)>("afp-fonts-1.2.dtd");
+        goto label4;
+
+     label0:
+        $r0 = "-//APACHE/DTD AFP Installed Font Definition DTD 1.1//EN";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(publicId);
+        if $z0 == 0 goto label1;
+
+        resource = specialinvoke this.<org.apache.fop.render.afp.tools.DTDEntityResolver: java.net.URL getResource(java.lang.String)>("afp-fonts-1.1.dtd");
+        goto label4;
+
+     label1:
+        $r0 = "-//APACHE/DTD AFP Installed Font Definition DTD 1.0//EN";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(publicId);
+        if $z0 == 0 goto label2;
+
+        $r1 = new org.apache.fop.render.afp.exceptions.FontRuntimeException;
+        specialinvoke $r1.<org.apache.fop.render.afp.exceptions.FontRuntimeException: void <init>(java.lang.String)>("The AFP Installed Font Definition 1.0 DTD is not longer supported");
+        throw $r1;
+
+     label2:
+        if systemId == null goto label3;
+
+        $i0 = virtualinvoke systemId.<java.lang.String: int indexOf(java.lang.String)>("afp-fonts.dtd");
+        if $i0 < 0 goto label3;
+
+        $r1 = new org.apache.fop.render.afp.exceptions.FontRuntimeException;
+        specialinvoke $r1.<org.apache.fop.render.afp.exceptions.FontRuntimeException: void <init>(java.lang.String)>("The AFP Installed Font Definition DTD must be specified using the public id");
+        throw $r1;
+
+     label3:
+        return null;
+
+     label4:
+        $r2 = new org.xml.sax.InputSource;
+        $r3 = virtualinvoke resource.<java.net.URL: java.io.InputStream openStream()>();
+        specialinvoke $r2.<org.xml.sax.InputSource: void <init>(java.io.InputStream)>($r3);
+        inputSource = $r2;
+        virtualinvoke inputSource.<org.xml.sax.InputSource: void setPublicId(java.lang.String)>(publicId);
+        virtualinvoke inputSource.<org.xml.sax.InputSource: void setSystemId(java.lang.String)>(systemId);
+        return inputSource;
+    }
+
+    private java.net.URL getResource(java.lang.String)
+    {
+        org.apache.fop.render.afp.tools.DTDEntityResolver this;
+        java.lang.String resourcePath, $r3;
+        java.lang.Thread $r0;
+        java.lang.ClassLoader cl;
+        java.net.URL resource;
+        java.lang.StringBuffer $r1;
+        org.apache.fop.render.afp.exceptions.FontRuntimeException $r2;
+
+        this := @this: org.apache.fop.render.afp.tools.DTDEntityResolver;
+        resourcePath := @parameter0: java.lang.String;
+        $r0 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        cl = virtualinvoke $r0.<java.lang.Thread: java.lang.ClassLoader getContextClassLoader()>();
+        if cl != null goto label0;
+
+        cl = staticinvoke <java.lang.ClassLoader: java.lang.ClassLoader getSystemClassLoader()>();
+
+     label0:
+        resource = virtualinvoke cl.<java.lang.ClassLoader: java.net.URL getResource(java.lang.String)>(resourcePath);
+        if resource != null goto label1;
+
+        $r2 = new org.apache.fop.render.afp.exceptions.FontRuntimeException;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Resource ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(resourcePath);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("could not be found on the classpath");
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<org.apache.fop.render.afp.exceptions.FontRuntimeException: void <init>(java.lang.String)>($r3);
+        throw $r2;
+
+     label1:
+        return resource;
+    }
+}

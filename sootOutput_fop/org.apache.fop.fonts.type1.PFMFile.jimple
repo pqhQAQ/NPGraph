@@ -1,0 +1,775 @@
+public class org.apache.fop.fonts.type1.PFMFile extends java.lang.Object
+{
+    private java.lang.String windowsName;
+    private java.lang.String postscriptName;
+    private short dfItalic;
+    private int dfWeight;
+    private short dfCharSet;
+    private short dfPitchAndFamily;
+    private int dfAvgWidth;
+    private int dfMaxWidth;
+    private int dfMinWidth;
+    private short dfFirstChar;
+    private short dfLastChar;
+    private int etmCapHeight;
+    private int etmXHeight;
+    private int etmLowerCaseAscent;
+    private int etmLowerCaseDescent;
+    private int[] extentTable;
+    private java.util.Map kerningTab;
+    protected org.apache.commons.logging.Log log;
+    static java.lang.Class class$org$apache$fop$fonts$type1$PFMFile;
+
+    public void <init>()
+    {
+        org.apache.fop.fonts.type1.PFMFile this;
+        java.util.HashMap $r0;
+        java.lang.Class $r2;
+        org.apache.commons.logging.Log $r3;
+
+        this := @this: org.apache.fop.fonts.type1.PFMFile;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.fonts.type1.PFMFile: java.util.Map kerningTab> = $r0;
+        $r2 = <org.apache.fop.fonts.type1.PFMFile: java.lang.Class class$org$apache$fop$fonts$type1$PFMFile>;
+        if $r2 != null goto label0;
+
+        $r2 = staticinvoke <org.apache.fop.fonts.type1.PFMFile: java.lang.Class class$(java.lang.String)>("org.apache.fop.fonts.type1.PFMFile");
+        <org.apache.fop.fonts.type1.PFMFile: java.lang.Class class$org$apache$fop$fonts$type1$PFMFile> = $r2;
+        goto label1;
+
+     label0:
+        $r2 = <org.apache.fop.fonts.type1.PFMFile: java.lang.Class class$org$apache$fop$fonts$type1$PFMFile>;
+
+     label1:
+        $r3 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r2);
+        this.<org.apache.fop.fonts.type1.PFMFile: org.apache.commons.logging.Log log> = $r3;
+        return;
+    }
+
+    public void load(java.io.InputStream) throws java.io.IOException
+    {
+        org.apache.fop.fonts.type1.PFMFile this;
+        java.io.InputStream inStream, bufin;
+        byte[] pfmBytes, b;
+        org.apache.fop.fonts.type1.PFMInputStream in, $r1;
+        short sh1, sh2;
+        int version;
+        java.io.ByteArrayInputStream $r0, bufin;
+        java.io.IOException $r2;
+        java.lang.String $r3, $r6;
+        boolean $z0;
+        org.apache.commons.logging.Log $r4;
+        java.lang.StringBuffer $r5;
+
+        this := @this: org.apache.fop.fonts.type1.PFMFile;
+        inStream := @parameter0: java.io.InputStream;
+        pfmBytes = staticinvoke <org.apache.commons.io.IOUtils: byte[] toByteArray(java.io.InputStream)>(inStream);
+        bufin = inStream;
+        $r0 = new java.io.ByteArrayInputStream;
+        specialinvoke $r0.<java.io.ByteArrayInputStream: void <init>(byte[])>(pfmBytes);
+        bufin = $r0;
+        $r1 = new org.apache.fop.fonts.type1.PFMInputStream;
+        specialinvoke $r1.<org.apache.fop.fonts.type1.PFMInputStream: void <init>(java.io.InputStream)>(bufin);
+        in = $r1;
+        virtualinvoke bufin.<java.io.InputStream: void mark(int)>(512);
+        sh1 = virtualinvoke in.<org.apache.fop.fonts.type1.PFMInputStream: short readByte()>();
+        sh2 = virtualinvoke in.<org.apache.fop.fonts.type1.PFMInputStream: short readByte()>();
+        if sh1 != 128 goto label0;
+
+        if sh2 != 1 goto label0;
+
+        $r2 = new java.io.IOException;
+        specialinvoke $r2.<java.io.IOException: void <init>(java.lang.String)>("Cannot parse PFM file. You probably specified the PFB file of a Type 1 font as parameter instead of the PFM.");
+        throw $r2;
+
+     label0:
+        virtualinvoke bufin.<java.io.InputStream: void reset()>();
+        b = newarray (byte)[16];
+        virtualinvoke bufin.<java.io.InputStream: int read(byte[])>(b);
+        $r3 = new java.lang.String;
+        specialinvoke $r3.<java.lang.String: void <init>(byte[],java.lang.String)>(b, "US-ASCII");
+        $z0 = virtualinvoke $r3.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>("StartFontMetrics");
+        if $z0 == 0 goto label1;
+
+        $r2 = new java.io.IOException;
+        specialinvoke $r2.<java.io.IOException: void <init>(java.lang.String)>("Cannot parse PFM file. You probably specified the AFM file of a Type 1 font as parameter instead of the PFM.");
+        throw $r2;
+
+     label1:
+        virtualinvoke bufin.<java.io.InputStream: void reset()>();
+        version = virtualinvoke in.<org.apache.fop.fonts.type1.PFMInputStream: int readShort()>();
+        if version == 256 goto label2;
+
+        $r4 = this.<org.apache.fop.fonts.type1.PFMFile: org.apache.commons.logging.Log log>;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("PFM version expected to be \'256\' but got \'");
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(version);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\'. Please make sure you specify the PFM as parameter and not the PFB or the AFM.");
+        $r6 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r4.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r6);
+
+     label2:
+        virtualinvoke bufin.<java.io.InputStream: void reset()>();
+        specialinvoke this.<org.apache.fop.fonts.type1.PFMFile: void loadHeader(org.apache.fop.fonts.type1.PFMInputStream)>(in);
+        specialinvoke this.<org.apache.fop.fonts.type1.PFMFile: void loadExtension(org.apache.fop.fonts.type1.PFMInputStream)>(in);
+        return;
+    }
+
+    private void loadHeader(org.apache.fop.fonts.type1.PFMInputStream) throws java.io.IOException
+    {
+        org.apache.fop.fonts.type1.PFMFile this;
+        org.apache.fop.fonts.type1.PFMInputStream inStream;
+        long faceOffset;
+        short $s1;
+        int $i2;
+        java.lang.String $r0;
+
+        this := @this: org.apache.fop.fonts.type1.PFMFile;
+        inStream := @parameter0: org.apache.fop.fonts.type1.PFMInputStream;
+        virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: long skip(long)>(80L);
+        $s1 = virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: short readByte()>();
+        this.<org.apache.fop.fonts.type1.PFMFile: short dfItalic> = $s1;
+        virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: long skip(long)>(2L);
+        $i2 = virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: int readShort()>();
+        this.<org.apache.fop.fonts.type1.PFMFile: int dfWeight> = $i2;
+        $s1 = virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: short readByte()>();
+        this.<org.apache.fop.fonts.type1.PFMFile: short dfCharSet> = $s1;
+        virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: long skip(long)>(4L);
+        $s1 = virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: short readByte()>();
+        this.<org.apache.fop.fonts.type1.PFMFile: short dfPitchAndFamily> = $s1;
+        $i2 = virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: int readShort()>();
+        this.<org.apache.fop.fonts.type1.PFMFile: int dfAvgWidth> = $i2;
+        $i2 = virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: int readShort()>();
+        this.<org.apache.fop.fonts.type1.PFMFile: int dfMaxWidth> = $i2;
+        $s1 = virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: short readByte()>();
+        this.<org.apache.fop.fonts.type1.PFMFile: short dfFirstChar> = $s1;
+        $s1 = virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: short readByte()>();
+        this.<org.apache.fop.fonts.type1.PFMFile: short dfLastChar> = $s1;
+        virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: long skip(long)>(8L);
+        faceOffset = virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: long readInt()>();
+        virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: void reset()>();
+        virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: long skip(long)>(faceOffset);
+        $r0 = virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: java.lang.String readString()>();
+        this.<org.apache.fop.fonts.type1.PFMFile: java.lang.String windowsName> = $r0;
+        virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: void reset()>();
+        virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: long skip(long)>(117L);
+        return;
+    }
+
+    private void loadExtension(org.apache.fop.fonts.type1.PFMInputStream) throws java.io.IOException
+    {
+        org.apache.fop.fonts.type1.PFMFile this;
+        org.apache.fop.fonts.type1.PFMInputStream inStream;
+        int size;
+        long extMetricsOffset, extentTableOffset, kernPairOffset, driverInfoOffset;
+        org.apache.commons.logging.Log $r0;
+        java.lang.StringBuffer $r1;
+        java.lang.String $r2;
+        byte $b1;
+
+        this := @this: org.apache.fop.fonts.type1.PFMFile;
+        inStream := @parameter0: org.apache.fop.fonts.type1.PFMInputStream;
+        size = virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: int readShort()>();
+        if size == 30 goto label0;
+
+        $r0 = this.<org.apache.fop.fonts.type1.PFMFile: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Size of extension block was expected to be 30 bytes, but was ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(size);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" bytes.");
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r2);
+
+     label0:
+        extMetricsOffset = virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: long readInt()>();
+        extentTableOffset = virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: long readInt()>();
+        virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: long skip(long)>(4L);
+        kernPairOffset = virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: long readInt()>();
+        virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: long skip(long)>(4L);
+        driverInfoOffset = virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: long readInt()>();
+        $b1 = kernPairOffset cmp 0L;
+        if $b1 <= 0 goto label1;
+
+        virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: void reset()>();
+        virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: long skip(long)>(kernPairOffset);
+        specialinvoke this.<org.apache.fop.fonts.type1.PFMFile: void loadKernPairs(org.apache.fop.fonts.type1.PFMInputStream)>(inStream);
+
+     label1:
+        virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: void reset()>();
+        virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: long skip(long)>(driverInfoOffset);
+        $r2 = virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: java.lang.String readString()>();
+        this.<org.apache.fop.fonts.type1.PFMFile: java.lang.String postscriptName> = $r2;
+        $b1 = extMetricsOffset cmp 0L;
+        if $b1 == 0 goto label2;
+
+        virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: void reset()>();
+        virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: long skip(long)>(extMetricsOffset);
+        specialinvoke this.<org.apache.fop.fonts.type1.PFMFile: void loadExtMetrics(org.apache.fop.fonts.type1.PFMInputStream)>(inStream);
+
+     label2:
+        $b1 = extentTableOffset cmp 0L;
+        if $b1 == 0 goto label3;
+
+        virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: void reset()>();
+        virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: long skip(long)>(extentTableOffset);
+        specialinvoke this.<org.apache.fop.fonts.type1.PFMFile: void loadExtentTable(org.apache.fop.fonts.type1.PFMInputStream)>(inStream);
+
+     label3:
+        return;
+    }
+
+    private void loadKernPairs(org.apache.fop.fonts.type1.PFMInputStream) throws java.io.IOException
+    {
+        org.apache.fop.fonts.type1.PFMFile this;
+        org.apache.fop.fonts.type1.PFMInputStream inStream;
+        int i, adj, $i0;
+        java.lang.StringBuffer $r0;
+        short g1, g2;
+        java.lang.String glyph1, glyph2, $r2;
+        java.util.Map adjTab, $r4;
+        org.apache.commons.logging.Log $r1;
+        boolean $z0;
+        java.lang.String[] $r3;
+        java.lang.Integer $r5, $r8;
+        java.lang.Object $r6;
+        java.util.HashMap $r7;
+
+        this := @this: org.apache.fop.fonts.type1.PFMFile;
+        inStream := @parameter0: org.apache.fop.fonts.type1.PFMInputStream;
+        i = virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: int readShort()>();
+        $r1 = this.<org.apache.fop.fonts.type1.PFMFile: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r1 = this.<org.apache.fop.fonts.type1.PFMFile: org.apache.commons.logging.Log log>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(i);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" kerning pairs");
+        $r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r2);
+
+     label0:
+        if i <= 0 goto label4;
+
+        g1 = virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: short readByte()>();
+        i = i + -1;
+        g2 = virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: short readByte()>();
+        adj = virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: int readShort()>();
+        if adj <= 32768 goto label1;
+
+        $i0 = 65536 - adj;
+        adj = neg $i0;
+
+     label1:
+        $r1 = this.<org.apache.fop.fonts.type1.PFMFile: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label2;
+
+        $r1 = this.<org.apache.fop.fonts.type1.PFMFile: org.apache.commons.logging.Log log>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Char no: (");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(g1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(g2);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(") kern: ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(adj);
+        $r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r2);
+        $r3 = <org.apache.xmlgraphics.fonts.Glyphs: java.lang.String[] TEX8R_GLYPH_NAMES>;
+        glyph1 = $r3[g1];
+        $r3 = <org.apache.xmlgraphics.fonts.Glyphs: java.lang.String[] TEX8R_GLYPH_NAMES>;
+        glyph2 = $r3[g2];
+        $r1 = this.<org.apache.fop.fonts.type1.PFMFile: org.apache.commons.logging.Log log>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("glyphs: ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(glyph1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(glyph2);
+        $r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r2);
+
+     label2:
+        $r4 = this.<org.apache.fop.fonts.type1.PFMFile: java.util.Map kerningTab>;
+        $r5 = new java.lang.Integer;
+        specialinvoke $r5.<java.lang.Integer: void <init>(int)>(g1);
+        $r6 = interfaceinvoke $r4.<java.util.Map: java.lang.Object get(java.lang.Object)>($r5);
+        adjTab = (java.util.Map) $r6;
+        if adjTab != null goto label3;
+
+        $r7 = new java.util.HashMap;
+        specialinvoke $r7.<java.util.HashMap: void <init>()>();
+        adjTab = $r7;
+
+     label3:
+        $r5 = new java.lang.Integer;
+        specialinvoke $r5.<java.lang.Integer: void <init>(int)>(g2);
+        $r8 = new java.lang.Integer;
+        specialinvoke $r8.<java.lang.Integer: void <init>(int)>(adj);
+        interfaceinvoke adjTab.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r5, $r8);
+        $r4 = this.<org.apache.fop.fonts.type1.PFMFile: java.util.Map kerningTab>;
+        $r5 = new java.lang.Integer;
+        specialinvoke $r5.<java.lang.Integer: void <init>(int)>(g1);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r5, adjTab);
+        goto label0;
+
+     label4:
+        return;
+    }
+
+    private void loadExtMetrics(org.apache.fop.fonts.type1.PFMInputStream) throws java.io.IOException
+    {
+        org.apache.fop.fonts.type1.PFMFile this;
+        org.apache.fop.fonts.type1.PFMInputStream inStream;
+        int size, $i1;
+        org.apache.commons.logging.Log $r0;
+        java.lang.StringBuffer $r1;
+        java.lang.String $r2;
+
+        this := @this: org.apache.fop.fonts.type1.PFMFile;
+        inStream := @parameter0: org.apache.fop.fonts.type1.PFMInputStream;
+        size = virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: int readShort()>();
+        if size == 52 goto label0;
+
+        $r0 = this.<org.apache.fop.fonts.type1.PFMFile: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Size of extension block was expected to be 52 bytes, but was ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(size);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" bytes.");
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r2);
+
+     label0:
+        virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: long skip(long)>(12L);
+        $i1 = virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: int readShort()>();
+        this.<org.apache.fop.fonts.type1.PFMFile: int etmCapHeight> = $i1;
+        $i1 = virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: int readShort()>();
+        this.<org.apache.fop.fonts.type1.PFMFile: int etmXHeight> = $i1;
+        $i1 = virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: int readShort()>();
+        this.<org.apache.fop.fonts.type1.PFMFile: int etmLowerCaseAscent> = $i1;
+        $i1 = virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: int readShort()>();
+        $i1 = neg $i1;
+        this.<org.apache.fop.fonts.type1.PFMFile: int etmLowerCaseDescent> = $i1;
+        return;
+    }
+
+    private void loadExtentTable(org.apache.fop.fonts.type1.PFMInputStream) throws java.io.IOException
+    {
+        org.apache.fop.fonts.type1.PFMFile this;
+        org.apache.fop.fonts.type1.PFMInputStream inStream;
+        short i, $s0, $s1, $s5;
+        int $i2, $i3, $i4;
+        int[] $r0, $r1;
+
+        this := @this: org.apache.fop.fonts.type1.PFMFile;
+        inStream := @parameter0: org.apache.fop.fonts.type1.PFMInputStream;
+        $s0 = this.<org.apache.fop.fonts.type1.PFMFile: short dfLastChar>;
+        $s1 = this.<org.apache.fop.fonts.type1.PFMFile: short dfFirstChar>;
+        $i2 = $s0 - $s1;
+        $i2 = $i2 + 1;
+        $r0 = newarray (int)[$i2];
+        this.<org.apache.fop.fonts.type1.PFMFile: int[] extentTable> = $r0;
+        $i2 = this.<org.apache.fop.fonts.type1.PFMFile: int dfMaxWidth>;
+        this.<org.apache.fop.fonts.type1.PFMFile: int dfMinWidth> = $i2;
+        i = this.<org.apache.fop.fonts.type1.PFMFile: short dfFirstChar>;
+
+     label0:
+        $s0 = this.<org.apache.fop.fonts.type1.PFMFile: short dfLastChar>;
+        if i > $s0 goto label2;
+
+        $r1 = this.<org.apache.fop.fonts.type1.PFMFile: int[] extentTable>;
+        $s1 = this.<org.apache.fop.fonts.type1.PFMFile: short dfFirstChar>;
+        $i2 = i - $s1;
+        $i3 = virtualinvoke inStream.<org.apache.fop.fonts.type1.PFMInputStream: int readShort()>();
+        $r1[$i2] = $i3;
+        $r1 = this.<org.apache.fop.fonts.type1.PFMFile: int[] extentTable>;
+        $s1 = this.<org.apache.fop.fonts.type1.PFMFile: short dfFirstChar>;
+        $i2 = i - $s1;
+        $i4 = $r1[$i2];
+        $i2 = this.<org.apache.fop.fonts.type1.PFMFile: int dfMinWidth>;
+        if $i4 >= $i2 goto label1;
+
+        $r0 = this.<org.apache.fop.fonts.type1.PFMFile: int[] extentTable>;
+        $s5 = this.<org.apache.fop.fonts.type1.PFMFile: short dfFirstChar>;
+        $i3 = i - $s5;
+        $i2 = $r0[$i3];
+        this.<org.apache.fop.fonts.type1.PFMFile: int dfMinWidth> = $i2;
+
+     label1:
+        $i4 = i + 1;
+        i = (short) $i4;
+        goto label0;
+
+     label2:
+        return;
+    }
+
+    public java.lang.String getWindowsName()
+    {
+        org.apache.fop.fonts.type1.PFMFile this;
+        java.lang.String $r0;
+
+        this := @this: org.apache.fop.fonts.type1.PFMFile;
+        $r0 = this.<org.apache.fop.fonts.type1.PFMFile: java.lang.String windowsName>;
+        return $r0;
+    }
+
+    public java.util.Map getKerning()
+    {
+        org.apache.fop.fonts.type1.PFMFile this;
+        java.util.Map $r0;
+
+        this := @this: org.apache.fop.fonts.type1.PFMFile;
+        $r0 = this.<org.apache.fop.fonts.type1.PFMFile: java.util.Map kerningTab>;
+        return $r0;
+    }
+
+    public java.lang.String getPostscriptName()
+    {
+        org.apache.fop.fonts.type1.PFMFile this;
+        java.lang.String $r0;
+
+        this := @this: org.apache.fop.fonts.type1.PFMFile;
+        $r0 = this.<org.apache.fop.fonts.type1.PFMFile: java.lang.String postscriptName>;
+        return $r0;
+    }
+
+    public short getCharSet()
+    {
+        org.apache.fop.fonts.type1.PFMFile this;
+        short $s0;
+
+        this := @this: org.apache.fop.fonts.type1.PFMFile;
+        $s0 = this.<org.apache.fop.fonts.type1.PFMFile: short dfCharSet>;
+        return $s0;
+    }
+
+    public java.lang.String getCharSetName()
+    {
+        org.apache.fop.fonts.type1.PFMFile this;
+        short $s0, $s1;
+        java.lang.String $r0, $r1, $r4;
+        boolean $z0;
+        org.apache.commons.logging.Log $r2;
+        java.lang.StringBuffer $r3;
+
+        this := @this: org.apache.fop.fonts.type1.PFMFile;
+        $s0 = this.<org.apache.fop.fonts.type1.PFMFile: short dfCharSet>;
+        lookupswitch($s0)
+        {
+            case 0: goto label0;
+            case 2: goto label1;
+            case 128: goto label2;
+            default: goto label3;
+        };
+
+     label0:
+        return "WinAnsi";
+
+     label1:
+        $r0 = "Symbol";
+        $r1 = virtualinvoke this.<org.apache.fop.fonts.type1.PFMFile: java.lang.String getPostscriptName()>();
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>($r1);
+        if $z0 == 0 goto label4;
+
+        return "Symbol";
+
+     label2:
+        return "Shift-JIS (Japanese)";
+
+     label3:
+        $r2 = this.<org.apache.fop.fonts.type1.PFMFile: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unknown charset detected (");
+        $s1 = this.<org.apache.fop.fonts.type1.PFMFile: short dfCharSet>;
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($s1);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", 0x");
+        $s1 = this.<org.apache.fop.fonts.type1.PFMFile: short dfCharSet>;
+        $r4 = staticinvoke <java.lang.Integer: java.lang.String toHexString(int)>($s1);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("). Trying fallback to WinAnsi.");
+        $r1 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r1);
+
+     label4:
+        return "WinAnsi";
+    }
+
+    public short getFirstChar()
+    {
+        org.apache.fop.fonts.type1.PFMFile this;
+        short $s0;
+
+        this := @this: org.apache.fop.fonts.type1.PFMFile;
+        $s0 = this.<org.apache.fop.fonts.type1.PFMFile: short dfFirstChar>;
+        return $s0;
+    }
+
+    public short getLastChar()
+    {
+        org.apache.fop.fonts.type1.PFMFile this;
+        short $s0;
+
+        this := @this: org.apache.fop.fonts.type1.PFMFile;
+        $s0 = this.<org.apache.fop.fonts.type1.PFMFile: short dfLastChar>;
+        return $s0;
+    }
+
+    public int getCapHeight()
+    {
+        org.apache.fop.fonts.type1.PFMFile this;
+        int $i0;
+
+        this := @this: org.apache.fop.fonts.type1.PFMFile;
+        $i0 = this.<org.apache.fop.fonts.type1.PFMFile: int etmCapHeight>;
+        return $i0;
+    }
+
+    public int getXHeight()
+    {
+        org.apache.fop.fonts.type1.PFMFile this;
+        int $i0;
+
+        this := @this: org.apache.fop.fonts.type1.PFMFile;
+        $i0 = this.<org.apache.fop.fonts.type1.PFMFile: int etmXHeight>;
+        return $i0;
+    }
+
+    public int getLowerCaseAscent()
+    {
+        org.apache.fop.fonts.type1.PFMFile this;
+        int $i0;
+
+        this := @this: org.apache.fop.fonts.type1.PFMFile;
+        $i0 = this.<org.apache.fop.fonts.type1.PFMFile: int etmLowerCaseAscent>;
+        return $i0;
+    }
+
+    public int getLowerCaseDescent()
+    {
+        org.apache.fop.fonts.type1.PFMFile this;
+        int $i0;
+
+        this := @this: org.apache.fop.fonts.type1.PFMFile;
+        $i0 = this.<org.apache.fop.fonts.type1.PFMFile: int etmLowerCaseDescent>;
+        return $i0;
+    }
+
+    public boolean getIsProportional()
+    {
+        org.apache.fop.fonts.type1.PFMFile this;
+        short $s0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.type1.PFMFile;
+        $s0 = this.<org.apache.fop.fonts.type1.PFMFile: short dfPitchAndFamily>;
+        $s0 = $s0 & 1;
+        if $s0 != 1 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public int[] getFontBBox()
+    {
+        org.apache.fop.fonts.type1.PFMFile this;
+        int[] bbox;
+        boolean $z0;
+        int $i0, $i1, $i2;
+
+        this := @this: org.apache.fop.fonts.type1.PFMFile;
+        bbox = newarray (int)[4];
+        $z0 = virtualinvoke this.<org.apache.fop.fonts.type1.PFMFile: boolean getIsProportional()>();
+        if $z0 != 0 goto label0;
+
+        $i0 = this.<org.apache.fop.fonts.type1.PFMFile: int dfAvgWidth>;
+        $i1 = this.<org.apache.fop.fonts.type1.PFMFile: int dfMaxWidth>;
+        if $i0 != $i1 goto label0;
+
+        bbox[0] = -20;
+        goto label1;
+
+     label0:
+        bbox[0] = -100;
+
+     label1:
+        $i2 = virtualinvoke this.<org.apache.fop.fonts.type1.PFMFile: int getLowerCaseDescent()>();
+        $i2 = $i2 - 5;
+        bbox[1] = $i2;
+        $i2 = this.<org.apache.fop.fonts.type1.PFMFile: int dfMaxWidth>;
+        $i2 = $i2 + 10;
+        bbox[2] = $i2;
+        $i2 = virtualinvoke this.<org.apache.fop.fonts.type1.PFMFile: int getLowerCaseAscent()>();
+        $i2 = $i2 + 5;
+        bbox[3] = $i2;
+        return bbox;
+    }
+
+    public boolean isNonSymbolic()
+    {
+        org.apache.fop.fonts.type1.PFMFile this;
+        short $s0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.type1.PFMFile;
+        $s0 = this.<org.apache.fop.fonts.type1.PFMFile: short dfCharSet>;
+        if $s0 == 2 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public int getFlags()
+    {
+        org.apache.fop.fonts.type1.PFMFile this;
+        byte flags;
+        boolean $z0;
+        short $s0;
+
+        this := @this: org.apache.fop.fonts.type1.PFMFile;
+        flags = 0;
+        $z0 = virtualinvoke this.<org.apache.fop.fonts.type1.PFMFile: boolean getIsProportional()>();
+        if $z0 != 0 goto label0;
+
+        flags = flags | 1;
+
+     label0:
+        $z0 = virtualinvoke this.<org.apache.fop.fonts.type1.PFMFile: boolean isNonSymbolic()>();
+        if $z0 == 0 goto label1;
+
+        flags = flags | 32;
+        goto label2;
+
+     label1:
+        flags = flags | 4;
+
+     label2:
+        $s0 = this.<org.apache.fop.fonts.type1.PFMFile: short dfPitchAndFamily>;
+        $s0 = $s0 & 16;
+        if $s0 == 0 goto label3;
+
+        flags = flags | 2;
+
+     label3:
+        $s0 = this.<org.apache.fop.fonts.type1.PFMFile: short dfPitchAndFamily>;
+        $s0 = $s0 & 64;
+        if $s0 == 0 goto label4;
+
+        flags = flags | 8;
+
+     label4:
+        $s0 = this.<org.apache.fop.fonts.type1.PFMFile: short dfItalic>;
+        if $s0 == 0 goto label5;
+
+        flags = flags | 64;
+
+     label5:
+        return flags;
+    }
+
+    public int getStemV()
+    {
+        org.apache.fop.fonts.type1.PFMFile this;
+        short $s0;
+        int $i1;
+        double $d0;
+        long $l2;
+
+        this := @this: org.apache.fop.fonts.type1.PFMFile;
+        $s0 = this.<org.apache.fop.fonts.type1.PFMFile: short dfItalic>;
+        if $s0 == 0 goto label0;
+
+        $i1 = this.<org.apache.fop.fonts.type1.PFMFile: int dfMinWidth>;
+        $d0 = (double) $i1;
+        $d0 = $d0 * 0.25;
+        $l2 = staticinvoke <java.lang.Math: long round(double)>($d0);
+        $i1 = (int) $l2;
+        return $i1;
+
+     label0:
+        $i1 = this.<org.apache.fop.fonts.type1.PFMFile: int dfMinWidth>;
+        $d0 = (double) $i1;
+        $d0 = $d0 * 0.6;
+        $l2 = staticinvoke <java.lang.Math: long round(double)>($d0);
+        $i1 = (int) $l2;
+        return $i1;
+    }
+
+    public int getItalicAngle()
+    {
+        org.apache.fop.fonts.type1.PFMFile this;
+        short $s0;
+
+        this := @this: org.apache.fop.fonts.type1.PFMFile;
+        $s0 = this.<org.apache.fop.fonts.type1.PFMFile: short dfItalic>;
+        if $s0 == 0 goto label0;
+
+        return -16;
+
+     label0:
+        return 0;
+    }
+
+    public int getCharWidth(short)
+    {
+        org.apache.fop.fonts.type1.PFMFile this;
+        short which, $s0;
+        int[] $r0;
+        int $i1, $i2;
+
+        this := @this: org.apache.fop.fonts.type1.PFMFile;
+        which := @parameter0: short;
+        $r0 = this.<org.apache.fop.fonts.type1.PFMFile: int[] extentTable>;
+        $s0 = this.<org.apache.fop.fonts.type1.PFMFile: short dfFirstChar>;
+        $i1 = which - $s0;
+        $i2 = $r0[$i1];
+        return $i2;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+}

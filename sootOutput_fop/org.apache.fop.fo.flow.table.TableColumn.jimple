@@ -1,0 +1,354 @@
+public class org.apache.fop.fo.flow.table.TableColumn extends org.apache.fop.fo.flow.table.TableFObj
+{
+    private org.apache.fop.fo.properties.CommonBorderPaddingBackground commonBorderPaddingBackground;
+    private int columnNumber;
+    private org.apache.fop.datatypes.Length columnWidth;
+    private int numberColumnsRepeated;
+    private int numberColumnsSpanned;
+    private boolean implicitColumn;
+    private org.apache.fop.fo.PropertyList pList;
+
+    public void <init>(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.flow.table.TableColumn this;
+        org.apache.fop.fo.FONode parent;
+
+        this := @this: org.apache.fop.fo.flow.table.TableColumn;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        specialinvoke this.<org.apache.fop.fo.flow.table.TableColumn: void <init>(org.apache.fop.fo.FONode,boolean)>(parent, 0);
+        return;
+    }
+
+    public void <init>(org.apache.fop.fo.FONode, boolean)
+    {
+        org.apache.fop.fo.flow.table.TableColumn this;
+        org.apache.fop.fo.FONode parent;
+        boolean implicit;
+
+        this := @this: org.apache.fop.fo.flow.table.TableColumn;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        implicit := @parameter1: boolean;
+        specialinvoke this.<org.apache.fop.fo.flow.table.TableFObj: void <init>(org.apache.fop.fo.FONode)>(parent);
+        this.<org.apache.fop.fo.flow.table.TableColumn: org.apache.fop.fo.PropertyList pList> = null;
+        this.<org.apache.fop.fo.flow.table.TableColumn: boolean implicitColumn> = implicit;
+        return;
+    }
+
+    public void bind(org.apache.fop.fo.PropertyList) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.table.TableColumn this;
+        org.apache.fop.fo.PropertyList pList;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground $r0;
+        org.apache.fop.fo.properties.Property $r1;
+        org.apache.fop.datatypes.Numeric $r2;
+        int $i0, $i1, $i2;
+        org.apache.fop.datatypes.Length $r3, $r7;
+        org.apache.fop.fo.expr.PropertyException $r4;
+        java.lang.StringBuffer $r5;
+        java.lang.String $r6;
+        boolean $z0;
+        org.apache.fop.fo.flow.table.Table $r8;
+        org.apache.commons.logging.Log $r9;
+        org.apache.fop.fo.properties.TableColLength $r10;
+
+        this := @this: org.apache.fop.fo.flow.table.TableColumn;
+        pList := @parameter0: org.apache.fop.fo.PropertyList;
+        $r0 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.CommonBorderPaddingBackground getBorderPaddingBackgroundProps()>();
+        this.<org.apache.fop.fo.flow.table.TableColumn: org.apache.fop.fo.properties.CommonBorderPaddingBackground commonBorderPaddingBackground> = $r0;
+        $r1 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(70);
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        $i0 = interfaceinvoke $r2.<org.apache.fop.datatypes.Numeric: int getValue()>();
+        this.<org.apache.fop.fo.flow.table.TableColumn: int columnNumber> = $i0;
+        $r1 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(71);
+        $r3 = virtualinvoke $r1.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        this.<org.apache.fop.fo.flow.table.TableColumn: org.apache.fop.datatypes.Length columnWidth> = $r3;
+        $r1 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(148);
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        $i0 = interfaceinvoke $r2.<org.apache.fop.datatypes.Numeric: int getValue()>();
+        this.<org.apache.fop.fo.flow.table.TableColumn: int numberColumnsRepeated> = $i0;
+        $r1 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(149);
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        $i0 = interfaceinvoke $r2.<org.apache.fop.datatypes.Numeric: int getValue()>();
+        this.<org.apache.fop.fo.flow.table.TableColumn: int numberColumnsSpanned> = $i0;
+        specialinvoke this.<org.apache.fop.fo.flow.table.TableFObj: void bind(org.apache.fop.fo.PropertyList)>(pList);
+        $i1 = this.<org.apache.fop.fo.flow.table.TableColumn: int numberColumnsRepeated>;
+        if $i1 > 0 goto label0;
+
+        $r4 = new org.apache.fop.fo.expr.PropertyException;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("number-columns-repeated must be 1 or bigger, but got ");
+        $i2 = this.<org.apache.fop.fo.flow.table.TableColumn: int numberColumnsRepeated>;
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i2);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r4.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>($r6);
+        throw $r4;
+
+     label0:
+        $i1 = this.<org.apache.fop.fo.flow.table.TableColumn: int numberColumnsSpanned>;
+        if $i1 > 0 goto label1;
+
+        $r4 = new org.apache.fop.fo.expr.PropertyException;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("number-columns-spanned must be 1 or bigger, but got ");
+        $i2 = this.<org.apache.fop.fo.flow.table.TableColumn: int numberColumnsSpanned>;
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i2);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r4.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>($r6);
+        throw $r4;
+
+     label1:
+        $r7 = this.<org.apache.fop.fo.flow.table.TableColumn: org.apache.fop.datatypes.Length columnWidth>;
+        $i1 = interfaceinvoke $r7.<org.apache.fop.datatypes.Length: int getEnum()>();
+        if $i1 != 9 goto label3;
+
+        $z0 = this.<org.apache.fop.fo.flow.table.TableColumn: boolean implicitColumn>;
+        if $z0 != 0 goto label2;
+
+        $r8 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableColumn: org.apache.fop.fo.flow.table.Table getTable()>();
+        $z0 = virtualinvoke $r8.<org.apache.fop.fo.flow.table.Table: boolean isAutoLayout()>();
+        if $z0 != 0 goto label2;
+
+        $r9 = <org.apache.fop.fo.flow.table.TableColumn: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r9.<org.apache.commons.logging.Log: void warn(java.lang.Object)>("table-layout=\"fixed\" and column-width unspecified => falling back to proportional-column-width(1)");
+
+     label2:
+        $r10 = new org.apache.fop.fo.properties.TableColLength;
+        specialinvoke $r10.<org.apache.fop.fo.properties.TableColLength: void <init>(double,org.apache.fop.fo.FObj)>(1.0, this);
+        this.<org.apache.fop.fo.flow.table.TableColumn: org.apache.fop.datatypes.Length columnWidth> = $r10;
+
+     label3:
+        $z0 = this.<org.apache.fop.fo.flow.table.TableColumn: boolean implicitColumn>;
+        if $z0 != 0 goto label4;
+
+        this.<org.apache.fop.fo.flow.table.TableColumn: org.apache.fop.fo.PropertyList pList> = pList;
+
+     label4:
+        return;
+    }
+
+    public void startOfNode() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.table.TableColumn this;
+        org.apache.fop.fo.FOEventHandler $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.TableColumn;
+        specialinvoke this.<org.apache.fop.fo.flow.table.TableFObj: void startOfNode()>();
+        $r0 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableColumn: org.apache.fop.fo.FOEventHandler getFOEventHandler()>();
+        virtualinvoke $r0.<org.apache.fop.fo.FOEventHandler: void startColumn(org.apache.fop.fo.flow.table.TableColumn)>(this);
+        return;
+    }
+
+    void setCollapsedBorders(org.apache.fop.layoutmgr.table.CollapsingBorderModel)
+    {
+        org.apache.fop.fo.flow.table.TableColumn this;
+        org.apache.fop.layoutmgr.table.CollapsingBorderModel collapsingBorderModel;
+
+        this := @this: org.apache.fop.fo.flow.table.TableColumn;
+        collapsingBorderModel := @parameter0: org.apache.fop.layoutmgr.table.CollapsingBorderModel;
+        this.<org.apache.fop.fo.flow.table.TableColumn: org.apache.fop.layoutmgr.table.CollapsingBorderModel collapsingBorderModel> = collapsingBorderModel;
+        virtualinvoke this.<org.apache.fop.fo.flow.table.TableColumn: void setCollapsedBorders()>();
+        return;
+    }
+
+    protected void setCollapsedBorders()
+    {
+        org.apache.fop.fo.flow.table.TableColumn this;
+        org.apache.fop.fo.flow.table.Table table;
+        org.apache.fop.fo.FONode $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.TableColumn;
+        $r0 = this.<org.apache.fop.fo.flow.table.TableColumn: org.apache.fop.fo.FONode parent>;
+        table = (org.apache.fop.fo.flow.table.Table) $r0;
+        virtualinvoke this.<org.apache.fop.fo.flow.table.TableColumn: void createBorder(int,org.apache.fop.fo.flow.table.TableFObj)>(0, table);
+        virtualinvoke this.<org.apache.fop.fo.flow.table.TableColumn: void createBorder(int,org.apache.fop.fo.flow.table.TableFObj)>(1, table);
+        virtualinvoke this.<org.apache.fop.fo.flow.table.TableColumn: void createBorder(int)>(2);
+        virtualinvoke this.<org.apache.fop.fo.flow.table.TableColumn: void createBorder(int)>(3);
+        return;
+    }
+
+    public void endOfNode() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.table.TableColumn this;
+        org.apache.fop.fo.FOEventHandler $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.TableColumn;
+        $r0 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableColumn: org.apache.fop.fo.FOEventHandler getFOEventHandler()>();
+        virtualinvoke $r0.<org.apache.fop.fo.FOEventHandler: void endColumn(org.apache.fop.fo.flow.table.TableColumn)>(this);
+        return;
+    }
+
+    protected void validateChildNode(org.xml.sax.Locator, java.lang.String, java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.flow.table.TableColumn this;
+        org.xml.sax.Locator loc;
+        java.lang.String nsURI, localName;
+
+        this := @this: org.apache.fop.fo.flow.table.TableColumn;
+        loc := @parameter0: org.xml.sax.Locator;
+        nsURI := @parameter1: java.lang.String;
+        localName := @parameter2: java.lang.String;
+        virtualinvoke this.<org.apache.fop.fo.flow.table.TableColumn: void invalidChildError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, nsURI, localName);
+        return;
+    }
+
+    public org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()
+    {
+        org.apache.fop.fo.flow.table.TableColumn this;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.TableColumn;
+        $r0 = this.<org.apache.fop.fo.flow.table.TableColumn: org.apache.fop.fo.properties.CommonBorderPaddingBackground commonBorderPaddingBackground>;
+        return $r0;
+    }
+
+    public org.apache.fop.datatypes.Length getColumnWidth()
+    {
+        org.apache.fop.fo.flow.table.TableColumn this;
+        org.apache.fop.datatypes.Length $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.TableColumn;
+        $r0 = this.<org.apache.fop.fo.flow.table.TableColumn: org.apache.fop.datatypes.Length columnWidth>;
+        return $r0;
+    }
+
+    public void setColumnWidth(org.apache.fop.datatypes.Length)
+    {
+        org.apache.fop.fo.flow.table.TableColumn this;
+        org.apache.fop.datatypes.Length columnWidth;
+
+        this := @this: org.apache.fop.fo.flow.table.TableColumn;
+        columnWidth := @parameter0: org.apache.fop.datatypes.Length;
+        this.<org.apache.fop.fo.flow.table.TableColumn: org.apache.fop.datatypes.Length columnWidth> = columnWidth;
+        return;
+    }
+
+    public int getColumnNumber()
+    {
+        org.apache.fop.fo.flow.table.TableColumn this;
+        int $i0;
+
+        this := @this: org.apache.fop.fo.flow.table.TableColumn;
+        $i0 = this.<org.apache.fop.fo.flow.table.TableColumn: int columnNumber>;
+        return $i0;
+    }
+
+    protected void setColumnNumber(int)
+    {
+        org.apache.fop.fo.flow.table.TableColumn this;
+        int columnNumber;
+
+        this := @this: org.apache.fop.fo.flow.table.TableColumn;
+        columnNumber := @parameter0: int;
+        this.<org.apache.fop.fo.flow.table.TableColumn: int columnNumber> = columnNumber;
+        return;
+    }
+
+    public int getNumberColumnsRepeated()
+    {
+        org.apache.fop.fo.flow.table.TableColumn this;
+        int $i0;
+
+        this := @this: org.apache.fop.fo.flow.table.TableColumn;
+        $i0 = this.<org.apache.fop.fo.flow.table.TableColumn: int numberColumnsRepeated>;
+        return $i0;
+    }
+
+    public int getNumberColumnsSpanned()
+    {
+        org.apache.fop.fo.flow.table.TableColumn this;
+        int $i0;
+
+        this := @this: org.apache.fop.fo.flow.table.TableColumn;
+        $i0 = this.<org.apache.fop.fo.flow.table.TableColumn: int numberColumnsSpanned>;
+        return $i0;
+    }
+
+    public java.lang.String getLocalName()
+    {
+        org.apache.fop.fo.flow.table.TableColumn this;
+
+        this := @this: org.apache.fop.fo.flow.table.TableColumn;
+        return "table-column";
+    }
+
+    public int getNameId()
+    {
+        org.apache.fop.fo.flow.table.TableColumn this;
+
+        this := @this: org.apache.fop.fo.flow.table.TableColumn;
+        return 51;
+    }
+
+    public boolean isImplicitColumn()
+    {
+        org.apache.fop.fo.flow.table.TableColumn this;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.flow.table.TableColumn;
+        $z0 = this.<org.apache.fop.fo.flow.table.TableColumn: boolean implicitColumn>;
+        return $z0;
+    }
+
+    public java.lang.String toString()
+    {
+        org.apache.fop.fo.flow.table.TableColumn this;
+        java.lang.StringBuffer $r0, sb;
+        int $i0, $i1;
+        org.apache.fop.datatypes.Length $r1;
+        java.lang.String $r2;
+
+        this := @this: org.apache.fop.fo.flow.table.TableColumn;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>(java.lang.String)>("fo:table-column");
+        sb = $r0;
+        $r0 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" column-number=");
+        $i0 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableColumn: int getColumnNumber()>();
+        virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $i1 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableColumn: int getNumberColumnsRepeated()>();
+        if $i1 <= 1 goto label0;
+
+        $r0 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" number-columns-repeated=");
+        $i0 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableColumn: int getNumberColumnsRepeated()>();
+        virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+
+     label0:
+        $i1 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableColumn: int getNumberColumnsSpanned()>();
+        if $i1 <= 1 goto label1;
+
+        $r0 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" number-columns-spanned=");
+        $i0 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableColumn: int getNumberColumnsSpanned()>();
+        virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+
+     label1:
+        $r0 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" column-width=");
+        $r1 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableColumn: org.apache.fop.datatypes.Length getColumnWidth()>();
+        virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r1);
+        $r2 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r2;
+    }
+
+    public org.apache.fop.fo.properties.Property getProperty(int) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.flow.table.TableColumn this;
+        int propId;
+        org.apache.fop.fo.PropertyList $r0;
+        org.apache.fop.fo.properties.Property $r1;
+
+        this := @this: org.apache.fop.fo.flow.table.TableColumn;
+        propId := @parameter0: int;
+        $r0 = this.<org.apache.fop.fo.flow.table.TableColumn: org.apache.fop.fo.PropertyList pList>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(propId);
+        return $r1;
+    }
+
+    protected void releasePropertyList()
+    {
+        org.apache.fop.fo.flow.table.TableColumn this;
+
+        this := @this: org.apache.fop.fo.flow.table.TableColumn;
+        this.<org.apache.fop.fo.flow.table.TableColumn: org.apache.fop.fo.PropertyList pList> = null;
+        return;
+    }
+}

@@ -1,0 +1,60 @@
+public class org.apache.fop.servlet.FopPrintServlet extends org.apache.fop.servlet.FopServlet
+{
+
+    public void <init>()
+    {
+        org.apache.fop.servlet.FopPrintServlet this;
+
+        this := @this: org.apache.fop.servlet.FopPrintServlet;
+        specialinvoke this.<org.apache.fop.servlet.FopServlet: void <init>()>();
+        return;
+    }
+
+    protected void render(javax.xml.transform.Source, javax.xml.transform.Transformer, javax.servlet.http.HttpServletResponse) throws org.apache.fop.apps.FOPException, javax.xml.transform.TransformerException, java.io.IOException
+    {
+        org.apache.fop.servlet.FopPrintServlet this;
+        javax.xml.transform.Source src;
+        javax.xml.transform.Transformer transformer;
+        javax.servlet.http.HttpServletResponse response;
+        org.apache.fop.apps.FOUserAgent foUserAgent;
+        org.apache.fop.apps.Fop fop;
+        javax.xml.transform.sax.SAXResult res, $r1;
+        org.apache.fop.apps.FopFactory $r0;
+        org.xml.sax.helpers.DefaultHandler $r2;
+
+        this := @this: org.apache.fop.servlet.FopPrintServlet;
+        src := @parameter0: javax.xml.transform.Source;
+        transformer := @parameter1: javax.xml.transform.Transformer;
+        response := @parameter2: javax.servlet.http.HttpServletResponse;
+        foUserAgent = virtualinvoke this.<org.apache.fop.servlet.FopPrintServlet: org.apache.fop.apps.FOUserAgent getFOUserAgent()>();
+        $r0 = this.<org.apache.fop.servlet.FopPrintServlet: org.apache.fop.apps.FopFactory fopFactory>;
+        fop = virtualinvoke $r0.<org.apache.fop.apps.FopFactory: org.apache.fop.apps.Fop newFop(java.lang.String,org.apache.fop.apps.FOUserAgent)>("application/X-fop-print", foUserAgent);
+        $r1 = new javax.xml.transform.sax.SAXResult;
+        $r2 = virtualinvoke fop.<org.apache.fop.apps.Fop: org.xml.sax.helpers.DefaultHandler getDefaultHandler()>();
+        specialinvoke $r1.<javax.xml.transform.sax.SAXResult: void <init>(org.xml.sax.ContentHandler)>($r2);
+        res = $r1;
+        virtualinvoke transformer.<javax.xml.transform.Transformer: void transform(javax.xml.transform.Source,javax.xml.transform.Result)>(src, res);
+        specialinvoke this.<org.apache.fop.servlet.FopPrintServlet: void reportOK(javax.servlet.http.HttpServletResponse)>(response);
+        return;
+    }
+
+    private void reportOK(javax.servlet.http.HttpServletResponse) throws java.io.IOException
+    {
+        org.apache.fop.servlet.FopPrintServlet this;
+        javax.servlet.http.HttpServletResponse response;
+        java.lang.String sMsg;
+        java.io.PrintWriter out;
+        int $i0;
+
+        this := @this: org.apache.fop.servlet.FopPrintServlet;
+        response := @parameter0: javax.servlet.http.HttpServletResponse;
+        sMsg = "<html><title>Success</title>\n<body><h1>FopPrintServlet: </h1><h3>The requested data was printed to the default printer.</h3></body></html>";
+        interfaceinvoke response.<javax.servlet.http.HttpServletResponse: void setContentType(java.lang.String)>("text/html");
+        $i0 = virtualinvoke sMsg.<java.lang.String: int length()>();
+        interfaceinvoke response.<javax.servlet.http.HttpServletResponse: void setContentLength(int)>($i0);
+        out = interfaceinvoke response.<javax.servlet.http.HttpServletResponse: java.io.PrintWriter getWriter()>();
+        virtualinvoke out.<java.io.PrintWriter: void println(java.lang.String)>(sMsg);
+        virtualinvoke out.<java.io.PrintWriter: void flush()>();
+        return;
+    }
+}

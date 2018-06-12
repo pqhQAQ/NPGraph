@@ -1,0 +1,1708 @@
+public abstract class org.apache.fop.layoutmgr.BreakingAlgorithm extends java.lang.Object
+{
+    protected static org.apache.commons.logging.Log log;
+    protected static final int INFINITE_RATIO;
+    private static final int MAX_RECOVERY_ATTEMPTS;
+    public static final int ALL_BREAKS;
+    public static final int NO_FLAGGED_PENALTIES;
+    public static final int ONLY_FORCED_BREAKS;
+    private int flaggedPenalty;
+    protected int repeatedFlaggedDemerit;
+    protected int incompatibleFitnessDemerit;
+    protected int maxFlaggedPenaltiesCount;
+    private double threshold;
+    protected org.apache.fop.layoutmgr.KnuthSequence par;
+    protected int lineWidth;
+    private boolean force;
+    protected boolean considerTooShort;
+    private org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooLong;
+    private org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooShort;
+    private org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastDeactivated;
+    protected int alignment;
+    protected int alignmentLast;
+    protected boolean bFirst;
+    protected org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode[] activeLines;
+    protected int activeNodeCount;
+    protected int startLine;
+    protected int endLine;
+    protected int totalWidth;
+    protected int totalStretch;
+    protected int totalShrink;
+    protected org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords best;
+    private boolean partOverflowRecoveryActivated;
+    private org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastRecovered;
+    static java.lang.Class class$org$apache$fop$layoutmgr$BreakingAlgorithm;
+
+    public void <init>(int, int, boolean, boolean, int)
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        int align, alignLast, maxFlagCount;
+        boolean first, partOverflowRecovery;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords $r0;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        align := @parameter0: int;
+        alignLast := @parameter1: int;
+        first := @parameter2: boolean;
+        partOverflowRecovery := @parameter3: boolean;
+        maxFlagCount := @parameter4: int;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int flaggedPenalty> = 50;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int repeatedFlaggedDemerit> = 50;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int incompatibleFitnessDemerit> = 50;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int lineWidth> = -1;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: boolean force> = 0;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: boolean considerTooShort> = 0;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int startLine> = 0;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int endLine> = 0;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalStretch> = 0;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalShrink> = 0;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: boolean partOverflowRecoveryActivated> = 1;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int alignment> = align;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int alignmentLast> = alignLast;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: boolean bFirst> = first;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: boolean partOverflowRecoveryActivated> = partOverflowRecovery;
+        $r0 = new org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords;
+        specialinvoke $r0.<org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords: void <init>(org.apache.fop.layoutmgr.BreakingAlgorithm)>(this);
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords best> = $r0;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int maxFlaggedPenaltiesCount> = maxFlagCount;
+        return;
+    }
+
+    protected int getMaxRecoveryAttempts()
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        return 5;
+    }
+
+    protected boolean isPartOverflowRecoveryActivated()
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        $z0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: boolean partOverflowRecoveryActivated>;
+        return $z0;
+    }
+
+    public abstract void updateData1(int, double);
+
+    public abstract void updateData2(org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode, org.apache.fop.layoutmgr.KnuthSequence, int);
+
+    public void setConstantLineWidth(int)
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        int lineWidth;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        lineWidth := @parameter0: int;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int lineWidth> = lineWidth;
+        return;
+    }
+
+    public int findBreakingPoints(org.apache.fop.layoutmgr.KnuthSequence, double, boolean, int)
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        org.apache.fop.layoutmgr.KnuthSequence par;
+        double threshold;
+        boolean force;
+        int allowedBreaks, $i0;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        par := @parameter0: org.apache.fop.layoutmgr.KnuthSequence;
+        threshold := @parameter1: double;
+        force := @parameter2: boolean;
+        allowedBreaks := @parameter3: int;
+        $i0 = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int findBreakingPoints(org.apache.fop.layoutmgr.KnuthSequence,int,double,boolean,int)>(par, 0, threshold, force, allowedBreaks);
+        return $i0;
+    }
+
+    public int findBreakingPoints(org.apache.fop.layoutmgr.KnuthSequence, int, double, boolean, int)
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        org.apache.fop.layoutmgr.KnuthSequence par;
+        int startIndex, allowedBreaks, firstBoxIndex, i, line, $i1, $i2, $i3, $i5;
+        double threshold, $d0, $d1;
+        boolean force, previousIsBox, $z0;
+        null_type $n0, thisElement;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastForced, node, $r3, $r10, $r11, $r12;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode[] $r0;
+        byte $b0, $b4;
+        java.lang.Object $r1;
+        org.apache.fop.layoutmgr.KnuthElement $r2, thisElement;
+        org.apache.commons.logging.Log $r4;
+        java.lang.StringBuffer $r5;
+        java.lang.String $r6, $r13;
+        org.apache.fop.layoutmgr.KnuthBox $r8;
+        org.apache.fop.layoutmgr.KnuthPenalty $r9;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        par := @parameter0: org.apache.fop.layoutmgr.KnuthSequence;
+        startIndex := @parameter1: int;
+        threshold := @parameter2: double;
+        force := @parameter3: boolean;
+        allowedBreaks := @parameter4: int;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.KnuthSequence par> = par;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: double threshold> = threshold;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: boolean force> = force;
+        virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: void initialize()>();
+        $r0 = newarray (org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)[20];
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode[] activeLines> = $r0;
+        $n0 = null;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooLong> = $n0;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooShort> = $n0;
+        $b0 = 0;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int endLine> = $b0;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int startLine> = $b0;
+        thisElement = null;
+        previousIsBox = 0;
+        firstBoxIndex = startIndex;
+        $i1 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int alignment>;
+        if $i1 == 23 goto label1;
+
+     label0:
+        $i1 = virtualinvoke par.<org.apache.fop.layoutmgr.KnuthSequence: int size()>();
+        if $i1 <= firstBoxIndex goto label1;
+
+        $r1 = virtualinvoke par.<org.apache.fop.layoutmgr.KnuthSequence: java.lang.Object get(int)>(firstBoxIndex);
+        $r2 = (org.apache.fop.layoutmgr.KnuthElement) $r1;
+        $z0 = virtualinvoke $r2.<org.apache.fop.layoutmgr.KnuthElement: boolean isBox()>();
+        if $z0 != 0 goto label1;
+
+        firstBoxIndex = firstBoxIndex + 1;
+        goto label0;
+
+     label1:
+        $r0 = newarray (org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)[20];
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode[] activeLines> = $r0;
+        $r3 = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode createNode(int,int,int,int,int,int,double,int,int,int,double,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)>(firstBoxIndex, 0, 1, 0, 0, 0, 0.0, 0, 0, 0, 0.0, null);
+        virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: void addNode(int,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)>(0, $r3);
+        $r4 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r4.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label2;
+
+        $r4 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Looping over ");
+        $i2 = virtualinvoke par.<org.apache.fop.layoutmgr.KnuthSequence: int size()>();
+        $i2 = $i2 - startIndex;
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i2);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" elements");
+        $r6 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r4.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r6);
+
+     label2:
+        lastForced = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode getNode(int)>(0);
+        i = startIndex;
+
+     label3:
+        $i3 = virtualinvoke par.<org.apache.fop.layoutmgr.KnuthSequence: int size()>();
+        if i >= $i3 goto label25;
+
+        thisElement = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.KnuthElement getElement(int)>(i);
+        $z0 = virtualinvoke thisElement.<org.apache.fop.layoutmgr.KnuthElement: boolean isBox()>();
+        if $z0 == 0 goto label4;
+
+        $i3 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalWidth>;
+        $i2 = virtualinvoke thisElement.<org.apache.fop.layoutmgr.KnuthElement: int getW()>();
+        $i3 = $i3 + $i2;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalWidth> = $i3;
+        previousIsBox = 1;
+        $r8 = (org.apache.fop.layoutmgr.KnuthBox) thisElement;
+        virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: void handleBox(org.apache.fop.layoutmgr.KnuthBox)>($r8);
+        goto label10;
+
+     label4:
+        $z0 = virtualinvoke thisElement.<org.apache.fop.layoutmgr.KnuthElement: boolean isGlue()>();
+        if $z0 == 0 goto label6;
+
+        if previousIsBox == 0 goto label5;
+
+        if allowedBreaks == 2 goto label5;
+
+        virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: void considerLegalBreak(org.apache.fop.layoutmgr.KnuthElement,int)>(thisElement, i);
+
+     label5:
+        $i3 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalWidth>;
+        $i2 = virtualinvoke thisElement.<org.apache.fop.layoutmgr.KnuthElement: int getW()>();
+        $i3 = $i3 + $i2;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalWidth> = $i3;
+        $i3 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalStretch>;
+        $i2 = virtualinvoke thisElement.<org.apache.fop.layoutmgr.KnuthElement: int getY()>();
+        $i3 = $i3 + $i2;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalStretch> = $i3;
+        $i3 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalShrink>;
+        $i2 = virtualinvoke thisElement.<org.apache.fop.layoutmgr.KnuthElement: int getZ()>();
+        $i3 = $i3 + $i2;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalShrink> = $i3;
+        previousIsBox = 0;
+        goto label10;
+
+     label6:
+        $r9 = (org.apache.fop.layoutmgr.KnuthPenalty) thisElement;
+        $i1 = virtualinvoke $r9.<org.apache.fop.layoutmgr.KnuthPenalty: int getP()>();
+        if $i1 >= 1000 goto label9;
+
+        if allowedBreaks != 1 goto label7;
+
+        $r9 = (org.apache.fop.layoutmgr.KnuthPenalty) thisElement;
+        $z0 = virtualinvoke $r9.<org.apache.fop.layoutmgr.KnuthPenalty: boolean isFlagged()>();
+        if $z0 != 0 goto label9;
+
+     label7:
+        if allowedBreaks != 2 goto label8;
+
+        $r9 = (org.apache.fop.layoutmgr.KnuthPenalty) thisElement;
+        $i1 = virtualinvoke $r9.<org.apache.fop.layoutmgr.KnuthPenalty: int getP()>();
+        if $i1 != -1000 goto label9;
+
+     label8:
+        virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: void considerLegalBreak(org.apache.fop.layoutmgr.KnuthElement,int)>(thisElement, i);
+
+     label9:
+        previousIsBox = 0;
+
+     label10:
+        $i1 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int activeNodeCount>;
+        if $i1 != 0 goto label24;
+
+        if force != 0 goto label11;
+
+        $r4 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Could not find a set of breaking points ");
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(double)>(threshold);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r4.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r6);
+        return 0;
+
+     label11:
+        $r10 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastDeactivated>;
+        if $r10 == null goto label13;
+
+        $r10 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastDeactivated>;
+        if $r10 == lastForced goto label13;
+
+        $r10 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastDeactivated>;
+        $d0 = $r10.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: double adjustRatio>;
+        $b4 = $d0 cmpl 0.0;
+        if $b4 <= 0 goto label12;
+
+        $r11 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastDeactivated>;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooShort> = $r11;
+        goto label13;
+
+     label12:
+        $r11 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastDeactivated>;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooLong> = $r11;
+
+     label13:
+        $r10 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooShort>;
+        if $r10 == null goto label14;
+
+        $i1 = lastForced.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int position>;
+        $r11 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooShort>;
+        $i3 = $r11.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int position>;
+        if $i1 != $i3 goto label21;
+
+     label14:
+        $z0 = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: boolean isPartOverflowRecoveryActivated()>();
+        if $z0 == 0 goto label20;
+
+        $r10 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastRecovered>;
+        if $r10 != null goto label15;
+
+        $r11 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooLong>;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastRecovered> = $r11;
+        $r4 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r4.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label15;
+
+        $r4 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Recovery point: ");
+        $r3 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastRecovered>;
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r3);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r4.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r6);
+
+     label15:
+        $r11 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooLong>;
+        $r11 = $r11.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode previous>;
+        $i3 = $r11.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int position>;
+        $r3 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooLong>;
+        $r3 = $r3.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode previous>;
+        $i2 = $r3.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int line>;
+        $i2 = $i2 + 1;
+        $r12 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooLong>;
+        $r12 = $r12.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode previous>;
+        node = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode createNode(int,int,int,int,int,int,double,int,int,int,double,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)>($i3, $i2, 1, 0, 0, 0, 0.0, 0, 0, 0, 0.0, $r12);
+        lastForced = node;
+        $r11 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooLong>;
+        $r11 = $r11.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode previous>;
+        $i3 = $r11.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int fitRecoveryCounter>;
+        $i3 = $i3 + 1;
+        node.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int fitRecoveryCounter> = $i3;
+        $r4 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r4.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label16;
+
+        $r4 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("first part doesn\'t fit into line, recovering: ");
+        $i2 = node.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int fitRecoveryCounter>;
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i2);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r4.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r6);
+
+     label16:
+        $i1 = node.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int fitRecoveryCounter>;
+        $i3 = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int getMaxRecoveryAttempts()>();
+        if $i1 <= $i3 goto label19;
+
+     label17:
+        $i1 = lastForced.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int fitRecoveryCounter>;
+        if $i1 <= 0 goto label18;
+
+        lastForced = lastForced.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode previous>;
+        $r11 = lastForced.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode previous>;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastDeactivated> = $r11;
+        $i3 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int startLine>;
+        $i3 = $i3 - 1;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int startLine> = $i3;
+        $i3 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int endLine>;
+        $i3 = $i3 - 1;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int endLine> = $i3;
+        goto label17;
+
+     label18:
+        lastForced = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastRecovered>;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastRecovered> = null;
+        $i3 = lastForced.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int line>;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int startLine> = $i3;
+        $i3 = lastForced.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int line>;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int endLine> = $i3;
+        $r4 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r4.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("rolled back...");
+
+     label19:
+        goto label22;
+
+     label20:
+        lastForced = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooLong>;
+        goto label22;
+
+     label21:
+        lastForced = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooShort>;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastRecovered> = null;
+
+     label22:
+        $r4 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r4.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label23;
+
+        $r4 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Restarting at node ");
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(lastForced);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r4.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r6);
+
+     label23:
+        i = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int restartFrom(org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode,int)>(lastForced, i);
+
+     label24:
+        i = i + 1;
+        goto label3;
+
+     label25:
+        virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: void finish()>();
+        $r4 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r4.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label26;
+
+        $r4 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Main loop completed ");
+        $i2 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int activeNodeCount>;
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i2);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r4.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r6);
+        $r4 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Active nodes=");
+        $r13 = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: java.lang.String toString(java.lang.String)>("");
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r13);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r4.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r6);
+
+     label26:
+        line = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int filterActiveNodes()>();
+        i = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int startLine>;
+
+     label27:
+        $i3 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int endLine>;
+        if i >= $i3 goto label30;
+
+        node = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode getNode(int)>(i);
+
+     label28:
+        if node == null goto label29;
+
+        $i3 = node.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int line>;
+        $d1 = node.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: double totalDemerits>;
+        virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: void updateData1(int,double)>($i3, $d1);
+        $i5 = node.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int line>;
+        specialinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: void calculateBreakPoints(org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode,org.apache.fop.layoutmgr.KnuthSequence,int)>(node, par, $i5);
+        node = node.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode next>;
+        goto label28;
+
+     label29:
+        i = i + 1;
+        goto label27;
+
+     label30:
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode[] activeLines> = null;
+        return line;
+    }
+
+    private org.apache.fop.fo.FONode findContextFO(org.apache.fop.layoutmgr.KnuthSequence, int)
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        org.apache.fop.layoutmgr.KnuthSequence seq;
+        int position, $i0;
+        org.apache.fop.layoutmgr.ListElement el;
+        org.apache.fop.layoutmgr.Position pos, $r1;
+        org.apache.fop.layoutmgr.LayoutManager lm, $r0;
+        boolean $z0;
+        org.apache.fop.layoutmgr.NonLeafPosition $r2;
+        org.apache.fop.fo.FObj $r3;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        seq := @parameter0: org.apache.fop.layoutmgr.KnuthSequence;
+        position := @parameter1: int;
+        el = virtualinvoke seq.<org.apache.fop.layoutmgr.KnuthSequence: org.apache.fop.layoutmgr.ListElement getElement(int)>(position);
+
+     label0:
+        $r0 = virtualinvoke el.<org.apache.fop.layoutmgr.ListElement: org.apache.fop.layoutmgr.LayoutManager getLayoutManager()>();
+        if $r0 != null goto label1;
+
+        $i0 = virtualinvoke seq.<org.apache.fop.layoutmgr.KnuthSequence: int size()>();
+        $i0 = $i0 - 1;
+        if position >= $i0 goto label1;
+
+        position = position + 1;
+        el = virtualinvoke seq.<org.apache.fop.layoutmgr.KnuthSequence: org.apache.fop.layoutmgr.ListElement getElement(int)>(position);
+        goto label0;
+
+     label1:
+        if el == null goto label2;
+
+        $r1 = virtualinvoke el.<org.apache.fop.layoutmgr.ListElement: org.apache.fop.layoutmgr.Position getPosition()>();
+        goto label3;
+
+     label2:
+        $r1 = null;
+
+     label3:
+        pos = $r1;
+        if pos == null goto label4;
+
+        $r0 = virtualinvoke pos.<org.apache.fop.layoutmgr.Position: org.apache.fop.layoutmgr.LayoutManager getLM()>();
+        goto label5;
+
+     label4:
+        $r0 = null;
+
+     label5:
+        lm = $r0;
+
+     label6:
+        $z0 = pos instanceof org.apache.fop.layoutmgr.NonLeafPosition;
+        if $z0 == 0 goto label7;
+
+        $r2 = (org.apache.fop.layoutmgr.NonLeafPosition) pos;
+        pos = virtualinvoke $r2.<org.apache.fop.layoutmgr.NonLeafPosition: org.apache.fop.layoutmgr.Position getPosition()>();
+        if pos == null goto label6;
+
+        $r0 = virtualinvoke pos.<org.apache.fop.layoutmgr.Position: org.apache.fop.layoutmgr.LayoutManager getLM()>();
+        if $r0 == null goto label6;
+
+        lm = virtualinvoke pos.<org.apache.fop.layoutmgr.Position: org.apache.fop.layoutmgr.LayoutManager getLM()>();
+        goto label6;
+
+     label7:
+        if lm == null goto label8;
+
+        $r3 = interfaceinvoke lm.<org.apache.fop.layoutmgr.LayoutManager: org.apache.fop.fo.FObj getFObj()>();
+        return $r3;
+
+     label8:
+        return null;
+    }
+
+    protected void initialize()
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalWidth> = 0;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalStretch> = 0;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalShrink> = 0;
+        return;
+    }
+
+    protected org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode createNode(int, int, int, int, int, int, double, int, int, int, double, org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        int position, line, fitness, totalWidth, totalStretch, totalShrink, availableShrink, availableStretch, difference;
+        double adjustRatio, totalDemerits;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode previous, $r0;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        position := @parameter0: int;
+        line := @parameter1: int;
+        fitness := @parameter2: int;
+        totalWidth := @parameter3: int;
+        totalStretch := @parameter4: int;
+        totalShrink := @parameter5: int;
+        adjustRatio := @parameter6: double;
+        availableShrink := @parameter7: int;
+        availableStretch := @parameter8: int;
+        difference := @parameter9: int;
+        totalDemerits := @parameter10: double;
+        previous := @parameter11: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode;
+        $r0 = new org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode;
+        specialinvoke $r0.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: void <init>(org.apache.fop.layoutmgr.BreakingAlgorithm,int,int,int,int,int,int,double,int,int,int,double,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)>(this, position, line, fitness, totalWidth, totalStretch, totalShrink, adjustRatio, availableShrink, availableStretch, difference, totalDemerits, previous);
+        return $r0;
+    }
+
+    protected org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode createNode(int, int, int, int, int, int)
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        int position, line, fitness, totalWidth, totalStretch, totalShrink, $i0, $i1, $i2;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode $r0, $r7;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords $r1, $r2, $r3, $r4, $r5, $r6;
+        double $d0, $d1;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        position := @parameter0: int;
+        line := @parameter1: int;
+        fitness := @parameter2: int;
+        totalWidth := @parameter3: int;
+        totalStretch := @parameter4: int;
+        totalShrink := @parameter5: int;
+        $r0 = new org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode;
+        $r1 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords best>;
+        $d0 = virtualinvoke $r1.<org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords: double getAdjust(int)>(fitness);
+        $r2 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords best>;
+        $i0 = virtualinvoke $r2.<org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords: int getAvailableShrink(int)>(fitness);
+        $r3 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords best>;
+        $i1 = virtualinvoke $r3.<org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords: int getAvailableStretch(int)>(fitness);
+        $r4 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords best>;
+        $i2 = virtualinvoke $r4.<org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords: int getDifference(int)>(fitness);
+        $r5 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords best>;
+        $d1 = virtualinvoke $r5.<org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords: double getDemerits(int)>(fitness);
+        $r6 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords best>;
+        $r7 = virtualinvoke $r6.<org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode getNode(int)>(fitness);
+        specialinvoke $r0.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: void <init>(org.apache.fop.layoutmgr.BreakingAlgorithm,int,int,int,int,int,int,double,int,int,int,double,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)>(this, position, line, fitness, totalWidth, totalStretch, totalShrink, $d0, $i0, $i1, $i2, $d1, $r7);
+        return $r0;
+    }
+
+    protected void handleBox(org.apache.fop.layoutmgr.KnuthBox)
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        org.apache.fop.layoutmgr.KnuthBox box;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        box := @parameter0: org.apache.fop.layoutmgr.KnuthBox;
+        return;
+    }
+
+    protected int restartFrom(org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode, int)
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode restartingNode;
+        int currentIndex, restartingIndex, $i0, $i1;
+        org.apache.fop.layoutmgr.KnuthSequence $r0;
+        org.apache.fop.layoutmgr.KnuthElement $r1;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        restartingNode := @parameter0: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode;
+        currentIndex := @parameter1: int;
+        restartingNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: double totalDemerits> = 0.0;
+        $i0 = restartingNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int line>;
+        virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: void addNode(int,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)>($i0, restartingNode);
+        $i0 = restartingNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int line>;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int startLine> = $i0;
+        $i0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int startLine>;
+        $i0 = $i0 + 1;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int endLine> = $i0;
+        $i0 = restartingNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int totalWidth>;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalWidth> = $i0;
+        $i0 = restartingNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int totalStretch>;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalStretch> = $i0;
+        $i0 = restartingNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int totalShrink>;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalShrink> = $i0;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooShort> = null;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooLong> = null;
+        restartingIndex = restartingNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int position>;
+
+     label0:
+        $i1 = restartingIndex + 1;
+        $r0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.KnuthSequence par>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.layoutmgr.KnuthSequence: int size()>();
+        if $i1 >= $i0 goto label1;
+
+        $i0 = restartingIndex + 1;
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.KnuthElement getElement(int)>($i0);
+        $z0 = virtualinvoke $r1.<org.apache.fop.layoutmgr.KnuthElement: boolean isBox()>();
+        if $z0 != 0 goto label1;
+
+        restartingIndex = restartingIndex + 1;
+        goto label0;
+
+     label1:
+        return restartingIndex;
+    }
+
+    protected void considerLegalBreak(org.apache.fop.layoutmgr.KnuthElement, int)
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        org.apache.fop.layoutmgr.KnuthElement element, tempElement;
+        int elementIdx, line, difference, availableShrink, availableStretch, fitnessClass, newWidth, newStretch, newShrink, i, $i0, $i1, $i2, $i4;
+        org.apache.commons.logging.Log $r0;
+        java.lang.StringBuffer $r1;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode node, $r4, $r5, $r9;
+        double r, demerits, $d0;
+        boolean $z0;
+        java.lang.String $r2, $r3;
+        byte $b3;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords $r6, $r7;
+        org.apache.fop.layoutmgr.KnuthSequence $r8;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        element := @parameter0: org.apache.fop.layoutmgr.KnuthElement;
+        elementIdx := @parameter1: int;
+        $r0 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("considerLegalBreak() at ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(elementIdx);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" (");
+        $i0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalWidth>;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("+");
+        $i0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalStretch>;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("-");
+        $i0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalShrink>;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("), parts/lines: ");
+        $i0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int startLine>;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("-");
+        $i0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int endLine>;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r2);
+        $r0 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\tCurrent active node list: ");
+        $i0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int activeNodeCount>;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $r3 = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: java.lang.String toString(java.lang.String)>("\t");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r2);
+
+     label0:
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastDeactivated> = null;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooLong> = null;
+        line = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int startLine>;
+
+     label1:
+        $i1 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int endLine>;
+        if line >= $i1 goto label22;
+
+        node = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode getNode(int)>(line);
+
+     label2:
+        if node == null goto label21;
+
+        $i2 = node.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int position>;
+        if $i2 != elementIdx goto label3;
+
+        goto label20;
+
+     label3:
+        difference = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int computeDifference(org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode,org.apache.fop.layoutmgr.KnuthElement,int)>(node, element, elementIdx);
+        r = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: double computeAdjustmentRatio(org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode,int)>(node, difference);
+        $i2 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalShrink>;
+        $i1 = node.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int totalShrink>;
+        availableShrink = $i2 - $i1;
+        $i2 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalStretch>;
+        $i1 = node.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int totalStretch>;
+        availableStretch = $i2 - $i1;
+        $r0 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label4;
+
+        $r0 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\tr=");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(double)>(r);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" difference=");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(difference);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r2);
+        $r0 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\tline=");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(line);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r2);
+
+     label4:
+        $b3 = r cmpg -1.0;
+        if $b3 < 0 goto label5;
+
+        $z0 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: boolean isForcedBreak()>();
+        if $z0 == 0 goto label7;
+
+     label5:
+        $r0 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label6;
+
+        $r0 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Removing ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(node);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r2);
+
+     label6:
+        virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: void removeNode(int,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)>(line, node);
+        $r4 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastDeactivated>;
+        $r5 = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode compareNodes(org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)>($r4, node);
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastDeactivated> = $r5;
+
+     label7:
+        $b3 = r cmpl -1.0;
+        if $b3 < 0 goto label9;
+
+        $d0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: double threshold>;
+        $b3 = r cmpg $d0;
+        if $b3 > 0 goto label9;
+
+        fitnessClass = specialinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int computeFitness(double)>(r);
+        demerits = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: double computeDemerits(org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode,org.apache.fop.layoutmgr.KnuthElement,int,double)>(node, element, fitnessClass, r);
+        $r0 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label8;
+
+        $r0 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\tDemerits=");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(double)>(demerits);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r2);
+        $r0 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\tFitness class=");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(fitnessClass);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r2);
+
+     label8:
+        $r6 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords best>;
+        $d0 = virtualinvoke $r6.<org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords: double getDemerits(int)>(fitnessClass);
+        $b3 = demerits cmpg $d0;
+        if $b3 >= 0 goto label9;
+
+        $r7 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords best>;
+        virtualinvoke $r7.<org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords: void addRecord(double,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode,double,int,int,int,int)>(demerits, node, r, availableShrink, availableStretch, difference, fitnessClass);
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooShort> = null;
+
+     label9:
+        $z0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: boolean force>;
+        if $z0 == 0 goto label20;
+
+        $b3 = r cmpg -1.0;
+        if $b3 <= 0 goto label10;
+
+        $d0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: double threshold>;
+        $b3 = r cmpl $d0;
+        if $b3 <= 0 goto label20;
+
+     label10:
+        fitnessClass = specialinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int computeFitness(double)>(r);
+        demerits = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: double computeDemerits(org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode,org.apache.fop.layoutmgr.KnuthElement,int,double)>(node, element, fitnessClass, r);
+        newWidth = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalWidth>;
+        newStretch = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalStretch>;
+        newShrink = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalShrink>;
+        i = elementIdx;
+
+     label11:
+        $r8 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.KnuthSequence par>;
+        $i1 = virtualinvoke $r8.<org.apache.fop.layoutmgr.KnuthSequence: int size()>();
+        if i >= $i1 goto label15;
+
+        tempElement = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.KnuthElement getElement(int)>(i);
+        $z0 = virtualinvoke tempElement.<org.apache.fop.layoutmgr.KnuthElement: boolean isBox()>();
+        if $z0 == 0 goto label12;
+
+        goto label15;
+
+     label12:
+        $z0 = virtualinvoke tempElement.<org.apache.fop.layoutmgr.KnuthElement: boolean isGlue()>();
+        if $z0 == 0 goto label13;
+
+        $i1 = virtualinvoke tempElement.<org.apache.fop.layoutmgr.KnuthElement: int getW()>();
+        newWidth = newWidth + $i1;
+        $i1 = virtualinvoke tempElement.<org.apache.fop.layoutmgr.KnuthElement: int getY()>();
+        newStretch = newStretch + $i1;
+        $i1 = virtualinvoke tempElement.<org.apache.fop.layoutmgr.KnuthElement: int getZ()>();
+        newShrink = newShrink + $i1;
+        goto label14;
+
+     label13:
+        $z0 = virtualinvoke tempElement.<org.apache.fop.layoutmgr.KnuthElement: boolean isForcedBreak()>();
+        if $z0 == 0 goto label14;
+
+        if i == elementIdx goto label14;
+
+        goto label15;
+
+     label14:
+        i = i + 1;
+        goto label11;
+
+     label15:
+        $b3 = r cmpg -1.0;
+        if $b3 > 0 goto label17;
+
+        $r9 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooLong>;
+        if $r9 == null goto label16;
+
+        $r4 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooLong>;
+        $d0 = $r4.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: double totalDemerits>;
+        $b3 = demerits cmpg $d0;
+        if $b3 >= 0 goto label20;
+
+     label16:
+        $i4 = line + 1;
+        $r5 = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode createNode(int,int,int,int,int,int,double,int,int,int,double,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)>(elementIdx, $i4, fitnessClass, newWidth, newStretch, newShrink, r, availableShrink, availableStretch, difference, demerits, node);
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooLong> = $r5;
+        $r0 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label20;
+
+        $r0 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Picking tooLong ");
+        $r4 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooLong>;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r4);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r2);
+        goto label20;
+
+     label17:
+        $r9 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooShort>;
+        if $r9 == null goto label18;
+
+        $r4 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooShort>;
+        $d0 = $r4.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: double totalDemerits>;
+        $b3 = demerits cmpg $d0;
+        if $b3 > 0 goto label20;
+
+     label18:
+        $z0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: boolean considerTooShort>;
+        if $z0 == 0 goto label19;
+
+        $r7 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords best>;
+        virtualinvoke $r7.<org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords: void addRecord(double,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode,double,int,int,int,int)>(demerits, node, r, availableShrink, availableStretch, difference, fitnessClass);
+
+     label19:
+        $i4 = line + 1;
+        $r5 = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode createNode(int,int,int,int,int,int,double,int,int,int,double,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)>(elementIdx, $i4, fitnessClass, newWidth, newStretch, newShrink, r, availableShrink, availableStretch, difference, demerits, node);
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooShort> = $r5;
+        $r0 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label20;
+
+        $r0 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Picking tooShort ");
+        $r4 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode lastTooShort>;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r4);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r2);
+
+     label20:
+        node = node.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode next>;
+        goto label2;
+
+     label21:
+        specialinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: void addBreaks(int,int)>(line, elementIdx);
+        line = line + 1;
+        goto label1;
+
+     label22:
+        return;
+    }
+
+    private void addBreaks(int, int)
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        int line, elementIdx, newWidth, newStretch, newShrink, i, $i0, $i1;
+        org.apache.fop.layoutmgr.KnuthElement tempElement;
+        double minimumDemerits, $d0, $d1;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode newNode;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords $r0;
+        boolean $z0;
+        org.apache.fop.layoutmgr.KnuthSequence $r1;
+        byte $b2;
+        org.apache.commons.logging.Log $r2;
+        java.lang.StringBuffer $r3;
+        java.lang.String $r4;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        line := @parameter0: int;
+        elementIdx := @parameter1: int;
+        $r0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords best>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords: boolean hasRecords()>();
+        if $z0 != 0 goto label0;
+
+        return;
+
+     label0:
+        newWidth = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalWidth>;
+        newStretch = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalStretch>;
+        newShrink = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalShrink>;
+        i = elementIdx;
+
+     label1:
+        $r1 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.KnuthSequence par>;
+        $i0 = virtualinvoke $r1.<org.apache.fop.layoutmgr.KnuthSequence: int size()>();
+        if i >= $i0 goto label5;
+
+        tempElement = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.KnuthElement getElement(int)>(i);
+        $z0 = virtualinvoke tempElement.<org.apache.fop.layoutmgr.KnuthElement: boolean isBox()>();
+        if $z0 == 0 goto label2;
+
+        goto label5;
+
+     label2:
+        $z0 = virtualinvoke tempElement.<org.apache.fop.layoutmgr.KnuthElement: boolean isGlue()>();
+        if $z0 == 0 goto label3;
+
+        $i0 = virtualinvoke tempElement.<org.apache.fop.layoutmgr.KnuthElement: int getW()>();
+        newWidth = newWidth + $i0;
+        $i0 = virtualinvoke tempElement.<org.apache.fop.layoutmgr.KnuthElement: int getY()>();
+        newStretch = newStretch + $i0;
+        $i0 = virtualinvoke tempElement.<org.apache.fop.layoutmgr.KnuthElement: int getZ()>();
+        newShrink = newShrink + $i0;
+        goto label4;
+
+     label3:
+        $z0 = virtualinvoke tempElement.<org.apache.fop.layoutmgr.KnuthElement: boolean isForcedBreak()>();
+        if $z0 == 0 goto label4;
+
+        if i == elementIdx goto label4;
+
+        goto label5;
+
+     label4:
+        i = i + 1;
+        goto label1;
+
+     label5:
+        $r0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords best>;
+        $d0 = virtualinvoke $r0.<org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords: double getMinDemerits()>();
+        $i1 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int incompatibleFitnessDemerit>;
+        $d1 = (double) $i1;
+        minimumDemerits = $d0 + $d1;
+        i = 0;
+
+     label6:
+        if i > 3 goto label9;
+
+        $r0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords best>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords: boolean notInfiniteDemerits(int)>(i);
+        if $z0 == 0 goto label8;
+
+        $r0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords best>;
+        $d0 = virtualinvoke $r0.<org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords: double getDemerits(int)>(i);
+        $b2 = $d0 cmpg minimumDemerits;
+        if $b2 > 0 goto label8;
+
+        $r2 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r2.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label7;
+
+        $r2 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\tInsert new break in list of ");
+        $i1 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int activeNodeCount>;
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" from fitness class ");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(i);
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r4);
+
+     label7:
+        $i1 = line + 1;
+        newNode = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode createNode(int,int,int,int,int,int)>(elementIdx, $i1, i, newWidth, newStretch, newShrink);
+        $i0 = line + 1;
+        virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: void addNode(int,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)>($i0, newNode);
+
+     label8:
+        i = i + 1;
+        goto label6;
+
+     label9:
+        $r0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords best>;
+        virtualinvoke $r0.<org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords: void reset()>();
+        return;
+    }
+
+    protected int computeDifference(org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode, org.apache.fop.layoutmgr.KnuthElement, int)
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode activeNode;
+        org.apache.fop.layoutmgr.KnuthElement element;
+        int elementIndex, actualWidth, $i0, $i1;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        activeNode := @parameter0: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode;
+        element := @parameter1: org.apache.fop.layoutmgr.KnuthElement;
+        elementIndex := @parameter2: int;
+        $i0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalWidth>;
+        $i1 = activeNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int totalWidth>;
+        actualWidth = $i0 - $i1;
+        $z0 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: boolean isPenalty()>();
+        if $z0 == 0 goto label0;
+
+        $i1 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: int getW()>();
+        actualWidth = actualWidth + $i1;
+
+     label0:
+        $i0 = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int getLineWidth()>();
+        $i0 = $i0 - actualWidth;
+        return $i0;
+    }
+
+    protected double computeAdjustmentRatio(org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode, int)
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode activeNode;
+        int difference, maxAdjustment, $i0, $i1;
+        double $d0, $d1;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        activeNode := @parameter0: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode;
+        difference := @parameter1: int;
+        if difference <= 0 goto label1;
+
+        $i0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalStretch>;
+        $i1 = activeNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int totalStretch>;
+        maxAdjustment = $i0 - $i1;
+        if maxAdjustment <= 0 goto label0;
+
+        $d0 = (double) difference;
+        $d1 = (double) maxAdjustment;
+        $d0 = $d0 / $d1;
+        return $d0;
+
+     label0:
+        return 1000.0;
+
+     label1:
+        if difference >= 0 goto label3;
+
+        $i0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int totalShrink>;
+        $i1 = activeNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int totalShrink>;
+        maxAdjustment = $i0 - $i1;
+        if maxAdjustment <= 0 goto label2;
+
+        $d0 = (double) difference;
+        $d1 = (double) maxAdjustment;
+        $d0 = $d0 / $d1;
+        return $d0;
+
+     label2:
+        return -1000.0;
+
+     label3:
+        return 0.0;
+    }
+
+    private int computeFitness(double)
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        double r;
+        byte $b0;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        r := @parameter0: double;
+        $b0 = r cmpg -0.5;
+        if $b0 >= 0 goto label0;
+
+        return 0;
+
+     label0:
+        $b0 = r cmpg 0.5;
+        if $b0 > 0 goto label1;
+
+        return 1;
+
+     label1:
+        $b0 = r cmpg 1.0;
+        if $b0 > 0 goto label2;
+
+        return 2;
+
+     label2:
+        return 3;
+    }
+
+    protected double computeDemerits(org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode, org.apache.fop.layoutmgr.KnuthElement, int, double)
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode activeNode, prevNode;
+        org.apache.fop.layoutmgr.KnuthElement element, prevElement, $r1;
+        int fitnessClass, flaggedPenaltiesCount, $i0, $i1, $i2;
+        double r, demerits, f, penalty, $d0, $d1;
+        boolean $z0;
+        org.apache.fop.layoutmgr.KnuthPenalty $r0;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        activeNode := @parameter0: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode;
+        element := @parameter1: org.apache.fop.layoutmgr.KnuthElement;
+        fitnessClass := @parameter2: int;
+        r := @parameter3: double;
+        demerits = 0.0;
+        f = staticinvoke <java.lang.Math: double abs(double)>(r);
+        $d0 = 100.0 * f;
+        $d0 = $d0 * f;
+        $d0 = $d0 * f;
+        f = 1.0 + $d0;
+        $z0 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: boolean isPenalty()>();
+        if $z0 == 0 goto label0;
+
+        $i0 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: int getP()>();
+        if $i0 < 0 goto label0;
+
+        $i1 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: int getP()>();
+        $d0 = (double) $i1;
+        f = f + $d0;
+        demerits = f * f;
+        goto label2;
+
+     label0:
+        $z0 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: boolean isPenalty()>();
+        if $z0 == 0 goto label1;
+
+        $z0 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: boolean isForcedBreak()>();
+        if $z0 != 0 goto label1;
+
+        $i0 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: int getP()>();
+        penalty = (double) $i0;
+        $d1 = f * f;
+        $d0 = penalty * penalty;
+        demerits = $d1 - $d0;
+        goto label2;
+
+     label1:
+        demerits = f * f;
+
+     label2:
+        $z0 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: boolean isPenalty()>();
+        if $z0 == 0 goto label5;
+
+        $r0 = (org.apache.fop.layoutmgr.KnuthPenalty) element;
+        $z0 = virtualinvoke $r0.<org.apache.fop.layoutmgr.KnuthPenalty: boolean isFlagged()>();
+        if $z0 == 0 goto label5;
+
+        $i2 = activeNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int position>;
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.KnuthElement getElement(int)>($i2);
+        $z0 = virtualinvoke $r1.<org.apache.fop.layoutmgr.KnuthElement: boolean isPenalty()>();
+        if $z0 == 0 goto label5;
+
+        $i2 = activeNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int position>;
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.KnuthElement getElement(int)>($i2);
+        $r0 = (org.apache.fop.layoutmgr.KnuthPenalty) $r1;
+        $z0 = virtualinvoke $r0.<org.apache.fop.layoutmgr.KnuthPenalty: boolean isFlagged()>();
+        if $z0 == 0 goto label5;
+
+        $i1 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int repeatedFlaggedDemerit>;
+        $d0 = (double) $i1;
+        demerits = demerits + $d0;
+        flaggedPenaltiesCount = 2;
+        prevNode = activeNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode previous>;
+
+     label3:
+        if prevNode == null goto label4;
+
+        $i2 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int maxFlaggedPenaltiesCount>;
+        if flaggedPenaltiesCount > $i2 goto label4;
+
+        $i2 = prevNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int position>;
+        prevElement = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.KnuthElement getElement(int)>($i2);
+        $z0 = virtualinvoke prevElement.<org.apache.fop.layoutmgr.KnuthElement: boolean isPenalty()>();
+        if $z0 == 0 goto label4;
+
+        $r0 = (org.apache.fop.layoutmgr.KnuthPenalty) prevElement;
+        $z0 = virtualinvoke $r0.<org.apache.fop.layoutmgr.KnuthPenalty: boolean isFlagged()>();
+        if $z0 == 0 goto label4;
+
+        flaggedPenaltiesCount = flaggedPenaltiesCount + 1;
+        prevNode = prevNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode previous>;
+        goto label3;
+
+     label4:
+        $i0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int maxFlaggedPenaltiesCount>;
+        if $i0 < 1 goto label5;
+
+        $i2 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int maxFlaggedPenaltiesCount>;
+        if flaggedPenaltiesCount <= $i2 goto label5;
+
+        demerits = demerits + #Infinity;
+
+     label5:
+        $i2 = activeNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int fitness>;
+        $i0 = fitnessClass - $i2;
+        $i0 = staticinvoke <java.lang.Math: int abs(int)>($i0);
+        if $i0 <= 1 goto label6;
+
+        $i1 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int incompatibleFitnessDemerit>;
+        $d0 = (double) $i1;
+        demerits = demerits + $d0;
+
+     label6:
+        $d0 = activeNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: double totalDemerits>;
+        demerits = demerits + $d0;
+        return demerits;
+    }
+
+    protected void finish()
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        return;
+    }
+
+    protected org.apache.fop.layoutmgr.KnuthElement getElement(int)
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        int idx;
+        org.apache.fop.layoutmgr.KnuthSequence $r0;
+        java.lang.Object $r1;
+        org.apache.fop.layoutmgr.KnuthElement $r2;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        idx := @parameter0: int;
+        $r0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.KnuthSequence par>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.layoutmgr.KnuthSequence: java.lang.Object get(int)>(idx);
+        $r2 = (org.apache.fop.layoutmgr.KnuthElement) $r1;
+        return $r2;
+    }
+
+    protected org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode compareNodes(org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode, org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode node1, node2;
+        int $i0, $i1;
+        double $d0, $d1;
+        byte $b2;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        node1 := @parameter0: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode;
+        node2 := @parameter1: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode;
+        if node1 == null goto label0;
+
+        $i0 = node2.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int position>;
+        $i1 = node1.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int position>;
+        if $i0 <= $i1 goto label1;
+
+     label0:
+        return node2;
+
+     label1:
+        $i0 = node2.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int position>;
+        $i1 = node1.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int position>;
+        if $i0 != $i1 goto label2;
+
+        $d0 = node2.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: double totalDemerits>;
+        $d1 = node1.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: double totalDemerits>;
+        $b2 = $d0 cmpg $d1;
+        if $b2 >= 0 goto label2;
+
+        return node2;
+
+     label2:
+        return node1;
+    }
+
+    protected void addNode(int, org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        int line, headIdx, $i0, $i1;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode node, $r3;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode[] oldList, $r0, $r1, $r2;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        line := @parameter0: int;
+        node := @parameter1: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode;
+        headIdx = line * 2;
+        $r0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode[] activeLines>;
+        $i0 = lengthof $r0;
+        if headIdx < $i0 goto label0;
+
+        oldList = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode[] activeLines>;
+        $i0 = headIdx + headIdx;
+        $r0 = newarray (org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)[$i0];
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode[] activeLines> = $r0;
+        $r1 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode[] activeLines>;
+        $i1 = lengthof oldList;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(oldList, 0, $r1, 0, $i1);
+
+     label0:
+        node.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode next> = null;
+        $r2 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode[] activeLines>;
+        $i0 = headIdx + 1;
+        $r3 = $r2[$i0];
+        if $r3 == null goto label1;
+
+        $r2 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode[] activeLines>;
+        $i0 = headIdx + 1;
+        $r3 = $r2[$i0];
+        $r3.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode next> = node;
+        goto label2;
+
+     label1:
+        $r2 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode[] activeLines>;
+        $r2[headIdx] = node;
+        $i0 = line + 1;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int endLine> = $i0;
+
+     label2:
+        $r2 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode[] activeLines>;
+        $i0 = headIdx + 1;
+        $r2[$i0] = node;
+        $i0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int activeNodeCount>;
+        $i0 = $i0 + 1;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int activeNodeCount> = $i0;
+        return;
+    }
+
+    protected void removeNode(int, org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        int line, headIdx, $i0, $i1;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode node, n, prevNode, $r0, $r1, $r3;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode[] $r2;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        line := @parameter0: int;
+        node := @parameter1: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode;
+        headIdx = line * 2;
+        n = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode getNode(int)>(line);
+        if n == node goto label3;
+
+        prevNode = null;
+
+     label0:
+        if n == node goto label1;
+
+        prevNode = n;
+        n = n.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode next>;
+        goto label0;
+
+     label1:
+        $r0 = n.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode next>;
+        prevNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode next> = $r0;
+        $r1 = prevNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode next>;
+        if $r1 != null goto label2;
+
+        $r2 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode[] activeLines>;
+        $i0 = headIdx + 1;
+        $r2[$i0] = prevNode;
+
+     label2:
+        goto label5;
+
+     label3:
+        $r2 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode[] activeLines>;
+        $r3 = node.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode next>;
+        $r2[headIdx] = $r3;
+        $r1 = node.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode next>;
+        if $r1 != null goto label4;
+
+        $r2 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode[] activeLines>;
+        $i0 = headIdx + 1;
+        $r2[$i0] = null;
+
+     label4:
+        $i1 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int startLine>;
+        $i0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int endLine>;
+        if $i1 >= $i0 goto label5;
+
+        $i0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int startLine>;
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode getNode(int)>($i0);
+        if $r1 != null goto label5;
+
+        $i0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int startLine>;
+        $i0 = $i0 + 1;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int startLine> = $i0;
+        goto label4;
+
+     label5:
+        $i0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int activeNodeCount>;
+        $i0 = $i0 - 1;
+        this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int activeNodeCount> = $i0;
+        return;
+    }
+
+    protected org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode getNode(int)
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        int line, $i0;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode[] $r0;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode $r1;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        line := @parameter0: int;
+        $r0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode[] activeLines>;
+        $i0 = line * 2;
+        $r1 = $r0[$i0];
+        return $r1;
+    }
+
+    protected int getLineWidth(int)
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        int line, $i0, $i1, $i2;
+        java.lang.StringBuffer $r1, $r3;
+        java.lang.IllegalStateException $r2;
+        java.lang.String $r4, $r5;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        line := @parameter0: int;
+        $i0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int lineWidth>;
+        if $i0 >= 0 goto label2;
+
+        $r2 = new java.lang.IllegalStateException;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("lineWidth must be set");
+        $i1 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int lineWidth>;
+        if $i1 == 0 goto label0;
+
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" and positive, but it is: ");
+        $i2 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int lineWidth>;
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i2);
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        goto label1;
+
+     label0:
+        $r4 = "";
+
+     label1:
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r5 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.IllegalStateException: void <init>(java.lang.String)>($r5);
+        throw $r2;
+
+     label2:
+        $i0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int lineWidth>;
+        return $i0;
+    }
+
+    protected int getLineWidth()
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        $i0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int lineWidth>;
+        return $i0;
+    }
+
+    public java.lang.String toString(java.lang.String)
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        java.lang.String prepend, $r2, $r3;
+        java.lang.StringBuffer $r0, sb, $r1;
+        int i, $i0;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode node;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        prepend := @parameter0: java.lang.String;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        sb = $r0;
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("[\n");
+        i = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int startLine>;
+
+     label0:
+        $i0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int endLine>;
+        if i >= $i0 goto label3;
+
+        node = virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode getNode(int)>(i);
+
+     label1:
+        if node == null goto label2;
+
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(prepend);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\t");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(node);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(",\n");
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        node = node.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode next>;
+        goto label1;
+
+     label2:
+        i = i + 1;
+        goto label0;
+
+     label3:
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(prepend);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("]");
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r3 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r3;
+    }
+
+    protected abstract int filterActiveNodes();
+
+    private void calculateBreakPoints(org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode, org.apache.fop.layoutmgr.KnuthSequence, int)
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode node, bestActiveNode;
+        org.apache.fop.layoutmgr.KnuthSequence par;
+        int total, i;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        node := @parameter0: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode;
+        par := @parameter1: org.apache.fop.layoutmgr.KnuthSequence;
+        total := @parameter2: int;
+        bestActiveNode = node;
+        i = node.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int line>;
+
+     label0:
+        if i <= 0 goto label1;
+
+        virtualinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: void updateData2(org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode,org.apache.fop.layoutmgr.KnuthSequence,int)>(bestActiveNode, par, total);
+        bestActiveNode = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode previous>;
+        i = i + -1;
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    public int getAlignment()
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        $i0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int alignment>;
+        return $i0;
+    }
+
+    public int getAlignmentLast()
+    {
+        org.apache.fop.layoutmgr.BreakingAlgorithm this;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.BreakingAlgorithm;
+        $i0 = this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int alignmentLast>;
+        return $i0;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.layoutmgr.BreakingAlgorithm: java.lang.Class class$org$apache$fop$layoutmgr$BreakingAlgorithm>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.layoutmgr.BreakingAlgorithm: java.lang.Class class$(java.lang.String)>("org.apache.fop.layoutmgr.BreakingAlgorithm");
+        <org.apache.fop.layoutmgr.BreakingAlgorithm: java.lang.Class class$org$apache$fop$layoutmgr$BreakingAlgorithm> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.layoutmgr.BreakingAlgorithm: java.lang.Class class$org$apache$fop$layoutmgr$BreakingAlgorithm>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

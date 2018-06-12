@@ -1,0 +1,772 @@
+public final class org.apache.fop.fonts.FontCache extends java.lang.Object implements java.io.Serializable
+{
+    private static final long serialVersionUID;
+    private static org.apache.commons.logging.Log log;
+    private static final java.lang.String FOP_USER_DIR;
+    private static final java.lang.String DEFAULT_CACHE_FILENAME;
+    private transient boolean changed;
+    private transient java.lang.Object changeLock;
+    private java.util.Map fontMap;
+    private java.util.Map failedFontMap;
+    static java.lang.Class class$org$apache$fop$fonts$FontCache;
+
+    public void <init>()
+    {
+        org.apache.fop.fonts.FontCache this;
+        java.lang.Object $r0;
+        java.util.HashMap $r1;
+
+        this := @this: org.apache.fop.fonts.FontCache;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.fonts.FontCache: boolean changed> = 0;
+        $r0 = new java.lang.Object;
+        specialinvoke $r0.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.fonts.FontCache: java.lang.Object changeLock> = $r0;
+        $r1 = new java.util.HashMap;
+        specialinvoke $r1.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.fonts.FontCache: java.util.Map fontMap> = $r1;
+        $r1 = new java.util.HashMap;
+        specialinvoke $r1.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.fonts.FontCache: java.util.Map failedFontMap> = $r1;
+        return;
+    }
+
+    private void readObject(java.io.ObjectInputStream) throws java.io.IOException, java.lang.ClassNotFoundException
+    {
+        org.apache.fop.fonts.FontCache this;
+        java.io.ObjectInputStream in;
+        java.lang.Object $r0;
+
+        this := @this: org.apache.fop.fonts.FontCache;
+        in := @parameter0: java.io.ObjectInputStream;
+        virtualinvoke in.<java.io.ObjectInputStream: void defaultReadObject()>();
+        $r0 = new java.lang.Object;
+        specialinvoke $r0.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.fonts.FontCache: java.lang.Object changeLock> = $r0;
+        return;
+    }
+
+    private static java.io.File getUserHome()
+    {
+        java.lang.String s;
+        java.io.File userDir, $r0;
+        boolean $z0;
+
+        s = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("user.home");
+        if s == null goto label0;
+
+        $r0 = new java.io.File;
+        specialinvoke $r0.<java.io.File: void <init>(java.lang.String)>(s);
+        userDir = $r0;
+        $z0 = virtualinvoke userDir.<java.io.File: boolean exists()>();
+        if $z0 == 0 goto label0;
+
+        return userDir;
+
+     label0:
+        return null;
+    }
+
+    public static java.io.File getDefaultCacheFile(boolean)
+    {
+        boolean forWriting;
+        java.io.File userHome, fopUserDir, $r0;
+
+        forWriting := @parameter0: boolean;
+        userHome = staticinvoke <org.apache.fop.fonts.FontCache: java.io.File getUserHome()>();
+        if userHome == null goto label1;
+
+        $r0 = new java.io.File;
+        specialinvoke $r0.<java.io.File: void <init>(java.io.File,java.lang.String)>(userHome, ".fop");
+        fopUserDir = $r0;
+        if forWriting == 0 goto label0;
+
+        virtualinvoke fopUserDir.<java.io.File: boolean mkdir()>();
+
+     label0:
+        $r0 = new java.io.File;
+        specialinvoke $r0.<java.io.File: void <init>(java.io.File,java.lang.String)>(fopUserDir, "fop-fonts.cache");
+        return $r0;
+
+     label1:
+        $r0 = new java.io.File;
+        specialinvoke $r0.<java.io.File: void <init>(java.lang.String)>(".fop");
+        return $r0;
+    }
+
+    public static org.apache.fop.fonts.FontCache load()
+    {
+        java.io.File $r0;
+        org.apache.fop.fonts.FontCache $r1;
+
+        $r0 = staticinvoke <org.apache.fop.fonts.FontCache: java.io.File getDefaultCacheFile(boolean)>(0);
+        $r1 = staticinvoke <org.apache.fop.fonts.FontCache: org.apache.fop.fonts.FontCache loadFrom(java.io.File)>($r0);
+        return $r1;
+    }
+
+    public static org.apache.fop.fonts.FontCache loadFrom(java.io.File)
+    {
+        java.io.File cacheFile;
+        java.lang.StringBuffer $r0;
+        java.io.FileInputStream in, $r4;
+        java.io.ObjectInputStream oin, $r6;
+        org.apache.fop.fonts.FontCache l3;
+        java.lang.Throwable l4, $r8;
+        java.lang.ClassNotFoundException e, $r9;
+        java.io.IOException ioe, $r10;
+        boolean $z0;
+        org.apache.commons.logging.Log $r1;
+        java.lang.String $r2, $r3;
+        java.io.BufferedInputStream $r5, in;
+        java.lang.Object $r7;
+
+        cacheFile := @parameter0: java.io.File;
+        $z0 = virtualinvoke cacheFile.<java.io.File: boolean exists()>();
+        if $z0 == 0 goto label10;
+
+     label0:
+        $r1 = <org.apache.fop.fonts.FontCache: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label1;
+
+        $r1 = <org.apache.fop.fonts.FontCache: org.apache.commons.logging.Log log>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Loading font cache from ");
+        $r2 = virtualinvoke cacheFile.<java.io.File: java.lang.String getCanonicalPath()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r3 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r3);
+
+     label1:
+        $r4 = new java.io.FileInputStream;
+        specialinvoke $r4.<java.io.FileInputStream: void <init>(java.io.File)>(cacheFile);
+        in = $r4;
+        $r5 = new java.io.BufferedInputStream;
+        specialinvoke $r5.<java.io.BufferedInputStream: void <init>(java.io.InputStream)>(in);
+        in = $r5;
+        $r6 = new java.io.ObjectInputStream;
+        specialinvoke $r6.<java.io.ObjectInputStream: void <init>(java.io.InputStream)>(in);
+        oin = $r6;
+
+     label2:
+        $r7 = virtualinvoke oin.<java.io.ObjectInputStream: java.lang.Object readObject()>();
+        l3 = (org.apache.fop.fonts.FontCache) $r7;
+
+     label3:
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.InputStream)>(oin);
+
+     label4:
+        return l3;
+
+     label5:
+        $r8 := @caughtexception;
+
+     label6:
+        l4 = $r8;
+
+     label7:
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.InputStream)>(oin);
+        throw l4;
+
+     label8:
+        $r9 := @caughtexception;
+        e = $r9;
+        $r1 = <org.apache.fop.fonts.FontCache: org.apache.commons.logging.Log log>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Could not read font cache. Discarding font cache file. Reason: ");
+        $r2 = virtualinvoke e.<java.lang.ClassNotFoundException: java.lang.String getMessage()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r3 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r3);
+        goto label10;
+
+     label9:
+        $r10 := @caughtexception;
+        ioe = $r10;
+        $r1 = <org.apache.fop.fonts.FontCache: org.apache.commons.logging.Log log>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("I/O exception while reading font cache (");
+        $r2 = virtualinvoke ioe.<java.io.IOException: java.lang.String getMessage()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("). Discarding font cache file.");
+        $r3 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r3);
+
+     label10:
+        return null;
+
+        catch java.lang.Throwable from label2 to label3 with label5;
+        catch java.lang.Throwable from label6 to label7 with label5;
+        catch java.lang.ClassNotFoundException from label0 to label4 with label8;
+        catch java.lang.ClassNotFoundException from label6 to label8 with label8;
+        catch java.io.IOException from label0 to label4 with label9;
+        catch java.io.IOException from label6 to label8 with label9;
+    }
+
+    public void save() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fonts.FontCache this;
+        java.io.File $r0;
+
+        this := @this: org.apache.fop.fonts.FontCache;
+        $r0 = staticinvoke <org.apache.fop.fonts.FontCache: java.io.File getDefaultCacheFile(boolean)>(1);
+        virtualinvoke this.<org.apache.fop.fonts.FontCache: void saveTo(java.io.File)>($r0);
+        return;
+    }
+
+    public void saveTo(java.io.File) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fonts.FontCache this;
+        java.io.File cacheFile;
+        java.lang.Object l2, $r0;
+        java.io.FileOutputStream out, $r5;
+        java.io.ObjectOutputStream oout, $r7;
+        java.lang.Throwable l5, l6, $r8, $r10;
+        java.io.IOException ioe, $r9;
+        boolean $z0;
+        org.apache.commons.logging.Log $r1;
+        java.lang.StringBuffer $r2;
+        java.lang.String $r3, $r4;
+        java.io.BufferedOutputStream $r6, out;
+
+        this := @this: org.apache.fop.fonts.FontCache;
+        cacheFile := @parameter0: java.io.File;
+        $r0 = this.<org.apache.fop.fonts.FontCache: java.lang.Object changeLock>;
+        l2 = $r0;
+        entermonitor $r0;
+
+     label0:
+        $z0 = this.<org.apache.fop.fonts.FontCache: boolean changed>;
+        if $z0 == 0 goto label11;
+
+     label1:
+        $r1 = <org.apache.fop.fonts.FontCache: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label2;
+
+        $r1 = <org.apache.fop.fonts.FontCache: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Writing font cache to ");
+        $r3 = virtualinvoke cacheFile.<java.io.File: java.lang.String getCanonicalPath()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r4 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r4);
+
+     label2:
+        $r5 = new java.io.FileOutputStream;
+        specialinvoke $r5.<java.io.FileOutputStream: void <init>(java.io.File)>(cacheFile);
+        out = $r5;
+        $r6 = new java.io.BufferedOutputStream;
+        specialinvoke $r6.<java.io.BufferedOutputStream: void <init>(java.io.OutputStream)>(out);
+        out = $r6;
+        $r7 = new java.io.ObjectOutputStream;
+        specialinvoke $r7.<java.io.ObjectOutputStream: void <init>(java.io.OutputStream)>(out);
+        oout = $r7;
+
+     label3:
+        virtualinvoke oout.<java.io.ObjectOutputStream: void writeObject(java.lang.Object)>(this);
+
+     label4:
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.OutputStream)>(oout);
+        goto label8;
+
+     label5:
+        $r8 := @caughtexception;
+
+     label6:
+        l5 = $r8;
+
+     label7:
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.OutputStream)>(oout);
+        throw l5;
+
+     label8:
+        goto label10;
+
+     label9:
+        $r9 := @caughtexception;
+        ioe = $r9;
+        $r1 = <org.apache.fop.fonts.FontCache: org.apache.commons.logging.Log log>;
+        staticinvoke <org.apache.fop.util.LogUtil: void handleException(org.apache.commons.logging.Log,java.lang.Exception,boolean)>($r1, ioe, 1);
+
+     label10:
+        this.<org.apache.fop.fonts.FontCache: boolean changed> = 0;
+        $r1 = <org.apache.fop.fonts.FontCache: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void trace(java.lang.Object)>("Cache file written.");
+
+     label11:
+        exitmonitor l2;
+
+     label12:
+        goto label16;
+
+     label13:
+        $r10 := @caughtexception;
+
+     label14:
+        l6 = $r10;
+        exitmonitor l2;
+
+     label15:
+        throw l6;
+
+     label16:
+        return;
+
+        catch java.lang.Throwable from label3 to label4 with label5;
+        catch java.lang.Throwable from label6 to label7 with label5;
+        catch java.io.IOException from label1 to label8 with label9;
+        catch java.lang.Throwable from label0 to label12 with label13;
+        catch java.lang.Throwable from label14 to label15 with label13;
+    }
+
+    protected static java.lang.String getCacheKey(org.apache.fop.fonts.EmbedFontInfo)
+    {
+        org.apache.fop.fonts.EmbedFontInfo fontInfo;
+        java.lang.String embedFile, metricsFile, $r0;
+
+        fontInfo := @parameter0: org.apache.fop.fonts.EmbedFontInfo;
+        if fontInfo == null goto label2;
+
+        embedFile = virtualinvoke fontInfo.<org.apache.fop.fonts.EmbedFontInfo: java.lang.String getEmbedFile()>();
+        metricsFile = virtualinvoke fontInfo.<org.apache.fop.fonts.EmbedFontInfo: java.lang.String getMetricsFile()>();
+        if embedFile == null goto label0;
+
+        $r0 = embedFile;
+        goto label1;
+
+     label0:
+        $r0 = metricsFile;
+
+     label1:
+        return $r0;
+
+     label2:
+        return null;
+    }
+
+    public boolean hasChanged()
+    {
+        org.apache.fop.fonts.FontCache this;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.FontCache;
+        $z0 = this.<org.apache.fop.fonts.FontCache: boolean changed>;
+        return $z0;
+    }
+
+    public boolean containsFont(java.lang.String)
+    {
+        org.apache.fop.fonts.FontCache this;
+        java.lang.String embedUrl;
+        java.util.Map $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.FontCache;
+        embedUrl := @parameter0: java.lang.String;
+        if embedUrl == null goto label0;
+
+        $r0 = this.<org.apache.fop.fonts.FontCache: java.util.Map fontMap>;
+        $z0 = interfaceinvoke $r0.<java.util.Map: boolean containsKey(java.lang.Object)>(embedUrl);
+        return $z0;
+
+     label0:
+        return 0;
+    }
+
+    public boolean containsFont(org.apache.fop.fonts.EmbedFontInfo)
+    {
+        org.apache.fop.fonts.FontCache this;
+        org.apache.fop.fonts.EmbedFontInfo fontInfo;
+        java.util.Map $r0;
+        java.lang.String $r1;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.FontCache;
+        fontInfo := @parameter0: org.apache.fop.fonts.EmbedFontInfo;
+        if fontInfo == null goto label0;
+
+        $r0 = this.<org.apache.fop.fonts.FontCache: java.util.Map fontMap>;
+        $r1 = staticinvoke <org.apache.fop.fonts.FontCache: java.lang.String getCacheKey(org.apache.fop.fonts.EmbedFontInfo)>(fontInfo);
+        $z0 = interfaceinvoke $r0.<java.util.Map: boolean containsKey(java.lang.Object)>($r1);
+        return $z0;
+
+     label0:
+        return 0;
+    }
+
+    public void addFont(org.apache.fop.fonts.EmbedFontInfo)
+    {
+        org.apache.fop.fonts.FontCache this;
+        org.apache.fop.fonts.EmbedFontInfo fontInfo;
+        java.lang.String cacheKey, $r3;
+        java.lang.Object l3, $r0;
+        java.lang.Throwable l4, $r6;
+        boolean $z0;
+        org.apache.commons.logging.Log $r1;
+        java.lang.StringBuffer $r2;
+        java.util.Map $r4;
+        org.apache.fop.fonts.CachedFontInfo $r5;
+
+        this := @this: org.apache.fop.fonts.FontCache;
+        fontInfo := @parameter0: org.apache.fop.fonts.EmbedFontInfo;
+        cacheKey = staticinvoke <org.apache.fop.fonts.FontCache: java.lang.String getCacheKey(org.apache.fop.fonts.EmbedFontInfo)>(fontInfo);
+        $r0 = this.<org.apache.fop.fonts.FontCache: java.lang.Object changeLock>;
+        l3 = $r0;
+        entermonitor $r0;
+
+     label0:
+        $z0 = virtualinvoke this.<org.apache.fop.fonts.FontCache: boolean containsFont(java.lang.String)>(cacheKey);
+        if $z0 != 0 goto label4;
+
+        $r1 = <org.apache.fop.fonts.FontCache: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label1;
+
+        $r1 = <org.apache.fop.fonts.FontCache: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Font added to cache: ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(cacheKey);
+        $r3 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r3);
+
+     label1:
+        $z0 = fontInfo instanceof org.apache.fop.fonts.CachedFontInfo;
+        if $z0 == 0 goto label2;
+
+        $r4 = this.<org.apache.fop.fonts.FontCache: java.util.Map fontMap>;
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(cacheKey, fontInfo);
+        goto label3;
+
+     label2:
+        $r4 = this.<org.apache.fop.fonts.FontCache: java.util.Map fontMap>;
+        $r5 = new org.apache.fop.fonts.CachedFontInfo;
+        specialinvoke $r5.<org.apache.fop.fonts.CachedFontInfo: void <init>(org.apache.fop.fonts.EmbedFontInfo)>(fontInfo);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(cacheKey, $r5);
+
+     label3:
+        this.<org.apache.fop.fonts.FontCache: boolean changed> = 1;
+
+     label4:
+        exitmonitor l3;
+
+     label5:
+        goto label9;
+
+     label6:
+        $r6 := @caughtexception;
+
+     label7:
+        l4 = $r6;
+        exitmonitor l3;
+
+     label8:
+        throw l4;
+
+     label9:
+        return;
+
+        catch java.lang.Throwable from label0 to label5 with label6;
+        catch java.lang.Throwable from label7 to label8 with label6;
+    }
+
+    public org.apache.fop.fonts.CachedFontInfo getFont(java.lang.String)
+    {
+        org.apache.fop.fonts.FontCache this;
+        java.lang.String embedUrl;
+        boolean $z0;
+        java.util.Map $r0;
+        java.lang.Object $r1;
+        org.apache.fop.fonts.CachedFontInfo $r2;
+
+        this := @this: org.apache.fop.fonts.FontCache;
+        embedUrl := @parameter0: java.lang.String;
+        $z0 = virtualinvoke this.<org.apache.fop.fonts.FontCache: boolean containsFont(java.lang.String)>(embedUrl);
+        if $z0 == 0 goto label0;
+
+        $r0 = this.<org.apache.fop.fonts.FontCache: java.util.Map fontMap>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>(embedUrl);
+        $r2 = (org.apache.fop.fonts.CachedFontInfo) $r1;
+        return $r2;
+
+     label0:
+        return null;
+    }
+
+    public void removeFont(java.lang.String)
+    {
+        org.apache.fop.fonts.FontCache this;
+        java.lang.String embedUrl, $r3;
+        java.lang.Object l2, $r0;
+        java.lang.Throwable l3, $r5;
+        boolean $z0;
+        org.apache.commons.logging.Log $r1;
+        java.lang.StringBuffer $r2;
+        java.util.Map $r4;
+
+        this := @this: org.apache.fop.fonts.FontCache;
+        embedUrl := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.fonts.FontCache: java.lang.Object changeLock>;
+        l2 = $r0;
+        entermonitor $r0;
+
+     label0:
+        $z0 = virtualinvoke this.<org.apache.fop.fonts.FontCache: boolean containsFont(java.lang.String)>(embedUrl);
+        if $z0 == 0 goto label2;
+
+        $r1 = <org.apache.fop.fonts.FontCache: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label1;
+
+        $r1 = <org.apache.fop.fonts.FontCache: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Font removed from cache: ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(embedUrl);
+        $r3 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r3);
+
+     label1:
+        $r4 = this.<org.apache.fop.fonts.FontCache: java.util.Map fontMap>;
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object remove(java.lang.Object)>(embedUrl);
+        this.<org.apache.fop.fonts.FontCache: boolean changed> = 1;
+
+     label2:
+        exitmonitor l2;
+
+     label3:
+        goto label7;
+
+     label4:
+        $r5 := @caughtexception;
+
+     label5:
+        l3 = $r5;
+        exitmonitor l2;
+
+     label6:
+        throw l3;
+
+     label7:
+        return;
+
+        catch java.lang.Throwable from label0 to label3 with label4;
+        catch java.lang.Throwable from label5 to label6 with label4;
+    }
+
+    public boolean isFailedFont(java.lang.String, long)
+    {
+        org.apache.fop.fonts.FontCache this;
+        java.lang.String embedUrl;
+        long lastModified, failedLastModified;
+        java.lang.Object l4, $r1;
+        java.lang.Throwable l7, $r3;
+        java.util.Map $r0;
+        boolean $z0;
+        java.lang.Long $r2;
+        byte $b0;
+
+        this := @this: org.apache.fop.fonts.FontCache;
+        embedUrl := @parameter0: java.lang.String;
+        lastModified := @parameter1: long;
+        $r0 = this.<org.apache.fop.fonts.FontCache: java.util.Map failedFontMap>;
+        $z0 = interfaceinvoke $r0.<java.util.Map: boolean containsKey(java.lang.Object)>(embedUrl);
+        if $z0 == 0 goto label7;
+
+        $r1 = this.<org.apache.fop.fonts.FontCache: java.lang.Object changeLock>;
+        l4 = $r1;
+        entermonitor $r1;
+
+     label0:
+        $r0 = this.<org.apache.fop.fonts.FontCache: java.util.Map failedFontMap>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>(embedUrl);
+        $r2 = (java.lang.Long) $r1;
+        failedLastModified = virtualinvoke $r2.<java.lang.Long: long longValue()>();
+        $b0 = lastModified cmp failedLastModified;
+        if $b0 == 0 goto label1;
+
+        $r0 = this.<org.apache.fop.fonts.FontCache: java.util.Map failedFontMap>;
+        interfaceinvoke $r0.<java.util.Map: java.lang.Object remove(java.lang.Object)>(embedUrl);
+        this.<org.apache.fop.fonts.FontCache: boolean changed> = 1;
+
+     label1:
+        exitmonitor l4;
+
+     label2:
+        goto label6;
+
+     label3:
+        $r3 := @caughtexception;
+
+     label4:
+        l7 = $r3;
+        exitmonitor l4;
+
+     label5:
+        throw l7;
+
+     label6:
+        return 1;
+
+     label7:
+        return 0;
+
+        catch java.lang.Throwable from label0 to label2 with label3;
+        catch java.lang.Throwable from label4 to label5 with label3;
+    }
+
+    public void registerFailedFont(java.lang.String, long)
+    {
+        org.apache.fop.fonts.FontCache this;
+        java.lang.String embedUrl;
+        long lastModified;
+        java.lang.Object l4, $r1;
+        java.lang.Long $r0;
+        java.lang.Throwable l5, $r3;
+        java.util.Map $r2;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.FontCache;
+        embedUrl := @parameter0: java.lang.String;
+        lastModified := @parameter1: long;
+        $r1 = this.<org.apache.fop.fonts.FontCache: java.lang.Object changeLock>;
+        l4 = $r1;
+        entermonitor $r1;
+
+     label0:
+        $r2 = this.<org.apache.fop.fonts.FontCache: java.util.Map failedFontMap>;
+        $z0 = interfaceinvoke $r2.<java.util.Map: boolean containsKey(java.lang.Object)>(embedUrl);
+        if $z0 != 0 goto label1;
+
+        $r2 = this.<org.apache.fop.fonts.FontCache: java.util.Map failedFontMap>;
+        $r0 = new java.lang.Long;
+        specialinvoke $r0.<java.lang.Long: void <init>(long)>(lastModified);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(embedUrl, $r0);
+        this.<org.apache.fop.fonts.FontCache: boolean changed> = 1;
+
+     label1:
+        exitmonitor l4;
+
+     label2:
+        goto label6;
+
+     label3:
+        $r3 := @caughtexception;
+
+     label4:
+        l5 = $r3;
+        exitmonitor l4;
+
+     label5:
+        throw l5;
+
+     label6:
+        return;
+
+        catch java.lang.Throwable from label0 to label2 with label3;
+        catch java.lang.Throwable from label4 to label5 with label3;
+    }
+
+    public void clear()
+    {
+        org.apache.fop.fonts.FontCache this;
+        java.lang.Object l1, $r0;
+        java.lang.Throwable l2, $r3;
+        org.apache.commons.logging.Log $r1;
+        boolean $z0;
+        java.util.Map $r2;
+
+        this := @this: org.apache.fop.fonts.FontCache;
+        $r0 = this.<org.apache.fop.fonts.FontCache: java.lang.Object changeLock>;
+        l1 = $r0;
+        entermonitor $r0;
+
+     label0:
+        $r1 = <org.apache.fop.fonts.FontCache: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label1;
+
+        $r1 = <org.apache.fop.fonts.FontCache: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void trace(java.lang.Object)>("Font cache cleared.");
+
+     label1:
+        $r2 = this.<org.apache.fop.fonts.FontCache: java.util.Map fontMap>;
+        interfaceinvoke $r2.<java.util.Map: void clear()>();
+        $r2 = this.<org.apache.fop.fonts.FontCache: java.util.Map failedFontMap>;
+        interfaceinvoke $r2.<java.util.Map: void clear()>();
+        this.<org.apache.fop.fonts.FontCache: boolean changed> = 1;
+        exitmonitor l1;
+
+     label2:
+        goto label6;
+
+     label3:
+        $r3 := @caughtexception;
+
+     label4:
+        l2 = $r3;
+        exitmonitor l1;
+
+     label5:
+        throw l2;
+
+     label6:
+        return;
+
+        catch java.lang.Throwable from label0 to label2 with label3;
+        catch java.lang.Throwable from label4 to label5 with label3;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.fonts.FontCache: java.lang.Class class$org$apache$fop$fonts$FontCache>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.fonts.FontCache: java.lang.Class class$(java.lang.String)>("org.apache.fop.fonts.FontCache");
+        <org.apache.fop.fonts.FontCache: java.lang.Class class$org$apache$fop$fonts$FontCache> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.fonts.FontCache: java.lang.Class class$org$apache$fop$fonts$FontCache>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.fonts.FontCache: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

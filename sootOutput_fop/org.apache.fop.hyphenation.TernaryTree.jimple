@@ -1,0 +1,887 @@
+public class org.apache.fop.hyphenation.TernaryTree extends java.lang.Object implements java.lang.Cloneable, java.io.Serializable
+{
+    protected char[] lo;
+    protected char[] hi;
+    protected char[] eq;
+    protected char[] sc;
+    protected org.apache.fop.hyphenation.CharVector kv;
+    protected char root;
+    protected char freenode;
+    protected int length;
+    protected static final int BLOCK_SIZE;
+
+    void <init>()
+    {
+        org.apache.fop.hyphenation.TernaryTree this;
+
+        this := @this: org.apache.fop.hyphenation.TernaryTree;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        virtualinvoke this.<org.apache.fop.hyphenation.TernaryTree: void init()>();
+        return;
+    }
+
+    protected void init()
+    {
+        org.apache.fop.hyphenation.TernaryTree this;
+        char[] $r0;
+        org.apache.fop.hyphenation.CharVector $r1;
+
+        this := @this: org.apache.fop.hyphenation.TernaryTree;
+        this.<org.apache.fop.hyphenation.TernaryTree: char root> = 0;
+        this.<org.apache.fop.hyphenation.TernaryTree: char freenode> = 1;
+        this.<org.apache.fop.hyphenation.TernaryTree: int length> = 0;
+        $r0 = newarray (char)[2048];
+        this.<org.apache.fop.hyphenation.TernaryTree: char[] lo> = $r0;
+        $r0 = newarray (char)[2048];
+        this.<org.apache.fop.hyphenation.TernaryTree: char[] hi> = $r0;
+        $r0 = newarray (char)[2048];
+        this.<org.apache.fop.hyphenation.TernaryTree: char[] eq> = $r0;
+        $r0 = newarray (char)[2048];
+        this.<org.apache.fop.hyphenation.TernaryTree: char[] sc> = $r0;
+        $r1 = new org.apache.fop.hyphenation.CharVector;
+        specialinvoke $r1.<org.apache.fop.hyphenation.CharVector: void <init>()>();
+        this.<org.apache.fop.hyphenation.TernaryTree: org.apache.fop.hyphenation.CharVector kv> = $r1;
+        return;
+    }
+
+    public void insert(java.lang.String, char)
+    {
+        org.apache.fop.hyphenation.TernaryTree this;
+        java.lang.String key;
+        char val, $c1, $c3, $c4;
+        int len, $i0, $i2, len;
+        char[] strkey, $r0;
+
+        this := @this: org.apache.fop.hyphenation.TernaryTree;
+        key := @parameter0: java.lang.String;
+        val := @parameter1: char;
+        $i0 = virtualinvoke key.<java.lang.String: int length()>();
+        len = $i0 + 1;
+        $c1 = this.<org.apache.fop.hyphenation.TernaryTree: char freenode>;
+        $i0 = $c1 + len;
+        $r0 = this.<org.apache.fop.hyphenation.TernaryTree: char[] eq>;
+        $i2 = lengthof $r0;
+        if $i0 <= $i2 goto label0;
+
+        $r0 = this.<org.apache.fop.hyphenation.TernaryTree: char[] eq>;
+        $i2 = lengthof $r0;
+        $i2 = $i2 + 2048;
+        specialinvoke this.<org.apache.fop.hyphenation.TernaryTree: void redimNodeArrays(int)>($i2);
+
+     label0:
+        len = len + -1;
+        strkey = newarray (char)[len];
+        virtualinvoke key.<java.lang.String: void getChars(int,int,char[],int)>(0, len, strkey, 0);
+        strkey[len] = 0;
+        $c3 = this.<org.apache.fop.hyphenation.TernaryTree: char root>;
+        $c4 = specialinvoke this.<org.apache.fop.hyphenation.TernaryTree: char insert(char,char[],int,char)>($c3, strkey, 0, val);
+        this.<org.apache.fop.hyphenation.TernaryTree: char root> = $c4;
+        return;
+    }
+
+    public void insert(char[], int, char)
+    {
+        org.apache.fop.hyphenation.TernaryTree this;
+        char[] key, $r0;
+        int start, len, $i0, $i2;
+        char val, $c1, $c3, $c4;
+
+        this := @this: org.apache.fop.hyphenation.TernaryTree;
+        key := @parameter0: char[];
+        start := @parameter1: int;
+        val := @parameter2: char;
+        $i0 = staticinvoke <org.apache.fop.hyphenation.TernaryTree: int strlen(char[])>(key);
+        len = $i0 + 1;
+        $c1 = this.<org.apache.fop.hyphenation.TernaryTree: char freenode>;
+        $i0 = $c1 + len;
+        $r0 = this.<org.apache.fop.hyphenation.TernaryTree: char[] eq>;
+        $i2 = lengthof $r0;
+        if $i0 <= $i2 goto label0;
+
+        $r0 = this.<org.apache.fop.hyphenation.TernaryTree: char[] eq>;
+        $i2 = lengthof $r0;
+        $i2 = $i2 + 2048;
+        specialinvoke this.<org.apache.fop.hyphenation.TernaryTree: void redimNodeArrays(int)>($i2);
+
+     label0:
+        $c3 = this.<org.apache.fop.hyphenation.TernaryTree: char root>;
+        $c4 = specialinvoke this.<org.apache.fop.hyphenation.TernaryTree: char insert(char,char[],int,char)>($c3, key, start, val);
+        this.<org.apache.fop.hyphenation.TernaryTree: char root> = $c4;
+        return;
+    }
+
+    private char insert(char, char[], int, char)
+    {
+        org.apache.fop.hyphenation.TernaryTree this;
+        char p, val, $c0, pp, s, $c2, p, $c5, $c6, $c7;
+        char[] key, $r1, $r4, $r5, $r6;
+        int start, len, $i1, $i3, $i4, $i8;
+        org.apache.fop.hyphenation.CharVector $r2, $r3;
+
+        this := @this: org.apache.fop.hyphenation.TernaryTree;
+        p := @parameter0: char;
+        key := @parameter1: char[];
+        start := @parameter2: int;
+        val := @parameter3: char;
+        len = staticinvoke <org.apache.fop.hyphenation.TernaryTree: int strlen(char[],int)>(key, start);
+        if p != 0 goto label2;
+
+        $c0 = this.<org.apache.fop.hyphenation.TernaryTree: char freenode>;
+        $i1 = $c0 + 1;
+        $c2 = (char) $i1;
+        this.<org.apache.fop.hyphenation.TernaryTree: char freenode> = $c2;
+        p = $c0;
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] eq>;
+        $r1[p] = val;
+        $i3 = this.<org.apache.fop.hyphenation.TernaryTree: int length>;
+        $i3 = $i3 + 1;
+        this.<org.apache.fop.hyphenation.TernaryTree: int length> = $i3;
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] hi>;
+        $r1[p] = 0;
+        if len <= 0 goto label0;
+
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] sc>;
+        $r1[p] = 65535;
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] lo>;
+        $r2 = this.<org.apache.fop.hyphenation.TernaryTree: org.apache.fop.hyphenation.CharVector kv>;
+        $i4 = len + 1;
+        $i1 = virtualinvoke $r2.<org.apache.fop.hyphenation.CharVector: int alloc(int)>($i4);
+        $c2 = (char) $i1;
+        $r1[p] = $c2;
+        $r3 = this.<org.apache.fop.hyphenation.TernaryTree: org.apache.fop.hyphenation.CharVector kv>;
+        $r1 = virtualinvoke $r3.<org.apache.fop.hyphenation.CharVector: char[] getArray()>();
+        $r4 = this.<org.apache.fop.hyphenation.TernaryTree: char[] lo>;
+        $c5 = $r4[p];
+        staticinvoke <org.apache.fop.hyphenation.TernaryTree: void strcpy(char[],int,char[],int)>($r1, $c5, key, start);
+        goto label1;
+
+     label0:
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] sc>;
+        $r1[p] = 0;
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] lo>;
+        $r1[p] = 0;
+
+     label1:
+        return p;
+
+     label2:
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] sc>;
+        $c6 = $r1[p];
+        if $c6 != 65535 goto label5;
+
+        $c2 = this.<org.apache.fop.hyphenation.TernaryTree: char freenode>;
+        $i1 = $c2 + 1;
+        $c0 = (char) $i1;
+        this.<org.apache.fop.hyphenation.TernaryTree: char freenode> = $c0;
+        pp = $c2;
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] lo>;
+        $r5 = this.<org.apache.fop.hyphenation.TernaryTree: char[] lo>;
+        $c2 = $r5[p];
+        $r1[pp] = $c2;
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] eq>;
+        $r5 = this.<org.apache.fop.hyphenation.TernaryTree: char[] eq>;
+        $c2 = $r5[p];
+        $r1[pp] = $c2;
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] lo>;
+        $r1[p] = 0;
+        if len <= 0 goto label4;
+
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] sc>;
+        $r2 = this.<org.apache.fop.hyphenation.TernaryTree: org.apache.fop.hyphenation.CharVector kv>;
+        $r6 = this.<org.apache.fop.hyphenation.TernaryTree: char[] lo>;
+        $c7 = $r6[pp];
+        $c2 = virtualinvoke $r2.<org.apache.fop.hyphenation.CharVector: char get(int)>($c7);
+        $r1[p] = $c2;
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] eq>;
+        $r1[p] = pp;
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] lo>;
+        $c2 = $r1[pp];
+        $i1 = $c2 + 1;
+        $c2 = (char) $i1;
+        $r1[pp] = $c2;
+        $r3 = this.<org.apache.fop.hyphenation.TernaryTree: org.apache.fop.hyphenation.CharVector kv>;
+        $r4 = this.<org.apache.fop.hyphenation.TernaryTree: char[] lo>;
+        $c5 = $r4[pp];
+        $c6 = virtualinvoke $r3.<org.apache.fop.hyphenation.CharVector: char get(int)>($c5);
+        if $c6 != 0 goto label3;
+
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] lo>;
+        $r1[pp] = 0;
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] sc>;
+        $r1[pp] = 0;
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] hi>;
+        $r1[pp] = 0;
+        goto label5;
+
+     label3:
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] sc>;
+        $r1[pp] = 65535;
+        goto label5;
+
+     label4:
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] sc>;
+        $r1[pp] = 65535;
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] hi>;
+        $r1[p] = pp;
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] sc>;
+        $r1[p] = 0;
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] eq>;
+        $r1[p] = val;
+        $i3 = this.<org.apache.fop.hyphenation.TernaryTree: int length>;
+        $i3 = $i3 + 1;
+        this.<org.apache.fop.hyphenation.TernaryTree: int length> = $i3;
+        return p;
+
+     label5:
+        s = key[start];
+        $r4 = this.<org.apache.fop.hyphenation.TernaryTree: char[] sc>;
+        $c5 = $r4[p];
+        if s >= $c5 goto label6;
+
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] lo>;
+        $r6 = this.<org.apache.fop.hyphenation.TernaryTree: char[] lo>;
+        $c7 = $r6[p];
+        $c2 = specialinvoke this.<org.apache.fop.hyphenation.TernaryTree: char insert(char,char[],int,char)>($c7, key, start, val);
+        $r1[p] = $c2;
+        goto label9;
+
+     label6:
+        $r4 = this.<org.apache.fop.hyphenation.TernaryTree: char[] sc>;
+        $c5 = $r4[p];
+        if s != $c5 goto label8;
+
+        if s == 0 goto label7;
+
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] eq>;
+        $r6 = this.<org.apache.fop.hyphenation.TernaryTree: char[] eq>;
+        $c7 = $r6[p];
+        $i8 = start + 1;
+        $c2 = specialinvoke this.<org.apache.fop.hyphenation.TernaryTree: char insert(char,char[],int,char)>($c7, key, $i8, val);
+        $r1[p] = $c2;
+        goto label9;
+
+     label7:
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] eq>;
+        $r1[p] = val;
+        goto label9;
+
+     label8:
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] hi>;
+        $r6 = this.<org.apache.fop.hyphenation.TernaryTree: char[] hi>;
+        $c7 = $r6[p];
+        $c2 = specialinvoke this.<org.apache.fop.hyphenation.TernaryTree: char insert(char,char[],int,char)>($c7, key, start, val);
+        $r1[p] = $c2;
+
+     label9:
+        return p;
+    }
+
+    public static int strcmp(char[], int, char[], int)
+    {
+        char[] a, b;
+        int startA, startB, $i2;
+        char $c0, $c1;
+
+        a := @parameter0: char[];
+        startA := @parameter1: int;
+        b := @parameter2: char[];
+        startB := @parameter3: int;
+
+     label0:
+        $c0 = a[startA];
+        $c1 = b[startB];
+        if $c0 != $c1 goto label2;
+
+        $c0 = a[startA];
+        if $c0 != 0 goto label1;
+
+        return 0;
+
+     label1:
+        startA = startA + 1;
+        startB = startB + 1;
+        goto label0;
+
+     label2:
+        $c0 = a[startA];
+        $c1 = b[startB];
+        $i2 = $c0 - $c1;
+        return $i2;
+    }
+
+    public static int strcmp(java.lang.String, char[], int)
+    {
+        java.lang.String str;
+        char[] a;
+        int start, len, i, d, $i1, $i3, $i4;
+        char $c0, $c2;
+
+        str := @parameter0: java.lang.String;
+        a := @parameter1: char[];
+        start := @parameter2: int;
+        len = virtualinvoke str.<java.lang.String: int length()>();
+        i = 0;
+
+     label0:
+        if i >= len goto label3;
+
+        $c0 = virtualinvoke str.<java.lang.String: char charAt(int)>(i);
+        $i1 = start + i;
+        $c2 = a[$i1];
+        d = $c0 - $c2;
+        if d == 0 goto label1;
+
+        return d;
+
+     label1:
+        $i3 = start + i;
+        $c0 = a[$i3];
+        if $c0 != 0 goto label2;
+
+        return d;
+
+     label2:
+        i = i + 1;
+        goto label0;
+
+     label3:
+        $i3 = start + i;
+        $c0 = a[$i3];
+        if $c0 == 0 goto label4;
+
+        $i3 = start + i;
+        $c0 = a[$i3];
+        $i4 = neg $c0;
+        return $i4;
+
+     label4:
+        return 0;
+    }
+
+    public static void strcpy(char[], int, char[], int)
+    {
+        char[] dst, src;
+        int di, si, $i0, $i2;
+        char $c1, $c3;
+
+        dst := @parameter0: char[];
+        di := @parameter1: int;
+        src := @parameter2: char[];
+        si := @parameter3: int;
+
+     label0:
+        $c1 = src[si];
+        if $c1 == 0 goto label1;
+
+        $i2 = di;
+        di = di + 1;
+        $i0 = si;
+        si = si + 1;
+        $c3 = src[$i0];
+        dst[$i2] = $c3;
+        goto label0;
+
+     label1:
+        dst[di] = 0;
+        return;
+    }
+
+    public static int strlen(char[], int)
+    {
+        char[] a;
+        int start, len, i, $i0;
+        char $c1;
+
+        a := @parameter0: char[];
+        start := @parameter1: int;
+        len = 0;
+        i = start;
+
+     label0:
+        $i0 = lengthof a;
+        if i >= $i0 goto label1;
+
+        $c1 = a[i];
+        if $c1 == 0 goto label1;
+
+        len = len + 1;
+        i = i + 1;
+        goto label0;
+
+     label1:
+        return len;
+    }
+
+    public static int strlen(char[])
+    {
+        char[] a;
+        int $i0;
+
+        a := @parameter0: char[];
+        $i0 = staticinvoke <org.apache.fop.hyphenation.TernaryTree: int strlen(char[],int)>(a, 0);
+        return $i0;
+    }
+
+    public int find(java.lang.String)
+    {
+        org.apache.fop.hyphenation.TernaryTree this;
+        java.lang.String key;
+        int len, $i0;
+        char[] strkey;
+
+        this := @this: org.apache.fop.hyphenation.TernaryTree;
+        key := @parameter0: java.lang.String;
+        len = virtualinvoke key.<java.lang.String: int length()>();
+        $i0 = len + 1;
+        strkey = newarray (char)[$i0];
+        virtualinvoke key.<java.lang.String: void getChars(int,int,char[],int)>(0, len, strkey, 0);
+        strkey[len] = 0;
+        $i0 = virtualinvoke this.<org.apache.fop.hyphenation.TernaryTree: int find(char[],int)>(strkey, 0);
+        return $i0;
+    }
+
+    public int find(char[], int)
+    {
+        org.apache.fop.hyphenation.TernaryTree this;
+        char[] key, $r0, $r2, $r3, $r4;
+        int start, i, d, $i2;
+        char p, c, $c0, $c1, $c3;
+        org.apache.fop.hyphenation.CharVector $r1;
+
+        this := @this: org.apache.fop.hyphenation.TernaryTree;
+        key := @parameter0: char[];
+        start := @parameter1: int;
+        p = this.<org.apache.fop.hyphenation.TernaryTree: char root>;
+        i = start;
+
+     label0:
+        if p == 0 goto label6;
+
+        $r0 = this.<org.apache.fop.hyphenation.TernaryTree: char[] sc>;
+        $c0 = $r0[p];
+        if $c0 != 65535 goto label2;
+
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: org.apache.fop.hyphenation.CharVector kv>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.hyphenation.CharVector: char[] getArray()>();
+        $r3 = this.<org.apache.fop.hyphenation.TernaryTree: char[] lo>;
+        $c1 = $r3[p];
+        $i2 = staticinvoke <org.apache.fop.hyphenation.TernaryTree: int strcmp(char[],int,char[],int)>(key, i, $r2, $c1);
+        if $i2 != 0 goto label1;
+
+        $r0 = this.<org.apache.fop.hyphenation.TernaryTree: char[] eq>;
+        $c0 = $r0[p];
+        return $c0;
+
+     label1:
+        return -1;
+
+     label2:
+        c = key[i];
+        $r4 = this.<org.apache.fop.hyphenation.TernaryTree: char[] sc>;
+        $c3 = $r4[p];
+        d = c - $c3;
+        if d != 0 goto label4;
+
+        if c != 0 goto label3;
+
+        $r0 = this.<org.apache.fop.hyphenation.TernaryTree: char[] eq>;
+        $c0 = $r0[p];
+        return $c0;
+
+     label3:
+        i = i + 1;
+        $r0 = this.<org.apache.fop.hyphenation.TernaryTree: char[] eq>;
+        p = $r0[p];
+        goto label0;
+
+     label4:
+        if d >= 0 goto label5;
+
+        $r0 = this.<org.apache.fop.hyphenation.TernaryTree: char[] lo>;
+        p = $r0[p];
+        goto label0;
+
+     label5:
+        $r0 = this.<org.apache.fop.hyphenation.TernaryTree: char[] hi>;
+        p = $r0[p];
+        goto label0;
+
+     label6:
+        return -1;
+    }
+
+    public boolean knows(java.lang.String)
+    {
+        org.apache.fop.hyphenation.TernaryTree this;
+        java.lang.String key;
+        int $i0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.hyphenation.TernaryTree;
+        key := @parameter0: java.lang.String;
+        $i0 = virtualinvoke this.<org.apache.fop.hyphenation.TernaryTree: int find(java.lang.String)>(key);
+        if $i0 < 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    private void redimNodeArrays(int)
+    {
+        org.apache.fop.hyphenation.TernaryTree this;
+        int newsize, len, $i0, $i1;
+        char[] na, $r0, $r1;
+
+        this := @this: org.apache.fop.hyphenation.TernaryTree;
+        newsize := @parameter0: int;
+        $r0 = this.<org.apache.fop.hyphenation.TernaryTree: char[] lo>;
+        $i0 = lengthof $r0;
+        if newsize >= $i0 goto label0;
+
+        $i1 = newsize;
+        goto label1;
+
+     label0:
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] lo>;
+        $i1 = lengthof $r1;
+
+     label1:
+        len = $i1;
+        na = newarray (char)[newsize];
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] lo>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r1, 0, na, 0, len);
+        this.<org.apache.fop.hyphenation.TernaryTree: char[] lo> = na;
+        na = newarray (char)[newsize];
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] hi>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r1, 0, na, 0, len);
+        this.<org.apache.fop.hyphenation.TernaryTree: char[] hi> = na;
+        na = newarray (char)[newsize];
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] eq>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r1, 0, na, 0, len);
+        this.<org.apache.fop.hyphenation.TernaryTree: char[] eq> = na;
+        na = newarray (char)[newsize];
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] sc>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r1, 0, na, 0, len);
+        this.<org.apache.fop.hyphenation.TernaryTree: char[] sc> = na;
+        return;
+    }
+
+    public int size()
+    {
+        org.apache.fop.hyphenation.TernaryTree this;
+        int $i0;
+
+        this := @this: org.apache.fop.hyphenation.TernaryTree;
+        $i0 = this.<org.apache.fop.hyphenation.TernaryTree: int length>;
+        return $i0;
+    }
+
+    public java.lang.Object clone()
+    {
+        org.apache.fop.hyphenation.TernaryTree this, $r0, t;
+        char[] $r1;
+        java.lang.Object $r2;
+        org.apache.fop.hyphenation.CharVector $r3;
+        char $c0;
+        int $i1;
+
+        this := @this: org.apache.fop.hyphenation.TernaryTree;
+        $r0 = new org.apache.fop.hyphenation.TernaryTree;
+        specialinvoke $r0.<org.apache.fop.hyphenation.TernaryTree: void <init>()>();
+        t = $r0;
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] lo>;
+        $r2 = virtualinvoke $r1.<java.lang.Object: java.lang.Object clone()>();
+        $r1 = (char[]) $r2;
+        $r1 = (char[]) $r1;
+        t.<org.apache.fop.hyphenation.TernaryTree: char[] lo> = $r1;
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] hi>;
+        $r2 = virtualinvoke $r1.<java.lang.Object: java.lang.Object clone()>();
+        $r1 = (char[]) $r2;
+        $r1 = (char[]) $r1;
+        t.<org.apache.fop.hyphenation.TernaryTree: char[] hi> = $r1;
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] eq>;
+        $r2 = virtualinvoke $r1.<java.lang.Object: java.lang.Object clone()>();
+        $r1 = (char[]) $r2;
+        $r1 = (char[]) $r1;
+        t.<org.apache.fop.hyphenation.TernaryTree: char[] eq> = $r1;
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: char[] sc>;
+        $r2 = virtualinvoke $r1.<java.lang.Object: java.lang.Object clone()>();
+        $r1 = (char[]) $r2;
+        $r1 = (char[]) $r1;
+        t.<org.apache.fop.hyphenation.TernaryTree: char[] sc> = $r1;
+        $r3 = this.<org.apache.fop.hyphenation.TernaryTree: org.apache.fop.hyphenation.CharVector kv>;
+        $r2 = virtualinvoke $r3.<org.apache.fop.hyphenation.CharVector: java.lang.Object clone()>();
+        $r3 = (org.apache.fop.hyphenation.CharVector) $r2;
+        t.<org.apache.fop.hyphenation.TernaryTree: org.apache.fop.hyphenation.CharVector kv> = $r3;
+        $c0 = this.<org.apache.fop.hyphenation.TernaryTree: char root>;
+        t.<org.apache.fop.hyphenation.TernaryTree: char root> = $c0;
+        $c0 = this.<org.apache.fop.hyphenation.TernaryTree: char freenode>;
+        t.<org.apache.fop.hyphenation.TernaryTree: char freenode> = $c0;
+        $i1 = this.<org.apache.fop.hyphenation.TernaryTree: int length>;
+        t.<org.apache.fop.hyphenation.TernaryTree: int length> = $i1;
+        return t;
+    }
+
+    protected void insertBalanced(java.lang.String[], char[], int, int)
+    {
+        org.apache.fop.hyphenation.TernaryTree this;
+        java.lang.String[] k;
+        char[] v;
+        int offset, n, m, $i0, $i1, $i3;
+        java.lang.String $r0;
+        char $c2;
+
+        this := @this: org.apache.fop.hyphenation.TernaryTree;
+        k := @parameter0: java.lang.String[];
+        v := @parameter1: char[];
+        offset := @parameter2: int;
+        n := @parameter3: int;
+        if n >= 1 goto label0;
+
+        return;
+
+     label0:
+        m = n >> 1;
+        $i0 = m + offset;
+        $r0 = k[$i0];
+        $i1 = m + offset;
+        $c2 = v[$i1];
+        virtualinvoke this.<org.apache.fop.hyphenation.TernaryTree: void insert(java.lang.String,char)>($r0, $c2);
+        virtualinvoke this.<org.apache.fop.hyphenation.TernaryTree: void insertBalanced(java.lang.String[],char[],int,int)>(k, v, offset, m);
+        $i1 = offset + m;
+        $i1 = $i1 + 1;
+        $i3 = n - m;
+        $i3 = $i3 - 1;
+        virtualinvoke this.<org.apache.fop.hyphenation.TernaryTree: void insertBalanced(java.lang.String[],char[],int,int)>(k, v, $i1, $i3);
+        return;
+    }
+
+    public void balance()
+    {
+        org.apache.fop.hyphenation.TernaryTree this;
+        int i, n, $i1;
+        java.lang.String[] k;
+        char[] v;
+        org.apache.fop.hyphenation.TernaryTree$Iterator iter, $r0;
+        boolean $z0;
+        char $c0;
+        java.lang.Object $r1;
+        java.lang.String $r2;
+
+        this := @this: org.apache.fop.hyphenation.TernaryTree;
+        i = 0;
+        n = this.<org.apache.fop.hyphenation.TernaryTree: int length>;
+        k = newarray (java.lang.String)[n];
+        v = newarray (char)[n];
+        $r0 = new org.apache.fop.hyphenation.TernaryTree$Iterator;
+        specialinvoke $r0.<org.apache.fop.hyphenation.TernaryTree$Iterator: void <init>(org.apache.fop.hyphenation.TernaryTree)>(this);
+        iter = $r0;
+
+     label0:
+        $z0 = virtualinvoke iter.<org.apache.fop.hyphenation.TernaryTree$Iterator: boolean hasMoreElements()>();
+        if $z0 == 0 goto label1;
+
+        $c0 = virtualinvoke iter.<org.apache.fop.hyphenation.TernaryTree$Iterator: char getValue()>();
+        v[i] = $c0;
+        $i1 = i;
+        i = i + 1;
+        $r1 = virtualinvoke iter.<org.apache.fop.hyphenation.TernaryTree$Iterator: java.lang.Object nextElement()>();
+        $r2 = (java.lang.String) $r1;
+        k[$i1] = $r2;
+        goto label0;
+
+     label1:
+        virtualinvoke this.<org.apache.fop.hyphenation.TernaryTree: void init()>();
+        virtualinvoke this.<org.apache.fop.hyphenation.TernaryTree: void insertBalanced(java.lang.String[],char[],int,int)>(k, v, 0, n);
+        return;
+    }
+
+    public void trimToSize()
+    {
+        org.apache.fop.hyphenation.TernaryTree this, map, $r1;
+        org.apache.fop.hyphenation.CharVector kx, $r0;
+        char $c0, $c2;
+
+        this := @this: org.apache.fop.hyphenation.TernaryTree;
+        virtualinvoke this.<org.apache.fop.hyphenation.TernaryTree: void balance()>();
+        $c0 = this.<org.apache.fop.hyphenation.TernaryTree: char freenode>;
+        specialinvoke this.<org.apache.fop.hyphenation.TernaryTree: void redimNodeArrays(int)>($c0);
+        $r0 = new org.apache.fop.hyphenation.CharVector;
+        specialinvoke $r0.<org.apache.fop.hyphenation.CharVector: void <init>()>();
+        kx = $r0;
+        virtualinvoke kx.<org.apache.fop.hyphenation.CharVector: int alloc(int)>(1);
+        $r1 = new org.apache.fop.hyphenation.TernaryTree;
+        specialinvoke $r1.<org.apache.fop.hyphenation.TernaryTree: void <init>()>();
+        map = $r1;
+        $c2 = this.<org.apache.fop.hyphenation.TernaryTree: char root>;
+        specialinvoke this.<org.apache.fop.hyphenation.TernaryTree: void compact(org.apache.fop.hyphenation.CharVector,org.apache.fop.hyphenation.TernaryTree,char)>(kx, map, $c2);
+        this.<org.apache.fop.hyphenation.TernaryTree: org.apache.fop.hyphenation.CharVector kv> = kx;
+        $r0 = this.<org.apache.fop.hyphenation.TernaryTree: org.apache.fop.hyphenation.CharVector kv>;
+        virtualinvoke $r0.<org.apache.fop.hyphenation.CharVector: void trimToSize()>();
+        return;
+    }
+
+    private void compact(org.apache.fop.hyphenation.CharVector, org.apache.fop.hyphenation.TernaryTree, char)
+    {
+        org.apache.fop.hyphenation.TernaryTree this, map;
+        org.apache.fop.hyphenation.CharVector kx, $r1, $r4;
+        char p, $c0, $c1, $c3;
+        int k, $i2;
+        char[] $r0, $r2, $r3, $r5;
+
+        this := @this: org.apache.fop.hyphenation.TernaryTree;
+        kx := @parameter0: org.apache.fop.hyphenation.CharVector;
+        map := @parameter1: org.apache.fop.hyphenation.TernaryTree;
+        p := @parameter2: char;
+        if p != 0 goto label0;
+
+        return;
+
+     label0:
+        $r0 = this.<org.apache.fop.hyphenation.TernaryTree: char[] sc>;
+        $c0 = $r0[p];
+        if $c0 != 65535 goto label2;
+
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: org.apache.fop.hyphenation.CharVector kv>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.hyphenation.CharVector: char[] getArray()>();
+        $r3 = this.<org.apache.fop.hyphenation.TernaryTree: char[] lo>;
+        $c1 = $r3[p];
+        k = virtualinvoke map.<org.apache.fop.hyphenation.TernaryTree: int find(char[],int)>($r2, $c1);
+        if k >= 0 goto label1;
+
+        $r1 = this.<org.apache.fop.hyphenation.TernaryTree: org.apache.fop.hyphenation.CharVector kv>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.hyphenation.CharVector: char[] getArray()>();
+        $r3 = this.<org.apache.fop.hyphenation.TernaryTree: char[] lo>;
+        $c1 = $r3[p];
+        $i2 = staticinvoke <org.apache.fop.hyphenation.TernaryTree: int strlen(char[],int)>($r2, $c1);
+        $i2 = $i2 + 1;
+        k = virtualinvoke kx.<org.apache.fop.hyphenation.CharVector: int alloc(int)>($i2);
+        $r0 = virtualinvoke kx.<org.apache.fop.hyphenation.CharVector: char[] getArray()>();
+        $r4 = this.<org.apache.fop.hyphenation.TernaryTree: org.apache.fop.hyphenation.CharVector kv>;
+        $r3 = virtualinvoke $r4.<org.apache.fop.hyphenation.CharVector: char[] getArray()>();
+        $r5 = this.<org.apache.fop.hyphenation.TernaryTree: char[] lo>;
+        $c3 = $r5[p];
+        staticinvoke <org.apache.fop.hyphenation.TernaryTree: void strcpy(char[],int,char[],int)>($r0, k, $r3, $c3);
+        $r2 = virtualinvoke kx.<org.apache.fop.hyphenation.CharVector: char[] getArray()>();
+        $c3 = (char) k;
+        virtualinvoke map.<org.apache.fop.hyphenation.TernaryTree: void insert(char[],int,char)>($r2, k, $c3);
+
+     label1:
+        $r0 = this.<org.apache.fop.hyphenation.TernaryTree: char[] lo>;
+        $c1 = (char) k;
+        $r0[p] = $c1;
+        goto label4;
+
+     label2:
+        $r5 = this.<org.apache.fop.hyphenation.TernaryTree: char[] lo>;
+        $c3 = $r5[p];
+        specialinvoke this.<org.apache.fop.hyphenation.TernaryTree: void compact(org.apache.fop.hyphenation.CharVector,org.apache.fop.hyphenation.TernaryTree,char)>(kx, map, $c3);
+        $r0 = this.<org.apache.fop.hyphenation.TernaryTree: char[] sc>;
+        $c0 = $r0[p];
+        if $c0 == 0 goto label3;
+
+        $r5 = this.<org.apache.fop.hyphenation.TernaryTree: char[] eq>;
+        $c3 = $r5[p];
+        specialinvoke this.<org.apache.fop.hyphenation.TernaryTree: void compact(org.apache.fop.hyphenation.CharVector,org.apache.fop.hyphenation.TernaryTree,char)>(kx, map, $c3);
+
+     label3:
+        $r5 = this.<org.apache.fop.hyphenation.TernaryTree: char[] hi>;
+        $c3 = $r5[p];
+        specialinvoke this.<org.apache.fop.hyphenation.TernaryTree: void compact(org.apache.fop.hyphenation.CharVector,org.apache.fop.hyphenation.TernaryTree,char)>(kx, map, $c3);
+
+     label4:
+        return;
+    }
+
+    public java.util.Enumeration keys()
+    {
+        org.apache.fop.hyphenation.TernaryTree this;
+        org.apache.fop.hyphenation.TernaryTree$Iterator $r0;
+
+        this := @this: org.apache.fop.hyphenation.TernaryTree;
+        $r0 = new org.apache.fop.hyphenation.TernaryTree$Iterator;
+        specialinvoke $r0.<org.apache.fop.hyphenation.TernaryTree$Iterator: void <init>(org.apache.fop.hyphenation.TernaryTree)>(this);
+        return $r0;
+    }
+
+    public void printStats()
+    {
+        org.apache.fop.hyphenation.TernaryTree this;
+        java.io.PrintStream $r0;
+        java.lang.StringBuffer $r1;
+        int $i0;
+        java.lang.String $r2, $r3;
+        char $c1;
+        org.apache.fop.hyphenation.CharVector $r4;
+
+        this := @this: org.apache.fop.hyphenation.TernaryTree;
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Number of keys = ");
+        $i0 = this.<org.apache.fop.hyphenation.TernaryTree: int length>;
+        $r2 = staticinvoke <java.lang.Integer: java.lang.String toString(int)>($i0);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>($r3);
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Node count = ");
+        $c1 = this.<org.apache.fop.hyphenation.TernaryTree: char freenode>;
+        $r2 = staticinvoke <java.lang.Integer: java.lang.String toString(int)>($c1);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>($r3);
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Key Array length = ");
+        $r4 = this.<org.apache.fop.hyphenation.TernaryTree: org.apache.fop.hyphenation.CharVector kv>;
+        $i0 = virtualinvoke $r4.<org.apache.fop.hyphenation.CharVector: int length()>();
+        $r2 = staticinvoke <java.lang.Integer: java.lang.String toString(int)>($i0);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>($r3);
+        return;
+    }
+
+    public static void main(java.lang.String[]) throws java.lang.Exception
+    {
+        java.lang.String[] args;
+        org.apache.fop.hyphenation.TernaryTree $r0, tt;
+        java.io.PrintStream $r1;
+        int $i0;
+        char $c1;
+
+        args := @parameter0: java.lang.String[];
+        $r0 = new org.apache.fop.hyphenation.TernaryTree;
+        specialinvoke $r0.<org.apache.fop.hyphenation.TernaryTree: void <init>()>();
+        tt = $r0;
+        virtualinvoke tt.<org.apache.fop.hyphenation.TernaryTree: void insert(java.lang.String,char)>("Carlos", 67);
+        virtualinvoke tt.<org.apache.fop.hyphenation.TernaryTree: void insert(java.lang.String,char)>("Car", 114);
+        virtualinvoke tt.<org.apache.fop.hyphenation.TernaryTree: void insert(java.lang.String,char)>("palos", 108);
+        virtualinvoke tt.<org.apache.fop.hyphenation.TernaryTree: void insert(java.lang.String,char)>("pa", 112);
+        virtualinvoke tt.<org.apache.fop.hyphenation.TernaryTree: void trimToSize()>();
+        $r1 = <java.lang.System: java.io.PrintStream out>;
+        $i0 = virtualinvoke tt.<org.apache.fop.hyphenation.TernaryTree: int find(java.lang.String)>("Car");
+        $c1 = (char) $i0;
+        virtualinvoke $r1.<java.io.PrintStream: void println(char)>($c1);
+        $r1 = <java.lang.System: java.io.PrintStream out>;
+        $i0 = virtualinvoke tt.<org.apache.fop.hyphenation.TernaryTree: int find(java.lang.String)>("Carlos");
+        $c1 = (char) $i0;
+        virtualinvoke $r1.<java.io.PrintStream: void println(char)>($c1);
+        $r1 = <java.lang.System: java.io.PrintStream out>;
+        $i0 = virtualinvoke tt.<org.apache.fop.hyphenation.TernaryTree: int find(java.lang.String)>("alto");
+        $c1 = (char) $i0;
+        virtualinvoke $r1.<java.io.PrintStream: void println(char)>($c1);
+        virtualinvoke tt.<org.apache.fop.hyphenation.TernaryTree: void printStats()>();
+        return;
+    }
+}

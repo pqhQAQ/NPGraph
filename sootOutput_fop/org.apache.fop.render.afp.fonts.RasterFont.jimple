@@ -1,0 +1,361 @@
+public class org.apache.fop.render.afp.fonts.RasterFont extends org.apache.fop.render.afp.fonts.AFPFont
+{
+    protected static final org.apache.commons.logging.Log log;
+    private java.util.Map charSets;
+    private org.apache.fop.render.afp.fonts.CharacterSet charSet;
+
+    public void <init>(java.lang.String)
+    {
+        org.apache.fop.render.afp.fonts.RasterFont this;
+        java.lang.String name;
+        java.util.HashMap $r0;
+
+        this := @this: org.apache.fop.render.afp.fonts.RasterFont;
+        name := @parameter0: java.lang.String;
+        specialinvoke this.<org.apache.fop.render.afp.fonts.AFPFont: void <init>(java.lang.String)>(name);
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.render.afp.fonts.RasterFont: java.util.Map charSets> = $r0;
+        this.<org.apache.fop.render.afp.fonts.RasterFont: org.apache.fop.render.afp.fonts.CharacterSet charSet> = null;
+        return;
+    }
+
+    public void addCharacterSet(int, org.apache.fop.render.afp.fonts.CharacterSet)
+    {
+        org.apache.fop.render.afp.fonts.RasterFont this;
+        int size;
+        org.apache.fop.render.afp.fonts.CharacterSet characterSet;
+        java.util.Map $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.render.afp.fonts.RasterFont;
+        size := @parameter0: int;
+        characterSet := @parameter1: org.apache.fop.render.afp.fonts.CharacterSet;
+        $r0 = this.<org.apache.fop.render.afp.fonts.RasterFont: java.util.Map charSets>;
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>(size);
+        interfaceinvoke $r0.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r1, characterSet);
+        this.<org.apache.fop.render.afp.fonts.RasterFont: org.apache.fop.render.afp.fonts.CharacterSet charSet> = characterSet;
+        return;
+    }
+
+    public org.apache.fop.render.afp.fonts.CharacterSet getCharacterSet(int)
+    {
+        org.apache.fop.render.afp.fonts.RasterFont this;
+        int size, distance, mpt, $i0, $i1;
+        java.lang.String pointsize, key, msg, $r3;
+        org.apache.fop.render.afp.fonts.CharacterSet csm;
+        java.util.Iterator it;
+        java.util.Map$Entry me;
+        java.util.Map $r0;
+        java.lang.Object $r1;
+        java.lang.StringBuffer $r2, $r5;
+        java.util.Set $r4;
+        boolean $z0;
+        org.apache.commons.logging.Log $r6;
+        org.apache.fop.render.afp.exceptions.FontRuntimeException $r7;
+
+        this := @this: org.apache.fop.render.afp.fonts.RasterFont;
+        size := @parameter0: int;
+        $i0 = size / 1000;
+        pointsize = staticinvoke <java.lang.String: java.lang.String valueOf(int)>($i0);
+        $r0 = this.<org.apache.fop.render.afp.fonts.RasterFont: java.util.Map charSets>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>(pointsize);
+        csm = (org.apache.fop.render.afp.fonts.CharacterSet) $r1;
+        if csm != null goto label0;
+
+        $r0 = this.<org.apache.fop.render.afp.fonts.RasterFont: java.util.Map charSets>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(size);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("mpt");
+        $r3 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>($r3);
+        csm = (org.apache.fop.render.afp.fonts.CharacterSet) $r1;
+
+     label0:
+        if csm != null goto label4;
+
+        distance = 2147483647;
+        $r0 = this.<org.apache.fop.render.afp.fonts.RasterFont: java.util.Map charSets>;
+        $r4 = interfaceinvoke $r0.<java.util.Map: java.util.Set entrySet()>();
+        it = interfaceinvoke $r4.<java.util.Set: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke it.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label3;
+
+        $r1 = interfaceinvoke it.<java.util.Iterator: java.lang.Object next()>();
+        me = (java.util.Map$Entry) $r1;
+        $r1 = interfaceinvoke me.<java.util.Map$Entry: java.lang.Object getKey()>();
+        key = (java.lang.String) $r1;
+        $z0 = virtualinvoke key.<java.lang.String: boolean endsWith(java.lang.String)>("mpt");
+        if $z0 != 0 goto label2;
+
+        $i0 = staticinvoke <java.lang.Integer: int parseInt(java.lang.String)>(key);
+        mpt = $i0 * 1000;
+        $i0 = size - mpt;
+        $i0 = staticinvoke <java.lang.Math: int abs(int)>($i0);
+        if $i0 >= distance goto label2;
+
+        $i0 = size - mpt;
+        distance = staticinvoke <java.lang.Math: int abs(int)>($i0);
+        $r1 = interfaceinvoke me.<java.util.Map$Entry: java.lang.Object getKey()>();
+        pointsize = (java.lang.String) $r1;
+        $r1 = interfaceinvoke me.<java.util.Map$Entry: java.lang.Object getValue()>();
+        csm = (org.apache.fop.render.afp.fonts.CharacterSet) $r1;
+
+     label2:
+        goto label1;
+
+     label3:
+        if csm == null goto label4;
+
+        $r0 = this.<org.apache.fop.render.afp.fonts.RasterFont: java.util.Map charSets>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(size);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("mpt");
+        $r3 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r3, csm);
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("No ");
+        $i1 = size / 1000;
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("pt font ");
+        $r3 = virtualinvoke this.<org.apache.fop.render.afp.fonts.RasterFont: java.lang.String getFontName()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" found, substituted with ");
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(pointsize);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("pt font");
+        msg = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r6 = <org.apache.fop.render.afp.fonts.RasterFont: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r6.<org.apache.commons.logging.Log: void warn(java.lang.Object)>(msg);
+
+     label4:
+        if csm != null goto label5;
+
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("No font found for font ");
+        $r3 = virtualinvoke this.<org.apache.fop.render.afp.fonts.RasterFont: java.lang.String getFontName()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" with point size ");
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(pointsize);
+        msg = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r6 = <org.apache.fop.render.afp.fonts.RasterFont: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r6.<org.apache.commons.logging.Log: void error(java.lang.Object)>(msg);
+        $r7 = new org.apache.fop.render.afp.exceptions.FontRuntimeException;
+        specialinvoke $r7.<org.apache.fop.render.afp.exceptions.FontRuntimeException: void <init>(java.lang.String)>(msg);
+        throw $r7;
+
+     label5:
+        return csm;
+    }
+
+    public int getFirstChar()
+    {
+        org.apache.fop.render.afp.fonts.RasterFont this;
+        java.util.Iterator it;
+        org.apache.fop.render.afp.fonts.CharacterSet csm;
+        java.lang.String msg, $r4;
+        java.util.Map $r0;
+        java.util.Collection $r1;
+        boolean $z0;
+        java.lang.Object $r2;
+        int $i0;
+        java.lang.StringBuffer $r3;
+        org.apache.commons.logging.Log $r5;
+        org.apache.fop.render.afp.exceptions.FontRuntimeException $r6;
+
+        this := @this: org.apache.fop.render.afp.fonts.RasterFont;
+        $r0 = this.<org.apache.fop.render.afp.fonts.RasterFont: java.util.Map charSets>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.util.Collection values()>();
+        it = interfaceinvoke $r1.<java.util.Collection: java.util.Iterator iterator()>();
+        $z0 = interfaceinvoke it.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label0;
+
+        $r2 = interfaceinvoke it.<java.util.Iterator: java.lang.Object next()>();
+        csm = (org.apache.fop.render.afp.fonts.CharacterSet) $r2;
+        $i0 = virtualinvoke csm.<org.apache.fop.render.afp.fonts.CharacterSet: int getFirstChar()>();
+        return $i0;
+
+     label0:
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("getFirstChar() - No character set found for font:");
+        $r4 = virtualinvoke this.<org.apache.fop.render.afp.fonts.RasterFont: java.lang.String getFontName()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        msg = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r5 = <org.apache.fop.render.afp.fonts.RasterFont: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void error(java.lang.Object)>(msg);
+        $r6 = new org.apache.fop.render.afp.exceptions.FontRuntimeException;
+        specialinvoke $r6.<org.apache.fop.render.afp.exceptions.FontRuntimeException: void <init>(java.lang.String)>(msg);
+        throw $r6;
+    }
+
+    public int getLastChar()
+    {
+        org.apache.fop.render.afp.fonts.RasterFont this;
+        java.util.Iterator it;
+        org.apache.fop.render.afp.fonts.CharacterSet csm;
+        java.lang.String msg, $r4;
+        java.util.Map $r0;
+        java.util.Collection $r1;
+        boolean $z0;
+        java.lang.Object $r2;
+        int $i0;
+        java.lang.StringBuffer $r3;
+        org.apache.commons.logging.Log $r5;
+        org.apache.fop.render.afp.exceptions.FontRuntimeException $r6;
+
+        this := @this: org.apache.fop.render.afp.fonts.RasterFont;
+        $r0 = this.<org.apache.fop.render.afp.fonts.RasterFont: java.util.Map charSets>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.util.Collection values()>();
+        it = interfaceinvoke $r1.<java.util.Collection: java.util.Iterator iterator()>();
+        $z0 = interfaceinvoke it.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label0;
+
+        $r2 = interfaceinvoke it.<java.util.Iterator: java.lang.Object next()>();
+        csm = (org.apache.fop.render.afp.fonts.CharacterSet) $r2;
+        $i0 = virtualinvoke csm.<org.apache.fop.render.afp.fonts.CharacterSet: int getLastChar()>();
+        return $i0;
+
+     label0:
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("getLastChar() - No character set found for font:");
+        $r4 = virtualinvoke this.<org.apache.fop.render.afp.fonts.RasterFont: java.lang.String getFontName()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        msg = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r5 = <org.apache.fop.render.afp.fonts.RasterFont: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void error(java.lang.Object)>(msg);
+        $r6 = new org.apache.fop.render.afp.exceptions.FontRuntimeException;
+        specialinvoke $r6.<org.apache.fop.render.afp.exceptions.FontRuntimeException: void <init>(java.lang.String)>(msg);
+        throw $r6;
+    }
+
+    public int getAscender(int)
+    {
+        org.apache.fop.render.afp.fonts.RasterFont this;
+        int size, $i0;
+        org.apache.fop.render.afp.fonts.CharacterSet $r0;
+
+        this := @this: org.apache.fop.render.afp.fonts.RasterFont;
+        size := @parameter0: int;
+        $r0 = virtualinvoke this.<org.apache.fop.render.afp.fonts.RasterFont: org.apache.fop.render.afp.fonts.CharacterSet getCharacterSet(int)>(size);
+        $i0 = virtualinvoke $r0.<org.apache.fop.render.afp.fonts.CharacterSet: int getAscender()>();
+        return $i0;
+    }
+
+    public int getCapHeight(int)
+    {
+        org.apache.fop.render.afp.fonts.RasterFont this;
+        int size, $i0;
+        org.apache.fop.render.afp.fonts.CharacterSet $r0;
+
+        this := @this: org.apache.fop.render.afp.fonts.RasterFont;
+        size := @parameter0: int;
+        $r0 = virtualinvoke this.<org.apache.fop.render.afp.fonts.RasterFont: org.apache.fop.render.afp.fonts.CharacterSet getCharacterSet(int)>(size);
+        $i0 = virtualinvoke $r0.<org.apache.fop.render.afp.fonts.CharacterSet: int getCapHeight()>();
+        return $i0;
+    }
+
+    public int getDescender(int)
+    {
+        org.apache.fop.render.afp.fonts.RasterFont this;
+        int size, $i0;
+        org.apache.fop.render.afp.fonts.CharacterSet $r0;
+
+        this := @this: org.apache.fop.render.afp.fonts.RasterFont;
+        size := @parameter0: int;
+        $r0 = virtualinvoke this.<org.apache.fop.render.afp.fonts.RasterFont: org.apache.fop.render.afp.fonts.CharacterSet getCharacterSet(int)>(size);
+        $i0 = virtualinvoke $r0.<org.apache.fop.render.afp.fonts.CharacterSet: int getDescender()>();
+        return $i0;
+    }
+
+    public int getXHeight(int)
+    {
+        org.apache.fop.render.afp.fonts.RasterFont this;
+        int size, $i0;
+        org.apache.fop.render.afp.fonts.CharacterSet $r0;
+
+        this := @this: org.apache.fop.render.afp.fonts.RasterFont;
+        size := @parameter0: int;
+        $r0 = virtualinvoke this.<org.apache.fop.render.afp.fonts.RasterFont: org.apache.fop.render.afp.fonts.CharacterSet getCharacterSet(int)>(size);
+        $i0 = virtualinvoke $r0.<org.apache.fop.render.afp.fonts.CharacterSet: int getXHeight()>();
+        return $i0;
+    }
+
+    public int getWidth(int, int)
+    {
+        org.apache.fop.render.afp.fonts.RasterFont this;
+        int character, size, $i0;
+        org.apache.fop.render.afp.fonts.CharacterSet $r0;
+
+        this := @this: org.apache.fop.render.afp.fonts.RasterFont;
+        character := @parameter0: int;
+        size := @parameter1: int;
+        $r0 = virtualinvoke this.<org.apache.fop.render.afp.fonts.RasterFont: org.apache.fop.render.afp.fonts.CharacterSet getCharacterSet(int)>(size);
+        $i0 = virtualinvoke $r0.<org.apache.fop.render.afp.fonts.CharacterSet: int width(int)>(character);
+        return $i0;
+    }
+
+    public int[] getWidths(int)
+    {
+        org.apache.fop.render.afp.fonts.RasterFont this;
+        int size;
+        org.apache.fop.render.afp.fonts.CharacterSet $r0;
+        int[] $r1;
+
+        this := @this: org.apache.fop.render.afp.fonts.RasterFont;
+        size := @parameter0: int;
+        $r0 = virtualinvoke this.<org.apache.fop.render.afp.fonts.RasterFont: org.apache.fop.render.afp.fonts.CharacterSet getCharacterSet(int)>(size);
+        $r1 = virtualinvoke $r0.<org.apache.fop.render.afp.fonts.CharacterSet: int[] getWidths()>();
+        return $r1;
+    }
+
+    public int[] getWidths()
+    {
+        org.apache.fop.render.afp.fonts.RasterFont this;
+        int[] $r0;
+
+        this := @this: org.apache.fop.render.afp.fonts.RasterFont;
+        $r0 = virtualinvoke this.<org.apache.fop.render.afp.fonts.RasterFont: int[] getWidths(int)>(1000);
+        return $r0;
+    }
+
+    public char mapChar(char)
+    {
+        org.apache.fop.render.afp.fonts.RasterFont this;
+        char c, $c0;
+        org.apache.fop.render.afp.fonts.CharacterSet $r0;
+
+        this := @this: org.apache.fop.render.afp.fonts.RasterFont;
+        c := @parameter0: char;
+        $r0 = this.<org.apache.fop.render.afp.fonts.RasterFont: org.apache.fop.render.afp.fonts.CharacterSet charSet>;
+        $c0 = virtualinvoke $r0.<org.apache.fop.render.afp.fonts.CharacterSet: char mapChar(char)>(c);
+        return $c0;
+    }
+
+    public java.lang.String getEncoding()
+    {
+        org.apache.fop.render.afp.fonts.RasterFont this;
+        org.apache.fop.render.afp.fonts.CharacterSet $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.render.afp.fonts.RasterFont;
+        $r0 = this.<org.apache.fop.render.afp.fonts.RasterFont: org.apache.fop.render.afp.fonts.CharacterSet charSet>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.render.afp.fonts.CharacterSet: java.lang.String getEncoding()>();
+        return $r1;
+    }
+
+    static void <clinit>()
+    {
+        org.apache.commons.logging.Log $r0;
+
+        $r0 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.String)>("org.apache.fop.render.afp.fonts");
+        <org.apache.fop.render.afp.fonts.RasterFont: org.apache.commons.logging.Log log> = $r0;
+        return;
+    }
+}

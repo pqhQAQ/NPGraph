@@ -1,0 +1,80 @@
+public class org.apache.fop.layoutmgr.inline.PageNumberCitationLayoutManager extends org.apache.fop.layoutmgr.inline.AbstractPageNumberCitationLayoutManager
+{
+
+    public void <init>(org.apache.fop.fo.flow.PageNumberCitation)
+    {
+        org.apache.fop.layoutmgr.inline.PageNumberCitationLayoutManager this;
+        org.apache.fop.fo.flow.PageNumberCitation node;
+
+        this := @this: org.apache.fop.layoutmgr.inline.PageNumberCitationLayoutManager;
+        node := @parameter0: org.apache.fop.fo.flow.PageNumberCitation;
+        specialinvoke this.<org.apache.fop.layoutmgr.inline.AbstractPageNumberCitationLayoutManager: void <init>(org.apache.fop.fo.flow.AbstractPageNumberCitation)>(node);
+        return;
+    }
+
+    public org.apache.fop.area.inline.InlineArea get(org.apache.fop.layoutmgr.LayoutContext)
+    {
+        org.apache.fop.layoutmgr.inline.PageNumberCitationLayoutManager this;
+        org.apache.fop.layoutmgr.LayoutContext context;
+        org.apache.fop.layoutmgr.LayoutManager $r0;
+        org.apache.fop.area.inline.InlineArea $r1, $r2;
+
+        this := @this: org.apache.fop.layoutmgr.inline.PageNumberCitationLayoutManager;
+        context := @parameter0: org.apache.fop.layoutmgr.LayoutContext;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.PageNumberCitationLayoutManager: org.apache.fop.layoutmgr.LayoutManager parentLM>;
+        $r1 = specialinvoke this.<org.apache.fop.layoutmgr.inline.PageNumberCitationLayoutManager: org.apache.fop.area.inline.InlineArea getPageNumberCitationInlineArea(org.apache.fop.layoutmgr.LayoutManager)>($r0);
+        this.<org.apache.fop.layoutmgr.inline.PageNumberCitationLayoutManager: org.apache.fop.area.inline.InlineArea curArea> = $r1;
+        $r2 = this.<org.apache.fop.layoutmgr.inline.PageNumberCitationLayoutManager: org.apache.fop.area.inline.InlineArea curArea>;
+        return $r2;
+    }
+
+    private org.apache.fop.area.inline.InlineArea getPageNumberCitationInlineArea(org.apache.fop.layoutmgr.LayoutManager)
+    {
+        org.apache.fop.layoutmgr.inline.PageNumberCitationLayoutManager this;
+        org.apache.fop.layoutmgr.LayoutManager parentLM;
+        org.apache.fop.area.PageViewport page;
+        null_type text;
+        java.lang.String str, $r2, $r6;
+        int width;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager $r0;
+        org.apache.fop.fo.flow.AbstractPageNumberCitation $r1, $r5;
+        org.apache.fop.area.inline.TextArea $r3, text;
+        org.apache.fop.area.inline.UnresolvedPageNumber $r4;
+        org.apache.fop.fonts.Font $r7;
+
+        this := @this: org.apache.fop.layoutmgr.inline.PageNumberCitationLayoutManager;
+        parentLM := @parameter0: org.apache.fop.layoutmgr.LayoutManager;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.PageNumberCitationLayoutManager: org.apache.fop.layoutmgr.PageSequenceLayoutManager getPSLM()>();
+        $r1 = this.<org.apache.fop.layoutmgr.inline.PageNumberCitationLayoutManager: org.apache.fop.fo.flow.AbstractPageNumberCitation fobj>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.flow.AbstractPageNumberCitation: java.lang.String getRefId()>();
+        page = virtualinvoke $r0.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.area.PageViewport getFirstPVWithID(java.lang.String)>($r2);
+        text = null;
+        if page == null goto label0;
+
+        str = virtualinvoke page.<org.apache.fop.area.PageViewport: java.lang.String getPageNumberString()>();
+        $r3 = new org.apache.fop.area.inline.TextArea;
+        specialinvoke $r3.<org.apache.fop.area.inline.TextArea: void <init>()>();
+        text = $r3;
+        width = virtualinvoke this.<org.apache.fop.layoutmgr.inline.PageNumberCitationLayoutManager: int getStringWidth(java.lang.String)>(str);
+        virtualinvoke text.<org.apache.fop.area.inline.TextArea: void addWord(java.lang.String,int)>(str, 0);
+        virtualinvoke text.<org.apache.fop.area.inline.TextArea: void setIPD(int)>(width);
+        this.<org.apache.fop.layoutmgr.inline.PageNumberCitationLayoutManager: boolean resolved> = 1;
+        goto label1;
+
+     label0:
+        this.<org.apache.fop.layoutmgr.inline.PageNumberCitationLayoutManager: boolean resolved> = 0;
+        $r4 = new org.apache.fop.area.inline.UnresolvedPageNumber;
+        $r5 = this.<org.apache.fop.layoutmgr.inline.PageNumberCitationLayoutManager: org.apache.fop.fo.flow.AbstractPageNumberCitation fobj>;
+        $r6 = virtualinvoke $r5.<org.apache.fop.fo.flow.AbstractPageNumberCitation: java.lang.String getRefId()>();
+        $r7 = this.<org.apache.fop.layoutmgr.inline.PageNumberCitationLayoutManager: org.apache.fop.fonts.Font font>;
+        specialinvoke $r4.<org.apache.fop.area.inline.UnresolvedPageNumber: void <init>(java.lang.String,org.apache.fop.fonts.Font)>($r6, $r7);
+        text = $r4;
+        str = "MMM";
+        width = virtualinvoke this.<org.apache.fop.layoutmgr.inline.PageNumberCitationLayoutManager: int getStringWidth(java.lang.String)>(str);
+        virtualinvoke text.<org.apache.fop.area.inline.TextArea: void setIPD(int)>(width);
+
+     label1:
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.PageNumberCitationLayoutManager: void updateTextAreaTraits(org.apache.fop.area.inline.TextArea)>(text);
+        return text;
+    }
+}

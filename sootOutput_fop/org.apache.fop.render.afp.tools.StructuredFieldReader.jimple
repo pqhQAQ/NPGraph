@@ -1,0 +1,132 @@
+public class org.apache.fop.render.afp.tools.StructuredFieldReader extends java.lang.Object
+{
+    private java.io.InputStream inputStream;
+
+    public void <init>(java.io.InputStream)
+    {
+        org.apache.fop.render.afp.tools.StructuredFieldReader this;
+        java.io.InputStream inputStream;
+
+        this := @this: org.apache.fop.render.afp.tools.StructuredFieldReader;
+        inputStream := @parameter0: java.io.InputStream;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.render.afp.tools.StructuredFieldReader: java.io.InputStream inputStream> = null;
+        this.<org.apache.fop.render.afp.tools.StructuredFieldReader: java.io.InputStream inputStream> = inputStream;
+        return;
+    }
+
+    public byte[] getNext(byte[]) throws java.io.IOException
+    {
+        org.apache.fop.render.afp.tools.StructuredFieldReader this;
+        byte[] identifier, bufferData, length, retval, $r1;
+        int bufferPointer, x, c, index, i, p, a, b, reclength, $i0, $i1;
+        boolean found;
+        java.io.InputStream $r0;
+        byte $b2, $b3, $b4;
+        short $s5, $s6;
+
+        this := @this: org.apache.fop.render.afp.tools.StructuredFieldReader;
+        identifier := @parameter0: byte[];
+        bufferPointer = 0;
+        $i0 = lengthof identifier;
+        $i0 = $i0 + 2;
+        bufferData = newarray (byte)[$i0];
+        x = 0;
+
+     label0:
+        $i1 = lengthof identifier;
+        if x >= $i1 goto label1;
+
+        bufferData[x] = 0;
+        x = x + 1;
+        goto label0;
+
+     label1:
+        $r0 = this.<org.apache.fop.render.afp.tools.StructuredFieldReader: java.io.InputStream inputStream>;
+        $i0 = virtualinvoke $r0.<java.io.InputStream: int read()>();
+        c = $i0;
+        if $i0 <= -1 goto label10;
+
+        $b2 = (byte) c;
+        bufferData[bufferPointer] = $b2;
+        index = 0;
+        found = 1;
+        $i0 = lengthof identifier;
+        i = $i0 - 1;
+
+     label2:
+        if i <= -1 goto label5;
+
+        p = bufferPointer - index;
+        if p >= 0 goto label3;
+
+        $i0 = lengthof bufferData;
+        p = $i0 + p;
+
+     label3:
+        index = index + 1;
+        $b3 = identifier[i];
+        $b4 = bufferData[p];
+        if $b3 == $b4 goto label4;
+
+        found = 0;
+        goto label5;
+
+     label4:
+        i = i + -1;
+        goto label2;
+
+     label5:
+        if found == 0 goto label8;
+
+        length = newarray (byte)[2];
+        $i1 = lengthof identifier;
+        a = bufferPointer - $i1;
+        if a >= 0 goto label6;
+
+        $i0 = lengthof bufferData;
+        a = $i0 + a;
+
+     label6:
+        $i1 = lengthof identifier;
+        $i0 = bufferPointer - $i1;
+        b = $i0 - 1;
+        if b >= 0 goto label7;
+
+        $i0 = lengthof bufferData;
+        b = $i0 + b;
+
+     label7:
+        $b2 = bufferData[b];
+        length[0] = $b2;
+        $b2 = bufferData[a];
+        length[1] = $b2;
+        $b3 = length[0];
+        $s5 = $b3 & 255;
+        $i0 = $s5 << 8;
+        $b4 = length[1];
+        $s6 = $b4 & 255;
+        $i0 = $i0 + $s6;
+        $i1 = lengthof identifier;
+        $i0 = $i0 - $i1;
+        reclength = $i0 - 2;
+        retval = newarray (byte)[reclength];
+        $r0 = this.<org.apache.fop.render.afp.tools.StructuredFieldReader: java.io.InputStream inputStream>;
+        virtualinvoke $r0.<java.io.InputStream: int read(byte[],int,int)>(retval, 0, reclength);
+        return retval;
+
+     label8:
+        bufferPointer = bufferPointer + 1;
+        $i1 = lengthof bufferData;
+        if bufferPointer < $i1 goto label9;
+
+        bufferPointer = 0;
+
+     label9:
+        goto label1;
+
+     label10:
+        $r1 = newarray (byte)[0];
+        return $r1;
+    }
+}

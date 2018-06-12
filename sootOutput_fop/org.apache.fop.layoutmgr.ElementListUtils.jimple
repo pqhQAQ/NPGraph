@@ -1,0 +1,342 @@
+public class org.apache.fop.layoutmgr.ElementListUtils extends java.lang.Object
+{
+
+    public void <init>()
+    {
+        org.apache.fop.layoutmgr.ElementListUtils this;
+
+        this := @this: org.apache.fop.layoutmgr.ElementListUtils;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public static boolean removeLegalBreaks(java.util.LinkedList, org.apache.fop.traits.MinOptMax)
+    {
+        java.util.LinkedList elements;
+        org.apache.fop.traits.MinOptMax constraint;
+        int $i0;
+        boolean $z0;
+
+        elements := @parameter0: java.util.LinkedList;
+        constraint := @parameter1: org.apache.fop.traits.MinOptMax;
+        $i0 = constraint.<org.apache.fop.traits.MinOptMax: int opt>;
+        $z0 = staticinvoke <org.apache.fop.layoutmgr.ElementListUtils: boolean removeLegalBreaks(java.util.LinkedList,int)>(elements, $i0);
+        return $z0;
+    }
+
+    public static boolean removeLegalBreaks(java.util.LinkedList, int)
+    {
+        java.util.LinkedList elements;
+        int constraint, len, $i0, $i1, $i2;
+        java.util.ListIterator iter;
+        org.apache.fop.layoutmgr.ListElement el;
+        org.apache.fop.layoutmgr.KnuthPenalty penalty, $r1;
+        org.apache.fop.layoutmgr.KnuthGlue glue;
+        org.apache.fop.layoutmgr.BreakElement breakEl;
+        org.apache.fop.layoutmgr.KnuthElement kel;
+        boolean $z0, $z1, $z2;
+        java.lang.Object $r0;
+        org.apache.fop.layoutmgr.Position $r2;
+
+        elements := @parameter0: java.util.LinkedList;
+        constraint := @parameter1: int;
+        len = 0;
+        iter = virtualinvoke elements.<java.util.LinkedList: java.util.ListIterator listIterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.ListIterator: boolean hasNext()>();
+        if $z0 == 0 goto label9;
+
+        $r0 = interfaceinvoke iter.<java.util.ListIterator: java.lang.Object next()>();
+        el = (org.apache.fop.layoutmgr.ListElement) $r0;
+        $z0 = virtualinvoke el.<org.apache.fop.layoutmgr.ListElement: boolean isPenalty()>();
+        if $z0 == 0 goto label2;
+
+        penalty = (org.apache.fop.layoutmgr.KnuthPenalty) el;
+        $i0 = virtualinvoke penalty.<org.apache.fop.layoutmgr.KnuthPenalty: int getP()>();
+        if $i0 >= 1000 goto label1;
+
+        $r1 = new org.apache.fop.layoutmgr.KnuthPenalty;
+        $i1 = virtualinvoke penalty.<org.apache.fop.layoutmgr.KnuthPenalty: int getW()>();
+        $z1 = virtualinvoke penalty.<org.apache.fop.layoutmgr.KnuthPenalty: boolean isFlagged()>();
+        $r2 = virtualinvoke penalty.<org.apache.fop.layoutmgr.KnuthPenalty: org.apache.fop.layoutmgr.Position getPosition()>();
+        $z2 = virtualinvoke penalty.<org.apache.fop.layoutmgr.KnuthPenalty: boolean isAuxiliary()>();
+        specialinvoke $r1.<org.apache.fop.layoutmgr.KnuthPenalty: void <init>(int,int,boolean,org.apache.fop.layoutmgr.Position,boolean)>($i1, 1000, $z1, $r2, $z2);
+        interfaceinvoke iter.<java.util.ListIterator: void set(java.lang.Object)>($r1);
+
+     label1:
+        goto label7;
+
+     label2:
+        $z0 = virtualinvoke el.<org.apache.fop.layoutmgr.ListElement: boolean isGlue()>();
+        if $z0 == 0 goto label4;
+
+        glue = (org.apache.fop.layoutmgr.KnuthGlue) el;
+        $i2 = virtualinvoke glue.<org.apache.fop.layoutmgr.KnuthGlue: int getW()>();
+        len = len + $i2;
+        interfaceinvoke iter.<java.util.ListIterator: java.lang.Object previous()>();
+        $r0 = interfaceinvoke iter.<java.util.ListIterator: java.lang.Object previous()>();
+        el = (org.apache.fop.layoutmgr.ListElement) $r0;
+        interfaceinvoke iter.<java.util.ListIterator: java.lang.Object next()>();
+        $z0 = virtualinvoke el.<org.apache.fop.layoutmgr.ListElement: boolean isBox()>();
+        if $z0 == 0 goto label3;
+
+        $r1 = new org.apache.fop.layoutmgr.KnuthPenalty;
+        specialinvoke $r1.<org.apache.fop.layoutmgr.KnuthPenalty: void <init>(int,int,boolean,org.apache.fop.layoutmgr.Position,boolean)>(0, 1000, 0, null, 0);
+        interfaceinvoke iter.<java.util.ListIterator: void add(java.lang.Object)>($r1);
+
+     label3:
+        interfaceinvoke iter.<java.util.ListIterator: java.lang.Object next()>();
+        goto label7;
+
+     label4:
+        $z0 = el instanceof org.apache.fop.layoutmgr.BreakElement;
+        if $z0 == 0 goto label6;
+
+        breakEl = (org.apache.fop.layoutmgr.BreakElement) el;
+        $i0 = virtualinvoke breakEl.<org.apache.fop.layoutmgr.BreakElement: int getPenaltyValue()>();
+        if $i0 >= 1000 goto label5;
+
+        virtualinvoke breakEl.<org.apache.fop.layoutmgr.BreakElement: void setPenaltyValue(int)>(1000);
+
+     label5:
+        goto label7;
+
+     label6:
+        kel = (org.apache.fop.layoutmgr.KnuthElement) el;
+        $i2 = virtualinvoke kel.<org.apache.fop.layoutmgr.KnuthElement: int getW()>();
+        len = len + $i2;
+
+     label7:
+        if len < constraint goto label8;
+
+        return 0;
+
+     label8:
+        goto label0;
+
+     label9:
+        return 1;
+    }
+
+    public static boolean removeLegalBreaksFromEnd(java.util.LinkedList, int)
+    {
+        java.util.LinkedList elements;
+        int constraint, len, $i0, $i1, $i2;
+        java.util.ListIterator i;
+        org.apache.fop.layoutmgr.ListElement el;
+        org.apache.fop.layoutmgr.KnuthPenalty penalty, $r1;
+        org.apache.fop.layoutmgr.KnuthGlue glue;
+        org.apache.fop.layoutmgr.BreakElement breakEl;
+        org.apache.fop.layoutmgr.UnresolvedListElementWithLength uel;
+        org.apache.fop.layoutmgr.KnuthElement kel;
+        boolean $z0, $z1, $z2;
+        java.lang.Object $r0;
+        org.apache.fop.layoutmgr.Position $r2;
+        org.apache.fop.traits.MinOptMax $r3;
+
+        elements := @parameter0: java.util.LinkedList;
+        constraint := @parameter1: int;
+        len = 0;
+        $i0 = virtualinvoke elements.<java.util.LinkedList: int size()>();
+        i = virtualinvoke elements.<java.util.LinkedList: java.util.ListIterator listIterator(int)>($i0);
+
+     label0:
+        $z0 = interfaceinvoke i.<java.util.ListIterator: boolean hasPrevious()>();
+        if $z0 == 0 goto label10;
+
+        $r0 = interfaceinvoke i.<java.util.ListIterator: java.lang.Object previous()>();
+        el = (org.apache.fop.layoutmgr.ListElement) $r0;
+        $z0 = virtualinvoke el.<org.apache.fop.layoutmgr.ListElement: boolean isPenalty()>();
+        if $z0 == 0 goto label2;
+
+        penalty = (org.apache.fop.layoutmgr.KnuthPenalty) el;
+        $i1 = virtualinvoke penalty.<org.apache.fop.layoutmgr.KnuthPenalty: int getP()>();
+        if $i1 >= 1000 goto label1;
+
+        $r1 = new org.apache.fop.layoutmgr.KnuthPenalty;
+        $i2 = virtualinvoke penalty.<org.apache.fop.layoutmgr.KnuthPenalty: int getW()>();
+        $z1 = virtualinvoke penalty.<org.apache.fop.layoutmgr.KnuthPenalty: boolean isFlagged()>();
+        $r2 = virtualinvoke penalty.<org.apache.fop.layoutmgr.KnuthPenalty: org.apache.fop.layoutmgr.Position getPosition()>();
+        $z2 = virtualinvoke penalty.<org.apache.fop.layoutmgr.KnuthPenalty: boolean isAuxiliary()>();
+        specialinvoke $r1.<org.apache.fop.layoutmgr.KnuthPenalty: void <init>(int,int,boolean,org.apache.fop.layoutmgr.Position,boolean)>($i2, 1000, $z1, $r2, $z2);
+        interfaceinvoke i.<java.util.ListIterator: void set(java.lang.Object)>($r1);
+
+     label1:
+        goto label8;
+
+     label2:
+        $z0 = virtualinvoke el.<org.apache.fop.layoutmgr.ListElement: boolean isGlue()>();
+        if $z0 == 0 goto label4;
+
+        glue = (org.apache.fop.layoutmgr.KnuthGlue) el;
+        $i0 = virtualinvoke glue.<org.apache.fop.layoutmgr.KnuthGlue: int getW()>();
+        len = len + $i0;
+        $r0 = interfaceinvoke i.<java.util.ListIterator: java.lang.Object previous()>();
+        el = (org.apache.fop.layoutmgr.ListElement) $r0;
+        interfaceinvoke i.<java.util.ListIterator: java.lang.Object next()>();
+        $z0 = virtualinvoke el.<org.apache.fop.layoutmgr.ListElement: boolean isBox()>();
+        if $z0 == 0 goto label3;
+
+        $r1 = new org.apache.fop.layoutmgr.KnuthPenalty;
+        specialinvoke $r1.<org.apache.fop.layoutmgr.KnuthPenalty: void <init>(int,int,boolean,org.apache.fop.layoutmgr.Position,boolean)>(0, 1000, 0, null, 0);
+        interfaceinvoke i.<java.util.ListIterator: void add(java.lang.Object)>($r1);
+
+     label3:
+        goto label8;
+
+     label4:
+        $z0 = virtualinvoke el.<org.apache.fop.layoutmgr.ListElement: boolean isUnresolvedElement()>();
+        if $z0 == 0 goto label7;
+
+        $z0 = el instanceof org.apache.fop.layoutmgr.BreakElement;
+        if $z0 == 0 goto label6;
+
+        breakEl = (org.apache.fop.layoutmgr.BreakElement) el;
+        $i1 = virtualinvoke breakEl.<org.apache.fop.layoutmgr.BreakElement: int getPenaltyValue()>();
+        if $i1 >= 1000 goto label5;
+
+        virtualinvoke breakEl.<org.apache.fop.layoutmgr.BreakElement: void setPenaltyValue(int)>(1000);
+
+     label5:
+        goto label8;
+
+     label6:
+        $z0 = el instanceof org.apache.fop.layoutmgr.UnresolvedListElementWithLength;
+        if $z0 == 0 goto label8;
+
+        uel = (org.apache.fop.layoutmgr.UnresolvedListElementWithLength) el;
+        $r3 = virtualinvoke uel.<org.apache.fop.layoutmgr.UnresolvedListElementWithLength: org.apache.fop.traits.MinOptMax getLength()>();
+        $i0 = $r3.<org.apache.fop.traits.MinOptMax: int opt>;
+        len = len + $i0;
+        goto label8;
+
+     label7:
+        kel = (org.apache.fop.layoutmgr.KnuthElement) el;
+        $i0 = virtualinvoke kel.<org.apache.fop.layoutmgr.KnuthElement: int getW()>();
+        len = len + $i0;
+
+     label8:
+        if len < constraint goto label9;
+
+        return 0;
+
+     label9:
+        goto label0;
+
+     label10:
+        return 1;
+    }
+
+    public static int calcContentLength(java.util.List, int, int)
+    {
+        java.util.List elems;
+        int start, end, count, len, $i0, $i1;
+        java.util.ListIterator iter;
+        org.apache.fop.layoutmgr.ListElement el;
+        boolean $z0;
+        java.lang.Object $r0;
+        org.apache.fop.layoutmgr.KnuthElement $r1;
+
+        elems := @parameter0: java.util.List;
+        start := @parameter1: int;
+        end := @parameter2: int;
+        iter = interfaceinvoke elems.<java.util.List: java.util.ListIterator listIterator(int)>(start);
+        $i0 = end - start;
+        count = $i0 + 1;
+        len = 0;
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.ListIterator: boolean hasNext()>();
+        if $z0 == 0 goto label4;
+
+        $r0 = interfaceinvoke iter.<java.util.ListIterator: java.lang.Object next()>();
+        el = (org.apache.fop.layoutmgr.ListElement) $r0;
+        $z0 = virtualinvoke el.<org.apache.fop.layoutmgr.ListElement: boolean isBox()>();
+        if $z0 == 0 goto label1;
+
+        $r1 = (org.apache.fop.layoutmgr.KnuthElement) el;
+        $i1 = virtualinvoke $r1.<org.apache.fop.layoutmgr.KnuthElement: int getW()>();
+        len = len + $i1;
+        goto label2;
+
+     label1:
+        $z0 = virtualinvoke el.<org.apache.fop.layoutmgr.ListElement: boolean isGlue()>();
+        if $z0 == 0 goto label2;
+
+        $r1 = (org.apache.fop.layoutmgr.KnuthElement) el;
+        $i1 = virtualinvoke $r1.<org.apache.fop.layoutmgr.KnuthElement: int getW()>();
+        len = len + $i1;
+
+     label2:
+        count = count + -1;
+        if count != 0 goto label3;
+
+        goto label4;
+
+     label3:
+        goto label0;
+
+     label4:
+        return len;
+    }
+
+    public static int calcContentLength(java.util.List)
+    {
+        java.util.List elems;
+        int $i0, $i1;
+
+        elems := @parameter0: java.util.List;
+        $i0 = interfaceinvoke elems.<java.util.List: int size()>();
+        $i0 = $i0 - 1;
+        $i1 = staticinvoke <org.apache.fop.layoutmgr.ElementListUtils: int calcContentLength(java.util.List,int,int)>(elems, 0, $i0);
+        return $i1;
+    }
+
+    public static boolean endsWithForcedBreak(java.util.LinkedList)
+    {
+        java.util.LinkedList elems;
+        org.apache.fop.layoutmgr.ListElement last;
+        java.lang.Object $r0;
+        boolean $z0;
+
+        elems := @parameter0: java.util.LinkedList;
+        $r0 = virtualinvoke elems.<java.util.LinkedList: java.lang.Object getLast()>();
+        last = (org.apache.fop.layoutmgr.ListElement) $r0;
+        $z0 = virtualinvoke last.<org.apache.fop.layoutmgr.ListElement: boolean isForcedBreak()>();
+        return $z0;
+    }
+
+    public static int determinePreviousBreak(java.util.List, int)
+    {
+        java.util.List elems;
+        int startIndex, prevBreak, $i0;
+        org.apache.fop.layoutmgr.KnuthElement el;
+        java.lang.Object $r0;
+        boolean $z0;
+
+        elems := @parameter0: java.util.List;
+        startIndex := @parameter1: int;
+        prevBreak = startIndex - 1;
+
+     label0:
+        if prevBreak < 0 goto label2;
+
+        $r0 = interfaceinvoke elems.<java.util.List: java.lang.Object get(int)>(prevBreak);
+        el = (org.apache.fop.layoutmgr.KnuthElement) $r0;
+        $z0 = virtualinvoke el.<org.apache.fop.layoutmgr.KnuthElement: boolean isPenalty()>();
+        if $z0 == 0 goto label1;
+
+        $i0 = virtualinvoke el.<org.apache.fop.layoutmgr.KnuthElement: int getP()>();
+        if $i0 >= 1000 goto label1;
+
+        goto label2;
+
+     label1:
+        prevBreak = prevBreak + -1;
+        goto label0;
+
+     label2:
+        return prevBreak;
+    }
+}

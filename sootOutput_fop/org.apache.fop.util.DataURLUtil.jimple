@@ -1,0 +1,56 @@
+public class org.apache.fop.util.DataURLUtil extends java.lang.Object
+{
+
+    public void <init>()
+    {
+        org.apache.fop.util.DataURLUtil this;
+
+        this := @this: org.apache.fop.util.DataURLUtil;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public static java.lang.String createDataURL(java.io.InputStream, java.lang.String) throws java.io.IOException
+    {
+        java.io.InputStream in;
+        java.lang.String mediatype, $r1;
+        java.io.StringWriter $r0, writer;
+
+        in := @parameter0: java.io.InputStream;
+        mediatype := @parameter1: java.lang.String;
+        $r0 = new java.io.StringWriter;
+        specialinvoke $r0.<java.io.StringWriter: void <init>()>();
+        writer = $r0;
+        staticinvoke <org.apache.fop.util.DataURLUtil: void writeDataURL(java.io.InputStream,java.lang.String,java.io.Writer)>(in, mediatype, writer);
+        $r1 = virtualinvoke writer.<java.io.StringWriter: java.lang.String toString()>();
+        return $r1;
+    }
+
+    public static void writeDataURL(java.io.InputStream, java.lang.String, java.io.Writer) throws java.io.IOException
+    {
+        java.io.InputStream in;
+        java.lang.String mediatype;
+        java.io.Writer writer;
+        org.apache.fop.util.WriterOutputStream $r0;
+        org.apache.xmlgraphics.util.io.Base64EncodeStream out, $r1;
+
+        in := @parameter0: java.io.InputStream;
+        mediatype := @parameter1: java.lang.String;
+        writer := @parameter2: java.io.Writer;
+        virtualinvoke writer.<java.io.Writer: void write(java.lang.String)>("data:");
+        if mediatype == null goto label0;
+
+        virtualinvoke writer.<java.io.Writer: void write(java.lang.String)>(mediatype);
+
+     label0:
+        virtualinvoke writer.<java.io.Writer: void write(java.lang.String)>(";base64,");
+        $r1 = new org.apache.xmlgraphics.util.io.Base64EncodeStream;
+        $r0 = new org.apache.fop.util.WriterOutputStream;
+        specialinvoke $r0.<org.apache.fop.util.WriterOutputStream: void <init>(java.io.Writer,java.lang.String)>(writer, "US-ASCII");
+        specialinvoke $r1.<org.apache.xmlgraphics.util.io.Base64EncodeStream: void <init>(java.io.OutputStream)>($r0);
+        out = $r1;
+        staticinvoke <org.apache.commons.io.IOUtils: int copy(java.io.InputStream,java.io.OutputStream)>(in, out);
+        virtualinvoke out.<org.apache.xmlgraphics.util.io.Base64EncodeStream: void flush()>();
+        return;
+    }
+}

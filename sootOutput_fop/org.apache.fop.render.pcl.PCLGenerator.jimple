@@ -1,0 +1,1866 @@
+public class org.apache.fop.render.pcl.PCLGenerator extends java.lang.Object
+{
+    public static final char ESC;
+    public static final int[] PCL_RESOLUTIONS;
+    public static final int DITHER_MATRIX_4X4;
+    public static final int DITHER_MATRIX_8X8;
+    private final java.text.DecimalFormatSymbols symbols;
+    private final java.text.DecimalFormat df2;
+    private final java.text.DecimalFormat df4;
+    private java.io.OutputStream out;
+    private boolean currentSourceTransparency;
+    private boolean currentPatternTransparency;
+    private int maxBitmapResolution;
+    private boolean usePCLShades;
+    private static final int[] BAYER_D2;
+    private static final int[] BAYER_D4;
+    private static final int[] BAYER_D8;
+    private static final byte[] THRESHOLD_TABLE;
+
+    public void <init>(java.io.OutputStream)
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        java.io.OutputStream out;
+        java.text.DecimalFormatSymbols $r0, $r3;
+        java.util.Locale $r1;
+        java.text.DecimalFormat $r2;
+        int[] $r4, $r5;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        out := @parameter0: java.io.OutputStream;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $r0 = new java.text.DecimalFormatSymbols;
+        $r1 = <java.util.Locale: java.util.Locale US>;
+        specialinvoke $r0.<java.text.DecimalFormatSymbols: void <init>(java.util.Locale)>($r1);
+        this.<org.apache.fop.render.pcl.PCLGenerator: java.text.DecimalFormatSymbols symbols> = $r0;
+        $r2 = new java.text.DecimalFormat;
+        $r3 = this.<org.apache.fop.render.pcl.PCLGenerator: java.text.DecimalFormatSymbols symbols>;
+        specialinvoke $r2.<java.text.DecimalFormat: void <init>(java.lang.String,java.text.DecimalFormatSymbols)>("0.##", $r3);
+        this.<org.apache.fop.render.pcl.PCLGenerator: java.text.DecimalFormat df2> = $r2;
+        $r2 = new java.text.DecimalFormat;
+        $r3 = this.<org.apache.fop.render.pcl.PCLGenerator: java.text.DecimalFormatSymbols symbols>;
+        specialinvoke $r2.<java.text.DecimalFormat: void <init>(java.lang.String,java.text.DecimalFormatSymbols)>("0.####", $r3);
+        this.<org.apache.fop.render.pcl.PCLGenerator: java.text.DecimalFormat df4> = $r2;
+        this.<org.apache.fop.render.pcl.PCLGenerator: boolean currentSourceTransparency> = 1;
+        this.<org.apache.fop.render.pcl.PCLGenerator: boolean currentPatternTransparency> = 1;
+        $r4 = <org.apache.fop.render.pcl.PCLGenerator: int[] PCL_RESOLUTIONS>;
+        $r5 = <org.apache.fop.render.pcl.PCLGenerator: int[] PCL_RESOLUTIONS>;
+        $i0 = lengthof $r5;
+        $i0 = $i0 - 1;
+        $i1 = $r4[$i0];
+        this.<org.apache.fop.render.pcl.PCLGenerator: int maxBitmapResolution> = $i1;
+        this.<org.apache.fop.render.pcl.PCLGenerator: boolean usePCLShades> = 0;
+        this.<org.apache.fop.render.pcl.PCLGenerator: java.io.OutputStream out> = out;
+        return;
+    }
+
+    public void <init>(java.io.OutputStream, int)
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        java.io.OutputStream out;
+        int maxResolution, i, $i0, $i1;
+        boolean found;
+        int[] $r0, $r1;
+        java.lang.IllegalArgumentException $r2;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        out := @parameter0: java.io.OutputStream;
+        maxResolution := @parameter1: int;
+        specialinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void <init>(java.io.OutputStream)>(out);
+        found = 0;
+        i = 0;
+
+     label0:
+        $r0 = <org.apache.fop.render.pcl.PCLGenerator: int[] PCL_RESOLUTIONS>;
+        $i0 = lengthof $r0;
+        if i >= $i0 goto label2;
+
+        $r1 = <org.apache.fop.render.pcl.PCLGenerator: int[] PCL_RESOLUTIONS>;
+        $i1 = $r1[i];
+        if $i1 != maxResolution goto label1;
+
+        found = 1;
+        goto label2;
+
+     label1:
+        i = i + 1;
+        goto label0;
+
+     label2:
+        if found != 0 goto label3;
+
+        $r2 = new java.lang.IllegalArgumentException;
+        specialinvoke $r2.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Illegal value for maximum resolution!");
+        throw $r2;
+
+     label3:
+        this.<org.apache.fop.render.pcl.PCLGenerator: int maxBitmapResolution> = maxResolution;
+        return;
+    }
+
+    public java.io.OutputStream getOutputStream()
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        java.io.OutputStream $r0;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        $r0 = this.<org.apache.fop.render.pcl.PCLGenerator: java.io.OutputStream out>;
+        return $r0;
+    }
+
+    public int getMaximumBitmapResolution()
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        int $i0;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        $i0 = this.<org.apache.fop.render.pcl.PCLGenerator: int maxBitmapResolution>;
+        return $i0;
+    }
+
+    public void writeCommand(java.lang.String) throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        java.lang.String cmd;
+        java.io.OutputStream $r0;
+        byte[] $r1;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        cmd := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.render.pcl.PCLGenerator: java.io.OutputStream out>;
+        virtualinvoke $r0.<java.io.OutputStream: void write(int)>(27);
+        $r0 = this.<org.apache.fop.render.pcl.PCLGenerator: java.io.OutputStream out>;
+        $r1 = virtualinvoke cmd.<java.lang.String: byte[] getBytes(java.lang.String)>("US-ASCII");
+        virtualinvoke $r0.<java.io.OutputStream: void write(byte[])>($r1);
+        return;
+    }
+
+    public void writeText(java.lang.String) throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        java.lang.String s;
+        java.io.OutputStream $r0;
+        byte[] $r1;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        s := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.render.pcl.PCLGenerator: java.io.OutputStream out>;
+        $r1 = virtualinvoke s.<java.lang.String: byte[] getBytes(java.lang.String)>("ISO-8859-1");
+        virtualinvoke $r0.<java.io.OutputStream: void write(byte[])>($r1);
+        return;
+    }
+
+    public final java.lang.String formatDouble2(double)
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        double value;
+        java.text.DecimalFormat $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        value := @parameter0: double;
+        $r0 = this.<org.apache.fop.render.pcl.PCLGenerator: java.text.DecimalFormat df2>;
+        $r1 = virtualinvoke $r0.<java.text.DecimalFormat: java.lang.String format(double)>(value);
+        return $r1;
+    }
+
+    public final java.lang.String formatDouble4(double)
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        double value;
+        java.text.DecimalFormat $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        value := @parameter0: double;
+        $r0 = this.<org.apache.fop.render.pcl.PCLGenerator: java.text.DecimalFormat df4>;
+        $r1 = virtualinvoke $r0.<java.text.DecimalFormat: java.lang.String format(double)>(value);
+        return $r1;
+    }
+
+    public void universalEndOfLanguage() throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("%-12345X");
+        return;
+    }
+
+    public void resetPrinter() throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("E");
+        return;
+    }
+
+    public void separateJobs() throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("&l1T");
+        return;
+    }
+
+    public void formFeed() throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        java.io.OutputStream $r0;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        $r0 = this.<org.apache.fop.render.pcl.PCLGenerator: java.io.OutputStream out>;
+        virtualinvoke $r0.<java.io.OutputStream: void write(int)>(12);
+        return;
+    }
+
+    public void setUnitOfMeasure(int) throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        int value;
+        java.lang.StringBuffer $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        value := @parameter0: int;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("&u");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(value);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("D");
+        $r1 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r1);
+        return;
+    }
+
+    public void setRasterGraphicsResolution(int) throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        int value;
+        java.lang.StringBuffer $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        value := @parameter0: int;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("*t");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(value);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("R");
+        $r1 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r1);
+        return;
+    }
+
+    public void selectPageSize(int) throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        int selector;
+        java.lang.StringBuffer $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        selector := @parameter0: int;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("&l");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(selector);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("A");
+        $r1 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r1);
+        return;
+    }
+
+    public void selectPaperSource(int) throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        int selector;
+        java.lang.StringBuffer $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        selector := @parameter0: int;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("&l");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(selector);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("H");
+        $r1 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r1);
+        return;
+    }
+
+    public void clearHorizontalMargins() throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("9");
+        return;
+    }
+
+    public void setTopMargin(int) throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        int numberOfLines;
+        java.lang.StringBuffer $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        numberOfLines := @parameter0: int;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("&l");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(numberOfLines);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("E");
+        $r1 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r1);
+        return;
+    }
+
+    public void setTextLength(int) throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        int numberOfLines;
+        java.lang.StringBuffer $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        numberOfLines := @parameter0: int;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("&l");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(numberOfLines);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("F");
+        $r1 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r1);
+        return;
+    }
+
+    public void setVMI(double) throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        double value;
+        java.lang.StringBuffer $r0;
+        java.lang.String $r1, $r2;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        value := @parameter0: double;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("&l");
+        $r1 = virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: java.lang.String formatDouble4(double)>(value);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("C");
+        $r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r2);
+        return;
+    }
+
+    public void setCursorPos(double, double) throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        double x, y, $d0;
+        java.lang.StringBuffer $r0;
+        byte $b0;
+        java.lang.String $r1, $r2;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        x := @parameter0: double;
+        y := @parameter1: double;
+        $b0 = x cmpg 0.0;
+        if $b0 >= 0 goto label0;
+
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("&a0h");
+        $d0 = x / 100.0;
+        $r1 = virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: java.lang.String formatDouble2(double)>($d0);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("h");
+        $d0 = y / 100.0;
+        $r1 = virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: java.lang.String formatDouble2(double)>($d0);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("V");
+        $r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r2);
+        goto label1;
+
+     label0:
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("&a");
+        $d0 = x / 100.0;
+        $r1 = virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: java.lang.String formatDouble2(double)>($d0);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("h");
+        $d0 = y / 100.0;
+        $r1 = virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: java.lang.String formatDouble2(double)>($d0);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("V");
+        $r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r2);
+
+     label1:
+        return;
+    }
+
+    public void pushCursorPos() throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("&f0S");
+        return;
+    }
+
+    public void popCursorPos() throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("&f1S");
+        return;
+    }
+
+    public void changePrintDirection(int) throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        int rotate;
+        java.lang.StringBuffer $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        rotate := @parameter0: int;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("&a");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(rotate);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("P");
+        $r1 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r1);
+        return;
+    }
+
+    public void enterHPGL2Mode(boolean) throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        boolean restorePreviousHPGL2Cursor;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        restorePreviousHPGL2Cursor := @parameter0: boolean;
+        if restorePreviousHPGL2Cursor == 0 goto label0;
+
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("%0B");
+        goto label1;
+
+     label0:
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("%1B");
+
+     label1:
+        return;
+    }
+
+    public void enterPCLMode(boolean) throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        boolean restorePreviousPCLCursor;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        restorePreviousPCLCursor := @parameter0: boolean;
+        if restorePreviousPCLCursor == 0 goto label0;
+
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("%0A");
+        goto label1;
+
+     label0:
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("%1A");
+
+     label1:
+        return;
+    }
+
+    protected void fillRect(int, int, java.awt.Color) throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        int w, h, lineshade, $i0;
+        java.awt.Color col, $r0;
+        boolean $z0;
+        java.lang.StringBuffer $r1;
+        double $d0;
+        java.lang.String $r2, $r3;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        w := @parameter0: int;
+        h := @parameter1: int;
+        col := @parameter2: java.awt.Color;
+        if w == 0 goto label0;
+
+        if h != 0 goto label1;
+
+     label0:
+        return;
+
+     label1:
+        if h >= 0 goto label2;
+
+        h = h * -1;
+
+     label2:
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void setPatternTransparencyMode(boolean)>(0);
+        $z0 = this.<org.apache.fop.render.pcl.PCLGenerator: boolean usePCLShades>;
+        if $z0 != 0 goto label3;
+
+        $r0 = <java.awt.Color: java.awt.Color black>;
+        $z0 = virtualinvoke $r0.<java.awt.Color: boolean equals(java.lang.Object)>(col);
+        if $z0 != 0 goto label3;
+
+        $r0 = <java.awt.Color: java.awt.Color white>;
+        $z0 = virtualinvoke $r0.<java.awt.Color: boolean equals(java.lang.Object)>(col);
+        if $z0 == 0 goto label4;
+
+     label3:
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("*c");
+        $i0 = w / 100;
+        $d0 = (double) $i0;
+        $r2 = virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: java.lang.String formatDouble4(double)>($d0);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("h");
+        $i0 = h / 100;
+        $d0 = (double) $i0;
+        $r2 = virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: java.lang.String formatDouble4(double)>($d0);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("V");
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r3);
+        lineshade = virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: int convertToPCLShade(java.awt.Color)>(col);
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("*c");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(lineshade);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("G");
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r3);
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("*c2P");
+        goto label5;
+
+     label4:
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void defineGrayscalePattern(java.awt.Color,int,int)>(col, 32, 4);
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("*c");
+        $i0 = w / 100;
+        $d0 = (double) $i0;
+        $r2 = virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: java.lang.String formatDouble4(double)>($d0);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("h");
+        $i0 = h / 100;
+        $d0 = (double) $i0;
+        $r2 = virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: java.lang.String formatDouble4(double)>($d0);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("V");
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r3);
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("*c32G");
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("*c4P");
+
+     label5:
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void setPatternTransparencyMode(boolean)>(1);
+        return;
+    }
+
+    private static void setValueInMatrix(int[], int, int, int, int)
+    {
+        int[] dn;
+        int half, part, idx, value, xoff, yoff, matrixIndex, $i0, $i1;
+
+        dn := @parameter0: int[];
+        half := @parameter1: int;
+        part := @parameter2: int;
+        idx := @parameter3: int;
+        value := @parameter4: int;
+        $i0 = part & 1;
+        xoff = $i0 * half;
+        $i0 = part & 2;
+        $i0 = $i0 * half;
+        yoff = $i0 * half;
+        $i1 = idx / half;
+        $i1 = $i1 * half;
+        $i1 = $i1 * 2;
+        $i0 = yoff + $i1;
+        $i1 = idx % half;
+        $i0 = $i0 + $i1;
+        matrixIndex = $i0 + xoff;
+        dn[matrixIndex] = value;
+        return;
+    }
+
+    private static int[] deriveBayerMatrix(int[])
+    {
+        int[] d, dn, $r0;
+        int half, part, i, c, $i0, $i1, $i2;
+        double $d0;
+
+        d := @parameter0: int[];
+        $i0 = lengthof d;
+        $i0 = $i0 * 4;
+        dn = newarray (int)[$i0];
+        $i0 = lengthof d;
+        $d0 = (double) $i0;
+        $d0 = staticinvoke <java.lang.Math: double sqrt(double)>($d0);
+        half = (int) $d0;
+        part = 0;
+
+     label0:
+        if part >= 4 goto label3;
+
+        i = 0;
+        c = lengthof d;
+
+     label1:
+        if i >= c goto label2;
+
+        $i1 = d[i];
+        $i1 = $i1 * 4;
+        $r0 = <org.apache.fop.render.pcl.PCLGenerator: int[] BAYER_D2>;
+        $i2 = $r0[part];
+        $i1 = $i1 + $i2;
+        staticinvoke <org.apache.fop.render.pcl.PCLGenerator: void setValueInMatrix(int[],int,int,int,int)>(dn, half, part, i, $i1);
+        i = i + 1;
+        goto label1;
+
+     label2:
+        part = part + 1;
+        goto label0;
+
+     label3:
+        return dn;
+    }
+
+    public void defineGrayscalePattern(java.awt.Color, int, int) throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        java.awt.Color col;
+        int patternID, ditherMatrixSize, gray255, gray65, i, c, byteIdx, gray17, $i0, $i1, $i2, $i3, $i5;
+        org.apache.commons.io.output.ByteArrayOutputStream $r0, baout;
+        java.io.DataOutputStream data, $r1;
+        byte[] pattern;
+        boolean dot, $z0;
+        int[] $r2;
+        byte $b4;
+        java.lang.StringBuffer $r4;
+        java.lang.String $r5;
+        java.io.OutputStream $r6;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        col := @parameter0: java.awt.Color;
+        patternID := @parameter1: int;
+        ditherMatrixSize := @parameter2: int;
+        $r0 = new org.apache.commons.io.output.ByteArrayOutputStream;
+        specialinvoke $r0.<org.apache.commons.io.output.ByteArrayOutputStream: void <init>()>();
+        baout = $r0;
+        $r1 = new java.io.DataOutputStream;
+        specialinvoke $r1.<java.io.DataOutputStream: void <init>(java.io.OutputStream)>(baout);
+        data = $r1;
+        virtualinvoke data.<java.io.DataOutputStream: void writeByte(int)>(0);
+        virtualinvoke data.<java.io.DataOutputStream: void writeByte(int)>(0);
+        virtualinvoke data.<java.io.DataOutputStream: void writeByte(int)>(1);
+        virtualinvoke data.<java.io.DataOutputStream: void writeByte(int)>(0);
+        virtualinvoke data.<java.io.DataOutputStream: void writeShort(int)>(8);
+        virtualinvoke data.<java.io.DataOutputStream: void writeShort(int)>(8);
+        $i0 = virtualinvoke col.<java.awt.Color: int getRed()>();
+        $i1 = virtualinvoke col.<java.awt.Color: int getGreen()>();
+        $i2 = virtualinvoke col.<java.awt.Color: int getBlue()>();
+        gray255 = virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: int convertToGray(int,int,int)>($i0, $i1, $i2);
+        if ditherMatrixSize != 8 goto label5;
+
+        $i3 = gray255 * 65;
+        gray65 = $i3 / 255;
+        $r2 = <org.apache.fop.render.pcl.PCLGenerator: int[] BAYER_D8>;
+        $i3 = lengthof $r2;
+        $i3 = $i3 / 8;
+        pattern = newarray (byte)[$i3];
+        i = 0;
+        $r2 = <org.apache.fop.render.pcl.PCLGenerator: int[] BAYER_D8>;
+        c = lengthof $r2;
+
+     label0:
+        if i >= c goto label4;
+
+        $r2 = <org.apache.fop.render.pcl.PCLGenerator: int[] BAYER_D8>;
+        $i3 = $r2[i];
+        $i0 = gray65 - 1;
+        if $i3 < $i0 goto label1;
+
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        dot = $z0;
+        if dot == 0 goto label3;
+
+        byteIdx = i / 8;
+        $b4 = pattern[byteIdx];
+        $i5 = i % 8;
+        $i2 = 1 << $i5;
+        $i1 = $b4 | $i2;
+        $b4 = (byte) $i1;
+        pattern[byteIdx] = $b4;
+
+     label3:
+        i = i + 1;
+        goto label0;
+
+     label4:
+        goto label10;
+
+     label5:
+        $i3 = gray255 * 17;
+        gray17 = $i3 / 255;
+        $r2 = <org.apache.fop.render.pcl.PCLGenerator: int[] BAYER_D4>;
+        $i3 = lengthof $r2;
+        $i3 = $i3 / 8;
+        $i3 = $i3 * 4;
+        pattern = newarray (byte)[$i3];
+        i = 0;
+        $r2 = <org.apache.fop.render.pcl.PCLGenerator: int[] BAYER_D4>;
+        c = lengthof $r2;
+
+     label6:
+        if i >= c goto label10;
+
+        $r2 = <org.apache.fop.render.pcl.PCLGenerator: int[] BAYER_D4>;
+        $i3 = $r2[i];
+        $i0 = gray17 - 1;
+        if $i3 < $i0 goto label7;
+
+        $z0 = 1;
+        goto label8;
+
+     label7:
+        $z0 = 0;
+
+     label8:
+        dot = $z0;
+        if dot == 0 goto label9;
+
+        byteIdx = i / 4;
+        $b4 = pattern[byteIdx];
+        $i5 = i % 4;
+        $i2 = 1 << $i5;
+        $i1 = $b4 | $i2;
+        $b4 = (byte) $i1;
+        pattern[byteIdx] = $b4;
+        $b4 = pattern[byteIdx];
+        $i5 = i % 4;
+        $i5 = $i5 + 4;
+        $i2 = 1 << $i5;
+        $i1 = $b4 | $i2;
+        $b4 = (byte) $i1;
+        pattern[byteIdx] = $b4;
+        $i0 = byteIdx + 4;
+        $b4 = pattern[$i0];
+        $i5 = i % 4;
+        $i2 = 1 << $i5;
+        $i1 = $b4 | $i2;
+        $b4 = (byte) $i1;
+        pattern[$i0] = $b4;
+        $i0 = byteIdx + 4;
+        $b4 = pattern[$i0];
+        $i5 = i % 4;
+        $i5 = $i5 + 4;
+        $i2 = 1 << $i5;
+        $i1 = $b4 | $i2;
+        $b4 = (byte) $i1;
+        pattern[$i0] = $b4;
+
+     label9:
+        i = i + 1;
+        goto label6;
+
+     label10:
+        virtualinvoke data.<java.io.DataOutputStream: void write(byte[])>(pattern);
+        $i3 = virtualinvoke baout.<org.apache.commons.io.output.ByteArrayOutputStream: int size()>();
+        $i3 = $i3 % 2;
+        if $i3 <= 0 goto label11;
+
+        virtualinvoke baout.<org.apache.commons.io.output.ByteArrayOutputStream: void write(int)>(0);
+
+     label11:
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("*c");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(patternID);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("G");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r5);
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("*c");
+        $i1 = virtualinvoke baout.<org.apache.commons.io.output.ByteArrayOutputStream: int size()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("W");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r5);
+        $r6 = this.<org.apache.fop.render.pcl.PCLGenerator: java.io.OutputStream out>;
+        virtualinvoke baout.<org.apache.commons.io.output.ByteArrayOutputStream: void writeTo(java.io.OutputStream)>($r6);
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("*c4Q");
+        return;
+    }
+
+    public void setSourceTransparencyMode(boolean) throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        boolean transparent, $z0;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        transparent := @parameter0: boolean;
+        $z0 = this.<org.apache.fop.render.pcl.PCLGenerator: boolean currentPatternTransparency>;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void setTransparencyMode(boolean,boolean)>(transparent, $z0);
+        return;
+    }
+
+    public void setPatternTransparencyMode(boolean) throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        boolean transparent, $z0;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        transparent := @parameter0: boolean;
+        $z0 = this.<org.apache.fop.render.pcl.PCLGenerator: boolean currentSourceTransparency>;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void setTransparencyMode(boolean,boolean)>($z0, transparent);
+        return;
+    }
+
+    public void setTransparencyMode(boolean, boolean) throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        boolean source, pattern, $z0;
+        java.lang.StringBuffer $r1;
+        char $c0;
+        java.lang.String $r2;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        source := @parameter0: boolean;
+        pattern := @parameter1: boolean;
+        $z0 = this.<org.apache.fop.render.pcl.PCLGenerator: boolean currentSourceTransparency>;
+        if source == $z0 goto label4;
+
+        $z0 = this.<org.apache.fop.render.pcl.PCLGenerator: boolean currentPatternTransparency>;
+        if pattern == $z0 goto label4;
+
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("*v");
+        if source == 0 goto label0;
+
+        $c0 = 48;
+        goto label1;
+
+     label0:
+        $c0 = 49;
+
+     label1:
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c0);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("n");
+        if pattern == 0 goto label2;
+
+        $c0 = 48;
+        goto label3;
+
+     label2:
+        $c0 = 49;
+
+     label3:
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c0);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("O");
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r2);
+        goto label10;
+
+     label4:
+        $z0 = this.<org.apache.fop.render.pcl.PCLGenerator: boolean currentSourceTransparency>;
+        if source == $z0 goto label7;
+
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("*v");
+        if source == 0 goto label5;
+
+        $c0 = 48;
+        goto label6;
+
+     label5:
+        $c0 = 49;
+
+     label6:
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c0);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("N");
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r2);
+        goto label10;
+
+     label7:
+        $z0 = this.<org.apache.fop.render.pcl.PCLGenerator: boolean currentPatternTransparency>;
+        if pattern == $z0 goto label10;
+
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("*v");
+        if pattern == 0 goto label8;
+
+        $c0 = 48;
+        goto label9;
+
+     label8:
+        $c0 = 49;
+
+     label9:
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c0);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("O");
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r2);
+
+     label10:
+        this.<org.apache.fop.render.pcl.PCLGenerator: boolean currentSourceTransparency> = source;
+        this.<org.apache.fop.render.pcl.PCLGenerator: boolean currentPatternTransparency> = pattern;
+        return;
+    }
+
+    public final int convertToGray(int, int, int)
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        int r, g, b, $i0, $i1;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        r := @parameter0: int;
+        g := @parameter1: int;
+        b := @parameter2: int;
+        $i0 = r * 30;
+        $i1 = g * 59;
+        $i0 = $i0 + $i1;
+        $i1 = b * 11;
+        $i0 = $i0 + $i1;
+        $i0 = $i0 / 100;
+        return $i0;
+    }
+
+    public final int convertToPCLShade(java.awt.Color)
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        java.awt.Color col;
+        float gray, $f0, $f1;
+        int $i0, $i1, $i2, $i3;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        col := @parameter0: java.awt.Color;
+        $i0 = virtualinvoke col.<java.awt.Color: int getRed()>();
+        $i1 = virtualinvoke col.<java.awt.Color: int getGreen()>();
+        $i2 = virtualinvoke col.<java.awt.Color: int getBlue()>();
+        $i3 = virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: int convertToGray(int,int,int)>($i0, $i1, $i2);
+        $f0 = (float) $i3;
+        gray = $f0 / 255.0F;
+        $f1 = gray * 100.0F;
+        $f0 = 100.0F - $f1;
+        $i3 = (int) $f0;
+        return $i3;
+    }
+
+    public void selectGrayscale(java.awt.Color) throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        java.awt.Color col, $r0;
+        boolean $z0;
+        int $i0;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        col := @parameter0: java.awt.Color;
+        $r0 = <java.awt.Color: java.awt.Color black>;
+        $z0 = virtualinvoke $r0.<java.awt.Color: boolean equals(java.lang.Object)>(col);
+        if $z0 == 0 goto label0;
+
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void selectCurrentPattern(int,int)>(0, 0);
+        goto label3;
+
+     label0:
+        $r0 = <java.awt.Color: java.awt.Color white>;
+        $z0 = virtualinvoke $r0.<java.awt.Color: boolean equals(java.lang.Object)>(col);
+        if $z0 == 0 goto label1;
+
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void selectCurrentPattern(int,int)>(0, 1);
+        goto label3;
+
+     label1:
+        $z0 = this.<org.apache.fop.render.pcl.PCLGenerator: boolean usePCLShades>;
+        if $z0 == 0 goto label2;
+
+        $i0 = virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: int convertToPCLShade(java.awt.Color)>(col);
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void selectCurrentPattern(int,int)>($i0, 2);
+        goto label3;
+
+     label2:
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void defineGrayscalePattern(java.awt.Color,int,int)>(col, 32, 4);
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void selectCurrentPattern(int,int)>(32, 4);
+
+     label3:
+        return;
+    }
+
+    public void selectCurrentPattern(int, int) throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        int patternID, pattern;
+        java.lang.StringBuffer $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        patternID := @parameter0: int;
+        pattern := @parameter1: int;
+        if pattern <= 1 goto label0;
+
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("*c");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(patternID);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("G");
+        $r1 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r1);
+
+     label0:
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("*v");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(pattern);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("T");
+        $r1 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r1);
+        return;
+    }
+
+    public static boolean isMonochromeImage(java.awt.image.RenderedImage)
+    {
+        java.awt.image.RenderedImage img;
+        java.awt.image.ColorModel cm;
+        java.awt.image.IndexColorModel icm;
+        boolean $z0;
+        int $i0;
+
+        img := @parameter0: java.awt.image.RenderedImage;
+        cm = interfaceinvoke img.<java.awt.image.RenderedImage: java.awt.image.ColorModel getColorModel()>();
+        $z0 = cm instanceof java.awt.image.IndexColorModel;
+        if $z0 == 0 goto label2;
+
+        icm = (java.awt.image.IndexColorModel) cm;
+        $i0 = virtualinvoke icm.<java.awt.image.IndexColorModel: int getMapSize()>();
+        if $i0 != 2 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+
+     label2:
+        return 0;
+    }
+
+    public static boolean isGrayscaleImage(java.awt.image.RenderedImage)
+    {
+        java.awt.image.RenderedImage img;
+        java.awt.image.ColorModel $r0;
+        java.awt.color.ColorSpace $r1;
+        int $i0;
+        boolean $z0;
+
+        img := @parameter0: java.awt.image.RenderedImage;
+        $r0 = interfaceinvoke img.<java.awt.image.RenderedImage: java.awt.image.ColorModel getColorModel()>();
+        $r1 = virtualinvoke $r0.<java.awt.image.ColorModel: java.awt.color.ColorSpace getColorSpace()>();
+        $i0 = virtualinvoke $r1.<java.awt.color.ColorSpace: int getNumComponents()>();
+        if $i0 != 1 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    private org.apache.fop.render.pcl.MonochromeBitmapConverter createMonochromeBitmapConverter()
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        org.apache.fop.render.pcl.MonochromeBitmapConverter converter;
+        java.lang.String clName;
+        java.lang.Class clazz;
+        java.lang.ClassNotFoundException l2, $r1;
+        java.lang.Object $r0;
+        java.lang.LinkageError $r2, l2;
+        java.lang.InstantiationException $r3, l2;
+        java.lang.IllegalAccessException $r4, l2;
+        org.apache.fop.render.pcl.DefaultMonochromeBitmapConverter $r5;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        converter = null;
+
+     label0:
+        clName = "org.apache.fop.render.pcl.JAIMonochromeBitmapConverter";
+        clazz = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(clName);
+        $r0 = virtualinvoke clazz.<java.lang.Class: java.lang.Object newInstance()>();
+        converter = (org.apache.fop.render.pcl.MonochromeBitmapConverter) $r0;
+
+     label1:
+        goto label6;
+
+     label2:
+        $r1 := @caughtexception;
+        l2 = $r1;
+        goto label6;
+
+     label3:
+        $r2 := @caughtexception;
+        l2 = $r2;
+        goto label6;
+
+     label4:
+        $r3 := @caughtexception;
+        l2 = $r3;
+        goto label6;
+
+     label5:
+        $r4 := @caughtexception;
+        l2 = $r4;
+
+     label6:
+        if converter != null goto label7;
+
+        $r5 = new org.apache.fop.render.pcl.DefaultMonochromeBitmapConverter;
+        specialinvoke $r5.<org.apache.fop.render.pcl.DefaultMonochromeBitmapConverter: void <init>()>();
+        converter = $r5;
+
+     label7:
+        return converter;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+        catch java.lang.LinkageError from label0 to label1 with label3;
+        catch java.lang.InstantiationException from label0 to label1 with label4;
+        catch java.lang.IllegalAccessException from label0 to label1 with label5;
+    }
+
+    private int calculatePCLResolution(int)
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        int resolution, $i0;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        resolution := @parameter0: int;
+        $i0 = specialinvoke this.<org.apache.fop.render.pcl.PCLGenerator: int calculatePCLResolution(int,boolean)>(resolution, 0);
+        return $i0;
+    }
+
+    private int calculatePCLResolution(int, boolean)
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        int resolution, choice, i, idx, $i0, $i1;
+        boolean increased;
+        int[] $r0, $r1;
+        byte $b2, $b3;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        resolution := @parameter0: int;
+        increased := @parameter1: boolean;
+        choice = -1;
+        $r0 = <org.apache.fop.render.pcl.PCLGenerator: int[] PCL_RESOLUTIONS>;
+        $i0 = lengthof $r0;
+        i = $i0 - 2;
+
+     label0:
+        if i < 0 goto label8;
+
+        $r1 = <org.apache.fop.render.pcl.PCLGenerator: int[] PCL_RESOLUTIONS>;
+        $i1 = $r1[i];
+        if resolution <= $i1 goto label7;
+
+        idx = i + 1;
+        $r1 = <org.apache.fop.render.pcl.PCLGenerator: int[] PCL_RESOLUTIONS>;
+        $i1 = lengthof $r1;
+        $i1 = $i1 - 2;
+        if idx >= $i1 goto label3;
+
+        $i0 = idx;
+        if increased == 0 goto label1;
+
+        $b2 = 2;
+        goto label2;
+
+     label1:
+        $b2 = 0;
+
+     label2:
+        idx = $i0 + $b2;
+        goto label6;
+
+     label3:
+        $r1 = <org.apache.fop.render.pcl.PCLGenerator: int[] PCL_RESOLUTIONS>;
+        $i1 = lengthof $r1;
+        $i1 = $i1 - 1;
+        if idx >= $i1 goto label6;
+
+        $i0 = idx;
+        if increased == 0 goto label4;
+
+        $b2 = 1;
+        goto label5;
+
+     label4:
+        $b2 = 0;
+
+     label5:
+        idx = $i0 + $b2;
+
+     label6:
+        choice = idx;
+        goto label8;
+
+     label7:
+        i = i + -1;
+        goto label0;
+
+     label8:
+        if choice >= 0 goto label11;
+
+        if increased == 0 goto label9;
+
+        $b3 = 2;
+        goto label10;
+
+     label9:
+        $b3 = 0;
+
+     label10:
+        choice = $b3;
+
+     label11:
+        if choice <= 0 goto label12;
+
+        $r0 = <org.apache.fop.render.pcl.PCLGenerator: int[] PCL_RESOLUTIONS>;
+        $i0 = $r0[choice];
+        $i1 = virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: int getMaximumBitmapResolution()>();
+        if $i0 <= $i1 goto label12;
+
+        choice = choice + -1;
+        goto label11;
+
+     label12:
+        $r0 = <org.apache.fop.render.pcl.PCLGenerator: int[] PCL_RESOLUTIONS>;
+        $i0 = $r0[choice];
+        return $i0;
+    }
+
+    private boolean isValidPCLResolution(int)
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        int resolution, $i0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        resolution := @parameter0: int;
+        $i0 = specialinvoke this.<org.apache.fop.render.pcl.PCLGenerator: int calculatePCLResolution(int)>(resolution);
+        if resolution != $i0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    private java.awt.Dimension getAdjustedDimension(java.awt.Dimension, double, int)
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        java.awt.Dimension orgDim, result, $r0;
+        double orgResolution, $d0, $d1, $d2;
+        int pclResolution, $i1;
+        byte $b0;
+        long $l2;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        orgDim := @parameter0: java.awt.Dimension;
+        orgResolution := @parameter1: double;
+        pclResolution := @parameter2: int;
+        $d0 = (double) pclResolution;
+        $b0 = orgResolution cmpl $d0;
+        if $b0 != 0 goto label0;
+
+        return orgDim;
+
+     label0:
+        $r0 = new java.awt.Dimension;
+        specialinvoke $r0.<java.awt.Dimension: void <init>()>();
+        result = $r0;
+        $i1 = orgDim.<java.awt.Dimension: int width>;
+        $d1 = (double) $i1;
+        $d2 = (double) pclResolution;
+        $d1 = $d1 * $d2;
+        $d1 = $d1 / orgResolution;
+        $l2 = staticinvoke <java.lang.Math: long round(double)>($d1);
+        $i1 = (int) $l2;
+        result.<java.awt.Dimension: int width> = $i1;
+        $i1 = orgDim.<java.awt.Dimension: int height>;
+        $d1 = (double) $i1;
+        $d2 = (double) pclResolution;
+        $d1 = $d1 * $d2;
+        $d1 = $d1 / orgResolution;
+        $l2 = staticinvoke <java.lang.Math: long round(double)>($d1);
+        $i1 = (int) $l2;
+        result.<java.awt.Dimension: int height> = $i1;
+        return result;
+    }
+
+    private java.awt.image.RenderedImage getMask(java.awt.image.RenderedImage, java.awt.Dimension)
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        java.awt.image.RenderedImage img;
+        java.awt.Dimension targetDim;
+        java.awt.image.ColorModel cm;
+        java.awt.image.BufferedImage alpha, alphat, mask, $r1;
+        java.awt.image.Raster raster;
+        byte[] $r0;
+        java.awt.image.LookupOp op1, $r3;
+        java.awt.Graphics2D g2d;
+        java.awt.geom.AffineTransform at, $r5;
+        double sx, sy, $d0, $d1;
+        java.lang.Throwable l15, $r6;
+        boolean $z0;
+        int $i0, $i1, $i2;
+        java.awt.image.WritableRaster $r2;
+        java.awt.image.ByteLookupTable $r4;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        img := @parameter0: java.awt.image.RenderedImage;
+        targetDim := @parameter1: java.awt.Dimension;
+        cm = interfaceinvoke img.<java.awt.image.RenderedImage: java.awt.image.ColorModel getColorModel()>();
+        $z0 = virtualinvoke cm.<java.awt.image.ColorModel: boolean hasAlpha()>();
+        if $z0 == 0 goto label6;
+
+        $r1 = new java.awt.image.BufferedImage;
+        $i0 = interfaceinvoke img.<java.awt.image.RenderedImage: int getWidth()>();
+        $i1 = interfaceinvoke img.<java.awt.image.RenderedImage: int getHeight()>();
+        specialinvoke $r1.<java.awt.image.BufferedImage: void <init>(int,int,int)>($i0, $i1, 10);
+        alpha = $r1;
+        raster = interfaceinvoke img.<java.awt.image.RenderedImage: java.awt.image.Raster getData()>();
+        $i2 = virtualinvoke cm.<java.awt.image.ColorModel: int getNumColorComponents()>();
+        $r2 = virtualinvoke alpha.<java.awt.image.BufferedImage: java.awt.image.WritableRaster getRaster()>();
+        staticinvoke <org.apache.xmlgraphics.image.GraphicsUtil: void copyBand(java.awt.image.Raster,int,java.awt.image.WritableRaster,int)>(raster, $i2, $r2, 0);
+        $r3 = new java.awt.image.LookupOp;
+        $r4 = new java.awt.image.ByteLookupTable;
+        $r0 = <org.apache.fop.render.pcl.PCLGenerator: byte[] THRESHOLD_TABLE>;
+        specialinvoke $r4.<java.awt.image.ByteLookupTable: void <init>(int,byte[])>(0, $r0);
+        specialinvoke $r3.<java.awt.image.LookupOp: void <init>(java.awt.image.LookupTable,java.awt.RenderingHints)>($r4, null);
+        op1 = $r3;
+        alphat = interfaceinvoke op1.<java.awt.image.BufferedImageOp: java.awt.image.BufferedImage filter(java.awt.image.BufferedImage,java.awt.image.BufferedImage)>(alpha, null);
+        $r1 = new java.awt.image.BufferedImage;
+        $i0 = targetDim.<java.awt.Dimension: int width>;
+        $i1 = targetDim.<java.awt.Dimension: int height>;
+        specialinvoke $r1.<java.awt.image.BufferedImage: void <init>(int,int,int)>($i0, $i1, 12);
+        mask = $r1;
+        g2d = virtualinvoke mask.<java.awt.image.BufferedImage: java.awt.Graphics2D createGraphics()>();
+
+     label0:
+        $r5 = new java.awt.geom.AffineTransform;
+        specialinvoke $r5.<java.awt.geom.AffineTransform: void <init>()>();
+        at = $r5;
+        $d0 = virtualinvoke targetDim.<java.awt.Dimension: double getWidth()>();
+        $i0 = interfaceinvoke img.<java.awt.image.RenderedImage: int getWidth()>();
+        $d1 = (double) $i0;
+        sx = $d0 / $d1;
+        $d0 = virtualinvoke targetDim.<java.awt.Dimension: double getHeight()>();
+        $i0 = interfaceinvoke img.<java.awt.image.RenderedImage: int getHeight()>();
+        $d1 = (double) $i0;
+        sy = $d0 / $d1;
+        virtualinvoke at.<java.awt.geom.AffineTransform: void scale(double,double)>(sx, sy);
+        virtualinvoke g2d.<java.awt.Graphics2D: void drawRenderedImage(java.awt.image.RenderedImage,java.awt.geom.AffineTransform)>(alphat, at);
+
+     label1:
+        virtualinvoke g2d.<java.awt.Graphics2D: void dispose()>();
+        goto label5;
+
+     label2:
+        $r6 := @caughtexception;
+
+     label3:
+        l15 = $r6;
+
+     label4:
+        virtualinvoke g2d.<java.awt.Graphics2D: void dispose()>();
+        throw l15;
+
+     label5:
+        return mask;
+
+     label6:
+        return null;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    public void paintBitmap(java.awt.image.RenderedImage, java.awt.Dimension, boolean) throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        java.awt.image.RenderedImage img, effImg, $r8;
+        java.awt.Dimension targetDim, orgDim, effDim, $r0;
+        boolean sourceTransparency, scaled, monochrome, transparencyDisabled, $z0, $z1;
+        double targetResolution, sx, sy, $d0, $d1;
+        int resolution, effResolution, $i0, $i1, $i3;
+        null_type mask;
+        java.awt.image.BufferedImage src, buf, red, $r2, $r5;
+        java.awt.image.ColorConvertOp op, $r3;
+        java.awt.Graphics2D g2d;
+        java.awt.geom.AffineTransform at, $r6;
+        java.lang.Throwable l21, l22, $r7, $r10;
+        org.apache.fop.render.pcl.MonochromeBitmapConverter converter;
+        long $l2;
+        java.awt.image.ColorModel $r1;
+        java.awt.color.ColorSpace $r4;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        img := @parameter0: java.awt.image.RenderedImage;
+        targetDim := @parameter1: java.awt.Dimension;
+        sourceTransparency := @parameter2: boolean;
+        $i0 = interfaceinvoke img.<java.awt.image.RenderedImage: int getWidth()>();
+        $d0 = (double) $i0;
+        $i1 = targetDim.<java.awt.Dimension: int width>;
+        $d1 = (double) $i1;
+        $d1 = staticinvoke <org.apache.fop.util.UnitConv: double mpt2in(double)>($d1);
+        targetResolution = $d0 / $d1;
+        $l2 = staticinvoke <java.lang.Math: long round(double)>(targetResolution);
+        resolution = (int) $l2;
+        effResolution = specialinvoke this.<org.apache.fop.render.pcl.PCLGenerator: int calculatePCLResolution(int,boolean)>(resolution, 1);
+        $r0 = new java.awt.Dimension;
+        $i1 = interfaceinvoke img.<java.awt.image.RenderedImage: int getWidth()>();
+        $i3 = interfaceinvoke img.<java.awt.image.RenderedImage: int getHeight()>();
+        specialinvoke $r0.<java.awt.Dimension: void <init>(int,int)>($i1, $i3);
+        orgDim = $r0;
+        effDim = specialinvoke this.<org.apache.fop.render.pcl.PCLGenerator: java.awt.Dimension getAdjustedDimension(java.awt.Dimension,double,int)>(orgDim, targetResolution, effResolution);
+        $z0 = virtualinvoke orgDim.<java.awt.Dimension: boolean equals(java.lang.Object)>(effDim);
+        if $z0 != 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        scaled = $z0;
+        monochrome = staticinvoke <org.apache.fop.render.pcl.PCLGenerator: boolean isMonochromeImage(java.awt.image.RenderedImage)>(img);
+        if monochrome != 0 goto label15;
+
+        transparencyDisabled = 1;
+        mask = null;
+        if mask == null goto label2;
+
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void pushCursorPos()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void selectCurrentPattern(int,int)>(0, 1);
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void setTransparencyMode(boolean,boolean)>(1, 1);
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void paintMonochromeBitmap(java.awt.image.RenderedImage,int)>(mask, effResolution);
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void popCursorPos()>();
+
+     label2:
+        src = null;
+        $z0 = img instanceof java.awt.image.BufferedImage;
+        if $z0 == 0 goto label5;
+
+        if scaled != 0 goto label5;
+
+        $z0 = staticinvoke <org.apache.fop.render.pcl.PCLGenerator: boolean isGrayscaleImage(java.awt.image.RenderedImage)>(img);
+        if $z0 == 0 goto label3;
+
+        $r1 = interfaceinvoke img.<java.awt.image.RenderedImage: java.awt.image.ColorModel getColorModel()>();
+        $z0 = virtualinvoke $r1.<java.awt.image.ColorModel: boolean hasAlpha()>();
+        if $z0 == 0 goto label4;
+
+     label3:
+        $r2 = new java.awt.image.BufferedImage;
+        $i1 = effDim.<java.awt.Dimension: int width>;
+        $i3 = effDim.<java.awt.Dimension: int height>;
+        specialinvoke $r2.<java.awt.image.BufferedImage: void <init>(int,int,int)>($i1, $i3, 10);
+        src = $r2;
+        $r3 = new java.awt.image.ColorConvertOp;
+        $r4 = staticinvoke <java.awt.color.ColorSpace: java.awt.color.ColorSpace getInstance(int)>(1003);
+        specialinvoke $r3.<java.awt.image.ColorConvertOp: void <init>(java.awt.color.ColorSpace,java.awt.RenderingHints)>($r4, null);
+        op = $r3;
+        $r5 = (java.awt.image.BufferedImage) img;
+        virtualinvoke op.<java.awt.image.ColorConvertOp: java.awt.image.BufferedImage filter(java.awt.image.BufferedImage,java.awt.image.BufferedImage)>($r5, src);
+        goto label5;
+
+     label4:
+        src = (java.awt.image.BufferedImage) img;
+
+     label5:
+        if src != null goto label11;
+
+        $r2 = new java.awt.image.BufferedImage;
+        $i1 = effDim.<java.awt.Dimension: int width>;
+        $i3 = effDim.<java.awt.Dimension: int height>;
+        specialinvoke $r2.<java.awt.image.BufferedImage: void <init>(int,int,int)>($i1, $i3, 10);
+        src = $r2;
+        g2d = virtualinvoke src.<java.awt.image.BufferedImage: java.awt.Graphics2D createGraphics()>();
+
+     label6:
+        $r6 = new java.awt.geom.AffineTransform;
+        specialinvoke $r6.<java.awt.geom.AffineTransform: void <init>()>();
+        at = $r6;
+        $d0 = virtualinvoke effDim.<java.awt.Dimension: double getWidth()>();
+        $d1 = virtualinvoke orgDim.<java.awt.Dimension: double getWidth()>();
+        sx = $d0 / $d1;
+        $d0 = virtualinvoke effDim.<java.awt.Dimension: double getHeight()>();
+        $d1 = virtualinvoke orgDim.<java.awt.Dimension: double getHeight()>();
+        sy = $d0 / $d1;
+        virtualinvoke at.<java.awt.geom.AffineTransform: void scale(double,double)>(sx, sy);
+        virtualinvoke g2d.<java.awt.Graphics2D: void drawRenderedImage(java.awt.image.RenderedImage,java.awt.geom.AffineTransform)>(img, at);
+
+     label7:
+        virtualinvoke g2d.<java.awt.Graphics2D: void dispose()>();
+        goto label11;
+
+     label8:
+        $r7 := @caughtexception;
+
+     label9:
+        l21 = $r7;
+
+     label10:
+        virtualinvoke g2d.<java.awt.Graphics2D: void dispose()>();
+        throw l21;
+
+     label11:
+        converter = specialinvoke this.<org.apache.fop.render.pcl.PCLGenerator: org.apache.fop.render.pcl.MonochromeBitmapConverter createMonochromeBitmapConverter()>();
+        interfaceinvoke converter.<org.apache.fop.render.pcl.MonochromeBitmapConverter: void setHint(java.lang.String,java.lang.String)>("quality", "false");
+        $r8 = interfaceinvoke converter.<org.apache.fop.render.pcl.MonochromeBitmapConverter: java.awt.image.RenderedImage convertToMonochrome(java.awt.image.BufferedImage)>(src);
+        buf = (java.awt.image.BufferedImage) $r8;
+        red = buf;
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void selectCurrentPattern(int,int)>(0, 0);
+        if sourceTransparency != 0 goto label12;
+
+        if mask == null goto label13;
+
+     label12:
+        $z1 = 1;
+        goto label14;
+
+     label13:
+        $z1 = 0;
+
+     label14:
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void setTransparencyMode(boolean,boolean)>($z1, 1);
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void paintMonochromeBitmap(java.awt.image.RenderedImage,int)>(red, effResolution);
+        goto label23;
+
+     label15:
+        effImg = img;
+        if scaled == 0 goto label22;
+
+        $r2 = new java.awt.image.BufferedImage;
+        $i1 = effDim.<java.awt.Dimension: int width>;
+        $i3 = effDim.<java.awt.Dimension: int height>;
+        specialinvoke $r2.<java.awt.image.BufferedImage: void <init>(int,int,int)>($i1, $i3, 12);
+        buf = $r2;
+        g2d = virtualinvoke buf.<java.awt.image.BufferedImage: java.awt.Graphics2D createGraphics()>();
+
+     label16:
+        $r6 = new java.awt.geom.AffineTransform;
+        specialinvoke $r6.<java.awt.geom.AffineTransform: void <init>()>();
+        at = $r6;
+        $d0 = virtualinvoke effDim.<java.awt.Dimension: double getWidth()>();
+        $d1 = virtualinvoke orgDim.<java.awt.Dimension: double getWidth()>();
+        sx = $d0 / $d1;
+        $d0 = virtualinvoke effDim.<java.awt.Dimension: double getHeight()>();
+        $d1 = virtualinvoke orgDim.<java.awt.Dimension: double getHeight()>();
+        sy = $d0 / $d1;
+        virtualinvoke at.<java.awt.geom.AffineTransform: void scale(double,double)>(sx, sy);
+        virtualinvoke g2d.<java.awt.Graphics2D: void drawRenderedImage(java.awt.image.RenderedImage,java.awt.geom.AffineTransform)>(img, at);
+
+     label17:
+        virtualinvoke g2d.<java.awt.Graphics2D: void dispose()>();
+        goto label21;
+
+     label18:
+        $r10 := @caughtexception;
+
+     label19:
+        l22 = $r10;
+
+     label20:
+        virtualinvoke g2d.<java.awt.Graphics2D: void dispose()>();
+        throw l22;
+
+     label21:
+        effImg = buf;
+
+     label22:
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void setSourceTransparencyMode(boolean)>(sourceTransparency);
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void selectCurrentPattern(int,int)>(0, 0);
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void paintMonochromeBitmap(java.awt.image.RenderedImage,int)>(effImg, effResolution);
+
+     label23:
+        return;
+
+        catch java.lang.Throwable from label6 to label7 with label8;
+        catch java.lang.Throwable from label9 to label10 with label8;
+        catch java.lang.Throwable from label16 to label17 with label18;
+        catch java.lang.Throwable from label19 to label20 with label18;
+    }
+
+    public void paintMonochromeBitmap(java.awt.image.RenderedImage, int) throws java.io.IOException
+    {
+        org.apache.fop.render.pcl.PCLGenerator this;
+        java.awt.image.RenderedImage img;
+        int resolution, imgw, imgh, bytewidth, lastcount, rlewidth, sample, $i0, $i1, y, x, $i2, $i3, rlewidth;
+        java.lang.StringBuffer $r0, $r3;
+        java.awt.image.Raster raster;
+        boolean monochrome, x, y, $z0;
+        byte[] rle, uncompressed;
+        byte lastbyte, ib, $b4;
+        java.lang.IllegalArgumentException $r1;
+        java.lang.String $r2, $r4;
+        java.io.OutputStream $r5;
+
+        this := @this: org.apache.fop.render.pcl.PCLGenerator;
+        img := @parameter0: java.awt.image.RenderedImage;
+        resolution := @parameter1: int;
+        $z0 = specialinvoke this.<org.apache.fop.render.pcl.PCLGenerator: boolean isValidPCLResolution(int)>(resolution);
+        if $z0 != 0 goto label0;
+
+        $r1 = new java.lang.IllegalArgumentException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Invalid PCL resolution: ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(resolution);
+        $r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r1.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r2);
+        throw $r1;
+
+     label0:
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void setRasterGraphicsResolution(int)>(resolution);
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("*r0f");
+        $i0 = interfaceinvoke img.<java.awt.image.RenderedImage: int getHeight()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("t");
+        $i0 = interfaceinvoke img.<java.awt.image.RenderedImage: int getWidth()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("s1A");
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r4);
+        raster = interfaceinvoke img.<java.awt.image.RenderedImage: java.awt.image.Raster getData()>();
+        monochrome = staticinvoke <org.apache.fop.render.pcl.PCLGenerator: boolean isMonochromeImage(java.awt.image.RenderedImage)>(img);
+        if monochrome != 0 goto label1;
+
+        $r1 = new java.lang.IllegalArgumentException;
+        specialinvoke $r1.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("img must be a monochrome image");
+        throw $r1;
+
+     label1:
+        x = 0;
+        y = 0;
+        imgw = interfaceinvoke img.<java.awt.image.RenderedImage: int getWidth()>();
+        imgh = interfaceinvoke img.<java.awt.image.RenderedImage: int getHeight()>();
+        bytewidth = imgw / 8;
+        $i1 = imgw % 8;
+        if $i1 == 0 goto label2;
+
+        bytewidth = bytewidth + 1;
+
+     label2:
+        $i1 = bytewidth * 2;
+        rle = newarray (byte)[$i1];
+        uncompressed = newarray (byte)[bytewidth];
+        lastcount = -1;
+        lastbyte = 0;
+        rlewidth = 0;
+        y = 0;
+
+     label3:
+        if y >= imgh goto label16;
+
+        ib = 0;
+        x = 0;
+
+     label4:
+        if x >= imgw goto label13;
+
+        sample = virtualinvoke raster.<java.awt.image.Raster: int getSample(int,int,int)>(x, y, 0);
+        if sample != 0 goto label5;
+
+        $i2 = x % 8;
+        $i0 = 7 - $i2;
+        $i3 = 1 << $i0;
+        $i1 = ib | $i3;
+        ib = (byte) $i1;
+
+     label5:
+        $i1 = x % 8;
+        if $i1 == 7 goto label6;
+
+        $i1 = x + 1;
+        if $i1 != imgw goto label12;
+
+     label6:
+        if rlewidth >= bytewidth goto label11;
+
+        if lastcount < 0 goto label8;
+
+        if ib != lastbyte goto label7;
+
+        lastcount = lastcount + 1;
+        goto label9;
+
+     label7:
+        rlewidth = rlewidth + 1;
+        $i0 = lastcount & 255;
+        $b4 = (byte) $i0;
+        rle[rlewidth] = $b4;
+        rlewidth = rlewidth + 1;
+        rle[rlewidth] = lastbyte;
+        lastbyte = ib;
+        lastcount = 0;
+        goto label9;
+
+     label8:
+        lastbyte = ib;
+        lastcount = 0;
+
+     label9:
+        if lastcount == 255 goto label10;
+
+        $i1 = x + 1;
+        if $i1 != imgw goto label11;
+
+     label10:
+        rlewidth = rlewidth + 1;
+        $i0 = lastcount & 255;
+        $b4 = (byte) $i0;
+        rle[rlewidth] = $b4;
+        rlewidth = rlewidth + 1;
+        rle[rlewidth] = lastbyte;
+        lastbyte = 0;
+        lastcount = -1;
+
+     label11:
+        $i3 = x / 8;
+        uncompressed[$i3] = ib;
+        ib = 0;
+
+     label12:
+        x = x + 1;
+        goto label4;
+
+     label13:
+        if rlewidth >= bytewidth goto label14;
+
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("*b1m");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(rlewidth);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("W");
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r4);
+        $r5 = this.<org.apache.fop.render.pcl.PCLGenerator: java.io.OutputStream out>;
+        virtualinvoke $r5.<java.io.OutputStream: void write(byte[],int,int)>(rle, 0, rlewidth);
+        goto label15;
+
+     label14:
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("*b0m");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(bytewidth);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("W");
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>($r4);
+        $r5 = this.<org.apache.fop.render.pcl.PCLGenerator: java.io.OutputStream out>;
+        virtualinvoke $r5.<java.io.OutputStream: void write(byte[])>(uncompressed);
+
+     label15:
+        lastcount = -1;
+        rlewidth = 0;
+        y = y + 1;
+        goto label3;
+
+     label16:
+        virtualinvoke this.<org.apache.fop.render.pcl.PCLGenerator: void writeCommand(java.lang.String)>("*rB");
+        return;
+    }
+
+    static void <clinit>()
+    {
+        int i, $i0;
+        int[] $r0;
+        byte[] $r1;
+        short $s1;
+        byte $b2;
+
+        $r0 = newarray (int)[6];
+        $r0[0] = 75;
+        $r0[1] = 100;
+        $r0[2] = 150;
+        $r0[3] = 200;
+        $r0[4] = 300;
+        $r0[5] = 600;
+        <org.apache.fop.render.pcl.PCLGenerator: int[] PCL_RESOLUTIONS> = $r0;
+        $r0 = newarray (int)[4];
+        $r0[0] = 0;
+        $r0[1] = 2;
+        $r0[2] = 3;
+        $r0[3] = 1;
+        <org.apache.fop.render.pcl.PCLGenerator: int[] BAYER_D2> = $r0;
+        $r0 = <org.apache.fop.render.pcl.PCLGenerator: int[] BAYER_D2>;
+        $r0 = staticinvoke <org.apache.fop.render.pcl.PCLGenerator: int[] deriveBayerMatrix(int[])>($r0);
+        <org.apache.fop.render.pcl.PCLGenerator: int[] BAYER_D4> = $r0;
+        $r0 = <org.apache.fop.render.pcl.PCLGenerator: int[] BAYER_D4>;
+        $r0 = staticinvoke <org.apache.fop.render.pcl.PCLGenerator: int[] deriveBayerMatrix(int[])>($r0);
+        <org.apache.fop.render.pcl.PCLGenerator: int[] BAYER_D8> = $r0;
+        $r1 = newarray (byte)[256];
+        <org.apache.fop.render.pcl.PCLGenerator: byte[] THRESHOLD_TABLE> = $r1;
+        i = 0;
+
+     label0:
+        if i >= 256 goto label3;
+
+        $r1 = <org.apache.fop.render.pcl.PCLGenerator: byte[] THRESHOLD_TABLE>;
+        $i0 = i;
+        if i >= 240 goto label1;
+
+        $s1 = 255;
+        goto label2;
+
+     label1:
+        $s1 = 0;
+
+     label2:
+        $b2 = (byte) $s1;
+        $r1[$i0] = $b2;
+        i = i + 1;
+        goto label0;
+
+     label3:
+        return;
+    }
+}

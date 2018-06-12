@@ -1,0 +1,403 @@
+public class org.apache.fop.fonts.type1.PFBParser extends java.lang.Object
+{
+    private static final byte[] CURRENTFILE_EEXEC;
+    private static final byte[] CLEARTOMARK;
+
+    public void <init>()
+    {
+        org.apache.fop.fonts.type1.PFBParser this;
+
+        this := @this: org.apache.fop.fonts.type1.PFBParser;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public org.apache.fop.fonts.type1.PFBData parsePFB(java.net.URL) throws java.io.IOException
+    {
+        org.apache.fop.fonts.type1.PFBParser this;
+        java.net.URL url;
+        java.io.InputStream in;
+        org.apache.fop.fonts.type1.PFBData l3;
+        java.lang.Throwable l4, $r0;
+
+        this := @this: org.apache.fop.fonts.type1.PFBParser;
+        url := @parameter0: java.net.URL;
+        in = virtualinvoke url.<java.net.URL: java.io.InputStream openStream()>();
+
+     label0:
+        l3 = virtualinvoke this.<org.apache.fop.fonts.type1.PFBParser: org.apache.fop.fonts.type1.PFBData parsePFB(java.io.InputStream)>(in);
+
+     label1:
+        virtualinvoke in.<java.io.InputStream: void close()>();
+        return l3;
+
+     label2:
+        $r0 := @caughtexception;
+
+     label3:
+        l4 = $r0;
+
+     label4:
+        virtualinvoke in.<java.io.InputStream: void close()>();
+        throw l4;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    public org.apache.fop.fonts.type1.PFBData parsePFB(java.io.File) throws java.io.IOException
+    {
+        org.apache.fop.fonts.type1.PFBParser this;
+        java.io.File pfbFile;
+        java.io.FileInputStream $r0, in;
+        org.apache.fop.fonts.type1.PFBData l3;
+        java.lang.Throwable l4, $r1;
+
+        this := @this: org.apache.fop.fonts.type1.PFBParser;
+        pfbFile := @parameter0: java.io.File;
+        $r0 = new java.io.FileInputStream;
+        specialinvoke $r0.<java.io.FileInputStream: void <init>(java.io.File)>(pfbFile);
+        in = $r0;
+
+     label0:
+        l3 = virtualinvoke this.<org.apache.fop.fonts.type1.PFBParser: org.apache.fop.fonts.type1.PFBData parsePFB(java.io.InputStream)>(in);
+
+     label1:
+        virtualinvoke in.<java.io.InputStream: void close()>();
+        return l3;
+
+     label2:
+        $r1 := @caughtexception;
+
+     label3:
+        l4 = $r1;
+
+     label4:
+        virtualinvoke in.<java.io.InputStream: void close()>();
+        throw l4;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    public org.apache.fop.fonts.type1.PFBData parsePFB(java.io.InputStream) throws java.io.IOException
+    {
+        org.apache.fop.fonts.type1.PFBParser this;
+        java.io.InputStream in;
+        org.apache.fop.fonts.type1.PFBData $r0, pfb;
+        java.io.BufferedInputStream bin, $r1;
+        java.io.DataInputStream din, $r2;
+        int firstByte;
+
+        this := @this: org.apache.fop.fonts.type1.PFBParser;
+        in := @parameter0: java.io.InputStream;
+        $r0 = new org.apache.fop.fonts.type1.PFBData;
+        specialinvoke $r0.<org.apache.fop.fonts.type1.PFBData: void <init>()>();
+        pfb = $r0;
+        $r1 = new java.io.BufferedInputStream;
+        specialinvoke $r1.<java.io.BufferedInputStream: void <init>(java.io.InputStream)>(in);
+        bin = $r1;
+        $r2 = new java.io.DataInputStream;
+        specialinvoke $r2.<java.io.DataInputStream: void <init>(java.io.InputStream)>(bin);
+        din = $r2;
+        virtualinvoke din.<java.io.DataInputStream: void mark(int)>(32);
+        firstByte = virtualinvoke din.<java.io.DataInputStream: int readUnsignedByte()>();
+        virtualinvoke din.<java.io.DataInputStream: void reset()>();
+        if firstByte != 128 goto label0;
+
+        virtualinvoke pfb.<org.apache.fop.fonts.type1.PFBData: void setPFBFormat(int)>(1);
+        specialinvoke this.<org.apache.fop.fonts.type1.PFBParser: void parsePCFormat(org.apache.fop.fonts.type1.PFBData,java.io.DataInputStream)>(pfb, din);
+        goto label1;
+
+     label0:
+        virtualinvoke pfb.<org.apache.fop.fonts.type1.PFBData: void setPFBFormat(int)>(0);
+        specialinvoke this.<org.apache.fop.fonts.type1.PFBParser: void parseRAWFormat(org.apache.fop.fonts.type1.PFBData,java.io.BufferedInputStream)>(pfb, bin);
+
+     label1:
+        return pfb;
+    }
+
+    private static int swapInteger(int)
+    {
+        int value, $i0, $i1;
+
+        value := @parameter0: int;
+        $i0 = value >> 0;
+        $i0 = $i0 & 255;
+        $i0 = $i0 << 24;
+        $i1 = value >> 8;
+        $i1 = $i1 & 255;
+        $i1 = $i1 << 16;
+        $i0 = $i0 + $i1;
+        $i1 = value >> 16;
+        $i1 = $i1 & 255;
+        $i1 = $i1 << 8;
+        $i0 = $i0 + $i1;
+        $i1 = value >> 24;
+        $i1 = $i1 & 255;
+        $i1 = $i1 << 0;
+        $i0 = $i0 + $i1;
+        return $i0;
+    }
+
+    private void parsePCFormat(org.apache.fop.fonts.type1.PFBData, java.io.DataInputStream) throws java.io.IOException
+    {
+        org.apache.fop.fonts.type1.PFBParser this;
+        org.apache.fop.fonts.type1.PFBData pfb;
+        java.io.DataInputStream din;
+        int segmentHead, segmentType, len1, len2, len3, $i0;
+        byte[] headerSegment, encryptedSegment, trailerSegment;
+        java.io.IOException $r0;
+        java.lang.StringBuffer $r1;
+        java.lang.String $r2;
+
+        this := @this: org.apache.fop.fonts.type1.PFBParser;
+        pfb := @parameter0: org.apache.fop.fonts.type1.PFBData;
+        din := @parameter1: java.io.DataInputStream;
+        segmentHead = virtualinvoke din.<java.io.DataInputStream: int readUnsignedByte()>();
+        if segmentHead == 128 goto label0;
+
+        $r0 = new java.io.IOException;
+        specialinvoke $r0.<java.io.IOException: void <init>(java.lang.String)>("Invalid file format. Expected ASCII 80hex");
+        throw $r0;
+
+     label0:
+        virtualinvoke din.<java.io.DataInputStream: int readUnsignedByte()>();
+        $i0 = virtualinvoke din.<java.io.DataInputStream: int readInt()>();
+        len1 = staticinvoke <org.apache.fop.fonts.type1.PFBParser: int swapInteger(int)>($i0);
+        headerSegment = newarray (byte)[len1];
+        virtualinvoke din.<java.io.DataInputStream: void readFully(byte[])>(headerSegment);
+        virtualinvoke pfb.<org.apache.fop.fonts.type1.PFBData: void setHeaderSegment(byte[])>(headerSegment);
+        segmentHead = virtualinvoke din.<java.io.DataInputStream: int readUnsignedByte()>();
+        if segmentHead == 128 goto label1;
+
+        $r0 = new java.io.IOException;
+        specialinvoke $r0.<java.io.IOException: void <init>(java.lang.String)>("Invalid file format. Expected ASCII 80hex");
+        throw $r0;
+
+     label1:
+        virtualinvoke din.<java.io.DataInputStream: int readUnsignedByte()>();
+        $i0 = virtualinvoke din.<java.io.DataInputStream: int readInt()>();
+        len2 = staticinvoke <org.apache.fop.fonts.type1.PFBParser: int swapInteger(int)>($i0);
+        encryptedSegment = newarray (byte)[len2];
+        virtualinvoke din.<java.io.DataInputStream: void readFully(byte[])>(encryptedSegment);
+        virtualinvoke pfb.<org.apache.fop.fonts.type1.PFBData: void setEncryptedSegment(byte[])>(encryptedSegment);
+        segmentHead = virtualinvoke din.<java.io.DataInputStream: int readUnsignedByte()>();
+        if segmentHead == 128 goto label2;
+
+        $r0 = new java.io.IOException;
+        specialinvoke $r0.<java.io.IOException: void <init>(java.lang.String)>("Invalid file format. Expected ASCII 80hex");
+        throw $r0;
+
+     label2:
+        virtualinvoke din.<java.io.DataInputStream: int readUnsignedByte()>();
+        $i0 = virtualinvoke din.<java.io.DataInputStream: int readInt()>();
+        len3 = staticinvoke <org.apache.fop.fonts.type1.PFBParser: int swapInteger(int)>($i0);
+        trailerSegment = newarray (byte)[len3];
+        virtualinvoke din.<java.io.DataInputStream: void readFully(byte[])>(trailerSegment);
+        virtualinvoke pfb.<org.apache.fop.fonts.type1.PFBData: void setTrailerSegment(byte[])>(trailerSegment);
+        segmentHead = virtualinvoke din.<java.io.DataInputStream: int readUnsignedByte()>();
+        if segmentHead == 128 goto label3;
+
+        $r0 = new java.io.IOException;
+        specialinvoke $r0.<java.io.IOException: void <init>(java.lang.String)>("Invalid file format. Expected ASCII 80hex");
+        throw $r0;
+
+     label3:
+        segmentType = virtualinvoke din.<java.io.DataInputStream: int readUnsignedByte()>();
+        if segmentType == 3 goto label4;
+
+        $r0 = new java.io.IOException;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Expected segment type 3, but found: ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(segmentType);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r0.<java.io.IOException: void <init>(java.lang.String)>($r2);
+        throw $r0;
+
+     label4:
+        return;
+    }
+
+    private static final boolean byteCmp(byte[], int, byte[])
+    {
+        byte[] src, 'cmp';
+        int srcOffset, i, $i0;
+        byte $b1, $b2;
+
+        src := @parameter0: byte[];
+        srcOffset := @parameter1: int;
+        'cmp' := @parameter2: byte[];
+        i = 0;
+
+     label0:
+        $i0 = lengthof 'cmp';
+        if i >= $i0 goto label2;
+
+        $i0 = srcOffset + i;
+        $b1 = src[$i0];
+        $b2 = 'cmp'[i];
+        if $b1 == $b2 goto label1;
+
+        return 0;
+
+     label1:
+        i = i + 1;
+        goto label0;
+
+     label2:
+        return 1;
+    }
+
+    private void calcLengths(org.apache.fop.fonts.type1.PFBData, byte[])
+    {
+        org.apache.fop.fonts.type1.PFBParser this;
+        org.apache.fop.fonts.type1.PFBData pfb;
+        byte[] originalData, $r0, ws1, ws2, ws3, buffer, $r1, $r2;
+        int len1, numZeroes, len2, $i0, $i1, len3, $i4;
+        byte len3, $b2, $b3;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.type1.PFBParser;
+        pfb := @parameter0: org.apache.fop.fonts.type1.PFBData;
+        originalData := @parameter1: byte[];
+        len1 = 30;
+
+     label0:
+        $r0 = <org.apache.fop.fonts.type1.PFBParser: byte[] CURRENTFILE_EEXEC>;
+        $i0 = lengthof $r0;
+        $i1 = len1 - $i0;
+        $r0 = <org.apache.fop.fonts.type1.PFBParser: byte[] CURRENTFILE_EEXEC>;
+        $z0 = staticinvoke <org.apache.fop.fonts.type1.PFBParser: boolean byteCmp(byte[],int,byte[])>(originalData, $i1, $r0);
+        if $z0 != 0 goto label1;
+
+        len1 = len1 + 1;
+        goto label0;
+
+     label1:
+        len1 = len1 + 1;
+        len3 = 0;
+        $r1 = <org.apache.fop.fonts.type1.PFBParser: byte[] CLEARTOMARK>;
+        $i1 = lengthof $r1;
+        len3 = len3 - $i1;
+
+     label2:
+        $i1 = lengthof originalData;
+        $i1 = $i1 + len3;
+        $r0 = <org.apache.fop.fonts.type1.PFBParser: byte[] CLEARTOMARK>;
+        $z0 = staticinvoke <org.apache.fop.fonts.type1.PFBParser: boolean byteCmp(byte[],int,byte[])>(originalData, $i1, $r0);
+        if $z0 != 0 goto label3;
+
+        len3 = len3 + -1;
+        goto label2;
+
+     label3:
+        len3 = neg len3;
+        len3 = len3 + 1;
+        numZeroes = 0;
+        $r2 = newarray (byte)[1];
+        $r2[0] = 13;
+        ws1 = $r2;
+        $r2 = newarray (byte)[1];
+        $r2[0] = 10;
+        ws2 = $r2;
+        $r2 = newarray (byte)[1];
+        $r2[0] = 48;
+        ws3 = $r2;
+
+     label4:
+        $i1 = lengthof originalData;
+        $i1 = $i1 - len3;
+        $b2 = originalData[$i1];
+        $b3 = ws1[0];
+        if $b2 == $b3 goto label5;
+
+        $i1 = lengthof originalData;
+        $i1 = $i1 - len3;
+        $b2 = originalData[$i1];
+        $b3 = ws2[0];
+        if $b2 == $b3 goto label5;
+
+        $i1 = lengthof originalData;
+        $i1 = $i1 - len3;
+        $b2 = originalData[$i1];
+        $b3 = ws3[0];
+        if $b2 != $b3 goto label6;
+
+     label5:
+        if numZeroes >= 512 goto label6;
+
+        len3 = len3 + 1;
+        $i1 = lengthof originalData;
+        $i1 = $i1 - len3;
+        $b2 = originalData[$i1];
+        $b3 = ws3[0];
+        if $b2 != $b3 goto label4;
+
+        numZeroes = numZeroes + 1;
+        goto label4;
+
+     label6:
+        buffer = newarray (byte)[len1];
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(originalData, 0, buffer, 0, len1);
+        virtualinvoke pfb.<org.apache.fop.fonts.type1.PFBData: void setHeaderSegment(byte[])>(buffer);
+        $i4 = lengthof originalData;
+        $i4 = $i4 - len3;
+        len2 = $i4 - len1;
+        buffer = newarray (byte)[len2];
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(originalData, len1, buffer, 0, len2);
+        virtualinvoke pfb.<org.apache.fop.fonts.type1.PFBData: void setEncryptedSegment(byte[])>(buffer);
+        buffer = newarray (byte)[len3];
+        $i1 = len1 + len2;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(originalData, $i1, buffer, 0, len3);
+        virtualinvoke pfb.<org.apache.fop.fonts.type1.PFBData: void setTrailerSegment(byte[])>(buffer);
+        return;
+    }
+
+    private void parseRAWFormat(org.apache.fop.fonts.type1.PFBData, java.io.BufferedInputStream) throws java.io.IOException
+    {
+        org.apache.fop.fonts.type1.PFBParser this;
+        org.apache.fop.fonts.type1.PFBData pfb;
+        java.io.BufferedInputStream bin;
+        byte[] $r0;
+
+        this := @this: org.apache.fop.fonts.type1.PFBParser;
+        pfb := @parameter0: org.apache.fop.fonts.type1.PFBData;
+        bin := @parameter1: java.io.BufferedInputStream;
+        $r0 = staticinvoke <org.apache.commons.io.IOUtils: byte[] toByteArray(java.io.InputStream)>(bin);
+        specialinvoke this.<org.apache.fop.fonts.type1.PFBParser: void calcLengths(org.apache.fop.fonts.type1.PFBData,byte[])>(pfb, $r0);
+        return;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.String $r0;
+        java.io.UnsupportedEncodingException e, $r2;
+        byte[] $r1;
+        java.lang.RuntimeException $r3;
+
+     label0:
+        $r0 = "currentfile eexec";
+        $r1 = virtualinvoke $r0.<java.lang.String: byte[] getBytes(java.lang.String)>("US-ASCII");
+        <org.apache.fop.fonts.type1.PFBParser: byte[] CURRENTFILE_EEXEC> = $r1;
+        $r0 = "cleartomark";
+        $r1 = virtualinvoke $r0.<java.lang.String: byte[] getBytes(java.lang.String)>("US-ASCII");
+        <org.apache.fop.fonts.type1.PFBParser: byte[] CLEARTOMARK> = $r1;
+
+     label1:
+        goto label3;
+
+     label2:
+        $r2 := @caughtexception;
+        e = $r2;
+        $r3 = new java.lang.RuntimeException;
+        specialinvoke $r3.<java.lang.RuntimeException: void <init>(java.lang.String)>("Incompatible VM. It doesn\'t support the US-ASCII encoding");
+        throw $r3;
+
+     label3:
+        return;
+
+        catch java.io.UnsupportedEncodingException from label0 to label1 with label2;
+    }
+}

@@ -1,0 +1,90 @@
+public class org.apache.fop.layoutmgr.inline.WrapperLayoutManager extends org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager
+{
+    private org.apache.fop.fo.flow.Wrapper fobj;
+
+    public void <init>(org.apache.fop.fo.flow.Wrapper)
+    {
+        org.apache.fop.layoutmgr.inline.WrapperLayoutManager this;
+        org.apache.fop.fo.flow.Wrapper node;
+
+        this := @this: org.apache.fop.layoutmgr.inline.WrapperLayoutManager;
+        node := @parameter0: org.apache.fop.fo.flow.Wrapper;
+        specialinvoke this.<org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager: void <init>(org.apache.fop.fo.FObj)>(node);
+        this.<org.apache.fop.layoutmgr.inline.WrapperLayoutManager: org.apache.fop.fo.flow.Wrapper fobj> = node;
+        return;
+    }
+
+    public org.apache.fop.area.inline.InlineArea get(org.apache.fop.layoutmgr.LayoutContext)
+    {
+        org.apache.fop.layoutmgr.inline.WrapperLayoutManager this;
+        org.apache.fop.layoutmgr.LayoutContext context;
+        org.apache.fop.area.inline.InlineArea $r0, area;
+        org.apache.fop.fo.flow.Wrapper $r1, $r2;
+        boolean $z0;
+        java.lang.String $r3;
+
+        this := @this: org.apache.fop.layoutmgr.inline.WrapperLayoutManager;
+        context := @parameter0: org.apache.fop.layoutmgr.LayoutContext;
+        $r0 = new org.apache.fop.area.inline.InlineArea;
+        specialinvoke $r0.<org.apache.fop.area.inline.InlineArea: void <init>()>();
+        area = $r0;
+        $r1 = this.<org.apache.fop.layoutmgr.inline.WrapperLayoutManager: org.apache.fop.fo.flow.Wrapper fobj>;
+        $z0 = virtualinvoke $r1.<org.apache.fop.fo.flow.Wrapper: boolean hasId()>();
+        if $z0 == 0 goto label0;
+
+        $r2 = this.<org.apache.fop.layoutmgr.inline.WrapperLayoutManager: org.apache.fop.fo.flow.Wrapper fobj>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.fo.flow.Wrapper: java.lang.String getId()>();
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void setProducerID(org.apache.fop.area.Area,java.lang.String)>(area, $r3);
+
+     label0:
+        return area;
+    }
+
+    public void addAreas(org.apache.fop.layoutmgr.PositionIterator, org.apache.fop.layoutmgr.LayoutContext)
+    {
+        org.apache.fop.layoutmgr.inline.WrapperLayoutManager this;
+        org.apache.fop.layoutmgr.PositionIterator posIter;
+        org.apache.fop.layoutmgr.LayoutContext context;
+        org.apache.fop.area.inline.InlineArea area;
+        org.apache.fop.fo.flow.Wrapper $r0;
+        boolean $z0;
+        org.apache.fop.layoutmgr.LayoutManager $r1;
+
+        this := @this: org.apache.fop.layoutmgr.inline.WrapperLayoutManager;
+        posIter := @parameter0: org.apache.fop.layoutmgr.PositionIterator;
+        context := @parameter1: org.apache.fop.layoutmgr.LayoutContext;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.WrapperLayoutManager: org.apache.fop.fo.flow.Wrapper fobj>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.fo.flow.Wrapper: boolean hasId()>();
+        if $z0 == 0 goto label0;
+
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.WrapperLayoutManager: void addId()>();
+        area = virtualinvoke this.<org.apache.fop.layoutmgr.inline.WrapperLayoutManager: org.apache.fop.area.inline.InlineArea getEffectiveArea()>();
+        $r1 = this.<org.apache.fop.layoutmgr.inline.WrapperLayoutManager: org.apache.fop.layoutmgr.LayoutManager parentLM>;
+        interfaceinvoke $r1.<org.apache.fop.layoutmgr.LayoutManager: void addChildArea(org.apache.fop.area.Area)>(area);
+
+     label0:
+        $z0 = virtualinvoke posIter.<org.apache.fop.layoutmgr.PositionIterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        virtualinvoke posIter.<org.apache.fop.layoutmgr.PositionIterator: java.lang.Object next()>();
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    protected void addId()
+    {
+        org.apache.fop.layoutmgr.inline.WrapperLayoutManager this;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager $r0;
+        org.apache.fop.fo.flow.Wrapper $r1;
+        java.lang.String $r2;
+
+        this := @this: org.apache.fop.layoutmgr.inline.WrapperLayoutManager;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.WrapperLayoutManager: org.apache.fop.layoutmgr.PageSequenceLayoutManager getPSLM()>();
+        $r1 = this.<org.apache.fop.layoutmgr.inline.WrapperLayoutManager: org.apache.fop.fo.flow.Wrapper fobj>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.flow.Wrapper: java.lang.String getId()>();
+        virtualinvoke $r0.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: void addIDToPage(java.lang.String)>($r2);
+        return;
+    }
+}

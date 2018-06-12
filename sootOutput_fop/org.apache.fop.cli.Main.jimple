@@ -1,0 +1,384 @@
+public class org.apache.fop.cli.Main extends java.lang.Object
+{
+    static java.lang.Class array$Ljava$lang$String;
+
+    public void <init>()
+    {
+        org.apache.fop.cli.Main this;
+
+        this := @this: org.apache.fop.cli.Main;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public static java.net.URL[] getJARList() throws java.net.MalformedURLException
+    {
+        java.lang.String fopHome, optionalLib, $r1, $r2, $r5, $r6;
+        java.io.File baseDir, buildDir, fopJar, libDir, $r0, $r10;
+        java.util.ArrayList jars, $r7;
+        org.apache.fop.cli.Main$1 filter, $r9;
+        java.io.File[] files;
+        int i, size, $i0;
+        java.net.URL[] urls, $r11, $r13;
+        boolean $z0;
+        java.lang.RuntimeException $r3;
+        java.lang.StringBuffer $r4;
+        java.net.URL $r8;
+        java.lang.Object[] $r12;
+
+        fopHome = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("fop.home");
+        if fopHome == null goto label0;
+
+        $r0 = new java.io.File;
+        specialinvoke $r0.<java.io.File: void <init>(java.lang.String)>(fopHome);
+        baseDir = virtualinvoke $r0.<java.io.File: java.io.File getAbsoluteFile()>();
+        goto label1;
+
+     label0:
+        $r0 = new java.io.File;
+        specialinvoke $r0.<java.io.File: void <init>(java.lang.String)>(".");
+        $r0 = virtualinvoke $r0.<java.io.File: java.io.File getAbsoluteFile()>();
+        baseDir = virtualinvoke $r0.<java.io.File: java.io.File getParentFile()>();
+
+     label1:
+        $r1 = "build";
+        $r2 = virtualinvoke baseDir.<java.io.File: java.lang.String getName()>();
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>($r2);
+        if $z0 == 0 goto label2;
+
+        buildDir = baseDir;
+        baseDir = virtualinvoke baseDir.<java.io.File: java.io.File getParentFile()>();
+        goto label3;
+
+     label2:
+        $r0 = new java.io.File;
+        specialinvoke $r0.<java.io.File: void <init>(java.io.File,java.lang.String)>(baseDir, "build");
+        buildDir = $r0;
+
+     label3:
+        $r0 = new java.io.File;
+        specialinvoke $r0.<java.io.File: void <init>(java.io.File,java.lang.String)>(buildDir, "fop.jar");
+        fopJar = $r0;
+        $z0 = virtualinvoke fopJar.<java.io.File: boolean exists()>();
+        if $z0 != 0 goto label4;
+
+        $r0 = new java.io.File;
+        specialinvoke $r0.<java.io.File: void <init>(java.io.File,java.lang.String)>(baseDir, "fop.jar");
+        fopJar = $r0;
+
+     label4:
+        $z0 = virtualinvoke fopJar.<java.io.File: boolean exists()>();
+        if $z0 != 0 goto label5;
+
+        $r3 = new java.lang.RuntimeException;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("fop.jar not found in directory: ");
+        $r5 = virtualinvoke baseDir.<java.io.File: java.lang.String getAbsolutePath()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" (or below)");
+        $r6 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r3.<java.lang.RuntimeException: void <init>(java.lang.String)>($r6);
+        throw $r3;
+
+     label5:
+        $r7 = new java.util.ArrayList;
+        specialinvoke $r7.<java.util.ArrayList: void <init>()>();
+        jars = $r7;
+        $r8 = virtualinvoke fopJar.<java.io.File: java.net.URL toURL()>();
+        interfaceinvoke jars.<java.util.List: boolean add(java.lang.Object)>($r8);
+        $r9 = new org.apache.fop.cli.Main$1;
+        specialinvoke $r9.<org.apache.fop.cli.Main$1: void <init>()>();
+        filter = $r9;
+        $r0 = new java.io.File;
+        specialinvoke $r0.<java.io.File: void <init>(java.io.File,java.lang.String)>(baseDir, "lib");
+        libDir = $r0;
+        $z0 = virtualinvoke libDir.<java.io.File: boolean exists()>();
+        if $z0 != 0 goto label6;
+
+        libDir = baseDir;
+
+     label6:
+        files = virtualinvoke libDir.<java.io.File: java.io.File[] listFiles(java.io.FileFilter)>(filter);
+        if files == null goto label8;
+
+        i = 0;
+        size = lengthof files;
+
+     label7:
+        if i >= size goto label8;
+
+        $r10 = files[i];
+        $r8 = virtualinvoke $r10.<java.io.File: java.net.URL toURL()>();
+        interfaceinvoke jars.<java.util.List: boolean add(java.lang.Object)>($r8);
+        i = i + 1;
+        goto label7;
+
+     label8:
+        optionalLib = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("fop.optional.lib");
+        if optionalLib == null goto label10;
+
+        $r0 = new java.io.File;
+        specialinvoke $r0.<java.io.File: void <init>(java.lang.String)>(optionalLib);
+        files = virtualinvoke $r0.<java.io.File: java.io.File[] listFiles(java.io.FileFilter)>(filter);
+        if files == null goto label10;
+
+        i = 0;
+        size = lengthof files;
+
+     label9:
+        if i >= size goto label10;
+
+        $r10 = files[i];
+        $r8 = virtualinvoke $r10.<java.io.File: java.net.URL toURL()>();
+        interfaceinvoke jars.<java.util.List: boolean add(java.lang.Object)>($r8);
+        i = i + 1;
+        goto label9;
+
+     label10:
+        $i0 = interfaceinvoke jars.<java.util.List: int size()>();
+        $r11 = newarray (java.net.URL)[$i0];
+        $r12 = interfaceinvoke jars.<java.util.List: java.lang.Object[] toArray(java.lang.Object[])>($r11);
+        $r13 = (java.net.URL[]) $r12;
+        urls = (java.net.URL[]) $r13;
+        return urls;
+    }
+
+    public static boolean checkDependencies()
+    {
+        java.lang.Class clazz;
+        java.lang.Exception e, $r0;
+        boolean $z0;
+
+     label0:
+        clazz = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>("org.apache.commons.io.IOUtils");
+        if clazz == null goto label1;
+
+        clazz = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>("org.apache.avalon.framework.configuration.Configuration");
+
+     label1:
+        if clazz == null goto label2;
+
+        $z0 = 1;
+        goto label3;
+
+     label2:
+        $z0 = 0;
+
+     label3:
+        return $z0;
+
+     label4:
+        $r0 := @caughtexception;
+        e = $r0;
+        return 0;
+
+        catch java.lang.Exception from label0 to label3 with label4;
+    }
+
+    public static void startFOPWithDynamicClasspath(java.lang.String[])
+    {
+        java.lang.String[] args;
+        java.net.URL[] urls;
+        java.net.URLClassLoader loader, $r1;
+        java.lang.Class clazz, $r0;
+        byte $b0;
+        java.lang.reflect.Method mainMethod;
+        java.lang.Exception e, $r9;
+        java.lang.Thread $r2;
+        java.lang.String $r4;
+        java.lang.Class[] $r5;
+        java.lang.Object[] $r7;
+        java.io.PrintStream $r10;
+
+        args := @parameter0: java.lang.String[];
+
+     label0:
+        urls = staticinvoke <org.apache.fop.cli.Main: java.net.URL[] getJARList()>();
+        $r1 = new java.net.URLClassLoader;
+        specialinvoke $r1.<java.net.URLClassLoader: void <init>(java.net.URL[],java.lang.ClassLoader)>(urls, null);
+        loader = $r1;
+        $r2 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        virtualinvoke $r2.<java.lang.Thread: void setContextClassLoader(java.lang.ClassLoader)>(loader);
+        clazz = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String,boolean,java.lang.ClassLoader)>("org.apache.fop.cli.Main", 1, loader);
+        $r4 = "startFOP";
+        $r5 = newarray (java.lang.Class)[1];
+        $b0 = 0;
+        $r0 = <org.apache.fop.cli.Main: java.lang.Class array$Ljava$lang$String>;
+        if $r0 != null goto label1;
+
+        $r0 = staticinvoke <org.apache.fop.cli.Main: java.lang.Class class$(java.lang.String)>("[Ljava.lang.String;");
+        <org.apache.fop.cli.Main: java.lang.Class array$Ljava$lang$String> = $r0;
+        goto label2;
+
+     label1:
+        $r0 = <org.apache.fop.cli.Main: java.lang.Class array$Ljava$lang$String>;
+
+     label2:
+        $r5[$b0] = $r0;
+        mainMethod = virtualinvoke clazz.<java.lang.Class: java.lang.reflect.Method getMethod(java.lang.String,java.lang.Class[])>($r4, $r5);
+        $r7 = newarray (java.lang.Object)[1];
+        $r7[0] = args;
+        virtualinvoke mainMethod.<java.lang.reflect.Method: java.lang.Object invoke(java.lang.Object,java.lang.Object[])>(null, $r7);
+
+     label3:
+        goto label5;
+
+     label4:
+        $r9 := @caughtexception;
+        e = $r9;
+        $r10 = <java.lang.System: java.io.PrintStream err>;
+        virtualinvoke $r10.<java.io.PrintStream: void println(java.lang.String)>("Unable to start FOP:");
+        virtualinvoke e.<java.lang.Exception: void printStackTrace()>();
+        staticinvoke <java.lang.System: void exit(int)>(-1);
+
+     label5:
+        return;
+
+        catch java.lang.Exception from label0 to label3 with label4;
+    }
+
+    public static void startFOP(java.lang.String[])
+    {
+        java.lang.String[] args;
+        org.apache.fop.cli.CommandLineOptions options, $r1;
+        null_type foUserAgent;
+        java.io.BufferedOutputStream out, $r3;
+        java.lang.String outputFormat, $r6;
+        java.io.FileOutputStream $r0;
+        java.lang.Throwable l5, $r8;
+        java.lang.Exception e, $r9;
+        org.apache.fop.apps.FOUserAgent foUserAgent;
+        java.io.File $r2, $r4, $r5;
+        boolean $z0;
+        org.apache.fop.cli.InputHandler $r7;
+        org.apache.commons.logging.Log $r10;
+
+        args := @parameter0: java.lang.String[];
+        options = null;
+        foUserAgent = null;
+        out = null;
+
+     label0:
+        $r1 = new org.apache.fop.cli.CommandLineOptions;
+        specialinvoke $r1.<org.apache.fop.cli.CommandLineOptions: void <init>()>();
+        options = $r1;
+        virtualinvoke options.<org.apache.fop.cli.CommandLineOptions: void parse(java.lang.String[])>(args);
+        foUserAgent = virtualinvoke options.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.apps.FOUserAgent getFOUserAgent()>();
+        outputFormat = virtualinvoke options.<org.apache.fop.cli.CommandLineOptions: java.lang.String getOutputFormat()>();
+
+     label1:
+        $r2 = virtualinvoke options.<org.apache.fop.cli.CommandLineOptions: java.io.File getOutputFile()>();
+        if $r2 == null goto label2;
+
+        $r3 = new java.io.BufferedOutputStream;
+        $r0 = new java.io.FileOutputStream;
+        $r4 = virtualinvoke options.<org.apache.fop.cli.CommandLineOptions: java.io.File getOutputFile()>();
+        specialinvoke $r0.<java.io.FileOutputStream: void <init>(java.io.File)>($r4);
+        specialinvoke $r3.<java.io.BufferedOutputStream: void <init>(java.io.OutputStream)>($r0);
+        out = $r3;
+        $r5 = virtualinvoke options.<org.apache.fop.cli.CommandLineOptions: java.io.File getOutputFile()>();
+        virtualinvoke foUserAgent.<org.apache.fop.apps.FOUserAgent: void setOutputFile(java.io.File)>($r5);
+
+     label2:
+        $r6 = "text/xsl";
+        $z0 = virtualinvoke $r6.<java.lang.String: boolean equals(java.lang.Object)>(outputFormat);
+        if $z0 != 0 goto label3;
+
+        $r7 = virtualinvoke options.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.cli.InputHandler getInputHandler()>();
+        virtualinvoke $r7.<org.apache.fop.cli.InputHandler: void renderTo(org.apache.fop.apps.FOUserAgent,java.lang.String,java.io.OutputStream)>(foUserAgent, outputFormat, out);
+        goto label4;
+
+     label3:
+        $r7 = virtualinvoke options.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.cli.InputHandler getInputHandler()>();
+        virtualinvoke $r7.<org.apache.fop.cli.InputHandler: void transformTo(java.io.OutputStream)>(out);
+
+     label4:
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.OutputStream)>(out);
+        goto label8;
+
+     label5:
+        $r8 := @caughtexception;
+
+     label6:
+        l5 = $r8;
+
+     label7:
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.OutputStream)>(out);
+        throw l5;
+
+     label8:
+        goto label12;
+
+     label9:
+        $r9 := @caughtexception;
+        e = $r9;
+        if options == null goto label10;
+
+        $r10 = virtualinvoke options.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log getLogger()>();
+        interfaceinvoke $r10.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("Exception", e);
+
+     label10:
+        $r2 = virtualinvoke options.<org.apache.fop.cli.CommandLineOptions: java.io.File getOutputFile()>();
+        if $r2 == null goto label11;
+
+        $r2 = virtualinvoke options.<org.apache.fop.cli.CommandLineOptions: java.io.File getOutputFile()>();
+        virtualinvoke $r2.<java.io.File: boolean delete()>();
+
+     label11:
+        staticinvoke <java.lang.System: void exit(int)>(1);
+
+     label12:
+        return;
+
+        catch java.lang.Throwable from label1 to label4 with label5;
+        catch java.lang.Throwable from label6 to label7 with label5;
+        catch java.lang.Exception from label0 to label8 with label9;
+    }
+
+    public static void main(java.lang.String[])
+    {
+        java.lang.String[] args;
+        boolean $z0;
+
+        args := @parameter0: java.lang.String[];
+        $z0 = staticinvoke <org.apache.fop.cli.Main: boolean checkDependencies()>();
+        if $z0 == 0 goto label0;
+
+        staticinvoke <org.apache.fop.cli.Main: void startFOP(java.lang.String[])>(args);
+        goto label1;
+
+     label0:
+        staticinvoke <org.apache.fop.cli.Main: void startFOPWithDynamicClasspath(java.lang.String[])>(args);
+
+     label1:
+        return;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+}

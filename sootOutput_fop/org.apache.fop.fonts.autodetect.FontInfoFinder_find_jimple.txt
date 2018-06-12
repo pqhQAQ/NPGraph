@@ -1,0 +1,76 @@
+method: org.apache.fop.fonts.autodetect.FontInfoFinder.find:1693674689
+1855930182:this := @this: org.apache.fop.fonts.autodetect.FontInfoFinder
+418596199:fontUrl := @parameter0: java.net.URL
+189889021:resolver := @parameter1: org.apache.fop.fonts.FontResolver
+304076505:fontCache := @parameter2: org.apache.fop.fonts.FontCache
+1919859895:embedUrl = null
+1139879297:embedUrl = virtualinvoke fontUrl.<java.net.URL: java.lang.String toExternalForm()>()
+1025567906:fileLastModified = -1L
+2031215943:if fontCache == null goto customFont = null
+124990520:conn = virtualinvoke fontUrl.<java.net.URL: java.net.URLConnection openConnection()>()
+291896166:fileLastModified = virtualinvoke conn.<java.net.URLConnection: long getLastModified()>()
+92579062:$r1 = virtualinvoke conn.<java.net.URLConnection: java.io.InputStream getInputStream()>()
+1198134606:staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.InputStream)>($r1)
+94165123:goto [?= (branch)]
+1236841619:$r2 := @caughtexception
+2085258069:l8 = $r2
+223230783:$r1 = virtualinvoke conn.<java.net.URLConnection: java.io.InputStream getInputStream()>()
+185838572:staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.InputStream)>($r1)
+1530220710:throw l8
+155316498:goto [?= $z0 = virtualinvoke fontCache.<org.apache.fop.fonts.FontCache: boolean containsFont(java.lang.String)>(embedUrl)]
+61679017:$r3 := @caughtexception
+1211750781:e = $r3
+1102720470:$r4 = this.<org.apache.fop.fonts.autodetect.FontInfoFinder: org.apache.commons.logging.Log log>
+639065680:$r0 = new java.lang.StringBuffer
+54564278:specialinvoke $r0.<java.lang.StringBuffer: void <init>()>()
+944353414:$r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("IOError: ")
+650704213:$r5 = virtualinvoke e.<java.io.IOException: java.lang.String getMessage()>()
+1398977367:$r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5)
+1961639813:$r6 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>()
+1111388347:interfaceinvoke $r4.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r6)
+2002463495:fileLastModified = 0L
+694211257:$z0 = virtualinvoke fontCache.<org.apache.fop.fonts.FontCache: boolean containsFont(java.lang.String)>(embedUrl)
+329942248:if $z0 == 0 goto $z0 = virtualinvoke fontCache.<org.apache.fop.fonts.FontCache: boolean isFailedFont(java.lang.String,long)>(embedUrl, fileLastModified)
+1229046599:fontInfo = virtualinvoke fontCache.<org.apache.fop.fonts.FontCache: org.apache.fop.fonts.CachedFontInfo getFont(java.lang.String)>(embedUrl)
+337887214:$l0 = virtualinvoke fontInfo.<org.apache.fop.fonts.CachedFontInfo: long lastModified()>()
+1656604694:$b1 = $l0 cmp fileLastModified
+429608703:if $b1 != 0 goto virtualinvoke fontCache.<org.apache.fop.fonts.FontCache: void removeFont(java.lang.String)>(embedUrl)
+1201891681:return fontInfo
+1858722463:virtualinvoke fontCache.<org.apache.fop.fonts.FontCache: void removeFont(java.lang.String)>(embedUrl)
+103822732:goto [?= customFont = null]
+1564340733:$z0 = virtualinvoke fontCache.<org.apache.fop.fonts.FontCache: boolean isFailedFont(java.lang.String,long)>(embedUrl, fileLastModified)
+232409310:if $z0 == 0 goto customFont = null
+1248288108:$r4 = this.<org.apache.fop.fonts.autodetect.FontInfoFinder: org.apache.commons.logging.Log log>
+1210483613:$z0 = interfaceinvoke $r4.<org.apache.commons.logging.Log: boolean isDebugEnabled()>()
+1485495660:if $z0 == 0 goto return null
+886208329:$r4 = this.<org.apache.fop.fonts.autodetect.FontInfoFinder: org.apache.commons.logging.Log log>
+1704293558:$r0 = new java.lang.StringBuffer
+2074398354:specialinvoke $r0.<java.lang.StringBuffer: void <init>()>()
+457381309:$r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Skipping font file that failed to load previously: ")
+1554533466:$r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(embedUrl)
+757913660:$r6 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>()
+1529373263:interfaceinvoke $r4.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r6)
+559026215:return null
+1793462598:customFont = null
+370381005:customFont = staticinvoke <org.apache.fop.fonts.FontLoader: org.apache.fop.fonts.CustomFont loadFont(java.net.URL,org.apache.fop.fonts.FontResolver)>(fontUrl, resolver)
+1585942029:goto [?= $r8 = specialinvoke this.<org.apache.fop.fonts.autodetect.FontInfoFinder: org.apache.fop.fonts.EmbedFontInfo fontInfoFromCustomFont(java.net.URL,org.apache.fop.fonts.CustomFont,org.apache.fop.fonts.FontCache)>(fontUrl, customFont, fontCache)]
+1011517946:$r7 := @caughtexception
+360654839:e = $r7
+1729131778:$r4 = this.<org.apache.fop.fonts.autodetect.FontInfoFinder: org.apache.commons.logging.Log log>
+1769081642:$z0 = interfaceinvoke $r4.<org.apache.commons.logging.Log: boolean isErrorEnabled()>()
+1044064379:if $z0 == 0 goto (branch)
+199132778:$r4 = this.<org.apache.fop.fonts.autodetect.FontInfoFinder: org.apache.commons.logging.Log log>
+1045077820:$r0 = new java.lang.StringBuffer
+1890391252:specialinvoke $r0.<java.lang.StringBuffer: void <init>()>()
+28498800:$r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unable to load font file: ")
+250685357:$r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(embedUrl)
+815313634:$r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(". Reason: ")
+127403722:$r5 = virtualinvoke e.<java.lang.Exception: java.lang.String getMessage()>()
+233159595:$r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5)
+1703141037:$r6 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>()
+881877996:interfaceinvoke $r4.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r6)
+12816197:if fontCache == null goto return null
+955215576:virtualinvoke fontCache.<org.apache.fop.fonts.FontCache: void registerFailedFont(java.lang.String,long)>(embedUrl, fileLastModified)
+143753656:return null
+375851094:$r8 = specialinvoke this.<org.apache.fop.fonts.autodetect.FontInfoFinder: org.apache.fop.fonts.EmbedFontInfo fontInfoFromCustomFont(java.net.URL,org.apache.fop.fonts.CustomFont,org.apache.fop.fonts.FontCache)>(fontUrl, customFont, fontCache)
+1179931031:return $r8

@@ -1,0 +1,305 @@
+public class org.apache.fop.pdf.PDFImageXObject extends org.apache.fop.pdf.PDFXObject
+{
+    private org.apache.fop.pdf.PDFImage pdfimage;
+
+    public void <init>(int, org.apache.fop.pdf.PDFImage)
+    {
+        org.apache.fop.pdf.PDFImageXObject this;
+        int xnumber;
+        org.apache.fop.pdf.PDFImage img;
+        org.apache.fop.pdf.PDFName $r0;
+        java.lang.StringBuffer $r1;
+        java.lang.String $r2;
+
+        this := @this: org.apache.fop.pdf.PDFImageXObject;
+        xnumber := @parameter0: int;
+        img := @parameter1: org.apache.fop.pdf.PDFImage;
+        specialinvoke this.<org.apache.fop.pdf.PDFXObject: void <init>()>();
+        $r0 = new org.apache.fop.pdf.PDFName;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Im");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(xnumber);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r0.<org.apache.fop.pdf.PDFName: void <init>(java.lang.String)>($r2);
+        virtualinvoke this.<org.apache.fop.pdf.PDFImageXObject: void put(java.lang.String,java.lang.Object)>("Name", $r0);
+        this.<org.apache.fop.pdf.PDFImageXObject: org.apache.fop.pdf.PDFImage pdfimage> = img;
+        return;
+    }
+
+    protected int output(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFImageXObject this;
+        java.io.OutputStream stream;
+        int length;
+
+        this := @this: org.apache.fop.pdf.PDFImageXObject;
+        stream := @parameter0: java.io.OutputStream;
+        length = specialinvoke this.<org.apache.fop.pdf.PDFXObject: int output(java.io.OutputStream)>(stream);
+        this.<org.apache.fop.pdf.PDFImageXObject: org.apache.fop.pdf.PDFImage pdfimage> = null;
+        return length;
+    }
+
+    protected void populateStreamDict(java.lang.Object)
+    {
+        org.apache.fop.pdf.PDFImageXObject this;
+        java.lang.Object lengthEntry;
+        org.apache.fop.pdf.PDFImage $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.pdf.PDFImageXObject;
+        lengthEntry := @parameter0: java.lang.Object;
+        specialinvoke this.<org.apache.fop.pdf.PDFXObject: void populateStreamDict(java.lang.Object)>(lengthEntry);
+        $r0 = this.<org.apache.fop.pdf.PDFImageXObject: org.apache.fop.pdf.PDFImage pdfimage>;
+        $z0 = interfaceinvoke $r0.<org.apache.fop.pdf.PDFImage: boolean isPS()>();
+        if $z0 == 0 goto label0;
+
+        specialinvoke this.<org.apache.fop.pdf.PDFImageXObject: void populateDictionaryFromPS()>();
+        goto label1;
+
+     label0:
+        specialinvoke this.<org.apache.fop.pdf.PDFImageXObject: void populateDictionaryFromImage()>();
+
+     label1:
+        return;
+    }
+
+    private void populateDictionaryFromPS()
+    {
+        org.apache.fop.pdf.PDFImageXObject this;
+        org.apache.fop.pdf.PDFName $r0;
+        org.apache.fop.pdf.PDFDocument $r1;
+        org.apache.fop.pdf.PDFProfile $r2;
+
+        this := @this: org.apache.fop.pdf.PDFImageXObject;
+        $r1 = virtualinvoke this.<org.apache.fop.pdf.PDFImageXObject: org.apache.fop.pdf.PDFDocument getDocumentSafely()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFProfile getProfile()>();
+        virtualinvoke $r2.<org.apache.fop.pdf.PDFProfile: void verifyPSXObjectsAllowed()>();
+        $r0 = new org.apache.fop.pdf.PDFName;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFName: void <init>(java.lang.String)>("PS");
+        virtualinvoke this.<org.apache.fop.pdf.PDFImageXObject: void put(java.lang.String,java.lang.Object)>("Subtype", $r0);
+        return;
+    }
+
+    private void populateDictionaryFromImage()
+    {
+        org.apache.fop.pdf.PDFImageXObject this;
+        org.apache.fop.pdf.PDFName $r0, $r1;
+        org.apache.fop.pdf.PDFICCStream pdfICCStream;
+        org.apache.fop.pdf.PDFDeviceColorSpace cs, $r10;
+        java.lang.Float zero, one, $r8;
+        org.apache.fop.pdf.PDFArray decode, mask, $r5, $r9;
+        int i, c, $i0, $i1;
+        org.apache.fop.pdf.PDFColor transp;
+        org.apache.fop.pdf.PDFReference ref;
+        java.lang.Integer $r2, $r11;
+        org.apache.fop.pdf.PDFImage $r3, $r4;
+        java.lang.Object[] $r6;
+        java.lang.String $r7;
+        boolean $z0;
+
+        this := @this: org.apache.fop.pdf.PDFImageXObject;
+        $r0 = new org.apache.fop.pdf.PDFName;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFName: void <init>(java.lang.String)>("Image");
+        virtualinvoke this.<org.apache.fop.pdf.PDFImageXObject: void put(java.lang.String,java.lang.Object)>("Subtype", $r0);
+        $r2 = new java.lang.Integer;
+        $r3 = this.<org.apache.fop.pdf.PDFImageXObject: org.apache.fop.pdf.PDFImage pdfimage>;
+        $i0 = interfaceinvoke $r3.<org.apache.fop.pdf.PDFImage: int getWidth()>();
+        specialinvoke $r2.<java.lang.Integer: void <init>(int)>($i0);
+        virtualinvoke this.<org.apache.fop.pdf.PDFImageXObject: void put(java.lang.String,java.lang.Object)>("Width", $r2);
+        $r2 = new java.lang.Integer;
+        $r3 = this.<org.apache.fop.pdf.PDFImageXObject: org.apache.fop.pdf.PDFImage pdfimage>;
+        $i0 = interfaceinvoke $r3.<org.apache.fop.pdf.PDFImage: int getHeight()>();
+        specialinvoke $r2.<java.lang.Integer: void <init>(int)>($i0);
+        virtualinvoke this.<org.apache.fop.pdf.PDFImageXObject: void put(java.lang.String,java.lang.Object)>("Height", $r2);
+        $r2 = new java.lang.Integer;
+        $r3 = this.<org.apache.fop.pdf.PDFImageXObject: org.apache.fop.pdf.PDFImage pdfimage>;
+        $i0 = interfaceinvoke $r3.<org.apache.fop.pdf.PDFImage: int getBitsPerComponent()>();
+        specialinvoke $r2.<java.lang.Integer: void <init>(int)>($i0);
+        virtualinvoke this.<org.apache.fop.pdf.PDFImageXObject: void put(java.lang.String,java.lang.Object)>("BitsPerComponent", $r2);
+        $r4 = this.<org.apache.fop.pdf.PDFImageXObject: org.apache.fop.pdf.PDFImage pdfimage>;
+        pdfICCStream = interfaceinvoke $r4.<org.apache.fop.pdf.PDFImage: org.apache.fop.pdf.PDFICCStream getICCStream()>();
+        if pdfICCStream == null goto label0;
+
+        $r5 = new org.apache.fop.pdf.PDFArray;
+        $r6 = newarray (java.lang.Object)[2];
+        $r1 = new org.apache.fop.pdf.PDFName;
+        specialinvoke $r1.<org.apache.fop.pdf.PDFName: void <init>(java.lang.String)>("ICCBased");
+        $r6[0] = $r1;
+        $r6[1] = pdfICCStream;
+        specialinvoke $r5.<org.apache.fop.pdf.PDFArray: void <init>(org.apache.fop.pdf.PDFObject,java.lang.Object[])>(this, $r6);
+        virtualinvoke this.<org.apache.fop.pdf.PDFImageXObject: void put(java.lang.String,java.lang.Object)>("ColorSpace", $r5);
+        goto label1;
+
+     label0:
+        $r4 = this.<org.apache.fop.pdf.PDFImageXObject: org.apache.fop.pdf.PDFImage pdfimage>;
+        cs = interfaceinvoke $r4.<org.apache.fop.pdf.PDFImage: org.apache.fop.pdf.PDFDeviceColorSpace getColorSpace()>();
+        $r0 = new org.apache.fop.pdf.PDFName;
+        $r7 = virtualinvoke cs.<org.apache.fop.pdf.PDFDeviceColorSpace: java.lang.String getName()>();
+        specialinvoke $r0.<org.apache.fop.pdf.PDFName: void <init>(java.lang.String)>($r7);
+        virtualinvoke this.<org.apache.fop.pdf.PDFImageXObject: void put(java.lang.String,java.lang.Object)>("ColorSpace", $r0);
+
+     label1:
+        $r4 = this.<org.apache.fop.pdf.PDFImageXObject: org.apache.fop.pdf.PDFImage pdfimage>;
+        $z0 = interfaceinvoke $r4.<org.apache.fop.pdf.PDFImage: boolean isInverted()>();
+        if $z0 == 0 goto label4;
+
+        $r8 = new java.lang.Float;
+        specialinvoke $r8.<java.lang.Float: void <init>(float)>(0.0F);
+        zero = $r8;
+        $r8 = new java.lang.Float;
+        specialinvoke $r8.<java.lang.Float: void <init>(float)>(1.0F);
+        one = $r8;
+        $r9 = new org.apache.fop.pdf.PDFArray;
+        specialinvoke $r9.<org.apache.fop.pdf.PDFArray: void <init>(org.apache.fop.pdf.PDFObject)>(this);
+        decode = $r9;
+        i = 0;
+        $r4 = this.<org.apache.fop.pdf.PDFImageXObject: org.apache.fop.pdf.PDFImage pdfimage>;
+        $r10 = interfaceinvoke $r4.<org.apache.fop.pdf.PDFImage: org.apache.fop.pdf.PDFDeviceColorSpace getColorSpace()>();
+        c = virtualinvoke $r10.<org.apache.fop.pdf.PDFDeviceColorSpace: int getNumComponents()>();
+
+     label2:
+        if i >= c goto label3;
+
+        virtualinvoke decode.<org.apache.fop.pdf.PDFArray: void add(java.lang.Object)>(one);
+        virtualinvoke decode.<org.apache.fop.pdf.PDFArray: void add(java.lang.Object)>(zero);
+        i = i + 1;
+        goto label2;
+
+     label3:
+        virtualinvoke this.<org.apache.fop.pdf.PDFImageXObject: void put(java.lang.String,java.lang.Object)>("Decode", decode);
+
+     label4:
+        $r4 = this.<org.apache.fop.pdf.PDFImageXObject: org.apache.fop.pdf.PDFImage pdfimage>;
+        $z0 = interfaceinvoke $r4.<org.apache.fop.pdf.PDFImage: boolean isTransparent()>();
+        if $z0 == 0 goto label7;
+
+        $r4 = this.<org.apache.fop.pdf.PDFImageXObject: org.apache.fop.pdf.PDFImage pdfimage>;
+        transp = interfaceinvoke $r4.<org.apache.fop.pdf.PDFImage: org.apache.fop.pdf.PDFColor getTransparentColor()>();
+        $r9 = new org.apache.fop.pdf.PDFArray;
+        specialinvoke $r9.<org.apache.fop.pdf.PDFArray: void <init>(org.apache.fop.pdf.PDFObject)>(this);
+        mask = $r9;
+        $r4 = this.<org.apache.fop.pdf.PDFImageXObject: org.apache.fop.pdf.PDFImage pdfimage>;
+        $r10 = interfaceinvoke $r4.<org.apache.fop.pdf.PDFImage: org.apache.fop.pdf.PDFDeviceColorSpace getColorSpace()>();
+        $z0 = virtualinvoke $r10.<org.apache.fop.pdf.PDFDeviceColorSpace: boolean isGrayColorSpace()>();
+        if $z0 == 0 goto label5;
+
+        $r11 = new java.lang.Integer;
+        $i1 = virtualinvoke transp.<org.apache.fop.pdf.PDFColor: int red255()>();
+        specialinvoke $r11.<java.lang.Integer: void <init>(int)>($i1);
+        virtualinvoke mask.<org.apache.fop.pdf.PDFArray: void add(java.lang.Object)>($r11);
+        $r11 = new java.lang.Integer;
+        $i1 = virtualinvoke transp.<org.apache.fop.pdf.PDFColor: int red255()>();
+        specialinvoke $r11.<java.lang.Integer: void <init>(int)>($i1);
+        virtualinvoke mask.<org.apache.fop.pdf.PDFArray: void add(java.lang.Object)>($r11);
+        goto label6;
+
+     label5:
+        $r11 = new java.lang.Integer;
+        $i1 = virtualinvoke transp.<org.apache.fop.pdf.PDFColor: int red255()>();
+        specialinvoke $r11.<java.lang.Integer: void <init>(int)>($i1);
+        virtualinvoke mask.<org.apache.fop.pdf.PDFArray: void add(java.lang.Object)>($r11);
+        $r11 = new java.lang.Integer;
+        $i1 = virtualinvoke transp.<org.apache.fop.pdf.PDFColor: int red255()>();
+        specialinvoke $r11.<java.lang.Integer: void <init>(int)>($i1);
+        virtualinvoke mask.<org.apache.fop.pdf.PDFArray: void add(java.lang.Object)>($r11);
+        $r11 = new java.lang.Integer;
+        $i1 = virtualinvoke transp.<org.apache.fop.pdf.PDFColor: int green255()>();
+        specialinvoke $r11.<java.lang.Integer: void <init>(int)>($i1);
+        virtualinvoke mask.<org.apache.fop.pdf.PDFArray: void add(java.lang.Object)>($r11);
+        $r11 = new java.lang.Integer;
+        $i1 = virtualinvoke transp.<org.apache.fop.pdf.PDFColor: int green255()>();
+        specialinvoke $r11.<java.lang.Integer: void <init>(int)>($i1);
+        virtualinvoke mask.<org.apache.fop.pdf.PDFArray: void add(java.lang.Object)>($r11);
+        $r11 = new java.lang.Integer;
+        $i1 = virtualinvoke transp.<org.apache.fop.pdf.PDFColor: int blue255()>();
+        specialinvoke $r11.<java.lang.Integer: void <init>(int)>($i1);
+        virtualinvoke mask.<org.apache.fop.pdf.PDFArray: void add(java.lang.Object)>($r11);
+        $r11 = new java.lang.Integer;
+        $i1 = virtualinvoke transp.<org.apache.fop.pdf.PDFColor: int blue255()>();
+        specialinvoke $r11.<java.lang.Integer: void <init>(int)>($i1);
+        virtualinvoke mask.<org.apache.fop.pdf.PDFArray: void add(java.lang.Object)>($r11);
+
+     label6:
+        virtualinvoke this.<org.apache.fop.pdf.PDFImageXObject: void put(java.lang.String,java.lang.Object)>("Mask", mask);
+
+     label7:
+        $r4 = this.<org.apache.fop.pdf.PDFImageXObject: org.apache.fop.pdf.PDFImage pdfimage>;
+        ref = interfaceinvoke $r4.<org.apache.fop.pdf.PDFImage: org.apache.fop.pdf.PDFReference getSoftMaskReference()>();
+        if ref == null goto label8;
+
+        virtualinvoke this.<org.apache.fop.pdf.PDFImageXObject: void put(java.lang.String,java.lang.Object)>("SMask", ref);
+
+     label8:
+        $r4 = this.<org.apache.fop.pdf.PDFImageXObject: org.apache.fop.pdf.PDFImage pdfimage>;
+        interfaceinvoke $r4.<org.apache.fop.pdf.PDFImage: void populateXObjectDictionary(org.apache.fop.pdf.PDFDictionary)>(this);
+        return;
+    }
+
+    protected void outputRawStreamData(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFImageXObject this;
+        java.io.OutputStream out;
+        org.apache.fop.pdf.PDFImage $r0;
+
+        this := @this: org.apache.fop.pdf.PDFImageXObject;
+        out := @parameter0: java.io.OutputStream;
+        $r0 = this.<org.apache.fop.pdf.PDFImageXObject: org.apache.fop.pdf.PDFImage pdfimage>;
+        interfaceinvoke $r0.<org.apache.fop.pdf.PDFImage: void outputContents(java.io.OutputStream)>(out);
+        return;
+    }
+
+    protected int getSizeHint() throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFImageXObject this;
+
+        this := @this: org.apache.fop.pdf.PDFImageXObject;
+        return 0;
+    }
+
+    protected void prepareImplicitFilters()
+    {
+        org.apache.fop.pdf.PDFImageXObject this;
+        org.apache.fop.pdf.PDFFilter pdfFilter;
+        org.apache.fop.pdf.PDFImage $r0;
+        org.apache.fop.pdf.PDFFilterList $r1;
+
+        this := @this: org.apache.fop.pdf.PDFImageXObject;
+        $r0 = this.<org.apache.fop.pdf.PDFImageXObject: org.apache.fop.pdf.PDFImage pdfimage>;
+        pdfFilter = interfaceinvoke $r0.<org.apache.fop.pdf.PDFImage: org.apache.fop.pdf.PDFFilter getPDFFilter()>();
+        if pdfFilter == null goto label0;
+
+        $r1 = virtualinvoke this.<org.apache.fop.pdf.PDFImageXObject: org.apache.fop.pdf.PDFFilterList getFilterList()>();
+        virtualinvoke $r1.<org.apache.fop.pdf.PDFFilterList: void ensureFilterInPlace(org.apache.fop.pdf.PDFFilter)>(pdfFilter);
+
+     label0:
+        return;
+    }
+
+    protected void setupFilterList()
+    {
+        org.apache.fop.pdf.PDFImageXObject this;
+        org.apache.fop.pdf.PDFFilterList $r0;
+        boolean $z0;
+        org.apache.fop.pdf.PDFDocument $r1;
+        java.util.Map $r2;
+        org.apache.fop.pdf.PDFImage $r3;
+        java.lang.String $r4;
+
+        this := @this: org.apache.fop.pdf.PDFImageXObject;
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFImageXObject: org.apache.fop.pdf.PDFFilterList getFilterList()>();
+        $z0 = virtualinvoke $r0.<org.apache.fop.pdf.PDFFilterList: boolean isInitialized()>();
+        if $z0 != 0 goto label0;
+
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFImageXObject: org.apache.fop.pdf.PDFFilterList getFilterList()>();
+        $r1 = virtualinvoke this.<org.apache.fop.pdf.PDFImageXObject: org.apache.fop.pdf.PDFDocument getDocumentSafely()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.pdf.PDFDocument: java.util.Map getFilterMap()>();
+        $r3 = this.<org.apache.fop.pdf.PDFImageXObject: org.apache.fop.pdf.PDFImage pdfimage>;
+        $r4 = interfaceinvoke $r3.<org.apache.fop.pdf.PDFImage: java.lang.String getFilterHint()>();
+        virtualinvoke $r0.<org.apache.fop.pdf.PDFFilterList: void addDefaultFilters(java.util.Map,java.lang.String)>($r2, $r4);
+
+     label0:
+        specialinvoke this.<org.apache.fop.pdf.PDFXObject: void setupFilterList()>();
+        return;
+    }
+}

@@ -1,0 +1,205 @@
+public abstract class org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject extends org.apache.fop.fo.FONode
+{
+    private org.apache.fop.render.afp.extensions.AFPPageSetup setupCode;
+    private java.lang.String name;
+
+    public void <init>(org.apache.fop.fo.FONode, java.lang.String)
+    {
+        org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject this;
+        org.apache.fop.fo.FONode parent;
+        java.lang.String name;
+        org.apache.fop.render.afp.extensions.AFPPageSetup $r0;
+
+        this := @this: org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        name := @parameter1: java.lang.String;
+        specialinvoke this.<org.apache.fop.fo.FONode: void <init>(org.apache.fop.fo.FONode)>(parent);
+        this.<org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject: java.lang.String name> = name;
+        $r0 = new org.apache.fop.render.afp.extensions.AFPPageSetup;
+        specialinvoke $r0.<org.apache.fop.render.afp.extensions.AFPPageSetup: void <init>(java.lang.String)>(name);
+        this.<org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject: org.apache.fop.render.afp.extensions.AFPPageSetup setupCode> = $r0;
+        return;
+    }
+
+    protected void validateChildNode(org.xml.sax.Locator, java.lang.String, java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject this;
+        org.xml.sax.Locator loc;
+        java.lang.String nsURI, localName, $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject;
+        loc := @parameter0: org.xml.sax.Locator;
+        nsURI := @parameter1: java.lang.String;
+        localName := @parameter2: java.lang.String;
+        $r0 = "http://www.w3.org/1999/XSL/Format";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(nsURI);
+        if $z0 == 0 goto label0;
+
+        virtualinvoke this.<org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject: void invalidChildError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, nsURI, localName);
+
+     label0:
+        return;
+    }
+
+    protected void addCharacters(char[], int, int, org.apache.fop.fo.PropertyList, org.xml.sax.Locator)
+    {
+        org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject this;
+        char[] data;
+        int start, end, $i0;
+        org.apache.fop.fo.PropertyList pList;
+        org.xml.sax.Locator locator;
+        java.lang.String $r0;
+        org.apache.fop.render.afp.extensions.AFPPageSetup $r1;
+
+        this := @this: org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject;
+        data := @parameter0: char[];
+        start := @parameter1: int;
+        end := @parameter2: int;
+        pList := @parameter3: org.apache.fop.fo.PropertyList;
+        locator := @parameter4: org.xml.sax.Locator;
+        $r1 = this.<org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject: org.apache.fop.render.afp.extensions.AFPPageSetup setupCode>;
+        $r0 = new java.lang.String;
+        $i0 = end - start;
+        specialinvoke $r0.<java.lang.String: void <init>(char[],int,int)>(data, start, $i0);
+        virtualinvoke $r1.<org.apache.fop.render.afp.extensions.AFPPageSetup: void setContent(java.lang.String)>($r0);
+        return;
+    }
+
+    public java.lang.String getNamespaceURI()
+    {
+        org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject this;
+
+        this := @this: org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject;
+        return "http://xmlgraphics.apache.org/fop/extensions/afp";
+    }
+
+    public java.lang.String getNormalNamespacePrefix()
+    {
+        org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject this;
+
+        this := @this: org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject;
+        return "afp";
+    }
+
+    public void processNode(java.lang.String, org.xml.sax.Locator, org.xml.sax.Attributes, org.apache.fop.fo.PropertyList) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject this;
+        java.lang.String elementName, name, $r3, $r4;
+        org.xml.sax.Locator locator;
+        org.xml.sax.Attributes attlist;
+        org.apache.fop.fo.PropertyList propertyList;
+        java.lang.StringBuffer $r0;
+        int $i0;
+        org.apache.fop.render.afp.extensions.AFPPageSetup $r1;
+        org.apache.fop.apps.FOPException $r2;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject;
+        elementName := @parameter0: java.lang.String;
+        locator := @parameter1: org.xml.sax.Locator;
+        attlist := @parameter2: org.xml.sax.Attributes;
+        propertyList := @parameter3: org.apache.fop.fo.PropertyList;
+        name = interfaceinvoke attlist.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("name");
+        if name == null goto label0;
+
+        $i0 = virtualinvoke name.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label0;
+
+        $r1 = this.<org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject: org.apache.fop.render.afp.extensions.AFPPageSetup setupCode>;
+        virtualinvoke $r1.<org.apache.fop.render.afp.extensions.AFPPageSetup: void setName(java.lang.String)>(name);
+        goto label1;
+
+     label0:
+        $r2 = new org.apache.fop.apps.FOPException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(elementName);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" must have a name attribute.");
+        $r3 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>($r3);
+        throw $r2;
+
+     label1:
+        $r4 = "include-page-segment";
+        $z0 = virtualinvoke $r4.<java.lang.String: boolean equals(java.lang.Object)>(elementName);
+        if $z0 == 0 goto label3;
+
+        name = interfaceinvoke attlist.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("src");
+        if name == null goto label2;
+
+        $i0 = virtualinvoke name.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label2;
+
+        $r1 = this.<org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject: org.apache.fop.render.afp.extensions.AFPPageSetup setupCode>;
+        virtualinvoke $r1.<org.apache.fop.render.afp.extensions.AFPPageSetup: void setValue(java.lang.String)>(name);
+        goto label5;
+
+     label2:
+        $r2 = new org.apache.fop.apps.FOPException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(elementName);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" must have a src attribute.");
+        $r3 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>($r3);
+        throw $r2;
+
+     label3:
+        $r4 = "tag-logical-element";
+        $z0 = virtualinvoke $r4.<java.lang.String: boolean equals(java.lang.Object)>(elementName);
+        if $z0 == 0 goto label5;
+
+        name = interfaceinvoke attlist.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("value");
+        if name == null goto label4;
+
+        $i0 = virtualinvoke name.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label4;
+
+        $r1 = this.<org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject: org.apache.fop.render.afp.extensions.AFPPageSetup setupCode>;
+        virtualinvoke $r1.<org.apache.fop.render.afp.extensions.AFPPageSetup: void setValue(java.lang.String)>(name);
+        goto label5;
+
+     label4:
+        $r2 = new org.apache.fop.apps.FOPException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(elementName);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" must have a value attribute.");
+        $r3 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>($r3);
+        throw $r2;
+
+     label5:
+        return;
+    }
+
+    protected void endOfNode() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject this;
+
+        this := @this: org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject;
+        specialinvoke this.<org.apache.fop.fo.FONode: void endOfNode()>();
+        return;
+    }
+
+    public org.apache.fop.fo.extensions.ExtensionAttachment getExtensionAttachment()
+    {
+        org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject this;
+        org.apache.fop.render.afp.extensions.AFPPageSetup $r0;
+
+        this := @this: org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject;
+        $r0 = this.<org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject: org.apache.fop.render.afp.extensions.AFPPageSetup setupCode>;
+        return $r0;
+    }
+
+    public java.lang.String getLocalName()
+    {
+        org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject this;
+        java.lang.String $r0;
+
+        this := @this: org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject;
+        $r0 = this.<org.apache.fop.render.afp.extensions.AbstractAFPExtensionObject: java.lang.String name>;
+        return $r0;
+    }
+}

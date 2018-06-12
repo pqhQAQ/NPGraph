@@ -1,0 +1,97 @@
+public class org.apache.fop.fo.InlineCharIterator extends org.apache.fop.fo.RecursiveCharIterator
+{
+    private boolean startBoundary;
+    private boolean endBoundary;
+
+    public void <init>(org.apache.fop.fo.FObj, org.apache.fop.fo.properties.CommonBorderPaddingBackground)
+    {
+        org.apache.fop.fo.InlineCharIterator this;
+        org.apache.fop.fo.FObj fobj;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground bpb;
+
+        this := @this: org.apache.fop.fo.InlineCharIterator;
+        fobj := @parameter0: org.apache.fop.fo.FObj;
+        bpb := @parameter1: org.apache.fop.fo.properties.CommonBorderPaddingBackground;
+        specialinvoke this.<org.apache.fop.fo.RecursiveCharIterator: void <init>(org.apache.fop.fo.FObj)>(fobj);
+        this.<org.apache.fop.fo.InlineCharIterator: boolean startBoundary> = 0;
+        this.<org.apache.fop.fo.InlineCharIterator: boolean endBoundary> = 0;
+        specialinvoke this.<org.apache.fop.fo.InlineCharIterator: void checkBoundaries(org.apache.fop.fo.properties.CommonBorderPaddingBackground)>(bpb);
+        return;
+    }
+
+    private void checkBoundaries(org.apache.fop.fo.properties.CommonBorderPaddingBackground)
+    {
+        org.apache.fop.fo.InlineCharIterator this;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground bpb;
+
+        this := @this: org.apache.fop.fo.InlineCharIterator;
+        bpb := @parameter0: org.apache.fop.fo.properties.CommonBorderPaddingBackground;
+        this.<org.apache.fop.fo.InlineCharIterator: boolean startBoundary> = 1;
+        this.<org.apache.fop.fo.InlineCharIterator: boolean endBoundary> = 1;
+        return;
+    }
+
+    public boolean hasNext()
+    {
+        org.apache.fop.fo.InlineCharIterator this;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.InlineCharIterator;
+        $z0 = this.<org.apache.fop.fo.InlineCharIterator: boolean startBoundary>;
+        if $z0 == 0 goto label0;
+
+        return 1;
+
+     label0:
+        $z0 = specialinvoke this.<org.apache.fop.fo.RecursiveCharIterator: boolean hasNext()>();
+        if $z0 != 0 goto label1;
+
+        $z0 = this.<org.apache.fop.fo.InlineCharIterator: boolean endBoundary>;
+        if $z0 == 0 goto label2;
+
+     label1:
+        $z0 = 1;
+        goto label3;
+
+     label2:
+        $z0 = 0;
+
+     label3:
+        return $z0;
+    }
+
+    public char nextChar() throws java.util.NoSuchElementException
+    {
+        org.apache.fop.fo.InlineCharIterator this;
+        java.util.NoSuchElementException e, $r0;
+        boolean $z0;
+        char $c0;
+
+        this := @this: org.apache.fop.fo.InlineCharIterator;
+        $z0 = this.<org.apache.fop.fo.InlineCharIterator: boolean startBoundary>;
+        if $z0 == 0 goto label0;
+
+        this.<org.apache.fop.fo.InlineCharIterator: boolean startBoundary> = 0;
+        return 0;
+
+     label0:
+        $c0 = specialinvoke this.<org.apache.fop.fo.RecursiveCharIterator: char nextChar()>();
+
+     label1:
+        return $c0;
+
+     label2:
+        $r0 := @caughtexception;
+        e = $r0;
+        $z0 = this.<org.apache.fop.fo.InlineCharIterator: boolean endBoundary>;
+        if $z0 == 0 goto label3;
+
+        this.<org.apache.fop.fo.InlineCharIterator: boolean endBoundary> = 0;
+        return 0;
+
+     label3:
+        throw e;
+
+        catch java.util.NoSuchElementException from label0 to label1 with label2;
+    }
+}

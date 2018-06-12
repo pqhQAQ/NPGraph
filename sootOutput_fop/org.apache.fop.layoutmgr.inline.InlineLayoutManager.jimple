@@ -1,0 +1,1246 @@
+public class org.apache.fop.layoutmgr.inline.InlineLayoutManager extends org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager
+{
+    private static org.apache.commons.logging.Log log;
+    private org.apache.fop.fo.flow.InlineLevel fobj;
+    private org.apache.fop.fo.properties.CommonMarginInline inlineProps;
+    private org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps;
+    private boolean areaCreated;
+    private org.apache.fop.layoutmgr.LayoutManager lastChildLM;
+    private org.apache.fop.layoutmgr.Position auxiliaryPosition;
+    private org.apache.fop.fonts.Font font;
+    protected org.apache.fop.datatypes.Length alignmentAdjust;
+    protected int alignmentBaseline;
+    protected org.apache.fop.datatypes.Length baselineShift;
+    protected int dominantBaseline;
+    protected org.apache.fop.fo.properties.SpaceProperty lineHeight;
+    private org.apache.fop.layoutmgr.inline.AlignmentContext alignmentContext;
+    static java.lang.Class class$org$apache$fop$layoutmgr$inline$InlineLayoutManager;
+
+    public void <init>(org.apache.fop.fo.flow.InlineLevel)
+    {
+        org.apache.fop.layoutmgr.inline.InlineLayoutManager this;
+        org.apache.fop.fo.flow.InlineLevel node;
+
+        this := @this: org.apache.fop.layoutmgr.inline.InlineLayoutManager;
+        node := @parameter0: org.apache.fop.fo.flow.InlineLevel;
+        specialinvoke this.<org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager: void <init>(org.apache.fop.fo.FObj)>(node);
+        this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonMarginInline inlineProps> = null;
+        this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps> = null;
+        this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: boolean areaCreated> = 0;
+        this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutManager lastChildLM> = null;
+        this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: int alignmentBaseline> = 12;
+        this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.inline.AlignmentContext alignmentContext> = null;
+        this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.flow.InlineLevel fobj> = node;
+        return;
+    }
+
+    private org.apache.fop.fo.flow.Inline getInlineFO()
+    {
+        org.apache.fop.layoutmgr.inline.InlineLayoutManager this;
+        org.apache.fop.fo.flow.InlineLevel $r0;
+        org.apache.fop.fo.flow.Inline $r1;
+
+        this := @this: org.apache.fop.layoutmgr.inline.InlineLayoutManager;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.flow.InlineLevel fobj>;
+        $r1 = (org.apache.fop.fo.flow.Inline) $r0;
+        return $r1;
+    }
+
+    public void initialize()
+    {
+        org.apache.fop.layoutmgr.inline.InlineLayoutManager this;
+        int padding, $i0, $i1;
+        org.apache.fop.fonts.FontInfo fi;
+        org.apache.fop.fonts.FontTriplet[] fontkeys;
+        org.apache.fop.fo.flow.InlineLevel $r0, $r4, $r8;
+        org.apache.fop.fo.FOEventHandler $r1;
+        org.apache.fop.fo.properties.CommonFont $r2, $r5;
+        org.apache.fop.fonts.FontTriplet $r3;
+        org.apache.fop.datatypes.Length $r6, $r13;
+        org.apache.fop.fonts.Font $r7;
+        org.apache.fop.fo.properties.SpaceProperty $r9;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground $r10, $r15;
+        org.apache.fop.fo.properties.CommonMarginInline $r11;
+        boolean $z0;
+        org.apache.fop.fo.flow.Inline $r12;
+        org.apache.fop.fo.flow.Leader $r14;
+        org.apache.fop.traits.MinOptMax $r16;
+
+        this := @this: org.apache.fop.layoutmgr.inline.InlineLayoutManager;
+        padding = 0;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.flow.InlineLevel fobj>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.InlineLevel: org.apache.fop.fo.FOEventHandler getFOEventHandler()>();
+        fi = virtualinvoke $r1.<org.apache.fop.fo.FOEventHandler: org.apache.fop.fonts.FontInfo getFontInfo()>();
+        $r0 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.flow.InlineLevel fobj>;
+        $r2 = virtualinvoke $r0.<org.apache.fop.fo.flow.InlineLevel: org.apache.fop.fo.properties.CommonFont getCommonFont()>();
+        fontkeys = virtualinvoke $r2.<org.apache.fop.fo.properties.CommonFont: org.apache.fop.fonts.FontTriplet[] getFontState(org.apache.fop.fonts.FontInfo)>(fi);
+        $r3 = fontkeys[0];
+        $r4 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.flow.InlineLevel fobj>;
+        $r5 = virtualinvoke $r4.<org.apache.fop.fo.flow.InlineLevel: org.apache.fop.fo.properties.CommonFont getCommonFont()>();
+        $r6 = $r5.<org.apache.fop.fo.properties.CommonFont: org.apache.fop.datatypes.Length fontSize>;
+        $i0 = interfaceinvoke $r6.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $r7 = virtualinvoke fi.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.Font getFontInstance(org.apache.fop.fonts.FontTriplet,int)>($r3, $i0);
+        this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fonts.Font font> = $r7;
+        $r8 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.flow.InlineLevel fobj>;
+        $r9 = virtualinvoke $r8.<org.apache.fop.fo.flow.InlineLevel: org.apache.fop.fo.properties.SpaceProperty getLineHeight()>();
+        this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.SpaceProperty lineHeight> = $r9;
+        $r8 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.flow.InlineLevel fobj>;
+        $r10 = virtualinvoke $r8.<org.apache.fop.fo.flow.InlineLevel: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps> = $r10;
+        $r8 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.flow.InlineLevel fobj>;
+        $r11 = virtualinvoke $r8.<org.apache.fop.fo.flow.InlineLevel: org.apache.fop.fo.properties.CommonMarginInline getCommonMarginInline()>();
+        this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonMarginInline inlineProps> = $r11;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.flow.InlineLevel fobj>;
+        $z0 = $r0 instanceof org.apache.fop.fo.flow.Inline;
+        if $z0 == 0 goto label0;
+
+        $r8 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.flow.InlineLevel fobj>;
+        $r12 = (org.apache.fop.fo.flow.Inline) $r8;
+        $r13 = virtualinvoke $r12.<org.apache.fop.fo.flow.Inline: org.apache.fop.datatypes.Length getAlignmentAdjust()>();
+        this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.datatypes.Length alignmentAdjust> = $r13;
+        $r8 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.flow.InlineLevel fobj>;
+        $r12 = (org.apache.fop.fo.flow.Inline) $r8;
+        $i1 = virtualinvoke $r12.<org.apache.fop.fo.flow.Inline: int getAlignmentBaseline()>();
+        this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: int alignmentBaseline> = $i1;
+        $r8 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.flow.InlineLevel fobj>;
+        $r12 = (org.apache.fop.fo.flow.Inline) $r8;
+        $r13 = virtualinvoke $r12.<org.apache.fop.fo.flow.Inline: org.apache.fop.datatypes.Length getBaselineShift()>();
+        this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.datatypes.Length baselineShift> = $r13;
+        $r8 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.flow.InlineLevel fobj>;
+        $r12 = (org.apache.fop.fo.flow.Inline) $r8;
+        $i1 = virtualinvoke $r12.<org.apache.fop.fo.flow.Inline: int getDominantBaseline()>();
+        this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: int dominantBaseline> = $i1;
+        goto label1;
+
+     label0:
+        $r0 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.flow.InlineLevel fobj>;
+        $z0 = $r0 instanceof org.apache.fop.fo.flow.Leader;
+        if $z0 == 0 goto label1;
+
+        $r8 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.flow.InlineLevel fobj>;
+        $r14 = (org.apache.fop.fo.flow.Leader) $r8;
+        $r13 = virtualinvoke $r14.<org.apache.fop.fo.flow.Leader: org.apache.fop.datatypes.Length getAlignmentAdjust()>();
+        this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.datatypes.Length alignmentAdjust> = $r13;
+        $r8 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.flow.InlineLevel fobj>;
+        $r14 = (org.apache.fop.fo.flow.Leader) $r8;
+        $i1 = virtualinvoke $r14.<org.apache.fop.fo.flow.Leader: int getAlignmentBaseline()>();
+        this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: int alignmentBaseline> = $i1;
+        $r8 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.flow.InlineLevel fobj>;
+        $r14 = (org.apache.fop.fo.flow.Leader) $r8;
+        $r13 = virtualinvoke $r14.<org.apache.fop.fo.flow.Leader: org.apache.fop.datatypes.Length getBaselineShift()>();
+        this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.datatypes.Length baselineShift> = $r13;
+        $r8 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.flow.InlineLevel fobj>;
+        $r14 = (org.apache.fop.fo.flow.Leader) $r8;
+        $i1 = virtualinvoke $r14.<org.apache.fop.fo.flow.Leader: int getDominantBaseline()>();
+        this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: int dominantBaseline> = $i1;
+
+     label1:
+        $r15 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        if $r15 == null goto label2;
+
+        $r15 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        padding = virtualinvoke $r15.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPadding(int,boolean,org.apache.fop.datatypes.PercentBaseContext)>(0, 0, this);
+        $r10 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        $i1 = virtualinvoke $r10.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getBorderWidth(int,boolean)>(0, 0);
+        padding = padding + $i1;
+        $r10 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        $i1 = virtualinvoke $r10.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPadding(int,boolean,org.apache.fop.datatypes.PercentBaseContext)>(1, 0, this);
+        padding = padding + $i1;
+        $r10 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        $i1 = virtualinvoke $r10.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getBorderWidth(int,boolean)>(1, 0);
+        padding = padding + $i1;
+
+     label2:
+        $r16 = new org.apache.fop.traits.MinOptMax;
+        specialinvoke $r16.<org.apache.fop.traits.MinOptMax: void <init>(int)>(padding);
+        this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.traits.MinOptMax extraBPD> = $r16;
+        return;
+    }
+
+    protected org.apache.fop.traits.MinOptMax getExtraIPD(boolean, boolean)
+    {
+        org.apache.fop.layoutmgr.inline.InlineLayoutManager this;
+        boolean isNotFirst, isNotLast;
+        int borderAndPadding, $i0;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground $r0, $r1;
+        org.apache.fop.traits.MinOptMax $r2;
+
+        this := @this: org.apache.fop.layoutmgr.inline.InlineLayoutManager;
+        isNotFirst := @parameter0: boolean;
+        isNotLast := @parameter1: boolean;
+        borderAndPadding = 0;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        borderAndPadding = virtualinvoke $r0.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPadding(int,boolean,org.apache.fop.datatypes.PercentBaseContext)>(2, isNotFirst, this);
+        $r1 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        $i0 = virtualinvoke $r1.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getBorderWidth(int,boolean)>(2, isNotFirst);
+        borderAndPadding = borderAndPadding + $i0;
+        $r1 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        $i0 = virtualinvoke $r1.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPadding(int,boolean,org.apache.fop.datatypes.PercentBaseContext)>(3, isNotLast, this);
+        borderAndPadding = borderAndPadding + $i0;
+        $r1 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        $i0 = virtualinvoke $r1.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getBorderWidth(int,boolean)>(3, isNotLast);
+        borderAndPadding = borderAndPadding + $i0;
+
+     label0:
+        $r2 = new org.apache.fop.traits.MinOptMax;
+        specialinvoke $r2.<org.apache.fop.traits.MinOptMax: void <init>(int)>(borderAndPadding);
+        return $r2;
+    }
+
+    protected boolean hasLeadingFence(boolean)
+    {
+        org.apache.fop.layoutmgr.inline.InlineLayoutManager this;
+        boolean isNotFirst, $z0;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.InlineLayoutManager;
+        isNotFirst := @parameter0: boolean;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        if $r0 == null goto label1;
+
+        $r0 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPadding(int,boolean,org.apache.fop.datatypes.PercentBaseContext)>(2, isNotFirst, this);
+        if $i0 > 0 goto label0;
+
+        $r0 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getBorderWidth(int,boolean)>(2, isNotFirst);
+        if $i0 <= 0 goto label1;
+
+     label0:
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    protected boolean hasTrailingFence(boolean)
+    {
+        org.apache.fop.layoutmgr.inline.InlineLayoutManager this;
+        boolean isNotLast, $z0;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.InlineLayoutManager;
+        isNotLast := @parameter0: boolean;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        if $r0 == null goto label1;
+
+        $r0 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPadding(int,boolean,org.apache.fop.datatypes.PercentBaseContext)>(3, isNotLast, this);
+        if $i0 > 0 goto label0;
+
+        $r0 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getBorderWidth(int,boolean)>(3, isNotLast);
+        if $i0 <= 0 goto label1;
+
+     label0:
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    protected org.apache.fop.fo.properties.SpaceProperty getSpaceStart()
+    {
+        org.apache.fop.layoutmgr.inline.InlineLayoutManager this;
+        org.apache.fop.fo.properties.CommonMarginInline $r0;
+        org.apache.fop.fo.properties.SpaceProperty $r1;
+
+        this := @this: org.apache.fop.layoutmgr.inline.InlineLayoutManager;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonMarginInline inlineProps>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonMarginInline inlineProps>;
+        $r1 = $r0.<org.apache.fop.fo.properties.CommonMarginInline: org.apache.fop.fo.properties.SpaceProperty spaceStart>;
+        goto label1;
+
+     label0:
+        $r1 = null;
+
+     label1:
+        return $r1;
+    }
+
+    protected org.apache.fop.fo.properties.SpaceProperty getSpaceEnd()
+    {
+        org.apache.fop.layoutmgr.inline.InlineLayoutManager this;
+        org.apache.fop.fo.properties.CommonMarginInline $r0;
+        org.apache.fop.fo.properties.SpaceProperty $r1;
+
+        this := @this: org.apache.fop.layoutmgr.inline.InlineLayoutManager;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonMarginInline inlineProps>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonMarginInline inlineProps>;
+        $r1 = $r0.<org.apache.fop.fo.properties.CommonMarginInline: org.apache.fop.fo.properties.SpaceProperty spaceEnd>;
+        goto label1;
+
+     label0:
+        $r1 = null;
+
+     label1:
+        return $r1;
+    }
+
+    protected org.apache.fop.area.inline.InlineArea createArea(boolean)
+    {
+        org.apache.fop.layoutmgr.inline.InlineLayoutManager this;
+        boolean hasInlineParent, $z0;
+        org.apache.fop.area.inline.InlineArea area;
+        org.apache.fop.area.inline.InlineParent $r0;
+        org.apache.fop.area.inline.InlineBlockParent $r1;
+        org.apache.fop.fo.flow.InlineLevel $r2;
+        org.apache.fop.fo.flow.Inline $r3;
+        java.lang.String $r4;
+
+        this := @this: org.apache.fop.layoutmgr.inline.InlineLayoutManager;
+        hasInlineParent := @parameter0: boolean;
+        if hasInlineParent == 0 goto label0;
+
+        $r0 = new org.apache.fop.area.inline.InlineParent;
+        specialinvoke $r0.<org.apache.fop.area.inline.InlineParent: void <init>()>();
+        area = $r0;
+        virtualinvoke area.<org.apache.fop.area.inline.InlineArea: void setOffset(int)>(0);
+        goto label1;
+
+     label0:
+        $r1 = new org.apache.fop.area.inline.InlineBlockParent;
+        specialinvoke $r1.<org.apache.fop.area.inline.InlineBlockParent: void <init>()>();
+        area = $r1;
+
+     label1:
+        $r2 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.flow.InlineLevel fobj>;
+        $z0 = $r2 instanceof org.apache.fop.fo.flow.Inline;
+        if $z0 == 0 goto label2;
+
+        $r3 = specialinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.flow.Inline getInlineFO()>();
+        $r4 = virtualinvoke $r3.<org.apache.fop.fo.flow.Inline: java.lang.String getId()>();
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void setProducerID(org.apache.fop.area.Area,java.lang.String)>(area, $r4);
+
+     label2:
+        return area;
+    }
+
+    protected void setTraits(boolean, boolean)
+    {
+        org.apache.fop.layoutmgr.inline.InlineLayoutManager this;
+        boolean isNotFirst, isNotLast;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground $r0, $r2;
+        org.apache.fop.area.Area $r1;
+
+        this := @this: org.apache.fop.layoutmgr.inline.InlineLayoutManager;
+        isNotFirst := @parameter0: boolean;
+        isNotLast := @parameter1: boolean;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        if $r0 == null goto label0;
+
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.area.Area getCurrentArea()>();
+        $r2 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void setBorderPaddingTraits(org.apache.fop.area.Area,org.apache.fop.fo.properties.CommonBorderPaddingBackground,boolean,boolean,org.apache.fop.datatypes.PercentBaseContext)>($r1, $r2, isNotFirst, isNotLast, this);
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.area.Area getCurrentArea()>();
+        $r2 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addBackground(org.apache.fop.area.Area,org.apache.fop.fo.properties.CommonBorderPaddingBackground,org.apache.fop.datatypes.PercentBaseContext)>($r1, $r2, this);
+
+     label0:
+        return;
+    }
+
+    public boolean mustKeepTogether()
+    {
+        org.apache.fop.layoutmgr.inline.InlineLayoutManager this;
+        org.apache.fop.layoutmgr.LayoutManager $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.InlineLayoutManager;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutManager getParent()>();
+        $z0 = specialinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: boolean mustKeepTogether(org.apache.fop.layoutmgr.LayoutManager)>($r0);
+        return $z0;
+    }
+
+    private boolean mustKeepTogether(org.apache.fop.layoutmgr.LayoutManager)
+    {
+        org.apache.fop.layoutmgr.inline.InlineLayoutManager this, $r1;
+        org.apache.fop.layoutmgr.LayoutManager lm, $r2;
+        boolean $z0;
+        org.apache.fop.layoutmgr.BlockLevelLayoutManager $r0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.InlineLayoutManager;
+        lm := @parameter0: org.apache.fop.layoutmgr.LayoutManager;
+        $z0 = lm instanceof org.apache.fop.layoutmgr.BlockLevelLayoutManager;
+        if $z0 == 0 goto label0;
+
+        $r0 = (org.apache.fop.layoutmgr.BlockLevelLayoutManager) lm;
+        $z0 = interfaceinvoke $r0.<org.apache.fop.layoutmgr.BlockLevelLayoutManager: boolean mustKeepTogether()>();
+        return $z0;
+
+     label0:
+        $z0 = lm instanceof org.apache.fop.layoutmgr.inline.InlineLayoutManager;
+        if $z0 == 0 goto label1;
+
+        $r1 = (org.apache.fop.layoutmgr.inline.InlineLayoutManager) lm;
+        $z0 = virtualinvoke $r1.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: boolean mustKeepTogether()>();
+        return $z0;
+
+     label1:
+        $r2 = interfaceinvoke lm.<org.apache.fop.layoutmgr.LayoutManager: org.apache.fop.layoutmgr.LayoutManager getParent()>();
+        $z0 = specialinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: boolean mustKeepTogether(org.apache.fop.layoutmgr.LayoutManager)>($r2);
+        return $z0;
+    }
+
+    public java.util.LinkedList getNextKnuthElements(org.apache.fop.layoutmgr.LayoutContext, int)
+    {
+        org.apache.fop.layoutmgr.inline.InlineLayoutManager this;
+        org.apache.fop.layoutmgr.LayoutContext context, $r10, $r11, $r29;
+        int alignment, $i0, $i1, $i2, $i3, $i4, $i5, $i6;
+        java.util.LinkedList $r0, returnList, returnedList;
+        org.apache.fop.layoutmgr.KnuthSequence lastSequence, sequence, $r24;
+        org.apache.fop.layoutmgr.SpaceSpecifier leadingSpace, $r13;
+        java.lang.StringBuffer trace, $r17;
+        boolean borderAdded, appended, keepTogether, $z0, $z1, $z2, $z3;
+        org.apache.fop.layoutmgr.LayoutManager curLM, $r20, $r21;
+        java.util.ListIterator seqIter;
+        org.apache.fop.layoutmgr.BreakElement bk, $r26;
+        org.apache.fop.layoutmgr.InlineKnuthSequence emptySeq, $r31;
+        org.apache.fop.fo.flow.InlineLevel $r1;
+        org.apache.fop.layoutmgr.inline.AlignmentContext $r2, $r9, $r33;
+        org.apache.fop.fonts.Font $r3;
+        org.apache.fop.fo.properties.SpaceProperty $r4, $r12, $r15;
+        org.apache.fop.fo.properties.Property $r5;
+        org.apache.fop.datatypes.Length $r6, $r7, $r8;
+        org.apache.fop.traits.SpaceVal $r14;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground $r18, $r19;
+        java.lang.Object $r22, $r23;
+        org.apache.fop.layoutmgr.BlockKnuthSequence $r25, sequence;
+        org.apache.fop.layoutmgr.Position $r27, $r34, $r35;
+        org.apache.commons.logging.Log $r30;
+        org.apache.fop.layoutmgr.inline.KnuthInlineBox $r32;
+
+        this := @this: org.apache.fop.layoutmgr.inline.InlineLayoutManager;
+        context := @parameter0: org.apache.fop.layoutmgr.LayoutContext;
+        alignment := @parameter1: int;
+        $r0 = new java.util.LinkedList;
+        specialinvoke $r0.<java.util.LinkedList: void <init>()>();
+        returnList = $r0;
+        lastSequence = null;
+        virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: org.apache.fop.layoutmgr.SpaceSpecifier getLeadingSpace()>();
+        $r1 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.flow.InlineLevel fobj>;
+        $z0 = $r1 instanceof org.apache.fop.fo.pagination.Title;
+        if $z0 == 0 goto label0;
+
+        $r2 = new org.apache.fop.layoutmgr.inline.AlignmentContext;
+        $r3 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fonts.Font font>;
+        $r4 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.SpaceProperty lineHeight>;
+        $r5 = virtualinvoke $r4.<org.apache.fop.fo.properties.SpaceProperty: org.apache.fop.fo.properties.Property getOptimum(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $r6 = virtualinvoke $r5.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        $i0 = interfaceinvoke $r6.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $i1 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: int getWritingMode()>();
+        specialinvoke $r2.<org.apache.fop.layoutmgr.inline.AlignmentContext: void <init>(org.apache.fop.fonts.Font,int,int)>($r3, $i0, $i1);
+        this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.inline.AlignmentContext alignmentContext> = $r2;
+        goto label1;
+
+     label0:
+        $r2 = new org.apache.fop.layoutmgr.inline.AlignmentContext;
+        $r3 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fonts.Font font>;
+        $r4 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.SpaceProperty lineHeight>;
+        $r5 = virtualinvoke $r4.<org.apache.fop.fo.properties.SpaceProperty: org.apache.fop.fo.properties.Property getOptimum(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $r6 = virtualinvoke $r5.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        $i0 = interfaceinvoke $r6.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $r7 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.datatypes.Length alignmentAdjust>;
+        $i2 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: int alignmentBaseline>;
+        $r8 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.datatypes.Length baselineShift>;
+        $i3 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: int dominantBaseline>;
+        $r9 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: org.apache.fop.layoutmgr.inline.AlignmentContext getAlignmentContext()>();
+        specialinvoke $r2.<org.apache.fop.layoutmgr.inline.AlignmentContext: void <init>(org.apache.fop.fonts.Font,int,org.apache.fop.datatypes.Length,int,org.apache.fop.datatypes.Length,int,org.apache.fop.layoutmgr.inline.AlignmentContext)>($r3, $i0, $r7, $i2, $r8, $i3, $r9);
+        this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.inline.AlignmentContext alignmentContext> = $r2;
+
+     label1:
+        $r10 = new org.apache.fop.layoutmgr.LayoutContext;
+        specialinvoke $r10.<org.apache.fop.layoutmgr.LayoutContext: void <init>(org.apache.fop.layoutmgr.LayoutContext)>(context);
+        this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext childLC> = $r10;
+        $r11 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext childLC>;
+        $r2 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.inline.AlignmentContext alignmentContext>;
+        virtualinvoke $r11.<org.apache.fop.layoutmgr.LayoutContext: void setAlignmentContext(org.apache.fop.layoutmgr.inline.AlignmentContext)>($r2);
+        $z0 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: boolean startsNewArea()>();
+        if $z0 == 0 goto label6;
+
+        $r12 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.SpaceProperty getSpaceStart()>();
+        if $r12 == null goto label2;
+
+        $r13 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: org.apache.fop.layoutmgr.SpaceSpecifier getLeadingSpace()>();
+        $r14 = new org.apache.fop.traits.SpaceVal;
+        $r15 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.SpaceProperty getSpaceStart()>();
+        specialinvoke $r14.<org.apache.fop.traits.SpaceVal: void <init>(org.apache.fop.fo.properties.SpaceProperty,org.apache.fop.datatypes.PercentBaseContext)>($r15, this);
+        virtualinvoke $r13.<org.apache.fop.layoutmgr.SpaceSpecifier: void addSpace(org.apache.fop.traits.SpaceVal)>($r14);
+
+     label2:
+        $z1 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: boolean isFirstArea()>();
+        if $z1 != 0 goto label3;
+
+        $z1 = 1;
+        goto label4;
+
+     label3:
+        $z1 = 0;
+
+     label4:
+        $z0 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: boolean hasLeadingFence(boolean)>($z1);
+        if $z0 == 0 goto label5;
+
+        $r13 = new org.apache.fop.layoutmgr.SpaceSpecifier;
+        specialinvoke $r13.<org.apache.fop.layoutmgr.SpaceSpecifier: void <init>(boolean)>(0);
+        leadingSpace = $r13;
+
+     label5:
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: void clearPrevIPD()>();
+
+     label6:
+        $r17 = new java.lang.StringBuffer;
+        specialinvoke $r17.<java.lang.StringBuffer: void <init>(java.lang.String)>("InlineLM:");
+        trace = $r17;
+        borderAdded = 0;
+        $r18 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        if $r18 == null goto label7;
+
+        $r11 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext childLC>;
+        $i4 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: int getLineStartBorderAndPaddingWidth()>();
+        $r19 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        $i5 = virtualinvoke $r19.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPaddingStart(boolean,org.apache.fop.datatypes.PercentBaseContext)>(1, this);
+        $i4 = $i4 + $i5;
+        $r19 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        $i5 = virtualinvoke $r19.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getBorderStartWidth(boolean)>(1);
+        $i4 = $i4 + $i5;
+        virtualinvoke $r11.<org.apache.fop.layoutmgr.LayoutContext: void setLineStartBorderAndPaddingWidth(int)>($i4);
+        $r11 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext childLC>;
+        $i4 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: int getLineEndBorderAndPaddingWidth()>();
+        $r19 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        $i5 = virtualinvoke $r19.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPaddingEnd(boolean,org.apache.fop.datatypes.PercentBaseContext)>(1, this);
+        $i4 = $i4 + $i5;
+        $r19 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        $i5 = virtualinvoke $r19.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getBorderEndWidth(boolean)>(1);
+        $i4 = $i4 + $i5;
+        virtualinvoke $r11.<org.apache.fop.layoutmgr.LayoutContext: void setLineEndBorderAndPaddingWidth(int)>($i4);
+
+     label7:
+        $r20 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutManager getChildLM()>();
+        curLM = $r20;
+        if $r20 == null goto label28;
+
+        $z0 = curLM instanceof org.apache.fop.layoutmgr.inline.InlineLevelLayoutManager;
+        if $z0 != 0 goto label12;
+
+        $r18 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        if $r18 == null goto label12;
+
+        $r11 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext childLC>;
+        $r10 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext childLC>;
+        $i4 = virtualinvoke $r10.<org.apache.fop.layoutmgr.LayoutContext: int getRefIPD()>();
+        $r19 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        $r21 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutManager lastChildLM>;
+        if $r21 == null goto label8;
+
+        $z2 = 1;
+        goto label9;
+
+     label8:
+        $z2 = 0;
+
+     label9:
+        $i5 = virtualinvoke $r19.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPaddingStart(boolean,org.apache.fop.datatypes.PercentBaseContext)>($z2, this);
+        $i4 = $i4 - $i5;
+        $r19 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        $r21 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutManager lastChildLM>;
+        if $r21 == null goto label10;
+
+        $z2 = 1;
+        goto label11;
+
+     label10:
+        $z2 = 0;
+
+     label11:
+        $i5 = virtualinvoke $r19.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getBorderStartWidth(boolean)>($z2);
+        $i4 = $i4 - $i5;
+        $r19 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        $z2 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: boolean hasNextChildLM()>();
+        $i5 = virtualinvoke $r19.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPaddingEnd(boolean,org.apache.fop.datatypes.PercentBaseContext)>($z2, this);
+        $i4 = $i4 - $i5;
+        $r19 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        $z2 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: boolean hasNextChildLM()>();
+        $i5 = virtualinvoke $r19.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getBorderEndWidth(boolean)>($z2);
+        $i4 = $i4 - $i5;
+        virtualinvoke $r11.<org.apache.fop.layoutmgr.LayoutContext: void setRefIPD(int)>($i4);
+
+     label12:
+        $r10 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext childLC>;
+        returnedList = interfaceinvoke curLM.<org.apache.fop.layoutmgr.LayoutManager: java.util.LinkedList getNextKnuthElements(org.apache.fop.layoutmgr.LayoutContext,int)>($r10, alignment);
+        $i6 = virtualinvoke returnList.<java.util.LinkedList: int size()>();
+        if $i6 != 0 goto label13;
+
+        $r11 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext childLC>;
+        $z0 = virtualinvoke $r11.<org.apache.fop.layoutmgr.LayoutContext: boolean isKeepWithPreviousPending()>();
+        if $z0 == 0 goto label13;
+
+        $r11 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext childLC>;
+        virtualinvoke $r11.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int,boolean)>(1024, 0);
+
+     label13:
+        if returnedList == null goto label7;
+
+        $i6 = virtualinvoke returnedList.<java.util.LinkedList: int size()>();
+        if $i6 != 0 goto label14;
+
+        goto label7;
+
+     label14:
+        $z0 = curLM instanceof org.apache.fop.layoutmgr.inline.InlineLevelLayoutManager;
+        if $z0 == 0 goto label19;
+
+        virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int,boolean)>(512, 0);
+        seqIter = virtualinvoke returnedList.<java.util.LinkedList: java.util.ListIterator listIterator()>();
+
+     label15:
+        $z0 = interfaceinvoke seqIter.<java.util.ListIterator: boolean hasNext()>();
+        if $z0 == 0 goto label16;
+
+        $r22 = interfaceinvoke seqIter.<java.util.ListIterator: java.lang.Object next()>();
+        sequence = (org.apache.fop.layoutmgr.KnuthSequence) $r22;
+        virtualinvoke sequence.<org.apache.fop.layoutmgr.KnuthSequence: void wrapPositions(org.apache.fop.layoutmgr.LayoutManager)>(this);
+        goto label15;
+
+     label16:
+        if lastSequence == null goto label17;
+
+        $r23 = virtualinvoke returnedList.<java.util.LinkedList: java.lang.Object get(int)>(0);
+        $r24 = (org.apache.fop.layoutmgr.KnuthSequence) $r23;
+        $z0 = virtualinvoke lastSequence.<org.apache.fop.layoutmgr.KnuthSequence: boolean appendSequenceOrClose(org.apache.fop.layoutmgr.KnuthSequence)>($r24);
+        if $z0 == 0 goto label17;
+
+        virtualinvoke returnedList.<java.util.LinkedList: java.lang.Object remove(int)>(0);
+
+     label17:
+        if borderAdded != 0 goto label18;
+
+        $i6 = virtualinvoke returnedList.<java.util.LinkedList: int size()>();
+        if $i6 == 0 goto label18;
+
+        $r23 = virtualinvoke returnedList.<java.util.LinkedList: java.lang.Object get(int)>(0);
+        $r24 = (org.apache.fop.layoutmgr.KnuthSequence) $r23;
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: void addKnuthElementsForBorderPaddingStart(java.util.List)>($r24);
+        borderAdded = 1;
+
+     label18:
+        virtualinvoke returnList.<java.util.LinkedList: boolean addAll(java.util.Collection)>(returnedList);
+        goto label27;
+
+     label19:
+        $r25 = new org.apache.fop.layoutmgr.BlockKnuthSequence;
+        specialinvoke $r25.<org.apache.fop.layoutmgr.BlockKnuthSequence: void <init>(java.util.List)>(returnedList);
+        sequence = $r25;
+        virtualinvoke sequence.<org.apache.fop.layoutmgr.BlockKnuthSequence: void wrapPositions(org.apache.fop.layoutmgr.LayoutManager)>(this);
+        appended = 0;
+        if lastSequence == null goto label24;
+
+        $z0 = virtualinvoke lastSequence.<org.apache.fop.layoutmgr.KnuthSequence: boolean canAppendSequence(org.apache.fop.layoutmgr.KnuthSequence)>(sequence);
+        if $z0 == 0 goto label23;
+
+        $r26 = new org.apache.fop.layoutmgr.BreakElement;
+        $r27 = new org.apache.fop.layoutmgr.Position;
+        specialinvoke $r27.<org.apache.fop.layoutmgr.Position: void <init>(org.apache.fop.layoutmgr.LayoutManager)>(this);
+        specialinvoke $r26.<org.apache.fop.layoutmgr.BreakElement: void <init>(org.apache.fop.layoutmgr.Position,int,org.apache.fop.layoutmgr.LayoutContext)>($r27, 0, context);
+        bk = $r26;
+        $z0 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: boolean mustKeepTogether()>();
+        if $z0 != 0 goto label20;
+
+        $z0 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: boolean isKeepWithNextPending()>();
+        if $z0 != 0 goto label20;
+
+        $r11 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext childLC>;
+        $z0 = virtualinvoke $r11.<org.apache.fop.layoutmgr.LayoutContext: boolean isKeepWithPreviousPending()>();
+        if $z0 == 0 goto label21;
+
+     label20:
+        $z0 = 1;
+        goto label22;
+
+     label21:
+        $z0 = 0;
+
+     label22:
+        keepTogether = $z0;
+        appended = virtualinvoke lastSequence.<org.apache.fop.layoutmgr.KnuthSequence: boolean appendSequenceOrClose(org.apache.fop.layoutmgr.KnuthSequence,boolean,org.apache.fop.layoutmgr.BreakElement)>(sequence, keepTogether, bk);
+        goto label24;
+
+     label23:
+        virtualinvoke lastSequence.<org.apache.fop.layoutmgr.KnuthSequence: org.apache.fop.layoutmgr.KnuthSequence endSequence()>();
+
+     label24:
+        if appended != 0 goto label26;
+
+        if borderAdded != 0 goto label25;
+
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: void addKnuthElementsForBorderPaddingStart(java.util.List)>(sequence);
+        borderAdded = 1;
+
+     label25:
+        virtualinvoke returnList.<java.util.LinkedList: boolean add(java.lang.Object)>(sequence);
+
+     label26:
+        $r29 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext childLC>;
+        $z3 = virtualinvoke $r29.<org.apache.fop.layoutmgr.LayoutContext: boolean isKeepWithNextPending()>();
+        virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int,boolean)>(512, $z3);
+        $r11 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext childLC>;
+        virtualinvoke $r11.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int,boolean)>(512, 0);
+        $r11 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext childLC>;
+        virtualinvoke $r11.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int,boolean)>(1024, 0);
+
+     label27:
+        $r22 = virtualinvoke returnList.<java.util.LinkedList: java.lang.Object getLast()>();
+        lastSequence = (org.apache.fop.layoutmgr.KnuthSequence) $r22;
+        this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutManager lastChildLM> = curLM;
+        goto label7;
+
+     label28:
+        if lastSequence == null goto label29;
+
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: void addKnuthElementsForBorderPaddingEnd(java.util.List)>(lastSequence);
+
+     label29:
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: void setFinished(boolean)>(1);
+        $r30 = <org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r30.<org.apache.commons.logging.Log: void trace(java.lang.Object)>(trace);
+        $i6 = virtualinvoke returnList.<java.util.LinkedList: int size()>();
+        if $i6 != 0 goto label31;
+
+        $r1 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.flow.InlineLevel fobj>;
+        $z0 = virtualinvoke $r1.<org.apache.fop.fo.flow.InlineLevel: boolean hasId()>();
+        if $z0 != 0 goto label30;
+
+        $r1 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.flow.InlineLevel fobj>;
+        $z0 = virtualinvoke $r1.<org.apache.fop.fo.flow.InlineLevel: boolean hasMarkers()>();
+        if $z0 == 0 goto label31;
+
+     label30:
+        $r31 = new org.apache.fop.layoutmgr.InlineKnuthSequence;
+        specialinvoke $r31.<org.apache.fop.layoutmgr.InlineKnuthSequence: void <init>()>();
+        emptySeq = $r31;
+        $r32 = new org.apache.fop.layoutmgr.inline.KnuthInlineBox;
+        $r33 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.inline.AlignmentContext alignmentContext>;
+        $r34 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.Position getAuxiliaryPosition()>();
+        $r35 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.Position notifyPos(org.apache.fop.layoutmgr.Position)>($r34);
+        specialinvoke $r32.<org.apache.fop.layoutmgr.inline.KnuthInlineBox: void <init>(int,org.apache.fop.layoutmgr.inline.AlignmentContext,org.apache.fop.layoutmgr.Position,boolean)>(0, $r33, $r35, 1);
+        virtualinvoke emptySeq.<org.apache.fop.layoutmgr.InlineKnuthSequence: boolean add(java.lang.Object)>($r32);
+        virtualinvoke returnList.<java.util.LinkedList: boolean add(java.lang.Object)>(emptySeq);
+
+     label31:
+        $i6 = virtualinvoke returnList.<java.util.LinkedList: int size()>();
+        if $i6 != 0 goto label32;
+
+        $r0 = null;
+        goto label33;
+
+     label32:
+        $r0 = returnList;
+
+     label33:
+        return $r0;
+    }
+
+    public void addAreas(org.apache.fop.layoutmgr.PositionIterator, org.apache.fop.layoutmgr.LayoutContext)
+    {
+        org.apache.fop.layoutmgr.inline.InlineLayoutManager this;
+        org.apache.fop.layoutmgr.PositionIterator parentIter;
+        org.apache.fop.layoutmgr.LayoutContext context, $r0, $r1, $r19, $r24;
+        java.util.LinkedList positionList, $r7;
+        null_type pos;
+        org.apache.fop.layoutmgr.LayoutManager lastLM, prevLM, childLM, $r18, $r20;
+        org.apache.fop.layoutmgr.NonLeafPosition lastPos, pos;
+        org.apache.fop.area.inline.InlineArea parent;
+        org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager$StackingIter childPosIter, $r16;
+        boolean isLast, $z0, $z1, $z2, $z3;
+        org.apache.fop.layoutmgr.SpaceSpecifier $r2, $r4, $r22;
+        org.apache.fop.fo.properties.SpaceProperty $r3, $r6;
+        org.apache.fop.traits.SpaceVal $r5;
+        java.lang.Object $r8;
+        org.apache.fop.layoutmgr.Position $r9, $r10;
+        org.apache.fop.layoutmgr.inline.AlignmentContext $r12;
+        int $i0, $i1;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground $r13, $r14, $r15;
+        java.util.ListIterator $r17;
+        short $s2;
+        org.apache.fop.area.Area $r21;
+        org.apache.fop.traits.MinOptMax $r23;
+        double $d0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.InlineLayoutManager;
+        parentIter := @parameter0: org.apache.fop.layoutmgr.PositionIterator;
+        context := @parameter1: org.apache.fop.layoutmgr.LayoutContext;
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: void addId()>();
+        $r0 = new org.apache.fop.layoutmgr.LayoutContext;
+        specialinvoke $r0.<org.apache.fop.layoutmgr.LayoutContext: void <init>(org.apache.fop.layoutmgr.LayoutContext)>(context);
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: void setChildContext(org.apache.fop.layoutmgr.LayoutContext)>($r0);
+        $z0 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: boolean areaCreated>;
+        $z1 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: boolean hasLeadingFence(boolean)>($z0);
+        if $z1 == 0 goto label0;
+
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext getContext()>();
+        $r2 = new org.apache.fop.layoutmgr.SpaceSpecifier;
+        specialinvoke $r2.<org.apache.fop.layoutmgr.SpaceSpecifier: void <init>(boolean)>(0);
+        virtualinvoke $r1.<org.apache.fop.layoutmgr.LayoutContext: void setLeadingSpace(org.apache.fop.layoutmgr.SpaceSpecifier)>($r2);
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext getContext()>();
+        virtualinvoke $r1.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int,boolean)>(256, 1);
+        goto label1;
+
+     label0:
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext getContext()>();
+        virtualinvoke $r1.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int,boolean)>(256, 0);
+
+     label1:
+        $r3 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.SpaceProperty getSpaceStart()>();
+        if $r3 == null goto label2;
+
+        $r4 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: org.apache.fop.layoutmgr.SpaceSpecifier getLeadingSpace()>();
+        $r5 = new org.apache.fop.traits.SpaceVal;
+        $r6 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.SpaceProperty getSpaceStart()>();
+        specialinvoke $r5.<org.apache.fop.traits.SpaceVal: void <init>(org.apache.fop.fo.properties.SpaceProperty,org.apache.fop.datatypes.PercentBaseContext)>($r6, this);
+        virtualinvoke $r4.<org.apache.fop.layoutmgr.SpaceSpecifier: void addSpace(org.apache.fop.traits.SpaceVal)>($r5);
+
+     label2:
+        $r7 = new java.util.LinkedList;
+        specialinvoke $r7.<java.util.LinkedList: void <init>()>();
+        positionList = $r7;
+        pos = null;
+        lastLM = null;
+        lastPos = null;
+
+     label3:
+        $z1 = virtualinvoke parentIter.<org.apache.fop.layoutmgr.PositionIterator: boolean hasNext()>();
+        if $z1 == 0 goto label4;
+
+        $r8 = virtualinvoke parentIter.<org.apache.fop.layoutmgr.PositionIterator: java.lang.Object next()>();
+        pos = (org.apache.fop.layoutmgr.NonLeafPosition) $r8;
+        if pos == null goto label3;
+
+        $r9 = virtualinvoke pos.<org.apache.fop.layoutmgr.NonLeafPosition: org.apache.fop.layoutmgr.Position getPosition()>();
+        if $r9 == null goto label3;
+
+        $r10 = virtualinvoke pos.<org.apache.fop.layoutmgr.NonLeafPosition: org.apache.fop.layoutmgr.Position getPosition()>();
+        virtualinvoke positionList.<java.util.LinkedList: boolean add(java.lang.Object)>($r10);
+        $r9 = virtualinvoke pos.<org.apache.fop.layoutmgr.NonLeafPosition: org.apache.fop.layoutmgr.Position getPosition()>();
+        lastLM = virtualinvoke $r9.<org.apache.fop.layoutmgr.Position: org.apache.fop.layoutmgr.LayoutManager getLM()>();
+        lastPos = pos;
+        goto label3;
+
+     label4:
+        $z0 = 1;
+        $z2 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: boolean areaCreated>;
+        if $z2 != 0 goto label5;
+
+        $z2 = 1;
+        goto label6;
+
+     label5:
+        $z2 = 0;
+
+     label6:
+        if lastPos == null goto label7;
+
+        $z3 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: boolean isLast(org.apache.fop.layoutmgr.Position)>(lastPos);
+        if $z3 == 0 goto label8;
+
+     label7:
+        $z3 = 1;
+        goto label9;
+
+     label8:
+        $z3 = 0;
+
+     label9:
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: void addMarkersToPage(boolean,boolean,boolean)>($z0, $z2, $z3);
+        if lastLM == null goto label10;
+
+        $z0 = lastLM instanceof org.apache.fop.layoutmgr.inline.InlineLevelLayoutManager;
+        if $z0 == 0 goto label11;
+
+     label10:
+        $z0 = 1;
+        goto label12;
+
+     label11:
+        $z0 = 0;
+
+     label12:
+        parent = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.area.inline.InlineArea createArea(boolean)>($z0);
+        $r12 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.inline.AlignmentContext alignmentContext>;
+        $i0 = virtualinvoke $r12.<org.apache.fop.layoutmgr.inline.AlignmentContext: int getHeight()>();
+        virtualinvoke parent.<org.apache.fop.area.inline.InlineArea: void setBPD(int)>($i0);
+        $z1 = parent instanceof org.apache.fop.area.inline.InlineParent;
+        if $z1 == 0 goto label13;
+
+        $r12 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.inline.AlignmentContext alignmentContext>;
+        $i0 = virtualinvoke $r12.<org.apache.fop.layoutmgr.inline.AlignmentContext: int getOffset()>();
+        virtualinvoke parent.<org.apache.fop.area.inline.InlineArea: void setOffset(int)>($i0);
+        goto label14;
+
+     label13:
+        $z1 = parent instanceof org.apache.fop.area.inline.InlineBlockParent;
+        if $z1 == 0 goto label14;
+
+        $r13 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        if $r13 == null goto label14;
+
+        $r14 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        $i0 = virtualinvoke $r14.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPaddingBefore(boolean,org.apache.fop.datatypes.PercentBaseContext)>(0, this);
+        $r15 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps>;
+        $i1 = virtualinvoke $r15.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getBorderBeforeWidth(boolean)>(0);
+        $i0 = $i0 + $i1;
+        virtualinvoke parent.<org.apache.fop.area.inline.InlineArea: void setOffset(int)>($i0);
+
+     label14:
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: void setCurrentArea(org.apache.fop.area.Area)>(parent);
+        $r16 = new org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager$StackingIter;
+        $r17 = virtualinvoke positionList.<java.util.LinkedList: java.util.ListIterator listIterator()>();
+        specialinvoke $r16.<org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager$StackingIter: void <init>(java.util.Iterator)>($r17);
+        childPosIter = $r16;
+        prevLM = null;
+
+     label15:
+        $r18 = virtualinvoke childPosIter.<org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager$StackingIter: org.apache.fop.layoutmgr.LayoutManager getNextChildLM()>();
+        childLM = $r18;
+        if $r18 == null goto label18;
+
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext getContext()>();
+        $s2 = 128;
+        $z2 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: boolean isLastArea()>();
+        if $z2 == 0 goto label16;
+
+        if childLM != lastLM goto label16;
+
+        $z2 = 1;
+        goto label17;
+
+     label16:
+        $z2 = 0;
+
+     label17:
+        virtualinvoke $r1.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int,boolean)>($s2, $z2);
+        $r19 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext getContext()>();
+        interfaceinvoke childLM.<org.apache.fop.layoutmgr.LayoutManager: void addAreas(org.apache.fop.layoutmgr.PositionIterator,org.apache.fop.layoutmgr.LayoutContext)>(childPosIter, $r19);
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext getContext()>();
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext getContext()>();
+        $r2 = virtualinvoke $r0.<org.apache.fop.layoutmgr.LayoutContext: org.apache.fop.layoutmgr.SpaceSpecifier getTrailingSpace()>();
+        virtualinvoke $r1.<org.apache.fop.layoutmgr.LayoutContext: void setLeadingSpace(org.apache.fop.layoutmgr.SpaceSpecifier)>($r2);
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext getContext()>();
+        virtualinvoke $r1.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int,boolean)>(256, 1);
+        prevLM = childLM;
+        goto label15;
+
+     label18:
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext getContext()>();
+        $z1 = virtualinvoke $r1.<org.apache.fop.layoutmgr.LayoutContext: boolean isLastArea()>();
+        if $z1 == 0 goto label19;
+
+        $r20 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutManager lastChildLM>;
+        if prevLM != $r20 goto label19;
+
+        $z1 = 1;
+        goto label20;
+
+     label19:
+        $z1 = 0;
+
+     label20:
+        isLast = $z1;
+        $z1 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: boolean hasTrailingFence(boolean)>(isLast);
+        if $z1 == 0 goto label21;
+
+        $r21 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.area.Area getCurrentArea()>();
+        $r19 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext getContext()>();
+        $r22 = virtualinvoke $r19.<org.apache.fop.layoutmgr.LayoutContext: org.apache.fop.layoutmgr.SpaceSpecifier getTrailingSpace()>();
+        $r23 = virtualinvoke $r22.<org.apache.fop.layoutmgr.SpaceSpecifier: org.apache.fop.traits.MinOptMax resolve(boolean)>(0);
+        $r24 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext getContext()>();
+        $d0 = virtualinvoke $r24.<org.apache.fop.layoutmgr.LayoutContext: double getSpaceAdjust()>();
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: void addSpace(org.apache.fop.area.Area,org.apache.fop.traits.MinOptMax,double)>($r21, $r23, $d0);
+        $r2 = new org.apache.fop.layoutmgr.SpaceSpecifier;
+        specialinvoke $r2.<org.apache.fop.layoutmgr.SpaceSpecifier: void <init>(boolean)>(0);
+        virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: void setTrailingSpace(org.apache.fop.layoutmgr.SpaceSpecifier)>($r2);
+        goto label22;
+
+     label21:
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext getContext()>();
+        $r2 = virtualinvoke $r0.<org.apache.fop.layoutmgr.LayoutContext: org.apache.fop.layoutmgr.SpaceSpecifier getTrailingSpace()>();
+        virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: void setTrailingSpace(org.apache.fop.layoutmgr.SpaceSpecifier)>($r2);
+
+     label22:
+        $r4 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: org.apache.fop.layoutmgr.SpaceSpecifier getTrailingSpace()>();
+        if $r4 == null goto label23;
+
+        $r3 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.SpaceProperty getSpaceEnd()>();
+        if $r3 == null goto label23;
+
+        $r4 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: org.apache.fop.layoutmgr.SpaceSpecifier getTrailingSpace()>();
+        $r5 = new org.apache.fop.traits.SpaceVal;
+        $r6 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.properties.SpaceProperty getSpaceEnd()>();
+        specialinvoke $r5.<org.apache.fop.traits.SpaceVal: void <init>(org.apache.fop.fo.properties.SpaceProperty,org.apache.fop.datatypes.PercentBaseContext)>($r6, this);
+        virtualinvoke $r4.<org.apache.fop.layoutmgr.SpaceSpecifier: void addSpace(org.apache.fop.traits.SpaceVal)>($r5);
+
+     label23:
+        $z0 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: boolean areaCreated>;
+        if lastPos == null goto label24;
+
+        $z2 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: boolean isLast(org.apache.fop.layoutmgr.Position)>(lastPos);
+        if $z2 != 0 goto label25;
+
+     label24:
+        $z2 = 1;
+        goto label26;
+
+     label25:
+        $z2 = 0;
+
+     label26:
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: void setTraits(boolean,boolean)>($z0, $z2);
+        $r18 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutManager parentLM>;
+        $r21 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.area.Area getCurrentArea()>();
+        interfaceinvoke $r18.<org.apache.fop.layoutmgr.LayoutManager: void addChildArea(org.apache.fop.area.Area)>($r21);
+        $z0 = 0;
+        $z2 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: boolean areaCreated>;
+        if $z2 != 0 goto label27;
+
+        $z2 = 1;
+        goto label28;
+
+     label27:
+        $z2 = 0;
+
+     label28:
+        if lastPos == null goto label29;
+
+        $z3 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: boolean isLast(org.apache.fop.layoutmgr.Position)>(lastPos);
+        if $z3 == 0 goto label30;
+
+     label29:
+        $z3 = 1;
+        goto label31;
+
+     label30:
+        $z3 = 0;
+
+     label31:
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: void addMarkersToPage(boolean,boolean,boolean)>($z0, $z2, $z3);
+        virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int,boolean)>(128, isLast);
+        this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: boolean areaCreated> = 1;
+        return;
+    }
+
+    public void addChildArea(org.apache.fop.area.Area)
+    {
+        org.apache.fop.layoutmgr.inline.InlineLayoutManager this;
+        org.apache.fop.area.Area childArea, parent;
+        org.apache.fop.layoutmgr.LayoutContext $r0, $r1, $r4;
+        boolean $z0;
+        org.apache.fop.layoutmgr.SpaceSpecifier $r2;
+        org.apache.fop.traits.MinOptMax $r3;
+        double $d0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.InlineLayoutManager;
+        childArea := @parameter0: org.apache.fop.area.Area;
+        parent = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.area.Area getCurrentArea()>();
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext getContext()>();
+        $z0 = virtualinvoke $r0.<org.apache.fop.layoutmgr.LayoutContext: boolean resolveLeadingSpace()>();
+        if $z0 == 0 goto label0;
+
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext getContext()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.layoutmgr.LayoutContext: org.apache.fop.layoutmgr.SpaceSpecifier getLeadingSpace()>();
+        $r3 = virtualinvoke $r2.<org.apache.fop.layoutmgr.SpaceSpecifier: org.apache.fop.traits.MinOptMax resolve(boolean)>(0);
+        $r4 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.LayoutContext getContext()>();
+        $d0 = virtualinvoke $r4.<org.apache.fop.layoutmgr.LayoutContext: double getSpaceAdjust()>();
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: void addSpace(org.apache.fop.area.Area,org.apache.fop.traits.MinOptMax,double)>(parent, $r3, $d0);
+
+     label0:
+        virtualinvoke parent.<org.apache.fop.area.Area: void addChildArea(org.apache.fop.area.Area)>(childArea);
+        return;
+    }
+
+    public java.util.LinkedList getChangedKnuthElements(java.util.List, int)
+    {
+        org.apache.fop.layoutmgr.inline.InlineLayoutManager this;
+        java.util.List oldList;
+        int alignment;
+        java.util.LinkedList $r0, returnedList, $r1;
+
+        this := @this: org.apache.fop.layoutmgr.inline.InlineLayoutManager;
+        oldList := @parameter0: java.util.List;
+        alignment := @parameter1: int;
+        $r0 = new java.util.LinkedList;
+        specialinvoke $r0.<java.util.LinkedList: void <init>()>();
+        returnedList = $r0;
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: void addKnuthElementsForBorderPaddingStart(java.util.List)>(returnedList);
+        $r1 = specialinvoke this.<org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager: java.util.LinkedList getChangedKnuthElements(java.util.List,int)>(oldList, alignment);
+        virtualinvoke returnedList.<java.util.LinkedList: boolean addAll(java.util.Collection)>($r1);
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: void addKnuthElementsForBorderPaddingEnd(java.util.List)>(returnedList);
+        return returnedList;
+    }
+
+    protected void addKnuthElementsForBorderPaddingStart(java.util.List)
+    {
+        org.apache.fop.layoutmgr.inline.InlineLayoutManager this;
+        java.util.List returnList;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground borderAndPadding;
+        int ipStart, $i0, $i1;
+        boolean $z0;
+        org.apache.fop.fo.flow.InlineLevel $r0;
+        org.apache.fop.layoutmgr.KnuthBox $r1;
+        org.apache.fop.layoutmgr.Position $r2;
+
+        this := @this: org.apache.fop.layoutmgr.inline.InlineLayoutManager;
+        returnList := @parameter0: java.util.List;
+        $z0 = returnList instanceof org.apache.fop.layoutmgr.BlockKnuthSequence;
+        if $z0 == 0 goto label0;
+
+        return;
+
+     label0:
+        $r0 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.flow.InlineLevel fobj>;
+        borderAndPadding = virtualinvoke $r0.<org.apache.fop.fo.flow.InlineLevel: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        if borderAndPadding == null goto label1;
+
+        $i0 = virtualinvoke borderAndPadding.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getBorderStartWidth(boolean)>(0);
+        $i1 = virtualinvoke borderAndPadding.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPaddingStart(boolean,org.apache.fop.datatypes.PercentBaseContext)>(0, this);
+        ipStart = $i0 + $i1;
+        if ipStart <= 0 goto label1;
+
+        $r1 = new org.apache.fop.layoutmgr.KnuthBox;
+        $r2 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.Position getAuxiliaryPosition()>();
+        specialinvoke $r1.<org.apache.fop.layoutmgr.KnuthBox: void <init>(int,org.apache.fop.layoutmgr.Position,boolean)>(ipStart, $r2, 1);
+        interfaceinvoke returnList.<java.util.List: void add(int,java.lang.Object)>(0, $r1);
+
+     label1:
+        return;
+    }
+
+    protected void addKnuthElementsForBorderPaddingEnd(java.util.List)
+    {
+        org.apache.fop.layoutmgr.inline.InlineLayoutManager this;
+        java.util.List returnList;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground borderAndPadding;
+        int ipEnd, $i0, $i1;
+        boolean $z0;
+        org.apache.fop.fo.flow.InlineLevel $r0;
+        org.apache.fop.layoutmgr.KnuthBox $r1;
+        org.apache.fop.layoutmgr.Position $r2;
+
+        this := @this: org.apache.fop.layoutmgr.inline.InlineLayoutManager;
+        returnList := @parameter0: java.util.List;
+        $z0 = returnList instanceof org.apache.fop.layoutmgr.BlockKnuthSequence;
+        if $z0 == 0 goto label0;
+
+        return;
+
+     label0:
+        $r0 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.flow.InlineLevel fobj>;
+        borderAndPadding = virtualinvoke $r0.<org.apache.fop.fo.flow.InlineLevel: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        if borderAndPadding == null goto label1;
+
+        $i0 = virtualinvoke borderAndPadding.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getBorderEndWidth(boolean)>(0);
+        $i1 = virtualinvoke borderAndPadding.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPaddingEnd(boolean,org.apache.fop.datatypes.PercentBaseContext)>(0, this);
+        ipEnd = $i0 + $i1;
+        if ipEnd <= 0 goto label1;
+
+        $r1 = new org.apache.fop.layoutmgr.KnuthBox;
+        $r2 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.Position getAuxiliaryPosition()>();
+        specialinvoke $r1.<org.apache.fop.layoutmgr.KnuthBox: void <init>(int,org.apache.fop.layoutmgr.Position,boolean)>(ipEnd, $r2, 1);
+        interfaceinvoke returnList.<java.util.List: boolean add(java.lang.Object)>($r1);
+
+     label1:
+        return;
+    }
+
+    protected org.apache.fop.layoutmgr.Position getAuxiliaryPosition()
+    {
+        org.apache.fop.layoutmgr.inline.InlineLayoutManager this;
+        org.apache.fop.layoutmgr.NonLeafPosition $r0;
+        org.apache.fop.layoutmgr.Position $r1;
+
+        this := @this: org.apache.fop.layoutmgr.inline.InlineLayoutManager;
+        $r0 = new org.apache.fop.layoutmgr.NonLeafPosition;
+        specialinvoke $r0.<org.apache.fop.layoutmgr.NonLeafPosition: void <init>(org.apache.fop.layoutmgr.LayoutManager,org.apache.fop.layoutmgr.Position)>(this, null);
+        this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.Position auxiliaryPosition> = $r0;
+        $r1 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.Position auxiliaryPosition>;
+        return $r1;
+    }
+
+    protected void addId()
+    {
+        org.apache.fop.layoutmgr.inline.InlineLayoutManager this;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager $r0;
+        org.apache.fop.fo.flow.InlineLevel $r1;
+        java.lang.String $r2;
+
+        this := @this: org.apache.fop.layoutmgr.inline.InlineLayoutManager;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.layoutmgr.PageSequenceLayoutManager getPSLM()>();
+        $r1 = this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.fo.flow.InlineLevel fobj>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.flow.InlineLevel: java.lang.String getId()>();
+        virtualinvoke $r0.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: void addIDToPage(java.lang.String)>($r2);
+        return;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.layoutmgr.inline.InlineLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$inline$InlineLayoutManager>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.layoutmgr.inline.InlineLayoutManager: java.lang.Class class$(java.lang.String)>("org.apache.fop.layoutmgr.inline.InlineLayoutManager");
+        <org.apache.fop.layoutmgr.inline.InlineLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$inline$InlineLayoutManager> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.layoutmgr.inline.InlineLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$inline$InlineLayoutManager>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

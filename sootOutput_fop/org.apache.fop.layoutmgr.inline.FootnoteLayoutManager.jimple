@@ -1,0 +1,349 @@
+public class org.apache.fop.layoutmgr.inline.FootnoteLayoutManager extends org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager
+{
+    private static org.apache.commons.logging.Log log;
+    private org.apache.fop.fo.flow.Footnote footnote;
+    private org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager citationLM;
+    private org.apache.fop.layoutmgr.FootnoteBodyLayoutManager bodyLM;
+    private org.apache.fop.layoutmgr.KnuthElement forcedAnchor;
+    static java.lang.Class class$org$apache$fop$layoutmgr$inline$FootnoteLayoutManager;
+
+    public void <init>(org.apache.fop.fo.flow.Footnote)
+    {
+        org.apache.fop.layoutmgr.inline.FootnoteLayoutManager this;
+        org.apache.fop.fo.flow.Footnote node;
+
+        this := @this: org.apache.fop.layoutmgr.inline.FootnoteLayoutManager;
+        node := @parameter0: org.apache.fop.fo.flow.Footnote;
+        specialinvoke this.<org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager: void <init>(org.apache.fop.fo.FObj)>(node);
+        this.<org.apache.fop.layoutmgr.inline.FootnoteLayoutManager: org.apache.fop.fo.flow.Footnote footnote> = node;
+        return;
+    }
+
+    public void initialize()
+    {
+        org.apache.fop.layoutmgr.inline.FootnoteLayoutManager this;
+        org.apache.fop.layoutmgr.inline.InlineLayoutManager $r0;
+        org.apache.fop.fo.flow.Footnote $r1;
+        org.apache.fop.fo.flow.Inline $r2;
+        org.apache.fop.layoutmgr.FootnoteBodyLayoutManager $r3;
+        org.apache.fop.fo.flow.FootnoteBody $r4;
+
+        this := @this: org.apache.fop.layoutmgr.inline.FootnoteLayoutManager;
+        $r0 = new org.apache.fop.layoutmgr.inline.InlineLayoutManager;
+        $r1 = this.<org.apache.fop.layoutmgr.inline.FootnoteLayoutManager: org.apache.fop.fo.flow.Footnote footnote>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.flow.Footnote: org.apache.fop.fo.flow.Inline getFootnoteCitation()>();
+        specialinvoke $r0.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: void <init>(org.apache.fop.fo.flow.InlineLevel)>($r2);
+        this.<org.apache.fop.layoutmgr.inline.FootnoteLayoutManager: org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager citationLM> = $r0;
+        $r3 = new org.apache.fop.layoutmgr.FootnoteBodyLayoutManager;
+        $r1 = this.<org.apache.fop.layoutmgr.inline.FootnoteLayoutManager: org.apache.fop.fo.flow.Footnote footnote>;
+        $r4 = virtualinvoke $r1.<org.apache.fop.fo.flow.Footnote: org.apache.fop.fo.flow.FootnoteBody getFootnoteBody()>();
+        specialinvoke $r3.<org.apache.fop.layoutmgr.FootnoteBodyLayoutManager: void <init>(org.apache.fop.fo.flow.FootnoteBody)>($r4);
+        this.<org.apache.fop.layoutmgr.inline.FootnoteLayoutManager: org.apache.fop.layoutmgr.FootnoteBodyLayoutManager bodyLM> = $r3;
+        return;
+    }
+
+    public java.util.LinkedList getNextKnuthElements(org.apache.fop.layoutmgr.LayoutContext, int)
+    {
+        org.apache.fop.layoutmgr.inline.FootnoteLayoutManager this;
+        org.apache.fop.layoutmgr.LayoutContext context;
+        int alignment, $i0;
+        java.util.LinkedList returnedList, partialList, $r2;
+        org.apache.fop.layoutmgr.InlineKnuthSequence seq, $r3;
+        java.util.ListIterator listIterator, elementIterator;
+        null_type elementIterator, list, element;
+        org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager $r0;
+        org.apache.fop.layoutmgr.FootnoteBodyLayoutManager $r1;
+        boolean $z0;
+        org.apache.fop.layoutmgr.inline.KnuthInlineBox $r4;
+        org.apache.fop.layoutmgr.KnuthElement $r5, element;
+        java.lang.Object $r6;
+        org.apache.fop.layoutmgr.KnuthSequence list;
+        org.apache.fop.layoutmgr.NonLeafPosition $r7;
+        org.apache.fop.layoutmgr.Position $r8, $r9;
+
+        this := @this: org.apache.fop.layoutmgr.inline.FootnoteLayoutManager;
+        context := @parameter0: org.apache.fop.layoutmgr.LayoutContext;
+        alignment := @parameter1: int;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.FootnoteLayoutManager: org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager citationLM>;
+        virtualinvoke $r0.<org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager: void setParent(org.apache.fop.layoutmgr.LayoutManager)>(this);
+        $r0 = this.<org.apache.fop.layoutmgr.inline.FootnoteLayoutManager: org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager citationLM>;
+        virtualinvoke $r0.<org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager: void initialize()>();
+        $r1 = this.<org.apache.fop.layoutmgr.inline.FootnoteLayoutManager: org.apache.fop.layoutmgr.FootnoteBodyLayoutManager bodyLM>;
+        virtualinvoke $r1.<org.apache.fop.layoutmgr.FootnoteBodyLayoutManager: void setParent(org.apache.fop.layoutmgr.LayoutManager)>(this);
+        $r1 = this.<org.apache.fop.layoutmgr.inline.FootnoteLayoutManager: org.apache.fop.layoutmgr.FootnoteBodyLayoutManager bodyLM>;
+        virtualinvoke $r1.<org.apache.fop.layoutmgr.FootnoteBodyLayoutManager: void initialize()>();
+        $r2 = new java.util.LinkedList;
+        specialinvoke $r2.<java.util.LinkedList: void <init>()>();
+        returnedList = $r2;
+
+     label0:
+        $r0 = this.<org.apache.fop.layoutmgr.inline.FootnoteLayoutManager: org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager citationLM>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager: boolean isFinished()>();
+        if $z0 != 0 goto label2;
+
+        $r0 = this.<org.apache.fop.layoutmgr.inline.FootnoteLayoutManager: org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager citationLM>;
+        partialList = virtualinvoke $r0.<org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager: java.util.LinkedList getNextKnuthElements(org.apache.fop.layoutmgr.LayoutContext,int)>(context, alignment);
+        if partialList == null goto label1;
+
+        virtualinvoke returnedList.<java.util.LinkedList: boolean addAll(java.util.Collection)>(partialList);
+
+     label1:
+        goto label0;
+
+     label2:
+        $i0 = virtualinvoke returnedList.<java.util.LinkedList: int size()>();
+        if $i0 != 0 goto label3;
+
+        $r3 = new org.apache.fop.layoutmgr.InlineKnuthSequence;
+        specialinvoke $r3.<org.apache.fop.layoutmgr.InlineKnuthSequence: void <init>()>();
+        seq = $r3;
+        $r4 = new org.apache.fop.layoutmgr.inline.KnuthInlineBox;
+        specialinvoke $r4.<org.apache.fop.layoutmgr.inline.KnuthInlineBox: void <init>(int,org.apache.fop.layoutmgr.inline.AlignmentContext,org.apache.fop.layoutmgr.Position,boolean)>(0, null, null, 1);
+        this.<org.apache.fop.layoutmgr.inline.FootnoteLayoutManager: org.apache.fop.layoutmgr.KnuthElement forcedAnchor> = $r4;
+        $r5 = this.<org.apache.fop.layoutmgr.inline.FootnoteLayoutManager: org.apache.fop.layoutmgr.KnuthElement forcedAnchor>;
+        virtualinvoke seq.<org.apache.fop.layoutmgr.KnuthSequence: boolean add(java.lang.Object)>($r5);
+        virtualinvoke returnedList.<java.util.LinkedList: boolean add(java.lang.Object)>(seq);
+
+     label3:
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.FootnoteLayoutManager: void setFinished(boolean)>(1);
+        specialinvoke this.<org.apache.fop.layoutmgr.inline.FootnoteLayoutManager: void addAnchor(java.util.LinkedList)>(returnedList);
+        listIterator = virtualinvoke returnedList.<java.util.LinkedList: java.util.ListIterator listIterator()>();
+        elementIterator = null;
+        list = null;
+        element = null;
+
+     label4:
+        $z0 = interfaceinvoke listIterator.<java.util.ListIterator: boolean hasNext()>();
+        if $z0 == 0 goto label6;
+
+        $r6 = interfaceinvoke listIterator.<java.util.ListIterator: java.lang.Object next()>();
+        list = (org.apache.fop.layoutmgr.KnuthSequence) $r6;
+        elementIterator = virtualinvoke list.<org.apache.fop.layoutmgr.KnuthSequence: java.util.ListIterator listIterator()>();
+
+     label5:
+        $z0 = interfaceinvoke elementIterator.<java.util.ListIterator: boolean hasNext()>();
+        if $z0 == 0 goto label4;
+
+        $r6 = interfaceinvoke elementIterator.<java.util.ListIterator: java.lang.Object next()>();
+        element = (org.apache.fop.layoutmgr.KnuthElement) $r6;
+        $r7 = new org.apache.fop.layoutmgr.NonLeafPosition;
+        $r8 = virtualinvoke element.<org.apache.fop.layoutmgr.ListElement: org.apache.fop.layoutmgr.Position getPosition()>();
+        specialinvoke $r7.<org.apache.fop.layoutmgr.NonLeafPosition: void <init>(org.apache.fop.layoutmgr.LayoutManager,org.apache.fop.layoutmgr.Position)>(this, $r8);
+        $r9 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.FootnoteLayoutManager: org.apache.fop.layoutmgr.Position notifyPos(org.apache.fop.layoutmgr.Position)>($r7);
+        virtualinvoke element.<org.apache.fop.layoutmgr.ListElement: void setPosition(org.apache.fop.layoutmgr.Position)>($r9);
+        goto label5;
+
+     label6:
+        return returnedList;
+    }
+
+    public java.util.LinkedList getChangedKnuthElements(java.util.List, int)
+    {
+        org.apache.fop.layoutmgr.inline.FootnoteLayoutManager this;
+        java.util.List oldList;
+        int alignment;
+        java.util.LinkedList returnedList;
+
+        this := @this: org.apache.fop.layoutmgr.inline.FootnoteLayoutManager;
+        oldList := @parameter0: java.util.List;
+        alignment := @parameter1: int;
+        returnedList = specialinvoke this.<org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager: java.util.LinkedList getChangedKnuthElements(java.util.List,int)>(oldList, alignment);
+        specialinvoke this.<org.apache.fop.layoutmgr.inline.FootnoteLayoutManager: void addAnchor(java.util.LinkedList)>(returnedList);
+        return returnedList;
+    }
+
+    public void addAreas(org.apache.fop.layoutmgr.PositionIterator, org.apache.fop.layoutmgr.LayoutContext)
+    {
+        org.apache.fop.layoutmgr.inline.FootnoteLayoutManager this;
+        org.apache.fop.layoutmgr.PositionIterator posIter;
+        org.apache.fop.layoutmgr.LayoutContext context, childContext, $r6;
+        java.util.LinkedList $r0, positionList;
+        null_type pos;
+        org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager$StackingIter childPosIter, $r7;
+        org.apache.fop.layoutmgr.LayoutManager childLM, $r5, $r9;
+        boolean $z0;
+        java.lang.Object $r1;
+        org.apache.fop.layoutmgr.NonLeafPosition pos;
+        org.apache.fop.layoutmgr.Position $r2, $r3;
+        org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager $r4;
+        java.util.ListIterator $r8;
+        org.apache.fop.layoutmgr.SpaceSpecifier $r10;
+
+        this := @this: org.apache.fop.layoutmgr.inline.FootnoteLayoutManager;
+        posIter := @parameter0: org.apache.fop.layoutmgr.PositionIterator;
+        context := @parameter1: org.apache.fop.layoutmgr.LayoutContext;
+        $r0 = new java.util.LinkedList;
+        specialinvoke $r0.<java.util.LinkedList: void <init>()>();
+        positionList = $r0;
+        pos = null;
+
+     label0:
+        $z0 = virtualinvoke posIter.<org.apache.fop.layoutmgr.PositionIterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r1 = virtualinvoke posIter.<org.apache.fop.layoutmgr.PositionIterator: java.lang.Object next()>();
+        pos = (org.apache.fop.layoutmgr.NonLeafPosition) $r1;
+        if pos == null goto label0;
+
+        $r2 = virtualinvoke pos.<org.apache.fop.layoutmgr.NonLeafPosition: org.apache.fop.layoutmgr.Position getPosition()>();
+        if $r2 == null goto label0;
+
+        $r3 = virtualinvoke pos.<org.apache.fop.layoutmgr.NonLeafPosition: org.apache.fop.layoutmgr.Position getPosition()>();
+        virtualinvoke positionList.<java.util.LinkedList: boolean add(java.lang.Object)>($r3);
+        goto label0;
+
+     label1:
+        $r4 = this.<org.apache.fop.layoutmgr.inline.FootnoteLayoutManager: org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager citationLM>;
+        $r5 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.FootnoteLayoutManager: org.apache.fop.layoutmgr.LayoutManager getParent()>();
+        virtualinvoke $r4.<org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager: void setParent(org.apache.fop.layoutmgr.LayoutManager)>($r5);
+        $r6 = new org.apache.fop.layoutmgr.LayoutContext;
+        specialinvoke $r6.<org.apache.fop.layoutmgr.LayoutContext: void <init>(org.apache.fop.layoutmgr.LayoutContext)>(context);
+        childContext = $r6;
+        $r7 = new org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager$StackingIter;
+        $r8 = virtualinvoke positionList.<java.util.LinkedList: java.util.ListIterator listIterator()>();
+        specialinvoke $r7.<org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager$StackingIter: void <init>(java.util.Iterator)>($r8);
+        childPosIter = $r7;
+
+     label2:
+        $r9 = virtualinvoke childPosIter.<org.apache.fop.layoutmgr.inline.InlineStackingLayoutManager$StackingIter: org.apache.fop.layoutmgr.LayoutManager getNextChildLM()>();
+        childLM = $r9;
+        if $r9 == null goto label3;
+
+        interfaceinvoke childLM.<org.apache.fop.layoutmgr.LayoutManager: void addAreas(org.apache.fop.layoutmgr.PositionIterator,org.apache.fop.layoutmgr.LayoutContext)>(childPosIter, childContext);
+        $r10 = virtualinvoke childContext.<org.apache.fop.layoutmgr.LayoutContext: org.apache.fop.layoutmgr.SpaceSpecifier getTrailingSpace()>();
+        virtualinvoke childContext.<org.apache.fop.layoutmgr.LayoutContext: void setLeadingSpace(org.apache.fop.layoutmgr.SpaceSpecifier)>($r10);
+        virtualinvoke childContext.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int,boolean)>(256, 1);
+        goto label2;
+
+     label3:
+        return;
+    }
+
+    private void addAnchor(java.util.LinkedList)
+    {
+        org.apache.fop.layoutmgr.inline.FootnoteLayoutManager this;
+        java.util.LinkedList citationList;
+        org.apache.fop.layoutmgr.inline.KnuthInlineBox lastBox;
+        java.util.ListIterator citationIterator, nestedIterator;
+        java.lang.Object obj, $r0;
+        org.apache.fop.layoutmgr.KnuthElement element, $r1;
+        org.apache.fop.layoutmgr.KnuthSequence seq;
+        int $i0;
+        boolean $z0;
+        org.apache.fop.layoutmgr.FootnoteBodyLayoutManager $r2;
+
+        this := @this: org.apache.fop.layoutmgr.inline.FootnoteLayoutManager;
+        citationList := @parameter0: java.util.LinkedList;
+        lastBox = null;
+        $i0 = virtualinvoke citationList.<java.util.LinkedList: int size()>();
+        citationIterator = virtualinvoke citationList.<java.util.LinkedList: java.util.ListIterator listIterator(int)>($i0);
+
+     label0:
+        $z0 = interfaceinvoke citationIterator.<java.util.ListIterator: boolean hasPrevious()>();
+        if $z0 == 0 goto label8;
+
+        if lastBox != null goto label8;
+
+        obj = interfaceinvoke citationIterator.<java.util.ListIterator: java.lang.Object previous()>();
+        $z0 = obj instanceof org.apache.fop.layoutmgr.KnuthElement;
+        if $z0 == 0 goto label2;
+
+        element = (org.apache.fop.layoutmgr.KnuthElement) obj;
+        $z0 = element instanceof org.apache.fop.layoutmgr.inline.KnuthInlineBox;
+        if $z0 == 0 goto label1;
+
+        lastBox = (org.apache.fop.layoutmgr.inline.KnuthInlineBox) element;
+
+     label1:
+        goto label7;
+
+     label2:
+        seq = (org.apache.fop.layoutmgr.KnuthSequence) obj;
+        $i0 = virtualinvoke seq.<org.apache.fop.layoutmgr.KnuthSequence: int size()>();
+        nestedIterator = virtualinvoke seq.<org.apache.fop.layoutmgr.KnuthSequence: java.util.ListIterator listIterator(int)>($i0);
+
+     label3:
+        $z0 = interfaceinvoke nestedIterator.<java.util.ListIterator: boolean hasPrevious()>();
+        if $z0 == 0 goto label7;
+
+        if lastBox != null goto label7;
+
+        $r0 = interfaceinvoke nestedIterator.<java.util.ListIterator: java.lang.Object previous()>();
+        element = (org.apache.fop.layoutmgr.KnuthElement) $r0;
+        $z0 = element instanceof org.apache.fop.layoutmgr.inline.KnuthInlineBox;
+        if $z0 == 0 goto label4;
+
+        $z0 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: boolean isAuxiliary()>();
+        if $z0 == 0 goto label5;
+
+     label4:
+        $r1 = this.<org.apache.fop.layoutmgr.inline.FootnoteLayoutManager: org.apache.fop.layoutmgr.KnuthElement forcedAnchor>;
+        if element != $r1 goto label6;
+
+     label5:
+        lastBox = (org.apache.fop.layoutmgr.inline.KnuthInlineBox) element;
+
+     label6:
+        goto label3;
+
+     label7:
+        goto label0;
+
+     label8:
+        if lastBox == null goto label9;
+
+        $r2 = this.<org.apache.fop.layoutmgr.inline.FootnoteLayoutManager: org.apache.fop.layoutmgr.FootnoteBodyLayoutManager bodyLM>;
+        virtualinvoke lastBox.<org.apache.fop.layoutmgr.inline.KnuthInlineBox: void setFootnoteBodyLM(org.apache.fop.layoutmgr.FootnoteBodyLayoutManager)>($r2);
+
+     label9:
+        return;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.layoutmgr.inline.FootnoteLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$inline$FootnoteLayoutManager>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.layoutmgr.inline.FootnoteLayoutManager: java.lang.Class class$(java.lang.String)>("org.apache.fop.layoutmgr.inline.FootnoteLayoutManager");
+        <org.apache.fop.layoutmgr.inline.FootnoteLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$inline$FootnoteLayoutManager> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.layoutmgr.inline.FootnoteLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$inline$FootnoteLayoutManager>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.layoutmgr.inline.FootnoteLayoutManager: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

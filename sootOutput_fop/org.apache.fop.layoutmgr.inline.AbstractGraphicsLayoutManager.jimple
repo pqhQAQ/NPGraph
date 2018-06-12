@@ -1,0 +1,212 @@
+public abstract class org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager extends org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager
+{
+    protected org.apache.fop.fo.flow.AbstractGraphics fobj;
+
+    public void <init>(org.apache.fop.fo.flow.AbstractGraphics)
+    {
+        org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager this;
+        org.apache.fop.fo.flow.AbstractGraphics node;
+
+        this := @this: org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager;
+        node := @parameter0: org.apache.fop.fo.flow.AbstractGraphics;
+        specialinvoke this.<org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager: void <init>(org.apache.fop.fo.FObj)>(node);
+        this.<org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager: org.apache.fop.fo.flow.AbstractGraphics fobj> = node;
+        return;
+    }
+
+    private org.apache.fop.area.inline.Viewport getInlineArea()
+    {
+        org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager this;
+        java.awt.Dimension $r0, intrinsicSize, $r9;
+        org.apache.fop.layoutmgr.inline.ImageLayout imageLayout, $r3;
+        java.awt.Rectangle placement;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground borderProps, $r10;
+        int beforeBPD, startIPD, $i0, $i1, $i2;
+        org.apache.fop.area.Area viewportArea;
+        org.apache.fop.area.inline.Viewport vp, $r8;
+        org.apache.fop.fo.flow.AbstractGraphics $r1, $r2, $r4, $r6;
+        java.lang.String $r7;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager;
+        $r0 = new java.awt.Dimension;
+        $r1 = this.<org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager: org.apache.fop.fo.flow.AbstractGraphics fobj>;
+        $i0 = virtualinvoke $r1.<org.apache.fop.fo.flow.AbstractGraphics: int getIntrinsicWidth()>();
+        $r2 = this.<org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager: org.apache.fop.fo.flow.AbstractGraphics fobj>;
+        $i1 = virtualinvoke $r2.<org.apache.fop.fo.flow.AbstractGraphics: int getIntrinsicHeight()>();
+        specialinvoke $r0.<java.awt.Dimension: void <init>(int,int)>($i0, $i1);
+        intrinsicSize = $r0;
+        $r3 = new org.apache.fop.layoutmgr.inline.ImageLayout;
+        $r1 = this.<org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager: org.apache.fop.fo.flow.AbstractGraphics fobj>;
+        specialinvoke $r3.<org.apache.fop.layoutmgr.inline.ImageLayout: void <init>(org.apache.fop.fo.GraphicsProperties,org.apache.fop.datatypes.PercentBaseContext,java.awt.Dimension)>($r1, this, intrinsicSize);
+        imageLayout = $r3;
+        placement = virtualinvoke imageLayout.<org.apache.fop.layoutmgr.inline.ImageLayout: java.awt.Rectangle getPlacement()>();
+        $r4 = this.<org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager: org.apache.fop.fo.flow.AbstractGraphics fobj>;
+        borderProps = virtualinvoke $r4.<org.apache.fop.fo.flow.AbstractGraphics: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        beforeBPD = virtualinvoke borderProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPadding(int,boolean,org.apache.fop.datatypes.PercentBaseContext)>(0, 0, this);
+        $i2 = virtualinvoke borderProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getBorderWidth(int,boolean)>(0, 0);
+        beforeBPD = beforeBPD + $i2;
+        $i2 = placement.<java.awt.Rectangle: int y>;
+        $i2 = $i2 + beforeBPD;
+        placement.<java.awt.Rectangle: int y> = $i2;
+        startIPD = virtualinvoke borderProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPadding(int,boolean,org.apache.fop.datatypes.PercentBaseContext)>(2, 0, this);
+        $i2 = virtualinvoke borderProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getBorderWidth(int,boolean)>(2, 0);
+        startIPD = startIPD + $i2;
+        $i2 = placement.<java.awt.Rectangle: int x>;
+        $i2 = $i2 + startIPD;
+        placement.<java.awt.Rectangle: int x> = $i2;
+        viewportArea = virtualinvoke this.<org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager: org.apache.fop.area.Area getChildArea()>();
+        $r6 = this.<org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager: org.apache.fop.fo.flow.AbstractGraphics fobj>;
+        $r7 = virtualinvoke $r6.<org.apache.fop.fo.flow.AbstractGraphics: java.lang.String getId()>();
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void setProducerID(org.apache.fop.area.Area,java.lang.String)>(viewportArea, $r7);
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager: void transferForeignAttributes(org.apache.fop.area.Area)>(viewportArea);
+        $r8 = new org.apache.fop.area.inline.Viewport;
+        specialinvoke $r8.<org.apache.fop.area.inline.Viewport: void <init>(org.apache.fop.area.Area)>(viewportArea);
+        vp = $r8;
+        $r6 = this.<org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager: org.apache.fop.fo.flow.AbstractGraphics fobj>;
+        $r7 = virtualinvoke $r6.<org.apache.fop.fo.flow.AbstractGraphics: java.lang.String getId()>();
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void setProducerID(org.apache.fop.area.Area,java.lang.String)>(vp, $r7);
+        $r9 = virtualinvoke imageLayout.<org.apache.fop.layoutmgr.inline.ImageLayout: java.awt.Dimension getViewportSize()>();
+        $i2 = $r9.<java.awt.Dimension: int width>;
+        virtualinvoke vp.<org.apache.fop.area.inline.Viewport: void setIPD(int)>($i2);
+        $r9 = virtualinvoke imageLayout.<org.apache.fop.layoutmgr.inline.ImageLayout: java.awt.Dimension getViewportSize()>();
+        $i2 = $r9.<java.awt.Dimension: int height>;
+        virtualinvoke vp.<org.apache.fop.area.inline.Viewport: void setBPD(int)>($i2);
+        virtualinvoke vp.<org.apache.fop.area.inline.Viewport: void setContentPosition(java.awt.geom.Rectangle2D)>(placement);
+        $z0 = virtualinvoke imageLayout.<org.apache.fop.layoutmgr.inline.ImageLayout: boolean isClipped()>();
+        virtualinvoke vp.<org.apache.fop.area.inline.Viewport: void setClip(boolean)>($z0);
+        virtualinvoke vp.<org.apache.fop.area.inline.Viewport: void setOffset(int)>(0);
+        $r6 = this.<org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager: org.apache.fop.fo.flow.AbstractGraphics fobj>;
+        $r10 = virtualinvoke $r6.<org.apache.fop.fo.flow.AbstractGraphics: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addBorders(org.apache.fop.area.Area,org.apache.fop.fo.properties.CommonBorderPaddingBackground,boolean,boolean,boolean,boolean,org.apache.fop.datatypes.PercentBaseContext)>(vp, $r10, 0, 0, 0, 0, this);
+        $r6 = this.<org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager: org.apache.fop.fo.flow.AbstractGraphics fobj>;
+        $r10 = virtualinvoke $r6.<org.apache.fop.fo.flow.AbstractGraphics: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addPadding(org.apache.fop.area.Area,org.apache.fop.fo.properties.CommonBorderPaddingBackground,boolean,boolean,boolean,boolean,org.apache.fop.datatypes.PercentBaseContext)>(vp, $r10, 0, 0, 0, 0, this);
+        $r6 = this.<org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager: org.apache.fop.fo.flow.AbstractGraphics fobj>;
+        $r10 = virtualinvoke $r6.<org.apache.fop.fo.flow.AbstractGraphics: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addBackground(org.apache.fop.area.Area,org.apache.fop.fo.properties.CommonBorderPaddingBackground,org.apache.fop.datatypes.PercentBaseContext)>(vp, $r10, this);
+        return vp;
+    }
+
+    public java.util.LinkedList getNextKnuthElements(org.apache.fop.layoutmgr.LayoutContext, int)
+    {
+        org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager this;
+        org.apache.fop.layoutmgr.LayoutContext context;
+        int alignment;
+        org.apache.fop.area.inline.Viewport areaCurrent;
+        java.util.LinkedList $r0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager;
+        context := @parameter0: org.apache.fop.layoutmgr.LayoutContext;
+        alignment := @parameter1: int;
+        areaCurrent = specialinvoke this.<org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager: org.apache.fop.area.inline.Viewport getInlineArea()>();
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager: void setCurrentArea(org.apache.fop.area.inline.InlineArea)>(areaCurrent);
+        $r0 = specialinvoke this.<org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager: java.util.LinkedList getNextKnuthElements(org.apache.fop.layoutmgr.LayoutContext,int)>(context, alignment);
+        return $r0;
+    }
+
+    protected org.apache.fop.layoutmgr.inline.AlignmentContext makeAlignmentContext(org.apache.fop.layoutmgr.LayoutContext)
+    {
+        org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager this;
+        org.apache.fop.layoutmgr.LayoutContext context;
+        org.apache.fop.layoutmgr.inline.AlignmentContext $r0, $r8;
+        org.apache.fop.area.inline.InlineArea $r1;
+        int $i0, $i1, $i2;
+        org.apache.fop.fo.flow.AbstractGraphics $r2, $r4, $r5, $r7;
+        org.apache.fop.datatypes.Length $r3, $r6;
+
+        this := @this: org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager;
+        context := @parameter0: org.apache.fop.layoutmgr.LayoutContext;
+        $r0 = new org.apache.fop.layoutmgr.inline.AlignmentContext;
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager: org.apache.fop.area.inline.InlineArea get(org.apache.fop.layoutmgr.LayoutContext)>(context);
+        $i0 = virtualinvoke $r1.<org.apache.fop.area.inline.InlineArea: int getAllocBPD()>();
+        $r2 = this.<org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager: org.apache.fop.fo.flow.AbstractGraphics fobj>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.fo.flow.AbstractGraphics: org.apache.fop.datatypes.Length getAlignmentAdjust()>();
+        $r4 = this.<org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager: org.apache.fop.fo.flow.AbstractGraphics fobj>;
+        $i1 = virtualinvoke $r4.<org.apache.fop.fo.flow.AbstractGraphics: int getAlignmentBaseline()>();
+        $r5 = this.<org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager: org.apache.fop.fo.flow.AbstractGraphics fobj>;
+        $r6 = virtualinvoke $r5.<org.apache.fop.fo.flow.AbstractGraphics: org.apache.fop.datatypes.Length getBaselineShift()>();
+        $r7 = this.<org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager: org.apache.fop.fo.flow.AbstractGraphics fobj>;
+        $i2 = virtualinvoke $r7.<org.apache.fop.fo.flow.AbstractGraphics: int getDominantBaseline()>();
+        $r8 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: org.apache.fop.layoutmgr.inline.AlignmentContext getAlignmentContext()>();
+        specialinvoke $r0.<org.apache.fop.layoutmgr.inline.AlignmentContext: void <init>(int,org.apache.fop.datatypes.Length,int,org.apache.fop.datatypes.Length,int,org.apache.fop.layoutmgr.inline.AlignmentContext)>($i0, $r3, $i1, $r6, $i2, $r8);
+        return $r0;
+    }
+
+    protected void addId()
+    {
+        org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager this;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager $r0;
+        org.apache.fop.fo.flow.AbstractGraphics $r1;
+        java.lang.String $r2;
+
+        this := @this: org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager: org.apache.fop.layoutmgr.PageSequenceLayoutManager getPSLM()>();
+        $r1 = this.<org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager: org.apache.fop.fo.flow.AbstractGraphics fobj>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.flow.AbstractGraphics: java.lang.String getId()>();
+        virtualinvoke $r0.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: void addIDToPage(java.lang.String)>($r2);
+        return;
+    }
+
+    abstract org.apache.fop.area.Area getChildArea();
+
+    public int getBaseLength(int, org.apache.fop.fo.FObj)
+    {
+        org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager this;
+        int lengthBase, $i0;
+        org.apache.fop.fo.FObj fobj;
+        org.apache.fop.area.inline.InlineArea $r0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager;
+        lengthBase := @parameter0: int;
+        fobj := @parameter1: org.apache.fop.fo.FObj;
+        lookupswitch(lengthBase)
+        {
+            case 7: goto label0;
+            case 8: goto label1;
+            case 12: goto label2;
+            default: goto label3;
+        };
+
+     label0:
+        $i0 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager: int getIntrinsicWidth()>();
+        return $i0;
+
+     label1:
+        $i0 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager: int getIntrinsicHeight()>();
+        return $i0;
+
+     label2:
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager: org.apache.fop.area.inline.InlineArea get(org.apache.fop.layoutmgr.LayoutContext)>(null);
+        $i0 = virtualinvoke $r0.<org.apache.fop.area.inline.InlineArea: int getBPD()>();
+        return $i0;
+
+     label3:
+        $i0 = specialinvoke this.<org.apache.fop.layoutmgr.inline.LeafNodeLayoutManager: int getBaseLength(int,org.apache.fop.fo.FObj)>(lengthBase, fobj);
+        return $i0;
+    }
+
+    protected int getIntrinsicWidth()
+    {
+        org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager this;
+        org.apache.fop.fo.flow.AbstractGraphics $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager: org.apache.fop.fo.flow.AbstractGraphics fobj>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fo.flow.AbstractGraphics: int getIntrinsicWidth()>();
+        return $i0;
+    }
+
+    protected int getIntrinsicHeight()
+    {
+        org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager this;
+        org.apache.fop.fo.flow.AbstractGraphics $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.AbstractGraphicsLayoutManager: org.apache.fop.fo.flow.AbstractGraphics fobj>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fo.flow.AbstractGraphics: int getIntrinsicHeight()>();
+        return $i0;
+    }
+}

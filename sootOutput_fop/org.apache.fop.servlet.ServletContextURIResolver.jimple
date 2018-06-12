@@ -1,0 +1,136 @@
+public class org.apache.fop.servlet.ServletContextURIResolver extends java.lang.Object implements javax.xml.transform.URIResolver
+{
+    public static final java.lang.String SERVLET_CONTEXT_PROTOCOL;
+    private javax.servlet.ServletContext servletContext;
+
+    public void <init>(javax.servlet.ServletContext)
+    {
+        org.apache.fop.servlet.ServletContextURIResolver this;
+        javax.servlet.ServletContext servletContext;
+
+        this := @this: org.apache.fop.servlet.ServletContextURIResolver;
+        servletContext := @parameter0: javax.servlet.ServletContext;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.servlet.ServletContextURIResolver: javax.servlet.ServletContext servletContext> = servletContext;
+        return;
+    }
+
+    public javax.xml.transform.Source resolve(java.lang.String, java.lang.String) throws javax.xml.transform.TransformerException
+    {
+        org.apache.fop.servlet.ServletContextURIResolver this;
+        java.lang.String href, base, $r0, abs, $r1;
+        boolean $z0;
+        int $i0, $i1;
+        javax.xml.transform.Source $r2;
+        java.lang.StringBuffer $r3;
+
+        this := @this: org.apache.fop.servlet.ServletContextURIResolver;
+        href := @parameter0: java.lang.String;
+        base := @parameter1: java.lang.String;
+        $z0 = virtualinvoke href.<java.lang.String: boolean startsWith(java.lang.String)>("servlet-context:");
+        if $z0 == 0 goto label0;
+
+        $r0 = "servlet-context:";
+        $i0 = virtualinvoke $r0.<java.lang.String: int length()>();
+        $r1 = virtualinvoke href.<java.lang.String: java.lang.String substring(int)>($i0);
+        $r2 = virtualinvoke this.<org.apache.fop.servlet.ServletContextURIResolver: javax.xml.transform.Source resolveServletContextURI(java.lang.String)>($r1);
+        return $r2;
+
+     label0:
+        if base == null goto label1;
+
+        $z0 = virtualinvoke base.<java.lang.String: boolean startsWith(java.lang.String)>("servlet-context:");
+        if $z0 == 0 goto label1;
+
+        $i1 = virtualinvoke href.<java.lang.String: int indexOf(int)>(58);
+        if $i1 >= 0 goto label1;
+
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(base);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(href);
+        abs = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r0 = "servlet-context:";
+        $i0 = virtualinvoke $r0.<java.lang.String: int length()>();
+        $r1 = virtualinvoke abs.<java.lang.String: java.lang.String substring(int)>($i0);
+        $r2 = virtualinvoke this.<org.apache.fop.servlet.ServletContextURIResolver: javax.xml.transform.Source resolveServletContextURI(java.lang.String)>($r1);
+        return $r2;
+
+     label1:
+        return null;
+    }
+
+    protected javax.xml.transform.Source resolveServletContextURI(java.lang.String) throws javax.xml.transform.TransformerException
+    {
+        org.apache.fop.servlet.ServletContextURIResolver this;
+        java.lang.String path, $r2, $r5;
+        java.net.URL url;
+        java.io.InputStream in;
+        java.net.MalformedURLException mfue, $r6;
+        boolean $z0;
+        javax.servlet.ServletContext $r0;
+        javax.xml.transform.stream.StreamSource $r1;
+        javax.xml.transform.TransformerException $r3;
+        java.lang.StringBuffer $r4;
+
+        this := @this: org.apache.fop.servlet.ServletContextURIResolver;
+        path := @parameter0: java.lang.String;
+
+     label0:
+        $z0 = virtualinvoke path.<java.lang.String: boolean startsWith(java.lang.String)>("//");
+        if $z0 == 0 goto label1;
+
+        path = virtualinvoke path.<java.lang.String: java.lang.String substring(int)>(1);
+        goto label0;
+
+     label1:
+        $r0 = this.<org.apache.fop.servlet.ServletContextURIResolver: javax.servlet.ServletContext servletContext>;
+        url = interfaceinvoke $r0.<javax.servlet.ServletContext: java.net.URL getResource(java.lang.String)>(path);
+        $r0 = this.<org.apache.fop.servlet.ServletContextURIResolver: javax.servlet.ServletContext servletContext>;
+        in = interfaceinvoke $r0.<javax.servlet.ServletContext: java.io.InputStream getResourceAsStream(java.lang.String)>(path);
+        if in == null goto label5;
+
+        if url == null goto label3;
+
+        $r1 = new javax.xml.transform.stream.StreamSource;
+        $r2 = virtualinvoke url.<java.net.URL: java.lang.String toExternalForm()>();
+        specialinvoke $r1.<javax.xml.transform.stream.StreamSource: void <init>(java.io.InputStream,java.lang.String)>(in, $r2);
+
+     label2:
+        return $r1;
+
+     label3:
+        $r1 = new javax.xml.transform.stream.StreamSource;
+        specialinvoke $r1.<javax.xml.transform.stream.StreamSource: void <init>(java.io.InputStream)>(in);
+
+     label4:
+        return $r1;
+
+     label5:
+        $r3 = new javax.xml.transform.TransformerException;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Resource does not exist. \"");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(path);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\" is not accessible through the servlet context.");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r3.<javax.xml.transform.TransformerException: void <init>(java.lang.String)>($r5);
+        throw $r3;
+
+     label6:
+        $r6 := @caughtexception;
+        mfue = $r6;
+        $r3 = new javax.xml.transform.TransformerException;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Error accessing resource using servlet context: ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(path);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r3.<javax.xml.transform.TransformerException: void <init>(java.lang.String,java.lang.Throwable)>($r5, mfue);
+        throw $r3;
+
+        catch java.net.MalformedURLException from label1 to label2 with label6;
+        catch java.net.MalformedURLException from label3 to label4 with label6;
+        catch java.net.MalformedURLException from label5 to label6 with label6;
+    }
+}

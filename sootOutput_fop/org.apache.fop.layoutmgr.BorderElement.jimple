@@ -1,0 +1,79 @@
+public class org.apache.fop.layoutmgr.BorderElement extends org.apache.fop.layoutmgr.BorderOrPaddingElement
+{
+
+    public void <init>(org.apache.fop.layoutmgr.Position, org.apache.fop.fo.properties.CondLengthProperty, org.apache.fop.layoutmgr.RelSide, boolean, boolean, org.apache.fop.datatypes.PercentBaseContext)
+    {
+        org.apache.fop.layoutmgr.BorderElement this;
+        org.apache.fop.layoutmgr.Position position;
+        org.apache.fop.fo.properties.CondLengthProperty condLength;
+        org.apache.fop.layoutmgr.RelSide side;
+        boolean isFirst, isLast;
+        org.apache.fop.datatypes.PercentBaseContext context;
+
+        this := @this: org.apache.fop.layoutmgr.BorderElement;
+        position := @parameter0: org.apache.fop.layoutmgr.Position;
+        condLength := @parameter1: org.apache.fop.fo.properties.CondLengthProperty;
+        side := @parameter2: org.apache.fop.layoutmgr.RelSide;
+        isFirst := @parameter3: boolean;
+        isLast := @parameter4: boolean;
+        context := @parameter5: org.apache.fop.datatypes.PercentBaseContext;
+        specialinvoke this.<org.apache.fop.layoutmgr.BorderOrPaddingElement: void <init>(org.apache.fop.layoutmgr.Position,org.apache.fop.fo.properties.CondLengthProperty,org.apache.fop.layoutmgr.RelSide,boolean,boolean,org.apache.fop.datatypes.PercentBaseContext)>(position, condLength, side, isFirst, isLast, context);
+        return;
+    }
+
+    public void notifyLayoutManager(org.apache.fop.traits.MinOptMax)
+    {
+        org.apache.fop.layoutmgr.BorderElement this;
+        org.apache.fop.traits.MinOptMax effectiveLength;
+        org.apache.fop.layoutmgr.LayoutManager lm;
+        boolean $z0;
+        org.apache.fop.layoutmgr.ConditionalElementListener $r0;
+        org.apache.fop.layoutmgr.RelSide $r1;
+        org.apache.commons.logging.Log $r2;
+        java.lang.StringBuffer $r3;
+        java.lang.Class $r4;
+        java.lang.String $r5, $r6;
+
+        this := @this: org.apache.fop.layoutmgr.BorderElement;
+        effectiveLength := @parameter0: org.apache.fop.traits.MinOptMax;
+        lm = virtualinvoke this.<org.apache.fop.layoutmgr.BorderElement: org.apache.fop.layoutmgr.LayoutManager getOriginatingLayoutManager()>();
+        $z0 = lm instanceof org.apache.fop.layoutmgr.ConditionalElementListener;
+        if $z0 == 0 goto label0;
+
+        $r0 = (org.apache.fop.layoutmgr.ConditionalElementListener) lm;
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.BorderElement: org.apache.fop.layoutmgr.RelSide getSide()>();
+        interfaceinvoke $r0.<org.apache.fop.layoutmgr.ConditionalElementListener: void notifyBorder(org.apache.fop.layoutmgr.RelSide,org.apache.fop.traits.MinOptMax)>($r1, effectiveLength);
+        goto label1;
+
+     label0:
+        $r2 = <org.apache.fop.layoutmgr.BorderElement: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Cannot notify LM. It does not implement ConditionalElementListener: ");
+        $r4 = virtualinvoke lm.<java.lang.Object: java.lang.Class getClass()>();
+        $r5 = virtualinvoke $r4.<java.lang.Class: java.lang.String getName()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r6 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r6);
+
+     label1:
+        return;
+    }
+
+    public java.lang.String toString()
+    {
+        org.apache.fop.layoutmgr.BorderElement this;
+        java.lang.StringBuffer $r0, sb;
+        java.lang.String $r1, $r2;
+
+        this := @this: org.apache.fop.layoutmgr.BorderElement;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>(java.lang.String)>("Border[");
+        sb = $r0;
+        $r1 = specialinvoke this.<org.apache.fop.layoutmgr.BorderOrPaddingElement: java.lang.String toString()>();
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("]");
+        $r2 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r2;
+    }
+}

@@ -1,0 +1,109 @@
+class org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter extends org.apache.fop.pdf.PDFFilter
+{
+    private org.apache.fop.pdf.PDFEncryptionJCE encryption;
+    private int number;
+    private int generation;
+    private final org.apache.fop.pdf.PDFEncryptionJCE this$0;
+
+    public void <init>(org.apache.fop.pdf.PDFEncryptionJCE, org.apache.fop.pdf.PDFEncryptionJCE, int, int)
+    {
+        org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter this;
+        org.apache.fop.pdf.PDFEncryptionJCE l1, encryption;
+        int number, generation;
+        org.apache.commons.logging.Log $r0;
+        java.lang.StringBuffer $r1;
+        java.lang.String $r2;
+
+        this := @this: org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter;
+        l1 := @parameter0: org.apache.fop.pdf.PDFEncryptionJCE;
+        encryption := @parameter1: org.apache.fop.pdf.PDFEncryptionJCE;
+        number := @parameter2: int;
+        generation := @parameter3: int;
+        this.<org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter: org.apache.fop.pdf.PDFEncryptionJCE this$0> = l1;
+        specialinvoke this.<org.apache.fop.pdf.PDFFilter: void <init>()>();
+        this.<org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter: org.apache.fop.pdf.PDFEncryptionJCE encryption> = encryption;
+        this.<org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter: int number> = number;
+        this.<org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter: int generation> = generation;
+        $r0 = <org.apache.fop.pdf.PDFObject: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("new encryption filter for number ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(number);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" and generation ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(generation);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r2);
+        return;
+    }
+
+    public java.lang.String getName()
+    {
+        org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter this;
+
+        this := @this: org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter;
+        return "";
+    }
+
+    public org.apache.fop.pdf.PDFObject getDecodeParms()
+    {
+        org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter this;
+
+        this := @this: org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter;
+        return null;
+    }
+
+    public byte[] encode(byte[])
+    {
+        org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter this;
+        byte[] data, $r1;
+        org.apache.fop.pdf.PDFEncryptionJCE $r0;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter;
+        data := @parameter0: byte[];
+        $r0 = this.<org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter: org.apache.fop.pdf.PDFEncryptionJCE encryption>;
+        $i0 = this.<org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter: int number>;
+        $i1 = this.<org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter: int generation>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] encryptData(byte[],int,int)>(data, $i0, $i1);
+        return $r1;
+    }
+
+    public void encode(java.io.InputStream, java.io.OutputStream, int) throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter this;
+        java.io.InputStream in;
+        java.io.OutputStream out;
+        int length;
+        byte[] buffer;
+
+        this := @this: org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter;
+        in := @parameter0: java.io.InputStream;
+        out := @parameter1: java.io.OutputStream;
+        length := @parameter2: int;
+        buffer = newarray (byte)[length];
+        virtualinvoke in.<java.io.InputStream: int read(byte[])>(buffer);
+        buffer = virtualinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter: byte[] encode(byte[])>(buffer);
+        virtualinvoke out.<java.io.OutputStream: void write(byte[])>(buffer);
+        return;
+    }
+
+    public java.io.OutputStream applyFilter(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter this;
+        java.io.OutputStream out;
+        javax.crypto.CipherOutputStream $r0;
+        org.apache.fop.pdf.PDFEncryptionJCE $r1;
+        int $i0, $i1;
+        javax.crypto.Cipher $r2;
+
+        this := @this: org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter;
+        out := @parameter0: java.io.OutputStream;
+        $r0 = new javax.crypto.CipherOutputStream;
+        $r1 = this.<org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter: org.apache.fop.pdf.PDFEncryptionJCE encryption>;
+        $i0 = this.<org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter: int number>;
+        $i1 = this.<org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter: int generation>;
+        $r2 = staticinvoke <org.apache.fop.pdf.PDFEncryptionJCE: javax.crypto.Cipher access$000(org.apache.fop.pdf.PDFEncryptionJCE,int,int)>($r1, $i0, $i1);
+        specialinvoke $r0.<javax.crypto.CipherOutputStream: void <init>(java.io.OutputStream,javax.crypto.Cipher)>(out, $r2);
+        return $r0;
+    }
+}

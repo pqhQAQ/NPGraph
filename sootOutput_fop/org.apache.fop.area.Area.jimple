@@ -1,0 +1,590 @@
+public class org.apache.fop.area.Area extends org.apache.fop.area.AreaTreeObject implements java.io.Serializable
+{
+    public static final int LR;
+    public static final int RL;
+    public static final int TB;
+    public static final int BT;
+    public static final int ORIENT_0;
+    public static final int ORIENT_90;
+    public static final int ORIENT_180;
+    public static final int ORIENT_270;
+    public static final int CLASS_NORMAL;
+    public static final int CLASS_FIXED;
+    public static final int CLASS_ABSOLUTE;
+    public static final int CLASS_BEFORE_FLOAT;
+    public static final int CLASS_FOOTNOTE;
+    public static final int CLASS_SIDE_FLOAT;
+    public static final int CLASS_MAX;
+    private int areaClass;
+    protected int ipd;
+    protected int bpd;
+    protected java.util.Map props;
+    protected static org.apache.commons.logging.Log log;
+    static java.lang.Class class$org$apache$fop$area$Area;
+
+    public void <init>()
+    {
+        org.apache.fop.area.Area this;
+
+        this := @this: org.apache.fop.area.Area;
+        specialinvoke this.<org.apache.fop.area.AreaTreeObject: void <init>()>();
+        this.<org.apache.fop.area.Area: int areaClass> = 0;
+        this.<org.apache.fop.area.Area: java.util.Map props> = null;
+        return;
+    }
+
+    public int getAreaClass()
+    {
+        org.apache.fop.area.Area this;
+        int $i0;
+
+        this := @this: org.apache.fop.area.Area;
+        $i0 = this.<org.apache.fop.area.Area: int areaClass>;
+        return $i0;
+    }
+
+    public void setAreaClass(int)
+    {
+        org.apache.fop.area.Area this;
+        int areaClass;
+
+        this := @this: org.apache.fop.area.Area;
+        areaClass := @parameter0: int;
+        this.<org.apache.fop.area.Area: int areaClass> = areaClass;
+        return;
+    }
+
+    public void setIPD(int)
+    {
+        org.apache.fop.area.Area this;
+        int i;
+
+        this := @this: org.apache.fop.area.Area;
+        i := @parameter0: int;
+        this.<org.apache.fop.area.Area: int ipd> = i;
+        return;
+    }
+
+    public int getIPD()
+    {
+        org.apache.fop.area.Area this;
+        int $i0;
+
+        this := @this: org.apache.fop.area.Area;
+        $i0 = this.<org.apache.fop.area.Area: int ipd>;
+        return $i0;
+    }
+
+    public void setBPD(int)
+    {
+        org.apache.fop.area.Area this;
+        int b;
+
+        this := @this: org.apache.fop.area.Area;
+        b := @parameter0: int;
+        this.<org.apache.fop.area.Area: int bpd> = b;
+        return;
+    }
+
+    public int getBPD()
+    {
+        org.apache.fop.area.Area this;
+        int $i0;
+
+        this := @this: org.apache.fop.area.Area;
+        $i0 = this.<org.apache.fop.area.Area: int bpd>;
+        return $i0;
+    }
+
+    public int getAllocIPD()
+    {
+        org.apache.fop.area.Area this;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.area.Area;
+        $i0 = virtualinvoke this.<org.apache.fop.area.Area: int getBorderAndPaddingWidthStart()>();
+        $i1 = virtualinvoke this.<org.apache.fop.area.Area: int getIPD()>();
+        $i0 = $i0 + $i1;
+        $i1 = virtualinvoke this.<org.apache.fop.area.Area: int getBorderAndPaddingWidthEnd()>();
+        $i0 = $i0 + $i1;
+        return $i0;
+    }
+
+    public int getAllocBPD()
+    {
+        org.apache.fop.area.Area this;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.area.Area;
+        $i0 = virtualinvoke this.<org.apache.fop.area.Area: int getSpaceBefore()>();
+        $i1 = virtualinvoke this.<org.apache.fop.area.Area: int getBorderAndPaddingWidthBefore()>();
+        $i0 = $i0 + $i1;
+        $i1 = virtualinvoke this.<org.apache.fop.area.Area: int getBPD()>();
+        $i0 = $i0 + $i1;
+        $i1 = virtualinvoke this.<org.apache.fop.area.Area: int getBorderAndPaddingWidthAfter()>();
+        $i0 = $i0 + $i1;
+        $i1 = virtualinvoke this.<org.apache.fop.area.Area: int getSpaceAfter()>();
+        $i0 = $i0 + $i1;
+        return $i0;
+    }
+
+    public int getBorderAndPaddingWidthBefore()
+    {
+        org.apache.fop.area.Area this;
+        int margin, $i0;
+        java.lang.Integer $r0, padWidth;
+        org.apache.fop.traits.BorderProps bps;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.area.Area;
+        margin = 0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_BEFORE>;
+        $r1 = virtualinvoke this.<org.apache.fop.area.Area: java.lang.Object getTrait(java.lang.Object)>($r0);
+        bps = (org.apache.fop.traits.BorderProps) $r1;
+        if bps == null goto label0;
+
+        margin = bps.<org.apache.fop.traits.BorderProps: int width>;
+
+     label0:
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer PADDING_BEFORE>;
+        $r1 = virtualinvoke this.<org.apache.fop.area.Area: java.lang.Object getTrait(java.lang.Object)>($r0);
+        padWidth = (java.lang.Integer) $r1;
+        if padWidth == null goto label1;
+
+        $i0 = virtualinvoke padWidth.<java.lang.Integer: int intValue()>();
+        margin = margin + $i0;
+
+     label1:
+        return margin;
+    }
+
+    public int getBorderAndPaddingWidthAfter()
+    {
+        org.apache.fop.area.Area this;
+        int margin, $i0;
+        java.lang.Integer $r0, padWidth;
+        org.apache.fop.traits.BorderProps bps;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.area.Area;
+        margin = 0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_AFTER>;
+        $r1 = virtualinvoke this.<org.apache.fop.area.Area: java.lang.Object getTrait(java.lang.Object)>($r0);
+        bps = (org.apache.fop.traits.BorderProps) $r1;
+        if bps == null goto label0;
+
+        margin = bps.<org.apache.fop.traits.BorderProps: int width>;
+
+     label0:
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer PADDING_AFTER>;
+        $r1 = virtualinvoke this.<org.apache.fop.area.Area: java.lang.Object getTrait(java.lang.Object)>($r0);
+        padWidth = (java.lang.Integer) $r1;
+        if padWidth == null goto label1;
+
+        $i0 = virtualinvoke padWidth.<java.lang.Integer: int intValue()>();
+        margin = margin + $i0;
+
+     label1:
+        return margin;
+    }
+
+    public int getBorderAndPaddingWidthStart()
+    {
+        org.apache.fop.area.Area this;
+        int margin, $i0;
+        java.lang.Integer $r0, padWidth;
+        org.apache.fop.traits.BorderProps bps;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.area.Area;
+        margin = 0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_START>;
+        $r1 = virtualinvoke this.<org.apache.fop.area.Area: java.lang.Object getTrait(java.lang.Object)>($r0);
+        bps = (org.apache.fop.traits.BorderProps) $r1;
+        if bps == null goto label0;
+
+        margin = bps.<org.apache.fop.traits.BorderProps: int width>;
+
+     label0:
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer PADDING_START>;
+        $r1 = virtualinvoke this.<org.apache.fop.area.Area: java.lang.Object getTrait(java.lang.Object)>($r0);
+        padWidth = (java.lang.Integer) $r1;
+        if padWidth == null goto label1;
+
+        $i0 = virtualinvoke padWidth.<java.lang.Integer: int intValue()>();
+        margin = margin + $i0;
+
+     label1:
+        return margin;
+    }
+
+    public int getBorderAndPaddingWidthEnd()
+    {
+        org.apache.fop.area.Area this;
+        int margin, $i0;
+        java.lang.Integer $r0, padWidth;
+        org.apache.fop.traits.BorderProps bps;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.area.Area;
+        margin = 0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_END>;
+        $r1 = virtualinvoke this.<org.apache.fop.area.Area: java.lang.Object getTrait(java.lang.Object)>($r0);
+        bps = (org.apache.fop.traits.BorderProps) $r1;
+        if bps == null goto label0;
+
+        margin = bps.<org.apache.fop.traits.BorderProps: int width>;
+
+     label0:
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer PADDING_END>;
+        $r1 = virtualinvoke this.<org.apache.fop.area.Area: java.lang.Object getTrait(java.lang.Object)>($r0);
+        padWidth = (java.lang.Integer) $r1;
+        if padWidth == null goto label1;
+
+        $i0 = virtualinvoke padWidth.<java.lang.Integer: int intValue()>();
+        margin = margin + $i0;
+
+     label1:
+        return margin;
+    }
+
+    public int getSpaceBefore()
+    {
+        org.apache.fop.area.Area this;
+        int margin;
+        java.lang.Integer $r0, space;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.area.Area;
+        margin = 0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer SPACE_BEFORE>;
+        $r1 = virtualinvoke this.<org.apache.fop.area.Area: java.lang.Object getTrait(java.lang.Object)>($r0);
+        space = (java.lang.Integer) $r1;
+        if space == null goto label0;
+
+        margin = virtualinvoke space.<java.lang.Integer: int intValue()>();
+
+     label0:
+        return margin;
+    }
+
+    public int getSpaceAfter()
+    {
+        org.apache.fop.area.Area this;
+        int margin;
+        java.lang.Integer $r0, space;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.area.Area;
+        margin = 0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer SPACE_AFTER>;
+        $r1 = virtualinvoke this.<org.apache.fop.area.Area: java.lang.Object getTrait(java.lang.Object)>($r0);
+        space = (java.lang.Integer) $r1;
+        if space == null goto label0;
+
+        margin = virtualinvoke space.<java.lang.Integer: int intValue()>();
+
+     label0:
+        return margin;
+    }
+
+    public int getSpaceStart()
+    {
+        org.apache.fop.area.Area this;
+        int margin;
+        java.lang.Integer $r0, space;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.area.Area;
+        margin = 0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer SPACE_START>;
+        $r1 = virtualinvoke this.<org.apache.fop.area.Area: java.lang.Object getTrait(java.lang.Object)>($r0);
+        space = (java.lang.Integer) $r1;
+        if space == null goto label0;
+
+        margin = virtualinvoke space.<java.lang.Integer: int intValue()>();
+
+     label0:
+        return margin;
+    }
+
+    public int getSpaceEnd()
+    {
+        org.apache.fop.area.Area this;
+        int margin;
+        java.lang.Integer $r0, space;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.area.Area;
+        margin = 0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer SPACE_END>;
+        $r1 = virtualinvoke this.<org.apache.fop.area.Area: java.lang.Object getTrait(java.lang.Object)>($r0);
+        space = (java.lang.Integer) $r1;
+        if space == null goto label0;
+
+        margin = virtualinvoke space.<java.lang.Integer: int intValue()>();
+
+     label0:
+        return margin;
+    }
+
+    public void addChildArea(org.apache.fop.area.Area)
+    {
+        org.apache.fop.area.Area this, child;
+
+        this := @this: org.apache.fop.area.Area;
+        child := @parameter0: org.apache.fop.area.Area;
+        return;
+    }
+
+    public void addTrait(org.apache.fop.area.Trait)
+    {
+        org.apache.fop.area.Area this;
+        org.apache.fop.area.Trait prop;
+        java.util.HashMap $r0;
+        java.util.Map $r1;
+        java.lang.Object $r2, $r3;
+
+        this := @this: org.apache.fop.area.Area;
+        prop := @parameter0: org.apache.fop.area.Trait;
+        $r1 = this.<org.apache.fop.area.Area: java.util.Map props>;
+        if $r1 != null goto label0;
+
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>(int)>(20);
+        this.<org.apache.fop.area.Area: java.util.Map props> = $r0;
+
+     label0:
+        $r1 = this.<org.apache.fop.area.Area: java.util.Map props>;
+        $r2 = virtualinvoke prop.<org.apache.fop.area.Trait: java.lang.Object getPropType()>();
+        $r3 = virtualinvoke prop.<org.apache.fop.area.Trait: java.lang.Object getData()>();
+        interfaceinvoke $r1.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r2, $r3);
+        return;
+    }
+
+    public void addTrait(java.lang.Object, java.lang.Object)
+    {
+        org.apache.fop.area.Area this;
+        java.lang.Object traitCode, prop;
+        java.util.HashMap $r0;
+        java.util.Map $r1;
+
+        this := @this: org.apache.fop.area.Area;
+        traitCode := @parameter0: java.lang.Object;
+        prop := @parameter1: java.lang.Object;
+        $r1 = this.<org.apache.fop.area.Area: java.util.Map props>;
+        if $r1 != null goto label0;
+
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>(int)>(20);
+        this.<org.apache.fop.area.Area: java.util.Map props> = $r0;
+
+     label0:
+        $r1 = this.<org.apache.fop.area.Area: java.util.Map props>;
+        interfaceinvoke $r1.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(traitCode, prop);
+        return;
+    }
+
+    public java.util.Map getTraits()
+    {
+        org.apache.fop.area.Area this;
+        java.util.Map $r0;
+
+        this := @this: org.apache.fop.area.Area;
+        $r0 = this.<org.apache.fop.area.Area: java.util.Map props>;
+        return $r0;
+    }
+
+    public boolean hasTraits()
+    {
+        org.apache.fop.area.Area this;
+        java.util.Map $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.area.Area;
+        $r0 = this.<org.apache.fop.area.Area: java.util.Map props>;
+        if $r0 == null goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public java.lang.Object getTrait(java.lang.Object)
+    {
+        org.apache.fop.area.Area this;
+        java.lang.Object oTraitCode, $r1;
+        java.util.Map $r0;
+
+        this := @this: org.apache.fop.area.Area;
+        oTraitCode := @parameter0: java.lang.Object;
+        $r0 = this.<org.apache.fop.area.Area: java.util.Map props>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.area.Area: java.util.Map props>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>(oTraitCode);
+        goto label1;
+
+     label0:
+        $r1 = null;
+
+     label1:
+        return $r1;
+    }
+
+    public boolean hasTrait(java.lang.Object)
+    {
+        org.apache.fop.area.Area this;
+        java.lang.Object oTraitCode, $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.area.Area;
+        oTraitCode := @parameter0: java.lang.Object;
+        $r0 = virtualinvoke this.<org.apache.fop.area.Area: java.lang.Object getTrait(java.lang.Object)>(oTraitCode);
+        if $r0 == null goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public boolean getBooleanTrait(java.lang.Object)
+    {
+        org.apache.fop.area.Area this;
+        java.lang.Object oTraitCode, obj;
+        boolean $z0;
+        java.lang.Boolean $r0;
+
+        this := @this: org.apache.fop.area.Area;
+        oTraitCode := @parameter0: java.lang.Object;
+        obj = virtualinvoke this.<org.apache.fop.area.Area: java.lang.Object getTrait(java.lang.Object)>(oTraitCode);
+        $z0 = obj instanceof java.lang.Boolean;
+        if $z0 == 0 goto label0;
+
+        $r0 = (java.lang.Boolean) obj;
+        $z0 = virtualinvoke $r0.<java.lang.Boolean: boolean booleanValue()>();
+        return $z0;
+
+     label0:
+        return 0;
+    }
+
+    public int getTraitAsInteger(java.lang.Object)
+    {
+        org.apache.fop.area.Area this;
+        java.lang.Object oTraitCode, obj;
+        java.lang.StringBuffer $r0;
+        boolean $z0;
+        java.lang.Integer $r1;
+        int $i0;
+        java.lang.IllegalArgumentException $r2;
+        java.lang.Class $r3;
+        java.lang.String $r4, $r5;
+
+        this := @this: org.apache.fop.area.Area;
+        oTraitCode := @parameter0: java.lang.Object;
+        obj = virtualinvoke this.<org.apache.fop.area.Area: java.lang.Object getTrait(java.lang.Object)>(oTraitCode);
+        $z0 = obj instanceof java.lang.Integer;
+        if $z0 == 0 goto label0;
+
+        $r1 = (java.lang.Integer) obj;
+        $i0 = virtualinvoke $r1.<java.lang.Integer: int intValue()>();
+        return $i0;
+
+     label0:
+        $r2 = new java.lang.IllegalArgumentException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Trait ");
+        $r3 = virtualinvoke oTraitCode.<java.lang.Object: java.lang.Class getClass()>();
+        $r4 = virtualinvoke $r3.<java.lang.Class: java.lang.String getName()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" could not be converted to an integer");
+        $r5 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r5);
+        throw $r2;
+    }
+
+    public java.lang.String toString()
+    {
+        org.apache.fop.area.Area this;
+        java.lang.StringBuffer $r0, sb;
+        java.lang.String $r1, $r2, $r3;
+        int $i0;
+
+        this := @this: org.apache.fop.area.Area;
+        $r0 = new java.lang.StringBuffer;
+        $r1 = specialinvoke this.<java.lang.Object: java.lang.String toString()>();
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>(java.lang.String)>($r1);
+        sb = $r0;
+        $r0 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" {ipd=");
+        $i0 = virtualinvoke this.<org.apache.fop.area.Area: int getIPD()>();
+        $r2 = staticinvoke <java.lang.Integer: java.lang.String toString(int)>($i0);
+        virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r0 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", bpd=");
+        $i0 = virtualinvoke this.<org.apache.fop.area.Area: int getBPD()>();
+        $r2 = staticinvoke <java.lang.Integer: java.lang.String toString(int)>($i0);
+        virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("}");
+        $r3 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r3;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.area.Area: java.lang.Class class$org$apache$fop$area$Area>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.area.Area: java.lang.Class class$(java.lang.String)>("org.apache.fop.area.Area");
+        <org.apache.fop.area.Area: java.lang.Class class$org$apache$fop$area$Area> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.area.Area: java.lang.Class class$org$apache$fop$area$Area>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.area.Area: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

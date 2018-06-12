@@ -1,0 +1,431 @@
+class org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder extends org.apache.fop.pdf.CMapBuilder
+{
+    private final org.apache.fop.pdf.PDFToUnicodeCMap this$0;
+
+    public void <init>(org.apache.fop.pdf.PDFToUnicodeCMap, java.io.Writer)
+    {
+        org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder this;
+        org.apache.fop.pdf.PDFToUnicodeCMap this$0;
+        java.io.Writer writer;
+
+        this := @this: org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder;
+        this$0 := @parameter0: org.apache.fop.pdf.PDFToUnicodeCMap;
+        writer := @parameter1: java.io.Writer;
+        this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: org.apache.fop.pdf.PDFToUnicodeCMap this$0> = this$0;
+        specialinvoke this.<org.apache.fop.pdf.CMapBuilder: void <init>(java.io.Writer,java.lang.String)>(writer, null);
+        return;
+    }
+
+    public void writeCMap() throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder this;
+
+        this := @this: org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder;
+        virtualinvoke this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: void writeCIDInit()>();
+        virtualinvoke this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: void writeCIDSystemInfo(java.lang.String,java.lang.String,int)>("Adobe", "UCS", 0);
+        virtualinvoke this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: void writeName(java.lang.String)>("Adobe-Identity-UCS");
+        virtualinvoke this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: void writeType(java.lang.String)>("2");
+        virtualinvoke this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: void writeCodeSpaceRange()>();
+        virtualinvoke this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: void writeBFEntries()>();
+        virtualinvoke this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: void writeWrapUp()>();
+        return;
+    }
+
+    protected void writeBFEntries() throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder this;
+        org.apache.fop.pdf.PDFToUnicodeCMap $r0, $r2;
+        char[] $r1, $r3;
+
+        this := @this: org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder;
+        $r0 = this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: org.apache.fop.pdf.PDFToUnicodeCMap this$0>;
+        $r1 = $r0.<org.apache.fop.pdf.PDFToUnicodeCMap: char[] unicodeCharMap>;
+        if $r1 == null goto label0;
+
+        $r2 = this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: org.apache.fop.pdf.PDFToUnicodeCMap this$0>;
+        $r3 = $r2.<org.apache.fop.pdf.PDFToUnicodeCMap: char[] unicodeCharMap>;
+        virtualinvoke this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: void writeBFCharEntries(char[])>($r3);
+        $r2 = this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: org.apache.fop.pdf.PDFToUnicodeCMap this$0>;
+        $r3 = $r2.<org.apache.fop.pdf.PDFToUnicodeCMap: char[] unicodeCharMap>;
+        virtualinvoke this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: void writeBFRangeEntries(char[])>($r3);
+
+     label0:
+        return;
+    }
+
+    protected void writeBFCharEntries(char[]) throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder this;
+        char[] charArray;
+        int totalEntries, i, remainingEntries, charIndex, entriesThisSection, $i0;
+        boolean $z0;
+        java.io.Writer $r0;
+        java.lang.StringBuffer $r1;
+        java.lang.String $r2, $r3, $r4;
+        char $c1;
+
+        this := @this: org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder;
+        charArray := @parameter0: char[];
+        totalEntries = 0;
+        i = 0;
+
+     label0:
+        $i0 = lengthof charArray;
+        if i >= $i0 goto label2;
+
+        $z0 = specialinvoke this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: boolean partOfRange(char[],int)>(charArray, i);
+        if $z0 != 0 goto label1;
+
+        totalEntries = totalEntries + 1;
+
+     label1:
+        i = i + 1;
+        goto label0;
+
+     label2:
+        if totalEntries >= 1 goto label3;
+
+        return;
+
+     label3:
+        remainingEntries = totalEntries;
+        charIndex = 0;
+
+     label4:
+        entriesThisSection = staticinvoke <java.lang.Math: int min(int,int)>(remainingEntries, 100);
+        $r0 = this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: java.io.Writer writer>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(entriesThisSection);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" beginbfchar\n");
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r0.<java.io.Writer: void write(java.lang.String)>($r2);
+        i = 0;
+
+     label5:
+        if i >= entriesThisSection goto label8;
+
+     label6:
+        $z0 = specialinvoke this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: boolean partOfRange(char[],int)>(charArray, charIndex);
+        if $z0 == 0 goto label7;
+
+        charIndex = charIndex + 1;
+        goto label6;
+
+     label7:
+        $r0 = this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: java.io.Writer writer>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("<");
+        $r3 = staticinvoke <java.lang.Integer: java.lang.String toHexString(int)>(charIndex);
+        $r4 = specialinvoke this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: java.lang.String padHexString(java.lang.String,int)>($r3, 4);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("> ");
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r0.<java.io.Writer: void write(java.lang.String)>($r2);
+        $r0 = this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: java.io.Writer writer>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("<");
+        $c1 = charArray[charIndex];
+        $r3 = staticinvoke <java.lang.Integer: java.lang.String toHexString(int)>($c1);
+        $r4 = specialinvoke this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: java.lang.String padHexString(java.lang.String,int)>($r3, 4);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(">\n");
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r0.<java.io.Writer: void write(java.lang.String)>($r2);
+        charIndex = charIndex + 1;
+        i = i + 1;
+        goto label5;
+
+     label8:
+        remainingEntries = remainingEntries - entriesThisSection;
+        $r0 = this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: java.io.Writer writer>;
+        virtualinvoke $r0.<java.io.Writer: void write(java.lang.String)>("endbfchar\n");
+        if remainingEntries > 0 goto label4;
+
+        return;
+    }
+
+    protected void writeBFRangeEntries(char[]) throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder this;
+        char[] charArray;
+        int totalEntries, i, remainingEntries, charIndex, entriesThisSection, $i0, $i1;
+        boolean $z0;
+        java.io.Writer $r0;
+        java.lang.StringBuffer $r1;
+        java.lang.String $r2, $r3, $r4;
+        char $c2;
+
+        this := @this: org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder;
+        charArray := @parameter0: char[];
+        totalEntries = 0;
+        i = 0;
+
+     label0:
+        $i0 = lengthof charArray;
+        if i >= $i0 goto label2;
+
+        $z0 = specialinvoke this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: boolean startOfRange(char[],int)>(charArray, i);
+        if $z0 == 0 goto label1;
+
+        totalEntries = totalEntries + 1;
+
+     label1:
+        i = i + 1;
+        goto label0;
+
+     label2:
+        if totalEntries >= 1 goto label3;
+
+        return;
+
+     label3:
+        remainingEntries = totalEntries;
+        charIndex = 0;
+
+     label4:
+        entriesThisSection = staticinvoke <java.lang.Math: int min(int,int)>(remainingEntries, 100);
+        $r0 = this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: java.io.Writer writer>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(entriesThisSection);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" beginbfrange\n");
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r0.<java.io.Writer: void write(java.lang.String)>($r2);
+        i = 0;
+
+     label5:
+        if i >= entriesThisSection goto label8;
+
+     label6:
+        $z0 = specialinvoke this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: boolean startOfRange(char[],int)>(charArray, charIndex);
+        if $z0 != 0 goto label7;
+
+        charIndex = charIndex + 1;
+        goto label6;
+
+     label7:
+        $r0 = this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: java.io.Writer writer>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("<");
+        $r3 = staticinvoke <java.lang.Integer: java.lang.String toHexString(int)>(charIndex);
+        $r4 = specialinvoke this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: java.lang.String padHexString(java.lang.String,int)>($r3, 4);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("> ");
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r0.<java.io.Writer: void write(java.lang.String)>($r2);
+        $r0 = this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: java.io.Writer writer>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("<");
+        $i1 = specialinvoke this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: int endOfRange(char[],int)>(charArray, charIndex);
+        $r3 = staticinvoke <java.lang.Integer: java.lang.String toHexString(int)>($i1);
+        $r4 = specialinvoke this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: java.lang.String padHexString(java.lang.String,int)>($r3, 4);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("> ");
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r0.<java.io.Writer: void write(java.lang.String)>($r2);
+        $r0 = this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: java.io.Writer writer>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("<");
+        $c2 = charArray[charIndex];
+        $r3 = staticinvoke <java.lang.Integer: java.lang.String toHexString(int)>($c2);
+        $r4 = specialinvoke this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: java.lang.String padHexString(java.lang.String,int)>($r3, 4);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(">\n");
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r0.<java.io.Writer: void write(java.lang.String)>($r2);
+        charIndex = charIndex + 1;
+        i = i + 1;
+        goto label5;
+
+     label8:
+        remainingEntries = remainingEntries - entriesThisSection;
+        $r0 = this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: java.io.Writer writer>;
+        virtualinvoke $r0.<java.io.Writer: void write(java.lang.String)>("endbfrange\n");
+        if remainingEntries > 0 goto label4;
+
+        return;
+    }
+
+    private int endOfRange(char[], int)
+    {
+        org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder this;
+        char[] charArray;
+        int startOfRange, i, $i0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder;
+        charArray := @parameter0: char[];
+        startOfRange := @parameter1: int;
+        i = startOfRange;
+
+     label0:
+        $i0 = lengthof charArray;
+        $i0 = $i0 - 1;
+        if i >= $i0 goto label1;
+
+        $z0 = specialinvoke this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: boolean sameRangeEntryAsNext(char[],int)>(charArray, i);
+        if $z0 == 0 goto label1;
+
+        i = i + 1;
+        goto label0;
+
+     label1:
+        return i;
+    }
+
+    private boolean partOfRange(char[], int)
+    {
+        org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder this;
+        char[] charArray;
+        int arrayIndex, $i0, $i1, $i2;
+        boolean $z0;
+
+        this := @this: org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder;
+        charArray := @parameter0: char[];
+        arrayIndex := @parameter1: int;
+        $i0 = lengthof charArray;
+        if $i0 >= 2 goto label0;
+
+        return 0;
+
+     label0:
+        if arrayIndex != 0 goto label1;
+
+        $z0 = specialinvoke this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: boolean sameRangeEntryAsNext(char[],int)>(charArray, 0);
+        return $z0;
+
+     label1:
+        $i1 = lengthof charArray;
+        $i1 = $i1 - 1;
+        if arrayIndex != $i1 goto label2;
+
+        $i2 = arrayIndex - 1;
+        $z0 = specialinvoke this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: boolean sameRangeEntryAsNext(char[],int)>(charArray, $i2);
+        return $z0;
+
+     label2:
+        $i2 = arrayIndex - 1;
+        $z0 = specialinvoke this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: boolean sameRangeEntryAsNext(char[],int)>(charArray, $i2);
+        if $z0 == 0 goto label3;
+
+        return 1;
+
+     label3:
+        $z0 = specialinvoke this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: boolean sameRangeEntryAsNext(char[],int)>(charArray, arrayIndex);
+        if $z0 == 0 goto label4;
+
+        return 1;
+
+     label4:
+        return 0;
+    }
+
+    private boolean sameRangeEntryAsNext(char[], int)
+    {
+        org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder this;
+        char[] charArray;
+        int firstItem, $i1, $i2, $i4;
+        char $c0, $c3;
+
+        this := @this: org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder;
+        charArray := @parameter0: char[];
+        firstItem := @parameter1: int;
+        $c0 = charArray[firstItem];
+        $i1 = $c0 + 1;
+        $i2 = firstItem + 1;
+        $c3 = charArray[$i2];
+        if $i1 == $c3 goto label0;
+
+        return 0;
+
+     label0:
+        $i1 = firstItem / 256;
+        $i4 = firstItem + 1;
+        $i4 = $i4 / 256;
+        if $i1 == $i4 goto label1;
+
+        return 0;
+
+     label1:
+        return 1;
+    }
+
+    private boolean startOfRange(char[], int)
+    {
+        org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder this;
+        char[] charArray;
+        int arrayIndex, $i0, $i1;
+        boolean $z0;
+
+        this := @this: org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder;
+        charArray := @parameter0: char[];
+        arrayIndex := @parameter1: int;
+        $z0 = specialinvoke this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: boolean partOfRange(char[],int)>(charArray, arrayIndex);
+        if $z0 != 0 goto label0;
+
+        return 0;
+
+     label0:
+        if arrayIndex != 0 goto label1;
+
+        return 1;
+
+     label1:
+        $i0 = lengthof charArray;
+        $i0 = $i0 - 1;
+        if arrayIndex != $i0 goto label2;
+
+        return 0;
+
+     label2:
+        $i1 = arrayIndex - 1;
+        $z0 = specialinvoke this.<org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder: boolean sameRangeEntryAsNext(char[],int)>(charArray, $i1);
+        if $z0 == 0 goto label3;
+
+        return 0;
+
+     label3:
+        return 1;
+    }
+
+    private java.lang.String padHexString(java.lang.String, int)
+    {
+        org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder this;
+        java.lang.String input, $r1;
+        int numChars, length, i, $i0;
+        java.lang.StringBuffer returnString, $r0;
+
+        this := @this: org.apache.fop.pdf.PDFToUnicodeCMap$ToUnicodeCMapBuilder;
+        input := @parameter0: java.lang.String;
+        numChars := @parameter1: int;
+        length = virtualinvoke input.<java.lang.String: int length()>();
+        if length < numChars goto label0;
+
+        return input;
+
+     label0:
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        returnString = $r0;
+        i = 1;
+
+     label1:
+        $i0 = numChars - length;
+        if i > $i0 goto label2;
+
+        virtualinvoke returnString.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("0");
+        i = i + 1;
+        goto label1;
+
+     label2:
+        virtualinvoke returnString.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(input);
+        $r1 = virtualinvoke returnString.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r1;
+    }
+}

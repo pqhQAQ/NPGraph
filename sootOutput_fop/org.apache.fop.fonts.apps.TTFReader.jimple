@@ -1,0 +1,858 @@
+public class org.apache.fop.fonts.apps.TTFReader extends org.apache.fop.fonts.apps.AbstractFontReader
+{
+    public static final java.lang.String METRICS_VERSION_ATTR;
+    public static final int METRICS_VERSION;
+    static java.lang.Class class$org$apache$fop$fonts$apps$TTFReader;
+    static java.lang.Class class$org$apache$fop$util$CommandLineLogger;
+
+    public void <init>()
+    {
+        org.apache.fop.fonts.apps.TTFReader this;
+
+        this := @this: org.apache.fop.fonts.apps.TTFReader;
+        specialinvoke this.<org.apache.fop.fonts.apps.AbstractFontReader: void <init>()>();
+        return;
+    }
+
+    private static void displayUsage()
+    {
+        java.io.PrintStream $r0;
+        java.lang.StringBuffer $r1;
+        java.lang.Class $r2;
+        java.lang.String $r3, $r4;
+
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("java ");
+        $r2 = <org.apache.fop.fonts.apps.TTFReader: java.lang.Class class$org$apache$fop$fonts$apps$TTFReader>;
+        if $r2 != null goto label0;
+
+        $r2 = staticinvoke <org.apache.fop.fonts.apps.TTFReader: java.lang.Class class$(java.lang.String)>("org.apache.fop.fonts.apps.TTFReader");
+        <org.apache.fop.fonts.apps.TTFReader: java.lang.Class class$org$apache$fop$fonts$apps$TTFReader> = $r2;
+        goto label1;
+
+     label0:
+        $r2 = <org.apache.fop.fonts.apps.TTFReader: java.lang.Class class$org$apache$fop$fonts$apps$TTFReader>;
+
+     label1:
+        $r3 = virtualinvoke $r2.<java.lang.Class: java.lang.String getName()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" [options] fontfile.ttf xmlfile.xml");
+        $r4 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>($r4);
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r0.<java.io.PrintStream: void println()>();
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>("where options can be:");
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>("-d  Debug mode");
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>("-q  Quiet mode");
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>("-enc ansi");
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>("    With this option you create a WinAnsi encoded font.");
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>("    The default is to create a CID keyed font.");
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>("    If you\'re not going to use characters outside the");
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>("    pdfencoding range (almost the same as iso-8889-1)");
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>("    you can add this option.");
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>("-ttcname <fontname>");
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>("    If you\'re reading data from a TrueType Collection");
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>("    (.ttc file) you must specify which font from the");
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>("    collection you will read metrics from. If you read");
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>("    from a .ttc file without this option, the fontnames");
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>("    will be listed for you.");
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>(" -fn <fontname>");
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>("    default is to use the fontname in the .ttf file, but");
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>("    you can override that name to make sure that the");
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>("    embedded font is used (if you\'re embedding fonts)");
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>("    instead of installed fonts when viewing documents ");
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>("    with Acrobat Reader.");
+        return;
+    }
+
+    public static void main(java.lang.String[])
+    {
+        java.lang.String[] args, arguments;
+        java.lang.String embFile, embResource, className, fontName, ttcName, enc, $r2, $r4, $r5;
+        boolean isCid, $z0;
+        java.util.HashMap options, $r1;
+        org.apache.commons.logging.LogFactory logFactory;
+        java.lang.Class $r0;
+        org.apache.fop.fonts.apps.TTFReader app, $r6;
+        org.apache.fop.fonts.truetype.TTFFile ttf;
+        org.w3c.dom.Document doc;
+        java.lang.Exception e, $r10;
+        org.apache.commons.logging.Log $r7;
+        java.lang.StringBuffer $r8;
+        java.lang.Object $r9;
+        int $i0;
+
+        args := @parameter0: java.lang.String[];
+        embFile = null;
+        embResource = null;
+        className = null;
+        fontName = null;
+        ttcName = null;
+        isCid = 1;
+        $r1 = new java.util.HashMap;
+        specialinvoke $r1.<java.util.HashMap: void <init>()>();
+        options = $r1;
+        arguments = staticinvoke <org.apache.fop.fonts.apps.TTFReader: java.lang.String[] parseArguments(java.util.Map,java.lang.String[])>(options, args);
+        logFactory = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.LogFactory getFactory()>();
+        $r2 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("org.apache.commons.logging.Log");
+        if $r2 != null goto label2;
+
+        $r4 = "org.apache.commons.logging.Log";
+        $r0 = <org.apache.fop.fonts.apps.TTFReader: java.lang.Class class$org$apache$fop$util$CommandLineLogger>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.fonts.apps.TTFReader: java.lang.Class class$(java.lang.String)>("org.apache.fop.util.CommandLineLogger");
+        <org.apache.fop.fonts.apps.TTFReader: java.lang.Class class$org$apache$fop$util$CommandLineLogger> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.fonts.apps.TTFReader: java.lang.Class class$org$apache$fop$util$CommandLineLogger>;
+
+     label1:
+        $r5 = virtualinvoke $r0.<java.lang.Class: java.lang.String getName()>();
+        virtualinvoke logFactory.<org.apache.commons.logging.LogFactory: void setAttribute(java.lang.String,java.lang.Object)>($r4, $r5);
+
+     label2:
+        staticinvoke <org.apache.fop.fonts.apps.TTFReader: void determineLogLevel(java.util.Map)>(options);
+        $r6 = new org.apache.fop.fonts.apps.TTFReader;
+        specialinvoke $r6.<org.apache.fop.fonts.apps.TTFReader: void <init>()>();
+        app = $r6;
+        $r7 = <org.apache.fop.fonts.apps.TTFReader: org.apache.commons.logging.Log log>;
+        $r8 = new java.lang.StringBuffer;
+        specialinvoke $r8.<java.lang.StringBuffer: void <init>()>();
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("TTF Reader for Apache FOP ");
+        $r5 = staticinvoke <org.apache.fop.Version: java.lang.String getVersion()>();
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\n");
+        $r4 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r7.<org.apache.commons.logging.Log: void info(java.lang.Object)>($r4);
+        $r9 = interfaceinvoke options.<java.util.Map: java.lang.Object get(java.lang.Object)>("-enc");
+        if $r9 == null goto label3;
+
+        $r9 = interfaceinvoke options.<java.util.Map: java.lang.Object get(java.lang.Object)>("-enc");
+        enc = (java.lang.String) $r9;
+        $r2 = "ansi";
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>(enc);
+        if $z0 == 0 goto label3;
+
+        isCid = 0;
+
+     label3:
+        $r9 = interfaceinvoke options.<java.util.Map: java.lang.Object get(java.lang.Object)>("-ttcname");
+        if $r9 == null goto label4;
+
+        $r9 = interfaceinvoke options.<java.util.Map: java.lang.Object get(java.lang.Object)>("-ttcname");
+        ttcName = (java.lang.String) $r9;
+
+     label4:
+        $r9 = interfaceinvoke options.<java.util.Map: java.lang.Object get(java.lang.Object)>("-ef");
+        if $r9 == null goto label5;
+
+        $r9 = interfaceinvoke options.<java.util.Map: java.lang.Object get(java.lang.Object)>("-ef");
+        embFile = (java.lang.String) $r9;
+
+     label5:
+        $r9 = interfaceinvoke options.<java.util.Map: java.lang.Object get(java.lang.Object)>("-er");
+        if $r9 == null goto label6;
+
+        $r9 = interfaceinvoke options.<java.util.Map: java.lang.Object get(java.lang.Object)>("-er");
+        embResource = (java.lang.String) $r9;
+
+     label6:
+        $r9 = interfaceinvoke options.<java.util.Map: java.lang.Object get(java.lang.Object)>("-fn");
+        if $r9 == null goto label7;
+
+        $r9 = interfaceinvoke options.<java.util.Map: java.lang.Object get(java.lang.Object)>("-fn");
+        fontName = (java.lang.String) $r9;
+
+     label7:
+        $r9 = interfaceinvoke options.<java.util.Map: java.lang.Object get(java.lang.Object)>("-cn");
+        if $r9 == null goto label8;
+
+        $r9 = interfaceinvoke options.<java.util.Map: java.lang.Object get(java.lang.Object)>("-cn");
+        className = (java.lang.String) $r9;
+
+     label8:
+        $i0 = lengthof arguments;
+        if $i0 != 2 goto label9;
+
+        $r9 = interfaceinvoke options.<java.util.Map: java.lang.Object get(java.lang.Object)>("-h");
+        if $r9 != null goto label9;
+
+        $r9 = interfaceinvoke options.<java.util.Map: java.lang.Object get(java.lang.Object)>("-help");
+        if $r9 != null goto label9;
+
+        $r9 = interfaceinvoke options.<java.util.Map: java.lang.Object get(java.lang.Object)>("--help");
+        if $r9 == null goto label10;
+
+     label9:
+        staticinvoke <org.apache.fop.fonts.apps.TTFReader: void displayUsage()>();
+        goto label18;
+
+     label10:
+        $r7 = <org.apache.fop.fonts.apps.TTFReader: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r7.<org.apache.commons.logging.Log: void info(java.lang.Object)>("Parsing font...");
+        $r4 = arguments[0];
+        ttf = virtualinvoke app.<org.apache.fop.fonts.apps.TTFReader: org.apache.fop.fonts.truetype.TTFFile loadTTF(java.lang.String,java.lang.String)>($r4, ttcName);
+        if ttf == null goto label15;
+
+        doc = virtualinvoke app.<org.apache.fop.fonts.apps.TTFReader: org.w3c.dom.Document constructFontXML(org.apache.fop.fonts.truetype.TTFFile,java.lang.String,java.lang.String,java.lang.String,java.lang.String,boolean,java.lang.String)>(ttf, fontName, className, embResource, embFile, isCid, ttcName);
+        if isCid == 0 goto label11;
+
+        $r7 = <org.apache.fop.fonts.apps.TTFReader: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r7.<org.apache.commons.logging.Log: void info(java.lang.Object)>("Creating CID encoded metrics...");
+        goto label12;
+
+     label11:
+        $r7 = <org.apache.fop.fonts.apps.TTFReader: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r7.<org.apache.commons.logging.Log: void info(java.lang.Object)>("Creating WinAnsi encoded metrics...");
+
+     label12:
+        if doc == null goto label13;
+
+        $r5 = arguments[1];
+        virtualinvoke app.<org.apache.fop.fonts.apps.TTFReader: void writeFontXML(org.w3c.dom.Document,java.lang.String)>(doc, $r5);
+
+     label13:
+        $z0 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: boolean isEmbeddable()>();
+        if $z0 == 0 goto label14;
+
+        $r7 = <org.apache.fop.fonts.apps.TTFReader: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r7.<org.apache.commons.logging.Log: void info(java.lang.Object)>("This font contains no embedding license restrictions.");
+        goto label15;
+
+     label14:
+        $r7 = <org.apache.fop.fonts.apps.TTFReader: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r7.<org.apache.commons.logging.Log: void info(java.lang.Object)>("** Note: This font contains license retrictions for\n         embedding. This font shouldn\'t be embedded.");
+
+     label15:
+        $r7 = <org.apache.fop.fonts.apps.TTFReader: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r7.<org.apache.commons.logging.Log: void info(java.lang.Object)>("");
+        $r7 = <org.apache.fop.fonts.apps.TTFReader: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r7.<org.apache.commons.logging.Log: void info(java.lang.Object)>("XML font metrics file successfully created.");
+
+     label16:
+        goto label18;
+
+     label17:
+        $r10 := @caughtexception;
+        e = $r10;
+        $r7 = <org.apache.fop.fonts.apps.TTFReader: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r7.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("Error while building XML font metrics file.", e);
+        staticinvoke <java.lang.System: void exit(int)>(-1);
+
+     label18:
+        return;
+
+        catch java.lang.Exception from label10 to label16 with label17;
+    }
+
+    public org.apache.fop.fonts.truetype.TTFFile loadTTF(java.lang.String, java.lang.String) throws java.io.IOException
+    {
+        org.apache.fop.fonts.apps.TTFReader this;
+        java.lang.String fileName, fontName, $r3;
+        org.apache.fop.fonts.truetype.TTFFile $r0, ttfFile;
+        org.apache.fop.fonts.truetype.FontFileReader reader, $r4;
+        boolean supported, $z0;
+        org.apache.commons.logging.Log $r1;
+        java.lang.StringBuffer $r2;
+        java.util.Set $r5;
+        java.lang.UnsupportedOperationException $r6;
+
+        this := @this: org.apache.fop.fonts.apps.TTFReader;
+        fileName := @parameter0: java.lang.String;
+        fontName := @parameter1: java.lang.String;
+        $r0 = new org.apache.fop.fonts.truetype.TTFFile;
+        specialinvoke $r0.<org.apache.fop.fonts.truetype.TTFFile: void <init>()>();
+        ttfFile = $r0;
+        $r1 = <org.apache.fop.fonts.apps.TTFReader: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Reading ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(fileName);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("...");
+        $r3 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void info(java.lang.Object)>($r3);
+        $r4 = new org.apache.fop.fonts.truetype.FontFileReader;
+        specialinvoke $r4.<org.apache.fop.fonts.truetype.FontFileReader: void <init>(java.lang.String)>(fileName);
+        reader = $r4;
+        supported = virtualinvoke ttfFile.<org.apache.fop.fonts.truetype.TTFFile: boolean readFont(org.apache.fop.fonts.truetype.FontFileReader,java.lang.String)>(reader, fontName);
+        if supported != 0 goto label0;
+
+        return null;
+
+     label0:
+        $r1 = <org.apache.fop.fonts.apps.TTFReader: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Font Family: ");
+        $r5 = virtualinvoke ttfFile.<org.apache.fop.fonts.truetype.TTFFile: java.util.Set getFamilyNames()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r5);
+        $r3 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void info(java.lang.Object)>($r3);
+        $z0 = virtualinvoke ttfFile.<org.apache.fop.fonts.truetype.TTFFile: boolean isCFF()>();
+        if $z0 == 0 goto label1;
+
+        $r6 = new java.lang.UnsupportedOperationException;
+        specialinvoke $r6.<java.lang.UnsupportedOperationException: void <init>(java.lang.String)>("OpenType fonts with CFF data are not supported, yet");
+        throw $r6;
+
+     label1:
+        return ttfFile;
+    }
+
+    public org.w3c.dom.Document constructFontXML(org.apache.fop.fonts.truetype.TTFFile, java.lang.String, java.lang.String, java.lang.String, java.lang.String, boolean, java.lang.String)
+    {
+        org.apache.fop.fonts.apps.TTFReader this;
+        org.apache.fop.fonts.truetype.TTFFile ttf;
+        java.lang.String fontName, className, resource, file, ttcName, s, familyName, $r4, $r5, $r10;
+        boolean isCid, $z0;
+        org.apache.commons.logging.Log $r0;
+        javax.xml.parsers.DocumentBuilderFactory factory;
+        org.w3c.dom.Document doc;
+        javax.xml.parsers.ParserConfigurationException e, $r2;
+        org.w3c.dom.Element root, el, bbox;
+        java.util.Set familyNames;
+        int[] bb;
+        java.lang.String[] names, $r9;
+        int i, $i0, $i1, $i2;
+        javax.xml.parsers.DocumentBuilder $r1;
+        org.w3c.dom.Text $r6;
+        java.util.Iterator $r7;
+        java.lang.Object $r8;
+
+        this := @this: org.apache.fop.fonts.apps.TTFReader;
+        ttf := @parameter0: org.apache.fop.fonts.truetype.TTFFile;
+        fontName := @parameter1: java.lang.String;
+        className := @parameter2: java.lang.String;
+        resource := @parameter3: java.lang.String;
+        file := @parameter4: java.lang.String;
+        isCid := @parameter5: boolean;
+        ttcName := @parameter6: java.lang.String;
+        $r0 = <org.apache.fop.fonts.apps.TTFReader: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>("Creating xml font file...");
+
+     label0:
+        factory = staticinvoke <javax.xml.parsers.DocumentBuilderFactory: javax.xml.parsers.DocumentBuilderFactory newInstance()>();
+        $r1 = virtualinvoke factory.<javax.xml.parsers.DocumentBuilderFactory: javax.xml.parsers.DocumentBuilder newDocumentBuilder()>();
+        doc = virtualinvoke $r1.<javax.xml.parsers.DocumentBuilder: org.w3c.dom.Document newDocument()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r2 := @caughtexception;
+        e = $r2;
+        $r0 = <org.apache.fop.fonts.apps.TTFReader: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("Can\'t create DOM implementation", e);
+        return null;
+
+     label3:
+        root = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("font-metrics");
+        interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(root);
+        $r4 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>(2);
+        interfaceinvoke root.<org.w3c.dom.Element: void setAttribute(java.lang.String,java.lang.String)>("metrics-version", $r4);
+        if isCid == 0 goto label4;
+
+        interfaceinvoke root.<org.w3c.dom.Element: void setAttribute(java.lang.String,java.lang.String)>("type", "TYPE0");
+        goto label5;
+
+     label4:
+        interfaceinvoke root.<org.w3c.dom.Element: void setAttribute(java.lang.String,java.lang.String)>("type", "TRUETYPE");
+
+     label5:
+        el = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("font-name");
+        interfaceinvoke root.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(el);
+        $r5 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: java.lang.String getPostScriptName()>();
+        s = staticinvoke <org.apache.fop.fonts.FontUtil: java.lang.String stripWhiteSpace(java.lang.String)>($r5);
+        if fontName == null goto label6;
+
+        $r4 = staticinvoke <org.apache.fop.fonts.FontUtil: java.lang.String stripWhiteSpace(java.lang.String)>(fontName);
+        $r6 = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Text createTextNode(java.lang.String)>($r4);
+        interfaceinvoke el.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>($r6);
+        goto label7;
+
+     label6:
+        $r6 = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Text createTextNode(java.lang.String)>(s);
+        interfaceinvoke el.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>($r6);
+
+     label7:
+        $r5 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: java.lang.String getFullName()>();
+        if $r5 == null goto label8;
+
+        el = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("full-name");
+        interfaceinvoke root.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(el);
+        $r4 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: java.lang.String getFullName()>();
+        $r6 = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Text createTextNode(java.lang.String)>($r4);
+        interfaceinvoke el.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>($r6);
+
+     label8:
+        familyNames = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: java.util.Set getFamilyNames()>();
+        $i0 = interfaceinvoke familyNames.<java.util.Set: int size()>();
+        if $i0 <= 0 goto label9;
+
+        $r7 = interfaceinvoke familyNames.<java.util.Set: java.util.Iterator iterator()>();
+        $r8 = interfaceinvoke $r7.<java.util.Iterator: java.lang.Object next()>();
+        familyName = (java.lang.String) $r8;
+        el = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("family-name");
+        interfaceinvoke root.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(el);
+        $r6 = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Text createTextNode(java.lang.String)>(familyName);
+        interfaceinvoke el.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>($r6);
+
+     label9:
+        el = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("embed");
+        interfaceinvoke root.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(el);
+        if file == null goto label10;
+
+        $z0 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: boolean isEmbeddable()>();
+        if $z0 == 0 goto label10;
+
+        interfaceinvoke el.<org.w3c.dom.Element: void setAttribute(java.lang.String,java.lang.String)>("file", file);
+
+     label10:
+        if resource == null goto label11;
+
+        $z0 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: boolean isEmbeddable()>();
+        if $z0 == 0 goto label11;
+
+        interfaceinvoke el.<org.w3c.dom.Element: void setAttribute(java.lang.String,java.lang.String)>("class", resource);
+
+     label11:
+        el = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("cap-height");
+        interfaceinvoke root.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(el);
+        $i1 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: int getCapHeight()>();
+        $r4 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>($i1);
+        $r6 = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Text createTextNode(java.lang.String)>($r4);
+        interfaceinvoke el.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>($r6);
+        el = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("x-height");
+        interfaceinvoke root.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(el);
+        $i1 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: int getXHeight()>();
+        $r4 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>($i1);
+        $r6 = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Text createTextNode(java.lang.String)>($r4);
+        interfaceinvoke el.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>($r6);
+        el = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("ascender");
+        interfaceinvoke root.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(el);
+        $i1 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: int getLowerCaseAscent()>();
+        $r4 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>($i1);
+        $r6 = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Text createTextNode(java.lang.String)>($r4);
+        interfaceinvoke el.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>($r6);
+        el = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("descender");
+        interfaceinvoke root.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(el);
+        $i1 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: int getLowerCaseDescent()>();
+        $r4 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>($i1);
+        $r6 = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Text createTextNode(java.lang.String)>($r4);
+        interfaceinvoke el.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>($r6);
+        bbox = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("bbox");
+        interfaceinvoke root.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(bbox);
+        bb = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: int[] getFontBBox()>();
+        $r9 = newarray (java.lang.String)[4];
+        $r9[0] = "left";
+        $r9[1] = "bottom";
+        $r9[2] = "right";
+        $r9[3] = "top";
+        names = $r9;
+        i = 0;
+
+     label12:
+        $i2 = lengthof names;
+        if i >= $i2 goto label13;
+
+        $r10 = names[i];
+        el = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>($r10);
+        interfaceinvoke bbox.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(el);
+        $i1 = bb[i];
+        $r4 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>($i1);
+        $r6 = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Text createTextNode(java.lang.String)>($r4);
+        interfaceinvoke el.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>($r6);
+        i = i + 1;
+        goto label12;
+
+     label13:
+        el = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("flags");
+        interfaceinvoke root.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(el);
+        $i1 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: int getFlags()>();
+        $r4 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>($i1);
+        $r6 = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Text createTextNode(java.lang.String)>($r4);
+        interfaceinvoke el.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>($r6);
+        el = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("stemv");
+        interfaceinvoke root.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(el);
+        $r4 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: java.lang.String getStemV()>();
+        $r6 = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Text createTextNode(java.lang.String)>($r4);
+        interfaceinvoke el.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>($r6);
+        el = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("italicangle");
+        interfaceinvoke root.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(el);
+        $r4 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: java.lang.String getItalicAngle()>();
+        $r6 = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Text createTextNode(java.lang.String)>($r4);
+        interfaceinvoke el.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>($r6);
+        if ttcName == null goto label14;
+
+        el = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("ttc-name");
+        interfaceinvoke root.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(el);
+        $r6 = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Text createTextNode(java.lang.String)>(ttcName);
+        interfaceinvoke el.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>($r6);
+
+     label14:
+        el = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("subtype");
+        interfaceinvoke root.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(el);
+        if isCid == 0 goto label15;
+
+        $r6 = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Text createTextNode(java.lang.String)>("TYPE0");
+        interfaceinvoke el.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>($r6);
+        specialinvoke this.<org.apache.fop.fonts.apps.TTFReader: void generateDOM4MultiByteExtras(org.w3c.dom.Element,org.apache.fop.fonts.truetype.TTFFile,boolean)>(root, ttf, isCid);
+        goto label16;
+
+     label15:
+        $r6 = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Text createTextNode(java.lang.String)>("TRUETYPE");
+        interfaceinvoke el.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>($r6);
+        specialinvoke this.<org.apache.fop.fonts.apps.TTFReader: void generateDOM4SingleByteExtras(org.w3c.dom.Element,org.apache.fop.fonts.truetype.TTFFile,boolean)>(root, ttf, isCid);
+
+     label16:
+        specialinvoke this.<org.apache.fop.fonts.apps.TTFReader: void generateDOM4Kerning(org.w3c.dom.Element,org.apache.fop.fonts.truetype.TTFFile,boolean)>(root, ttf, isCid);
+        return doc;
+
+        catch javax.xml.parsers.ParserConfigurationException from label0 to label1 with label2;
+    }
+
+    private void generateDOM4MultiByteExtras(org.w3c.dom.Element, org.apache.fop.fonts.truetype.TTFFile, boolean)
+    {
+        org.apache.fop.fonts.apps.TTFReader this;
+        org.w3c.dom.Element parent, mel, el, el2, wxel;
+        org.apache.fop.fonts.truetype.TTFFile ttf;
+        boolean isCid, $z0;
+        org.w3c.dom.Document doc;
+        java.util.ListIterator iter;
+        org.apache.fop.fonts.truetype.TTFCmapEntry ce;
+        int[] wx;
+        int i, $i0, $i1;
+        org.w3c.dom.Text $r1;
+        java.util.List $r2;
+        java.lang.Object $r3;
+        java.lang.String $r4;
+
+        this := @this: org.apache.fop.fonts.apps.TTFReader;
+        parent := @parameter0: org.w3c.dom.Element;
+        ttf := @parameter1: org.apache.fop.fonts.truetype.TTFFile;
+        isCid := @parameter2: boolean;
+        doc = interfaceinvoke parent.<org.w3c.dom.Element: org.w3c.dom.Document getOwnerDocument()>();
+        mel = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("multibyte-extras");
+        interfaceinvoke parent.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(mel);
+        el = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("cid-type");
+        interfaceinvoke mel.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(el);
+        $r1 = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Text createTextNode(java.lang.String)>("CIDFontType2");
+        interfaceinvoke el.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>($r1);
+        el = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("default-width");
+        interfaceinvoke mel.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(el);
+        $r1 = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Text createTextNode(java.lang.String)>("0");
+        interfaceinvoke el.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>($r1);
+        el = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("bfranges");
+        interfaceinvoke mel.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(el);
+        $r2 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: java.util.List getCMaps()>();
+        iter = interfaceinvoke $r2.<java.util.List: java.util.ListIterator listIterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r3 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        ce = (org.apache.fop.fonts.truetype.TTFCmapEntry) $r3;
+        el2 = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("bf");
+        interfaceinvoke el.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(el2);
+        $i0 = virtualinvoke ce.<org.apache.fop.fonts.truetype.TTFCmapEntry: int getUnicodeStart()>();
+        $r4 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>($i0);
+        interfaceinvoke el2.<org.w3c.dom.Element: void setAttribute(java.lang.String,java.lang.String)>("us", $r4);
+        $i0 = virtualinvoke ce.<org.apache.fop.fonts.truetype.TTFCmapEntry: int getUnicodeEnd()>();
+        $r4 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>($i0);
+        interfaceinvoke el2.<org.w3c.dom.Element: void setAttribute(java.lang.String,java.lang.String)>("ue", $r4);
+        $i0 = virtualinvoke ce.<org.apache.fop.fonts.truetype.TTFCmapEntry: int getGlyphStartIndex()>();
+        $r4 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>($i0);
+        interfaceinvoke el2.<org.w3c.dom.Element: void setAttribute(java.lang.String,java.lang.String)>("gi", $r4);
+        goto label0;
+
+     label1:
+        el = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("cid-widths");
+        interfaceinvoke el.<org.w3c.dom.Element: void setAttribute(java.lang.String,java.lang.String)>("start-index", "0");
+        interfaceinvoke mel.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(el);
+        wx = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: int[] getWidths()>();
+        i = 0;
+
+     label2:
+        $i1 = lengthof wx;
+        if i >= $i1 goto label3;
+
+        wxel = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("wx");
+        $i0 = wx[i];
+        $r4 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>($i0);
+        interfaceinvoke wxel.<org.w3c.dom.Element: void setAttribute(java.lang.String,java.lang.String)>("w", $r4);
+        interfaceinvoke el.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(wxel);
+        i = i + 1;
+        goto label2;
+
+     label3:
+        return;
+    }
+
+    private void generateDOM4SingleByteExtras(org.w3c.dom.Element, org.apache.fop.fonts.truetype.TTFFile, boolean)
+    {
+        org.apache.fop.fonts.apps.TTFReader this;
+        org.w3c.dom.Element parent, sel, el, widths;
+        org.apache.fop.fonts.truetype.TTFFile ttf;
+        boolean isCid;
+        org.w3c.dom.Document doc;
+        short i, $s0, $s1;
+        java.lang.String $r1;
+        org.w3c.dom.Text $r2;
+        int $i2, $i3;
+
+        this := @this: org.apache.fop.fonts.apps.TTFReader;
+        parent := @parameter0: org.w3c.dom.Element;
+        ttf := @parameter1: org.apache.fop.fonts.truetype.TTFFile;
+        isCid := @parameter2: boolean;
+        doc = interfaceinvoke parent.<org.w3c.dom.Element: org.w3c.dom.Document getOwnerDocument()>();
+        sel = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("singlebyte-extras");
+        interfaceinvoke parent.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(sel);
+        el = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("encoding");
+        interfaceinvoke sel.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(el);
+        $r1 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: java.lang.String getCharSetName()>();
+        $r2 = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Text createTextNode(java.lang.String)>($r1);
+        interfaceinvoke el.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>($r2);
+        el = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("first-char");
+        interfaceinvoke sel.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(el);
+        $s0 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: short getFirstChar()>();
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>($s0);
+        $r2 = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Text createTextNode(java.lang.String)>($r1);
+        interfaceinvoke el.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>($r2);
+        el = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("last-char");
+        interfaceinvoke sel.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(el);
+        $s0 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: short getLastChar()>();
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>($s0);
+        $r2 = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Text createTextNode(java.lang.String)>($r1);
+        interfaceinvoke el.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>($r2);
+        widths = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("widths");
+        interfaceinvoke sel.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(widths);
+        i = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: short getFirstChar()>();
+
+     label0:
+        $s1 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: short getLastChar()>();
+        if i > $s1 goto label1;
+
+        el = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("char");
+        interfaceinvoke widths.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(el);
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>(i);
+        interfaceinvoke el.<org.w3c.dom.Element: void setAttribute(java.lang.String,java.lang.String)>("idx", $r1);
+        $i2 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: int getCharWidth(int)>(i);
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>($i2);
+        interfaceinvoke el.<org.w3c.dom.Element: void setAttribute(java.lang.String,java.lang.String)>("wdt", $r1);
+        $i3 = i + 1;
+        i = (short) $i3;
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    private void generateDOM4Kerning(org.w3c.dom.Element, org.apache.fop.fonts.truetype.TTFFile, boolean)
+    {
+        org.apache.fop.fonts.apps.TTFReader this;
+        org.w3c.dom.Element parent, el, el2;
+        org.apache.fop.fonts.truetype.TTFFile ttf;
+        boolean isCid, $z0;
+        org.w3c.dom.Document doc;
+        java.util.Iterator iter, iter2;
+        java.lang.Integer kpx1, kpx2, val;
+        null_type el2;
+        java.util.Map h2, $r0;
+        java.util.Set $r1;
+        java.lang.Object $r2;
+        java.lang.String $r3;
+        int $i0;
+
+        this := @this: org.apache.fop.fonts.apps.TTFReader;
+        parent := @parameter0: org.w3c.dom.Element;
+        ttf := @parameter1: org.apache.fop.fonts.truetype.TTFFile;
+        isCid := @parameter2: boolean;
+        doc = interfaceinvoke parent.<org.w3c.dom.Element: org.w3c.dom.Document getOwnerDocument()>();
+        if isCid == 0 goto label0;
+
+        $r0 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: java.util.Map getKerning()>();
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.util.Set keySet()>();
+        iter = interfaceinvoke $r1.<java.util.Set: java.util.Iterator iterator()>();
+        goto label1;
+
+     label0:
+        $r0 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: java.util.Map getAnsiKerning()>();
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.util.Set keySet()>();
+        iter = interfaceinvoke $r1.<java.util.Set: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label8;
+
+        $r2 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        kpx1 = (java.lang.Integer) $r2;
+        el = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("kerning");
+        $r3 = virtualinvoke kpx1.<java.lang.Integer: java.lang.String toString()>();
+        interfaceinvoke el.<org.w3c.dom.Element: void setAttribute(java.lang.String,java.lang.String)>("kpx1", $r3);
+        interfaceinvoke parent.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(el);
+        el2 = null;
+        if isCid == 0 goto label2;
+
+        $r0 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: java.util.Map getKerning()>();
+        $r2 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>(kpx1);
+        h2 = (java.util.Map) $r2;
+        goto label3;
+
+     label2:
+        $r0 = virtualinvoke ttf.<org.apache.fop.fonts.truetype.TTFFile: java.util.Map getAnsiKerning()>();
+        $r2 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>(kpx1);
+        h2 = (java.util.Map) $r2;
+
+     label3:
+        $r1 = interfaceinvoke h2.<java.util.Map: java.util.Set keySet()>();
+        iter2 = interfaceinvoke $r1.<java.util.Set: java.util.Iterator iterator()>();
+
+     label4:
+        $z0 = interfaceinvoke iter2.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label7;
+
+        $r2 = interfaceinvoke iter2.<java.util.Iterator: java.lang.Object next()>();
+        kpx2 = (java.lang.Integer) $r2;
+        if isCid != 0 goto label5;
+
+        $i0 = virtualinvoke kpx2.<java.lang.Integer: int intValue()>();
+        if $i0 >= 256 goto label6;
+
+     label5:
+        el2 = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element createElement(java.lang.String)>("pair");
+        $r3 = virtualinvoke kpx2.<java.lang.Integer: java.lang.String toString()>();
+        interfaceinvoke el2.<org.w3c.dom.Element: void setAttribute(java.lang.String,java.lang.String)>("kpx2", $r3);
+        $r2 = interfaceinvoke h2.<java.util.Map: java.lang.Object get(java.lang.Object)>(kpx2);
+        val = (java.lang.Integer) $r2;
+        $r3 = virtualinvoke val.<java.lang.Integer: java.lang.String toString()>();
+        interfaceinvoke el2.<org.w3c.dom.Element: void setAttribute(java.lang.String,java.lang.String)>("kern", $r3);
+        interfaceinvoke el.<org.w3c.dom.Element: org.w3c.dom.Node appendChild(org.w3c.dom.Node)>(el2);
+
+     label6:
+        goto label4;
+
+     label7:
+        goto label1;
+
+     label8:
+        return;
+    }
+
+    public static void checkMetricsVersion(org.xml.sax.Attributes) throws org.xml.sax.SAXException
+    {
+        org.xml.sax.Attributes attr;
+        java.lang.String err, str, $r4;
+        boolean version;
+        java.lang.NumberFormatException e, $r2;
+        java.lang.StringBuffer $r0, $r1;
+        int version;
+        org.xml.sax.SAXException $r3;
+
+        attr := @parameter0: org.xml.sax.Attributes;
+        err = null;
+        str = interfaceinvoke attr.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("metrics-version");
+        if str != null goto label0;
+
+        err = "Missing metrics-version attribute";
+        goto label4;
+
+     label0:
+        version = 0;
+
+     label1:
+        version = staticinvoke <java.lang.Integer: int parseInt(java.lang.String)>(str);
+        if version >= 2 goto label2;
+
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Incompatible metrics-version value (");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(version);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", should be ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(")");
+        err = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+
+     label2:
+        goto label4;
+
+     label3:
+        $r2 := @caughtexception;
+        e = $r2;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Invalid metrics-version attribute value (");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(str);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(")");
+        err = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+
+     label4:
+        if err == null goto label5;
+
+        $r3 = new org.xml.sax.SAXException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(err);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" - please regenerate the font metrics file with a more recent version of FOP.");
+        $r4 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r3.<org.xml.sax.SAXException: void <init>(java.lang.String)>($r4);
+        throw $r3;
+
+     label5:
+        return;
+
+        catch java.lang.NumberFormatException from label1 to label2 with label3;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+}

@@ -1,0 +1,628 @@
+public abstract class org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager extends org.apache.fop.layoutmgr.AbstractLayoutManager implements org.apache.fop.layoutmgr.TopLevelLayoutManager
+{
+    private static org.apache.commons.logging.Log log;
+    protected org.apache.fop.area.AreaTreeHandler areaTreeHandler;
+    protected org.apache.fop.area.IDTracker idTracker;
+    protected org.apache.fop.fo.pagination.AbstractPageSequence pageSeq;
+    protected org.apache.fop.layoutmgr.Page curPage;
+    protected int currentPageNum;
+    protected int startPageNum;
+    static java.lang.Class class$org$apache$fop$layoutmgr$AbstractPageSequenceLayoutManager;
+
+    public void <init>(org.apache.fop.area.AreaTreeHandler, org.apache.fop.fo.pagination.AbstractPageSequence)
+    {
+        org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager this;
+        org.apache.fop.area.AreaTreeHandler ath;
+        org.apache.fop.fo.pagination.AbstractPageSequence pseq;
+        org.apache.fop.area.IDTracker $r0;
+
+        this := @this: org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager;
+        ath := @parameter0: org.apache.fop.area.AreaTreeHandler;
+        pseq := @parameter1: org.apache.fop.fo.pagination.AbstractPageSequence;
+        specialinvoke this.<org.apache.fop.layoutmgr.AbstractLayoutManager: void <init>(org.apache.fop.fo.FObj)>(pseq);
+        this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: int currentPageNum> = 0;
+        this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: int startPageNum> = 0;
+        this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.area.AreaTreeHandler areaTreeHandler> = ath;
+        $r0 = virtualinvoke ath.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.IDTracker getIDTracker()>();
+        this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.area.IDTracker idTracker> = $r0;
+        this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.fo.pagination.AbstractPageSequence pageSeq> = pseq;
+        return;
+    }
+
+    public org.apache.fop.layoutmgr.LayoutManagerMaker getLayoutManagerMaker()
+    {
+        org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager this;
+        org.apache.fop.area.AreaTreeHandler $r0;
+        org.apache.fop.layoutmgr.LayoutManagerMaker $r1;
+
+        this := @this: org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager;
+        $r0 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.area.AreaTreeHandler areaTreeHandler>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.layoutmgr.LayoutManagerMaker getLayoutManagerMaker()>();
+        return $r1;
+    }
+
+    public org.apache.fop.layoutmgr.Page getCurrentPage()
+    {
+        org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager this;
+        org.apache.fop.layoutmgr.Page $r0;
+
+        this := @this: org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager;
+        $r0 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.layoutmgr.Page curPage>;
+        return $r0;
+    }
+
+    protected void setCurrentPage(org.apache.fop.layoutmgr.Page)
+    {
+        org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager this;
+        org.apache.fop.layoutmgr.Page currentPage;
+
+        this := @this: org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager;
+        currentPage := @parameter0: org.apache.fop.layoutmgr.Page;
+        this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.layoutmgr.Page curPage> = currentPage;
+        return;
+    }
+
+    protected int getCurrentPageNum()
+    {
+        org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager this;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager;
+        $i0 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: int currentPageNum>;
+        return $i0;
+    }
+
+    public void initialize()
+    {
+        org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager this;
+        org.apache.fop.fo.pagination.AbstractPageSequence $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager;
+        $r0 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.fo.pagination.AbstractPageSequence pageSeq>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fo.pagination.AbstractPageSequence: int getStartingPageNumber()>();
+        this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: int startPageNum> = $i0;
+        $i0 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: int startPageNum>;
+        $i0 = $i0 - 1;
+        this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: int currentPageNum> = $i0;
+        return;
+    }
+
+    public org.apache.fop.area.PageViewport getFirstPVWithID(java.lang.String)
+    {
+        org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager this;
+        java.lang.String idref;
+        java.util.List list;
+        org.apache.fop.area.IDTracker $r0;
+        int $i0;
+        java.lang.Object $r1;
+        org.apache.fop.area.PageViewport $r2;
+
+        this := @this: org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager;
+        idref := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.area.IDTracker idTracker>;
+        list = virtualinvoke $r0.<org.apache.fop.area.IDTracker: java.util.List getPageViewportsContainingID(java.lang.String)>(idref);
+        if list == null goto label0;
+
+        $i0 = interfaceinvoke list.<java.util.List: int size()>();
+        if $i0 <= 0 goto label0;
+
+        $r1 = interfaceinvoke list.<java.util.List: java.lang.Object get(int)>(0);
+        $r2 = (org.apache.fop.area.PageViewport) $r1;
+        return $r2;
+
+     label0:
+        return null;
+    }
+
+    public org.apache.fop.area.PageViewport getLastPVWithID(java.lang.String)
+    {
+        org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager this;
+        java.lang.String idref;
+        java.util.List list;
+        org.apache.fop.area.IDTracker $r0;
+        int $i0, $i1;
+        java.lang.Object $r1;
+        org.apache.fop.area.PageViewport $r2;
+
+        this := @this: org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager;
+        idref := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.area.IDTracker idTracker>;
+        list = virtualinvoke $r0.<org.apache.fop.area.IDTracker: java.util.List getPageViewportsContainingID(java.lang.String)>(idref);
+        if list == null goto label0;
+
+        $i0 = interfaceinvoke list.<java.util.List: int size()>();
+        if $i0 <= 0 goto label0;
+
+        $i1 = interfaceinvoke list.<java.util.List: int size()>();
+        $i1 = $i1 - 1;
+        $r1 = interfaceinvoke list.<java.util.List: java.lang.Object get(int)>($i1);
+        $r2 = (org.apache.fop.area.PageViewport) $r1;
+        return $r2;
+
+     label0:
+        return null;
+    }
+
+    public void addIDToPage(java.lang.String)
+    {
+        org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager this;
+        java.lang.String id;
+        int $i0;
+        org.apache.fop.area.IDTracker $r0;
+        org.apache.fop.layoutmgr.Page $r1;
+        org.apache.fop.area.PageViewport $r2;
+
+        this := @this: org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager;
+        id := @parameter0: java.lang.String;
+        if id == null goto label0;
+
+        $i0 = virtualinvoke id.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label0;
+
+        $r0 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.area.IDTracker idTracker>;
+        $r1 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.layoutmgr.Page curPage>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.layoutmgr.Page: org.apache.fop.area.PageViewport getPageViewport()>();
+        virtualinvoke $r0.<org.apache.fop.area.IDTracker: void associateIDWithPageViewport(java.lang.String,org.apache.fop.area.PageViewport)>(id, $r2);
+
+     label0:
+        return;
+    }
+
+    public boolean associateLayoutManagerID(java.lang.String)
+    {
+        org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager this;
+        java.lang.String id, $r2;
+        org.apache.commons.logging.Log $r0;
+        java.lang.StringBuffer $r1;
+        boolean $z0;
+        org.apache.fop.area.IDTracker $r3;
+
+        this := @this: org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager;
+        id := @parameter0: java.lang.String;
+        $r0 = <org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = <org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("associateLayoutManagerID(");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(id);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(")");
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r2);
+
+     label0:
+        $r3 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.area.IDTracker idTracker>;
+        $z0 = virtualinvoke $r3.<org.apache.fop.area.IDTracker: boolean alreadyResolvedID(java.lang.String)>(id);
+        if $z0 != 0 goto label1;
+
+        $r3 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.area.IDTracker idTracker>;
+        virtualinvoke $r3.<org.apache.fop.area.IDTracker: void signalPendingID(java.lang.String)>(id);
+        return 0;
+
+     label1:
+        return 1;
+    }
+
+    public void notifyEndOfLayout(java.lang.String)
+    {
+        org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager this;
+        java.lang.String id;
+        org.apache.fop.area.IDTracker $r0;
+
+        this := @this: org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager;
+        id := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.area.IDTracker idTracker>;
+        virtualinvoke $r0.<org.apache.fop.area.IDTracker: void signalIDProcessed(java.lang.String)>(id);
+        return;
+    }
+
+    public void addUnresolvedArea(java.lang.String, org.apache.fop.area.Resolvable)
+    {
+        org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager this;
+        java.lang.String id;
+        org.apache.fop.area.Resolvable res;
+        org.apache.fop.layoutmgr.Page $r0, $r3;
+        org.apache.fop.area.PageViewport $r1, $r4;
+        org.apache.fop.area.IDTracker $r2;
+
+        this := @this: org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager;
+        id := @parameter0: java.lang.String;
+        res := @parameter1: org.apache.fop.area.Resolvable;
+        $r0 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.layoutmgr.Page curPage>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.layoutmgr.Page: org.apache.fop.area.PageViewport getPageViewport()>();
+        virtualinvoke $r1.<org.apache.fop.area.PageViewport: void addUnresolvedIDRef(java.lang.String,org.apache.fop.area.Resolvable)>(id, res);
+        $r2 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.area.IDTracker idTracker>;
+        $r3 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.layoutmgr.Page curPage>;
+        $r4 = virtualinvoke $r3.<org.apache.fop.layoutmgr.Page: org.apache.fop.area.PageViewport getPageViewport()>();
+        virtualinvoke $r2.<org.apache.fop.area.IDTracker: void addUnresolvedIDRef(java.lang.String,org.apache.fop.area.Resolvable)>(id, $r4);
+        return;
+    }
+
+    public org.apache.fop.fo.flow.RetrieveMarker resolveRetrieveMarker(org.apache.fop.fo.flow.RetrieveMarker)
+    {
+        org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager this;
+        org.apache.fop.fo.flow.RetrieveMarker rm;
+        org.apache.fop.area.AreaTreeModel areaTreeModel;
+        java.lang.String name, $r5;
+        int pos, boundary, seq, page, $i0;
+        org.apache.fop.fo.flow.Marker mark;
+        boolean doc, $z0;
+        org.apache.fop.area.PageViewport pv, $r1;
+        org.apache.fop.area.AreaTreeHandler $r0;
+        java.lang.Object $r2;
+        org.apache.commons.logging.Log $r3;
+        java.lang.StringBuffer $r4;
+
+        this := @this: org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager;
+        rm := @parameter0: org.apache.fop.fo.flow.RetrieveMarker;
+        $r0 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.area.AreaTreeHandler areaTreeHandler>;
+        areaTreeModel = virtualinvoke $r0.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.AreaTreeModel getAreaTreeModel()>();
+        name = virtualinvoke rm.<org.apache.fop.fo.flow.RetrieveMarker: java.lang.String getRetrieveClassName()>();
+        pos = virtualinvoke rm.<org.apache.fop.fo.flow.RetrieveMarker: int getRetrievePosition()>();
+        boundary = virtualinvoke rm.<org.apache.fop.fo.flow.RetrieveMarker: int getRetrieveBoundary()>();
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.area.PageViewport getCurrentPV()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.area.PageViewport: java.lang.Object getMarker(java.lang.String,int)>(name, pos);
+        mark = (org.apache.fop.fo.flow.Marker) $r2;
+        if mark != null goto label6;
+
+        if boundary == 104 goto label6;
+
+        if boundary != 34 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        doc = $z0;
+        seq = virtualinvoke areaTreeModel.<org.apache.fop.area.AreaTreeModel: int getPageSequenceCount()>();
+        $i0 = virtualinvoke areaTreeModel.<org.apache.fop.area.AreaTreeModel: int getPageCount(int)>(seq);
+        page = $i0 - 1;
+
+     label2:
+        if page >= 0 goto label3;
+
+        if doc == 0 goto label3;
+
+        if seq <= 1 goto label3;
+
+        seq = seq + -1;
+        $i0 = virtualinvoke areaTreeModel.<org.apache.fop.area.AreaTreeModel: int getPageCount(int)>(seq);
+        page = $i0 - 1;
+        goto label2;
+
+     label3:
+        if page < 0 goto label6;
+
+        pv = virtualinvoke areaTreeModel.<org.apache.fop.area.AreaTreeModel: org.apache.fop.area.PageViewport getPage(int,int)>(seq, page);
+        $r2 = virtualinvoke pv.<org.apache.fop.area.PageViewport: java.lang.Object getMarker(java.lang.String,int)>(name, 74);
+        mark = (org.apache.fop.fo.flow.Marker) $r2;
+        if mark == null goto label4;
+
+        goto label6;
+
+     label4:
+        page = page + -1;
+        if page >= 0 goto label5;
+
+        if doc == 0 goto label5;
+
+        if seq <= 1 goto label5;
+
+        seq = seq + -1;
+        $i0 = virtualinvoke areaTreeModel.<org.apache.fop.area.AreaTreeModel: int getPageCount(int)>(seq);
+        page = $i0 - 1;
+
+     label5:
+        goto label3;
+
+     label6:
+        if mark != null goto label7;
+
+        $r3 = <org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("found no marker with name: ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(name);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r5);
+        return null;
+
+     label7:
+        virtualinvoke rm.<org.apache.fop.fo.flow.RetrieveMarker: void bindMarker(org.apache.fop.fo.flow.Marker)>(mark);
+        return rm;
+    }
+
+    protected abstract org.apache.fop.layoutmgr.Page createPage(int, boolean);
+
+    protected org.apache.fop.layoutmgr.Page makeNewPage(boolean, boolean)
+    {
+        org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager this;
+        boolean isBlank, isLast, $z0;
+        org.apache.fop.layoutmgr.Page $r0, $r2, $r5;
+        int $i0, $i1;
+        org.apache.commons.logging.Log $r3;
+        java.lang.StringBuffer $r4;
+        org.apache.fop.area.PageViewport $r6;
+        java.lang.String $r7, $r8;
+        org.apache.fop.fo.pagination.AbstractPageSequence $r9;
+
+        this := @this: org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager;
+        isBlank := @parameter0: boolean;
+        isLast := @parameter1: boolean;
+        $r0 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.layoutmgr.Page curPage>;
+        if $r0 == null goto label0;
+
+        virtualinvoke this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: void finishPage()>();
+
+     label0:
+        $i0 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: int currentPageNum>;
+        $i0 = $i0 + 1;
+        this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: int currentPageNum> = $i0;
+        $i1 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: int currentPageNum>;
+        $r2 = virtualinvoke this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.layoutmgr.Page createPage(int,boolean)>($i1, isBlank);
+        this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.layoutmgr.Page curPage> = $r2;
+        $r3 = <org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r3.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label3;
+
+        $r3 = <org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("[");
+        $r5 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.layoutmgr.Page curPage>;
+        $r6 = virtualinvoke $r5.<org.apache.fop.layoutmgr.Page: org.apache.fop.area.PageViewport getPageViewport()>();
+        $r7 = virtualinvoke $r6.<org.apache.fop.area.PageViewport: java.lang.String getPageNumberString()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r7);
+        if isBlank == 0 goto label1;
+
+        $r7 = "*";
+        goto label2;
+
+     label1:
+        $r7 = "";
+
+     label2:
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r7);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("]");
+        $r8 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r8);
+
+     label3:
+        $r9 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.fo.pagination.AbstractPageSequence pageSeq>;
+        $r8 = virtualinvoke $r9.<org.apache.fop.fo.pagination.AbstractPageSequence: java.lang.String getId()>();
+        virtualinvoke this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: void addIDToPage(java.lang.String)>($r8);
+        $r0 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.layoutmgr.Page curPage>;
+        return $r0;
+    }
+
+    protected void finishPage()
+    {
+        org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager this;
+        org.apache.commons.logging.Log $r0;
+        boolean $z0;
+        org.apache.fop.layoutmgr.Page $r1, $r4, $r9;
+        org.apache.fop.area.PageViewport $r2, $r5, $r10;
+        org.apache.fop.area.IDTracker $r3;
+        org.apache.fop.area.AreaTreeHandler $r6;
+        org.apache.fop.area.AreaTreeModel $r7;
+        java.lang.StringBuffer $r8;
+        java.lang.String $r11, $r12;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager;
+        $r0 = <org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r1 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.layoutmgr.Page curPage>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.layoutmgr.Page: org.apache.fop.area.PageViewport getPageViewport()>();
+        virtualinvoke $r2.<org.apache.fop.area.PageViewport: void dumpMarkers()>();
+
+     label0:
+        $r3 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.area.IDTracker idTracker>;
+        $r4 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.layoutmgr.Page curPage>;
+        $r5 = virtualinvoke $r4.<org.apache.fop.layoutmgr.Page: org.apache.fop.area.PageViewport getPageViewport()>();
+        virtualinvoke $r3.<org.apache.fop.area.IDTracker: void tryIDResolution(org.apache.fop.area.PageViewport)>($r5);
+        $r6 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.area.AreaTreeHandler areaTreeHandler>;
+        $r7 = virtualinvoke $r6.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.AreaTreeModel getAreaTreeModel()>();
+        $r4 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.layoutmgr.Page curPage>;
+        $r5 = virtualinvoke $r4.<org.apache.fop.layoutmgr.Page: org.apache.fop.area.PageViewport getPageViewport()>();
+        virtualinvoke $r7.<org.apache.fop.area.AreaTreeModel: void addPage(org.apache.fop.area.PageViewport)>($r5);
+        $r0 = <org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label1;
+
+        $r0 = <org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.commons.logging.Log log>;
+        $r8 = new java.lang.StringBuffer;
+        specialinvoke $r8.<java.lang.StringBuffer: void <init>()>();
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("page finished: ");
+        $r9 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.layoutmgr.Page curPage>;
+        $r10 = virtualinvoke $r9.<org.apache.fop.layoutmgr.Page: org.apache.fop.area.PageViewport getPageViewport()>();
+        $r11 = virtualinvoke $r10.<org.apache.fop.area.PageViewport: java.lang.String getPageNumberString()>();
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r11);
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", current num: ");
+        $i0 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: int currentPageNum>;
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r12 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r12);
+
+     label1:
+        this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.layoutmgr.Page curPage> = null;
+        return;
+    }
+
+    public void doForcePageCount(org.apache.fop.datatypes.Numeric)
+    {
+        org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager this;
+        org.apache.fop.datatypes.Numeric nextPageSeqInitialPageNumber;
+        int forcePageCount, nextPageSeqPageNumberType, nextPageSeqPageStart, $i0, $i1;
+        org.apache.fop.fo.pagination.AbstractPageSequence $r0;
+        org.apache.fop.layoutmgr.Page $r1, $r2;
+
+        this := @this: org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager;
+        nextPageSeqInitialPageNumber := @parameter0: org.apache.fop.datatypes.Numeric;
+        $r0 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.fo.pagination.AbstractPageSequence pageSeq>;
+        forcePageCount = virtualinvoke $r0.<org.apache.fop.fo.pagination.AbstractPageSequence: int getForcePageCount()>();
+        if nextPageSeqInitialPageNumber == null goto label7;
+
+        if forcePageCount != 9 goto label7;
+
+        $i0 = interfaceinvoke nextPageSeqInitialPageNumber.<org.apache.fop.datatypes.Numeric: int getEnum()>();
+        if $i0 == 0 goto label3;
+
+        nextPageSeqPageNumberType = interfaceinvoke nextPageSeqInitialPageNumber.<org.apache.fop.datatypes.Numeric: int getEnum()>();
+        if nextPageSeqPageNumberType != 11 goto label0;
+
+        forcePageCount = 40;
+        goto label2;
+
+     label0:
+        if nextPageSeqPageNumberType != 10 goto label1;
+
+        forcePageCount = 41;
+        goto label2;
+
+     label1:
+        forcePageCount = 88;
+
+     label2:
+        goto label7;
+
+     label3:
+        nextPageSeqPageStart = interfaceinvoke nextPageSeqInitialPageNumber.<org.apache.fop.datatypes.Numeric: int getValue()>();
+        if nextPageSeqPageStart <= 0 goto label4;
+
+        $i0 = nextPageSeqPageStart;
+        goto label5;
+
+     label4:
+        $i0 = 1;
+
+     label5:
+        nextPageSeqPageStart = $i0;
+        $i0 = nextPageSeqPageStart % 2;
+        if $i0 != 0 goto label6;
+
+        forcePageCount = 41;
+        goto label7;
+
+     label6:
+        forcePageCount = 40;
+
+     label7:
+        if forcePageCount != 43 goto label8;
+
+        $i0 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: int currentPageNum>;
+        $i1 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: int startPageNum>;
+        $i0 = $i0 - $i1;
+        $i0 = $i0 + 1;
+        $i0 = $i0 % 2;
+        if $i0 == 0 goto label12;
+
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.layoutmgr.Page makeNewPage(boolean,boolean)>(1, 0);
+        this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.layoutmgr.Page curPage> = $r1;
+        goto label12;
+
+     label8:
+        if forcePageCount != 99 goto label9;
+
+        $i0 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: int currentPageNum>;
+        $i1 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: int startPageNum>;
+        $i0 = $i0 - $i1;
+        $i0 = $i0 + 1;
+        $i0 = $i0 % 2;
+        if $i0 != 0 goto label12;
+
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.layoutmgr.Page makeNewPage(boolean,boolean)>(1, 0);
+        this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.layoutmgr.Page curPage> = $r1;
+        goto label12;
+
+     label9:
+        if forcePageCount != 40 goto label10;
+
+        $i0 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: int currentPageNum>;
+        $i0 = $i0 % 2;
+        if $i0 == 0 goto label12;
+
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.layoutmgr.Page makeNewPage(boolean,boolean)>(1, 0);
+        this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.layoutmgr.Page curPage> = $r1;
+        goto label12;
+
+     label10:
+        if forcePageCount != 41 goto label11;
+
+        $i0 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: int currentPageNum>;
+        $i0 = $i0 % 2;
+        if $i0 != 0 goto label12;
+
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.layoutmgr.Page makeNewPage(boolean,boolean)>(1, 0);
+        this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.layoutmgr.Page curPage> = $r1;
+        goto label12;
+
+     label11:
+        if forcePageCount != 88 goto label12;
+
+     label12:
+        $r2 = this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.fop.layoutmgr.Page curPage>;
+        if $r2 == null goto label13;
+
+        virtualinvoke this.<org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: void finishPage()>();
+
+     label13:
+        return;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$AbstractPageSequenceLayoutManager>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: java.lang.Class class$(java.lang.String)>("org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager");
+        <org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$AbstractPageSequenceLayoutManager> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$AbstractPageSequenceLayoutManager>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.layoutmgr.AbstractPageSequenceLayoutManager: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

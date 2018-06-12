@@ -1,0 +1,201 @@
+public class org.apache.fop.fo.flow.BasicLink extends org.apache.fop.fo.flow.Inline
+{
+    private java.lang.String externalDestination;
+    private java.lang.String internalDestination;
+    private boolean blockOrInlineItemFound;
+
+    public void <init>(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.flow.BasicLink this;
+        org.apache.fop.fo.FONode parent;
+
+        this := @this: org.apache.fop.fo.flow.BasicLink;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        specialinvoke this.<org.apache.fop.fo.flow.Inline: void <init>(org.apache.fop.fo.FONode)>(parent);
+        this.<org.apache.fop.fo.flow.BasicLink: boolean blockOrInlineItemFound> = 0;
+        return;
+    }
+
+    public void bind(org.apache.fop.fo.PropertyList) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.BasicLink this;
+        org.apache.fop.fo.PropertyList pList;
+        org.apache.fop.fo.properties.Property $r0;
+        java.lang.String $r1, $r2;
+        int $i0;
+
+        this := @this: org.apache.fop.fo.flow.BasicLink;
+        pList := @parameter0: org.apache.fop.fo.PropertyList;
+        specialinvoke this.<org.apache.fop.fo.flow.Inline: void bind(org.apache.fop.fo.PropertyList)>(pList);
+        $r0 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(88);
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.properties.Property: java.lang.String getString()>();
+        this.<org.apache.fop.fo.flow.BasicLink: java.lang.String externalDestination> = $r1;
+        $r0 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(117);
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.properties.Property: java.lang.String getString()>();
+        this.<org.apache.fop.fo.flow.BasicLink: java.lang.String internalDestination> = $r1;
+        $r2 = this.<org.apache.fop.fo.flow.BasicLink: java.lang.String internalDestination>;
+        $i0 = virtualinvoke $r2.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label0;
+
+        this.<org.apache.fop.fo.flow.BasicLink: java.lang.String externalDestination> = null;
+        goto label1;
+
+     label0:
+        $r2 = this.<org.apache.fop.fo.flow.BasicLink: java.lang.String externalDestination>;
+        $i0 = virtualinvoke $r2.<java.lang.String: int length()>();
+        if $i0 != 0 goto label1;
+
+        virtualinvoke this.<org.apache.fop.fo.flow.BasicLink: void attributeError(java.lang.String)>("Missing attribute:  Either external-destination or internal-destination must be specified.");
+
+     label1:
+        return;
+    }
+
+    protected void startOfNode() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.BasicLink this;
+        org.apache.fop.fo.FOEventHandler $r0;
+
+        this := @this: org.apache.fop.fo.flow.BasicLink;
+        specialinvoke this.<org.apache.fop.fo.flow.Inline: void startOfNode()>();
+        $r0 = virtualinvoke this.<org.apache.fop.fo.flow.BasicLink: org.apache.fop.fo.FOEventHandler getFOEventHandler()>();
+        virtualinvoke $r0.<org.apache.fop.fo.FOEventHandler: void startLink(org.apache.fop.fo.flow.BasicLink)>(this);
+        return;
+    }
+
+    protected void endOfNode() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.BasicLink this;
+        org.apache.fop.fo.FOEventHandler $r0;
+
+        this := @this: org.apache.fop.fo.flow.BasicLink;
+        specialinvoke this.<org.apache.fop.fo.flow.Inline: void endOfNode()>();
+        $r0 = virtualinvoke this.<org.apache.fop.fo.flow.BasicLink: org.apache.fop.fo.FOEventHandler getFOEventHandler()>();
+        virtualinvoke $r0.<org.apache.fop.fo.FOEventHandler: void endLink()>();
+        return;
+    }
+
+    protected void validateChildNode(org.xml.sax.Locator, java.lang.String, java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.flow.BasicLink this;
+        org.xml.sax.Locator loc;
+        java.lang.String nsURI, localName, $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.flow.BasicLink;
+        loc := @parameter0: org.xml.sax.Locator;
+        nsURI := @parameter1: java.lang.String;
+        localName := @parameter2: java.lang.String;
+        $r0 = "http://www.w3.org/1999/XSL/Format";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(nsURI);
+        if $z0 == 0 goto label0;
+
+        $z0 = virtualinvoke localName.<java.lang.String: boolean equals(java.lang.Object)>("marker");
+        if $z0 == 0 goto label0;
+
+        $z0 = this.<org.apache.fop.fo.flow.BasicLink: boolean blockOrInlineItemFound>;
+        if $z0 == 0 goto label2;
+
+        virtualinvoke this.<org.apache.fop.fo.flow.BasicLink: void nodesOutOfOrderError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, "fo:marker", "(#PCDATA|%inline;|%block;)");
+        goto label2;
+
+     label0:
+        $z0 = virtualinvoke this.<org.apache.fop.fo.flow.BasicLink: boolean isBlockOrInlineItem(java.lang.String,java.lang.String)>(nsURI, localName);
+        if $z0 != 0 goto label1;
+
+        virtualinvoke this.<org.apache.fop.fo.flow.BasicLink: void invalidChildError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, nsURI, localName);
+        goto label2;
+
+     label1:
+        this.<org.apache.fop.fo.flow.BasicLink: boolean blockOrInlineItemFound> = 1;
+
+     label2:
+        return;
+    }
+
+    public java.lang.String getInternalDestination()
+    {
+        org.apache.fop.fo.flow.BasicLink this;
+        java.lang.String $r0;
+
+        this := @this: org.apache.fop.fo.flow.BasicLink;
+        $r0 = this.<org.apache.fop.fo.flow.BasicLink: java.lang.String internalDestination>;
+        return $r0;
+    }
+
+    public java.lang.String getExternalDestination()
+    {
+        org.apache.fop.fo.flow.BasicLink this;
+        java.lang.String $r0;
+
+        this := @this: org.apache.fop.fo.flow.BasicLink;
+        $r0 = this.<org.apache.fop.fo.flow.BasicLink: java.lang.String externalDestination>;
+        return $r0;
+    }
+
+    public boolean hasInternalDestination()
+    {
+        org.apache.fop.fo.flow.BasicLink this;
+        java.lang.String $r0;
+        int $i0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.flow.BasicLink;
+        $r0 = this.<org.apache.fop.fo.flow.BasicLink: java.lang.String internalDestination>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.fo.flow.BasicLink: java.lang.String internalDestination>;
+        $i0 = virtualinvoke $r0.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public boolean hasExternalDestination()
+    {
+        org.apache.fop.fo.flow.BasicLink this;
+        java.lang.String $r0;
+        int $i0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.flow.BasicLink;
+        $r0 = this.<org.apache.fop.fo.flow.BasicLink: java.lang.String externalDestination>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.fo.flow.BasicLink: java.lang.String externalDestination>;
+        $i0 = virtualinvoke $r0.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public java.lang.String getLocalName()
+    {
+        org.apache.fop.fo.flow.BasicLink this;
+
+        this := @this: org.apache.fop.fo.flow.BasicLink;
+        return "basic-link";
+    }
+
+    public int getNameId()
+    {
+        org.apache.fop.fo.flow.BasicLink this;
+
+        this := @this: org.apache.fop.fo.flow.BasicLink;
+        return 1;
+    }
+}

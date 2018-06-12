@@ -1,0 +1,533 @@
+public class org.apache.fop.fo.XMLWhiteSpaceHandler extends java.lang.Object
+{
+    private boolean inWhiteSpace;
+    private boolean afterLinefeed;
+    private int nonWhiteSpaceCount;
+    private int linefeedTreatment;
+    private int whiteSpaceTreatment;
+    private int whiteSpaceCollapse;
+    private boolean endOfBlock;
+    private boolean nextChildIsBlockLevel;
+    private org.apache.fop.fo.RecursiveCharIterator charIter;
+    private java.util.List pendingInlines;
+    private java.util.Stack nestedBlockStack;
+    private org.apache.fop.fo.CharIterator firstWhiteSpaceInSeq;
+
+    public void <init>()
+    {
+        org.apache.fop.fo.XMLWhiteSpaceHandler this;
+        java.util.Stack $r0;
+
+        this := @this: org.apache.fop.fo.XMLWhiteSpaceHandler;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: boolean inWhiteSpace> = 0;
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: boolean afterLinefeed> = 1;
+        $r0 = new java.util.Stack;
+        specialinvoke $r0.<java.util.Stack: void <init>()>();
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: java.util.Stack nestedBlockStack> = $r0;
+        return;
+    }
+
+    public void handleWhiteSpace(org.apache.fop.fo.FObjMixed, org.apache.fop.fo.FONode, org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.XMLWhiteSpaceHandler this;
+        org.apache.fop.fo.FObjMixed fo;
+        org.apache.fop.fo.FONode firstTextNode, nextChild, ancestor, $r5, $r7, $r9;
+        org.apache.fop.fo.flow.Block currentBlock;
+        int foId, nextChildId, i, $i0, $i1;
+        org.apache.fop.fo.XMLWhiteSpaceHandler$PendingInline p;
+        java.util.Stack $r0, $r1;
+        boolean $z0, $z1;
+        java.lang.Object $r2, $r3;
+        org.apache.fop.fo.RecursiveCharIterator $r4;
+        org.apache.fop.fo.FONode[] $r8;
+        java.util.List $r10;
+        org.apache.fop.fo.CharIterator $r11;
+        null_type currentBlock;
+
+        this := @this: org.apache.fop.fo.XMLWhiteSpaceHandler;
+        fo := @parameter0: org.apache.fop.fo.FObjMixed;
+        firstTextNode := @parameter1: org.apache.fop.fo.FONode;
+        nextChild := @parameter2: org.apache.fop.fo.FONode;
+        currentBlock = null;
+        foId = virtualinvoke fo.<org.apache.fop.fo.FObjMixed: int getNameId()>();
+        if foId != 3 goto label2;
+
+        currentBlock = (org.apache.fop.fo.flow.Block) fo;
+        $r0 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: java.util.Stack nestedBlockStack>;
+        $z0 = virtualinvoke $r0.<java.util.Stack: boolean isEmpty()>();
+        if $z0 != 0 goto label0;
+
+        $r1 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: java.util.Stack nestedBlockStack>;
+        $r2 = virtualinvoke $r1.<java.util.Stack: java.lang.Object peek()>();
+        if fo == $r2 goto label1;
+
+     label0:
+        if nextChild == null goto label7;
+
+        $r0 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: java.util.Stack nestedBlockStack>;
+        virtualinvoke $r0.<java.util.Stack: java.lang.Object push(java.lang.Object)>(currentBlock);
+        goto label7;
+
+     label1:
+        if nextChild != null goto label7;
+
+        $r0 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: java.util.Stack nestedBlockStack>;
+        virtualinvoke $r0.<java.util.Stack: java.lang.Object pop()>();
+        goto label7;
+
+     label2:
+        if foId != 41 goto label6;
+
+        ancestor = fo;
+
+     label3:
+        ancestor = virtualinvoke ancestor.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode getParent()>();
+        $i0 = virtualinvoke ancestor.<org.apache.fop.fo.FONode: int getNameId()>();
+        if $i0 == 3 goto label4;
+
+        $i0 = virtualinvoke ancestor.<org.apache.fop.fo.FONode: int getNameId()>();
+        if $i0 != 45 goto label3;
+
+     label4:
+        $i0 = virtualinvoke ancestor.<org.apache.fop.fo.FONode: int getNameId()>();
+        if $i0 != 3 goto label5;
+
+        currentBlock = (org.apache.fop.fo.flow.Block) ancestor;
+
+     label5:
+        goto label7;
+
+     label6:
+        $r0 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: java.util.Stack nestedBlockStack>;
+        $z0 = virtualinvoke $r0.<java.util.Stack: boolean isEmpty()>();
+        if $z0 != 0 goto label7;
+
+        $r0 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: java.util.Stack nestedBlockStack>;
+        $r3 = virtualinvoke $r0.<java.util.Stack: java.lang.Object peek()>();
+        currentBlock = (org.apache.fop.fo.flow.Block) $r3;
+
+     label7:
+        if currentBlock == null goto label8;
+
+        $i1 = virtualinvoke currentBlock.<org.apache.fop.fo.flow.Block: int getLinefeedTreatment()>();
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: int linefeedTreatment> = $i1;
+        $i1 = virtualinvoke currentBlock.<org.apache.fop.fo.flow.Block: int getWhitespaceCollapse()>();
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: int whiteSpaceCollapse> = $i1;
+        $i1 = virtualinvoke currentBlock.<org.apache.fop.fo.flow.Block: int getWhitespaceTreatment()>();
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: int whiteSpaceTreatment> = $i1;
+        goto label9;
+
+     label8:
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: int linefeedTreatment> = 147;
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: int whiteSpaceCollapse> = 149;
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: int whiteSpaceTreatment> = 63;
+
+     label9:
+        if firstTextNode != null goto label10;
+
+        return;
+
+     label10:
+        $r4 = new org.apache.fop.fo.RecursiveCharIterator;
+        specialinvoke $r4.<org.apache.fop.fo.RecursiveCharIterator: void <init>(org.apache.fop.fo.FObj,org.apache.fop.fo.FONode)>(fo, firstTextNode);
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: org.apache.fop.fo.RecursiveCharIterator charIter> = $r4;
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: boolean inWhiteSpace> = 0;
+        if fo == currentBlock goto label11;
+
+        if currentBlock == null goto label11;
+
+        if foId != 41 goto label15;
+
+        $r5 = virtualinvoke fo.<org.apache.fop.fo.FObjMixed: org.apache.fop.fo.FONode getParent()>();
+        if $r5 != currentBlock goto label15;
+
+     label11:
+        $r7 = fo.<org.apache.fop.fo.FObjMixed: org.apache.fop.fo.FONode firstChild>;
+        if firstTextNode == $r7 goto label12;
+
+        $r8 = firstTextNode.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode[] siblings>;
+        $r9 = $r8[0];
+        $i1 = virtualinvoke $r9.<org.apache.fop.fo.FONode: int getNameId()>();
+        if $i1 != 3 goto label13;
+
+     label12:
+        $z1 = 1;
+        goto label14;
+
+     label13:
+        $z1 = 0;
+
+     label14:
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: boolean afterLinefeed> = $z1;
+
+     label15:
+        if nextChild != null goto label16;
+
+        if fo != currentBlock goto label16;
+
+        $z1 = 1;
+        goto label17;
+
+     label16:
+        $z1 = 0;
+
+     label17:
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: boolean endOfBlock> = $z1;
+        if nextChild == null goto label21;
+
+        nextChildId = virtualinvoke nextChild.<org.apache.fop.fo.FONode: int getNameId()>();
+        if nextChildId == 3 goto label18;
+
+        if nextChildId == 47 goto label18;
+
+        if nextChildId == 46 goto label18;
+
+        if nextChildId == 20 goto label18;
+
+        if nextChildId != 4 goto label19;
+
+     label18:
+        $z1 = 1;
+        goto label20;
+
+     label19:
+        $z1 = 0;
+
+     label20:
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: boolean nextChildIsBlockLevel> = $z1;
+        goto label22;
+
+     label21:
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: boolean nextChildIsBlockLevel> = 0;
+
+     label22:
+        specialinvoke this.<org.apache.fop.fo.XMLWhiteSpaceHandler: void handleWhiteSpace()>();
+        if fo != currentBlock goto label27;
+
+        $r10 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: java.util.List pendingInlines>;
+        if $r10 == null goto label27;
+
+        $r10 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: java.util.List pendingInlines>;
+        $z0 = interfaceinvoke $r10.<java.util.List: boolean isEmpty()>();
+        if $z0 != 0 goto label27;
+
+        $z0 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: boolean endOfBlock>;
+        if $z0 != 0 goto label23;
+
+        $z0 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: boolean nextChildIsBlockLevel>;
+        if $z0 == 0 goto label27;
+
+     label23:
+        $i0 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: int nonWhiteSpaceCount>;
+        if $i0 != 0 goto label26;
+
+        $r10 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: java.util.List pendingInlines>;
+        i = interfaceinvoke $r10.<java.util.List: int size()>();
+
+     label24:
+        i = i + -1;
+        if i < 0 goto label25;
+
+        $r10 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: java.util.List pendingInlines>;
+        $r3 = interfaceinvoke $r10.<java.util.List: java.lang.Object get(int)>(i);
+        p = (org.apache.fop.fo.XMLWhiteSpaceHandler$PendingInline) $r3;
+        $r11 = p.<org.apache.fop.fo.XMLWhiteSpaceHandler$PendingInline: org.apache.fop.fo.CharIterator firstTrailingWhiteSpace>;
+        $r4 = (org.apache.fop.fo.RecursiveCharIterator) $r11;
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: org.apache.fop.fo.RecursiveCharIterator charIter> = $r4;
+        specialinvoke this.<org.apache.fop.fo.XMLWhiteSpaceHandler: void handleWhiteSpace()>();
+        $r10 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: java.util.List pendingInlines>;
+        interfaceinvoke $r10.<java.util.List: boolean remove(java.lang.Object)>(p);
+        goto label24;
+
+     label25:
+        goto label27;
+
+     label26:
+        $r10 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: java.util.List pendingInlines>;
+        interfaceinvoke $r10.<java.util.List: void clear()>();
+
+     label27:
+        if nextChild != null goto label32;
+
+        if fo == currentBlock goto label29;
+
+        $i0 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: int nonWhiteSpaceCount>;
+        if $i0 <= 0 goto label28;
+
+        $r10 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: java.util.List pendingInlines>;
+        if $r10 == null goto label28;
+
+        $r10 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: java.util.List pendingInlines>;
+        interfaceinvoke $r10.<java.util.List: void clear()>();
+
+     label28:
+        $z0 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: boolean inWhiteSpace>;
+        if $z0 == 0 goto label32;
+
+        specialinvoke this.<org.apache.fop.fo.XMLWhiteSpaceHandler: void addPendingInline(org.apache.fop.fo.FObjMixed)>(fo);
+        goto label32;
+
+     label29:
+        $r0 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: java.util.Stack nestedBlockStack>;
+        $z0 = virtualinvoke $r0.<java.util.Stack: boolean empty()>();
+        if $z0 != 0 goto label30;
+
+        $r0 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: java.util.Stack nestedBlockStack>;
+        $r3 = virtualinvoke $r0.<java.util.Stack: java.lang.Object pop()>();
+        currentBlock = (org.apache.fop.fo.flow.Block) $r3;
+        goto label31;
+
+     label30:
+        currentBlock = null;
+
+     label31:
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: org.apache.fop.fo.RecursiveCharIterator charIter> = null;
+
+     label32:
+        return;
+    }
+
+    public void handleWhiteSpace(org.apache.fop.fo.FObjMixed, org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.XMLWhiteSpaceHandler this;
+        org.apache.fop.fo.FObjMixed fo;
+        org.apache.fop.fo.FONode firstTextNode;
+
+        this := @this: org.apache.fop.fo.XMLWhiteSpaceHandler;
+        fo := @parameter0: org.apache.fop.fo.FObjMixed;
+        firstTextNode := @parameter1: org.apache.fop.fo.FONode;
+        virtualinvoke this.<org.apache.fop.fo.XMLWhiteSpaceHandler: void handleWhiteSpace(org.apache.fop.fo.FObjMixed,org.apache.fop.fo.FONode,org.apache.fop.fo.FONode)>(fo, firstTextNode, null);
+        return;
+    }
+
+    private void handleWhiteSpace()
+    {
+        org.apache.fop.fo.XMLWhiteSpaceHandler this;
+        org.apache.fop.fo.XMLWhiteSpaceHandler$EOLchecker $r0, lfCheck;
+        char currentChar;
+        int currentCharClass, $i0, $i1;
+        boolean bIgnore, $z0;
+        org.apache.fop.fo.RecursiveCharIterator $r1, $r2, $r3;
+        org.apache.fop.fo.CharIterator $r4;
+
+        this := @this: org.apache.fop.fo.XMLWhiteSpaceHandler;
+        $r0 = new org.apache.fop.fo.XMLWhiteSpaceHandler$EOLchecker;
+        $r1 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: org.apache.fop.fo.RecursiveCharIterator charIter>;
+        specialinvoke $r0.<org.apache.fop.fo.XMLWhiteSpaceHandler$EOLchecker: void <init>(org.apache.fop.fo.XMLWhiteSpaceHandler,org.apache.fop.fo.CharIterator)>(this, $r1);
+        lfCheck = $r0;
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: int nonWhiteSpaceCount> = 0;
+
+     label0:
+        $r2 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: org.apache.fop.fo.RecursiveCharIterator charIter>;
+        $z0 = virtualinvoke $r2.<org.apache.fop.fo.RecursiveCharIterator: boolean hasNext()>();
+        if $z0 == 0 goto label23;
+
+        $z0 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: boolean inWhiteSpace>;
+        if $z0 != 0 goto label1;
+
+        $r3 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: org.apache.fop.fo.RecursiveCharIterator charIter>;
+        $r4 = virtualinvoke $r3.<org.apache.fop.fo.RecursiveCharIterator: org.apache.fop.fo.CharIterator mark()>();
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: org.apache.fop.fo.CharIterator firstWhiteSpaceInSeq> = $r4;
+
+     label1:
+        $r2 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: org.apache.fop.fo.RecursiveCharIterator charIter>;
+        currentChar = virtualinvoke $r2.<org.apache.fop.fo.RecursiveCharIterator: char nextChar()>();
+        currentCharClass = staticinvoke <org.apache.fop.util.CharUtilities: int classOf(char)>(currentChar);
+        if currentCharClass != 1 goto label2;
+
+        $i0 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: int linefeedTreatment>;
+        if $i0 != 147 goto label2;
+
+        currentChar = 32;
+        $r2 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: org.apache.fop.fo.RecursiveCharIterator charIter>;
+        virtualinvoke $r2.<org.apache.fop.fo.RecursiveCharIterator: void replaceChar(char)>(32);
+        staticinvoke <org.apache.fop.util.CharUtilities: int classOf(char)>(currentChar);
+
+     label2:
+        $i0 = staticinvoke <org.apache.fop.util.CharUtilities: int classOf(char)>(currentChar);
+        tableswitch($i0)
+        {
+            case 1: goto label16;
+            case 2: goto label21;
+            case 3: goto label21;
+            case 4: goto label3;
+            default: goto label21;
+        };
+
+     label3:
+        $z0 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: boolean inWhiteSpace>;
+        if $z0 == 0 goto label4;
+
+        $i0 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: int whiteSpaceCollapse>;
+        if $i0 != 149 goto label4;
+
+        $r2 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: org.apache.fop.fo.RecursiveCharIterator charIter>;
+        virtualinvoke $r2.<org.apache.fop.fo.RecursiveCharIterator: void remove()>();
+        goto label22;
+
+     label4:
+        bIgnore = 0;
+        $i0 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: int whiteSpaceTreatment>;
+        lookupswitch($i0)
+        {
+            case 60: goto label5;
+            case 61: goto label11;
+            case 62: goto label6;
+            case 63: goto label7;
+            case 108: goto label12;
+            default: goto label13;
+        };
+
+     label5:
+        bIgnore = 1;
+        goto label13;
+
+     label6:
+        bIgnore = virtualinvoke lfCheck.<org.apache.fop.fo.XMLWhiteSpaceHandler$EOLchecker: boolean beforeLinefeed()>();
+        goto label13;
+
+     label7:
+        $z0 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: boolean afterLinefeed>;
+        if $z0 != 0 goto label8;
+
+        $z0 = virtualinvoke lfCheck.<org.apache.fop.fo.XMLWhiteSpaceHandler$EOLchecker: boolean beforeLinefeed()>();
+        if $z0 == 0 goto label9;
+
+     label8:
+        $z0 = 1;
+        goto label10;
+
+     label9:
+        $z0 = 0;
+
+     label10:
+        bIgnore = $z0;
+        goto label13;
+
+     label11:
+        bIgnore = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: boolean afterLinefeed>;
+        goto label13;
+
+     label12:
+        goto label13;
+
+     label13:
+        if bIgnore == 0 goto label14;
+
+        $r2 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: org.apache.fop.fo.RecursiveCharIterator charIter>;
+        virtualinvoke $r2.<org.apache.fop.fo.RecursiveCharIterator: void remove()>();
+        goto label15;
+
+     label14:
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: boolean inWhiteSpace> = 1;
+        if currentChar == 32 goto label15;
+
+        $r2 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: org.apache.fop.fo.RecursiveCharIterator charIter>;
+        virtualinvoke $r2.<org.apache.fop.fo.RecursiveCharIterator: void replaceChar(char)>(32);
+
+     label15:
+        goto label22;
+
+     label16:
+        $i0 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: int linefeedTreatment>;
+        lookupswitch($i0)
+        {
+            case 60: goto label17;
+            case 108: goto label19;
+            case 148: goto label18;
+            default: goto label20;
+        };
+
+     label17:
+        $r2 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: org.apache.fop.fo.RecursiveCharIterator charIter>;
+        virtualinvoke $r2.<org.apache.fop.fo.RecursiveCharIterator: void remove()>();
+        goto label22;
+
+     label18:
+        $r2 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: org.apache.fop.fo.RecursiveCharIterator charIter>;
+        virtualinvoke $r2.<org.apache.fop.fo.RecursiveCharIterator: void replaceChar(char)>(8203);
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: boolean inWhiteSpace> = 0;
+        goto label22;
+
+     label19:
+        virtualinvoke lfCheck.<org.apache.fop.fo.XMLWhiteSpaceHandler$EOLchecker: void reset()>();
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: boolean inWhiteSpace> = 0;
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: boolean afterLinefeed> = 1;
+        goto label22;
+
+     label20:
+        goto label22;
+
+     label21:
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: boolean inWhiteSpace> = 0;
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: boolean afterLinefeed> = 0;
+        $i1 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: int nonWhiteSpaceCount>;
+        $i1 = $i1 + 1;
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: int nonWhiteSpaceCount> = $i1;
+        virtualinvoke lfCheck.<org.apache.fop.fo.XMLWhiteSpaceHandler$EOLchecker: void reset()>();
+
+     label22:
+        goto label0;
+
+     label23:
+        return;
+    }
+
+    private void addPendingInline(org.apache.fop.fo.FObjMixed)
+    {
+        org.apache.fop.fo.XMLWhiteSpaceHandler this;
+        org.apache.fop.fo.FObjMixed fo;
+        java.util.ArrayList $r0;
+        java.util.List $r1;
+        org.apache.fop.fo.XMLWhiteSpaceHandler$PendingInline $r2;
+        org.apache.fop.fo.CharIterator $r3;
+
+        this := @this: org.apache.fop.fo.XMLWhiteSpaceHandler;
+        fo := @parameter0: org.apache.fop.fo.FObjMixed;
+        $r1 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: java.util.List pendingInlines>;
+        if $r1 != null goto label0;
+
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>(int)>(5);
+        this.<org.apache.fop.fo.XMLWhiteSpaceHandler: java.util.List pendingInlines> = $r0;
+
+     label0:
+        $r1 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: java.util.List pendingInlines>;
+        $r2 = new org.apache.fop.fo.XMLWhiteSpaceHandler$PendingInline;
+        $r3 = this.<org.apache.fop.fo.XMLWhiteSpaceHandler: org.apache.fop.fo.CharIterator firstWhiteSpaceInSeq>;
+        specialinvoke $r2.<org.apache.fop.fo.XMLWhiteSpaceHandler$PendingInline: void <init>(org.apache.fop.fo.XMLWhiteSpaceHandler,org.apache.fop.fo.FObjMixed,org.apache.fop.fo.CharIterator)>(this, fo, $r3);
+        interfaceinvoke $r1.<java.util.List: boolean add(java.lang.Object)>($r2);
+        return;
+    }
+
+    static int access$000(org.apache.fop.fo.XMLWhiteSpaceHandler)
+    {
+        org.apache.fop.fo.XMLWhiteSpaceHandler x0;
+        int $i0;
+
+        x0 := @parameter0: org.apache.fop.fo.XMLWhiteSpaceHandler;
+        $i0 = x0.<org.apache.fop.fo.XMLWhiteSpaceHandler: int linefeedTreatment>;
+        return $i0;
+    }
+
+    static boolean access$100(org.apache.fop.fo.XMLWhiteSpaceHandler)
+    {
+        org.apache.fop.fo.XMLWhiteSpaceHandler x0;
+        boolean $z0;
+
+        x0 := @parameter0: org.apache.fop.fo.XMLWhiteSpaceHandler;
+        $z0 = x0.<org.apache.fop.fo.XMLWhiteSpaceHandler: boolean nextChildIsBlockLevel>;
+        return $z0;
+    }
+
+    static boolean access$200(org.apache.fop.fo.XMLWhiteSpaceHandler)
+    {
+        org.apache.fop.fo.XMLWhiteSpaceHandler x0;
+        boolean $z0;
+
+        x0 := @parameter0: org.apache.fop.fo.XMLWhiteSpaceHandler;
+        $z0 = x0.<org.apache.fop.fo.XMLWhiteSpaceHandler: boolean endOfBlock>;
+        return $z0;
+    }
+}

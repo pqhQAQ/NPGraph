@@ -1,0 +1,117 @@
+public class org.apache.fop.fo.flow.Wrapper extends org.apache.fop.fo.FObjMixed
+{
+    private boolean blockOrInlineItemFound;
+    private boolean inlineChildrenAllowed;
+
+    public void <init>(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.flow.Wrapper this;
+        org.apache.fop.fo.FONode parent, ancestor;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.flow.Wrapper;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        specialinvoke this.<org.apache.fop.fo.FObjMixed: void <init>(org.apache.fop.fo.FONode)>(parent);
+        this.<org.apache.fop.fo.flow.Wrapper: boolean blockOrInlineItemFound> = 0;
+        this.<org.apache.fop.fo.flow.Wrapper: boolean inlineChildrenAllowed> = 0;
+        ancestor = this.<org.apache.fop.fo.flow.Wrapper: org.apache.fop.fo.FONode parent>;
+
+     label0:
+        $z0 = ancestor instanceof org.apache.fop.fo.flow.Wrapper;
+        if $z0 == 0 goto label1;
+
+        ancestor = virtualinvoke ancestor.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode getParent()>();
+        goto label0;
+
+     label1:
+        $z0 = ancestor instanceof org.apache.fop.fo.FObjMixed;
+        if $z0 == 0 goto label2;
+
+        this.<org.apache.fop.fo.flow.Wrapper: boolean inlineChildrenAllowed> = 1;
+
+     label2:
+        return;
+    }
+
+    protected void validateChildNode(org.xml.sax.Locator, java.lang.String, java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.flow.Wrapper this;
+        org.xml.sax.Locator loc;
+        java.lang.String nsURI, localName, $r0;
+        boolean $z0;
+        org.apache.fop.fo.FONode $r1;
+
+        this := @this: org.apache.fop.fo.flow.Wrapper;
+        loc := @parameter0: org.xml.sax.Locator;
+        nsURI := @parameter1: java.lang.String;
+        localName := @parameter2: java.lang.String;
+        $r0 = "http://www.w3.org/1999/XSL/Format";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(nsURI);
+        if $z0 == 0 goto label0;
+
+        $r0 = "marker";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label0;
+
+        $z0 = this.<org.apache.fop.fo.flow.Wrapper: boolean blockOrInlineItemFound>;
+        if $z0 == 0 goto label2;
+
+        virtualinvoke this.<org.apache.fop.fo.flow.Wrapper: void nodesOutOfOrderError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, "fo:marker", "(#PCDATA|%inline;|%block;)");
+        goto label2;
+
+     label0:
+        $z0 = virtualinvoke this.<org.apache.fop.fo.flow.Wrapper: boolean isBlockOrInlineItem(java.lang.String,java.lang.String)>(nsURI, localName);
+        if $z0 == 0 goto label1;
+
+        $r1 = this.<org.apache.fop.fo.flow.Wrapper: org.apache.fop.fo.FONode parent>;
+        staticinvoke <org.apache.fop.fo.FONode: void validateChildNode(org.apache.fop.fo.FONode,org.xml.sax.Locator,java.lang.String,java.lang.String)>($r1, loc, nsURI, localName);
+        this.<org.apache.fop.fo.flow.Wrapper: boolean blockOrInlineItemFound> = 1;
+        goto label2;
+
+     label1:
+        virtualinvoke this.<org.apache.fop.fo.flow.Wrapper: void invalidChildError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, nsURI, localName);
+
+     label2:
+        return;
+    }
+
+    protected void addCharacters(char[], int, int, org.apache.fop.fo.PropertyList, org.xml.sax.Locator) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.Wrapper this;
+        char[] data;
+        int start, end;
+        org.apache.fop.fo.PropertyList pList;
+        org.xml.sax.Locator locator;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.flow.Wrapper;
+        data := @parameter0: char[];
+        start := @parameter1: int;
+        end := @parameter2: int;
+        pList := @parameter3: org.apache.fop.fo.PropertyList;
+        locator := @parameter4: org.xml.sax.Locator;
+        $z0 = this.<org.apache.fop.fo.flow.Wrapper: boolean inlineChildrenAllowed>;
+        if $z0 == 0 goto label0;
+
+        specialinvoke this.<org.apache.fop.fo.FObjMixed: void addCharacters(char[],int,int,org.apache.fop.fo.PropertyList,org.xml.sax.Locator)>(data, start, end, pList, locator);
+
+     label0:
+        return;
+    }
+
+    public java.lang.String getLocalName()
+    {
+        org.apache.fop.fo.flow.Wrapper this;
+
+        this := @this: org.apache.fop.fo.flow.Wrapper;
+        return "wrapper";
+    }
+
+    public int getNameId()
+    {
+        org.apache.fop.fo.flow.Wrapper this;
+
+        this := @this: org.apache.fop.fo.flow.Wrapper;
+        return 56;
+    }
+}

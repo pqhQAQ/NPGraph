@@ -1,0 +1,1254 @@
+public abstract class org.apache.fop.render.AbstractRenderer extends java.lang.Object implements org.apache.fop.render.Renderer, org.apache.fop.fo.Constants
+{
+    protected static org.apache.commons.logging.Log log;
+    protected org.apache.fop.apps.FOUserAgent userAgent;
+    protected int currentBPPosition;
+    protected int currentIPPosition;
+    protected int containingBPPosition;
+    protected int containingIPPosition;
+    protected org.apache.fop.area.PageViewport currentPageViewport;
+    private java.util.Set warnedXMLHandlers;
+
+    public void <init>()
+    {
+        org.apache.fop.render.AbstractRenderer this;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.render.AbstractRenderer: org.apache.fop.apps.FOUserAgent userAgent> = null;
+        this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition> = 0;
+        this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition> = 0;
+        this.<org.apache.fop.render.AbstractRenderer: int containingBPPosition> = 0;
+        this.<org.apache.fop.render.AbstractRenderer: int containingIPPosition> = 0;
+        return;
+    }
+
+    public abstract void setupFontInfo(org.apache.fop.fonts.FontInfo);
+
+    public void setUserAgent(org.apache.fop.apps.FOUserAgent)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.apps.FOUserAgent agent;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        agent := @parameter0: org.apache.fop.apps.FOUserAgent;
+        this.<org.apache.fop.render.AbstractRenderer: org.apache.fop.apps.FOUserAgent userAgent> = agent;
+        return;
+    }
+
+    public org.apache.fop.apps.FOUserAgent getUserAgent()
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.apps.FOUserAgent $r0;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        $r0 = this.<org.apache.fop.render.AbstractRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        return $r0;
+    }
+
+    public void startRenderer(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        java.io.OutputStream outputStream;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        outputStream := @parameter0: java.io.OutputStream;
+        return;
+    }
+
+    public void stopRenderer() throws java.io.IOException
+    {
+        org.apache.fop.render.AbstractRenderer this;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        return;
+    }
+
+    public boolean supportsOutOfOrder()
+    {
+        org.apache.fop.render.AbstractRenderer this;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        return 0;
+    }
+
+    public void processOffDocumentItem(org.apache.fop.area.OffDocumentItem)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.OffDocumentItem odi;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        odi := @parameter0: org.apache.fop.area.OffDocumentItem;
+        return;
+    }
+
+    public org.apache.fop.render.Graphics2DAdapter getGraphics2DAdapter()
+    {
+        org.apache.fop.render.AbstractRenderer this;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        return null;
+    }
+
+    public org.apache.fop.render.ImageAdapter getImageAdapter()
+    {
+        org.apache.fop.render.AbstractRenderer this;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        return null;
+    }
+
+    protected org.apache.fop.area.PageViewport getCurrentPageViewport()
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.PageViewport $r0;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        $r0 = this.<org.apache.fop.render.AbstractRenderer: org.apache.fop.area.PageViewport currentPageViewport>;
+        return $r0;
+    }
+
+    public void preparePage(org.apache.fop.area.PageViewport)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.PageViewport page;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        page := @parameter0: org.apache.fop.area.PageViewport;
+        return;
+    }
+
+    protected java.lang.String convertTitleToString(org.apache.fop.area.LineArea)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.LineArea title;
+        java.util.List children;
+        java.lang.String str, $r0;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        title := @parameter0: org.apache.fop.area.LineArea;
+        children = virtualinvoke title.<org.apache.fop.area.LineArea: java.util.List getInlineAreas()>();
+        str = specialinvoke this.<org.apache.fop.render.AbstractRenderer: java.lang.String convertToString(java.util.List)>(children);
+        $r0 = virtualinvoke str.<java.lang.String: java.lang.String trim()>();
+        return $r0;
+    }
+
+    private java.lang.String convertToString(java.util.List)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        java.util.List children, $r5;
+        java.lang.StringBuffer $r0, sb;
+        int count, $i0;
+        org.apache.fop.area.inline.InlineArea inline;
+        java.lang.Object $r1;
+        boolean $z0;
+        org.apache.fop.area.inline.TextArea $r2;
+        java.lang.String $r3, $r6;
+        org.apache.fop.area.inline.InlineParent $r4;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        children := @parameter0: java.util.List;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        sb = $r0;
+        count = 0;
+
+     label0:
+        $i0 = interfaceinvoke children.<java.util.List: int size()>();
+        if count >= $i0 goto label4;
+
+        $r1 = interfaceinvoke children.<java.util.List: java.lang.Object get(int)>(count);
+        inline = (org.apache.fop.area.inline.InlineArea) $r1;
+        $z0 = inline instanceof org.apache.fop.area.inline.TextArea;
+        if $z0 == 0 goto label1;
+
+        $r2 = (org.apache.fop.area.inline.TextArea) inline;
+        $r3 = virtualinvoke $r2.<org.apache.fop.area.inline.TextArea: java.lang.String getText()>();
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        goto label3;
+
+     label1:
+        $z0 = inline instanceof org.apache.fop.area.inline.InlineParent;
+        if $z0 == 0 goto label2;
+
+        $r4 = (org.apache.fop.area.inline.InlineParent) inline;
+        $r5 = virtualinvoke $r4.<org.apache.fop.area.inline.InlineParent: java.util.List getChildAreas()>();
+        $r3 = specialinvoke this.<org.apache.fop.render.AbstractRenderer: java.lang.String convertToString(java.util.List)>($r5);
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        goto label3;
+
+     label2:
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+
+     label3:
+        count = count + 1;
+        goto label0;
+
+     label4:
+        $r6 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r6;
+    }
+
+    public void startPageSequence(org.apache.fop.area.LineArea)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.LineArea seqTitle;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        seqTitle := @parameter0: org.apache.fop.area.LineArea;
+        return;
+    }
+
+    public void startPageSequence(org.apache.fop.area.PageSequence)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.PageSequence pageSequence;
+        org.apache.fop.area.LineArea $r0;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        pageSequence := @parameter0: org.apache.fop.area.PageSequence;
+        $r0 = virtualinvoke pageSequence.<org.apache.fop.area.PageSequence: org.apache.fop.area.LineArea getTitle()>();
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void startPageSequence(org.apache.fop.area.LineArea)>($r0);
+        return;
+    }
+
+    public void renderPage(org.apache.fop.area.PageViewport) throws java.io.IOException, org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.PageViewport page;
+        org.apache.fop.area.Page p;
+        java.lang.Throwable l3, $r0;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        page := @parameter0: org.apache.fop.area.PageViewport;
+        this.<org.apache.fop.render.AbstractRenderer: org.apache.fop.area.PageViewport currentPageViewport> = page;
+
+     label0:
+        p = virtualinvoke page.<org.apache.fop.area.PageViewport: org.apache.fop.area.Page getPage()>();
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderPageAreas(org.apache.fop.area.Page)>(p);
+
+     label1:
+        this.<org.apache.fop.render.AbstractRenderer: org.apache.fop.area.PageViewport currentPageViewport> = null;
+        goto label3;
+
+     label2:
+        $r0 := @caughtexception;
+        l3 = $r0;
+        this.<org.apache.fop.render.AbstractRenderer: org.apache.fop.area.PageViewport currentPageViewport> = null;
+        throw l3;
+
+     label3:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+    }
+
+    protected void renderPageAreas(org.apache.fop.area.Page)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.Page page;
+        org.apache.fop.area.RegionViewport viewport;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        page := @parameter0: org.apache.fop.area.Page;
+        viewport = virtualinvoke page.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport getRegionViewport(int)>(35);
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderRegionViewport(org.apache.fop.area.RegionViewport)>(viewport);
+        viewport = virtualinvoke page.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport getRegionViewport(int)>(38);
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderRegionViewport(org.apache.fop.area.RegionViewport)>(viewport);
+        viewport = virtualinvoke page.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport getRegionViewport(int)>(37);
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderRegionViewport(org.apache.fop.area.RegionViewport)>(viewport);
+        viewport = virtualinvoke page.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport getRegionViewport(int)>(34);
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderRegionViewport(org.apache.fop.area.RegionViewport)>(viewport);
+        viewport = virtualinvoke page.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport getRegionViewport(int)>(36);
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderRegionViewport(org.apache.fop.area.RegionViewport)>(viewport);
+        return;
+    }
+
+    protected void renderRegionViewport(org.apache.fop.area.RegionViewport)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.RegionViewport port;
+        java.awt.geom.Rectangle2D view, $r2;
+        org.apache.fop.area.RegionReference regionReference;
+        org.apache.fop.area.CTM $r1;
+        boolean $z0;
+        int $i0;
+        org.apache.fop.area.BodyRegion $r3;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        port := @parameter0: org.apache.fop.area.RegionViewport;
+        if port == null goto label4;
+
+        view = virtualinvoke port.<org.apache.fop.area.RegionViewport: java.awt.geom.Rectangle2D getViewArea()>();
+        this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition> = 0;
+        this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition> = 0;
+        regionReference = virtualinvoke port.<org.apache.fop.area.RegionViewport: org.apache.fop.area.RegionReference getRegionReference()>();
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void handleRegionTraits(org.apache.fop.area.RegionViewport)>(port);
+        $r1 = virtualinvoke regionReference.<org.apache.fop.area.RegionReference: org.apache.fop.area.CTM getCTM()>();
+        $z0 = virtualinvoke port.<org.apache.fop.area.RegionViewport: boolean isClip()>();
+        if $z0 == 0 goto label0;
+
+        $r2 = view;
+        goto label1;
+
+     label0:
+        $r2 = null;
+
+     label1:
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void startVParea(org.apache.fop.area.CTM,java.awt.geom.Rectangle2D)>($r1, $r2);
+        $i0 = virtualinvoke regionReference.<org.apache.fop.area.RegionReference: int getRegionClass()>();
+        if $i0 != 36 goto label2;
+
+        $r3 = (org.apache.fop.area.BodyRegion) regionReference;
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderBodyRegion(org.apache.fop.area.BodyRegion)>($r3);
+        goto label3;
+
+     label2:
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderRegion(org.apache.fop.area.RegionReference)>(regionReference);
+
+     label3:
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void endVParea()>();
+
+     label4:
+        return;
+    }
+
+    protected abstract void startVParea(org.apache.fop.area.CTM, java.awt.geom.Rectangle2D);
+
+    protected abstract void endVParea();
+
+    protected void handleRegionTraits(org.apache.fop.area.RegionViewport)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.RegionViewport rv;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        rv := @parameter0: org.apache.fop.area.RegionViewport;
+        return;
+    }
+
+    protected void renderRegion(org.apache.fop.area.RegionReference)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.RegionReference region;
+        java.util.List blocks;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        region := @parameter0: org.apache.fop.area.RegionReference;
+        blocks = virtualinvoke region.<org.apache.fop.area.RegionReference: java.util.List getBlocks()>();
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderBlocks(org.apache.fop.area.Block,java.util.List)>(null, blocks);
+        return;
+    }
+
+    protected void renderBodyRegion(org.apache.fop.area.BodyRegion)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.BodyRegion region;
+        org.apache.fop.area.BeforeFloat bf;
+        org.apache.fop.area.MainReference mr;
+        org.apache.fop.area.Footnote foot;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        region := @parameter0: org.apache.fop.area.BodyRegion;
+        bf = virtualinvoke region.<org.apache.fop.area.BodyRegion: org.apache.fop.area.BeforeFloat getBeforeFloat()>();
+        if bf == null goto label0;
+
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderBeforeFloat(org.apache.fop.area.BeforeFloat)>(bf);
+
+     label0:
+        mr = virtualinvoke region.<org.apache.fop.area.BodyRegion: org.apache.fop.area.MainReference getMainReference()>();
+        if mr == null goto label1;
+
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderMainReference(org.apache.fop.area.MainReference)>(mr);
+
+     label1:
+        foot = virtualinvoke region.<org.apache.fop.area.BodyRegion: org.apache.fop.area.Footnote getFootnote()>();
+        if foot == null goto label2;
+
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderFootnote(org.apache.fop.area.Footnote)>(foot);
+
+     label2:
+        return;
+    }
+
+    protected void renderBeforeFloat(org.apache.fop.area.BeforeFloat)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.BeforeFloat bf;
+        java.util.List blocks;
+        org.apache.fop.area.Block sep;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        bf := @parameter0: org.apache.fop.area.BeforeFloat;
+        blocks = virtualinvoke bf.<org.apache.fop.area.BeforeFloat: java.util.List getChildAreas()>();
+        if blocks == null goto label0;
+
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderBlocks(org.apache.fop.area.Block,java.util.List)>(null, blocks);
+        sep = virtualinvoke bf.<org.apache.fop.area.BeforeFloat: org.apache.fop.area.Block getSeparator()>();
+        if sep == null goto label0;
+
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderBlock(org.apache.fop.area.Block)>(sep);
+
+     label0:
+        return;
+    }
+
+    protected void renderFootnote(org.apache.fop.area.Footnote)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.Footnote footnote;
+        java.util.List blocks;
+        org.apache.fop.area.Block sep;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        footnote := @parameter0: org.apache.fop.area.Footnote;
+        $i0 = this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition>;
+        $i1 = virtualinvoke footnote.<org.apache.fop.area.Footnote: int getTop()>();
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition> = $i0;
+        blocks = virtualinvoke footnote.<org.apache.fop.area.Footnote: java.util.List getChildAreas()>();
+        if blocks == null goto label1;
+
+        sep = virtualinvoke footnote.<org.apache.fop.area.Footnote: org.apache.fop.area.Block getSeparator()>();
+        if sep == null goto label0;
+
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderBlock(org.apache.fop.area.Block)>(sep);
+
+     label0:
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderBlocks(org.apache.fop.area.Block,java.util.List)>(null, blocks);
+
+     label1:
+        return;
+    }
+
+    protected void renderMainReference(org.apache.fop.area.MainReference)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.MainReference mr;
+        int saveIPPos, saveBPPos, saveSpanBPPos, count, c, $i0, $i1;
+        null_type span;
+        java.util.List spans;
+        org.apache.fop.area.NormalFlow flow;
+        java.lang.Object $r0;
+        org.apache.fop.area.Span span;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        mr := @parameter0: org.apache.fop.area.MainReference;
+        saveIPPos = this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition>;
+        span = null;
+        spans = virtualinvoke mr.<org.apache.fop.area.MainReference: java.util.List getSpans()>();
+        saveBPPos = this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition>;
+        saveSpanBPPos = saveBPPos;
+        count = 0;
+
+     label0:
+        $i0 = interfaceinvoke spans.<java.util.List: int size()>();
+        if count >= $i0 goto label4;
+
+        $r0 = interfaceinvoke spans.<java.util.List: java.lang.Object get(int)>(count);
+        span = (org.apache.fop.area.Span) $r0;
+        c = 0;
+
+     label1:
+        $i0 = virtualinvoke span.<org.apache.fop.area.Span: int getColumnCount()>();
+        if c >= $i0 goto label3;
+
+        flow = virtualinvoke span.<org.apache.fop.area.Span: org.apache.fop.area.NormalFlow getNormalFlow(int)>(c);
+        if flow == null goto label2;
+
+        this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition> = saveSpanBPPos;
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderFlow(org.apache.fop.area.NormalFlow)>(flow);
+        $i0 = this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition>;
+        $i1 = virtualinvoke flow.<org.apache.fop.area.NormalFlow: int getIPD()>();
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition> = $i0;
+        $i0 = this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition>;
+        $i1 = virtualinvoke mr.<org.apache.fop.area.MainReference: int getColumnGap()>();
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition> = $i0;
+
+     label2:
+        c = c + 1;
+        goto label1;
+
+     label3:
+        this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition> = saveIPPos;
+        $i1 = virtualinvoke span.<org.apache.fop.area.Span: int getHeight()>();
+        $i0 = saveSpanBPPos + $i1;
+        this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition> = $i0;
+        saveSpanBPPos = this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition>;
+        count = count + 1;
+        goto label0;
+
+     label4:
+        this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition> = saveBPPos;
+        return;
+    }
+
+    protected void renderFlow(org.apache.fop.area.NormalFlow)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.NormalFlow flow;
+        java.util.List blocks;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        flow := @parameter0: org.apache.fop.area.NormalFlow;
+        blocks = virtualinvoke flow.<org.apache.fop.area.NormalFlow: java.util.List getChildAreas()>();
+        if blocks == null goto label0;
+
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderBlocks(org.apache.fop.area.Block,java.util.List)>(null, blocks);
+
+     label0:
+        return;
+    }
+
+    protected void handleBlockTraits(org.apache.fop.area.Block)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.Block block;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        block := @parameter0: org.apache.fop.area.Block;
+        return;
+    }
+
+    protected void renderBlockViewport(org.apache.fop.area.BlockViewport, java.util.List)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.BlockViewport bv;
+        java.util.List children;
+        int saveIP, saveBP, $i0, $i1, $i2, $i3, $i4;
+        java.awt.Rectangle clippingRect, $r0;
+        org.apache.fop.area.CTM ctm;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        bv := @parameter0: org.apache.fop.area.BlockViewport;
+        children := @parameter1: java.util.List;
+        $i0 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getPositioning()>();
+        if $i0 != 2 goto label1;
+
+        saveIP = this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition>;
+        saveBP = this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition>;
+        clippingRect = null;
+        $z0 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: boolean getClip()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = new java.awt.Rectangle;
+        $i1 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getIPD()>();
+        $i2 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getBPD()>();
+        specialinvoke $r0.<java.awt.Rectangle: void <init>(int,int,int,int)>(saveIP, saveBP, $i1, $i2);
+        clippingRect = $r0;
+
+     label0:
+        ctm = virtualinvoke bv.<org.apache.fop.area.BlockViewport: org.apache.fop.area.CTM getCTM()>();
+        this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition> = 0;
+        this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition> = 0;
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void startVParea(org.apache.fop.area.CTM,java.awt.geom.Rectangle2D)>(ctm, clippingRect);
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void handleBlockTraits(org.apache.fop.area.Block)>(bv);
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderBlocks(org.apache.fop.area.Block,java.util.List)>(bv, children);
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void endVParea()>();
+        this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition> = saveIP;
+        this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition> = saveBP;
+        goto label2;
+
+     label1:
+        saveIP = this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition>;
+        saveBP = this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition>;
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void handleBlockTraits(org.apache.fop.area.Block)>(bv);
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderBlocks(org.apache.fop.area.Block,java.util.List)>(bv, children);
+        this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition> = saveIP;
+        $i3 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getAllocBPD()>();
+        $i4 = saveBP + $i3;
+        this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition> = $i4;
+
+     label2:
+        return;
+    }
+
+    protected abstract void renderReferenceArea(org.apache.fop.area.Block);
+
+    protected void renderBlocks(org.apache.fop.area.Block, java.util.List)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.Block parent, $r4;
+        java.util.List blocks;
+        int saveIP, saveBP, contBP, contIP, count, $i0, $i1;
+        java.lang.Integer $r0;
+        java.lang.Object obj, $r2;
+        org.apache.fop.area.LineArea line;
+        java.lang.Boolean $r1;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        parent := @parameter0: org.apache.fop.area.Block;
+        blocks := @parameter1: java.util.List;
+        saveIP = this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition>;
+        saveBP = this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition>;
+        if parent == null goto label0;
+
+        $r1 = <java.lang.Boolean: java.lang.Boolean TRUE>;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer IS_VIEWPORT_AREA>;
+        $r2 = virtualinvoke parent.<org.apache.fop.area.Block: java.lang.Object getTrait(java.lang.Object)>($r0);
+        $z0 = virtualinvoke $r1.<java.lang.Boolean: boolean equals(java.lang.Object)>($r2);
+        if $z0 != 0 goto label0;
+
+        $i0 = this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition>;
+        $i1 = virtualinvoke parent.<org.apache.fop.area.Block: int getBorderAndPaddingWidthBefore()>();
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition> = $i0;
+
+     label0:
+        contBP = this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition>;
+        contIP = this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition>;
+        $i0 = this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition>;
+        this.<org.apache.fop.render.AbstractRenderer: int containingBPPosition> = $i0;
+        $i0 = this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition>;
+        this.<org.apache.fop.render.AbstractRenderer: int containingIPPosition> = $i0;
+        count = 0;
+
+     label1:
+        $i0 = interfaceinvoke blocks.<java.util.List: int size()>();
+        if count >= $i0 goto label4;
+
+        obj = interfaceinvoke blocks.<java.util.List: java.lang.Object get(int)>(count);
+        $z0 = obj instanceof org.apache.fop.area.Block;
+        if $z0 == 0 goto label2;
+
+        this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition> = contIP;
+        this.<org.apache.fop.render.AbstractRenderer: int containingBPPosition> = contBP;
+        this.<org.apache.fop.render.AbstractRenderer: int containingIPPosition> = contIP;
+        $r4 = (org.apache.fop.area.Block) obj;
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderBlock(org.apache.fop.area.Block)>($r4);
+        this.<org.apache.fop.render.AbstractRenderer: int containingBPPosition> = contBP;
+        this.<org.apache.fop.render.AbstractRenderer: int containingIPPosition> = contIP;
+        goto label3;
+
+     label2:
+        line = (org.apache.fop.area.LineArea) obj;
+        $i1 = virtualinvoke parent.<org.apache.fop.area.Block: int getStartIndent()>();
+        $i0 = contIP + $i1;
+        $i1 = virtualinvoke line.<org.apache.fop.area.LineArea: int getStartIndent()>();
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition> = $i0;
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderLineArea(org.apache.fop.area.LineArea)>(line);
+        $i0 = this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition>;
+        $i1 = virtualinvoke line.<org.apache.fop.area.LineArea: int getAllocBPD()>();
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition> = $i0;
+
+     label3:
+        this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition> = saveIP;
+        count = count + 1;
+        goto label1;
+
+     label4:
+        return;
+    }
+
+    protected void renderBlock(org.apache.fop.area.Block)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.Block block;
+        java.util.List children;
+        int saveIP, saveBP, $i0, $i1, $i2;
+        boolean $z0;
+        org.apache.fop.area.BlockViewport $r0;
+        java.lang.Boolean $r2;
+        java.lang.Integer $r3;
+        java.lang.Object $r4;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        block := @parameter0: org.apache.fop.area.Block;
+        children = virtualinvoke block.<org.apache.fop.area.Block: java.util.List getChildAreas()>();
+        $z0 = block instanceof org.apache.fop.area.BlockViewport;
+        if $z0 == 0 goto label1;
+
+        if children == null goto label0;
+
+        $r0 = (org.apache.fop.area.BlockViewport) block;
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderBlockViewport(org.apache.fop.area.BlockViewport,java.util.List)>($r0, children);
+        goto label5;
+
+     label0:
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void handleBlockTraits(org.apache.fop.area.Block)>(block);
+        $i0 = this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition>;
+        $i1 = virtualinvoke block.<org.apache.fop.area.Block: int getAllocBPD()>();
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition> = $i0;
+        goto label5;
+
+     label1:
+        $r2 = <java.lang.Boolean: java.lang.Boolean TRUE>;
+        $r3 = <org.apache.fop.area.Trait: java.lang.Integer IS_REFERENCE_AREA>;
+        $r4 = virtualinvoke block.<org.apache.fop.area.Block: java.lang.Object getTrait(java.lang.Object)>($r3);
+        $z0 = virtualinvoke $r2.<java.lang.Boolean: boolean equals(java.lang.Object)>($r4);
+        if $z0 == 0 goto label2;
+
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderReferenceArea(org.apache.fop.area.Block)>(block);
+        goto label5;
+
+     label2:
+        saveIP = this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition>;
+        saveBP = this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition>;
+        $i0 = this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition>;
+        $i1 = virtualinvoke block.<org.apache.fop.area.Block: int getXOffset()>();
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition> = $i0;
+        $i0 = this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition>;
+        $i1 = virtualinvoke block.<org.apache.fop.area.Block: int getYOffset()>();
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition> = $i0;
+        $i0 = this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition>;
+        $i1 = virtualinvoke block.<org.apache.fop.area.Block: int getSpaceBefore()>();
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition> = $i0;
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void handleBlockTraits(org.apache.fop.area.Block)>(block);
+        if children == null goto label3;
+
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderBlocks(org.apache.fop.area.Block,java.util.List)>(block, children);
+
+     label3:
+        $i2 = virtualinvoke block.<org.apache.fop.area.Block: int getPositioning()>();
+        if $i2 != 2 goto label4;
+
+        this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition> = saveBP;
+        goto label5;
+
+     label4:
+        this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition> = saveIP;
+        $i1 = virtualinvoke block.<org.apache.fop.area.Block: int getAllocBPD()>();
+        $i0 = saveBP + $i1;
+        this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition> = $i0;
+
+     label5:
+        return;
+    }
+
+    protected void renderLineArea(org.apache.fop.area.LineArea)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.LineArea line;
+        java.util.List children;
+        int saveBP, count, $i0, $i1;
+        org.apache.fop.area.inline.InlineArea inline;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        line := @parameter0: org.apache.fop.area.LineArea;
+        children = virtualinvoke line.<org.apache.fop.area.LineArea: java.util.List getInlineAreas()>();
+        saveBP = this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition>;
+        $i0 = this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition>;
+        $i1 = virtualinvoke line.<org.apache.fop.area.LineArea: int getSpaceBefore()>();
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition> = $i0;
+        count = 0;
+
+     label0:
+        $i0 = interfaceinvoke children.<java.util.List: int size()>();
+        if count >= $i0 goto label1;
+
+        $r1 = interfaceinvoke children.<java.util.List: java.lang.Object get(int)>(count);
+        inline = (org.apache.fop.area.inline.InlineArea) $r1;
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderInlineArea(org.apache.fop.area.inline.InlineArea)>(inline);
+        count = count + 1;
+        goto label0;
+
+     label1:
+        this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition> = saveBP;
+        return;
+    }
+
+    protected void renderInlineArea(org.apache.fop.area.inline.InlineArea)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.inline.InlineArea inlineArea;
+        boolean $z0;
+        org.apache.fop.area.inline.TextArea $r0;
+        org.apache.fop.area.inline.WordArea $r1;
+        org.apache.fop.area.inline.SpaceArea $r2;
+        org.apache.fop.area.inline.InlineParent $r3;
+        org.apache.fop.area.inline.InlineBlockParent $r4;
+        org.apache.fop.area.inline.Space $r5;
+        org.apache.fop.area.inline.Viewport $r6;
+        org.apache.fop.area.inline.Leader $r7;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        inlineArea := @parameter0: org.apache.fop.area.inline.InlineArea;
+        $z0 = inlineArea instanceof org.apache.fop.area.inline.TextArea;
+        if $z0 == 0 goto label0;
+
+        $r0 = (org.apache.fop.area.inline.TextArea) inlineArea;
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderText(org.apache.fop.area.inline.TextArea)>($r0);
+        goto label7;
+
+     label0:
+        $z0 = inlineArea instanceof org.apache.fop.area.inline.WordArea;
+        if $z0 == 0 goto label1;
+
+        $r1 = (org.apache.fop.area.inline.WordArea) inlineArea;
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderWord(org.apache.fop.area.inline.WordArea)>($r1);
+        goto label7;
+
+     label1:
+        $z0 = inlineArea instanceof org.apache.fop.area.inline.SpaceArea;
+        if $z0 == 0 goto label2;
+
+        $r2 = (org.apache.fop.area.inline.SpaceArea) inlineArea;
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderSpace(org.apache.fop.area.inline.SpaceArea)>($r2);
+        goto label7;
+
+     label2:
+        $z0 = inlineArea instanceof org.apache.fop.area.inline.InlineParent;
+        if $z0 == 0 goto label3;
+
+        $r3 = (org.apache.fop.area.inline.InlineParent) inlineArea;
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderInlineParent(org.apache.fop.area.inline.InlineParent)>($r3);
+        goto label7;
+
+     label3:
+        $z0 = inlineArea instanceof org.apache.fop.area.inline.InlineBlockParent;
+        if $z0 == 0 goto label4;
+
+        $r4 = (org.apache.fop.area.inline.InlineBlockParent) inlineArea;
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderInlineBlockParent(org.apache.fop.area.inline.InlineBlockParent)>($r4);
+        goto label7;
+
+     label4:
+        $z0 = inlineArea instanceof org.apache.fop.area.inline.Space;
+        if $z0 == 0 goto label5;
+
+        $r5 = (org.apache.fop.area.inline.Space) inlineArea;
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderInlineSpace(org.apache.fop.area.inline.Space)>($r5);
+        goto label7;
+
+     label5:
+        $z0 = inlineArea instanceof org.apache.fop.area.inline.Viewport;
+        if $z0 == 0 goto label6;
+
+        $r6 = (org.apache.fop.area.inline.Viewport) inlineArea;
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderViewport(org.apache.fop.area.inline.Viewport)>($r6);
+        goto label7;
+
+     label6:
+        $z0 = inlineArea instanceof org.apache.fop.area.inline.Leader;
+        if $z0 == 0 goto label7;
+
+        $r7 = (org.apache.fop.area.inline.Leader) inlineArea;
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderLeader(org.apache.fop.area.inline.Leader)>($r7);
+
+     label7:
+        return;
+    }
+
+    protected void renderCharacter(org.apache.fop.area.inline.Character)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.inline.Character ch;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        ch := @parameter0: org.apache.fop.area.inline.Character;
+        $i0 = this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition>;
+        $i1 = virtualinvoke ch.<org.apache.fop.area.inline.Character: int getAllocIPD()>();
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition> = $i0;
+        return;
+    }
+
+    protected abstract void renderInlineAreaBackAndBorders(org.apache.fop.area.inline.InlineArea);
+
+    protected void renderInlineSpace(org.apache.fop.area.inline.Space)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.inline.Space space;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        space := @parameter0: org.apache.fop.area.inline.Space;
+        virtualinvoke space.<org.apache.fop.area.inline.Space: void setBPD(int)>(0);
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderInlineAreaBackAndBorders(org.apache.fop.area.inline.InlineArea)>(space);
+        $i0 = this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition>;
+        $i1 = virtualinvoke space.<org.apache.fop.area.inline.Space: int getAllocIPD()>();
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition> = $i0;
+        return;
+    }
+
+    protected void renderLeader(org.apache.fop.area.inline.Leader)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.inline.Leader area;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        area := @parameter0: org.apache.fop.area.inline.Leader;
+        $i0 = this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition>;
+        $i1 = virtualinvoke area.<org.apache.fop.area.inline.Leader: int getAllocIPD()>();
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition> = $i0;
+        return;
+    }
+
+    protected void renderText(org.apache.fop.area.inline.TextArea)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.inline.TextArea text;
+        int saveIP, saveBP, $i0, $i1;
+        java.util.Iterator iter;
+        java.util.List $r0;
+        boolean $z0;
+        java.lang.Object $r1;
+        org.apache.fop.area.inline.InlineArea $r2;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        text := @parameter0: org.apache.fop.area.inline.TextArea;
+        saveIP = this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition>;
+        saveBP = this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition>;
+        $r0 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: java.util.List getChildAreas()>();
+        iter = interfaceinvoke $r0.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r1 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        $r2 = (org.apache.fop.area.inline.InlineArea) $r1;
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderInlineArea(org.apache.fop.area.inline.InlineArea)>($r2);
+        goto label0;
+
+     label1:
+        $i0 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getAllocIPD()>();
+        $i1 = saveIP + $i0;
+        this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition> = $i1;
+        return;
+    }
+
+    protected void renderWord(org.apache.fop.area.inline.WordArea)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.inline.WordArea word;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        word := @parameter0: org.apache.fop.area.inline.WordArea;
+        $i0 = this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition>;
+        $i1 = virtualinvoke word.<org.apache.fop.area.inline.WordArea: int getAllocIPD()>();
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition> = $i0;
+        return;
+    }
+
+    protected void renderSpace(org.apache.fop.area.inline.SpaceArea)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.inline.SpaceArea space;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        space := @parameter0: org.apache.fop.area.inline.SpaceArea;
+        $i0 = this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition>;
+        $i1 = virtualinvoke space.<org.apache.fop.area.inline.SpaceArea: int getAllocIPD()>();
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition> = $i0;
+        return;
+    }
+
+    protected void renderInlineParent(org.apache.fop.area.inline.InlineParent)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.inline.InlineParent ip;
+        int saveIP, saveBP, $i0, $i1;
+        java.util.Iterator iter;
+        java.util.List $r1;
+        boolean $z0;
+        java.lang.Object $r2;
+        org.apache.fop.area.inline.InlineArea $r3;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        ip := @parameter0: org.apache.fop.area.inline.InlineParent;
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderInlineAreaBackAndBorders(org.apache.fop.area.inline.InlineArea)>(ip);
+        saveIP = this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition>;
+        saveBP = this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition>;
+        $i0 = this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition>;
+        $i1 = virtualinvoke ip.<org.apache.fop.area.inline.InlineParent: int getBorderAndPaddingWidthStart()>();
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition> = $i0;
+        $i0 = this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition>;
+        $i1 = virtualinvoke ip.<org.apache.fop.area.inline.InlineParent: int getOffset()>();
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition> = $i0;
+        $r1 = virtualinvoke ip.<org.apache.fop.area.inline.InlineParent: java.util.List getChildAreas()>();
+        iter = interfaceinvoke $r1.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r2 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        $r3 = (org.apache.fop.area.inline.InlineArea) $r2;
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderInlineArea(org.apache.fop.area.inline.InlineArea)>($r3);
+        goto label0;
+
+     label1:
+        $i1 = virtualinvoke ip.<org.apache.fop.area.inline.InlineParent: int getAllocIPD()>();
+        $i0 = saveIP + $i1;
+        this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition> = $i0;
+        this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition> = saveBP;
+        return;
+    }
+
+    protected void renderInlineBlockParent(org.apache.fop.area.inline.InlineBlockParent)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.inline.InlineBlockParent ibp;
+        int saveBP, $i0, $i1;
+        org.apache.fop.area.Block $r1;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        ibp := @parameter0: org.apache.fop.area.inline.InlineBlockParent;
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderInlineAreaBackAndBorders(org.apache.fop.area.inline.InlineArea)>(ibp);
+        $i0 = this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition>;
+        $i1 = virtualinvoke ibp.<org.apache.fop.area.inline.InlineBlockParent: int getBorderAndPaddingWidthStart()>();
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition> = $i0;
+        saveBP = this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition>;
+        $i0 = this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition>;
+        $i1 = virtualinvoke ibp.<org.apache.fop.area.inline.InlineBlockParent: int getOffset()>();
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition> = $i0;
+        $r1 = virtualinvoke ibp.<org.apache.fop.area.inline.InlineBlockParent: org.apache.fop.area.Block getChildArea()>();
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderBlock(org.apache.fop.area.Block)>($r1);
+        this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition> = saveBP;
+        return;
+    }
+
+    protected void renderViewport(org.apache.fop.area.inline.Viewport)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.inline.Viewport viewport;
+        org.apache.fop.area.Area content;
+        int saveBP, $i0, $i1;
+        java.awt.geom.Rectangle2D contpos;
+        boolean $z0;
+        org.apache.fop.area.inline.Image $r1;
+        org.apache.fop.area.inline.Container $r2;
+        org.apache.fop.area.inline.ForeignObject $r3;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        viewport := @parameter0: org.apache.fop.area.inline.Viewport;
+        content = virtualinvoke viewport.<org.apache.fop.area.inline.Viewport: org.apache.fop.area.Area getContent()>();
+        saveBP = this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition>;
+        $i0 = this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition>;
+        $i1 = virtualinvoke viewport.<org.apache.fop.area.inline.Viewport: int getOffset()>();
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition> = $i0;
+        contpos = virtualinvoke viewport.<org.apache.fop.area.inline.Viewport: java.awt.geom.Rectangle2D getContentPosition()>();
+        $z0 = content instanceof org.apache.fop.area.inline.Image;
+        if $z0 == 0 goto label0;
+
+        $r1 = (org.apache.fop.area.inline.Image) content;
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderImage(org.apache.fop.area.inline.Image,java.awt.geom.Rectangle2D)>($r1, contpos);
+        goto label2;
+
+     label0:
+        $z0 = content instanceof org.apache.fop.area.inline.Container;
+        if $z0 == 0 goto label1;
+
+        $r2 = (org.apache.fop.area.inline.Container) content;
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderContainer(org.apache.fop.area.inline.Container)>($r2);
+        goto label2;
+
+     label1:
+        $z0 = content instanceof org.apache.fop.area.inline.ForeignObject;
+        if $z0 == 0 goto label2;
+
+        $r3 = (org.apache.fop.area.inline.ForeignObject) content;
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderForeignObject(org.apache.fop.area.inline.ForeignObject,java.awt.geom.Rectangle2D)>($r3, contpos);
+
+     label2:
+        $i0 = this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition>;
+        $i1 = virtualinvoke viewport.<org.apache.fop.area.inline.Viewport: int getAllocIPD()>();
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition> = $i0;
+        this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition> = saveBP;
+        return;
+    }
+
+    public void renderImage(org.apache.fop.area.inline.Image, java.awt.geom.Rectangle2D)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.inline.Image image;
+        java.awt.geom.Rectangle2D pos;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        image := @parameter0: org.apache.fop.area.inline.Image;
+        pos := @parameter1: java.awt.geom.Rectangle2D;
+        return;
+    }
+
+    protected void renderContainer(org.apache.fop.area.inline.Container)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.inline.Container cont;
+        int saveIP, saveBP;
+        java.util.List blocks;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        cont := @parameter0: org.apache.fop.area.inline.Container;
+        saveIP = this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition>;
+        saveBP = this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition>;
+        blocks = virtualinvoke cont.<org.apache.fop.area.inline.Container: java.util.List getBlocks()>();
+        virtualinvoke this.<org.apache.fop.render.AbstractRenderer: void renderBlocks(org.apache.fop.area.Block,java.util.List)>(null, blocks);
+        this.<org.apache.fop.render.AbstractRenderer: int currentIPPosition> = saveIP;
+        this.<org.apache.fop.render.AbstractRenderer: int currentBPPosition> = saveBP;
+        return;
+    }
+
+    public void renderForeignObject(org.apache.fop.area.inline.ForeignObject, java.awt.geom.Rectangle2D)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.area.inline.ForeignObject fo;
+        java.awt.geom.Rectangle2D pos;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        fo := @parameter0: org.apache.fop.area.inline.ForeignObject;
+        pos := @parameter1: java.awt.geom.Rectangle2D;
+        return;
+    }
+
+    public void renderXML(org.apache.fop.render.RendererContext, org.w3c.dom.Document, java.lang.String)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        org.apache.fop.render.RendererContext ctx;
+        org.w3c.dom.Document doc;
+        java.lang.String namespace, $r9;
+        org.apache.fop.render.XMLHandler handler;
+        org.apache.fop.render.XMLHandlerConfigurator configurator, $r2;
+        java.lang.Throwable t, $r4;
+        org.apache.fop.apps.FOUserAgent $r0, $r3;
+        org.apache.fop.render.XMLHandlerRegistry $r1;
+        org.apache.commons.logging.Log $r5;
+        java.util.Set $r6;
+        java.util.HashSet $r7;
+        boolean $z0;
+        java.lang.StringBuffer $r8;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        ctx := @parameter0: org.apache.fop.render.RendererContext;
+        doc := @parameter1: org.w3c.dom.Document;
+        namespace := @parameter2: java.lang.String;
+        $r0 = this.<org.apache.fop.render.AbstractRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.apps.FOUserAgent: org.apache.fop.render.XMLHandlerRegistry getXMLHandlerRegistry()>();
+        handler = virtualinvoke $r1.<org.apache.fop.render.XMLHandlerRegistry: org.apache.fop.render.XMLHandler getXMLHandler(org.apache.fop.render.Renderer,java.lang.String)>(this, namespace);
+        if handler == null goto label3;
+
+     label0:
+        $r2 = new org.apache.fop.render.XMLHandlerConfigurator;
+        $r3 = this.<org.apache.fop.render.AbstractRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        specialinvoke $r2.<org.apache.fop.render.XMLHandlerConfigurator: void <init>(org.apache.fop.apps.FOUserAgent)>($r3);
+        configurator = $r2;
+        virtualinvoke configurator.<org.apache.fop.render.XMLHandlerConfigurator: void configure(org.apache.fop.render.RendererContext,java.lang.String)>(ctx, namespace);
+        interfaceinvoke handler.<org.apache.fop.render.XMLHandler: void handleXML(org.apache.fop.render.RendererContext,org.w3c.dom.Document,java.lang.String)>(ctx, doc, namespace);
+
+     label1:
+        goto label5;
+
+     label2:
+        $r4 := @caughtexception;
+        t = $r4;
+        $r5 = <org.apache.fop.render.AbstractRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("Some XML content will be ignored. Could not render XML", t);
+        goto label5;
+
+     label3:
+        $r6 = this.<org.apache.fop.render.AbstractRenderer: java.util.Set warnedXMLHandlers>;
+        if $r6 != null goto label4;
+
+        $r7 = new java.util.HashSet;
+        specialinvoke $r7.<java.util.HashSet: void <init>()>();
+        this.<org.apache.fop.render.AbstractRenderer: java.util.Set warnedXMLHandlers> = $r7;
+
+     label4:
+        $r6 = this.<org.apache.fop.render.AbstractRenderer: java.util.Set warnedXMLHandlers>;
+        $z0 = interfaceinvoke $r6.<java.util.Set: boolean contains(java.lang.Object)>(namespace);
+        if $z0 != 0 goto label5;
+
+        $r6 = this.<org.apache.fop.render.AbstractRenderer: java.util.Set warnedXMLHandlers>;
+        interfaceinvoke $r6.<java.util.Set: boolean add(java.lang.Object)>(namespace);
+        $r5 = <org.apache.fop.render.AbstractRenderer: org.apache.commons.logging.Log log>;
+        $r8 = new java.lang.StringBuffer;
+        specialinvoke $r8.<java.lang.StringBuffer: void <init>()>();
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Some XML content will be ignored. No handler defined for XML: ");
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(namespace);
+        $r9 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r9);
+
+     label5:
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+    }
+
+    public java.lang.String getMimeType()
+    {
+        org.apache.fop.render.AbstractRenderer this;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        return null;
+    }
+
+    protected java.awt.geom.AffineTransform mptToPt(java.awt.geom.AffineTransform)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        java.awt.geom.AffineTransform at, $r0;
+        double[] matrix;
+        double $d0;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        at := @parameter0: java.awt.geom.AffineTransform;
+        matrix = newarray (double)[6];
+        virtualinvoke at.<java.awt.geom.AffineTransform: void getMatrix(double[])>(matrix);
+        $d0 = matrix[4];
+        $d0 = $d0 / 1000.0;
+        matrix[4] = $d0;
+        $d0 = matrix[5];
+        $d0 = $d0 / 1000.0;
+        matrix[5] = $d0;
+        $r0 = new java.awt.geom.AffineTransform;
+        specialinvoke $r0.<java.awt.geom.AffineTransform: void <init>(double[])>(matrix);
+        return $r0;
+    }
+
+    protected java.awt.geom.AffineTransform ptToMpt(java.awt.geom.AffineTransform)
+    {
+        org.apache.fop.render.AbstractRenderer this;
+        java.awt.geom.AffineTransform at, $r0;
+        double[] matrix;
+        double $d0;
+
+        this := @this: org.apache.fop.render.AbstractRenderer;
+        at := @parameter0: java.awt.geom.AffineTransform;
+        matrix = newarray (double)[6];
+        virtualinvoke at.<java.awt.geom.AffineTransform: void getMatrix(double[])>(matrix);
+        $d0 = matrix[4];
+        $d0 = $d0 * 1000.0;
+        matrix[4] = $d0;
+        $d0 = matrix[5];
+        $d0 = $d0 * 1000.0;
+        matrix[5] = $d0;
+        $r0 = new java.awt.geom.AffineTransform;
+        specialinvoke $r0.<java.awt.geom.AffineTransform: void <init>(double[])>(matrix);
+        return $r0;
+    }
+
+    static void <clinit>()
+    {
+        org.apache.commons.logging.Log $r0;
+
+        $r0 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.String)>("org.apache.fop.render");
+        <org.apache.fop.render.AbstractRenderer: org.apache.commons.logging.Log log> = $r0;
+        return;
+    }
+}

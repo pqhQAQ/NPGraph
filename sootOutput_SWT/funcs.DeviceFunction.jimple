@@ -1,0 +1,376 @@
+public class funcs.DeviceFunction extends java.lang.Object
+{
+    private java.util.ArrayList AllDevices;
+    public static java.util.ArrayList androidDevices;
+    public static java.util.ArrayList iosDevices;
+    public static main.MainUI mainui;
+    public static java.lang.String ADB_PATH;
+    java.lang.String rootPath;
+    private funcs.DeviceFunction$UpdateDevices updateThread;
+    private static boolean isInit;
+    private static funcs.DeviceFunction df;
+
+    static void <clinit>()
+    {
+        java.util.ArrayList $r0;
+
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        <funcs.DeviceFunction: java.util.ArrayList androidDevices> = $r0;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        <funcs.DeviceFunction: java.util.ArrayList iosDevices> = $r0;
+        <funcs.DeviceFunction: boolean isInit> = 0;
+        return;
+    }
+
+    public static void main(java.lang.String[])
+    {
+        java.lang.String[] args;
+        funcs.DeviceFunction $r0, df;
+
+        args := @parameter0: java.lang.String[];
+        $r0 = new funcs.DeviceFunction;
+        specialinvoke $r0.<funcs.DeviceFunction: void <init>()>();
+        df = $r0;
+        return;
+    }
+
+    private void <init>()
+    {
+        funcs.DeviceFunction this;
+        java.util.ArrayList $r0;
+        java.io.IOException e, $r1;
+
+        this := @this: funcs.DeviceFunction;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<funcs.DeviceFunction: java.util.ArrayList AllDevices> = $r0;
+
+     label0:
+        virtualinvoke this.<funcs.DeviceFunction: void init()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r1 := @caughtexception;
+        e = $r1;
+        virtualinvoke e.<java.io.IOException: void printStackTrace()>();
+
+     label3:
+        return;
+
+        catch java.io.IOException from label0 to label1 with label2;
+    }
+
+    public static funcs.DeviceFunction getDeviceFunction()
+    {
+        boolean $z0;
+        funcs.DeviceFunction $r0;
+
+        $z0 = <funcs.DeviceFunction: boolean isInit>;
+        if $z0 != 0 goto label0;
+
+        $r0 = new funcs.DeviceFunction;
+        specialinvoke $r0.<funcs.DeviceFunction: void <init>()>();
+        return $r0;
+
+     label0:
+        $r0 = <funcs.DeviceFunction: funcs.DeviceFunction df>;
+        return $r0;
+    }
+
+    public void init() throws java.io.IOException
+    {
+        funcs.DeviceFunction this;
+        java.io.File $r0;
+        java.lang.Exception e, $r2, $r7;
+        null_type hv;
+        java.lang.String $r1, $r4, $r5;
+        java.lang.StringBuilder $r3;
+        boolean $z0, $z1;
+        int $i0;
+        com.android.hierarchyviewerlib.HierarchyViewerDirector hv;
+        java.io.PrintStream $r6;
+
+        this := @this: funcs.DeviceFunction;
+
+     label0:
+        $r0 = new java.io.File;
+        specialinvoke $r0.<java.io.File: void <init>(java.lang.String)>("");
+        $r1 = virtualinvoke $r0.<java.io.File: java.lang.String getAbsolutePath()>();
+        this.<funcs.DeviceFunction: java.lang.String rootPath> = $r1;
+
+     label1:
+        goto label3;
+
+     label2:
+        $r2 := @caughtexception;
+        e = $r2;
+        virtualinvoke e.<java.lang.Exception: void printStackTrace()>();
+
+     label3:
+        $r3 = new java.lang.StringBuilder;
+        $r4 = this.<funcs.DeviceFunction: java.lang.String rootPath>;
+        $r4 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r4);
+        specialinvoke $r3.<java.lang.StringBuilder: void <init>(java.lang.String)>($r4);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("/tools/platform-tools");
+        $r5 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.String toString()>();
+        <funcs.DeviceFunction: java.lang.String ADB_PATH> = $r5;
+        $r5 = this.<funcs.DeviceFunction: java.lang.String rootPath>;
+        if $r5 == null goto label4;
+
+        $z0 = 1;
+        goto label5;
+
+     label4:
+        $z0 = 0;
+
+     label5:
+        $r1 = this.<funcs.DeviceFunction: java.lang.String rootPath>;
+        $i0 = virtualinvoke $r1.<java.lang.String: int length()>();
+        if $i0 == 0 goto label6;
+
+        $z1 = 1;
+        goto label7;
+
+     label6:
+        $z1 = 0;
+
+     label7:
+        $z0 = $z0 | $z1;
+        if $z0 == 0 goto label8;
+
+        $r1 = <funcs.DeviceFunction: java.lang.String ADB_PATH>;
+        staticinvoke <java.lang.System: java.lang.String setProperty(java.lang.String,java.lang.String)>("com.android.hierarchyviewer.bindir", $r1);
+        goto label9;
+
+     label8:
+        return;
+
+     label9:
+        hv = null;
+        staticinvoke <com.android.hierarchyviewerlib.device.DeviceBridge: void terminate()>();
+        hv = staticinvoke <com.android.hierarchyviewer.HierarchyViewerApplicationDirector: com.android.hierarchyviewerlib.HierarchyViewerDirector createDirector()>();
+        virtualinvoke hv.<com.android.hierarchyviewerlib.HierarchyViewerDirector: void initDebugBridge()>();
+        virtualinvoke hv.<com.android.hierarchyviewerlib.HierarchyViewerDirector: void populateDeviceSelectionModel()>();
+        $r6 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r6.<java.io.PrintStream: void println(java.lang.String)>("ADB\u521d\u59cb\u5316\u7ed3\u675f");
+
+     label10:
+        staticinvoke <java.lang.Thread: void sleep(long)>(1000L);
+
+     label11:
+        goto label13;
+
+     label12:
+        $r7 := @caughtexception;
+        e = $r7;
+        virtualinvoke e.<java.lang.Exception: void printStackTrace()>();
+
+     label13:
+        <funcs.DeviceFunction: funcs.DeviceFunction df> = this;
+        <funcs.DeviceFunction: boolean isInit> = 1;
+        return;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+        catch java.lang.Exception from label10 to label11 with label12;
+    }
+
+    public void stop()
+    {
+        funcs.DeviceFunction this;
+        funcs.DeviceFunction$UpdateDevices $r0;
+
+        this := @this: funcs.DeviceFunction;
+        $r0 = this.<funcs.DeviceFunction: funcs.DeviceFunction$UpdateDevices updateThread>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<funcs.DeviceFunction: funcs.DeviceFunction$UpdateDevices updateThread>;
+        $r0.<funcs.DeviceFunction$UpdateDevices: boolean stop> = 1;
+
+     label0:
+        return;
+    }
+
+    public void run(main.MainUI)
+    {
+        funcs.DeviceFunction this;
+        main.MainUI ui;
+        funcs.DeviceFunction$UpdateDevices $r0, $r1;
+
+        this := @this: funcs.DeviceFunction;
+        ui := @parameter0: main.MainUI;
+        <funcs.DeviceFunction: main.MainUI mainui> = ui;
+        $r0 = new funcs.DeviceFunction$UpdateDevices;
+        specialinvoke $r0.<funcs.DeviceFunction$UpdateDevices: void <init>(funcs.DeviceFunction)>(this);
+        this.<funcs.DeviceFunction: funcs.DeviceFunction$UpdateDevices updateThread> = $r0;
+        $r1 = this.<funcs.DeviceFunction: funcs.DeviceFunction$UpdateDevices updateThread>;
+        virtualinvoke $r1.<funcs.DeviceFunction$UpdateDevices: void start()>();
+        return;
+    }
+
+    public int getIndex(java.lang.String)
+    {
+        funcs.DeviceFunction this;
+        java.lang.String serialNumber, $r2;
+        int i, $i0;
+        data.MyDevice d;
+        java.util.ArrayList $r0, $r3;
+        java.lang.Object $r1;
+        boolean $z0;
+
+        this := @this: funcs.DeviceFunction;
+        serialNumber := @parameter0: java.lang.String;
+        i = 0;
+        goto label2;
+
+     label0:
+        $r0 = this.<funcs.DeviceFunction: java.util.ArrayList AllDevices>;
+        $r1 = virtualinvoke $r0.<java.util.ArrayList: java.lang.Object get(int)>(i);
+        d = (data.MyDevice) $r1;
+        $r2 = d.<data.MyDevice: java.lang.String SerialNumber>;
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>(serialNumber);
+        if $z0 == 0 goto label1;
+
+        return i;
+
+     label1:
+        i = i + 1;
+
+     label2:
+        $r3 = this.<funcs.DeviceFunction: java.util.ArrayList AllDevices>;
+        $i0 = virtualinvoke $r3.<java.util.ArrayList: int size()>();
+        if i < $i0 goto label0;
+
+        return -1;
+    }
+
+    public data.MyDevice getDevice(java.lang.String)
+    {
+        funcs.DeviceFunction this;
+        java.lang.String serialNumber, $r2;
+        java.util.Iterator l3;
+        data.MyDevice dev;
+        java.util.ArrayList $r0;
+        java.lang.Object $r1;
+        boolean $z0;
+
+        this := @this: funcs.DeviceFunction;
+        serialNumber := @parameter0: java.lang.String;
+        $r0 = this.<funcs.DeviceFunction: java.util.ArrayList AllDevices>;
+        l3 = virtualinvoke $r0.<java.util.ArrayList: java.util.Iterator iterator()>();
+        goto label1;
+
+     label0:
+        $r1 = interfaceinvoke l3.<java.util.Iterator: java.lang.Object next()>();
+        dev = (data.MyDevice) $r1;
+        $r2 = dev.<data.MyDevice: java.lang.String SerialNumber>;
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>(serialNumber);
+        if $z0 == 0 goto label1;
+
+        return dev;
+
+     label1:
+        $z0 = interfaceinvoke l3.<java.util.Iterator: boolean hasNext()>();
+        if $z0 != 0 goto label0;
+
+        return null;
+    }
+
+    public java.lang.String getDimension(com.android.ddmlib.IDevice)
+    {
+        funcs.DeviceFunction this;
+        com.android.ddmlib.IDevice d;
+        null_type rawImage;
+        java.lang.String Dimension, $r1;
+        int width, height;
+        com.android.ddmlib.TimeoutException e, $r2;
+        com.android.ddmlib.RawImage rawImage;
+        java.lang.StringBuilder $r0;
+        com.android.ddmlib.AdbCommandRejectedException $r3, e;
+        java.io.IOException $r4, e;
+
+        this := @this: funcs.DeviceFunction;
+        d := @parameter0: com.android.ddmlib.IDevice;
+        rawImage = null;
+        Dimension = "";
+
+     label0:
+        rawImage = interfaceinvoke d.<com.android.ddmlib.IDevice: com.android.ddmlib.RawImage getScreenshot()>();
+        width = rawImage.<com.android.ddmlib.RawImage: int width>;
+        height = rawImage.<com.android.ddmlib.RawImage: int height>;
+        $r0 = new java.lang.StringBuilder;
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>(width);
+        specialinvoke $r0.<java.lang.StringBuilder: void <init>(java.lang.String)>($r1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("*");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(height);
+        Dimension = virtualinvoke $r0.<java.lang.StringBuilder: java.lang.String toString()>();
+
+     label1:
+        goto label5;
+
+     label2:
+        $r2 := @caughtexception;
+        e = $r2;
+        virtualinvoke e.<com.android.ddmlib.TimeoutException: void printStackTrace()>();
+        goto label5;
+
+     label3:
+        $r3 := @caughtexception;
+        e = $r3;
+        virtualinvoke e.<com.android.ddmlib.AdbCommandRejectedException: void printStackTrace()>();
+        goto label5;
+
+     label4:
+        $r4 := @caughtexception;
+        e = $r4;
+        virtualinvoke e.<java.io.IOException: void printStackTrace()>();
+
+     label5:
+        return Dimension;
+
+        catch com.android.ddmlib.TimeoutException from label0 to label1 with label2;
+        catch com.android.ddmlib.AdbCommandRejectedException from label0 to label1 with label3;
+        catch java.io.IOException from label0 to label1 with label4;
+    }
+
+    public void updateTree()
+    {
+        funcs.DeviceFunction this;
+        org.eclipse.swt.widgets.Display $r0;
+        funcs.DeviceFunction$1 $r1;
+
+        this := @this: funcs.DeviceFunction;
+        $r0 = staticinvoke <org.eclipse.swt.widgets.Display: org.eclipse.swt.widgets.Display getDefault()>();
+        $r1 = new funcs.DeviceFunction$1;
+        specialinvoke $r1.<funcs.DeviceFunction$1: void <init>(funcs.DeviceFunction)>(this);
+        virtualinvoke $r0.<org.eclipse.swt.widgets.Display: void syncExec(java.lang.Runnable)>($r1);
+        return;
+    }
+
+    public java.util.ArrayList getAllDevices()
+    {
+        funcs.DeviceFunction this;
+        java.util.ArrayList $r0;
+        java.lang.Object $r1;
+
+        this := @this: funcs.DeviceFunction;
+        $r0 = this.<funcs.DeviceFunction: java.util.ArrayList AllDevices>;
+        $r1 = virtualinvoke $r0.<java.util.ArrayList: java.lang.Object clone()>();
+        $r0 = (java.util.ArrayList) $r1;
+        return $r0;
+    }
+
+    static java.util.ArrayList access$0(funcs.DeviceFunction)
+    {
+        funcs.DeviceFunction l0;
+        java.util.ArrayList $r0;
+
+        l0 := @parameter0: funcs.DeviceFunction;
+        $r0 = l0.<funcs.DeviceFunction: java.util.ArrayList AllDevices>;
+        return $r0;
+    }
+}

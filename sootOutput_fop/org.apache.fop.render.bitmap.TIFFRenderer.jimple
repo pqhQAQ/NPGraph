@@ -1,0 +1,213 @@
+public class org.apache.fop.render.bitmap.TIFFRenderer extends org.apache.fop.render.java2d.Java2DRenderer
+{
+    public static final java.lang.String MIME_TYPE;
+    public static final java.lang.String COMPRESSION_PACKBITS;
+    public static final java.lang.String COMPRESSION_CCITT_T6;
+    public static final java.lang.String COMPRESSION_CCITT_T4;
+    private org.apache.xmlgraphics.image.writer.ImageWriterParams writerParams;
+    private int bufferedImageType;
+    private java.io.OutputStream outputStream;
+
+    public java.lang.String getMimeType()
+    {
+        org.apache.fop.render.bitmap.TIFFRenderer this;
+
+        this := @this: org.apache.fop.render.bitmap.TIFFRenderer;
+        return "image/tiff";
+    }
+
+    public void <init>()
+    {
+        org.apache.fop.render.bitmap.TIFFRenderer this;
+        org.apache.xmlgraphics.image.writer.ImageWriterParams $r0, $r1;
+
+        this := @this: org.apache.fop.render.bitmap.TIFFRenderer;
+        specialinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void <init>()>();
+        this.<org.apache.fop.render.bitmap.TIFFRenderer: int bufferedImageType> = 2;
+        $r0 = new org.apache.xmlgraphics.image.writer.ImageWriterParams;
+        specialinvoke $r0.<org.apache.xmlgraphics.image.writer.ImageWriterParams: void <init>()>();
+        this.<org.apache.fop.render.bitmap.TIFFRenderer: org.apache.xmlgraphics.image.writer.ImageWriterParams writerParams> = $r0;
+        $r1 = this.<org.apache.fop.render.bitmap.TIFFRenderer: org.apache.xmlgraphics.image.writer.ImageWriterParams writerParams>;
+        virtualinvoke $r1.<org.apache.xmlgraphics.image.writer.ImageWriterParams: void setCompressionMethod(java.lang.String)>("PackBits");
+        return;
+    }
+
+    public void setUserAgent(org.apache.fop.apps.FOUserAgent)
+    {
+        org.apache.fop.render.bitmap.TIFFRenderer this;
+        org.apache.fop.apps.FOUserAgent foUserAgent, $r0;
+        int dpi;
+        float $f0;
+        org.apache.xmlgraphics.image.writer.ImageWriterParams $r1;
+
+        this := @this: org.apache.fop.render.bitmap.TIFFRenderer;
+        foUserAgent := @parameter0: org.apache.fop.apps.FOUserAgent;
+        specialinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void setUserAgent(org.apache.fop.apps.FOUserAgent)>(foUserAgent);
+        $r0 = this.<org.apache.fop.render.bitmap.TIFFRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        $f0 = virtualinvoke $r0.<org.apache.fop.apps.FOUserAgent: float getTargetResolution()>();
+        dpi = staticinvoke <java.lang.Math: int round(float)>($f0);
+        $r1 = this.<org.apache.fop.render.bitmap.TIFFRenderer: org.apache.xmlgraphics.image.writer.ImageWriterParams writerParams>;
+        virtualinvoke $r1.<org.apache.xmlgraphics.image.writer.ImageWriterParams: void setResolution(int)>(dpi);
+        return;
+    }
+
+    public void startRenderer(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.render.bitmap.TIFFRenderer this;
+        java.io.OutputStream outputStream;
+
+        this := @this: org.apache.fop.render.bitmap.TIFFRenderer;
+        outputStream := @parameter0: java.io.OutputStream;
+        this.<org.apache.fop.render.bitmap.TIFFRenderer: java.io.OutputStream outputStream> = outputStream;
+        specialinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void startRenderer(java.io.OutputStream)>(outputStream);
+        return;
+    }
+
+    public void stopRenderer() throws java.io.IOException
+    {
+        org.apache.fop.render.bitmap.TIFFRenderer this;
+        org.apache.commons.logging.Log $r0, $r1;
+        org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator pageImagesItr, $r2;
+        org.apache.xmlgraphics.image.writer.ImageWriter writer;
+        org.apache.xmlgraphics.image.writer.MultiImageWriter multiWriter;
+        java.awt.image.RenderedImage img, $r14;
+        java.lang.Throwable l5, $r12;
+        int $i0;
+        org.apache.xmlgraphics.image.writer.ImageWriterRegistry $r3;
+        java.lang.String $r4, $r7, $r8;
+        java.lang.NullPointerException $r5;
+        java.lang.StringBuffer $r6;
+        boolean $z0;
+        java.io.OutputStream $r9, $r15, $r17;
+        java.lang.Object $r10, $r13;
+        org.apache.xmlgraphics.image.writer.ImageWriterParams $r11, $r16;
+
+        this := @this: org.apache.fop.render.bitmap.TIFFRenderer;
+        specialinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void stopRenderer()>();
+        $r1 = <org.apache.fop.render.bitmap.TIFFRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("Starting TIFF encoding ...");
+        $r2 = new org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator;
+        $i0 = virtualinvoke this.<org.apache.fop.render.bitmap.TIFFRenderer: int getNumberOfPages()>();
+        $r0 = <org.apache.fop.render.bitmap.TIFFRenderer: org.apache.commons.logging.Log log>;
+        specialinvoke $r2.<org.apache.fop.render.bitmap.TIFFRenderer$LazyPageImagesIterator: void <init>(org.apache.fop.render.bitmap.TIFFRenderer,int,org.apache.commons.logging.Log)>(this, $i0, $r0);
+        pageImagesItr = $r2;
+        $r3 = staticinvoke <org.apache.xmlgraphics.image.writer.ImageWriterRegistry: org.apache.xmlgraphics.image.writer.ImageWriterRegistry getInstance()>();
+        $r4 = virtualinvoke this.<org.apache.fop.render.bitmap.TIFFRenderer: java.lang.String getMimeType()>();
+        writer = virtualinvoke $r3.<org.apache.xmlgraphics.image.writer.ImageWriterRegistry: org.apache.xmlgraphics.image.writer.ImageWriter getWriterFor(java.lang.String)>($r4);
+        if writer != null goto label0;
+
+        $r5 = new java.lang.NullPointerException;
+        $r6 = new java.lang.StringBuffer;
+        specialinvoke $r6.<java.lang.StringBuffer: void <init>()>();
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("No ImageWriter for ");
+        $r7 = virtualinvoke this.<org.apache.fop.render.bitmap.TIFFRenderer: java.lang.String getMimeType()>();
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r7);
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" available!");
+        $r8 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r5.<java.lang.NullPointerException: void <init>(java.lang.String)>($r8);
+        throw $r5;
+
+     label0:
+        $z0 = interfaceinvoke writer.<org.apache.xmlgraphics.image.writer.ImageWriter: boolean supportsMultiImageWriter()>();
+        if $z0 == 0 goto label7;
+
+        $r9 = this.<org.apache.fop.render.bitmap.TIFFRenderer: java.io.OutputStream outputStream>;
+        multiWriter = interfaceinvoke writer.<org.apache.xmlgraphics.image.writer.ImageWriter: org.apache.xmlgraphics.image.writer.MultiImageWriter createMultiImageWriter(java.io.OutputStream)>($r9);
+
+     label1:
+        $z0 = interfaceinvoke pageImagesItr.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label2;
+
+        $r10 = interfaceinvoke pageImagesItr.<java.util.Iterator: java.lang.Object next()>();
+        img = (java.awt.image.RenderedImage) $r10;
+        $r11 = this.<org.apache.fop.render.bitmap.TIFFRenderer: org.apache.xmlgraphics.image.writer.ImageWriterParams writerParams>;
+        interfaceinvoke multiWriter.<org.apache.xmlgraphics.image.writer.MultiImageWriter: void writeImage(java.awt.image.RenderedImage,org.apache.xmlgraphics.image.writer.ImageWriterParams)>(img, $r11);
+        goto label1;
+
+     label2:
+        interfaceinvoke multiWriter.<org.apache.xmlgraphics.image.writer.MultiImageWriter: void close()>();
+        goto label6;
+
+     label3:
+        $r12 := @caughtexception;
+
+     label4:
+        l5 = $r12;
+
+     label5:
+        interfaceinvoke multiWriter.<org.apache.xmlgraphics.image.writer.MultiImageWriter: void close()>();
+        throw l5;
+
+     label6:
+        goto label8;
+
+     label7:
+        $r13 = interfaceinvoke pageImagesItr.<java.util.Iterator: java.lang.Object next()>();
+        $r14 = (java.awt.image.RenderedImage) $r13;
+        $r15 = this.<org.apache.fop.render.bitmap.TIFFRenderer: java.io.OutputStream outputStream>;
+        $r16 = this.<org.apache.fop.render.bitmap.TIFFRenderer: org.apache.xmlgraphics.image.writer.ImageWriterParams writerParams>;
+        interfaceinvoke writer.<org.apache.xmlgraphics.image.writer.ImageWriter: void writeImage(java.awt.image.RenderedImage,java.io.OutputStream,org.apache.xmlgraphics.image.writer.ImageWriterParams)>($r14, $r15, $r16);
+        $z0 = interfaceinvoke pageImagesItr.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label8;
+
+        $r1 = <org.apache.fop.render.bitmap.TIFFRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void error(java.lang.Object)>("Image encoder does not support multiple images. Only the first page has been produced.");
+
+     label8:
+        $r17 = this.<org.apache.fop.render.bitmap.TIFFRenderer: java.io.OutputStream outputStream>;
+        virtualinvoke $r17.<java.io.OutputStream: void flush()>();
+        virtualinvoke this.<org.apache.fop.render.bitmap.TIFFRenderer: void clearViewportList()>();
+        $r1 = <org.apache.fop.render.bitmap.TIFFRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("TIFF encoding done.");
+        return;
+
+        catch java.lang.Throwable from label1 to label2 with label3;
+        catch java.lang.Throwable from label4 to label5 with label3;
+    }
+
+    protected java.awt.image.BufferedImage getBufferedImage(int, int)
+    {
+        org.apache.fop.render.bitmap.TIFFRenderer this;
+        int bitmapWidth, bitmapHeight, $i0;
+        java.awt.image.BufferedImage $r0;
+
+        this := @this: org.apache.fop.render.bitmap.TIFFRenderer;
+        bitmapWidth := @parameter0: int;
+        bitmapHeight := @parameter1: int;
+        $r0 = new java.awt.image.BufferedImage;
+        $i0 = this.<org.apache.fop.render.bitmap.TIFFRenderer: int bufferedImageType>;
+        specialinvoke $r0.<java.awt.image.BufferedImage: void <init>(int,int,int)>(bitmapWidth, bitmapHeight, $i0);
+        return $r0;
+    }
+
+    public void setBufferedImageType(int)
+    {
+        org.apache.fop.render.bitmap.TIFFRenderer this;
+        int bufferedImageType;
+
+        this := @this: org.apache.fop.render.bitmap.TIFFRenderer;
+        bufferedImageType := @parameter0: int;
+        this.<org.apache.fop.render.bitmap.TIFFRenderer: int bufferedImageType> = bufferedImageType;
+        return;
+    }
+
+    public org.apache.xmlgraphics.image.writer.ImageWriterParams getWriterParams()
+    {
+        org.apache.fop.render.bitmap.TIFFRenderer this;
+        org.apache.xmlgraphics.image.writer.ImageWriterParams $r0;
+
+        this := @this: org.apache.fop.render.bitmap.TIFFRenderer;
+        $r0 = this.<org.apache.fop.render.bitmap.TIFFRenderer: org.apache.xmlgraphics.image.writer.ImageWriterParams writerParams>;
+        return $r0;
+    }
+
+    static org.apache.xmlgraphics.image.writer.ImageWriterParams access$000(org.apache.fop.render.bitmap.TIFFRenderer)
+    {
+        org.apache.fop.render.bitmap.TIFFRenderer x0;
+        org.apache.xmlgraphics.image.writer.ImageWriterParams $r0;
+
+        x0 := @parameter0: org.apache.fop.render.bitmap.TIFFRenderer;
+        $r0 = x0.<org.apache.fop.render.bitmap.TIFFRenderer: org.apache.xmlgraphics.image.writer.ImageWriterParams writerParams>;
+        return $r0;
+    }
+}

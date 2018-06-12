@@ -1,0 +1,472 @@
+public class org.apache.fop.area.RenderPagesModel extends org.apache.fop.area.AreaTreeModel
+{
+    protected org.apache.fop.render.Renderer renderer;
+    protected java.util.List prepared;
+    private java.util.List pendingODI;
+    private java.util.List endDocODI;
+
+    public void <init>(org.apache.fop.apps.FOUserAgent, java.lang.String, org.apache.fop.fonts.FontInfo, java.io.OutputStream) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.area.RenderPagesModel this;
+        org.apache.fop.apps.FOUserAgent userAgent;
+        java.lang.String outputFormat;
+        org.apache.fop.fonts.FontInfo fontInfo;
+        java.io.OutputStream stream;
+        java.util.ArrayList $r0;
+        java.io.IOException e, $r5;
+        org.apache.fop.render.RendererFactory $r1;
+        org.apache.fop.render.Renderer $r2, $r3;
+        boolean $z0;
+        org.apache.fop.apps.FOPException $r4;
+
+        this := @this: org.apache.fop.area.RenderPagesModel;
+        userAgent := @parameter0: org.apache.fop.apps.FOUserAgent;
+        outputFormat := @parameter1: java.lang.String;
+        fontInfo := @parameter2: org.apache.fop.fonts.FontInfo;
+        stream := @parameter3: java.io.OutputStream;
+        specialinvoke this.<org.apache.fop.area.AreaTreeModel: void <init>()>();
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.area.RenderPagesModel: java.util.List prepared> = $r0;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.area.RenderPagesModel: java.util.List pendingODI> = $r0;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.area.RenderPagesModel: java.util.List endDocODI> = $r0;
+        $r1 = virtualinvoke userAgent.<org.apache.fop.apps.FOUserAgent: org.apache.fop.render.RendererFactory getRendererFactory()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.render.RendererFactory: org.apache.fop.render.Renderer createRenderer(org.apache.fop.apps.FOUserAgent,java.lang.String)>(userAgent, outputFormat);
+        this.<org.apache.fop.area.RenderPagesModel: org.apache.fop.render.Renderer renderer> = $r2;
+
+     label0:
+        $r3 = this.<org.apache.fop.area.RenderPagesModel: org.apache.fop.render.Renderer renderer>;
+        interfaceinvoke $r3.<org.apache.fop.render.Renderer: void setupFontInfo(org.apache.fop.fonts.FontInfo)>(fontInfo);
+        $z0 = virtualinvoke fontInfo.<org.apache.fop.fonts.FontInfo: boolean isSetupValid()>();
+        if $z0 != 0 goto label1;
+
+        $r4 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r4.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("No default font defined by OutputConverter");
+        throw $r4;
+
+     label1:
+        $r3 = this.<org.apache.fop.area.RenderPagesModel: org.apache.fop.render.Renderer renderer>;
+        interfaceinvoke $r3.<org.apache.fop.render.Renderer: void startRenderer(java.io.OutputStream)>(stream);
+
+     label2:
+        goto label4;
+
+     label3:
+        $r5 := @caughtexception;
+        e = $r5;
+        $r4 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r4.<org.apache.fop.apps.FOPException: void <init>(java.lang.Exception)>(e);
+        throw $r4;
+
+     label4:
+        return;
+
+        catch java.io.IOException from label0 to label2 with label3;
+    }
+
+    public void startPageSequence(org.apache.fop.area.PageSequence)
+    {
+        org.apache.fop.area.RenderPagesModel this;
+        org.apache.fop.area.PageSequence pageSequence, $r1;
+        org.apache.fop.render.Renderer $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.area.RenderPagesModel;
+        pageSequence := @parameter0: org.apache.fop.area.PageSequence;
+        specialinvoke this.<org.apache.fop.area.AreaTreeModel: void startPageSequence(org.apache.fop.area.PageSequence)>(pageSequence);
+        $r0 = this.<org.apache.fop.area.RenderPagesModel: org.apache.fop.render.Renderer renderer>;
+        $z0 = interfaceinvoke $r0.<org.apache.fop.render.Renderer: boolean supportsOutOfOrder()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = this.<org.apache.fop.area.RenderPagesModel: org.apache.fop.render.Renderer renderer>;
+        $r1 = virtualinvoke this.<org.apache.fop.area.RenderPagesModel: org.apache.fop.area.PageSequence getCurrentPageSequence()>();
+        interfaceinvoke $r0.<org.apache.fop.render.Renderer: void startPageSequence(org.apache.fop.area.PageSequence)>($r1);
+
+     label0:
+        return;
+    }
+
+    public void addPage(org.apache.fop.area.PageViewport)
+    {
+        org.apache.fop.area.RenderPagesModel this;
+        org.apache.fop.area.PageViewport page;
+        boolean ready, cont, $z0;
+        java.lang.RuntimeException re, $r3;
+        java.lang.String err, $r5, $r11, $r12;
+        java.lang.Exception e, $r7;
+        org.apache.fop.render.Renderer $r0;
+        org.apache.fop.area.PageSequence $r1, $r2;
+        java.lang.StringBuffer $r4, $r9;
+        org.apache.commons.logging.Log $r6;
+        java.lang.IllegalStateException $r8;
+        java.lang.Class $r10;
+        java.util.List $r13, $r14;
+
+        this := @this: org.apache.fop.area.RenderPagesModel;
+        page := @parameter0: org.apache.fop.area.PageViewport;
+        specialinvoke this.<org.apache.fop.area.AreaTreeModel: void addPage(org.apache.fop.area.PageViewport)>(page);
+        $r0 = this.<org.apache.fop.area.RenderPagesModel: org.apache.fop.render.Renderer renderer>;
+        $z0 = interfaceinvoke $r0.<org.apache.fop.render.Renderer: boolean supportsOutOfOrder()>();
+        if $z0 == 0 goto label0;
+
+        $z0 = virtualinvoke page.<org.apache.fop.area.PageViewport: boolean isResolved()>();
+        if $z0 == 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        ready = $z0;
+        if ready == 0 goto label7;
+
+        $r0 = this.<org.apache.fop.area.RenderPagesModel: org.apache.fop.render.Renderer renderer>;
+        $z0 = interfaceinvoke $r0.<org.apache.fop.render.Renderer: boolean supportsOutOfOrder()>();
+        if $z0 != 0 goto label2;
+
+        $r1 = virtualinvoke page.<org.apache.fop.area.PageViewport: org.apache.fop.area.PageSequence getPageSequence()>();
+        $z0 = virtualinvoke $r1.<org.apache.fop.area.PageSequence: boolean isFirstPage(org.apache.fop.area.PageViewport)>(page);
+        if $z0 == 0 goto label2;
+
+        $r0 = this.<org.apache.fop.area.RenderPagesModel: org.apache.fop.render.Renderer renderer>;
+        $r2 = virtualinvoke this.<org.apache.fop.area.RenderPagesModel: org.apache.fop.area.PageSequence getCurrentPageSequence()>();
+        interfaceinvoke $r0.<org.apache.fop.render.Renderer: void startPageSequence(org.apache.fop.area.PageSequence)>($r2);
+
+     label2:
+        $r0 = this.<org.apache.fop.area.RenderPagesModel: org.apache.fop.render.Renderer renderer>;
+        interfaceinvoke $r0.<org.apache.fop.render.Renderer: void renderPage(org.apache.fop.area.PageViewport)>(page);
+
+     label3:
+        goto label6;
+
+     label4:
+        $r3 := @caughtexception;
+        re = $r3;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Error while rendering page ");
+        $r5 = virtualinvoke page.<org.apache.fop.area.PageViewport: java.lang.String getPageNumberString()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        err = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r6 = <org.apache.fop.area.RenderPagesModel: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r6.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>(err, re);
+        throw re;
+
+     label5:
+        $r7 := @caughtexception;
+        e = $r7;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Error while rendering page ");
+        $r5 = virtualinvoke page.<org.apache.fop.area.PageViewport: java.lang.String getPageNumberString()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        err = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r6 = <org.apache.fop.area.RenderPagesModel: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r6.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>(err, e);
+        $r8 = new java.lang.IllegalStateException;
+        $r9 = new java.lang.StringBuffer;
+        specialinvoke $r9.<java.lang.StringBuffer: void <init>()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Fatal error occurred. Cannot continue. ");
+        $r10 = virtualinvoke e.<java.lang.Object: java.lang.Class getClass()>();
+        $r11 = virtualinvoke $r10.<java.lang.Class: java.lang.String getName()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r11);
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": ");
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(err);
+        $r12 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r8.<java.lang.IllegalStateException: void <init>(java.lang.String)>($r12);
+        throw $r8;
+
+     label6:
+        virtualinvoke page.<org.apache.fop.area.PageViewport: void clear()>();
+        goto label8;
+
+     label7:
+        virtualinvoke this.<org.apache.fop.area.RenderPagesModel: void preparePage(org.apache.fop.area.PageViewport)>(page);
+
+     label8:
+        cont = virtualinvoke this.<org.apache.fop.area.RenderPagesModel: boolean checkPreparedPages(org.apache.fop.area.PageViewport,boolean)>(page, 0);
+        if cont == 0 goto label9;
+
+        $r13 = this.<org.apache.fop.area.RenderPagesModel: java.util.List pendingODI>;
+        specialinvoke this.<org.apache.fop.area.RenderPagesModel: void processOffDocumentItems(java.util.List)>($r13);
+        $r14 = this.<org.apache.fop.area.RenderPagesModel: java.util.List pendingODI>;
+        interfaceinvoke $r14.<java.util.List: void clear()>();
+
+     label9:
+        return;
+
+        catch java.lang.RuntimeException from label2 to label3 with label4;
+        catch java.lang.Exception from label2 to label3 with label5;
+    }
+
+    protected boolean checkPreparedPages(org.apache.fop.area.PageViewport, boolean)
+    {
+        org.apache.fop.area.RenderPagesModel this;
+        org.apache.fop.area.PageViewport newPageViewport, pageViewport;
+        boolean renderUnresolved, $z0;
+        java.util.Iterator iter;
+        java.lang.String[] idrefs;
+        int count, $i0, $i1;
+        java.lang.Exception e, $r9;
+        java.util.List $r0;
+        java.lang.Object $r1;
+        org.apache.fop.render.Renderer $r2;
+        org.apache.fop.area.PageSequence $r3, $r4;
+        org.apache.commons.logging.Log $r5;
+        java.lang.StringBuffer $r6;
+        java.lang.String $r7, $r8;
+        java.lang.RuntimeException $r10;
+
+        this := @this: org.apache.fop.area.RenderPagesModel;
+        newPageViewport := @parameter0: org.apache.fop.area.PageViewport;
+        renderUnresolved := @parameter1: boolean;
+        $r0 = this.<org.apache.fop.area.RenderPagesModel: java.util.List prepared>;
+        iter = interfaceinvoke $r0.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label9;
+
+        $r1 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        pageViewport = (org.apache.fop.area.PageViewport) $r1;
+        $z0 = virtualinvoke pageViewport.<org.apache.fop.area.PageViewport: boolean isResolved()>();
+        if $z0 != 0 goto label1;
+
+        if renderUnresolved == 0 goto label7;
+
+     label1:
+        $r2 = this.<org.apache.fop.area.RenderPagesModel: org.apache.fop.render.Renderer renderer>;
+        $z0 = interfaceinvoke $r2.<org.apache.fop.render.Renderer: boolean supportsOutOfOrder()>();
+        if $z0 != 0 goto label2;
+
+        $r3 = virtualinvoke pageViewport.<org.apache.fop.area.PageViewport: org.apache.fop.area.PageSequence getPageSequence()>();
+        $z0 = virtualinvoke $r3.<org.apache.fop.area.PageSequence: boolean isFirstPage(org.apache.fop.area.PageViewport)>(pageViewport);
+        if $z0 == 0 goto label2;
+
+        $r2 = this.<org.apache.fop.area.RenderPagesModel: org.apache.fop.render.Renderer renderer>;
+        $r4 = virtualinvoke this.<org.apache.fop.area.RenderPagesModel: org.apache.fop.area.PageSequence getCurrentPageSequence()>();
+        interfaceinvoke $r2.<org.apache.fop.render.Renderer: void startPageSequence(org.apache.fop.area.PageSequence)>($r4);
+
+     label2:
+        $r2 = this.<org.apache.fop.area.RenderPagesModel: org.apache.fop.render.Renderer renderer>;
+        interfaceinvoke $r2.<org.apache.fop.render.Renderer: void renderPage(org.apache.fop.area.PageViewport)>(pageViewport);
+        $z0 = virtualinvoke pageViewport.<org.apache.fop.area.PageViewport: boolean isResolved()>();
+        if $z0 != 0 goto label4;
+
+        idrefs = virtualinvoke pageViewport.<org.apache.fop.area.PageViewport: java.lang.String[] getIDRefs()>();
+        count = 0;
+
+     label3:
+        $i0 = lengthof idrefs;
+        if count >= $i0 goto label4;
+
+        $r5 = <org.apache.fop.area.RenderPagesModel: org.apache.commons.logging.Log log>;
+        $r6 = new java.lang.StringBuffer;
+        specialinvoke $r6.<java.lang.StringBuffer: void <init>()>();
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Page ");
+        $r7 = virtualinvoke pageViewport.<org.apache.fop.area.PageViewport: java.lang.String getPageNumberString()>();
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r7);
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": Unresolved id reference \"");
+        $r7 = idrefs[count];
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r7);
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\" found.");
+        $r8 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r8);
+        count = count + 1;
+        goto label3;
+
+     label4:
+        goto label6;
+
+     label5:
+        $r9 := @caughtexception;
+        e = $r9;
+        $r5 = <org.apache.fop.area.RenderPagesModel: org.apache.commons.logging.Log log>;
+        $r6 = new java.lang.StringBuffer;
+        specialinvoke $r6.<java.lang.StringBuffer: void <init>()>();
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Error while rendering page ");
+        $i1 = virtualinvoke pageViewport.<org.apache.fop.area.PageViewport: int getPageIndex()>();
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r8 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r8, e);
+        $z0 = e instanceof java.lang.RuntimeException;
+        if $z0 == 0 goto label6;
+
+        $r10 = (java.lang.RuntimeException) e;
+        throw $r10;
+
+     label6:
+        virtualinvoke pageViewport.<org.apache.fop.area.PageViewport: void clear()>();
+        interfaceinvoke iter.<java.util.Iterator: void remove()>();
+        goto label8;
+
+     label7:
+        $r2 = this.<org.apache.fop.area.RenderPagesModel: org.apache.fop.render.Renderer renderer>;
+        $z0 = interfaceinvoke $r2.<org.apache.fop.render.Renderer: boolean supportsOutOfOrder()>();
+        if $z0 != 0 goto label8;
+
+        goto label9;
+
+     label8:
+        goto label0;
+
+     label9:
+        $r2 = this.<org.apache.fop.area.RenderPagesModel: org.apache.fop.render.Renderer renderer>;
+        $z0 = interfaceinvoke $r2.<org.apache.fop.render.Renderer: boolean supportsOutOfOrder()>();
+        if $z0 != 0 goto label10;
+
+        $r0 = this.<org.apache.fop.area.RenderPagesModel: java.util.List prepared>;
+        $z0 = interfaceinvoke $r0.<java.util.List: boolean isEmpty()>();
+        if $z0 == 0 goto label11;
+
+     label10:
+        $z0 = 1;
+        goto label12;
+
+     label11:
+        $z0 = 0;
+
+     label12:
+        return $z0;
+
+        catch java.lang.Exception from label2 to label4 with label5;
+    }
+
+    protected void preparePage(org.apache.fop.area.PageViewport)
+    {
+        org.apache.fop.area.RenderPagesModel this;
+        org.apache.fop.area.PageViewport page;
+        org.apache.fop.render.Renderer $r0;
+        boolean $z0;
+        java.util.List $r1;
+
+        this := @this: org.apache.fop.area.RenderPagesModel;
+        page := @parameter0: org.apache.fop.area.PageViewport;
+        $r0 = this.<org.apache.fop.area.RenderPagesModel: org.apache.fop.render.Renderer renderer>;
+        $z0 = interfaceinvoke $r0.<org.apache.fop.render.Renderer: boolean supportsOutOfOrder()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = this.<org.apache.fop.area.RenderPagesModel: org.apache.fop.render.Renderer renderer>;
+        interfaceinvoke $r0.<org.apache.fop.render.Renderer: void preparePage(org.apache.fop.area.PageViewport)>(page);
+
+     label0:
+        $r1 = this.<org.apache.fop.area.RenderPagesModel: java.util.List prepared>;
+        interfaceinvoke $r1.<java.util.List: boolean add(java.lang.Object)>(page);
+        return;
+    }
+
+    public void handleOffDocumentItem(org.apache.fop.area.OffDocumentItem)
+    {
+        org.apache.fop.area.RenderPagesModel this;
+        org.apache.fop.area.OffDocumentItem oDI;
+        int $i0;
+        org.apache.fop.render.Renderer $r0;
+        java.util.List $r1;
+        java.lang.RuntimeException $r2;
+
+        this := @this: org.apache.fop.area.RenderPagesModel;
+        oDI := @parameter0: org.apache.fop.area.OffDocumentItem;
+        $i0 = interfaceinvoke oDI.<org.apache.fop.area.OffDocumentItem: int getWhenToProcess()>();
+        tableswitch($i0)
+        {
+            case 0: goto label0;
+            case 1: goto label1;
+            case 2: goto label2;
+            default: goto label3;
+        };
+
+     label0:
+        $r0 = this.<org.apache.fop.area.RenderPagesModel: org.apache.fop.render.Renderer renderer>;
+        interfaceinvoke $r0.<org.apache.fop.render.Renderer: void processOffDocumentItem(org.apache.fop.area.OffDocumentItem)>(oDI);
+        goto label4;
+
+     label1:
+        $r1 = this.<org.apache.fop.area.RenderPagesModel: java.util.List pendingODI>;
+        interfaceinvoke $r1.<java.util.List: boolean add(java.lang.Object)>(oDI);
+        goto label4;
+
+     label2:
+        $r1 = this.<org.apache.fop.area.RenderPagesModel: java.util.List endDocODI>;
+        interfaceinvoke $r1.<java.util.List: boolean add(java.lang.Object)>(oDI);
+        goto label4;
+
+     label3:
+        $r2 = new java.lang.RuntimeException;
+        specialinvoke $r2.<java.lang.RuntimeException: void <init>()>();
+        throw $r2;
+
+     label4:
+        return;
+    }
+
+    private void processOffDocumentItems(java.util.List)
+    {
+        org.apache.fop.area.RenderPagesModel this;
+        java.util.List list;
+        int count, $i0;
+        org.apache.fop.area.OffDocumentItem oDI;
+        java.lang.Object $r0;
+        org.apache.fop.render.Renderer $r1;
+
+        this := @this: org.apache.fop.area.RenderPagesModel;
+        list := @parameter0: java.util.List;
+        count = 0;
+
+     label0:
+        $i0 = interfaceinvoke list.<java.util.List: int size()>();
+        if count >= $i0 goto label1;
+
+        $r0 = interfaceinvoke list.<java.util.List: java.lang.Object get(int)>(count);
+        oDI = (org.apache.fop.area.OffDocumentItem) $r0;
+        $r1 = this.<org.apache.fop.area.RenderPagesModel: org.apache.fop.render.Renderer renderer>;
+        interfaceinvoke $r1.<org.apache.fop.render.Renderer: void processOffDocumentItem(org.apache.fop.area.OffDocumentItem)>(oDI);
+        count = count + 1;
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    public void endDocument() throws org.xml.sax.SAXException
+    {
+        org.apache.fop.area.RenderPagesModel this;
+        java.io.IOException ex, $r3;
+        java.util.List $r0, $r1;
+        org.apache.fop.render.Renderer $r2;
+        org.xml.sax.SAXException $r4;
+
+        this := @this: org.apache.fop.area.RenderPagesModel;
+        virtualinvoke this.<org.apache.fop.area.RenderPagesModel: boolean checkPreparedPages(org.apache.fop.area.PageViewport,boolean)>(null, 1);
+        $r0 = this.<org.apache.fop.area.RenderPagesModel: java.util.List pendingODI>;
+        specialinvoke this.<org.apache.fop.area.RenderPagesModel: void processOffDocumentItems(java.util.List)>($r0);
+        $r1 = this.<org.apache.fop.area.RenderPagesModel: java.util.List pendingODI>;
+        interfaceinvoke $r1.<java.util.List: void clear()>();
+        $r0 = this.<org.apache.fop.area.RenderPagesModel: java.util.List endDocODI>;
+        specialinvoke this.<org.apache.fop.area.RenderPagesModel: void processOffDocumentItems(java.util.List)>($r0);
+
+     label0:
+        $r2 = this.<org.apache.fop.area.RenderPagesModel: org.apache.fop.render.Renderer renderer>;
+        interfaceinvoke $r2.<org.apache.fop.render.Renderer: void stopRenderer()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r3 := @caughtexception;
+        ex = $r3;
+        $r4 = new org.xml.sax.SAXException;
+        specialinvoke $r4.<org.xml.sax.SAXException: void <init>(java.lang.Exception)>(ex);
+        throw $r4;
+
+     label3:
+        return;
+
+        catch java.io.IOException from label0 to label1 with label2;
+    }
+}

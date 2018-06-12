@@ -1,0 +1,2053 @@
+public class org.apache.fop.render.xml.XMLRenderer extends org.apache.fop.render.PrintRenderer
+{
+    public static final java.lang.String XML_MIME_TYPE;
+    public static final java.lang.String NS;
+    public static final java.lang.String CDATA;
+    public static final org.xml.sax.Attributes EMPTY_ATTS;
+    private boolean startedSequence;
+    private org.apache.fop.render.RendererContext context;
+    private boolean compactFormat;
+    protected org.apache.fop.render.Renderer mimic;
+    protected org.xml.sax.ContentHandler handler;
+    protected org.xml.sax.helpers.AttributesImpl atts;
+    protected java.io.OutputStream out;
+    protected java.util.List extensionAttachments;
+    static java.lang.Class class$org$apache$fop$area$Trait$InternalLink;
+    static java.lang.Class class$org$apache$fop$area$Trait$Background;
+    static java.lang.Class class$java$awt$Color;
+    static java.lang.Class class$org$apache$fop$area$inline$InlineArea;
+
+    public void <init>()
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.xml.sax.helpers.AttributesImpl $r0;
+        org.apache.fop.render.RendererContext $r1;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        specialinvoke this.<org.apache.fop.render.PrintRenderer: void <init>()>();
+        this.<org.apache.fop.render.xml.XMLRenderer: boolean startedSequence> = 0;
+        this.<org.apache.fop.render.xml.XMLRenderer: boolean compactFormat> = 0;
+        $r0 = new org.xml.sax.helpers.AttributesImpl;
+        specialinvoke $r0.<org.xml.sax.helpers.AttributesImpl: void <init>()>();
+        this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts> = $r0;
+        $r1 = new org.apache.fop.render.RendererContext;
+        specialinvoke $r1.<org.apache.fop.render.RendererContext: void <init>(org.apache.fop.render.AbstractRenderer,java.lang.String)>(this, "application/X-fop-areatree");
+        this.<org.apache.fop.render.xml.XMLRenderer: org.apache.fop.render.RendererContext context> = $r1;
+        return;
+    }
+
+    public void setUserAgent(org.apache.fop.apps.FOUserAgent)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.apps.FOUserAgent agent, $r1;
+        org.apache.fop.render.xml.XMLXMLHandler xmlHandler, $r0;
+        java.lang.Boolean b;
+        org.apache.fop.render.XMLHandlerRegistry $r2;
+        java.util.Map $r3;
+        java.lang.Object $r4;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        agent := @parameter0: org.apache.fop.apps.FOUserAgent;
+        specialinvoke this.<org.apache.fop.render.PrintRenderer: void setUserAgent(org.apache.fop.apps.FOUserAgent)>(agent);
+        $r0 = new org.apache.fop.render.xml.XMLXMLHandler;
+        specialinvoke $r0.<org.apache.fop.render.xml.XMLXMLHandler: void <init>()>();
+        xmlHandler = $r0;
+        $r1 = this.<org.apache.fop.render.xml.XMLRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.apps.FOUserAgent: org.apache.fop.render.XMLHandlerRegistry getXMLHandlerRegistry()>();
+        virtualinvoke $r2.<org.apache.fop.render.XMLHandlerRegistry: void addXMLHandler(org.apache.fop.render.XMLHandler)>(xmlHandler);
+        $r1 = this.<org.apache.fop.render.xml.XMLRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        $r3 = virtualinvoke $r1.<org.apache.fop.apps.FOUserAgent: java.util.Map getRendererOptions()>();
+        $r4 = interfaceinvoke $r3.<java.util.Map: java.lang.Object get(java.lang.Object)>("compact-format");
+        b = (java.lang.Boolean) $r4;
+        if b == null goto label0;
+
+        $z0 = virtualinvoke b.<java.lang.Boolean: boolean booleanValue()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void setCompactFormat(boolean)>($z0);
+
+     label0:
+        return;
+    }
+
+    public void mimicRenderer(org.apache.fop.render.Renderer)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.render.Renderer renderer;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        renderer := @parameter0: org.apache.fop.render.Renderer;
+        this.<org.apache.fop.render.xml.XMLRenderer: org.apache.fop.render.Renderer mimic> = renderer;
+        return;
+    }
+
+    public void setupFontInfo(org.apache.fop.fonts.FontInfo)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.fonts.FontInfo inFontInfo;
+        org.apache.fop.render.Renderer $r0;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        inFontInfo := @parameter0: org.apache.fop.fonts.FontInfo;
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.apache.fop.render.Renderer mimic>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.apache.fop.render.Renderer mimic>;
+        interfaceinvoke $r0.<org.apache.fop.render.Renderer: void setupFontInfo(org.apache.fop.fonts.FontInfo)>(inFontInfo);
+        goto label1;
+
+     label0:
+        specialinvoke this.<org.apache.fop.render.PrintRenderer: void setupFontInfo(org.apache.fop.fonts.FontInfo)>(inFontInfo);
+
+     label1:
+        return;
+    }
+
+    public void setContentHandler(org.xml.sax.ContentHandler)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.xml.sax.ContentHandler handler;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        handler := @parameter0: org.xml.sax.ContentHandler;
+        this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.ContentHandler handler> = handler;
+        return;
+    }
+
+    public void setCompactFormat(boolean)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        boolean compact;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        compact := @parameter0: boolean;
+        this.<org.apache.fop.render.xml.XMLRenderer: boolean compactFormat> = compact;
+        return;
+    }
+
+    private boolean isDetailedFormat()
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        $z0 = this.<org.apache.fop.render.xml.XMLRenderer: boolean compactFormat>;
+        if $z0 != 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    protected void handleSAXException(org.xml.sax.SAXException)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.xml.sax.SAXException saxe;
+        java.lang.RuntimeException $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        saxe := @parameter0: org.xml.sax.SAXException;
+        $r0 = new java.lang.RuntimeException;
+        $r1 = virtualinvoke saxe.<org.xml.sax.SAXException: java.lang.String getMessage()>();
+        specialinvoke $r0.<java.lang.RuntimeException: void <init>(java.lang.String)>($r1);
+        throw $r0;
+    }
+
+    protected void comment(java.lang.String)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        java.lang.String comment;
+        org.xml.sax.SAXException saxe, $r3;
+        org.xml.sax.ContentHandler $r0;
+        boolean $z0;
+        org.xml.sax.ext.LexicalHandler $r1;
+        char[] $r2;
+        int $i0;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        comment := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.ContentHandler handler>;
+        $z0 = $r0 instanceof org.xml.sax.ext.LexicalHandler;
+        if $z0 == 0 goto label3;
+
+     label0:
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.ContentHandler handler>;
+        $r1 = (org.xml.sax.ext.LexicalHandler) $r0;
+        $r2 = virtualinvoke comment.<java.lang.String: char[] toCharArray()>();
+        $i0 = virtualinvoke comment.<java.lang.String: int length()>();
+        interfaceinvoke $r1.<org.xml.sax.ext.LexicalHandler: void comment(char[],int,int)>($r2, 0, $i0);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r3 := @caughtexception;
+        saxe = $r3;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void handleSAXException(org.xml.sax.SAXException)>(saxe);
+
+     label3:
+        return;
+
+        catch org.xml.sax.SAXException from label0 to label1 with label2;
+    }
+
+    protected void startElement(java.lang.String)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        java.lang.String tagName;
+        org.xml.sax.Attributes $r0;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        tagName := @parameter0: java.lang.String;
+        $r0 = <org.apache.fop.render.xml.XMLRenderer: org.xml.sax.Attributes EMPTY_ATTS>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>(tagName, $r0);
+        return;
+    }
+
+    protected void startElement(java.lang.String, org.xml.sax.Attributes)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        java.lang.String tagName;
+        org.xml.sax.Attributes atts;
+        org.xml.sax.SAXException saxe, $r1;
+        org.xml.sax.ContentHandler $r0;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        tagName := @parameter0: java.lang.String;
+        atts := @parameter1: org.xml.sax.Attributes;
+
+     label0:
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.ContentHandler handler>;
+        interfaceinvoke $r0.<org.xml.sax.ContentHandler: void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes)>("", tagName, tagName, atts);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r1 := @caughtexception;
+        saxe = $r1;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void handleSAXException(org.xml.sax.SAXException)>(saxe);
+
+     label3:
+        return;
+
+        catch org.xml.sax.SAXException from label0 to label1 with label2;
+    }
+
+    protected void endElement(java.lang.String)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        java.lang.String tagName;
+        org.xml.sax.SAXException saxe, $r1;
+        org.xml.sax.ContentHandler $r0;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        tagName := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.ContentHandler handler>;
+        interfaceinvoke $r0.<org.xml.sax.ContentHandler: void endElement(java.lang.String,java.lang.String,java.lang.String)>("", tagName, tagName);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r1 := @caughtexception;
+        saxe = $r1;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void handleSAXException(org.xml.sax.SAXException)>(saxe);
+
+     label3:
+        return;
+
+        catch org.xml.sax.SAXException from label0 to label1 with label2;
+    }
+
+    protected void characters(java.lang.String)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        java.lang.String text;
+        char[] ca;
+        org.xml.sax.SAXException saxe, $r1;
+        org.xml.sax.ContentHandler $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        text := @parameter0: java.lang.String;
+
+     label0:
+        ca = virtualinvoke text.<java.lang.String: char[] toCharArray()>();
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.ContentHandler handler>;
+        $i0 = lengthof ca;
+        interfaceinvoke $r0.<org.xml.sax.ContentHandler: void characters(char[],int,int)>(ca, 0, $i0);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r1 := @caughtexception;
+        saxe = $r1;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void handleSAXException(org.xml.sax.SAXException)>(saxe);
+
+     label3:
+        return;
+
+        catch org.xml.sax.SAXException from label0 to label1 with label2;
+    }
+
+    protected void addAttribute(java.lang.String, java.lang.String)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        java.lang.String name, value;
+        org.xml.sax.helpers.AttributesImpl $r0;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        name := @parameter0: java.lang.String;
+        value := @parameter1: java.lang.String;
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke $r0.<org.xml.sax.helpers.AttributesImpl: void addAttribute(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)>("", name, name, "CDATA", value);
+        return;
+    }
+
+    protected void addAttribute(org.apache.fop.util.QName, java.lang.String)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.util.QName name;
+        java.lang.String value, $r1, $r2, $r3;
+        org.xml.sax.helpers.AttributesImpl $r0;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        name := @parameter0: org.apache.fop.util.QName;
+        value := @parameter1: java.lang.String;
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        $r1 = virtualinvoke name.<org.apache.fop.util.QName: java.lang.String getNamespaceURI()>();
+        $r2 = virtualinvoke name.<org.apache.fop.util.QName: java.lang.String getLocalName()>();
+        $r3 = virtualinvoke name.<org.apache.fop.util.QName: java.lang.String getQName()>();
+        virtualinvoke $r0.<org.xml.sax.helpers.AttributesImpl: void addAttribute(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)>($r1, $r2, $r3, "CDATA", value);
+        return;
+    }
+
+    protected void addAttribute(java.lang.String, int)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        java.lang.String name, $r0;
+        int value;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        name := @parameter0: java.lang.String;
+        value := @parameter1: int;
+        $r0 = staticinvoke <java.lang.Integer: java.lang.String toString(int)>(value);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>(name, $r0);
+        return;
+    }
+
+    protected void addAttribute(java.lang.String, java.awt.geom.Rectangle2D)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        java.lang.String name, $r0;
+        java.awt.geom.Rectangle2D rect;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        name := @parameter0: java.lang.String;
+        rect := @parameter1: java.awt.geom.Rectangle2D;
+        $r0 = specialinvoke this.<org.apache.fop.render.xml.XMLRenderer: java.lang.String createString(java.awt.geom.Rectangle2D)>(rect);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>(name, $r0);
+        return;
+    }
+
+    protected void addAreaAttributes(org.apache.fop.area.Area)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.Area area;
+        int $i0, $i1, $i2;
+        boolean $z0;
+        java.lang.StringBuffer $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        area := @parameter0: org.apache.fop.area.Area;
+        $i0 = virtualinvoke area.<org.apache.fop.area.Area: int getIPD()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("ipd", $i0);
+        $i0 = virtualinvoke area.<org.apache.fop.area.Area: int getBPD()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("bpd", $i0);
+        $z0 = specialinvoke this.<org.apache.fop.render.xml.XMLRenderer: boolean isDetailedFormat()>();
+        if $z0 == 0 goto label2;
+
+        $i1 = virtualinvoke area.<org.apache.fop.area.Area: int getIPD()>();
+        if $i1 == 0 goto label0;
+
+        $i0 = virtualinvoke area.<org.apache.fop.area.Area: int getAllocIPD()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("ipda", $i0);
+
+     label0:
+        $i1 = virtualinvoke area.<org.apache.fop.area.Area: int getBPD()>();
+        if $i1 == 0 goto label1;
+
+        $i0 = virtualinvoke area.<org.apache.fop.area.Area: int getAllocBPD()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("bpda", $i0);
+
+     label1:
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $i2 = virtualinvoke area.<org.apache.fop.area.Area: int getBorderAndPaddingWidthStart()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i2);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $i2 = virtualinvoke area.<org.apache.fop.area.Area: int getBorderAndPaddingWidthEnd()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i2);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $i2 = virtualinvoke area.<org.apache.fop.area.Area: int getBorderAndPaddingWidthBefore()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i2);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $i2 = virtualinvoke area.<org.apache.fop.area.Area: int getBorderAndPaddingWidthAfter()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i2);
+        $r1 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("bap", $r1);
+
+     label2:
+        return;
+    }
+
+    protected void addTraitAttributes(org.apache.fop.area.Area)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.Area area;
+        java.util.Map traitMap;
+        java.util.Iterator iter;
+        java.util.Map$Entry traitEntry;
+        java.lang.Object key, value, $r1;
+        java.lang.String name, repString, $r2, $r4;
+        java.lang.Class clazz, $r6;
+        org.apache.fop.fonts.FontTriplet triplet;
+        org.apache.fop.area.Trait$InternalLink iLink;
+        org.apache.fop.area.Trait$Background bkg;
+        int repeat, $i0, $i1;
+        java.awt.Color c, $r7, $r8;
+        java.util.Set $r0;
+        boolean $z0;
+        java.lang.Integer $r3, $r11;
+        java.lang.IllegalStateException $r9;
+        java.lang.StringBuffer $r10;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        area := @parameter0: org.apache.fop.area.Area;
+        traitMap = virtualinvoke area.<org.apache.fop.area.Area: java.util.Map getTraits()>();
+        if traitMap == null goto label23;
+
+        $r0 = interfaceinvoke traitMap.<java.util.Map: java.util.Set entrySet()>();
+        iter = interfaceinvoke $r0.<java.util.Set: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label23;
+
+        $r1 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        traitEntry = (java.util.Map$Entry) $r1;
+        key = interfaceinvoke traitEntry.<java.util.Map$Entry: java.lang.Object getKey()>();
+        name = staticinvoke <org.apache.fop.area.Trait: java.lang.String getTraitName(java.lang.Object)>(key);
+        clazz = staticinvoke <org.apache.fop.area.Trait: java.lang.Class getTraitClass(java.lang.Object)>(key);
+        $r2 = "break-before";
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>(name);
+        if $z0 != 0 goto label0;
+
+        $r2 = "break-after";
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>(name);
+        if $z0 == 0 goto label1;
+
+        goto label0;
+
+     label1:
+        value = interfaceinvoke traitEntry.<java.util.Map$Entry: java.lang.Object getValue()>();
+        $r3 = <org.apache.fop.area.Trait: java.lang.Integer FONT>;
+        if key != $r3 goto label2;
+
+        triplet = (org.apache.fop.fonts.FontTriplet) value;
+        $r4 = virtualinvoke triplet.<org.apache.fop.fonts.FontTriplet: java.lang.String getName()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("font-name", $r4);
+        $r4 = virtualinvoke triplet.<org.apache.fop.fonts.FontTriplet: java.lang.String getStyle()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("font-style", $r4);
+        $i0 = virtualinvoke triplet.<org.apache.fop.fonts.FontTriplet: int getWeight()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("font-weight", $i0);
+        goto label22;
+
+     label2:
+        $r6 = <org.apache.fop.render.xml.XMLRenderer: java.lang.Class class$org$apache$fop$area$Trait$InternalLink>;
+        if $r6 != null goto label3;
+
+        $r6 = staticinvoke <org.apache.fop.render.xml.XMLRenderer: java.lang.Class class$(java.lang.String)>("org.apache.fop.area.Trait$InternalLink");
+        <org.apache.fop.render.xml.XMLRenderer: java.lang.Class class$org$apache$fop$area$Trait$InternalLink> = $r6;
+        goto label4;
+
+     label3:
+        $r6 = <org.apache.fop.render.xml.XMLRenderer: java.lang.Class class$org$apache$fop$area$Trait$InternalLink>;
+
+     label4:
+        $z0 = virtualinvoke clazz.<java.lang.Object: boolean equals(java.lang.Object)>($r6);
+        if $z0 == 0 goto label5;
+
+        iLink = (org.apache.fop.area.Trait$InternalLink) value;
+        $r4 = virtualinvoke iLink.<org.apache.fop.area.Trait$InternalLink: java.lang.String xmlAttribute()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>(name, $r4);
+        goto label22;
+
+     label5:
+        $r6 = <org.apache.fop.render.xml.XMLRenderer: java.lang.Class class$org$apache$fop$area$Trait$Background>;
+        if $r6 != null goto label6;
+
+        $r6 = staticinvoke <org.apache.fop.render.xml.XMLRenderer: java.lang.Class class$(java.lang.String)>("org.apache.fop.area.Trait$Background");
+        <org.apache.fop.render.xml.XMLRenderer: java.lang.Class class$org$apache$fop$area$Trait$Background> = $r6;
+        goto label7;
+
+     label6:
+        $r6 = <org.apache.fop.render.xml.XMLRenderer: java.lang.Class class$org$apache$fop$area$Trait$Background>;
+
+     label7:
+        $z0 = virtualinvoke clazz.<java.lang.Object: boolean equals(java.lang.Object)>($r6);
+        if $z0 == 0 goto label16;
+
+        bkg = (org.apache.fop.area.Trait$Background) value;
+        $r4 = virtualinvoke bkg.<org.apache.fop.area.Trait$Background: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>(name, $r4);
+        $r7 = virtualinvoke bkg.<org.apache.fop.area.Trait$Background: java.awt.Color getColor()>();
+        if $r7 == null goto label8;
+
+        $r8 = virtualinvoke bkg.<org.apache.fop.area.Trait$Background: java.awt.Color getColor()>();
+        $r4 = virtualinvoke $r8.<java.awt.Color: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("bkg-color", $r4);
+
+     label8:
+        $r2 = virtualinvoke bkg.<org.apache.fop.area.Trait$Background: java.lang.String getURL()>();
+        if $r2 == null goto label15;
+
+        $r4 = virtualinvoke bkg.<org.apache.fop.area.Trait$Background: java.lang.String getURL()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("bkg-img", $r4);
+        repeat = virtualinvoke bkg.<org.apache.fop.area.Trait$Background: int getRepeat()>();
+        lookupswitch(repeat)
+        {
+            case 96: goto label12;
+            case 112: goto label9;
+            case 113: goto label10;
+            case 114: goto label11;
+            default: goto label13;
+        };
+
+     label9:
+        repString = "repeat";
+        goto label14;
+
+     label10:
+        repString = "repeat-x";
+        goto label14;
+
+     label11:
+        repString = "repeat-y";
+        goto label14;
+
+     label12:
+        repString = "no-repeat";
+        goto label14;
+
+     label13:
+        $r9 = new java.lang.IllegalStateException;
+        $r10 = new java.lang.StringBuffer;
+        specialinvoke $r10.<java.lang.StringBuffer: void <init>()>();
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Illegal value for repeat encountered: ");
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(repeat);
+        $r4 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r9.<java.lang.IllegalStateException: void <init>(java.lang.String)>($r4);
+        throw $r9;
+
+     label14:
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("bkg-repeat", repString);
+        $i0 = virtualinvoke bkg.<org.apache.fop.area.Trait$Background: int getHoriz()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("bkg-horz-offset", $i0);
+        $i0 = virtualinvoke bkg.<org.apache.fop.area.Trait$Background: int getVertical()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("bkg-vert-offset", $i0);
+
+     label15:
+        goto label22;
+
+     label16:
+        $r6 = <org.apache.fop.render.xml.XMLRenderer: java.lang.Class class$java$awt$Color>;
+        if $r6 != null goto label17;
+
+        $r6 = staticinvoke <org.apache.fop.render.xml.XMLRenderer: java.lang.Class class$(java.lang.String)>("java.awt.Color");
+        <org.apache.fop.render.xml.XMLRenderer: java.lang.Class class$java$awt$Color> = $r6;
+        goto label18;
+
+     label17:
+        $r6 = <org.apache.fop.render.xml.XMLRenderer: java.lang.Class class$java$awt$Color>;
+
+     label18:
+        $z0 = virtualinvoke clazz.<java.lang.Object: boolean equals(java.lang.Object)>($r6);
+        if $z0 == 0 goto label19;
+
+        c = (java.awt.Color) value;
+        $r4 = staticinvoke <org.apache.fop.util.ColorUtil: java.lang.String colorToString(java.awt.Color)>(c);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>(name, $r4);
+        goto label22;
+
+     label19:
+        $r3 = <org.apache.fop.area.Trait: java.lang.Integer START_INDENT>;
+        if key == $r3 goto label20;
+
+        $r3 = <org.apache.fop.area.Trait: java.lang.Integer END_INDENT>;
+        if key != $r3 goto label21;
+
+     label20:
+        $r11 = (java.lang.Integer) value;
+        $i1 = virtualinvoke $r11.<java.lang.Integer: int intValue()>();
+        if $i1 == 0 goto label22;
+
+        $r4 = virtualinvoke value.<java.lang.Object: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>(name, $r4);
+        goto label22;
+
+     label21:
+        $r4 = virtualinvoke value.<java.lang.Object: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>(name, $r4);
+
+     label22:
+        goto label0;
+
+     label23:
+        specialinvoke this.<org.apache.fop.render.xml.XMLRenderer: void transferForeignObjects(org.apache.fop.area.AreaTreeObject)>(area);
+        return;
+    }
+
+    private void transferForeignObjects(org.apache.fop.area.AreaTreeObject)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.AreaTreeObject ato;
+        java.util.HashMap $r0, prefixes;
+        java.util.Iterator iter;
+        java.util.Map$Entry entry;
+        org.apache.fop.util.QName qname;
+        java.lang.String qn, $r4, $r5, $r11;
+        java.util.Map $r1;
+        java.util.Set $r2;
+        boolean $z0;
+        java.lang.Object $r3, $r6, $r8, $r10;
+        java.lang.StringBuffer $r7;
+        org.xml.sax.helpers.AttributesImpl $r9;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        ato := @parameter0: org.apache.fop.area.AreaTreeObject;
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        prefixes = $r0;
+        $r1 = virtualinvoke ato.<org.apache.fop.area.AreaTreeObject: java.util.Map getForeignAttributes()>();
+        $r2 = interfaceinvoke $r1.<java.util.Map: java.util.Set entrySet()>();
+        iter = interfaceinvoke $r2.<java.util.Set: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r3 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        entry = (java.util.Map$Entry) $r3;
+        $r3 = interfaceinvoke entry.<java.util.Map$Entry: java.lang.Object getKey()>();
+        qname = (org.apache.fop.util.QName) $r3;
+        $r4 = virtualinvoke qname.<org.apache.fop.util.QName: java.lang.String getPrefix()>();
+        $r5 = virtualinvoke qname.<org.apache.fop.util.QName: java.lang.String getNamespaceURI()>();
+        interfaceinvoke prefixes.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r4, $r5);
+        $r6 = interfaceinvoke entry.<java.util.Map$Entry: java.lang.Object getValue()>();
+        $r5 = (java.lang.String) $r6;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(org.apache.fop.util.QName,java.lang.String)>(qname, $r5);
+        goto label0;
+
+     label1:
+        $r2 = interfaceinvoke prefixes.<java.util.Map: java.util.Set entrySet()>();
+        iter = interfaceinvoke $r2.<java.util.Set: java.util.Iterator iterator()>();
+
+     label2:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label3;
+
+        $r3 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        entry = (java.util.Map$Entry) $r3;
+        $r7 = new java.lang.StringBuffer;
+        specialinvoke $r7.<java.lang.StringBuffer: void <init>()>();
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("xmlns:");
+        $r8 = interfaceinvoke entry.<java.util.Map$Entry: java.lang.Object getKey()>();
+        $r4 = (java.lang.String) $r8;
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        qn = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r9 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        $r6 = interfaceinvoke entry.<java.util.Map$Entry: java.lang.Object getKey()>();
+        $r5 = (java.lang.String) $r6;
+        $r10 = interfaceinvoke entry.<java.util.Map$Entry: java.lang.Object getValue()>();
+        $r11 = (java.lang.String) $r10;
+        virtualinvoke $r9.<org.xml.sax.helpers.AttributesImpl: void addAttribute(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)>("", $r5, qn, "CDATA", $r11);
+        goto label2;
+
+     label3:
+        return;
+    }
+
+    private java.lang.String createString(java.awt.geom.Rectangle2D)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        java.awt.geom.Rectangle2D rect;
+        java.lang.StringBuffer $r0;
+        double $d0;
+        int $i0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        rect := @parameter0: java.awt.geom.Rectangle2D;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("");
+        $d0 = virtualinvoke rect.<java.awt.geom.Rectangle2D: double getX()>();
+        $i0 = (int) $d0;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $d0 = virtualinvoke rect.<java.awt.geom.Rectangle2D: double getY()>();
+        $i0 = (int) $d0;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $d0 = virtualinvoke rect.<java.awt.geom.Rectangle2D: double getWidth()>();
+        $i0 = (int) $d0;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $d0 = virtualinvoke rect.<java.awt.geom.Rectangle2D: double getHeight()>();
+        $i0 = (int) $d0;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r1 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r1;
+    }
+
+    private void handleDocumentExtensionAttachments()
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        java.util.List $r0, $r1;
+        int $i0;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: java.util.List extensionAttachments>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: java.util.List extensionAttachments>;
+        $i0 = interfaceinvoke $r0.<java.util.List: int size()>();
+        if $i0 <= 0 goto label0;
+
+        $r1 = this.<org.apache.fop.render.xml.XMLRenderer: java.util.List extensionAttachments>;
+        specialinvoke this.<org.apache.fop.render.xml.XMLRenderer: void handleExtensionAttachments(java.util.List)>($r1);
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: java.util.List extensionAttachments>;
+        interfaceinvoke $r0.<java.util.List: void clear()>();
+
+     label0:
+        return;
+    }
+
+    public void processOffDocumentItem(org.apache.fop.area.OffDocumentItem)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.OffDocumentItem oDI;
+        org.apache.fop.fo.extensions.ExtensionAttachment attachment;
+        java.lang.String warn;
+        boolean $z0;
+        org.apache.fop.area.BookmarkData $r0;
+        org.apache.fop.area.DestinationData $r1;
+        org.apache.fop.area.OffDocumentExtensionAttachment $r2;
+        java.util.List $r3;
+        java.util.ArrayList $r4;
+        java.lang.StringBuffer $r5;
+        org.apache.commons.logging.Log $r6;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        oDI := @parameter0: org.apache.fop.area.OffDocumentItem;
+        $z0 = oDI instanceof org.apache.fop.area.BookmarkData;
+        if $z0 == 0 goto label0;
+
+        $r0 = (org.apache.fop.area.BookmarkData) oDI;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void renderBookmarkTree(org.apache.fop.area.BookmarkData)>($r0);
+        goto label4;
+
+     label0:
+        $z0 = oDI instanceof org.apache.fop.area.DestinationData;
+        if $z0 == 0 goto label1;
+
+        $r1 = (org.apache.fop.area.DestinationData) oDI;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void renderDestination(org.apache.fop.area.DestinationData)>($r1);
+        goto label4;
+
+     label1:
+        $z0 = oDI instanceof org.apache.fop.area.OffDocumentExtensionAttachment;
+        if $z0 == 0 goto label3;
+
+        $r2 = (org.apache.fop.area.OffDocumentExtensionAttachment) oDI;
+        attachment = virtualinvoke $r2.<org.apache.fop.area.OffDocumentExtensionAttachment: org.apache.fop.fo.extensions.ExtensionAttachment getAttachment()>();
+        $r3 = this.<org.apache.fop.render.xml.XMLRenderer: java.util.List extensionAttachments>;
+        if $r3 != null goto label2;
+
+        $r4 = new java.util.ArrayList;
+        specialinvoke $r4.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.render.xml.XMLRenderer: java.util.List extensionAttachments> = $r4;
+
+     label2:
+        $r3 = this.<org.apache.fop.render.xml.XMLRenderer: java.util.List extensionAttachments>;
+        interfaceinvoke $r3.<java.util.List: boolean add(java.lang.Object)>(attachment);
+        goto label4;
+
+     label3:
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Ignoring OffDocumentItem: ");
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(oDI);
+        warn = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r6 = <org.apache.fop.render.xml.XMLRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r6.<org.apache.commons.logging.Log: void warn(java.lang.Object)>(warn);
+
+     label4:
+        return;
+    }
+
+    protected void renderBookmarkTree(org.apache.fop.area.BookmarkData)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.BookmarkData bookmarkRoot, $r0;
+        int i, $i0, $i1;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        bookmarkRoot := @parameter0: org.apache.fop.area.BookmarkData;
+        $i0 = virtualinvoke bookmarkRoot.<org.apache.fop.area.BookmarkData: int getWhenToProcess()>();
+        if $i0 != 2 goto label0;
+
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endPageSequence()>();
+
+     label0:
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String)>("bookmarkTree");
+        i = 0;
+
+     label1:
+        $i1 = virtualinvoke bookmarkRoot.<org.apache.fop.area.BookmarkData: int getCount()>();
+        if i >= $i1 goto label2;
+
+        $r0 = virtualinvoke bookmarkRoot.<org.apache.fop.area.BookmarkData: org.apache.fop.area.BookmarkData getSubData(int)>(i);
+        specialinvoke this.<org.apache.fop.render.xml.XMLRenderer: void renderBookmarkItem(org.apache.fop.area.BookmarkData)>($r0);
+        i = i + 1;
+        goto label1;
+
+     label2:
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("bookmarkTree");
+        return;
+    }
+
+    private void renderBookmarkItem(org.apache.fop.area.BookmarkData)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.BookmarkData bm, $r5;
+        org.apache.fop.area.PageViewport pv;
+        java.lang.String pvKey, $r1, $r2, $r3;
+        int i, $i0;
+        org.xml.sax.helpers.AttributesImpl $r0, $r4;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        bm := @parameter0: org.apache.fop.area.BookmarkData;
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke $r0.<org.xml.sax.helpers.AttributesImpl: void clear()>();
+        $r1 = virtualinvoke bm.<org.apache.fop.area.BookmarkData: java.lang.String getBookmarkTitle()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("title", $r1);
+        $z0 = virtualinvoke bm.<org.apache.fop.area.BookmarkData: boolean showChildItems()>();
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(boolean)>($z0);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("show-children", $r1);
+        pv = virtualinvoke bm.<org.apache.fop.area.BookmarkData: org.apache.fop.area.PageViewport getPageViewport()>();
+        if pv != null goto label0;
+
+        $r2 = null;
+        goto label1;
+
+     label0:
+        $r2 = virtualinvoke pv.<org.apache.fop.area.PageViewport: java.lang.String getKey()>();
+
+     label1:
+        pvKey = $r2;
+        $r3 = virtualinvoke bm.<org.apache.fop.area.BookmarkData: java.lang.String getIDRef()>();
+        $r1 = staticinvoke <org.apache.fop.area.Trait$InternalLink: java.lang.String makeXMLAttribute(java.lang.String,java.lang.String)>(pvKey, $r3);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("internal-link", $r1);
+        $r4 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>("bookmark", $r4);
+        i = 0;
+
+     label2:
+        $i0 = virtualinvoke bm.<org.apache.fop.area.BookmarkData: int getCount()>();
+        if i >= $i0 goto label3;
+
+        $r5 = virtualinvoke bm.<org.apache.fop.area.BookmarkData: org.apache.fop.area.BookmarkData getSubData(int)>(i);
+        specialinvoke this.<org.apache.fop.render.xml.XMLRenderer: void renderBookmarkItem(org.apache.fop.area.BookmarkData)>($r5);
+        i = i + 1;
+        goto label2;
+
+     label3:
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("bookmark");
+        return;
+    }
+
+    protected void renderDestination(org.apache.fop.area.DestinationData)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.DestinationData destination;
+        org.apache.fop.area.PageViewport pv;
+        java.lang.String pvKey, $r1, $r2, $r3;
+        int $i0;
+        org.xml.sax.helpers.AttributesImpl $r0, $r4;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        destination := @parameter0: org.apache.fop.area.DestinationData;
+        $i0 = virtualinvoke destination.<org.apache.fop.area.DestinationData: int getWhenToProcess()>();
+        if $i0 != 2 goto label0;
+
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endPageSequence()>();
+
+     label0:
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke $r0.<org.xml.sax.helpers.AttributesImpl: void clear()>();
+        pv = virtualinvoke destination.<org.apache.fop.area.DestinationData: org.apache.fop.area.PageViewport getPageViewport()>();
+        if pv != null goto label1;
+
+        $r1 = null;
+        goto label2;
+
+     label1:
+        $r1 = virtualinvoke pv.<org.apache.fop.area.PageViewport: java.lang.String getKey()>();
+
+     label2:
+        pvKey = $r1;
+        $r2 = virtualinvoke destination.<org.apache.fop.area.DestinationData: java.lang.String getIDRef()>();
+        $r3 = staticinvoke <org.apache.fop.area.Trait$InternalLink: java.lang.String makeXMLAttribute(java.lang.String,java.lang.String)>(pvKey, $r2);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("internal-link", $r3);
+        $r4 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>("destination", $r4);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("destination");
+        return;
+    }
+
+    public void startRenderer(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        java.io.OutputStream outputStream;
+        org.apache.commons.logging.Log $r0;
+        javax.xml.transform.sax.SAXTransformerFactory factory;
+        javax.xml.transform.sax.TransformerHandler transformerHandler;
+        javax.xml.transform.stream.StreamResult res, $r3;
+        javax.xml.transform.TransformerConfigurationException tce, $r4;
+        org.xml.sax.SAXException saxe, $r7;
+        org.xml.sax.ContentHandler $r1;
+        javax.xml.transform.TransformerFactory $r2;
+        java.lang.RuntimeException $r5;
+        java.lang.String $r6, $r9, $r12;
+        org.apache.fop.apps.FOUserAgent $r8, $r11;
+        java.lang.StringBuffer $r10;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        outputStream := @parameter0: java.io.OutputStream;
+        $r0 = <org.apache.fop.render.xml.XMLRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("Rendering areas to Area Tree XML");
+        $r1 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.ContentHandler handler>;
+        if $r1 != null goto label4;
+
+        $r2 = staticinvoke <javax.xml.transform.sax.SAXTransformerFactory: javax.xml.transform.TransformerFactory newInstance()>();
+        factory = (javax.xml.transform.sax.SAXTransformerFactory) $r2;
+
+     label0:
+        transformerHandler = virtualinvoke factory.<javax.xml.transform.sax.SAXTransformerFactory: javax.xml.transform.sax.TransformerHandler newTransformerHandler()>();
+        this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.ContentHandler handler> = transformerHandler;
+        $r3 = new javax.xml.transform.stream.StreamResult;
+        specialinvoke $r3.<javax.xml.transform.stream.StreamResult: void <init>(java.io.OutputStream)>(outputStream);
+        res = $r3;
+        interfaceinvoke transformerHandler.<javax.xml.transform.sax.TransformerHandler: void setResult(javax.xml.transform.Result)>(res);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r4 := @caughtexception;
+        tce = $r4;
+        $r5 = new java.lang.RuntimeException;
+        $r6 = virtualinvoke tce.<javax.xml.transform.TransformerConfigurationException: java.lang.String getMessage()>();
+        specialinvoke $r5.<java.lang.RuntimeException: void <init>(java.lang.String)>($r6);
+        throw $r5;
+
+     label3:
+        this.<org.apache.fop.render.xml.XMLRenderer: java.io.OutputStream out> = outputStream;
+
+     label4:
+        $r1 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.ContentHandler handler>;
+        interfaceinvoke $r1.<org.xml.sax.ContentHandler: void startDocument()>();
+
+     label5:
+        goto label7;
+
+     label6:
+        $r7 := @caughtexception;
+        saxe = $r7;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void handleSAXException(org.xml.sax.SAXException)>(saxe);
+
+     label7:
+        $r8 = this.<org.apache.fop.render.xml.XMLRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        $r9 = virtualinvoke $r8.<org.apache.fop.apps.FOUserAgent: java.lang.String getProducer()>();
+        if $r9 == null goto label8;
+
+        $r10 = new java.lang.StringBuffer;
+        specialinvoke $r10.<java.lang.StringBuffer: void <init>()>();
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Produced by ");
+        $r11 = this.<org.apache.fop.render.xml.XMLRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        $r6 = virtualinvoke $r11.<org.apache.fop.apps.FOUserAgent: java.lang.String getProducer()>();
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r12 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void comment(java.lang.String)>($r12);
+
+     label8:
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String)>("areaTree");
+        return;
+
+        catch javax.xml.transform.TransformerConfigurationException from label0 to label1 with label2;
+        catch org.xml.sax.SAXException from label4 to label5 with label6;
+    }
+
+    public void stopRenderer() throws java.io.IOException
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.xml.sax.SAXException saxe, $r1;
+        org.xml.sax.ContentHandler $r0;
+        java.io.OutputStream $r2;
+        org.apache.commons.logging.Log $r3;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endPageSequence()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("areaTree");
+
+     label0:
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.ContentHandler handler>;
+        interfaceinvoke $r0.<org.xml.sax.ContentHandler: void endDocument()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r1 := @caughtexception;
+        saxe = $r1;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void handleSAXException(org.xml.sax.SAXException)>(saxe);
+
+     label3:
+        $r2 = this.<org.apache.fop.render.xml.XMLRenderer: java.io.OutputStream out>;
+        if $r2 == null goto label4;
+
+        $r2 = this.<org.apache.fop.render.xml.XMLRenderer: java.io.OutputStream out>;
+        virtualinvoke $r2.<java.io.OutputStream: void flush()>();
+
+     label4:
+        $r3 = <org.apache.fop.render.xml.XMLRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("Written out Area Tree XML");
+        return;
+
+        catch org.xml.sax.SAXException from label0 to label1 with label2;
+    }
+
+    public void renderPage(org.apache.fop.area.PageViewport) throws java.io.IOException, org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.PageViewport page;
+        org.xml.sax.helpers.AttributesImpl $r0, $r4;
+        java.awt.geom.Rectangle2D $r1;
+        java.lang.String $r2, $r3;
+        int $i0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        page := @parameter0: org.apache.fop.area.PageViewport;
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke $r0.<org.xml.sax.helpers.AttributesImpl: void clear()>();
+        $r1 = virtualinvoke page.<org.apache.fop.area.PageViewport: java.awt.geom.Rectangle2D getViewArea()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.awt.geom.Rectangle2D)>("bounds", $r1);
+        $r2 = virtualinvoke page.<org.apache.fop.area.PageViewport: java.lang.String getKey()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("key", $r2);
+        $i0 = virtualinvoke page.<org.apache.fop.area.PageViewport: int getPageNumber()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("nr", $i0);
+        $r2 = virtualinvoke page.<org.apache.fop.area.PageViewport: java.lang.String getPageNumberString()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("formatted-nr", $r2);
+        $r3 = virtualinvoke page.<org.apache.fop.area.PageViewport: java.lang.String getSimplePageMasterName()>();
+        if $r3 == null goto label0;
+
+        $r2 = virtualinvoke page.<org.apache.fop.area.PageViewport: java.lang.String getSimplePageMasterName()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("simple-page-master-name", $r2);
+
+     label0:
+        $z0 = virtualinvoke page.<org.apache.fop.area.PageViewport: boolean isBlank()>();
+        if $z0 == 0 goto label1;
+
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("blank", "true");
+
+     label1:
+        specialinvoke this.<org.apache.fop.render.xml.XMLRenderer: void transferForeignObjects(org.apache.fop.area.AreaTreeObject)>(page);
+        $r4 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>("pageViewport", $r4);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String)>("page");
+        specialinvoke this.<org.apache.fop.render.xml.XMLRenderer: void handlePageExtensionAttachments(org.apache.fop.area.PageViewport)>(page);
+        specialinvoke this.<org.apache.fop.render.PrintRenderer: void renderPage(org.apache.fop.area.PageViewport)>(page);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("page");
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("pageViewport");
+        return;
+    }
+
+    private void handleExtensionAttachments(java.util.List)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        java.util.List attachments;
+        java.util.Iterator i;
+        org.apache.fop.fo.extensions.ExtensionAttachment attachment;
+        org.xml.sax.SAXException e, $r3;
+        java.lang.String warn;
+        int $i0;
+        boolean $z0;
+        java.lang.Object $r0;
+        org.apache.xmlgraphics.util.XMLizable $r1;
+        org.xml.sax.ContentHandler $r2;
+        org.apache.commons.logging.Log $r4;
+        java.lang.StringBuffer $r5;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        attachments := @parameter0: java.util.List;
+        if attachments == null goto label7;
+
+        $i0 = interfaceinvoke attachments.<java.util.List: int size()>();
+        if $i0 <= 0 goto label7;
+
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String)>("extension-attachments");
+        i = interfaceinvoke attachments.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke i.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label6;
+
+        $r0 = interfaceinvoke i.<java.util.Iterator: java.lang.Object next()>();
+        attachment = (org.apache.fop.fo.extensions.ExtensionAttachment) $r0;
+        $z0 = attachment instanceof org.apache.xmlgraphics.util.XMLizable;
+        if $z0 == 0 goto label4;
+
+     label1:
+        $r1 = (org.apache.xmlgraphics.util.XMLizable) attachment;
+        $r2 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.ContentHandler handler>;
+        interfaceinvoke $r1.<org.apache.xmlgraphics.util.XMLizable: void toSAX(org.xml.sax.ContentHandler)>($r2);
+
+     label2:
+        goto label5;
+
+     label3:
+        $r3 := @caughtexception;
+        e = $r3;
+        $r4 = <org.apache.fop.render.xml.XMLRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r4.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("Error while serializing Extension Attachment", e);
+        goto label5;
+
+     label4:
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Ignoring non-XMLizable ExtensionAttachment: ");
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(attachment);
+        warn = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r4 = <org.apache.fop.render.xml.XMLRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r4.<org.apache.commons.logging.Log: void warn(java.lang.Object)>(warn);
+
+     label5:
+        goto label0;
+
+     label6:
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("extension-attachments");
+
+     label7:
+        return;
+
+        catch org.xml.sax.SAXException from label1 to label2 with label3;
+    }
+
+    private void handlePageExtensionAttachments(org.apache.fop.area.PageViewport)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.PageViewport page;
+        java.util.List $r0;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        page := @parameter0: org.apache.fop.area.PageViewport;
+        $r0 = virtualinvoke page.<org.apache.fop.area.PageViewport: java.util.List getExtensionAttachments()>();
+        specialinvoke this.<org.apache.fop.render.xml.XMLRenderer: void handleExtensionAttachments(java.util.List)>($r0);
+        return;
+    }
+
+    public void startPageSequence(org.apache.fop.area.PageSequence)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.PageSequence pageSequence;
+        org.apache.fop.area.LineArea seqTitle;
+        java.util.List children;
+        int count, $i0;
+        org.apache.fop.area.inline.InlineArea inline;
+        org.xml.sax.helpers.AttributesImpl $r0, $r3;
+        java.lang.String $r1, $r2;
+        java.lang.Object $r4;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        pageSequence := @parameter0: org.apache.fop.area.PageSequence;
+        specialinvoke this.<org.apache.fop.render.xml.XMLRenderer: void handleDocumentExtensionAttachments()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endPageSequence()>();
+        this.<org.apache.fop.render.xml.XMLRenderer: boolean startedSequence> = 1;
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke $r0.<org.xml.sax.helpers.AttributesImpl: void clear()>();
+        $r1 = virtualinvoke pageSequence.<org.apache.fop.area.PageSequence: java.lang.String getLanguage()>();
+        if $r1 == null goto label0;
+
+        $r2 = virtualinvoke pageSequence.<org.apache.fop.area.PageSequence: java.lang.String getLanguage()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("language", $r2);
+
+     label0:
+        $r1 = virtualinvoke pageSequence.<org.apache.fop.area.PageSequence: java.lang.String getCountry()>();
+        if $r1 == null goto label1;
+
+        $r2 = virtualinvoke pageSequence.<org.apache.fop.area.PageSequence: java.lang.String getCountry()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("country", $r2);
+
+     label1:
+        $r3 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>("pageSequence", $r3);
+        seqTitle = virtualinvoke pageSequence.<org.apache.fop.area.PageSequence: org.apache.fop.area.LineArea getTitle()>();
+        if seqTitle == null goto label4;
+
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String)>("title");
+        children = virtualinvoke seqTitle.<org.apache.fop.area.LineArea: java.util.List getInlineAreas()>();
+        count = 0;
+
+     label2:
+        $i0 = interfaceinvoke children.<java.util.List: int size()>();
+        if count >= $i0 goto label3;
+
+        $r4 = interfaceinvoke children.<java.util.List: java.lang.Object get(int)>(count);
+        inline = (org.apache.fop.area.inline.InlineArea) $r4;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void renderInlineArea(org.apache.fop.area.inline.InlineArea)>(inline);
+        count = count + 1;
+        goto label2;
+
+     label3:
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("title");
+
+     label4:
+        return;
+    }
+
+    public void endPageSequence()
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        $z0 = this.<org.apache.fop.render.xml.XMLRenderer: boolean startedSequence>;
+        if $z0 == 0 goto label0;
+
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("pageSequence");
+
+     label0:
+        this.<org.apache.fop.render.xml.XMLRenderer: boolean startedSequence> = 0;
+        return;
+    }
+
+    protected void renderRegionViewport(org.apache.fop.area.RegionViewport)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.RegionViewport port;
+        org.apache.fop.area.RegionReference region;
+        org.apache.fop.area.BodyRegion body;
+        org.xml.sax.helpers.AttributesImpl $r0, $r2;
+        java.awt.geom.Rectangle2D $r1;
+        boolean $z0;
+        java.lang.String $r3;
+        org.apache.fop.area.CTM $r4;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        port := @parameter0: org.apache.fop.area.RegionViewport;
+        if port == null goto label7;
+
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke $r0.<org.xml.sax.helpers.AttributesImpl: void clear()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAreaAttributes(org.apache.fop.area.Area)>(port);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addTraitAttributes(org.apache.fop.area.Area)>(port);
+        $r1 = virtualinvoke port.<org.apache.fop.area.RegionViewport: java.awt.geom.Rectangle2D getViewArea()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.awt.geom.Rectangle2D)>("rect", $r1);
+        $z0 = virtualinvoke port.<org.apache.fop.area.RegionViewport: boolean isClip()>();
+        if $z0 == 0 goto label0;
+
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("clipped", "true");
+
+     label0:
+        $r2 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>("regionViewport", $r2);
+        region = virtualinvoke port.<org.apache.fop.area.RegionViewport: org.apache.fop.area.RegionReference getRegionReference()>();
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke $r0.<org.xml.sax.helpers.AttributesImpl: void clear()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAreaAttributes(org.apache.fop.area.Area)>(region);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addTraitAttributes(org.apache.fop.area.Area)>(region);
+        $r3 = virtualinvoke region.<org.apache.fop.area.RegionReference: java.lang.String getRegionName()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("name", $r3);
+        $r4 = virtualinvoke region.<org.apache.fop.area.RegionReference: org.apache.fop.area.CTM getCTM()>();
+        $r3 = virtualinvoke $r4.<org.apache.fop.area.CTM: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("ctm", $r3);
+        $i0 = virtualinvoke region.<org.apache.fop.area.RegionReference: int getRegionClass()>();
+        if $i0 != 35 goto label1;
+
+        $r2 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>("regionBefore", $r2);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void renderRegion(org.apache.fop.area.RegionReference)>(region);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("regionBefore");
+        goto label6;
+
+     label1:
+        $i0 = virtualinvoke region.<org.apache.fop.area.RegionReference: int getRegionClass()>();
+        if $i0 != 38 goto label2;
+
+        $r2 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>("regionStart", $r2);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void renderRegion(org.apache.fop.area.RegionReference)>(region);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("regionStart");
+        goto label6;
+
+     label2:
+        $i0 = virtualinvoke region.<org.apache.fop.area.RegionReference: int getRegionClass()>();
+        if $i0 != 36 goto label4;
+
+        body = (org.apache.fop.area.BodyRegion) region;
+        $i0 = virtualinvoke body.<org.apache.fop.area.BodyRegion: int getColumnCount()>();
+        if $i0 == 1 goto label3;
+
+        $i1 = virtualinvoke body.<org.apache.fop.area.BodyRegion: int getColumnGap()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("columnGap", $i1);
+        $i1 = virtualinvoke body.<org.apache.fop.area.BodyRegion: int getColumnCount()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("columnCount", $i1);
+
+     label3:
+        $r2 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>("regionBody", $r2);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void renderBodyRegion(org.apache.fop.area.BodyRegion)>(body);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("regionBody");
+        goto label6;
+
+     label4:
+        $i0 = virtualinvoke region.<org.apache.fop.area.RegionReference: int getRegionClass()>();
+        if $i0 != 37 goto label5;
+
+        $r2 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>("regionEnd", $r2);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void renderRegion(org.apache.fop.area.RegionReference)>(region);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("regionEnd");
+        goto label6;
+
+     label5:
+        $i0 = virtualinvoke region.<org.apache.fop.area.RegionReference: int getRegionClass()>();
+        if $i0 != 34 goto label6;
+
+        $r2 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>("regionAfter", $r2);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void renderRegion(org.apache.fop.area.RegionReference)>(region);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("regionAfter");
+
+     label6:
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("regionViewport");
+
+     label7:
+        return;
+    }
+
+    protected void startVParea(org.apache.fop.area.CTM, java.awt.geom.Rectangle2D)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.CTM ctm;
+        java.awt.geom.Rectangle2D clippingRect;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        ctm := @parameter0: org.apache.fop.area.CTM;
+        clippingRect := @parameter1: java.awt.geom.Rectangle2D;
+        return;
+    }
+
+    protected void endVParea()
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        return;
+    }
+
+    protected void renderInlineAreaBackAndBorders(org.apache.fop.area.inline.InlineArea)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.inline.InlineArea area;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        area := @parameter0: org.apache.fop.area.inline.InlineArea;
+        return;
+    }
+
+    protected void renderBeforeFloat(org.apache.fop.area.BeforeFloat)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.BeforeFloat bf;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        bf := @parameter0: org.apache.fop.area.BeforeFloat;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String)>("beforeFloat");
+        specialinvoke this.<org.apache.fop.render.PrintRenderer: void renderBeforeFloat(org.apache.fop.area.BeforeFloat)>(bf);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("beforeFloat");
+        return;
+    }
+
+    protected void renderFootnote(org.apache.fop.area.Footnote)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.Footnote footnote;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        footnote := @parameter0: org.apache.fop.area.Footnote;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String)>("footnote");
+        specialinvoke this.<org.apache.fop.render.PrintRenderer: void renderFootnote(org.apache.fop.area.Footnote)>(footnote);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("footnote");
+        return;
+    }
+
+    protected void renderMainReference(org.apache.fop.area.MainReference)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.MainReference mr;
+        null_type span;
+        java.util.List spans;
+        int count, c, $i0, $i1, $i2;
+        org.apache.fop.area.NormalFlow flow;
+        org.xml.sax.helpers.AttributesImpl $r0, $r1;
+        java.lang.Object $r2;
+        org.apache.fop.area.Span span;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        mr := @parameter0: org.apache.fop.area.MainReference;
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke $r0.<org.xml.sax.helpers.AttributesImpl: void clear()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAreaAttributes(org.apache.fop.area.Area)>(mr);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addTraitAttributes(org.apache.fop.area.Area)>(mr);
+        $i0 = virtualinvoke mr.<org.apache.fop.area.MainReference: int getColumnCount()>();
+        if $i0 == 1 goto label0;
+
+        $i1 = virtualinvoke mr.<org.apache.fop.area.MainReference: int getColumnGap()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("columnGap", $i1);
+
+     label0:
+        $r1 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>("mainReference", $r1);
+        span = null;
+        spans = virtualinvoke mr.<org.apache.fop.area.MainReference: java.util.List getSpans()>();
+        count = 0;
+
+     label1:
+        $i2 = interfaceinvoke spans.<java.util.List: int size()>();
+        if count >= $i2 goto label5;
+
+        $r2 = interfaceinvoke spans.<java.util.List: java.lang.Object get(int)>(count);
+        span = (org.apache.fop.area.Span) $r2;
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke $r0.<org.xml.sax.helpers.AttributesImpl: void clear()>();
+        $i0 = virtualinvoke span.<org.apache.fop.area.Span: int getColumnCount()>();
+        if $i0 == 1 goto label2;
+
+        $i1 = virtualinvoke span.<org.apache.fop.area.Span: int getColumnCount()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("columnCount", $i1);
+
+     label2:
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAreaAttributes(org.apache.fop.area.Area)>(span);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addTraitAttributes(org.apache.fop.area.Area)>(span);
+        $r1 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>("span", $r1);
+        c = 0;
+
+     label3:
+        $i2 = virtualinvoke span.<org.apache.fop.area.Span: int getColumnCount()>();
+        if c >= $i2 goto label4;
+
+        flow = virtualinvoke span.<org.apache.fop.area.Span: org.apache.fop.area.NormalFlow getNormalFlow(int)>(c);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void renderFlow(org.apache.fop.area.NormalFlow)>(flow);
+        c = c + 1;
+        goto label3;
+
+     label4:
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("span");
+        count = count + 1;
+        goto label1;
+
+     label5:
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("mainReference");
+        return;
+    }
+
+    protected void renderFlow(org.apache.fop.area.NormalFlow)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.NormalFlow flow;
+        org.xml.sax.helpers.AttributesImpl $r0, $r1;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        flow := @parameter0: org.apache.fop.area.NormalFlow;
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke $r0.<org.xml.sax.helpers.AttributesImpl: void clear()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAreaAttributes(org.apache.fop.area.Area)>(flow);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addTraitAttributes(org.apache.fop.area.Area)>(flow);
+        $r1 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>("flow", $r1);
+        specialinvoke this.<org.apache.fop.render.PrintRenderer: void renderFlow(org.apache.fop.area.NormalFlow)>(flow);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("flow");
+        return;
+    }
+
+    protected void renderReferenceArea(org.apache.fop.area.Block)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.Block block;
+        java.util.List children;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        block := @parameter0: org.apache.fop.area.Block;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void handleBlockTraits(org.apache.fop.area.Block)>(block);
+        children = virtualinvoke block.<org.apache.fop.area.Block: java.util.List getChildAreas()>();
+        if children == null goto label0;
+
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void renderBlocks(org.apache.fop.area.Block,java.util.List)>(block, children);
+
+     label0:
+        return;
+    }
+
+    protected void renderBlock(org.apache.fop.area.Block)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.Block block;
+        int positioning, $i0, $i1;
+        org.apache.fop.area.BlockViewport bvp;
+        boolean abspos, $z0;
+        org.xml.sax.helpers.AttributesImpl $r0, $r3;
+        org.apache.fop.area.CTM $r1;
+        java.lang.String $r2;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        block := @parameter0: org.apache.fop.area.Block;
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke $r0.<org.xml.sax.helpers.AttributesImpl: void clear()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAreaAttributes(org.apache.fop.area.Area)>(block);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addTraitAttributes(org.apache.fop.area.Area)>(block);
+        positioning = virtualinvoke block.<org.apache.fop.area.Block: int getPositioning()>();
+        $z0 = block instanceof org.apache.fop.area.BlockViewport;
+        if $z0 == 0 goto label4;
+
+        bvp = (org.apache.fop.area.BlockViewport) block;
+        abspos = 0;
+        $i0 = virtualinvoke bvp.<org.apache.fop.area.BlockViewport: int getPositioning()>();
+        if $i0 == 2 goto label0;
+
+        $i0 = virtualinvoke bvp.<org.apache.fop.area.BlockViewport: int getPositioning()>();
+        if $i0 != 3 goto label1;
+
+     label0:
+        abspos = 1;
+
+     label1:
+        if abspos == 0 goto label2;
+
+        $i1 = virtualinvoke bvp.<org.apache.fop.area.BlockViewport: int getXOffset()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("left-position", $i1);
+        $i1 = virtualinvoke bvp.<org.apache.fop.area.BlockViewport: int getYOffset()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("top-position", $i1);
+
+     label2:
+        $r1 = virtualinvoke bvp.<org.apache.fop.area.BlockViewport: org.apache.fop.area.CTM getCTM()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.area.CTM: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("ctm", $r2);
+        $z0 = virtualinvoke bvp.<org.apache.fop.area.BlockViewport: boolean getClip()>();
+        if $z0 == 0 goto label3;
+
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("clipped", "true");
+
+     label3:
+        goto label6;
+
+     label4:
+        $i0 = virtualinvoke block.<org.apache.fop.area.Block: int getXOffset()>();
+        if $i0 == 0 goto label5;
+
+        $i1 = virtualinvoke block.<org.apache.fop.area.Block: int getXOffset()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("left-offset", $i1);
+
+     label5:
+        $i0 = virtualinvoke block.<org.apache.fop.area.Block: int getYOffset()>();
+        if $i0 == 0 goto label6;
+
+        $i1 = virtualinvoke block.<org.apache.fop.area.Block: int getYOffset()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("top-offset", $i1);
+
+     label6:
+        tableswitch(positioning)
+        {
+            case 1: goto label7;
+            case 2: goto label8;
+            case 3: goto label9;
+            default: goto label10;
+        };
+
+     label7:
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("positioning", "relative");
+        goto label10;
+
+     label8:
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("positioning", "absolute");
+        goto label10;
+
+     label9:
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("positioning", "fixed");
+        goto label10;
+
+     label10:
+        $r3 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>("block", $r3);
+        specialinvoke this.<org.apache.fop.render.PrintRenderer: void renderBlock(org.apache.fop.area.Block)>(block);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("block");
+        return;
+    }
+
+    protected void renderLineArea(org.apache.fop.area.LineArea)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.LineArea line;
+        org.xml.sax.helpers.AttributesImpl $r0, $r1;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        line := @parameter0: org.apache.fop.area.LineArea;
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke $r0.<org.xml.sax.helpers.AttributesImpl: void clear()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAreaAttributes(org.apache.fop.area.Area)>(line);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addTraitAttributes(org.apache.fop.area.Area)>(line);
+        $r1 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>("lineArea", $r1);
+        specialinvoke this.<org.apache.fop.render.PrintRenderer: void renderLineArea(org.apache.fop.area.LineArea)>(line);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("lineArea");
+        return;
+    }
+
+    protected void renderInlineArea(org.apache.fop.area.inline.InlineArea)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.inline.InlineArea inlineArea;
+        java.lang.Class $r0, $r2;
+        org.xml.sax.helpers.AttributesImpl $r1, $r3;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        inlineArea := @parameter0: org.apache.fop.area.inline.InlineArea;
+        $r1 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke $r1.<org.xml.sax.helpers.AttributesImpl: void clear()>();
+        $r2 = virtualinvoke inlineArea.<java.lang.Object: java.lang.Class getClass()>();
+        $r0 = <org.apache.fop.render.xml.XMLRenderer: java.lang.Class class$org$apache$fop$area$inline$InlineArea>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.render.xml.XMLRenderer: java.lang.Class class$(java.lang.String)>("org.apache.fop.area.inline.InlineArea");
+        <org.apache.fop.render.xml.XMLRenderer: java.lang.Class class$org$apache$fop$area$inline$InlineArea> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.render.xml.XMLRenderer: java.lang.Class class$org$apache$fop$area$inline$InlineArea>;
+
+     label1:
+        if $r2 != $r0 goto label2;
+
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAreaAttributes(org.apache.fop.area.Area)>(inlineArea);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addTraitAttributes(org.apache.fop.area.Area)>(inlineArea);
+        $r3 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>("inline", $r3);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("inline");
+        goto label3;
+
+     label2:
+        specialinvoke this.<org.apache.fop.render.PrintRenderer: void renderInlineArea(org.apache.fop.area.inline.InlineArea)>(inlineArea);
+
+     label3:
+        return;
+    }
+
+    protected void renderViewport(org.apache.fop.area.inline.Viewport)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.inline.Viewport viewport;
+        org.xml.sax.helpers.AttributesImpl $r0, $r2;
+        int $i0;
+        java.awt.geom.Rectangle2D $r1;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        viewport := @parameter0: org.apache.fop.area.inline.Viewport;
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke $r0.<org.xml.sax.helpers.AttributesImpl: void clear()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAreaAttributes(org.apache.fop.area.Area)>(viewport);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addTraitAttributes(org.apache.fop.area.Area)>(viewport);
+        $i0 = virtualinvoke viewport.<org.apache.fop.area.inline.Viewport: int getOffset()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("offset", $i0);
+        $r1 = virtualinvoke viewport.<org.apache.fop.area.inline.Viewport: java.awt.geom.Rectangle2D getContentPosition()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.awt.geom.Rectangle2D)>("pos", $r1);
+        $z0 = virtualinvoke viewport.<org.apache.fop.area.inline.Viewport: boolean getClip()>();
+        if $z0 == 0 goto label0;
+
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("clip", "true");
+
+     label0:
+        $r2 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>("viewport", $r2);
+        specialinvoke this.<org.apache.fop.render.PrintRenderer: void renderViewport(org.apache.fop.area.inline.Viewport)>(viewport);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("viewport");
+        return;
+    }
+
+    public void renderImage(org.apache.fop.area.inline.Image, java.awt.geom.Rectangle2D)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.inline.Image image;
+        java.awt.geom.Rectangle2D pos;
+        org.xml.sax.helpers.AttributesImpl $r0, $r2;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        image := @parameter0: org.apache.fop.area.inline.Image;
+        pos := @parameter1: java.awt.geom.Rectangle2D;
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke $r0.<org.xml.sax.helpers.AttributesImpl: void clear()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAreaAttributes(org.apache.fop.area.Area)>(image);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addTraitAttributes(org.apache.fop.area.Area)>(image);
+        $r1 = virtualinvoke image.<org.apache.fop.area.inline.Image: java.lang.String getURL()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("url", $r1);
+        $r2 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>("image", $r2);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("image");
+        return;
+    }
+
+    public void renderContainer(org.apache.fop.area.inline.Container)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.inline.Container cont;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        cont := @parameter0: org.apache.fop.area.inline.Container;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String)>("container");
+        specialinvoke this.<org.apache.fop.render.PrintRenderer: void renderContainer(org.apache.fop.area.inline.Container)>(cont);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("container");
+        return;
+    }
+
+    public void renderForeignObject(org.apache.fop.area.inline.ForeignObject, java.awt.geom.Rectangle2D)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.inline.ForeignObject fo;
+        java.awt.geom.Rectangle2D pos;
+        java.lang.String ns;
+        org.w3c.dom.Document doc;
+        org.xml.sax.helpers.AttributesImpl $r0, $r1;
+        org.apache.fop.render.RendererContext $r2, $r4;
+        org.xml.sax.ContentHandler $r3;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        fo := @parameter0: org.apache.fop.area.inline.ForeignObject;
+        pos := @parameter1: java.awt.geom.Rectangle2D;
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke $r0.<org.xml.sax.helpers.AttributesImpl: void clear()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAreaAttributes(org.apache.fop.area.Area)>(fo);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addTraitAttributes(org.apache.fop.area.Area)>(fo);
+        ns = virtualinvoke fo.<org.apache.fop.area.inline.ForeignObject: java.lang.String getNameSpace()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("ns", ns);
+        $r1 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>("foreignObject", $r1);
+        doc = virtualinvoke fo.<org.apache.fop.area.inline.ForeignObject: org.w3c.dom.Document getDocument()>();
+        $r2 = this.<org.apache.fop.render.xml.XMLRenderer: org.apache.fop.render.RendererContext context>;
+        $r3 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.ContentHandler handler>;
+        virtualinvoke $r2.<org.apache.fop.render.RendererContext: void setProperty(java.lang.String,java.lang.Object)>("handler", $r3);
+        $r4 = this.<org.apache.fop.render.xml.XMLRenderer: org.apache.fop.render.RendererContext context>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void renderXML(org.apache.fop.render.RendererContext,org.w3c.dom.Document,java.lang.String)>($r4, doc, ns);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("foreignObject");
+        return;
+    }
+
+    protected void renderInlineSpace(org.apache.fop.area.inline.Space)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.inline.Space space;
+        org.xml.sax.helpers.AttributesImpl $r0, $r1;
+        int $i0;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        space := @parameter0: org.apache.fop.area.inline.Space;
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke $r0.<org.xml.sax.helpers.AttributesImpl: void clear()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAreaAttributes(org.apache.fop.area.Area)>(space);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addTraitAttributes(org.apache.fop.area.Area)>(space);
+        $i0 = virtualinvoke space.<org.apache.fop.area.inline.Space: int getOffset()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("offset", $i0);
+        $r1 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>("space", $r1);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("space");
+        return;
+    }
+
+    protected void renderText(org.apache.fop.area.inline.TextArea)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.inline.TextArea text;
+        org.xml.sax.helpers.AttributesImpl $r0, $r1;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        text := @parameter0: org.apache.fop.area.inline.TextArea;
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke $r0.<org.xml.sax.helpers.AttributesImpl: void clear()>();
+        $i0 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getTextWordSpaceAdjust()>();
+        if $i0 == 0 goto label0;
+
+        $i1 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getTextWordSpaceAdjust()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("twsadjust", $i1);
+
+     label0:
+        $i0 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getTextLetterSpaceAdjust()>();
+        if $i0 == 0 goto label1;
+
+        $i1 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getTextLetterSpaceAdjust()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("tlsadjust", $i1);
+
+     label1:
+        $i1 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getOffset()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("offset", $i1);
+        $i1 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getBaselineOffset()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("baseline", $i1);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAreaAttributes(org.apache.fop.area.Area)>(text);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addTraitAttributes(org.apache.fop.area.Area)>(text);
+        $r1 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>("text", $r1);
+        specialinvoke this.<org.apache.fop.render.PrintRenderer: void renderText(org.apache.fop.area.inline.TextArea)>(text);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("text");
+        return;
+    }
+
+    protected void renderWord(org.apache.fop.area.inline.WordArea)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.inline.WordArea word;
+        int[] letterAdjust;
+        java.lang.StringBuffer sb, $r1;
+        boolean nonZeroFound, $z0, $z1;
+        int i, c, $i0, $i1;
+        org.xml.sax.helpers.AttributesImpl $r0, $r3;
+        java.lang.String $r2, $r4;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        word := @parameter0: org.apache.fop.area.inline.WordArea;
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke $r0.<org.xml.sax.helpers.AttributesImpl: void clear()>();
+        $i0 = virtualinvoke word.<org.apache.fop.area.inline.WordArea: int getOffset()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("offset", $i0);
+        letterAdjust = virtualinvoke word.<org.apache.fop.area.inline.WordArea: int[] getLetterAdjustArray()>();
+        if letterAdjust == null goto label5;
+
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>(int)>(64);
+        sb = $r1;
+        nonZeroFound = 0;
+        i = 0;
+        c = lengthof letterAdjust;
+
+     label0:
+        if i >= c goto label4;
+
+        if i <= 0 goto label1;
+
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(32);
+
+     label1:
+        $i1 = letterAdjust[i];
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $z0 = nonZeroFound;
+        $i1 = letterAdjust[i];
+        if $i1 == 0 goto label2;
+
+        $z1 = 1;
+        goto label3;
+
+     label2:
+        $z1 = 0;
+
+     label3:
+        nonZeroFound = $z0 | $z1;
+        i = i + 1;
+        goto label0;
+
+     label4:
+        if nonZeroFound == 0 goto label5;
+
+        $r2 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("letter-adjust", $r2);
+
+     label5:
+        $r3 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>("word", $r3);
+        $r4 = virtualinvoke word.<org.apache.fop.area.inline.WordArea: java.lang.String getWord()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void characters(java.lang.String)>($r4);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("word");
+        specialinvoke this.<org.apache.fop.render.PrintRenderer: void renderWord(org.apache.fop.area.inline.WordArea)>(word);
+        return;
+    }
+
+    protected void renderSpace(org.apache.fop.area.inline.SpaceArea)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.inline.SpaceArea space;
+        org.xml.sax.helpers.AttributesImpl $r0, $r1;
+        int $i0;
+        boolean $z0;
+        java.lang.String $r2;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        space := @parameter0: org.apache.fop.area.inline.SpaceArea;
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke $r0.<org.xml.sax.helpers.AttributesImpl: void clear()>();
+        $i0 = virtualinvoke space.<org.apache.fop.area.inline.SpaceArea: int getOffset()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("offset", $i0);
+        $z0 = virtualinvoke space.<org.apache.fop.area.inline.SpaceArea: boolean isAdjustable()>();
+        if $z0 != 0 goto label0;
+
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("adj", "false");
+
+     label0:
+        $r1 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>("space", $r1);
+        $r2 = virtualinvoke space.<org.apache.fop.area.inline.SpaceArea: java.lang.String getSpace()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void characters(java.lang.String)>($r2);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("space");
+        specialinvoke this.<org.apache.fop.render.PrintRenderer: void renderSpace(org.apache.fop.area.inline.SpaceArea)>(space);
+        return;
+    }
+
+    protected void renderInlineParent(org.apache.fop.area.inline.InlineParent)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.inline.InlineParent ip;
+        org.xml.sax.helpers.AttributesImpl $r0, $r1;
+        int $i0;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        ip := @parameter0: org.apache.fop.area.inline.InlineParent;
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke $r0.<org.xml.sax.helpers.AttributesImpl: void clear()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAreaAttributes(org.apache.fop.area.Area)>(ip);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addTraitAttributes(org.apache.fop.area.Area)>(ip);
+        $i0 = virtualinvoke ip.<org.apache.fop.area.inline.InlineParent: int getOffset()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("offset", $i0);
+        $r1 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>("inlineparent", $r1);
+        specialinvoke this.<org.apache.fop.render.PrintRenderer: void renderInlineParent(org.apache.fop.area.inline.InlineParent)>(ip);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("inlineparent");
+        return;
+    }
+
+    protected void renderInlineBlockParent(org.apache.fop.area.inline.InlineBlockParent)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.inline.InlineBlockParent ibp;
+        org.xml.sax.helpers.AttributesImpl $r0, $r1;
+        int $i0;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        ibp := @parameter0: org.apache.fop.area.inline.InlineBlockParent;
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke $r0.<org.xml.sax.helpers.AttributesImpl: void clear()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAreaAttributes(org.apache.fop.area.Area)>(ibp);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addTraitAttributes(org.apache.fop.area.Area)>(ibp);
+        $i0 = virtualinvoke ibp.<org.apache.fop.area.inline.InlineBlockParent: int getOffset()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("offset", $i0);
+        $r1 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>("inlineblockparent", $r1);
+        specialinvoke this.<org.apache.fop.render.PrintRenderer: void renderInlineBlockParent(org.apache.fop.area.inline.InlineBlockParent)>(ibp);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("inlineblockparent");
+        return;
+    }
+
+    protected void renderLeader(org.apache.fop.area.inline.Leader)
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+        org.apache.fop.area.inline.Leader area;
+        org.xml.sax.helpers.AttributesImpl $r0, $r2;
+        int $i0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        area := @parameter0: org.apache.fop.area.inline.Leader;
+        $r0 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke $r0.<org.xml.sax.helpers.AttributesImpl: void clear()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAreaAttributes(org.apache.fop.area.Area)>(area);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addTraitAttributes(org.apache.fop.area.Area)>(area);
+        $i0 = virtualinvoke area.<org.apache.fop.area.inline.Leader: int getOffset()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("offset", $i0);
+        $r1 = virtualinvoke area.<org.apache.fop.area.inline.Leader: java.lang.String getRuleStyleAsString()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,java.lang.String)>("ruleStyle", $r1);
+        $i0 = virtualinvoke area.<org.apache.fop.area.inline.Leader: int getRuleThickness()>();
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void addAttribute(java.lang.String,int)>("ruleThickness", $i0);
+        $r2 = this.<org.apache.fop.render.xml.XMLRenderer: org.xml.sax.helpers.AttributesImpl atts>;
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void startElement(java.lang.String,org.xml.sax.Attributes)>("leader", $r2);
+        virtualinvoke this.<org.apache.fop.render.xml.XMLRenderer: void endElement(java.lang.String)>("leader");
+        specialinvoke this.<org.apache.fop.render.PrintRenderer: void renderLeader(org.apache.fop.area.inline.Leader)>(area);
+        return;
+    }
+
+    public java.lang.String getMimeType()
+    {
+        org.apache.fop.render.xml.XMLRenderer this;
+
+        this := @this: org.apache.fop.render.xml.XMLRenderer;
+        return "application/X-fop-areatree";
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        org.xml.sax.helpers.AttributesImpl $r0;
+
+        $r0 = new org.xml.sax.helpers.AttributesImpl;
+        specialinvoke $r0.<org.xml.sax.helpers.AttributesImpl: void <init>()>();
+        <org.apache.fop.render.xml.XMLRenderer: org.xml.sax.Attributes EMPTY_ATTS> = $r0;
+        return;
+    }
+}

@@ -1,0 +1,63 @@
+method: org.apache.fop.fonts.type1.Type1FontLoader.buildCustomEncoding:144768476
+387968609:this := @this: org.apache.fop.fonts.type1.Type1FontLoader
+828059171:encodingName := @parameter0: java.lang.String
+1496454437:afm := @parameter1: org.apache.fop.fonts.type1.AFMFile
+42030662:chars = virtualinvoke afm.<org.apache.fop.fonts.type1.AFMFile: java.util.List getCharMetrics()>()
+673607698:mappingCount = 0
+1461028987:iter = interfaceinvoke chars.<java.util.List: java.util.Iterator iterator()>()
+779602676:$z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>()
+984445185:if $z0 == 0 goto $i0 = mappingCount * 2
+393182991:$r0 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>()
+2086612019:charMetrics = (org.apache.fop.fonts.type1.AFMCharMetrics) $r0
+1486501868:$i0 = virtualinvoke charMetrics.<org.apache.fop.fonts.type1.AFMCharMetrics: int getCharCode()>()
+1959629925:if $i0 < 0 goto (branch)
+1852534925:u = virtualinvoke charMetrics.<org.apache.fop.fonts.type1.AFMCharMetrics: java.lang.String getUnicodeSequence()>()
+1057563463:if u == null goto (branch)
+1597829261:$i0 = virtualinvoke u.<java.lang.String: int length()>()
+1766025867:if $i0 != 1 goto (branch)
+1225261482:mappingCount = mappingCount + 1
+749036891:goto [?= $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>()]
+773139176:$i0 = mappingCount * 2
+296073825:table = newarray (int)[$i0]
+2002831046:charNameMap = newarray (java.lang.String)[256]
+1750296699:iter = interfaceinvoke chars.<java.util.List: java.util.Iterator iterator()>()
+817644119:idx = 0
+1936016225:$z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>()
+2099957878:if $z0 == 0 goto $r5 = new org.apache.fop.fonts.CodePointMapping
+1000591964:$r0 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>()
+1671572545:charMetrics = (org.apache.fop.fonts.type1.AFMCharMetrics) $r0
+623077820:$i0 = virtualinvoke charMetrics.<org.apache.fop.fonts.type1.AFMCharMetrics: int getCharCode()>()
+938657968:if $i0 < 0 goto (branch)
+733527132:$i1 = virtualinvoke charMetrics.<org.apache.fop.fonts.type1.AFMCharMetrics: int getCharCode()>()
+1044279076:$r1 = virtualinvoke charMetrics.<org.apache.fop.fonts.type1.AFMCharMetrics: java.lang.String getCharName()>()
+1962067048:charNameMap[$i1] = $r1
+2087993463:unicodes = virtualinvoke charMetrics.<org.apache.fop.fonts.type1.AFMCharMetrics: java.lang.String getUnicodeSequence()>()
+1675917760:if unicodes != null goto $i0 = virtualinvoke unicodes.<java.lang.String: int length()>()
+754278268:$r2 = <org.apache.fop.fonts.type1.Type1FontLoader: org.apache.commons.logging.Log log>
+558882035:$r3 = new java.lang.StringBuffer
+1539427133:specialinvoke $r3.<java.lang.StringBuffer: void <init>()>()
+176943637:$r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("No Unicode mapping for glyph: ")
+1367919835:$r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(charMetrics)
+1816225710:$r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>()
+972949512:interfaceinvoke $r2.<org.apache.commons.logging.Log: void info(java.lang.Object)>($r4)
+1421959926:goto [?= (branch)]
+1061416013:$i0 = virtualinvoke unicodes.<java.lang.String: int length()>()
+1395345079:if $i0 != 1 goto $r2 = <org.apache.fop.fonts.type1.Type1FontLoader: org.apache.commons.logging.Log log>
+1207069994:$i2 = virtualinvoke charMetrics.<org.apache.fop.fonts.type1.AFMCharMetrics: int getCharCode()>()
+2094859596:table[idx] = $i2
+310837407:idx = idx + 1
+1313727568:$c3 = virtualinvoke unicodes.<java.lang.String: char charAt(int)>(0)
+1539860569:table[idx] = $c3
+1111153186:idx = idx + 1
+633802790:goto [?= (branch)]
+804602410:$r2 = <org.apache.fop.fonts.type1.Type1FontLoader: org.apache.commons.logging.Log log>
+248179711:$r3 = new java.lang.StringBuffer
+530321569:specialinvoke $r3.<java.lang.StringBuffer: void <init>()>()
+409897759:$r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Multi-character representation of glyph not currently supported: ")
+1253487523:$r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(charMetrics)
+550221991:$r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>()
+516418755:interfaceinvoke $r2.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r4)
+1468597758:goto [?= $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>()]
+1692963735:$r5 = new org.apache.fop.fonts.CodePointMapping
+289776586:specialinvoke $r5.<org.apache.fop.fonts.CodePointMapping: void <init>(java.lang.String,int[],java.lang.String[])>(encodingName, table, charNameMap)
+1929653153:return $r5

@@ -1,0 +1,60 @@
+public class org.apache.fop.render.afp.AFPGraphics2DAdapter extends org.apache.fop.render.AbstractGraphics2DAdapter
+{
+
+    public void <init>()
+    {
+        org.apache.fop.render.afp.AFPGraphics2DAdapter this;
+
+        this := @this: org.apache.fop.render.afp.AFPGraphics2DAdapter;
+        specialinvoke this.<org.apache.fop.render.AbstractGraphics2DAdapter: void <init>()>();
+        return;
+    }
+
+    public void paintImage(org.apache.xmlgraphics.java2d.Graphics2DImagePainter, org.apache.fop.render.RendererContext, int, int, int, int) throws java.io.IOException
+    {
+        org.apache.fop.render.afp.AFPGraphics2DAdapter this;
+        org.apache.xmlgraphics.java2d.Graphics2DImagePainter painter;
+        org.apache.fop.render.RendererContext context;
+        int x, y, width, height, resolution;
+        org.apache.fop.render.RendererContext$RendererContextWrapper $r0, wrappedContext;
+        org.apache.fop.render.afp.AFPRenderer afp;
+        java.lang.Boolean grayObj;
+        boolean gray, $z0;
+        java.awt.image.BufferedImage bi;
+        org.apache.fop.render.AbstractRenderer $r1;
+        java.lang.Object $r2;
+        org.apache.fop.apps.FOUserAgent $r3;
+        float $f0;
+
+        this := @this: org.apache.fop.render.afp.AFPGraphics2DAdapter;
+        painter := @parameter0: org.apache.xmlgraphics.java2d.Graphics2DImagePainter;
+        context := @parameter1: org.apache.fop.render.RendererContext;
+        x := @parameter2: int;
+        y := @parameter3: int;
+        width := @parameter4: int;
+        height := @parameter5: int;
+        $r0 = new org.apache.fop.render.RendererContext$RendererContextWrapper;
+        specialinvoke $r0.<org.apache.fop.render.RendererContext$RendererContextWrapper: void <init>(org.apache.fop.render.RendererContext)>(context);
+        wrappedContext = $r0;
+        $r1 = virtualinvoke context.<org.apache.fop.render.RendererContext: org.apache.fop.render.AbstractRenderer getRenderer()>();
+        afp = (org.apache.fop.render.afp.AFPRenderer) $r1;
+        $r2 = virtualinvoke context.<org.apache.fop.render.RendererContext: java.lang.Object getProperty(java.lang.String)>("afpGrayscale");
+        grayObj = (java.lang.Boolean) $r2;
+        if grayObj == null goto label0;
+
+        $z0 = virtualinvoke grayObj.<java.lang.Boolean: boolean booleanValue()>();
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        gray = $z0;
+        $r3 = virtualinvoke context.<org.apache.fop.render.RendererContext: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        $f0 = virtualinvoke $r3.<org.apache.fop.apps.FOUserAgent: float getTargetResolution()>();
+        resolution = staticinvoke <java.lang.Math: int round(float)>($f0);
+        bi = virtualinvoke this.<org.apache.fop.render.afp.AFPGraphics2DAdapter: java.awt.image.BufferedImage paintToBufferedImage(org.apache.xmlgraphics.java2d.Graphics2DImagePainter,org.apache.fop.render.RendererContext$RendererContextWrapper,int,boolean,boolean)>(painter, wrappedContext, resolution, gray, 0);
+        virtualinvoke afp.<org.apache.fop.render.afp.AFPRenderer: void drawBufferedImage(java.awt.image.RenderedImage,int,int,int,int,int)>(bi, resolution, x, y, width, height);
+        return;
+    }
+}

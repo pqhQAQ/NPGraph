@@ -1,0 +1,207 @@
+public class org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter extends java.lang.Object
+{
+    private static final org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter INSTANCE;
+    private static final java.util.Map SPECIAL_CHARS;
+    private static final java.lang.Character DBLQUOTE;
+    private static final java.lang.Character QUOTE;
+    private static final java.lang.Character SPACE;
+
+    private void <init>()
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter this;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public static org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter getInstance()
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter $r0;
+
+        $r0 = <org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter INSTANCE>;
+        return $r0;
+    }
+
+    public void writeRtfString(java.io.Writer, java.lang.String) throws java.io.IOException
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter this;
+        java.io.Writer w;
+        java.lang.String str, $r0;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter;
+        w := @parameter0: java.io.Writer;
+        str := @parameter1: java.lang.String;
+        if str != null goto label0;
+
+        return;
+
+     label0:
+        $r0 = virtualinvoke this.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter: java.lang.String escape(java.lang.String)>(str);
+        virtualinvoke w.<java.io.Writer: void write(java.lang.String)>($r0);
+        return;
+    }
+
+    public java.lang.String escape(java.lang.String)
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter this;
+        java.lang.String str, replacement, $r5, $r6;
+        java.lang.StringBuffer sb, $r0;
+        int i, $i0, $i1, $i2;
+        java.lang.Character c, d, $r1, $r2;
+        char $c3, $c4, $c5;
+        boolean $z0;
+        java.util.Map $r3;
+        java.lang.Object $r4;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter;
+        str := @parameter0: java.lang.String;
+        if str != null goto label0;
+
+        return null;
+
+     label0:
+        $r0 = new java.lang.StringBuffer;
+        $i0 = virtualinvoke str.<java.lang.String: int length()>();
+        $i1 = staticinvoke <java.lang.Math: int max(int,int)>(16, $i0);
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>(int)>($i1);
+        sb = $r0;
+        i = 0;
+
+     label1:
+        $i2 = virtualinvoke str.<java.lang.String: int length()>();
+        if i >= $i2 goto label10;
+
+        $r1 = new java.lang.Character;
+        $c3 = virtualinvoke str.<java.lang.String: char charAt(int)>(i);
+        specialinvoke $r1.<java.lang.Character: void <init>(char)>($c3);
+        c = $r1;
+        if i == 0 goto label2;
+
+        $r1 = new java.lang.Character;
+        $i0 = i - 1;
+        $c3 = virtualinvoke str.<java.lang.String: char charAt(int)>($i0);
+        specialinvoke $r1.<java.lang.Character: void <init>(char)>($c3);
+        d = $r1;
+        goto label3;
+
+     label2:
+        $r1 = new java.lang.Character;
+        $c3 = virtualinvoke str.<java.lang.String: char charAt(int)>(i);
+        specialinvoke $r1.<java.lang.Character: void <init>(char)>($c3);
+        d = $r1;
+
+     label3:
+        $r2 = <org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter: java.lang.Character DBLQUOTE>;
+        $z0 = virtualinvoke c.<java.lang.Character: boolean equals(java.lang.Object)>($r2);
+        if $z0 == 0 goto label4;
+
+        $r2 = <org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter: java.lang.Character SPACE>;
+        $z0 = virtualinvoke d.<java.lang.Character: boolean equals(java.lang.Object)>($r2);
+        if $z0 == 0 goto label4;
+
+        replacement = "ldblquote";
+        goto label6;
+
+     label4:
+        $r2 = <org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter: java.lang.Character QUOTE>;
+        $z0 = virtualinvoke c.<java.lang.Character: boolean equals(java.lang.Object)>($r2);
+        if $z0 == 0 goto label5;
+
+        $r2 = <org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter: java.lang.Character SPACE>;
+        $z0 = virtualinvoke d.<java.lang.Character: boolean equals(java.lang.Object)>($r2);
+        if $z0 == 0 goto label5;
+
+        replacement = "lquote";
+        goto label6;
+
+     label5:
+        $r3 = <org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter: java.util.Map SPECIAL_CHARS>;
+        $r4 = interfaceinvoke $r3.<java.util.Map: java.lang.Object get(java.lang.Object)>(c);
+        replacement = (java.lang.String) $r4;
+
+     label6:
+        if replacement == null goto label7;
+
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(92);
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(replacement);
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(32);
+        goto label9;
+
+     label7:
+        $c4 = virtualinvoke c.<java.lang.Character: char charValue()>();
+        if $c4 <= 127 goto label8;
+
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\\u");
+        $c5 = virtualinvoke c.<java.lang.Character: char charValue()>();
+        $r5 = staticinvoke <java.lang.Integer: java.lang.String toString(int)>($c5);
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\\\'3f");
+        goto label9;
+
+     label8:
+        $c5 = virtualinvoke c.<java.lang.Character: char charValue()>();
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c5);
+
+     label9:
+        i = i + 1;
+        goto label1;
+
+     label10:
+        $r6 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r6;
+    }
+
+    static void <clinit>()
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter $r0;
+        java.lang.Character $r1, $r4;
+        java.util.HashMap $r2;
+        java.util.Map $r3;
+
+        $r0 = new org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter;
+        specialinvoke $r0.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter: void <init>()>();
+        <org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter INSTANCE> = $r0;
+        $r1 = new java.lang.Character;
+        specialinvoke $r1.<java.lang.Character: void <init>(char)>(34);
+        <org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter: java.lang.Character DBLQUOTE> = $r1;
+        $r1 = new java.lang.Character;
+        specialinvoke $r1.<java.lang.Character: void <init>(char)>(39);
+        <org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter: java.lang.Character QUOTE> = $r1;
+        $r1 = new java.lang.Character;
+        specialinvoke $r1.<java.lang.Character: void <init>(char)>(32);
+        <org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter: java.lang.Character SPACE> = $r1;
+        $r2 = new java.util.HashMap;
+        specialinvoke $r2.<java.util.HashMap: void <init>()>();
+        <org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter: java.util.Map SPECIAL_CHARS> = $r2;
+        $r3 = <org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter: java.util.Map SPECIAL_CHARS>;
+        $r4 = new java.lang.Character;
+        specialinvoke $r4.<java.lang.Character: void <init>(char)>(9);
+        interfaceinvoke $r3.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r4, "tab");
+        $r3 = <org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter: java.util.Map SPECIAL_CHARS>;
+        $r4 = new java.lang.Character;
+        specialinvoke $r4.<java.lang.Character: void <init>(char)>(10);
+        interfaceinvoke $r3.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r4, "line");
+        $r3 = <org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter: java.util.Map SPECIAL_CHARS>;
+        $r4 = new java.lang.Character;
+        specialinvoke $r4.<java.lang.Character: void <init>(char)>(39);
+        interfaceinvoke $r3.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r4, "rquote");
+        $r3 = <org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter: java.util.Map SPECIAL_CHARS>;
+        $r4 = new java.lang.Character;
+        specialinvoke $r4.<java.lang.Character: void <init>(char)>(34);
+        interfaceinvoke $r3.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r4, "rdblquote");
+        $r3 = <org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter: java.util.Map SPECIAL_CHARS>;
+        $r4 = new java.lang.Character;
+        specialinvoke $r4.<java.lang.Character: void <init>(char)>(92);
+        interfaceinvoke $r3.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r4, "\\");
+        $r3 = <org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter: java.util.Map SPECIAL_CHARS>;
+        $r4 = new java.lang.Character;
+        specialinvoke $r4.<java.lang.Character: void <init>(char)>(123);
+        interfaceinvoke $r3.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r4, "{");
+        $r3 = <org.apache.fop.render.rtf.rtflib.rtfdoc.RtfStringConverter: java.util.Map SPECIAL_CHARS>;
+        $r4 = new java.lang.Character;
+        specialinvoke $r4.<java.lang.Character: void <init>(char)>(125);
+        interfaceinvoke $r3.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r4, "}");
+        return;
+    }
+}

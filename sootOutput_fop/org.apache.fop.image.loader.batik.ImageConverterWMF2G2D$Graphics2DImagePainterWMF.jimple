@@ -1,0 +1,97 @@
+class org.apache.fop.image.loader.batik.ImageConverterWMF2G2D$Graphics2DImagePainterWMF extends java.lang.Object implements org.apache.xmlgraphics.java2d.Graphics2DImagePainter
+{
+    private org.apache.fop.image.loader.batik.ImageWMF wmf;
+
+    public void <init>(org.apache.fop.image.loader.batik.ImageWMF)
+    {
+        org.apache.fop.image.loader.batik.ImageConverterWMF2G2D$Graphics2DImagePainterWMF this;
+        org.apache.fop.image.loader.batik.ImageWMF wmf;
+
+        this := @this: org.apache.fop.image.loader.batik.ImageConverterWMF2G2D$Graphics2DImagePainterWMF;
+        wmf := @parameter0: org.apache.fop.image.loader.batik.ImageWMF;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.image.loader.batik.ImageConverterWMF2G2D$Graphics2DImagePainterWMF: org.apache.fop.image.loader.batik.ImageWMF wmf> = wmf;
+        return;
+    }
+
+    public java.awt.Dimension getImageSize()
+    {
+        org.apache.fop.image.loader.batik.ImageConverterWMF2G2D$Graphics2DImagePainterWMF this;
+        org.apache.fop.image.loader.batik.ImageWMF $r0;
+        org.apache.xmlgraphics.image.loader.ImageSize $r1;
+        java.awt.Dimension $r2;
+
+        this := @this: org.apache.fop.image.loader.batik.ImageConverterWMF2G2D$Graphics2DImagePainterWMF;
+        $r0 = this.<org.apache.fop.image.loader.batik.ImageConverterWMF2G2D$Graphics2DImagePainterWMF: org.apache.fop.image.loader.batik.ImageWMF wmf>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.image.loader.batik.ImageWMF: org.apache.xmlgraphics.image.loader.ImageSize getSize()>();
+        $r2 = virtualinvoke $r1.<org.apache.xmlgraphics.image.loader.ImageSize: java.awt.Dimension getDimensionMpt()>();
+        return $r2;
+    }
+
+    public void paint(java.awt.Graphics2D, java.awt.geom.Rectangle2D)
+    {
+        org.apache.fop.image.loader.batik.ImageConverterWMF2G2D$Graphics2DImagePainterWMF this;
+        java.awt.Graphics2D g2d;
+        java.awt.geom.Rectangle2D area;
+        org.apache.batik.transcoder.wmf.tosvg.WMFRecordStore wmfStore;
+        double w, h, sx, sy, $d0, $d1, $d2;
+        org.apache.batik.transcoder.wmf.tosvg.WMFPainter painter, $r1;
+        long start, duration, $l2;
+        org.apache.fop.image.loader.batik.ImageWMF $r0;
+        int $i0;
+        byte $b1;
+        org.apache.commons.logging.Log $r2;
+        boolean $z0;
+        java.lang.StringBuffer $r3;
+        java.lang.String $r4;
+
+        this := @this: org.apache.fop.image.loader.batik.ImageConverterWMF2G2D$Graphics2DImagePainterWMF;
+        g2d := @parameter0: java.awt.Graphics2D;
+        area := @parameter1: java.awt.geom.Rectangle2D;
+        $r0 = this.<org.apache.fop.image.loader.batik.ImageConverterWMF2G2D$Graphics2DImagePainterWMF: org.apache.fop.image.loader.batik.ImageWMF wmf>;
+        wmfStore = virtualinvoke $r0.<org.apache.fop.image.loader.batik.ImageWMF: org.apache.batik.transcoder.wmf.tosvg.WMFRecordStore getRecordStore()>();
+        w = virtualinvoke area.<java.awt.geom.Rectangle2D: double getWidth()>();
+        h = virtualinvoke area.<java.awt.geom.Rectangle2D: double getHeight()>();
+        $d0 = virtualinvoke area.<java.awt.geom.Rectangle2D: double getX()>();
+        $d1 = virtualinvoke area.<java.awt.geom.Rectangle2D: double getY()>();
+        virtualinvoke g2d.<java.awt.Graphics2D: void translate(double,double)>($d0, $d1);
+        $i0 = virtualinvoke wmfStore.<org.apache.batik.transcoder.wmf.tosvg.WMFRecordStore: int getWidthPixels()>();
+        $d2 = (double) $i0;
+        sx = w / $d2;
+        $i0 = virtualinvoke wmfStore.<org.apache.batik.transcoder.wmf.tosvg.WMFRecordStore: int getHeightPixels()>();
+        $d2 = (double) $i0;
+        sy = h / $d2;
+        $b1 = sx cmpl 1.0;
+        if $b1 != 0 goto label0;
+
+        $b1 = sy cmpl 1.0;
+        if $b1 == 0 goto label1;
+
+     label0:
+        virtualinvoke g2d.<java.awt.Graphics2D: void scale(double,double)>(sx, sy);
+
+     label1:
+        $r1 = new org.apache.batik.transcoder.wmf.tosvg.WMFPainter;
+        specialinvoke $r1.<org.apache.batik.transcoder.wmf.tosvg.WMFPainter: void <init>(org.apache.batik.transcoder.wmf.tosvg.WMFRecordStore,float)>(wmfStore, 1.0F);
+        painter = $r1;
+        start = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        virtualinvoke painter.<org.apache.batik.transcoder.wmf.tosvg.WMFPainter: void paint(java.awt.Graphics)>(g2d);
+        $r2 = staticinvoke <org.apache.fop.image.loader.batik.ImageConverterWMF2G2D: org.apache.commons.logging.Log access$000()>();
+        $z0 = interfaceinvoke $r2.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label2;
+
+        $l2 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        duration = $l2 - start;
+        $r2 = staticinvoke <org.apache.fop.image.loader.batik.ImageConverterWMF2G2D: org.apache.commons.logging.Log access$000()>();
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Painting WMF took ");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(long)>(duration);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ms.");
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r4);
+
+     label2:
+        return;
+    }
+}

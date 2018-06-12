@@ -1,0 +1,1732 @@
+class org.apache.fop.area.AreaTreeParser$Handler extends org.xml.sax.helpers.DefaultHandler
+{
+    private java.util.Map makers;
+    private org.apache.fop.area.AreaTreeModel treeModel;
+    private org.apache.fop.apps.FOUserAgent userAgent;
+    private org.apache.fop.fo.ElementMappingRegistry elementMappingRegistry;
+    private org.xml.sax.Attributes lastAttributes;
+    private java.lang.StringBuffer content;
+    private org.apache.fop.area.PageViewport currentPageViewport;
+    private java.util.Map pageViewportsByKey;
+    private java.util.Set idFirstsAssigned;
+    private java.util.Stack areaStack;
+    private boolean firstFlow;
+    private java.util.Stack delegateStack;
+    private org.xml.sax.ContentHandler delegate;
+    private org.w3c.dom.DOMImplementation domImplementation;
+    private static final java.lang.Object[] SUBSET_COMMON;
+    private static final java.lang.Object[] SUBSET_LINK;
+    private static final java.lang.Object[] SUBSET_COLOR;
+    private static final java.lang.Object[] SUBSET_FONT;
+    private static final java.lang.Object[] SUBSET_BOX;
+
+    public void <init>(org.apache.fop.area.AreaTreeModel, org.apache.fop.apps.FOUserAgent, org.apache.fop.fo.ElementMappingRegistry)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler this;
+        org.apache.fop.area.AreaTreeModel treeModel;
+        org.apache.fop.apps.FOUserAgent userAgent;
+        org.apache.fop.fo.ElementMappingRegistry elementMappingRegistry;
+        java.util.HashMap $r0;
+        java.lang.StringBuffer $r1;
+        java.util.HashSet $r2;
+        java.util.Stack $r3;
+        java.util.Map $r4;
+        org.apache.fop.area.AreaTreeParser$Handler$AreaTreeMaker $r5;
+        org.apache.fop.area.AreaTreeParser$Handler$PageMaker $r7;
+        org.apache.fop.area.AreaTreeParser$Handler$PageSequenceMaker $r8;
+        org.apache.fop.area.AreaTreeParser$Handler$TitleMaker $r9;
+        org.apache.fop.area.AreaTreeParser$Handler$PageViewportMaker $r10;
+        org.apache.fop.area.AreaTreeParser$Handler$RegionViewportMaker $r11;
+        org.apache.fop.area.AreaTreeParser$Handler$RegionBeforeMaker $r12;
+        org.apache.fop.area.AreaTreeParser$Handler$RegionAfterMaker $r13;
+        org.apache.fop.area.AreaTreeParser$Handler$RegionStartMaker $r14;
+        org.apache.fop.area.AreaTreeParser$Handler$RegionEndMaker $r15;
+        org.apache.fop.area.AreaTreeParser$Handler$RegionBodyMaker $r16;
+        org.apache.fop.area.AreaTreeParser$Handler$FlowMaker $r17;
+        org.apache.fop.area.AreaTreeParser$Handler$MainReferenceMaker $r18;
+        org.apache.fop.area.AreaTreeParser$Handler$SpanMaker $r19;
+        org.apache.fop.area.AreaTreeParser$Handler$FootnoteMaker $r20;
+        org.apache.fop.area.AreaTreeParser$Handler$BeforeFloatMaker $r21;
+        org.apache.fop.area.AreaTreeParser$Handler$BlockMaker $r22;
+        org.apache.fop.area.AreaTreeParser$Handler$LineAreaMaker $r23;
+        org.apache.fop.area.AreaTreeParser$Handler$InlineMaker $r24;
+        org.apache.fop.area.AreaTreeParser$Handler$InlineParentMaker $r25;
+        org.apache.fop.area.AreaTreeParser$Handler$InlineBlockParentMaker $r26;
+        org.apache.fop.area.AreaTreeParser$Handler$TextMaker $r27;
+        org.apache.fop.area.AreaTreeParser$Handler$WordMaker $r28;
+        org.apache.fop.area.AreaTreeParser$Handler$SpaceMaker $r29;
+        org.apache.fop.area.AreaTreeParser$Handler$CharMaker $r30;
+        org.apache.fop.area.AreaTreeParser$Handler$LeaderMaker $r31;
+        org.apache.fop.area.AreaTreeParser$Handler$ViewportMaker $r32;
+        org.apache.fop.area.AreaTreeParser$Handler$ImageMaker $r33;
+        org.apache.fop.area.AreaTreeParser$Handler$ForeignObjectMaker $r34;
+        org.apache.fop.area.AreaTreeParser$Handler$BookmarkTreeMaker $r35;
+        org.apache.fop.area.AreaTreeParser$Handler$BookmarkMaker $r36;
+        org.apache.fop.area.AreaTreeParser$Handler$DestinationMaker $r37;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler;
+        treeModel := @parameter0: org.apache.fop.area.AreaTreeModel;
+        userAgent := @parameter1: org.apache.fop.apps.FOUserAgent;
+        elementMappingRegistry := @parameter2: org.apache.fop.fo.ElementMappingRegistry;
+        specialinvoke this.<org.xml.sax.helpers.DefaultHandler: void <init>()>();
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers> = $r0;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        this.<org.apache.fop.area.AreaTreeParser$Handler: java.lang.StringBuffer content> = $r1;
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map pageViewportsByKey> = $r0;
+        $r2 = new java.util.HashSet;
+        specialinvoke $r2.<java.util.HashSet: void <init>()>();
+        this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Set idFirstsAssigned> = $r2;
+        $r3 = new java.util.Stack;
+        specialinvoke $r3.<java.util.Stack: void <init>()>();
+        this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Stack areaStack> = $r3;
+        $r3 = new java.util.Stack;
+        specialinvoke $r3.<java.util.Stack: void <init>()>();
+        this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Stack delegateStack> = $r3;
+        this.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.area.AreaTreeModel treeModel> = treeModel;
+        this.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.apps.FOUserAgent userAgent> = userAgent;
+        this.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.fo.ElementMappingRegistry elementMappingRegistry> = elementMappingRegistry;
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r5 = new org.apache.fop.area.AreaTreeParser$Handler$AreaTreeMaker;
+        specialinvoke $r5.<org.apache.fop.area.AreaTreeParser$Handler$AreaTreeMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("areaTree", $r5);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r7 = new org.apache.fop.area.AreaTreeParser$Handler$PageMaker;
+        specialinvoke $r7.<org.apache.fop.area.AreaTreeParser$Handler$PageMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("page", $r7);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r8 = new org.apache.fop.area.AreaTreeParser$Handler$PageSequenceMaker;
+        specialinvoke $r8.<org.apache.fop.area.AreaTreeParser$Handler$PageSequenceMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("pageSequence", $r8);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r9 = new org.apache.fop.area.AreaTreeParser$Handler$TitleMaker;
+        specialinvoke $r9.<org.apache.fop.area.AreaTreeParser$Handler$TitleMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("title", $r9);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r10 = new org.apache.fop.area.AreaTreeParser$Handler$PageViewportMaker;
+        specialinvoke $r10.<org.apache.fop.area.AreaTreeParser$Handler$PageViewportMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("pageViewport", $r10);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r11 = new org.apache.fop.area.AreaTreeParser$Handler$RegionViewportMaker;
+        specialinvoke $r11.<org.apache.fop.area.AreaTreeParser$Handler$RegionViewportMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("regionViewport", $r11);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r12 = new org.apache.fop.area.AreaTreeParser$Handler$RegionBeforeMaker;
+        specialinvoke $r12.<org.apache.fop.area.AreaTreeParser$Handler$RegionBeforeMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("regionBefore", $r12);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r13 = new org.apache.fop.area.AreaTreeParser$Handler$RegionAfterMaker;
+        specialinvoke $r13.<org.apache.fop.area.AreaTreeParser$Handler$RegionAfterMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("regionAfter", $r13);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r14 = new org.apache.fop.area.AreaTreeParser$Handler$RegionStartMaker;
+        specialinvoke $r14.<org.apache.fop.area.AreaTreeParser$Handler$RegionStartMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("regionStart", $r14);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r15 = new org.apache.fop.area.AreaTreeParser$Handler$RegionEndMaker;
+        specialinvoke $r15.<org.apache.fop.area.AreaTreeParser$Handler$RegionEndMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("regionEnd", $r15);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r16 = new org.apache.fop.area.AreaTreeParser$Handler$RegionBodyMaker;
+        specialinvoke $r16.<org.apache.fop.area.AreaTreeParser$Handler$RegionBodyMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("regionBody", $r16);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r17 = new org.apache.fop.area.AreaTreeParser$Handler$FlowMaker;
+        specialinvoke $r17.<org.apache.fop.area.AreaTreeParser$Handler$FlowMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("flow", $r17);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r18 = new org.apache.fop.area.AreaTreeParser$Handler$MainReferenceMaker;
+        specialinvoke $r18.<org.apache.fop.area.AreaTreeParser$Handler$MainReferenceMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("mainReference", $r18);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r19 = new org.apache.fop.area.AreaTreeParser$Handler$SpanMaker;
+        specialinvoke $r19.<org.apache.fop.area.AreaTreeParser$Handler$SpanMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("span", $r19);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r20 = new org.apache.fop.area.AreaTreeParser$Handler$FootnoteMaker;
+        specialinvoke $r20.<org.apache.fop.area.AreaTreeParser$Handler$FootnoteMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("footnote", $r20);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r21 = new org.apache.fop.area.AreaTreeParser$Handler$BeforeFloatMaker;
+        specialinvoke $r21.<org.apache.fop.area.AreaTreeParser$Handler$BeforeFloatMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("beforeFloat", $r21);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r22 = new org.apache.fop.area.AreaTreeParser$Handler$BlockMaker;
+        specialinvoke $r22.<org.apache.fop.area.AreaTreeParser$Handler$BlockMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("block", $r22);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r23 = new org.apache.fop.area.AreaTreeParser$Handler$LineAreaMaker;
+        specialinvoke $r23.<org.apache.fop.area.AreaTreeParser$Handler$LineAreaMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("lineArea", $r23);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r24 = new org.apache.fop.area.AreaTreeParser$Handler$InlineMaker;
+        specialinvoke $r24.<org.apache.fop.area.AreaTreeParser$Handler$InlineMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("inline", $r24);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r25 = new org.apache.fop.area.AreaTreeParser$Handler$InlineParentMaker;
+        specialinvoke $r25.<org.apache.fop.area.AreaTreeParser$Handler$InlineParentMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("inlineparent", $r25);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r26 = new org.apache.fop.area.AreaTreeParser$Handler$InlineBlockParentMaker;
+        specialinvoke $r26.<org.apache.fop.area.AreaTreeParser$Handler$InlineBlockParentMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("inlineblockparent", $r26);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r27 = new org.apache.fop.area.AreaTreeParser$Handler$TextMaker;
+        specialinvoke $r27.<org.apache.fop.area.AreaTreeParser$Handler$TextMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("text", $r27);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r28 = new org.apache.fop.area.AreaTreeParser$Handler$WordMaker;
+        specialinvoke $r28.<org.apache.fop.area.AreaTreeParser$Handler$WordMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("word", $r28);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r29 = new org.apache.fop.area.AreaTreeParser$Handler$SpaceMaker;
+        specialinvoke $r29.<org.apache.fop.area.AreaTreeParser$Handler$SpaceMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("space", $r29);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r30 = new org.apache.fop.area.AreaTreeParser$Handler$CharMaker;
+        specialinvoke $r30.<org.apache.fop.area.AreaTreeParser$Handler$CharMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("char", $r30);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r31 = new org.apache.fop.area.AreaTreeParser$Handler$LeaderMaker;
+        specialinvoke $r31.<org.apache.fop.area.AreaTreeParser$Handler$LeaderMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("leader", $r31);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r32 = new org.apache.fop.area.AreaTreeParser$Handler$ViewportMaker;
+        specialinvoke $r32.<org.apache.fop.area.AreaTreeParser$Handler$ViewportMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("viewport", $r32);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r33 = new org.apache.fop.area.AreaTreeParser$Handler$ImageMaker;
+        specialinvoke $r33.<org.apache.fop.area.AreaTreeParser$Handler$ImageMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("image", $r33);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r34 = new org.apache.fop.area.AreaTreeParser$Handler$ForeignObjectMaker;
+        specialinvoke $r34.<org.apache.fop.area.AreaTreeParser$Handler$ForeignObjectMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("foreignObject", $r34);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r35 = new org.apache.fop.area.AreaTreeParser$Handler$BookmarkTreeMaker;
+        specialinvoke $r35.<org.apache.fop.area.AreaTreeParser$Handler$BookmarkTreeMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("bookmarkTree", $r35);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r36 = new org.apache.fop.area.AreaTreeParser$Handler$BookmarkMaker;
+        specialinvoke $r36.<org.apache.fop.area.AreaTreeParser$Handler$BookmarkMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("bookmark", $r36);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r37 = new org.apache.fop.area.AreaTreeParser$Handler$DestinationMaker;
+        specialinvoke $r37.<org.apache.fop.area.AreaTreeParser$Handler$DestinationMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(this, null);
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("destination", $r37);
+        return;
+    }
+
+    private static java.awt.geom.Rectangle2D parseRect(java.lang.String)
+    {
+        java.lang.String rect, $r2, $r3, $r4, $r5;
+        java.util.StringTokenizer $r0, tokenizer;
+        java.awt.geom.Rectangle2D$Double $r1;
+        double $d0, $d1, $d2, $d3;
+
+        rect := @parameter0: java.lang.String;
+        $r0 = new java.util.StringTokenizer;
+        specialinvoke $r0.<java.util.StringTokenizer: void <init>(java.lang.String,java.lang.String)>(rect, " ");
+        tokenizer = $r0;
+        $r1 = new java.awt.geom.Rectangle2D$Double;
+        $r2 = virtualinvoke tokenizer.<java.util.StringTokenizer: java.lang.String nextToken()>();
+        $d0 = staticinvoke <java.lang.Double: double parseDouble(java.lang.String)>($r2);
+        $r3 = virtualinvoke tokenizer.<java.util.StringTokenizer: java.lang.String nextToken()>();
+        $d1 = staticinvoke <java.lang.Double: double parseDouble(java.lang.String)>($r3);
+        $r4 = virtualinvoke tokenizer.<java.util.StringTokenizer: java.lang.String nextToken()>();
+        $d2 = staticinvoke <java.lang.Double: double parseDouble(java.lang.String)>($r4);
+        $r5 = virtualinvoke tokenizer.<java.util.StringTokenizer: java.lang.String nextToken()>();
+        $d3 = staticinvoke <java.lang.Double: double parseDouble(java.lang.String)>($r5);
+        specialinvoke $r1.<java.awt.geom.Rectangle2D$Double: void <init>(double,double,double,double)>($d0, $d1, $d2, $d3);
+        return $r1;
+    }
+
+    private org.apache.fop.area.Area findAreaType(java.lang.Class)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler this;
+        java.lang.Class clazz;
+        int pos, $i0;
+        java.lang.Object obj, $r2;
+        java.util.Stack $r0, $r1;
+        boolean $z0;
+        org.apache.fop.area.Area $r3;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler;
+        clazz := @parameter0: java.lang.Class;
+        $r0 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Stack areaStack>;
+        $i0 = virtualinvoke $r0.<java.util.Stack: int size()>();
+        if $i0 <= 0 goto label2;
+
+        $r0 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Stack areaStack>;
+        $i0 = virtualinvoke $r0.<java.util.Stack: int size()>();
+        pos = $i0 - 1;
+        obj = null;
+
+     label0:
+        if pos < 0 goto label1;
+
+        $r1 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Stack areaStack>;
+        $r2 = virtualinvoke $r1.<java.util.Stack: java.lang.Object get(int)>(pos);
+        obj = $r2;
+        $z0 = virtualinvoke clazz.<java.lang.Class: boolean isInstance(java.lang.Object)>($r2);
+        if $z0 != 0 goto label1;
+
+        pos = pos + -1;
+        goto label0;
+
+     label1:
+        if pos < 0 goto label2;
+
+        $r3 = (org.apache.fop.area.Area) obj;
+        return $r3;
+
+     label2:
+        return null;
+    }
+
+    private org.apache.fop.area.RegionViewport getCurrentRegionViewport()
+    {
+        org.apache.fop.area.AreaTreeParser$Handler this;
+        java.lang.Class $r1;
+        org.apache.fop.area.Area $r2;
+        org.apache.fop.area.RegionViewport $r3;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler;
+        $r1 = <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$area$RegionViewport>;
+        if $r1 != null goto label0;
+
+        $r1 = staticinvoke <org.apache.fop.area.AreaTreeParser: java.lang.Class class$(java.lang.String)>("org.apache.fop.area.RegionViewport");
+        <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$area$RegionViewport> = $r1;
+        goto label1;
+
+     label0:
+        $r1 = <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$area$RegionViewport>;
+
+     label1:
+        $r2 = specialinvoke this.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.area.Area findAreaType(java.lang.Class)>($r1);
+        $r3 = (org.apache.fop.area.RegionViewport) $r2;
+        return $r3;
+    }
+
+    private org.apache.fop.area.BodyRegion getCurrentBodyRegion()
+    {
+        org.apache.fop.area.AreaTreeParser$Handler this;
+        java.lang.Class $r1;
+        org.apache.fop.area.Area $r2;
+        org.apache.fop.area.BodyRegion $r3;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler;
+        $r1 = <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$area$BodyRegion>;
+        if $r1 != null goto label0;
+
+        $r1 = staticinvoke <org.apache.fop.area.AreaTreeParser: java.lang.Class class$(java.lang.String)>("org.apache.fop.area.BodyRegion");
+        <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$area$BodyRegion> = $r1;
+        goto label1;
+
+     label0:
+        $r1 = <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$area$BodyRegion>;
+
+     label1:
+        $r2 = specialinvoke this.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.area.Area findAreaType(java.lang.Class)>($r1);
+        $r3 = (org.apache.fop.area.BodyRegion) $r2;
+        return $r3;
+    }
+
+    private org.apache.fop.area.BlockParent getCurrentBlockParent()
+    {
+        org.apache.fop.area.AreaTreeParser$Handler this;
+        java.lang.Class $r1;
+        org.apache.fop.area.Area $r2;
+        org.apache.fop.area.BlockParent $r3;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler;
+        $r1 = <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$area$BlockParent>;
+        if $r1 != null goto label0;
+
+        $r1 = staticinvoke <org.apache.fop.area.AreaTreeParser: java.lang.Class class$(java.lang.String)>("org.apache.fop.area.BlockParent");
+        <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$area$BlockParent> = $r1;
+        goto label1;
+
+     label0:
+        $r1 = <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$area$BlockParent>;
+
+     label1:
+        $r2 = specialinvoke this.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.area.Area findAreaType(java.lang.Class)>($r1);
+        $r3 = (org.apache.fop.area.BlockParent) $r2;
+        return $r3;
+    }
+
+    private org.apache.fop.area.inline.AbstractTextArea getCurrentText()
+    {
+        org.apache.fop.area.AreaTreeParser$Handler this;
+        java.lang.Class $r1;
+        org.apache.fop.area.Area $r2;
+        org.apache.fop.area.inline.AbstractTextArea $r3;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler;
+        $r1 = <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$area$inline$AbstractTextArea>;
+        if $r1 != null goto label0;
+
+        $r1 = staticinvoke <org.apache.fop.area.AreaTreeParser: java.lang.Class class$(java.lang.String)>("org.apache.fop.area.inline.AbstractTextArea");
+        <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$area$inline$AbstractTextArea> = $r1;
+        goto label1;
+
+     label0:
+        $r1 = <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$area$inline$AbstractTextArea>;
+
+     label1:
+        $r2 = specialinvoke this.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.area.Area findAreaType(java.lang.Class)>($r1);
+        $r3 = (org.apache.fop.area.inline.AbstractTextArea) $r2;
+        return $r3;
+    }
+
+    private org.apache.fop.area.inline.Viewport getCurrentViewport()
+    {
+        org.apache.fop.area.AreaTreeParser$Handler this;
+        java.lang.Class $r1;
+        org.apache.fop.area.Area $r2;
+        org.apache.fop.area.inline.Viewport $r3;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler;
+        $r1 = <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$area$inline$Viewport>;
+        if $r1 != null goto label0;
+
+        $r1 = staticinvoke <org.apache.fop.area.AreaTreeParser: java.lang.Class class$(java.lang.String)>("org.apache.fop.area.inline.Viewport");
+        <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$area$inline$Viewport> = $r1;
+        goto label1;
+
+     label0:
+        $r1 = <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$area$inline$Viewport>;
+
+     label1:
+        $r2 = specialinvoke this.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.area.Area findAreaType(java.lang.Class)>($r1);
+        $r3 = (org.apache.fop.area.inline.Viewport) $r2;
+        return $r3;
+    }
+
+    public void startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes) throws org.xml.sax.SAXException
+    {
+        org.apache.fop.area.AreaTreeParser$Handler this;
+        java.lang.String uri, localName, qName, $r11, $r17, $r20;
+        org.xml.sax.Attributes attributes;
+        javax.xml.transform.sax.TransformerHandler handler;
+        javax.xml.transform.TransformerConfigurationException e, $r5;
+        org.w3c.dom.Document doc;
+        org.apache.fop.area.Area parent;
+        boolean handled, $z0;
+        org.apache.fop.area.AreaTreeParser$Handler$Maker maker;
+        org.apache.fop.util.ContentHandlerFactoryRegistry registry;
+        org.apache.fop.util.ContentHandlerFactory factory;
+        org.xml.sax.ContentHandler $r0, $r15;
+        java.util.Stack $r1;
+        java.lang.Object $r2;
+        org.w3c.dom.DOMImplementation $r3;
+        javax.xml.transform.sax.SAXTransformerFactory $r4;
+        org.xml.sax.SAXException $r6;
+        org.w3c.dom.Element $r7;
+        javax.xml.transform.dom.DOMResult $r9;
+        org.apache.fop.area.inline.ForeignObject $r10;
+        java.util.Map $r12;
+        org.apache.fop.apps.FOUserAgent $r13;
+        org.apache.fop.apps.FopFactory $r14;
+        int $i0;
+        java.lang.StringBuffer $r16, $r19;
+        org.apache.commons.logging.Log $r18;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler;
+        uri := @parameter0: java.lang.String;
+        localName := @parameter1: java.lang.String;
+        qName := @parameter2: java.lang.String;
+        attributes := @parameter3: org.xml.sax.Attributes;
+        $r0 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.xml.sax.ContentHandler delegate>;
+        if $r0 == null goto label0;
+
+        $r1 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Stack delegateStack>;
+        virtualinvoke $r1.<java.util.Stack: java.lang.Object push(java.lang.Object)>(qName);
+        $r0 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.xml.sax.ContentHandler delegate>;
+        interfaceinvoke $r0.<org.xml.sax.ContentHandler: void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes)>(uri, localName, qName, attributes);
+        goto label14;
+
+     label0:
+        $r3 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.w3c.dom.DOMImplementation domImplementation>;
+        if $r3 == null goto label5;
+
+     label1:
+        $r4 = staticinvoke <org.apache.fop.area.AreaTreeParser: javax.xml.transform.sax.SAXTransformerFactory access$3200()>();
+        handler = virtualinvoke $r4.<javax.xml.transform.sax.SAXTransformerFactory: javax.xml.transform.sax.TransformerHandler newTransformerHandler()>();
+
+     label2:
+        goto label4;
+
+     label3:
+        $r5 := @caughtexception;
+        e = $r5;
+        $r6 = new org.xml.sax.SAXException;
+        specialinvoke $r6.<org.xml.sax.SAXException: void <init>(java.lang.String,java.lang.Exception)>("Error creating a new TransformerHandler", e);
+        throw $r6;
+
+     label4:
+        $r3 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.w3c.dom.DOMImplementation domImplementation>;
+        doc = interfaceinvoke $r3.<org.w3c.dom.DOMImplementation: org.w3c.dom.Document createDocument(java.lang.String,java.lang.String,org.w3c.dom.DocumentType)>(uri, qName, null);
+        $r7 = interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Element getDocumentElement()>();
+        interfaceinvoke doc.<org.w3c.dom.Document: org.w3c.dom.Node removeChild(org.w3c.dom.Node)>($r7);
+        $r9 = new javax.xml.transform.dom.DOMResult;
+        specialinvoke $r9.<javax.xml.transform.dom.DOMResult: void <init>(org.w3c.dom.Node)>(doc);
+        interfaceinvoke handler.<javax.xml.transform.sax.TransformerHandler: void setResult(javax.xml.transform.Result)>($r9);
+        $r1 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Stack areaStack>;
+        $r2 = virtualinvoke $r1.<java.util.Stack: java.lang.Object peek()>();
+        parent = (org.apache.fop.area.Area) $r2;
+        $r10 = (org.apache.fop.area.inline.ForeignObject) parent;
+        virtualinvoke $r10.<org.apache.fop.area.inline.ForeignObject: void setDocument(org.w3c.dom.Document)>(doc);
+        this.<org.apache.fop.area.AreaTreeParser$Handler: org.w3c.dom.DOMImplementation domImplementation> = null;
+        this.<org.apache.fop.area.AreaTreeParser$Handler: org.xml.sax.ContentHandler delegate> = handler;
+        $r1 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Stack delegateStack>;
+        virtualinvoke $r1.<java.util.Stack: java.lang.Object push(java.lang.Object)>(qName);
+        $r0 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.xml.sax.ContentHandler delegate>;
+        interfaceinvoke $r0.<org.xml.sax.ContentHandler: void startDocument()>();
+        $r0 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.xml.sax.ContentHandler delegate>;
+        interfaceinvoke $r0.<org.xml.sax.ContentHandler: void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes)>(uri, localName, qName, attributes);
+        goto label14;
+
+     label5:
+        this.<org.apache.fop.area.AreaTreeParser$Handler: org.xml.sax.Attributes lastAttributes> = attributes;
+        handled = 1;
+        $r11 = "";
+        $z0 = virtualinvoke $r11.<java.lang.String: boolean equals(java.lang.Object)>(uri);
+        if $z0 == 0 goto label9;
+
+        $r12 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r2 = interfaceinvoke $r12.<java.util.Map: java.lang.Object get(java.lang.Object)>(localName);
+        maker = (org.apache.fop.area.AreaTreeParser$Handler$Maker) $r2;
+        if maker == null goto label6;
+
+        interfaceinvoke maker.<org.apache.fop.area.AreaTreeParser$Handler$Maker: void startElement(org.xml.sax.Attributes)>(attributes);
+        goto label8;
+
+     label6:
+        $r11 = "extension-attachments";
+        $z0 = virtualinvoke $r11.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label7;
+
+        goto label8;
+
+     label7:
+        handled = 0;
+
+     label8:
+        goto label11;
+
+     label9:
+        $r13 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.apps.FOUserAgent userAgent>;
+        $r14 = virtualinvoke $r13.<org.apache.fop.apps.FOUserAgent: org.apache.fop.apps.FopFactory getFactory()>();
+        registry = virtualinvoke $r14.<org.apache.fop.apps.FopFactory: org.apache.fop.util.ContentHandlerFactoryRegistry getContentHandlerFactoryRegistry()>();
+        factory = virtualinvoke registry.<org.apache.fop.util.ContentHandlerFactoryRegistry: org.apache.fop.util.ContentHandlerFactory getFactory(java.lang.String)>(uri);
+        if factory == null goto label10;
+
+        $r15 = interfaceinvoke factory.<org.apache.fop.util.ContentHandlerFactory: org.xml.sax.ContentHandler createContentHandler()>();
+        this.<org.apache.fop.area.AreaTreeParser$Handler: org.xml.sax.ContentHandler delegate> = $r15;
+        $r1 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Stack delegateStack>;
+        virtualinvoke $r1.<java.util.Stack: java.lang.Object push(java.lang.Object)>(qName);
+        $r0 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.xml.sax.ContentHandler delegate>;
+        interfaceinvoke $r0.<org.xml.sax.ContentHandler: void startDocument()>();
+        $r0 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.xml.sax.ContentHandler delegate>;
+        interfaceinvoke $r0.<org.xml.sax.ContentHandler: void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes)>(uri, localName, qName, attributes);
+        goto label11;
+
+     label10:
+        handled = 0;
+
+     label11:
+        if handled != 0 goto label14;
+
+        if uri == null goto label12;
+
+        $i0 = virtualinvoke uri.<java.lang.String: int length()>();
+        if $i0 != 0 goto label13;
+
+     label12:
+        $r6 = new org.xml.sax.SAXException;
+        $r16 = new java.lang.StringBuffer;
+        specialinvoke $r16.<java.lang.StringBuffer: void <init>()>();
+        $r16 = virtualinvoke $r16.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unhandled element ");
+        $r16 = virtualinvoke $r16.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(localName);
+        $r16 = virtualinvoke $r16.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" in namespace: ");
+        $r16 = virtualinvoke $r16.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(uri);
+        $r17 = virtualinvoke $r16.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r6.<org.xml.sax.SAXException: void <init>(java.lang.String)>($r17);
+        throw $r6;
+
+     label13:
+        $r18 = <org.apache.fop.area.AreaTreeParser: org.apache.commons.logging.Log log>;
+        $r19 = new java.lang.StringBuffer;
+        specialinvoke $r19.<java.lang.StringBuffer: void <init>()>();
+        $r19 = virtualinvoke $r19.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unhandled element ");
+        $r19 = virtualinvoke $r19.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(localName);
+        $r19 = virtualinvoke $r19.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" in namespace: ");
+        $r19 = virtualinvoke $r19.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(uri);
+        $r20 = virtualinvoke $r19.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r18.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r20);
+
+     label14:
+        return;
+
+        catch javax.xml.transform.TransformerConfigurationException from label1 to label2 with label3;
+    }
+
+    public void endElement(java.lang.String, java.lang.String, java.lang.String) throws org.xml.sax.SAXException
+    {
+        org.apache.fop.area.AreaTreeParser$Handler this;
+        java.lang.String uri, localName, qName, $r4;
+        java.lang.Object obj, $r2;
+        org.apache.fop.area.AreaTreeParser$Handler$Maker maker;
+        org.xml.sax.ContentHandler $r0;
+        java.util.Stack $r1;
+        int $i0;
+        boolean $z0;
+        org.apache.fop.util.ContentHandlerFactory$ObjectSource $r3;
+        java.util.Map $r5;
+        java.lang.StringBuffer $r6;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler;
+        uri := @parameter0: java.lang.String;
+        localName := @parameter1: java.lang.String;
+        qName := @parameter2: java.lang.String;
+        $r0 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.xml.sax.ContentHandler delegate>;
+        if $r0 == null goto label1;
+
+        $r0 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.xml.sax.ContentHandler delegate>;
+        interfaceinvoke $r0.<org.xml.sax.ContentHandler: void endElement(java.lang.String,java.lang.String,java.lang.String)>(uri, localName, qName);
+        $r1 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Stack delegateStack>;
+        virtualinvoke $r1.<java.util.Stack: java.lang.Object pop()>();
+        $r1 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Stack delegateStack>;
+        $i0 = virtualinvoke $r1.<java.util.Stack: int size()>();
+        if $i0 != 0 goto label3;
+
+        $r0 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.xml.sax.ContentHandler delegate>;
+        interfaceinvoke $r0.<org.xml.sax.ContentHandler: void endDocument()>();
+        $r0 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.xml.sax.ContentHandler delegate>;
+        $z0 = $r0 instanceof org.apache.fop.util.ContentHandlerFactory$ObjectSource;
+        if $z0 == 0 goto label0;
+
+        $r0 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.xml.sax.ContentHandler delegate>;
+        $r3 = (org.apache.fop.util.ContentHandlerFactory$ObjectSource) $r0;
+        obj = interfaceinvoke $r3.<org.apache.fop.util.ContentHandlerFactory$ObjectSource: java.lang.Object getObject()>();
+        virtualinvoke this.<org.apache.fop.area.AreaTreeParser$Handler: void handleExternallyGeneratedObject(java.lang.Object)>(obj);
+
+     label0:
+        this.<org.apache.fop.area.AreaTreeParser$Handler: org.xml.sax.ContentHandler delegate> = null;
+        goto label3;
+
+     label1:
+        $r4 = "";
+        $z0 = virtualinvoke $r4.<java.lang.String: boolean equals(java.lang.Object)>(uri);
+        if $z0 == 0 goto label2;
+
+        $r5 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map makers>;
+        $r2 = interfaceinvoke $r5.<java.util.Map: java.lang.Object get(java.lang.Object)>(localName);
+        maker = (org.apache.fop.area.AreaTreeParser$Handler$Maker) $r2;
+        if maker == null goto label2;
+
+        interfaceinvoke maker.<org.apache.fop.area.AreaTreeParser$Handler$Maker: void endElement()>();
+
+     label2:
+        $r6 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.lang.StringBuffer content>;
+        virtualinvoke $r6.<java.lang.StringBuffer: void setLength(int)>(0);
+
+     label3:
+        return;
+    }
+
+    private void pushNewRegionReference(org.xml.sax.Attributes, int)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler this;
+        org.xml.sax.Attributes attributes;
+        int side;
+        java.lang.String regionName;
+        org.apache.fop.area.RegionViewport rv;
+        org.apache.fop.area.RegionReference reg, $r0;
+        org.apache.fop.area.CTM $r1;
+        org.apache.fop.area.PageViewport $r2;
+        org.apache.fop.area.Page $r3;
+        java.util.Stack $r4;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler;
+        attributes := @parameter0: org.xml.sax.Attributes;
+        side := @parameter1: int;
+        regionName = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("name");
+        rv = specialinvoke this.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.area.RegionViewport getCurrentRegionViewport()>();
+        $r0 = new org.apache.fop.area.RegionReference;
+        specialinvoke $r0.<org.apache.fop.area.RegionReference: void <init>(int,java.lang.String,org.apache.fop.area.RegionViewport)>(side, regionName, rv);
+        reg = $r0;
+        specialinvoke this.<org.apache.fop.area.AreaTreeParser$Handler: void transferForeignObjects(org.xml.sax.Attributes,org.apache.fop.area.AreaTreeObject)>(attributes, reg);
+        $r1 = specialinvoke this.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.area.CTM getAttributeAsCTM(org.xml.sax.Attributes,java.lang.String)>(attributes, "ctm");
+        virtualinvoke reg.<org.apache.fop.area.RegionReference: void setCTM(org.apache.fop.area.CTM)>($r1);
+        specialinvoke this.<org.apache.fop.area.AreaTreeParser$Handler: void setAreaAttributes(org.xml.sax.Attributes,org.apache.fop.area.Area)>(attributes, reg);
+        virtualinvoke rv.<org.apache.fop.area.RegionViewport: void setRegionReference(org.apache.fop.area.RegionReference)>(reg);
+        $r2 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.area.PageViewport currentPageViewport>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.area.PageViewport: org.apache.fop.area.Page getPage()>();
+        virtualinvoke $r3.<org.apache.fop.area.Page: void setRegionViewport(int,org.apache.fop.area.RegionViewport)>(side, rv);
+        $r4 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Stack areaStack>;
+        virtualinvoke $r4.<java.util.Stack: java.lang.Object push(java.lang.Object)>(reg);
+        return;
+    }
+
+    private void assertObjectOfClass(java.lang.Object, java.lang.Class)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler this;
+        java.lang.Object obj;
+        java.lang.Class clazz, $r3;
+        java.lang.StringBuffer $r0;
+        boolean $z0;
+        java.lang.IllegalStateException $r1;
+        java.lang.String $r2, $r4;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler;
+        obj := @parameter0: java.lang.Object;
+        clazz := @parameter1: java.lang.Class;
+        $z0 = virtualinvoke clazz.<java.lang.Class: boolean isInstance(java.lang.Object)>(obj);
+        if $z0 != 0 goto label0;
+
+        $r1 = new java.lang.IllegalStateException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Object is not an instance of ");
+        $r2 = virtualinvoke clazz.<java.lang.Class: java.lang.String getName()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" but of ");
+        $r3 = virtualinvoke obj.<java.lang.Object: java.lang.Class getClass()>();
+        $r2 = virtualinvoke $r3.<java.lang.Class: java.lang.String getName()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r4 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r1.<java.lang.IllegalStateException: void <init>(java.lang.String)>($r4);
+        throw $r1;
+
+     label0:
+        return;
+    }
+
+    protected void handleExternallyGeneratedObject(java.lang.Object)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler this;
+        java.lang.Object obj;
+        org.apache.fop.fo.extensions.ExtensionAttachment attachment;
+        org.apache.fop.area.OffDocumentExtensionAttachment $r0;
+        java.util.Stack $r1;
+        int $i0;
+        boolean $z0;
+        org.apache.fop.area.PageViewport $r2;
+        org.apache.fop.area.AreaTreeModel $r3;
+        org.apache.commons.logging.Log $r4;
+        java.lang.StringBuffer $r5;
+        java.lang.String $r6;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler;
+        obj := @parameter0: java.lang.Object;
+        $r1 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Stack areaStack>;
+        $i0 = virtualinvoke $r1.<java.util.Stack: int size()>();
+        if $i0 != 0 goto label2;
+
+        $z0 = obj instanceof org.apache.fop.fo.extensions.ExtensionAttachment;
+        if $z0 == 0 goto label2;
+
+        attachment = (org.apache.fop.fo.extensions.ExtensionAttachment) obj;
+        $r2 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.area.PageViewport currentPageViewport>;
+        if $r2 != null goto label0;
+
+        $r3 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.area.AreaTreeModel treeModel>;
+        $r0 = new org.apache.fop.area.OffDocumentExtensionAttachment;
+        specialinvoke $r0.<org.apache.fop.area.OffDocumentExtensionAttachment: void <init>(org.apache.fop.fo.extensions.ExtensionAttachment)>(attachment);
+        virtualinvoke $r3.<org.apache.fop.area.AreaTreeModel: void handleOffDocumentItem(org.apache.fop.area.OffDocumentItem)>($r0);
+        goto label1;
+
+     label0:
+        $r2 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.area.PageViewport currentPageViewport>;
+        virtualinvoke $r2.<org.apache.fop.area.PageViewport: void addExtensionAttachment(org.apache.fop.fo.extensions.ExtensionAttachment)>(attachment);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r4 = <org.apache.fop.area.AreaTreeParser: org.apache.commons.logging.Log log>;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Don\'t know how to handle externally generated object: ");
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(obj);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r4.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r6);
+
+     label3:
+        return;
+    }
+
+    private void setAreaAttributes(org.xml.sax.Attributes, org.apache.fop.area.Area)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler this;
+        org.xml.sax.Attributes attributes;
+        org.apache.fop.area.Area area;
+        java.lang.String $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler;
+        attributes := @parameter0: org.xml.sax.Attributes;
+        area := @parameter1: org.apache.fop.area.Area;
+        $r0 = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("ipd");
+        $i0 = staticinvoke <java.lang.Integer: int parseInt(java.lang.String)>($r0);
+        virtualinvoke area.<org.apache.fop.area.Area: void setIPD(int)>($i0);
+        $r0 = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("bpd");
+        $i0 = staticinvoke <java.lang.Integer: int parseInt(java.lang.String)>($r0);
+        virtualinvoke area.<org.apache.fop.area.Area: void setBPD(int)>($i0);
+        return;
+    }
+
+    private void setTraits(org.xml.sax.Attributes, org.apache.fop.area.Area, java.lang.Object[])
+    {
+        org.apache.fop.area.AreaTreeParser$Handler this;
+        org.xml.sax.Attributes attributes;
+        org.apache.fop.area.Area area;
+        java.lang.Object[] traitSubset;
+        int i, c, fontWeight, $i0;
+        java.lang.Object trait;
+        java.lang.String traitName, value, uri, repeat, fontName, fontStyle, $r11, $r15;
+        java.lang.Class cl, $r1;
+        org.apache.fop.fo.expr.PropertyException e, $r9, $r16;
+        org.apache.fop.area.Trait$Background bkg, $r13;
+        java.awt.Color col, $r8;
+        org.apache.xmlgraphics.image.loader.ImageManager manager;
+        org.apache.xmlgraphics.image.loader.ImageSessionContext sessionContext;
+        org.apache.xmlgraphics.image.loader.ImageInfo info;
+        java.lang.Integer $r2, $r4;
+        java.lang.Boolean $r3;
+        java.util.Set $r5;
+        boolean $z0;
+        org.apache.fop.area.PageViewport $r6;
+        org.apache.fop.apps.FOUserAgent $r7, $r14;
+        java.lang.IllegalArgumentException $r10;
+        org.apache.fop.area.Trait$InternalLink $r12;
+        org.apache.fop.apps.FopFactory $r17;
+        java.lang.Exception $r18, e;
+        org.apache.commons.logging.Log $r19;
+        java.lang.StringBuffer $r20;
+        org.apache.fop.traits.BorderProps $r21;
+        org.apache.fop.fonts.FontTriplet $r22;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler;
+        attributes := @parameter0: org.xml.sax.Attributes;
+        area := @parameter1: org.apache.fop.area.Area;
+        traitSubset := @parameter2: java.lang.Object[];
+        i = 0;
+        c = lengthof traitSubset;
+
+     label0:
+        if i >= c goto label37;
+
+        trait = traitSubset[i];
+        traitName = staticinvoke <org.apache.fop.area.Trait: java.lang.String getTraitName(java.lang.Object)>(trait);
+        value = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>(traitName);
+        if value == null goto label35;
+
+        cl = staticinvoke <org.apache.fop.area.Trait: java.lang.Class getTraitClass(java.lang.Object)>(trait);
+        $r1 = <org.apache.fop.area.AreaTreeParser: java.lang.Class class$java$lang$Integer>;
+        if $r1 != null goto label1;
+
+        $r1 = staticinvoke <org.apache.fop.area.AreaTreeParser: java.lang.Class class$(java.lang.String)>("java.lang.Integer");
+        <org.apache.fop.area.AreaTreeParser: java.lang.Class class$java$lang$Integer> = $r1;
+        goto label2;
+
+     label1:
+        $r1 = <org.apache.fop.area.AreaTreeParser: java.lang.Class class$java$lang$Integer>;
+
+     label2:
+        if cl != $r1 goto label3;
+
+        $r2 = new java.lang.Integer;
+        specialinvoke $r2.<java.lang.Integer: void <init>(java.lang.String)>(value);
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>(trait, $r2);
+        goto label34;
+
+     label3:
+        $r1 = <org.apache.fop.area.AreaTreeParser: java.lang.Class class$java$lang$Boolean>;
+        if $r1 != null goto label4;
+
+        $r1 = staticinvoke <org.apache.fop.area.AreaTreeParser: java.lang.Class class$(java.lang.String)>("java.lang.Boolean");
+        <org.apache.fop.area.AreaTreeParser: java.lang.Class class$java$lang$Boolean> = $r1;
+        goto label5;
+
+     label4:
+        $r1 = <org.apache.fop.area.AreaTreeParser: java.lang.Class class$java$lang$Boolean>;
+
+     label5:
+        if cl != $r1 goto label6;
+
+        $r3 = staticinvoke <java.lang.Boolean: java.lang.Boolean valueOf(java.lang.String)>(value);
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>(trait, $r3);
+        goto label34;
+
+     label6:
+        $r1 = <org.apache.fop.area.AreaTreeParser: java.lang.Class class$java$lang$String>;
+        if $r1 != null goto label7;
+
+        $r1 = staticinvoke <org.apache.fop.area.AreaTreeParser: java.lang.Class class$(java.lang.String)>("java.lang.String");
+        <org.apache.fop.area.AreaTreeParser: java.lang.Class class$java$lang$String> = $r1;
+        goto label8;
+
+     label7:
+        $r1 = <org.apache.fop.area.AreaTreeParser: java.lang.Class class$java$lang$String>;
+
+     label8:
+        if cl != $r1 goto label9;
+
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>(trait, value);
+        $r4 = <org.apache.fop.area.Trait: java.lang.Integer PROD_ID>;
+        if trait != $r4 goto label34;
+
+        $r5 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Set idFirstsAssigned>;
+        $z0 = interfaceinvoke $r5.<java.util.Set: boolean contains(java.lang.Object)>(value);
+        if $z0 != 0 goto label34;
+
+        $r6 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.area.PageViewport currentPageViewport>;
+        if $r6 == null goto label34;
+
+        $r6 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.area.PageViewport currentPageViewport>;
+        virtualinvoke $r6.<org.apache.fop.area.PageViewport: void setFirstWithID(java.lang.String)>(value);
+        $r5 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Set idFirstsAssigned>;
+        interfaceinvoke $r5.<java.util.Set: boolean add(java.lang.Object)>(value);
+        goto label34;
+
+     label9:
+        $r1 = <org.apache.fop.area.AreaTreeParser: java.lang.Class class$java$awt$Color>;
+        if $r1 != null goto label10;
+
+        $r1 = staticinvoke <org.apache.fop.area.AreaTreeParser: java.lang.Class class$(java.lang.String)>("java.awt.Color");
+        <org.apache.fop.area.AreaTreeParser: java.lang.Class class$java$awt$Color> = $r1;
+        goto label11;
+
+     label10:
+        $r1 = <org.apache.fop.area.AreaTreeParser: java.lang.Class class$java$awt$Color>;
+
+     label11:
+        if cl != $r1 goto label15;
+
+     label12:
+        $r7 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.apps.FOUserAgent userAgent>;
+        $r8 = staticinvoke <org.apache.fop.util.ColorUtil: java.awt.Color parseColorString(org.apache.fop.apps.FOUserAgent,java.lang.String)>($r7, value);
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>(trait, $r8);
+
+     label13:
+        goto label34;
+
+     label14:
+        $r9 := @caughtexception;
+        e = $r9;
+        $r10 = new java.lang.IllegalArgumentException;
+        $r11 = virtualinvoke e.<org.apache.fop.fo.expr.PropertyException: java.lang.String getMessage()>();
+        specialinvoke $r10.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r11);
+        throw $r10;
+
+     label15:
+        $r1 = <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$area$Trait$InternalLink>;
+        if $r1 != null goto label16;
+
+        $r1 = staticinvoke <org.apache.fop.area.AreaTreeParser: java.lang.Class class$(java.lang.String)>("org.apache.fop.area.Trait$InternalLink");
+        <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$area$Trait$InternalLink> = $r1;
+        goto label17;
+
+     label16:
+        $r1 = <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$area$Trait$InternalLink>;
+
+     label17:
+        if cl != $r1 goto label18;
+
+        $r12 = new org.apache.fop.area.Trait$InternalLink;
+        specialinvoke $r12.<org.apache.fop.area.Trait$InternalLink: void <init>(java.lang.String)>(value);
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>(trait, $r12);
+        goto label34;
+
+     label18:
+        $r1 = <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$area$Trait$Background>;
+        if $r1 != null goto label19;
+
+        $r1 = staticinvoke <org.apache.fop.area.AreaTreeParser: java.lang.Class class$(java.lang.String)>("org.apache.fop.area.Trait$Background");
+        <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$area$Trait$Background> = $r1;
+        goto label20;
+
+     label19:
+        $r1 = <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$area$Trait$Background>;
+
+     label20:
+        if cl != $r1 goto label31;
+
+        $r13 = new org.apache.fop.area.Trait$Background;
+        specialinvoke $r13.<org.apache.fop.area.Trait$Background: void <init>()>();
+        bkg = $r13;
+
+     label21:
+        $r14 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.apps.FOUserAgent userAgent>;
+        $r15 = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("bkg-color");
+        col = staticinvoke <org.apache.fop.util.ColorUtil: java.awt.Color parseColorString(org.apache.fop.apps.FOUserAgent,java.lang.String)>($r14, $r15);
+        virtualinvoke bkg.<org.apache.fop.area.Trait$Background: void setColor(java.awt.Color)>(col);
+
+     label22:
+        goto label24;
+
+     label23:
+        $r16 := @caughtexception;
+        e = $r16;
+        $r10 = new java.lang.IllegalArgumentException;
+        $r11 = virtualinvoke e.<org.apache.fop.fo.expr.PropertyException: java.lang.String getMessage()>();
+        specialinvoke $r10.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r11);
+        throw $r10;
+
+     label24:
+        uri = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("bkg-img");
+        if uri == null goto label30;
+
+        virtualinvoke bkg.<org.apache.fop.area.Trait$Background: void setURL(java.lang.String)>(uri);
+
+     label25:
+        $r14 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.apps.FOUserAgent userAgent>;
+        $r17 = virtualinvoke $r14.<org.apache.fop.apps.FOUserAgent: org.apache.fop.apps.FopFactory getFactory()>();
+        manager = virtualinvoke $r17.<org.apache.fop.apps.FopFactory: org.apache.xmlgraphics.image.loader.ImageManager getImageManager()>();
+        $r14 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.apps.FOUserAgent userAgent>;
+        sessionContext = virtualinvoke $r14.<org.apache.fop.apps.FOUserAgent: org.apache.xmlgraphics.image.loader.ImageSessionContext getImageSessionContext()>();
+        info = virtualinvoke manager.<org.apache.xmlgraphics.image.loader.ImageManager: org.apache.xmlgraphics.image.loader.ImageInfo getImageInfo(java.lang.String,org.apache.xmlgraphics.image.loader.ImageSessionContext)>(uri, sessionContext);
+        virtualinvoke bkg.<org.apache.fop.area.Trait$Background: void setImageInfo(org.apache.xmlgraphics.image.loader.ImageInfo)>(info);
+
+     label26:
+        goto label28;
+
+     label27:
+        $r18 := @caughtexception;
+        e = $r18;
+        $r19 = <org.apache.fop.area.AreaTreeParser: org.apache.commons.logging.Log log>;
+        $r20 = new java.lang.StringBuffer;
+        specialinvoke $r20.<java.lang.StringBuffer: void <init>()>();
+        $r20 = virtualinvoke $r20.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Background image not available: ");
+        $r20 = virtualinvoke $r20.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(uri);
+        $r15 = virtualinvoke $r20.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r19.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r15, e);
+
+     label28:
+        repeat = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("bkg-repeat");
+        if repeat == null goto label29;
+
+        virtualinvoke bkg.<org.apache.fop.area.Trait$Background: void setRepeat(java.lang.String)>(repeat);
+
+     label29:
+        $i0 = specialinvoke this.<org.apache.fop.area.AreaTreeParser$Handler: int getAttributeAsInteger(org.xml.sax.Attributes,java.lang.String,int)>(attributes, "bkg-horz-offset", 0);
+        virtualinvoke bkg.<org.apache.fop.area.Trait$Background: void setHoriz(int)>($i0);
+        $i0 = specialinvoke this.<org.apache.fop.area.AreaTreeParser$Handler: int getAttributeAsInteger(org.xml.sax.Attributes,java.lang.String,int)>(attributes, "bkg-vert-offset", 0);
+        virtualinvoke bkg.<org.apache.fop.area.Trait$Background: void setVertical(int)>($i0);
+
+     label30:
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>(trait, bkg);
+        goto label34;
+
+     label31:
+        $r1 = <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$traits$BorderProps>;
+        if $r1 != null goto label32;
+
+        $r1 = staticinvoke <org.apache.fop.area.AreaTreeParser: java.lang.Class class$(java.lang.String)>("org.apache.fop.traits.BorderProps");
+        <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$traits$BorderProps> = $r1;
+        goto label33;
+
+     label32:
+        $r1 = <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$traits$BorderProps>;
+
+     label33:
+        if cl != $r1 goto label34;
+
+        $r7 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.apps.FOUserAgent userAgent>;
+        $r21 = staticinvoke <org.apache.fop.traits.BorderProps: org.apache.fop.traits.BorderProps valueOf(org.apache.fop.apps.FOUserAgent,java.lang.String)>($r7, value);
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>(trait, $r21);
+
+     label34:
+        goto label36;
+
+     label35:
+        $r4 = <org.apache.fop.area.Trait: java.lang.Integer FONT>;
+        if trait != $r4 goto label36;
+
+        fontName = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("font-name");
+        if fontName == null goto label36;
+
+        fontStyle = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("font-style");
+        fontWeight = specialinvoke this.<org.apache.fop.area.AreaTreeParser$Handler: int getAttributeAsInteger(org.xml.sax.Attributes,java.lang.String,int)>(attributes, "font-weight", 400);
+        $r22 = staticinvoke <org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet createFontKey(java.lang.String,java.lang.String,int)>(fontName, fontStyle, fontWeight);
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>(trait, $r22);
+
+     label36:
+        i = i + 1;
+        goto label0;
+
+     label37:
+        return;
+
+        catch org.apache.fop.fo.expr.PropertyException from label12 to label13 with label14;
+        catch org.apache.fop.fo.expr.PropertyException from label21 to label22 with label23;
+        catch java.lang.Exception from label25 to label26 with label27;
+    }
+
+    private boolean getAttributeAsBoolean(org.xml.sax.Attributes, java.lang.String, boolean)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler this;
+        org.xml.sax.Attributes attributes;
+        java.lang.String name, s;
+        boolean defaultValue, $z0;
+        java.lang.Boolean $r0;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler;
+        attributes := @parameter0: org.xml.sax.Attributes;
+        name := @parameter1: java.lang.String;
+        defaultValue := @parameter2: boolean;
+        s = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>(name);
+        if s != null goto label0;
+
+        return defaultValue;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Boolean: java.lang.Boolean valueOf(java.lang.String)>(s);
+        $z0 = virtualinvoke $r0.<java.lang.Boolean: boolean booleanValue()>();
+        return $z0;
+    }
+
+    private int getAttributeAsInteger(org.xml.sax.Attributes, java.lang.String, int)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler this;
+        org.xml.sax.Attributes attributes;
+        java.lang.String name, s;
+        int defaultValue, $i0;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler;
+        attributes := @parameter0: org.xml.sax.Attributes;
+        name := @parameter1: java.lang.String;
+        defaultValue := @parameter2: int;
+        s = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>(name);
+        if s != null goto label0;
+
+        return defaultValue;
+
+     label0:
+        $i0 = staticinvoke <java.lang.Integer: int parseInt(java.lang.String)>(s);
+        return $i0;
+    }
+
+    private org.apache.fop.area.CTM getAttributeAsCTM(org.xml.sax.Attributes, java.lang.String)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler this;
+        org.xml.sax.Attributes attributes;
+        java.lang.String name, s, $r0, $r3;
+        java.util.StringTokenizer tokenizer, $r1;
+        double[] values, $r2;
+        boolean $z0;
+        int $i0;
+        double $d0, $d1, $d2, $d3, $d4, $d5, $d6;
+        org.apache.fop.area.CTM $r4;
+        java.lang.IllegalArgumentException $r5;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler;
+        attributes := @parameter0: org.xml.sax.Attributes;
+        name := @parameter1: java.lang.String;
+        $r0 = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>(name);
+        s = virtualinvoke $r0.<java.lang.String: java.lang.String trim()>();
+        $z0 = virtualinvoke s.<java.lang.String: boolean startsWith(java.lang.String)>("[");
+        if $z0 == 0 goto label0;
+
+        $z0 = virtualinvoke s.<java.lang.String: boolean endsWith(java.lang.String)>("]");
+        if $z0 == 0 goto label0;
+
+        $i0 = virtualinvoke s.<java.lang.String: int length()>();
+        $i0 = $i0 - 1;
+        s = virtualinvoke s.<java.lang.String: java.lang.String substring(int,int)>(1, $i0);
+        $r1 = new java.util.StringTokenizer;
+        specialinvoke $r1.<java.util.StringTokenizer: void <init>(java.lang.String,java.lang.String)>(s, " ");
+        tokenizer = $r1;
+        $r2 = newarray (double)[6];
+        $r3 = virtualinvoke tokenizer.<java.util.StringTokenizer: java.lang.String nextToken()>();
+        $d0 = staticinvoke <java.lang.Double: double parseDouble(java.lang.String)>($r3);
+        $r2[0] = $d0;
+        $r3 = virtualinvoke tokenizer.<java.util.StringTokenizer: java.lang.String nextToken()>();
+        $d0 = staticinvoke <java.lang.Double: double parseDouble(java.lang.String)>($r3);
+        $r2[1] = $d0;
+        $r3 = virtualinvoke tokenizer.<java.util.StringTokenizer: java.lang.String nextToken()>();
+        $d0 = staticinvoke <java.lang.Double: double parseDouble(java.lang.String)>($r3);
+        $r2[2] = $d0;
+        $r3 = virtualinvoke tokenizer.<java.util.StringTokenizer: java.lang.String nextToken()>();
+        $d0 = staticinvoke <java.lang.Double: double parseDouble(java.lang.String)>($r3);
+        $r2[3] = $d0;
+        $r3 = virtualinvoke tokenizer.<java.util.StringTokenizer: java.lang.String nextToken()>();
+        $d0 = staticinvoke <java.lang.Double: double parseDouble(java.lang.String)>($r3);
+        $r2[4] = $d0;
+        $r3 = virtualinvoke tokenizer.<java.util.StringTokenizer: java.lang.String nextToken()>();
+        $d0 = staticinvoke <java.lang.Double: double parseDouble(java.lang.String)>($r3);
+        $r2[5] = $d0;
+        values = $r2;
+        $r4 = new org.apache.fop.area.CTM;
+        $d1 = values[0];
+        $d2 = values[1];
+        $d3 = values[2];
+        $d4 = values[3];
+        $d5 = values[4];
+        $d6 = values[5];
+        specialinvoke $r4.<org.apache.fop.area.CTM: void <init>(double,double,double,double,double,double)>($d1, $d2, $d3, $d4, $d5, $d6);
+        return $r4;
+
+     label0:
+        $r5 = new java.lang.IllegalArgumentException;
+        specialinvoke $r5.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("CTM must be surrounded by square brackets");
+        throw $r5;
+    }
+
+    private java.awt.geom.Rectangle2D getAttributeAsRectangle2D(org.xml.sax.Attributes, java.lang.String)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler this;
+        org.xml.sax.Attributes attributes;
+        java.lang.String name, s, $r0, $r3;
+        java.util.StringTokenizer tokenizer, $r1;
+        double[] values, $r2;
+        double $d0, $d1, $d2, $d3, $d4;
+        java.awt.geom.Rectangle2D$Double $r4;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler;
+        attributes := @parameter0: org.xml.sax.Attributes;
+        name := @parameter1: java.lang.String;
+        $r0 = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>(name);
+        s = virtualinvoke $r0.<java.lang.String: java.lang.String trim()>();
+        $r1 = new java.util.StringTokenizer;
+        specialinvoke $r1.<java.util.StringTokenizer: void <init>(java.lang.String,java.lang.String)>(s, " ");
+        tokenizer = $r1;
+        $r2 = newarray (double)[4];
+        $r3 = virtualinvoke tokenizer.<java.util.StringTokenizer: java.lang.String nextToken()>();
+        $d0 = staticinvoke <java.lang.Double: double parseDouble(java.lang.String)>($r3);
+        $r2[0] = $d0;
+        $r3 = virtualinvoke tokenizer.<java.util.StringTokenizer: java.lang.String nextToken()>();
+        $d0 = staticinvoke <java.lang.Double: double parseDouble(java.lang.String)>($r3);
+        $r2[1] = $d0;
+        $r3 = virtualinvoke tokenizer.<java.util.StringTokenizer: java.lang.String nextToken()>();
+        $d0 = staticinvoke <java.lang.Double: double parseDouble(java.lang.String)>($r3);
+        $r2[2] = $d0;
+        $r3 = virtualinvoke tokenizer.<java.util.StringTokenizer: java.lang.String nextToken()>();
+        $d0 = staticinvoke <java.lang.Double: double parseDouble(java.lang.String)>($r3);
+        $r2[3] = $d0;
+        values = $r2;
+        $r4 = new java.awt.geom.Rectangle2D$Double;
+        $d1 = values[0];
+        $d2 = values[1];
+        $d3 = values[2];
+        $d4 = values[3];
+        specialinvoke $r4.<java.awt.geom.Rectangle2D$Double: void <init>(double,double,double,double)>($d1, $d2, $d3, $d4);
+        return $r4;
+    }
+
+    private void transferForeignObjects(org.xml.sax.Attributes, org.apache.fop.area.AreaTreeObject)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler this;
+        org.xml.sax.Attributes atts;
+        org.apache.fop.area.AreaTreeObject ato;
+        int i, c, $i0;
+        java.lang.String ns, $r0, $r2, $r3;
+        org.apache.fop.util.QName qname, $r1;
+        boolean $z0;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler;
+        atts := @parameter0: org.xml.sax.Attributes;
+        ato := @parameter1: org.apache.fop.area.AreaTreeObject;
+        i = 0;
+        c = interfaceinvoke atts.<org.xml.sax.Attributes: int getLength()>();
+
+     label0:
+        if i >= c goto label3;
+
+        ns = interfaceinvoke atts.<org.xml.sax.Attributes: java.lang.String getURI(int)>(i);
+        $i0 = virtualinvoke ns.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label2;
+
+        $r0 = "http://www.w3.org/2000/xmlns/";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(ns);
+        if $z0 == 0 goto label1;
+
+        goto label2;
+
+     label1:
+        $r1 = new org.apache.fop.util.QName;
+        $r2 = interfaceinvoke atts.<org.xml.sax.Attributes: java.lang.String getQName(int)>(i);
+        specialinvoke $r1.<org.apache.fop.util.QName: void <init>(java.lang.String,java.lang.String)>(ns, $r2);
+        qname = $r1;
+        $r3 = interfaceinvoke atts.<org.xml.sax.Attributes: java.lang.String getValue(int)>(i);
+        virtualinvoke ato.<org.apache.fop.area.AreaTreeObject: void setForeignAttribute(org.apache.fop.util.QName,java.lang.String)>(qname, $r3);
+
+     label2:
+        i = i + 1;
+        goto label0;
+
+     label3:
+        return;
+    }
+
+    public void characters(char[], int, int) throws org.xml.sax.SAXException
+    {
+        org.apache.fop.area.AreaTreeParser$Handler this;
+        char[] ch;
+        int start, length;
+        org.xml.sax.ContentHandler $r0;
+        java.lang.StringBuffer $r1;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler;
+        ch := @parameter0: char[];
+        start := @parameter1: int;
+        length := @parameter2: int;
+        $r0 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.xml.sax.ContentHandler delegate>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.area.AreaTreeParser$Handler: org.xml.sax.ContentHandler delegate>;
+        interfaceinvoke $r0.<org.xml.sax.ContentHandler: void characters(char[],int,int)>(ch, start, length);
+        goto label1;
+
+     label0:
+        $r1 = this.<org.apache.fop.area.AreaTreeParser$Handler: java.lang.StringBuffer content>;
+        virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char[],int,int)>(ch, start, length);
+
+     label1:
+        return;
+    }
+
+    static java.util.Set access$3400(org.apache.fop.area.AreaTreeParser$Handler)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        java.util.Set $r0;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        $r0 = x0.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Set idFirstsAssigned>;
+        return $r0;
+    }
+
+    static java.util.Stack access$3500(org.apache.fop.area.AreaTreeParser$Handler)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        java.util.Stack $r0;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        $r0 = x0.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Stack areaStack>;
+        return $r0;
+    }
+
+    static void access$3600(org.apache.fop.area.AreaTreeParser$Handler, org.xml.sax.Attributes, org.apache.fop.area.AreaTreeObject)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        org.xml.sax.Attributes x1;
+        org.apache.fop.area.AreaTreeObject x2;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        x1 := @parameter1: org.xml.sax.Attributes;
+        x2 := @parameter2: org.apache.fop.area.AreaTreeObject;
+        specialinvoke x0.<org.apache.fop.area.AreaTreeParser$Handler: void transferForeignObjects(org.xml.sax.Attributes,org.apache.fop.area.AreaTreeObject)>(x1, x2);
+        return;
+    }
+
+    static org.apache.fop.area.AreaTreeModel access$3700(org.apache.fop.area.AreaTreeParser$Handler)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        org.apache.fop.area.AreaTreeModel $r0;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        $r0 = x0.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.area.AreaTreeModel treeModel>;
+        return $r0;
+    }
+
+    static org.apache.fop.area.PageViewport access$3800(org.apache.fop.area.AreaTreeParser$Handler)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        org.apache.fop.area.PageViewport $r0;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        $r0 = x0.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.area.PageViewport currentPageViewport>;
+        return $r0;
+    }
+
+    static java.awt.geom.Rectangle2D access$3900(java.lang.String)
+    {
+        java.lang.String x0;
+        java.awt.geom.Rectangle2D $r0;
+
+        x0 := @parameter0: java.lang.String;
+        $r0 = staticinvoke <org.apache.fop.area.AreaTreeParser$Handler: java.awt.geom.Rectangle2D parseRect(java.lang.String)>(x0);
+        return $r0;
+    }
+
+    static int access$4000(org.apache.fop.area.AreaTreeParser$Handler, org.xml.sax.Attributes, java.lang.String, int)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        org.xml.sax.Attributes x1;
+        java.lang.String x2;
+        int x3, $i0;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        x1 := @parameter1: org.xml.sax.Attributes;
+        x2 := @parameter2: java.lang.String;
+        x3 := @parameter3: int;
+        $i0 = specialinvoke x0.<org.apache.fop.area.AreaTreeParser$Handler: int getAttributeAsInteger(org.xml.sax.Attributes,java.lang.String,int)>(x1, x2, x3);
+        return $i0;
+    }
+
+    static boolean access$4100(org.apache.fop.area.AreaTreeParser$Handler, org.xml.sax.Attributes, java.lang.String, boolean)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        org.xml.sax.Attributes x1;
+        java.lang.String x2;
+        boolean x3, $z0;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        x1 := @parameter1: org.xml.sax.Attributes;
+        x2 := @parameter2: java.lang.String;
+        x3 := @parameter3: boolean;
+        $z0 = specialinvoke x0.<org.apache.fop.area.AreaTreeParser$Handler: boolean getAttributeAsBoolean(org.xml.sax.Attributes,java.lang.String,boolean)>(x1, x2, x3);
+        return $z0;
+    }
+
+    static org.apache.fop.area.PageViewport access$3802(org.apache.fop.area.AreaTreeParser$Handler, org.apache.fop.area.PageViewport)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        org.apache.fop.area.PageViewport x1;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        x1 := @parameter1: org.apache.fop.area.PageViewport;
+        x0.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.area.PageViewport currentPageViewport> = x1;
+        return x1;
+    }
+
+    static java.util.Map access$4200(org.apache.fop.area.AreaTreeParser$Handler)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        java.util.Map $r0;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        $r0 = x0.<org.apache.fop.area.AreaTreeParser$Handler: java.util.Map pageViewportsByKey>;
+        return $r0;
+    }
+
+    static org.apache.fop.area.RegionViewport access$4300(org.apache.fop.area.AreaTreeParser$Handler)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        org.apache.fop.area.RegionViewport $r0;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        $r0 = specialinvoke x0.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.area.RegionViewport getCurrentRegionViewport()>();
+        return $r0;
+    }
+
+    static void access$4400(org.apache.fop.area.AreaTreeParser$Handler, org.xml.sax.Attributes, org.apache.fop.area.Area)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        org.xml.sax.Attributes x1;
+        org.apache.fop.area.Area x2;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        x1 := @parameter1: org.xml.sax.Attributes;
+        x2 := @parameter2: org.apache.fop.area.Area;
+        specialinvoke x0.<org.apache.fop.area.AreaTreeParser$Handler: void setAreaAttributes(org.xml.sax.Attributes,org.apache.fop.area.Area)>(x1, x2);
+        return;
+    }
+
+    static java.lang.Object[] access$4500()
+    {
+        java.lang.Object[] $r0;
+
+        $r0 = <org.apache.fop.area.AreaTreeParser$Handler: java.lang.Object[] SUBSET_COMMON>;
+        return $r0;
+    }
+
+    static void access$4600(org.apache.fop.area.AreaTreeParser$Handler, org.xml.sax.Attributes, org.apache.fop.area.Area, java.lang.Object[])
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        org.xml.sax.Attributes x1;
+        org.apache.fop.area.Area x2;
+        java.lang.Object[] x3;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        x1 := @parameter1: org.xml.sax.Attributes;
+        x2 := @parameter2: org.apache.fop.area.Area;
+        x3 := @parameter3: java.lang.Object[];
+        specialinvoke x0.<org.apache.fop.area.AreaTreeParser$Handler: void setTraits(org.xml.sax.Attributes,org.apache.fop.area.Area,java.lang.Object[])>(x1, x2, x3);
+        return;
+    }
+
+    static java.lang.Object[] access$4700()
+    {
+        java.lang.Object[] $r0;
+
+        $r0 = <org.apache.fop.area.AreaTreeParser$Handler: java.lang.Object[] SUBSET_BOX>;
+        return $r0;
+    }
+
+    static java.lang.Object[] access$4800()
+    {
+        java.lang.Object[] $r0;
+
+        $r0 = <org.apache.fop.area.AreaTreeParser$Handler: java.lang.Object[] SUBSET_COLOR>;
+        return $r0;
+    }
+
+    static void access$4900(org.apache.fop.area.AreaTreeParser$Handler, java.lang.Object, java.lang.Class)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        java.lang.Object x1;
+        java.lang.Class x2;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        x1 := @parameter1: java.lang.Object;
+        x2 := @parameter2: java.lang.Class;
+        specialinvoke x0.<org.apache.fop.area.AreaTreeParser$Handler: void assertObjectOfClass(java.lang.Object,java.lang.Class)>(x1, x2);
+        return;
+    }
+
+    static void access$5000(org.apache.fop.area.AreaTreeParser$Handler, org.xml.sax.Attributes, int)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        org.xml.sax.Attributes x1;
+        int x2;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        x1 := @parameter1: org.xml.sax.Attributes;
+        x2 := @parameter2: int;
+        specialinvoke x0.<org.apache.fop.area.AreaTreeParser$Handler: void pushNewRegionReference(org.xml.sax.Attributes,int)>(x1, x2);
+        return;
+    }
+
+    static org.apache.fop.area.BodyRegion access$5100(org.apache.fop.area.AreaTreeParser$Handler)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        org.apache.fop.area.BodyRegion $r0;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        $r0 = specialinvoke x0.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.area.BodyRegion getCurrentBodyRegion()>();
+        return $r0;
+    }
+
+    static org.apache.fop.area.CTM access$5200(org.apache.fop.area.AreaTreeParser$Handler, org.xml.sax.Attributes, java.lang.String)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        org.xml.sax.Attributes x1;
+        java.lang.String x2;
+        org.apache.fop.area.CTM $r0;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        x1 := @parameter1: org.xml.sax.Attributes;
+        x2 := @parameter2: java.lang.String;
+        $r0 = specialinvoke x0.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.area.CTM getAttributeAsCTM(org.xml.sax.Attributes,java.lang.String)>(x1, x2);
+        return $r0;
+    }
+
+    static boolean access$5300(org.apache.fop.area.AreaTreeParser$Handler)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        boolean $z0;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        $z0 = x0.<org.apache.fop.area.AreaTreeParser$Handler: boolean firstFlow>;
+        return $z0;
+    }
+
+    static boolean access$5302(org.apache.fop.area.AreaTreeParser$Handler, boolean)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        boolean x1;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        x1 := @parameter1: boolean;
+        x0.<org.apache.fop.area.AreaTreeParser$Handler: boolean firstFlow> = x1;
+        return x1;
+    }
+
+    static org.apache.fop.area.BlockParent access$5400(org.apache.fop.area.AreaTreeParser$Handler)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        org.apache.fop.area.BlockParent $r0;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        $r0 = specialinvoke x0.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.area.BlockParent getCurrentBlockParent()>();
+        return $r0;
+    }
+
+    static java.lang.Object[] access$5500()
+    {
+        java.lang.Object[] $r0;
+
+        $r0 = <org.apache.fop.area.AreaTreeParser$Handler: java.lang.Object[] SUBSET_LINK>;
+        return $r0;
+    }
+
+    static org.apache.fop.area.inline.AbstractTextArea access$5600(org.apache.fop.area.AreaTreeParser$Handler)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        org.apache.fop.area.inline.AbstractTextArea $r0;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        $r0 = specialinvoke x0.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.area.inline.AbstractTextArea getCurrentText()>();
+        return $r0;
+    }
+
+    static java.lang.Object[] access$5700()
+    {
+        java.lang.Object[] $r0;
+
+        $r0 = <org.apache.fop.area.AreaTreeParser$Handler: java.lang.Object[] SUBSET_FONT>;
+        return $r0;
+    }
+
+    static org.xml.sax.Attributes access$5800(org.apache.fop.area.AreaTreeParser$Handler)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        org.xml.sax.Attributes $r0;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        $r0 = x0.<org.apache.fop.area.AreaTreeParser$Handler: org.xml.sax.Attributes lastAttributes>;
+        return $r0;
+    }
+
+    static java.lang.StringBuffer access$5900(org.apache.fop.area.AreaTreeParser$Handler)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        java.lang.StringBuffer $r0;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        $r0 = x0.<org.apache.fop.area.AreaTreeParser$Handler: java.lang.StringBuffer content>;
+        return $r0;
+    }
+
+    static java.awt.geom.Rectangle2D access$6000(org.apache.fop.area.AreaTreeParser$Handler, org.xml.sax.Attributes, java.lang.String)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        org.xml.sax.Attributes x1;
+        java.lang.String x2;
+        java.awt.geom.Rectangle2D $r0;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        x1 := @parameter1: org.xml.sax.Attributes;
+        x2 := @parameter2: java.lang.String;
+        $r0 = specialinvoke x0.<org.apache.fop.area.AreaTreeParser$Handler: java.awt.geom.Rectangle2D getAttributeAsRectangle2D(org.xml.sax.Attributes,java.lang.String)>(x1, x2);
+        return $r0;
+    }
+
+    static org.apache.fop.area.inline.Viewport access$6100(org.apache.fop.area.AreaTreeParser$Handler)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        org.apache.fop.area.inline.Viewport $r0;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        $r0 = specialinvoke x0.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.area.inline.Viewport getCurrentViewport()>();
+        return $r0;
+    }
+
+    static org.w3c.dom.DOMImplementation access$6202(org.apache.fop.area.AreaTreeParser$Handler, org.w3c.dom.DOMImplementation)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        org.w3c.dom.DOMImplementation x1;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        x1 := @parameter1: org.w3c.dom.DOMImplementation;
+        x0.<org.apache.fop.area.AreaTreeParser$Handler: org.w3c.dom.DOMImplementation domImplementation> = x1;
+        return x1;
+    }
+
+    static org.apache.fop.fo.ElementMappingRegistry access$6300(org.apache.fop.area.AreaTreeParser$Handler)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        org.apache.fop.fo.ElementMappingRegistry $r0;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        $r0 = x0.<org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.fo.ElementMappingRegistry elementMappingRegistry>;
+        return $r0;
+    }
+
+    static org.w3c.dom.DOMImplementation access$6200(org.apache.fop.area.AreaTreeParser$Handler)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        org.w3c.dom.DOMImplementation $r0;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        $r0 = x0.<org.apache.fop.area.AreaTreeParser$Handler: org.w3c.dom.DOMImplementation domImplementation>;
+        return $r0;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Integer $r0;
+        java.lang.Object[] $r1;
+
+        $r1 = newarray (java.lang.Object)[1];
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer PROD_ID>;
+        $r1[0] = $r0;
+        <org.apache.fop.area.AreaTreeParser$Handler: java.lang.Object[] SUBSET_COMMON> = $r1;
+        $r1 = newarray (java.lang.Object)[2];
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer INTERNAL_LINK>;
+        $r1[0] = $r0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer EXTERNAL_LINK>;
+        $r1[1] = $r0;
+        <org.apache.fop.area.AreaTreeParser$Handler: java.lang.Object[] SUBSET_LINK> = $r1;
+        $r1 = newarray (java.lang.Object)[2];
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BACKGROUND>;
+        $r1[0] = $r0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer COLOR>;
+        $r1[1] = $r0;
+        <org.apache.fop.area.AreaTreeParser$Handler: java.lang.Object[] SUBSET_COLOR> = $r1;
+        $r1 = newarray (java.lang.Object)[9];
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer FONT>;
+        $r1[0] = $r0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer FONT_SIZE>;
+        $r1[1] = $r0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BLINK>;
+        $r1[2] = $r0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer OVERLINE>;
+        $r1[3] = $r0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer OVERLINE_COLOR>;
+        $r1[4] = $r0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer LINETHROUGH>;
+        $r1[5] = $r0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer LINETHROUGH_COLOR>;
+        $r1[6] = $r0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer UNDERLINE>;
+        $r1[7] = $r0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer UNDERLINE_COLOR>;
+        $r1[8] = $r0;
+        <org.apache.fop.area.AreaTreeParser$Handler: java.lang.Object[] SUBSET_FONT> = $r1;
+        $r1 = newarray (java.lang.Object)[16];
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_BEFORE>;
+        $r1[0] = $r0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_AFTER>;
+        $r1[1] = $r0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_START>;
+        $r1[2] = $r0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_END>;
+        $r1[3] = $r0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer SPACE_BEFORE>;
+        $r1[4] = $r0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer SPACE_AFTER>;
+        $r1[5] = $r0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer SPACE_START>;
+        $r1[6] = $r0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer SPACE_END>;
+        $r1[7] = $r0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer PADDING_BEFORE>;
+        $r1[8] = $r0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer PADDING_AFTER>;
+        $r1[9] = $r0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer PADDING_START>;
+        $r1[10] = $r0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer PADDING_END>;
+        $r1[11] = $r0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer START_INDENT>;
+        $r1[12] = $r0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer END_INDENT>;
+        $r1[13] = $r0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer IS_REFERENCE_AREA>;
+        $r1[14] = $r0;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer IS_VIEWPORT_AREA>;
+        $r1[15] = $r0;
+        <org.apache.fop.area.AreaTreeParser$Handler: java.lang.Object[] SUBSET_BOX> = $r1;
+        return;
+    }
+}

@@ -1,0 +1,223 @@
+public final class org.apache.fop.render.afp.modca.Document extends org.apache.fop.render.afp.modca.AbstractNamedAFPObject
+{
+    private static final java.lang.String DEFAULT_NAME;
+    private java.util.List objects;
+    private boolean started;
+    private boolean complete;
+
+    public void <init>()
+    {
+        org.apache.fop.render.afp.modca.Document this;
+
+        this := @this: org.apache.fop.render.afp.modca.Document;
+        specialinvoke this.<org.apache.fop.render.afp.modca.Document: void <init>(java.lang.String)>("DOC00001");
+        return;
+    }
+
+    public void <init>(java.lang.String)
+    {
+        org.apache.fop.render.afp.modca.Document this;
+        java.lang.String name;
+        java.util.ArrayList $r0;
+
+        this := @this: org.apache.fop.render.afp.modca.Document;
+        name := @parameter0: java.lang.String;
+        specialinvoke this.<org.apache.fop.render.afp.modca.AbstractNamedAFPObject: void <init>(java.lang.String)>(name);
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.render.afp.modca.Document: java.util.List objects> = $r0;
+        this.<org.apache.fop.render.afp.modca.Document: boolean started> = 0;
+        this.<org.apache.fop.render.afp.modca.Document: boolean complete> = 0;
+        return;
+    }
+
+    public void addPage(org.apache.fop.render.afp.modca.PageObject)
+    {
+        org.apache.fop.render.afp.modca.Document this;
+        org.apache.fop.render.afp.modca.PageObject page;
+        java.util.List $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.afp.modca.Document;
+        page := @parameter0: org.apache.fop.render.afp.modca.PageObject;
+        $r0 = this.<org.apache.fop.render.afp.modca.Document: java.util.List objects>;
+        $z0 = interfaceinvoke $r0.<java.util.List: boolean contains(java.lang.Object)>(page);
+        if $z0 != 0 goto label0;
+
+        $r0 = this.<org.apache.fop.render.afp.modca.Document: java.util.List objects>;
+        interfaceinvoke $r0.<java.util.List: boolean add(java.lang.Object)>(page);
+
+     label0:
+        return;
+    }
+
+    public void addPageGroup(org.apache.fop.render.afp.modca.PageGroup)
+    {
+        org.apache.fop.render.afp.modca.Document this;
+        org.apache.fop.render.afp.modca.PageGroup pageGroup;
+        java.util.List $r0;
+
+        this := @this: org.apache.fop.render.afp.modca.Document;
+        pageGroup := @parameter0: org.apache.fop.render.afp.modca.PageGroup;
+        $r0 = this.<org.apache.fop.render.afp.modca.Document: java.util.List objects>;
+        interfaceinvoke $r0.<java.util.List: boolean add(java.lang.Object)>(pageGroup);
+        return;
+    }
+
+    public void endDocument()
+    {
+        org.apache.fop.render.afp.modca.Document this;
+
+        this := @this: org.apache.fop.render.afp.modca.Document;
+        this.<org.apache.fop.render.afp.modca.Document: boolean complete> = 1;
+        return;
+    }
+
+    public boolean isComplete()
+    {
+        org.apache.fop.render.afp.modca.Document this;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.afp.modca.Document;
+        $z0 = this.<org.apache.fop.render.afp.modca.Document: boolean complete>;
+        return $z0;
+    }
+
+    public void writeDataStream(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.render.afp.modca.Document this;
+        java.io.OutputStream os;
+        java.util.Iterator it;
+        org.apache.fop.render.afp.modca.AbstractAFPObject ao;
+        boolean $z0;
+        java.util.List $r0;
+        java.lang.Object $r1;
+        org.apache.fop.render.afp.modca.PageObject $r2;
+        org.apache.fop.render.afp.modca.PageGroup $r3;
+
+        this := @this: org.apache.fop.render.afp.modca.Document;
+        os := @parameter0: java.io.OutputStream;
+        $z0 = this.<org.apache.fop.render.afp.modca.Document: boolean started>;
+        if $z0 != 0 goto label0;
+
+        specialinvoke this.<org.apache.fop.render.afp.modca.Document: void writeStart(java.io.OutputStream)>(os);
+        this.<org.apache.fop.render.afp.modca.Document: boolean started> = 1;
+
+     label0:
+        $r0 = this.<org.apache.fop.render.afp.modca.Document: java.util.List objects>;
+        it = interfaceinvoke $r0.<java.util.List: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke it.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label4;
+
+        $r1 = interfaceinvoke it.<java.util.Iterator: java.lang.Object next()>();
+        ao = (org.apache.fop.render.afp.modca.AbstractAFPObject) $r1;
+        $z0 = ao instanceof org.apache.fop.render.afp.modca.PageObject;
+        if $z0 == 0 goto label2;
+
+        $r2 = (org.apache.fop.render.afp.modca.PageObject) ao;
+        $z0 = virtualinvoke $r2.<org.apache.fop.render.afp.modca.PageObject: boolean isComplete()>();
+        if $z0 != 0 goto label3;
+
+     label2:
+        $z0 = ao instanceof org.apache.fop.render.afp.modca.PageGroup;
+        if $z0 == 0 goto label4;
+
+        $r3 = (org.apache.fop.render.afp.modca.PageGroup) ao;
+        $z0 = virtualinvoke $r3.<org.apache.fop.render.afp.modca.PageGroup: boolean isComplete()>();
+        if $z0 == 0 goto label4;
+
+     label3:
+        virtualinvoke ao.<org.apache.fop.render.afp.modca.AbstractAFPObject: void writeDataStream(java.io.OutputStream)>(os);
+        interfaceinvoke it.<java.util.Iterator: void remove()>();
+        goto label1;
+
+     label4:
+        $z0 = this.<org.apache.fop.render.afp.modca.Document: boolean complete>;
+        if $z0 == 0 goto label5;
+
+        specialinvoke this.<org.apache.fop.render.afp.modca.Document: void writeEnd(java.io.OutputStream)>(os);
+
+     label5:
+        return;
+    }
+
+    private void writeStart(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.render.afp.modca.Document this;
+        java.io.OutputStream os;
+        byte[] data, $r0, $r1;
+        int i, $i0;
+        byte $b1;
+
+        this := @this: org.apache.fop.render.afp.modca.Document;
+        os := @parameter0: java.io.OutputStream;
+        data = newarray (byte)[17];
+        data[0] = 90;
+        data[1] = 0;
+        data[2] = 16;
+        data[3] = -45;
+        data[4] = -88;
+        data[5] = -88;
+        data[6] = 0;
+        data[7] = 0;
+        data[8] = 0;
+        i = 0;
+
+     label0:
+        $r0 = this.<org.apache.fop.render.afp.modca.Document: byte[] nameBytes>;
+        $i0 = lengthof $r0;
+        if i >= $i0 goto label1;
+
+        $i0 = 9 + i;
+        $r1 = this.<org.apache.fop.render.afp.modca.Document: byte[] nameBytes>;
+        $b1 = $r1[i];
+        data[$i0] = $b1;
+        i = i + 1;
+        goto label0;
+
+     label1:
+        virtualinvoke os.<java.io.OutputStream: void write(byte[])>(data);
+        return;
+    }
+
+    private void writeEnd(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.render.afp.modca.Document this;
+        java.io.OutputStream os;
+        byte[] data, $r0, $r1;
+        int i, $i0;
+        byte $b1;
+
+        this := @this: org.apache.fop.render.afp.modca.Document;
+        os := @parameter0: java.io.OutputStream;
+        data = newarray (byte)[17];
+        data[0] = 90;
+        data[1] = 0;
+        data[2] = 16;
+        data[3] = -45;
+        data[4] = -87;
+        data[5] = -88;
+        data[6] = 0;
+        data[7] = 0;
+        data[8] = 0;
+        i = 0;
+
+     label0:
+        $r0 = this.<org.apache.fop.render.afp.modca.Document: byte[] nameBytes>;
+        $i0 = lengthof $r0;
+        if i >= $i0 goto label1;
+
+        $i0 = 9 + i;
+        $r1 = this.<org.apache.fop.render.afp.modca.Document: byte[] nameBytes>;
+        $b1 = $r1[i];
+        data[$i0] = $b1;
+        i = i + 1;
+        goto label0;
+
+     label1:
+        virtualinvoke os.<java.io.OutputStream: void write(byte[])>(data);
+        return;
+    }
+}

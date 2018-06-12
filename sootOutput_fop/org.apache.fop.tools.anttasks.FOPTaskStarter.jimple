@@ -1,0 +1,768 @@
+class org.apache.fop.tools.anttasks.FOPTaskStarter extends java.lang.Object
+{
+    private org.apache.fop.apps.FopFactory fopFactory;
+    private org.apache.fop.tools.anttasks.Fop task;
+    private java.lang.String baseURL;
+    protected org.apache.commons.logging.Log logger;
+    private static final java.lang.String[][] SHORT_NAMES;
+    private static final java.lang.String[][] EXTENSIONS;
+
+    public void setLogger(org.apache.commons.logging.Log)
+    {
+        org.apache.fop.tools.anttasks.FOPTaskStarter this;
+        org.apache.commons.logging.Log logger;
+
+        this := @this: org.apache.fop.tools.anttasks.FOPTaskStarter;
+        logger := @parameter0: org.apache.commons.logging.Log;
+        this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.commons.logging.Log logger> = logger;
+        return;
+    }
+
+    protected org.apache.commons.logging.Log getLogger()
+    {
+        org.apache.fop.tools.anttasks.FOPTaskStarter this;
+        org.apache.commons.logging.Log $r0;
+
+        this := @this: org.apache.fop.tools.anttasks.FOPTaskStarter;
+        $r0 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.commons.logging.Log logger>;
+        return $r0;
+    }
+
+    void <init>(org.apache.fop.tools.anttasks.Fop) throws org.xml.sax.SAXException, java.io.IOException
+    {
+        org.apache.fop.tools.anttasks.FOPTaskStarter this;
+        org.apache.fop.tools.anttasks.Fop task;
+        org.apache.fop.apps.FopFactory $r0, $r2;
+        java.io.File $r1, $r3;
+
+        this := @this: org.apache.fop.tools.anttasks.FOPTaskStarter;
+        task := @parameter0: org.apache.fop.tools.anttasks.Fop;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $r0 = staticinvoke <org.apache.fop.apps.FopFactory: org.apache.fop.apps.FopFactory newInstance()>();
+        this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.apps.FopFactory fopFactory> = $r0;
+        this.<org.apache.fop.tools.anttasks.FOPTaskStarter: java.lang.String baseURL> = null;
+        this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.commons.logging.Log logger> = null;
+        this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task> = task;
+        $r1 = virtualinvoke task.<org.apache.fop.tools.anttasks.Fop: java.io.File getUserconfig()>();
+        if $r1 == null goto label0;
+
+        $r2 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.apps.FopFactory fopFactory>;
+        $r3 = virtualinvoke task.<org.apache.fop.tools.anttasks.Fop: java.io.File getUserconfig()>();
+        virtualinvoke $r2.<org.apache.fop.apps.FopFactory: void setUserConfig(java.io.File)>($r3);
+
+     label0:
+        return;
+    }
+
+    private java.lang.String normalizeOutputFormat(java.lang.String)
+    {
+        org.apache.fop.tools.anttasks.FOPTaskStarter this;
+        java.lang.String format, $r3;
+        int i, $i0;
+        java.lang.String[][] $r0, $r1;
+        java.lang.String[] $r2;
+        boolean $z0;
+
+        this := @this: org.apache.fop.tools.anttasks.FOPTaskStarter;
+        format := @parameter0: java.lang.String;
+        if format != null goto label0;
+
+        return "application/pdf";
+
+     label0:
+        i = 0;
+
+     label1:
+        $r0 = <org.apache.fop.tools.anttasks.FOPTaskStarter: java.lang.String[][] SHORT_NAMES>;
+        $i0 = lengthof $r0;
+        if i >= $i0 goto label3;
+
+        $r1 = <org.apache.fop.tools.anttasks.FOPTaskStarter: java.lang.String[][] SHORT_NAMES>;
+        $r2 = $r1[i];
+        $r3 = $r2[0];
+        $z0 = virtualinvoke $r3.<java.lang.String: boolean equals(java.lang.Object)>(format);
+        if $z0 == 0 goto label2;
+
+        $r1 = <org.apache.fop.tools.anttasks.FOPTaskStarter: java.lang.String[][] SHORT_NAMES>;
+        $r2 = $r1[i];
+        $r3 = $r2[1];
+        return $r3;
+
+     label2:
+        i = i + 1;
+        goto label1;
+
+     label3:
+        return format;
+    }
+
+    private java.lang.String determineExtension(java.lang.String)
+    {
+        org.apache.fop.tools.anttasks.FOPTaskStarter this;
+        java.lang.String outputFormat, ext, $r4, $r6;
+        int i, $i0;
+        java.lang.String[][] $r0, $r2;
+        java.lang.StringBuffer $r1;
+        java.lang.String[] $r3;
+        boolean $z0;
+        java.lang.RuntimeException $r5;
+
+        this := @this: org.apache.fop.tools.anttasks.FOPTaskStarter;
+        outputFormat := @parameter0: java.lang.String;
+        i = 0;
+
+     label0:
+        $r0 = <org.apache.fop.tools.anttasks.FOPTaskStarter: java.lang.String[][] EXTENSIONS>;
+        $i0 = lengthof $r0;
+        if i >= $i0 goto label3;
+
+        $r2 = <org.apache.fop.tools.anttasks.FOPTaskStarter: java.lang.String[][] EXTENSIONS>;
+        $r3 = $r2[i];
+        $r4 = $r3[0];
+        $z0 = virtualinvoke $r4.<java.lang.String: boolean equals(java.lang.Object)>(outputFormat);
+        if $z0 == 0 goto label2;
+
+        $r2 = <org.apache.fop.tools.anttasks.FOPTaskStarter: java.lang.String[][] EXTENSIONS>;
+        $r3 = $r2[i];
+        ext = $r3[1];
+        if ext != null goto label1;
+
+        $r5 = new java.lang.RuntimeException;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Output format \'");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(outputFormat);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\' does not produce a file.");
+        $r6 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r5.<java.lang.RuntimeException: void <init>(java.lang.String)>($r6);
+        throw $r5;
+
+     label1:
+        return ext;
+
+     label2:
+        i = i + 1;
+        goto label0;
+
+     label3:
+        return ".unk";
+    }
+
+    private java.io.File replaceExtension(java.io.File, java.lang.String, java.lang.String)
+    {
+        org.apache.fop.tools.anttasks.FOPTaskStarter this;
+        java.io.File file, $r1, $r2;
+        java.lang.String expectedExt, newExt, name, $r0;
+        boolean $z0;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.tools.anttasks.FOPTaskStarter;
+        file := @parameter0: java.io.File;
+        expectedExt := @parameter1: java.lang.String;
+        newExt := @parameter2: java.lang.String;
+        name = virtualinvoke file.<java.io.File: java.lang.String getName()>();
+        $r0 = virtualinvoke name.<java.lang.String: java.lang.String toLowerCase()>();
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean endsWith(java.lang.String)>(expectedExt);
+        if $z0 == 0 goto label0;
+
+        $i0 = virtualinvoke name.<java.lang.String: int length()>();
+        $i1 = virtualinvoke expectedExt.<java.lang.String: int length()>();
+        $i0 = $i0 - $i1;
+        name = virtualinvoke name.<java.lang.String: java.lang.String substring(int,int)>(0, $i0);
+
+     label0:
+        name = virtualinvoke name.<java.lang.String: java.lang.String concat(java.lang.String)>(newExt);
+        $r1 = new java.io.File;
+        $r2 = virtualinvoke file.<java.io.File: java.io.File getParentFile()>();
+        specialinvoke $r1.<java.io.File: void <init>(java.io.File,java.lang.String)>($r2, name);
+        return $r1;
+    }
+
+    public void run() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.tools.anttasks.FOPTaskStarter this;
+        java.net.MalformedURLException mfue, $r6, $r8;
+        java.lang.String outputFormat, newExtension, $r5, $r10, $r14, $r22;
+        int actioncount, skippedcount, i, j, $i3, $i4;
+        java.io.File outf, f, $r1, $r3, $r13;
+        org.apache.tools.ant.util.GlobPatternMapper mapper, $r15;
+        org.apache.tools.ant.types.FileSet fs;
+        org.apache.tools.ant.DirectoryScanner ds;
+        java.lang.String[] files, sa;
+        java.lang.Exception e, $r24;
+        org.apache.fop.tools.anttasks.Fop $r0, $r2, $r12, $r20;
+        java.net.URL $r4;
+        org.apache.commons.logging.Log $r7;
+        java.lang.StringBuffer $r9;
+        boolean $z0;
+        org.apache.tools.ant.BuildException $r11;
+        long $l0, $l1;
+        byte $b2;
+        java.util.List $r16, $r17;
+        java.lang.Object $r18;
+        org.apache.tools.ant.Project $r19, $r21, $r23;
+        null_type outf;
+
+        this := @this: org.apache.fop.tools.anttasks.FOPTaskStarter;
+        $r0 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.tools.anttasks.Fop: java.io.File getBasedir()>();
+        if $r1 == null goto label3;
+
+     label0:
+        $r2 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.tools.anttasks.Fop: java.io.File getBasedir()>();
+        $r4 = virtualinvoke $r3.<java.io.File: java.net.URL toURL()>();
+        $r5 = virtualinvoke $r4.<java.net.URL: java.lang.String toExternalForm()>();
+        this.<org.apache.fop.tools.anttasks.FOPTaskStarter: java.lang.String baseURL> = $r5;
+
+     label1:
+        goto label6;
+
+     label2:
+        $r6 := @caughtexception;
+        mfue = $r6;
+        $r7 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.commons.logging.Log logger>;
+        interfaceinvoke $r7.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("Error creating base URL from base directory", mfue);
+        goto label6;
+
+     label3:
+        $r0 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.tools.anttasks.Fop: java.io.File getFofile()>();
+        if $r1 == null goto label4;
+
+        $r2 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.tools.anttasks.Fop: java.io.File getFofile()>();
+        $r3 = virtualinvoke $r3.<java.io.File: java.io.File getParentFile()>();
+        $r4 = virtualinvoke $r3.<java.io.File: java.net.URL toURL()>();
+        $r5 = virtualinvoke $r4.<java.net.URL: java.lang.String toExternalForm()>();
+        this.<org.apache.fop.tools.anttasks.FOPTaskStarter: java.lang.String baseURL> = $r5;
+
+     label4:
+        goto label6;
+
+     label5:
+        $r8 := @caughtexception;
+        mfue = $r8;
+        $r7 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.commons.logging.Log logger>;
+        interfaceinvoke $r7.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("Error creating base URL from XSL-FO input file", mfue);
+
+     label6:
+        $r0 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $r9 = new java.lang.StringBuffer;
+        specialinvoke $r9.<java.lang.StringBuffer: void <init>()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Using base URL: ");
+        $r10 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: java.lang.String baseURL>;
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r10);
+        $r5 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r0.<org.apache.fop.tools.anttasks.Fop: void log(java.lang.String,int)>($r5, 4);
+        $r2 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $r5 = virtualinvoke $r2.<org.apache.fop.tools.anttasks.Fop: java.lang.String getFormat()>();
+        outputFormat = specialinvoke this.<org.apache.fop.tools.anttasks.FOPTaskStarter: java.lang.String normalizeOutputFormat(java.lang.String)>($r5);
+        newExtension = specialinvoke this.<org.apache.fop.tools.anttasks.FOPTaskStarter: java.lang.String determineExtension(java.lang.String)>(outputFormat);
+        actioncount = 0;
+        skippedcount = 0;
+        $r0 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.tools.anttasks.Fop: java.io.File getFofile()>();
+        if $r1 == null goto label11;
+
+        $r0 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.tools.anttasks.Fop: java.io.File getFofile()>();
+        $z0 = virtualinvoke $r1.<java.io.File: boolean exists()>();
+        if $z0 == 0 goto label11;
+
+        $r0 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        outf = virtualinvoke $r0.<org.apache.fop.tools.anttasks.Fop: java.io.File getOutfile()>();
+        if outf != null goto label7;
+
+        $r11 = new org.apache.tools.ant.BuildException;
+        specialinvoke $r11.<org.apache.tools.ant.BuildException: void <init>(java.lang.String)>("outfile is required when fofile is used");
+        throw $r11;
+
+     label7:
+        $r0 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.tools.anttasks.Fop: java.io.File getOutdir()>();
+        if $r1 == null goto label8;
+
+        $r1 = new java.io.File;
+        $r12 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $r13 = virtualinvoke $r12.<org.apache.fop.tools.anttasks.Fop: java.io.File getOutdir()>();
+        $r14 = virtualinvoke outf.<java.io.File: java.lang.String getName()>();
+        specialinvoke $r1.<java.io.File: void <init>(java.io.File,java.lang.String)>($r13, $r14);
+        outf = $r1;
+
+     label8:
+        $r0 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.tools.anttasks.Fop: boolean getForce()>();
+        if $z0 != 0 goto label9;
+
+        $z0 = virtualinvoke outf.<java.io.File: boolean exists()>();
+        if $z0 == 0 goto label9;
+
+        $r0 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.tools.anttasks.Fop: java.io.File getFofile()>();
+        $l0 = virtualinvoke $r1.<java.io.File: long lastModified()>();
+        $l1 = virtualinvoke outf.<java.io.File: long lastModified()>();
+        $b2 = $l0 cmp $l1;
+        if $b2 <= 0 goto label10;
+
+     label9:
+        $r2 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.tools.anttasks.Fop: java.io.File getFofile()>();
+        specialinvoke this.<org.apache.fop.tools.anttasks.FOPTaskStarter: void render(java.io.File,java.io.File,java.lang.String)>($r3, outf, outputFormat);
+        actioncount = actioncount + 1;
+        goto label11;
+
+     label10:
+        $z0 = virtualinvoke outf.<java.io.File: boolean exists()>();
+        if $z0 == 0 goto label11;
+
+        $r0 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.tools.anttasks.Fop: java.io.File getFofile()>();
+        $l0 = virtualinvoke $r1.<java.io.File: long lastModified()>();
+        $l1 = virtualinvoke outf.<java.io.File: long lastModified()>();
+        $b2 = $l0 cmp $l1;
+        if $b2 > 0 goto label11;
+
+        skippedcount = skippedcount + 1;
+
+     label11:
+        $r15 = new org.apache.tools.ant.util.GlobPatternMapper;
+        specialinvoke $r15.<org.apache.tools.ant.util.GlobPatternMapper: void <init>()>();
+        mapper = $r15;
+        virtualinvoke mapper.<org.apache.tools.ant.util.GlobPatternMapper: void setFrom(java.lang.String)>("*.fo");
+        $r9 = new java.lang.StringBuffer;
+        specialinvoke $r9.<java.lang.StringBuffer: void <init>()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("*");
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(newExtension);
+        $r5 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke mapper.<org.apache.tools.ant.util.GlobPatternMapper: void setTo(java.lang.String)>($r5);
+        i = 0;
+
+     label12:
+        $r2 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $r16 = virtualinvoke $r2.<org.apache.fop.tools.anttasks.Fop: java.util.List getFilesets()>();
+        $i3 = interfaceinvoke $r16.<java.util.List: int size()>();
+        if i >= $i3 goto label24;
+
+        $r0 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $r17 = virtualinvoke $r0.<org.apache.fop.tools.anttasks.Fop: java.util.List getFilesets()>();
+        $r18 = interfaceinvoke $r17.<java.util.List: java.lang.Object get(int)>(i);
+        fs = (org.apache.tools.ant.types.FileSet) $r18;
+        $r2 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $r19 = virtualinvoke $r2.<org.apache.fop.tools.anttasks.Fop: org.apache.tools.ant.Project getProject()>();
+        ds = virtualinvoke fs.<org.apache.tools.ant.types.FileSet: org.apache.tools.ant.DirectoryScanner getDirectoryScanner(org.apache.tools.ant.Project)>($r19);
+        files = virtualinvoke ds.<org.apache.tools.ant.DirectoryScanner: java.lang.String[] getIncludedFiles()>();
+        j = 0;
+
+     label13:
+        $i3 = lengthof files;
+        if j >= $i3 goto label23;
+
+        $r1 = new java.io.File;
+        $r20 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $r21 = virtualinvoke $r20.<org.apache.fop.tools.anttasks.Fop: org.apache.tools.ant.Project getProject()>();
+        $r13 = virtualinvoke fs.<org.apache.tools.ant.types.FileSet: java.io.File getDir(org.apache.tools.ant.Project)>($r21);
+        $r14 = files[j];
+        specialinvoke $r1.<java.io.File: void <init>(java.io.File,java.lang.String)>($r13, $r14);
+        f = $r1;
+        outf = null;
+        $r0 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.tools.anttasks.Fop: java.io.File getOutdir()>();
+        if $r1 == null goto label14;
+
+        $r22 = files[j];
+        $z0 = virtualinvoke $r22.<java.lang.String: boolean endsWith(java.lang.String)>(".fo");
+        if $z0 == 0 goto label14;
+
+        $r5 = files[j];
+        sa = virtualinvoke mapper.<org.apache.tools.ant.util.GlobPatternMapper: java.lang.String[] mapFileName(java.lang.String)>($r5);
+        $r1 = new java.io.File;
+        $r12 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $r13 = virtualinvoke $r12.<org.apache.fop.tools.anttasks.Fop: java.io.File getOutdir()>();
+        $r14 = sa[0];
+        specialinvoke $r1.<java.io.File: void <init>(java.io.File,java.lang.String)>($r13, $r14);
+        outf = $r1;
+        goto label15;
+
+     label14:
+        outf = specialinvoke this.<org.apache.fop.tools.anttasks.FOPTaskStarter: java.io.File replaceExtension(java.io.File,java.lang.String,java.lang.String)>(f, ".fo", newExtension);
+        $r0 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.tools.anttasks.Fop: java.io.File getOutdir()>();
+        if $r1 == null goto label15;
+
+        $r1 = new java.io.File;
+        $r12 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $r13 = virtualinvoke $r12.<org.apache.fop.tools.anttasks.Fop: java.io.File getOutdir()>();
+        $r14 = virtualinvoke outf.<java.io.File: java.lang.String getName()>();
+        specialinvoke $r1.<java.io.File: void <init>(java.io.File,java.lang.String)>($r13, $r14);
+        outf = $r1;
+
+     label15:
+        $r0 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.tools.anttasks.Fop: boolean getRelativebase()>();
+        if $z0 == 0 goto label16;
+
+        $r3 = virtualinvoke f.<java.io.File: java.io.File getParentFile()>();
+        $r4 = virtualinvoke $r3.<java.io.File: java.net.URL toURL()>();
+        $r5 = virtualinvoke $r4.<java.net.URL: java.lang.String toExternalForm()>();
+        this.<org.apache.fop.tools.anttasks.FOPTaskStarter: java.lang.String baseURL> = $r5;
+
+     label16:
+        $r22 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: java.lang.String baseURL>;
+        if $r22 != null goto label17;
+
+        $r12 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $r23 = virtualinvoke $r12.<org.apache.fop.tools.anttasks.Fop: org.apache.tools.ant.Project getProject()>();
+        $r3 = virtualinvoke fs.<org.apache.tools.ant.types.FileSet: java.io.File getDir(org.apache.tools.ant.Project)>($r23);
+        $r4 = virtualinvoke $r3.<java.io.File: java.net.URL toURL()>();
+        $r5 = virtualinvoke $r4.<java.net.URL: java.lang.String toExternalForm()>();
+        this.<org.apache.fop.tools.anttasks.FOPTaskStarter: java.lang.String baseURL> = $r5;
+
+     label17:
+        goto label19;
+
+     label18:
+        $r24 := @caughtexception;
+        e = $r24;
+        $r0 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        virtualinvoke $r0.<org.apache.fop.tools.anttasks.Fop: void log(java.lang.String,int)>("Error setting base URL", 4);
+
+     label19:
+        $r0 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.tools.anttasks.Fop: boolean getForce()>();
+        if $z0 != 0 goto label20;
+
+        $z0 = virtualinvoke outf.<java.io.File: boolean exists()>();
+        if $z0 == 0 goto label20;
+
+        $l0 = virtualinvoke f.<java.io.File: long lastModified()>();
+        $l1 = virtualinvoke outf.<java.io.File: long lastModified()>();
+        $b2 = $l0 cmp $l1;
+        if $b2 <= 0 goto label21;
+
+     label20:
+        specialinvoke this.<org.apache.fop.tools.anttasks.FOPTaskStarter: void render(java.io.File,java.io.File,java.lang.String)>(f, outf, outputFormat);
+        actioncount = actioncount + 1;
+        goto label22;
+
+     label21:
+        $z0 = virtualinvoke outf.<java.io.File: boolean exists()>();
+        if $z0 == 0 goto label22;
+
+        $l0 = virtualinvoke f.<java.io.File: long lastModified()>();
+        $l1 = virtualinvoke outf.<java.io.File: long lastModified()>();
+        $b2 = $l0 cmp $l1;
+        if $b2 > 0 goto label22;
+
+        skippedcount = skippedcount + 1;
+
+     label22:
+        j = j + 1;
+        goto label13;
+
+     label23:
+        i = i + 1;
+        goto label12;
+
+     label24:
+        $i4 = actioncount + skippedcount;
+        if $i4 != 0 goto label25;
+
+        $r0 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        virtualinvoke $r0.<org.apache.fop.tools.anttasks.Fop: void log(java.lang.String,int)>("No files processed. No files were selected by the filesets and no fofile was set.", 1);
+        goto label26;
+
+     label25:
+        if skippedcount <= 0 goto label26;
+
+        $r0 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $r9 = new java.lang.StringBuffer;
+        specialinvoke $r9.<java.lang.StringBuffer: void <init>()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(skippedcount);
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" xslfo file(s) skipped (no change found since last generation; set force=\"true\" to override).");
+        $r5 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r0.<org.apache.fop.tools.anttasks.Fop: void log(java.lang.String,int)>($r5, 2);
+
+     label26:
+        return;
+
+        catch java.net.MalformedURLException from label0 to label1 with label2;
+        catch java.net.MalformedURLException from label3 to label4 with label5;
+        catch java.lang.Exception from label15 to label17 with label18;
+    }
+
+    private void render(java.io.File, java.io.File, java.lang.String) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.tools.anttasks.FOPTaskStarter this;
+        java.io.File foFile, outFile;
+        java.lang.String outputFormat, $r6, $r9;
+        org.apache.fop.cli.InputHandler $r0, inputHandler;
+        null_type out;
+        java.lang.Exception ex, $r3, $r13;
+        boolean success, $z0;
+        org.apache.fop.apps.FOUserAgent userAgent;
+        java.io.IOException ioe, $r11, $r15;
+        java.lang.Throwable l8, $r14;
+        java.io.FileOutputStream $r1, out;
+        java.io.BufferedOutputStream $r2, out;
+        org.apache.tools.ant.BuildException $r4;
+        java.lang.StringBuffer $r5, $r8;
+        org.apache.fop.tools.anttasks.Fop $r7;
+        org.apache.fop.apps.FopFactory $r10;
+        org.apache.commons.logging.Log $r12;
+
+        this := @this: org.apache.fop.tools.anttasks.FOPTaskStarter;
+        foFile := @parameter0: java.io.File;
+        outFile := @parameter1: java.io.File;
+        outputFormat := @parameter2: java.lang.String;
+        $r0 = new org.apache.fop.cli.InputHandler;
+        specialinvoke $r0.<org.apache.fop.cli.InputHandler: void <init>(java.io.File)>(foFile);
+        inputHandler = $r0;
+        out = null;
+
+     label0:
+        $r1 = new java.io.FileOutputStream;
+        specialinvoke $r1.<java.io.FileOutputStream: void <init>(java.io.File)>(outFile);
+        out = $r1;
+        $r2 = new java.io.BufferedOutputStream;
+        specialinvoke $r2.<java.io.BufferedOutputStream: void <init>(java.io.OutputStream)>(out);
+        out = $r2;
+
+     label1:
+        goto label3;
+
+     label2:
+        $r3 := @caughtexception;
+        ex = $r3;
+        $r4 = new org.apache.tools.ant.BuildException;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Failed to open ");
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(outFile);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r4.<org.apache.tools.ant.BuildException: void <init>(java.lang.String,java.lang.Throwable)>($r6, ex);
+        throw $r4;
+
+     label3:
+        $r7 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $z0 = virtualinvoke $r7.<org.apache.fop.tools.anttasks.Fop: boolean getLogFiles()>();
+        if $z0 == 0 goto label4;
+
+        $r7 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.tools.anttasks.Fop task>;
+        $r8 = new java.lang.StringBuffer;
+        specialinvoke $r8.<java.lang.StringBuffer: void <init>()>();
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(foFile);
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" -> ");
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(outFile);
+        $r9 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r7.<org.apache.fop.tools.anttasks.Fop: void log(java.lang.String,int)>($r9, 2);
+
+     label4:
+        success = 0;
+
+     label5:
+        $r10 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.fop.apps.FopFactory fopFactory>;
+        userAgent = virtualinvoke $r10.<org.apache.fop.apps.FopFactory: org.apache.fop.apps.FOUserAgent newFOUserAgent()>();
+        $r9 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: java.lang.String baseURL>;
+        virtualinvoke userAgent.<org.apache.fop.apps.FOUserAgent: void setBaseURL(java.lang.String)>($r9);
+        virtualinvoke inputHandler.<org.apache.fop.cli.InputHandler: void renderTo(org.apache.fop.apps.FOUserAgent,java.lang.String,java.io.OutputStream)>(userAgent, outputFormat, out);
+        success = 1;
+
+     label6:
+        virtualinvoke out.<java.io.OutputStream: void close()>();
+
+     label7:
+        goto label9;
+
+     label8:
+        $r11 := @caughtexception;
+        ioe = $r11;
+        $r12 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.commons.logging.Log logger>;
+        interfaceinvoke $r12.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("Error closing output file", ioe);
+
+     label9:
+        if success != 0 goto label18;
+
+        virtualinvoke outFile.<java.io.File: boolean delete()>();
+        goto label18;
+
+     label10:
+        $r13 := @caughtexception;
+
+     label11:
+        ex = $r13;
+        $r4 = new org.apache.tools.ant.BuildException;
+        specialinvoke $r4.<org.apache.tools.ant.BuildException: void <init>(java.lang.Throwable)>(ex);
+        throw $r4;
+
+     label12:
+        $r14 := @caughtexception;
+        l8 = $r14;
+
+     label13:
+        virtualinvoke out.<java.io.OutputStream: void close()>();
+
+     label14:
+        goto label16;
+
+     label15:
+        $r15 := @caughtexception;
+        ioe = $r15;
+        $r12 = this.<org.apache.fop.tools.anttasks.FOPTaskStarter: org.apache.commons.logging.Log logger>;
+        interfaceinvoke $r12.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("Error closing output file", ioe);
+
+     label16:
+        if success != 0 goto label17;
+
+        virtualinvoke outFile.<java.io.File: boolean delete()>();
+
+     label17:
+        throw l8;
+
+     label18:
+        return;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+        catch java.io.IOException from label6 to label7 with label8;
+        catch java.lang.Exception from label5 to label6 with label10;
+        catch java.lang.Throwable from label5 to label6 with label12;
+        catch java.io.IOException from label13 to label14 with label15;
+        catch java.lang.Throwable from label11 to label13 with label12;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.String[][] $r0;
+        java.lang.String[] $r1;
+
+        $r0 = newarray (java.lang.String[])[12];
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "pdf";
+        $r1[1] = "application/pdf";
+        $r0[0] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "ps";
+        $r1[1] = "application/postscript";
+        $r0[1] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "mif";
+        $r1[1] = "application/mif";
+        $r0[2] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "rtf";
+        $r1[1] = "application/rtf";
+        $r0[3] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "pcl";
+        $r1[1] = "application/x-pcl";
+        $r0[4] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "txt";
+        $r1[1] = "text/plain";
+        $r0[5] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "at";
+        $r1[1] = "application/X-fop-areatree";
+        $r0[6] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "xml";
+        $r1[1] = "application/X-fop-areatree";
+        $r0[7] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "tiff";
+        $r1[1] = "image/tiff";
+        $r0[8] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "tif";
+        $r1[1] = "image/tiff";
+        $r0[9] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "png";
+        $r1[1] = "image/png";
+        $r0[10] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "afp";
+        $r1[1] = "application/x-afp";
+        $r0[11] = $r1;
+        <org.apache.fop.tools.anttasks.FOPTaskStarter: java.lang.String[][] SHORT_NAMES> = $r0;
+        $r0 = newarray (java.lang.String[])[19];
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "application/X-fop-areatree";
+        $r1[1] = ".at.xml";
+        $r0[0] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "application/X-fop-awt-preview";
+        $r1[1] = null;
+        $r0[1] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "application/X-fop-print";
+        $r1[1] = null;
+        $r0[2] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "application/pdf";
+        $r1[1] = ".pdf";
+        $r0[3] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "application/postscript";
+        $r1[1] = ".ps";
+        $r0[4] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "application/x-pcl";
+        $r1[1] = ".pcl";
+        $r0[5] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "application/vnd.hp-PCL";
+        $r1[1] = ".pcl";
+        $r0[6] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "text/plain";
+        $r1[1] = ".txt";
+        $r0[7] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "application/rtf";
+        $r1[1] = ".rtf";
+        $r0[8] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "text/richtext";
+        $r1[1] = ".rtf";
+        $r0[9] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "text/rtf";
+        $r1[1] = ".rtf";
+        $r0[10] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "application/mif";
+        $r1[1] = ".mif";
+        $r0[11] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "image/svg+xml";
+        $r1[1] = ".svg";
+        $r0[12] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "image/png";
+        $r1[1] = ".png";
+        $r0[13] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "image/jpeg";
+        $r1[1] = ".jpg";
+        $r0[14] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "image/tiff";
+        $r1[1] = ".tif";
+        $r0[15] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "application/x-afp";
+        $r1[1] = ".afp";
+        $r0[16] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "application/vnd.ibm.modcap";
+        $r1[1] = ".afp";
+        $r0[17] = $r1;
+        $r1 = newarray (java.lang.String)[2];
+        $r1[0] = "text/xsl";
+        $r1[1] = ".fo";
+        $r0[18] = $r1;
+        <org.apache.fop.tools.anttasks.FOPTaskStarter: java.lang.String[][] EXTENSIONS> = $r0;
+        return;
+    }
+}

@@ -1,0 +1,172 @@
+class org.apache.fop.area.AreaTreeHandler$Statistics extends java.lang.Object
+{
+    private java.lang.Runtime runtime;
+    private long initialMemory;
+    private long startTime;
+    private final org.apache.fop.area.AreaTreeHandler this$0;
+
+    protected void <init>(org.apache.fop.area.AreaTreeHandler)
+    {
+        org.apache.fop.area.AreaTreeHandler$Statistics this;
+        org.apache.fop.area.AreaTreeHandler l1;
+        java.lang.Runtime $r0;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler$Statistics;
+        l1 := @parameter0: org.apache.fop.area.AreaTreeHandler;
+        this.<org.apache.fop.area.AreaTreeHandler$Statistics: org.apache.fop.area.AreaTreeHandler this$0> = l1;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $r0 = staticinvoke <java.lang.Runtime: java.lang.Runtime getRuntime()>();
+        this.<org.apache.fop.area.AreaTreeHandler$Statistics: java.lang.Runtime runtime> = $r0;
+        return;
+    }
+
+    protected void start()
+    {
+        org.apache.fop.area.AreaTreeHandler$Statistics this;
+        java.lang.Runtime $r0, $r1;
+        long $l0, $l1;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler$Statistics;
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler$Statistics: java.lang.Runtime runtime>;
+        $l0 = virtualinvoke $r0.<java.lang.Runtime: long totalMemory()>();
+        $r1 = this.<org.apache.fop.area.AreaTreeHandler$Statistics: java.lang.Runtime runtime>;
+        $l1 = virtualinvoke $r1.<java.lang.Runtime: long freeMemory()>();
+        $l0 = $l0 - $l1;
+        this.<org.apache.fop.area.AreaTreeHandler$Statistics: long initialMemory> = $l0;
+        $l0 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        this.<org.apache.fop.area.AreaTreeHandler$Statistics: long startTime> = $l0;
+        return;
+    }
+
+    protected void end()
+    {
+        org.apache.fop.area.AreaTreeHandler$Statistics this;
+        long memoryNow, $l0, $l1;
+        java.lang.StringBuffer $r0;
+        java.lang.Runtime $r1, $r2;
+        org.apache.commons.logging.Log $r3;
+        java.lang.String $r4;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler$Statistics;
+        $r1 = this.<org.apache.fop.area.AreaTreeHandler$Statistics: java.lang.Runtime runtime>;
+        $l0 = virtualinvoke $r1.<java.lang.Runtime: long totalMemory()>();
+        $r2 = this.<org.apache.fop.area.AreaTreeHandler$Statistics: java.lang.Runtime runtime>;
+        $l1 = virtualinvoke $r2.<java.lang.Runtime: long freeMemory()>();
+        memoryNow = $l0 - $l1;
+        $r3 = staticinvoke <org.apache.fop.area.AreaTreeHandler: org.apache.commons.logging.Log access$000()>();
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Current heap size: ");
+        $l1 = memoryNow / 1024L;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(long)>($l1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("KB");
+        $r4 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r4);
+        return;
+    }
+
+    protected void logResults()
+    {
+        org.apache.fop.area.AreaTreeHandler$Statistics this;
+        long memoryNow, memoryUsed, timeUsed, perPage, ppm, $l0, $l1;
+        int pageCount, $i3;
+        java.lang.StringBuffer $r0;
+        java.lang.Runtime $r1, $r2;
+        org.apache.fop.area.AreaTreeHandler $r3;
+        org.apache.fop.fo.pagination.Root $r4;
+        org.apache.commons.logging.Log $r5;
+        java.lang.String $r6;
+        byte $b2;
+        double $d0, $d1;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler$Statistics;
+        $r1 = this.<org.apache.fop.area.AreaTreeHandler$Statistics: java.lang.Runtime runtime>;
+        $l0 = virtualinvoke $r1.<java.lang.Runtime: long totalMemory()>();
+        $r2 = this.<org.apache.fop.area.AreaTreeHandler$Statistics: java.lang.Runtime runtime>;
+        $l1 = virtualinvoke $r2.<java.lang.Runtime: long freeMemory()>();
+        memoryNow = $l0 - $l1;
+        $l1 = this.<org.apache.fop.area.AreaTreeHandler$Statistics: long initialMemory>;
+        $l0 = memoryNow - $l1;
+        memoryUsed = $l0 / 1024L;
+        $l0 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        $l1 = this.<org.apache.fop.area.AreaTreeHandler$Statistics: long startTime>;
+        timeUsed = $l0 - $l1;
+        $r3 = this.<org.apache.fop.area.AreaTreeHandler$Statistics: org.apache.fop.area.AreaTreeHandler this$0>;
+        $r4 = staticinvoke <org.apache.fop.area.AreaTreeHandler: org.apache.fop.fo.pagination.Root access$100(org.apache.fop.area.AreaTreeHandler)>($r3);
+        pageCount = virtualinvoke $r4.<org.apache.fop.fo.pagination.Root: int getTotalPagesGenerated()>();
+        $r5 = staticinvoke <org.apache.fop.area.AreaTreeHandler: org.apache.commons.logging.Log access$000()>();
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Initial heap size: ");
+        $l1 = this.<org.apache.fop.area.AreaTreeHandler$Statistics: long initialMemory>;
+        $l1 = $l1 / 1024L;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(long)>($l1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("KB");
+        $r6 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r6);
+        $r5 = staticinvoke <org.apache.fop.area.AreaTreeHandler: org.apache.commons.logging.Log access$000()>();
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Current heap size: ");
+        $l1 = memoryNow / 1024L;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(long)>($l1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("KB");
+        $r6 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r6);
+        $r5 = staticinvoke <org.apache.fop.area.AreaTreeHandler: org.apache.commons.logging.Log access$000()>();
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Total memory used: ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(long)>(memoryUsed);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("KB");
+        $r6 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r6);
+        $r5 = staticinvoke <org.apache.fop.area.AreaTreeHandler: org.apache.commons.logging.Log access$000()>();
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Total time used: ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(long)>(timeUsed);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("ms");
+        $r6 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r6);
+        $r5 = staticinvoke <org.apache.fop.area.AreaTreeHandler: org.apache.commons.logging.Log access$000()>();
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Pages rendered: ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(pageCount);
+        $r6 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r6);
+        if pageCount <= 0 goto label2;
+
+        $l1 = (long) pageCount;
+        perPage = timeUsed / $l1;
+        $b2 = timeUsed cmp 0L;
+        if $b2 == 0 goto label0;
+
+        $i3 = 60000 * pageCount;
+        $d0 = (double) $i3;
+        $d1 = (double) timeUsed;
+        $d0 = $d0 / $d1;
+        $l0 = staticinvoke <java.lang.Math: long round(double)>($d0);
+        goto label1;
+
+     label0:
+        $l0 = -1L;
+
+     label1:
+        ppm = $l0;
+        $r5 = staticinvoke <org.apache.fop.area.AreaTreeHandler: org.apache.commons.logging.Log access$000()>();
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Avg render time: ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(long)>(perPage);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("ms/page (");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(long)>(ppm);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("pages/min)");
+        $r6 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r6);
+
+     label2:
+        return;
+    }
+}

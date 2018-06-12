@@ -1,0 +1,153 @@
+final class org.apache.fop.render.rtf.PageAttributesConverter extends java.lang.Object
+{
+    private static org.apache.commons.logging.Log log;
+
+    private void <init>()
+    {
+        org.apache.fop.render.rtf.PageAttributesConverter this;
+
+        this := @this: org.apache.fop.render.rtf.PageAttributesConverter;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    static org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes convertPageAttributes(org.apache.fop.fo.pagination.SimplePageMaster)
+    {
+        org.apache.fop.fo.pagination.SimplePageMaster pagemaster;
+        org.apache.fop.render.rtf.FOPRtfAttributes $r0, attrib;
+        org.apache.fop.fo.pagination.RegionBA before, after;
+        org.apache.fop.fo.pagination.RegionBody body;
+        java.lang.Object widthRaw, heightRaw;
+        org.apache.fop.datatypes.Length pageTop, pageBottom, pageLeft, pageRight, bodyTop, bodyBottom, bodyLeft, bodyRight, beforeTop, afterBottom, $r2, $r7;
+        org.apache.fop.fo.properties.CommonMarginBlock bodyMargin, $r6;
+        java.lang.Exception e, $r9;
+        org.apache.fop.fo.pagination.Region $r1;
+        boolean $z0;
+        java.lang.Integer $r4, $r5;
+        int $i0, $i1;
+        org.apache.fop.datatypes.Numeric $r8;
+        org.apache.commons.logging.Log $r10;
+        java.lang.StringBuffer $r11;
+        java.lang.String $r12, $r13;
+
+        pagemaster := @parameter0: org.apache.fop.fo.pagination.SimplePageMaster;
+        $r0 = new org.apache.fop.render.rtf.FOPRtfAttributes;
+        specialinvoke $r0.<org.apache.fop.render.rtf.FOPRtfAttributes: void <init>()>();
+        attrib = $r0;
+
+     label0:
+        $r1 = virtualinvoke pagemaster.<org.apache.fop.fo.pagination.SimplePageMaster: org.apache.fop.fo.pagination.Region getRegion(int)>(35);
+        before = (org.apache.fop.fo.pagination.RegionBA) $r1;
+        $r1 = virtualinvoke pagemaster.<org.apache.fop.fo.pagination.SimplePageMaster: org.apache.fop.fo.pagination.Region getRegion(int)>(36);
+        body = (org.apache.fop.fo.pagination.RegionBody) $r1;
+        $r1 = virtualinvoke pagemaster.<org.apache.fop.fo.pagination.SimplePageMaster: org.apache.fop.fo.pagination.Region getRegion(int)>(34);
+        after = (org.apache.fop.fo.pagination.RegionBA) $r1;
+        $r2 = virtualinvoke pagemaster.<org.apache.fop.fo.pagination.SimplePageMaster: org.apache.fop.datatypes.Length getPageWidth()>();
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes setTwips(java.lang.String,org.apache.fop.datatypes.Length)>("paperw", $r2);
+        $r2 = virtualinvoke pagemaster.<org.apache.fop.fo.pagination.SimplePageMaster: org.apache.fop.datatypes.Length getPageHeight()>();
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes setTwips(java.lang.String,org.apache.fop.datatypes.Length)>("paperh", $r2);
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes set(java.lang.String,java.lang.String)>("itap", "0");
+        widthRaw = virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: java.lang.Object getValue(java.lang.String)>("paperw");
+        heightRaw = virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: java.lang.Object getValue(java.lang.String)>("paperh");
+        $z0 = widthRaw instanceof java.lang.Integer;
+        if $z0 == 0 goto label1;
+
+        $z0 = heightRaw instanceof java.lang.Integer;
+        if $z0 == 0 goto label1;
+
+        $r4 = (java.lang.Integer) widthRaw;
+        $i0 = virtualinvoke $r4.<java.lang.Integer: int intValue()>();
+        $r5 = (java.lang.Integer) heightRaw;
+        $i1 = virtualinvoke $r5.<java.lang.Integer: int intValue()>();
+        if $i0 <= $i1 goto label1;
+
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes set(java.lang.String)>("landscape");
+
+     label1:
+        $r6 = virtualinvoke pagemaster.<org.apache.fop.fo.pagination.SimplePageMaster: org.apache.fop.fo.properties.CommonMarginBlock getCommonMarginBlock()>();
+        pageTop = $r6.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.datatypes.Length marginTop>;
+        $r6 = virtualinvoke pagemaster.<org.apache.fop.fo.pagination.SimplePageMaster: org.apache.fop.fo.properties.CommonMarginBlock getCommonMarginBlock()>();
+        pageBottom = $r6.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.datatypes.Length marginBottom>;
+        $r6 = virtualinvoke pagemaster.<org.apache.fop.fo.pagination.SimplePageMaster: org.apache.fop.fo.properties.CommonMarginBlock getCommonMarginBlock()>();
+        pageLeft = $r6.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.datatypes.Length marginLeft>;
+        $r6 = virtualinvoke pagemaster.<org.apache.fop.fo.pagination.SimplePageMaster: org.apache.fop.fo.properties.CommonMarginBlock getCommonMarginBlock()>();
+        pageRight = $r6.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.datatypes.Length marginRight>;
+        bodyTop = pageTop;
+        bodyBottom = pageBottom;
+        bodyLeft = pageLeft;
+        bodyRight = pageRight;
+        if body == null goto label2;
+
+        bodyMargin = virtualinvoke body.<org.apache.fop.fo.pagination.RegionBody: org.apache.fop.fo.properties.CommonMarginBlock getCommonMarginBlock()>();
+        $r7 = bodyMargin.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.datatypes.Length marginTop>;
+        $r8 = staticinvoke <org.apache.fop.fo.expr.NumericOp: org.apache.fop.datatypes.Numeric addition(org.apache.fop.datatypes.Numeric,org.apache.fop.datatypes.Numeric)>(pageTop, $r7);
+        bodyTop = (org.apache.fop.datatypes.Length) $r8;
+        $r7 = bodyMargin.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.datatypes.Length marginBottom>;
+        $r8 = staticinvoke <org.apache.fop.fo.expr.NumericOp: org.apache.fop.datatypes.Numeric addition(org.apache.fop.datatypes.Numeric,org.apache.fop.datatypes.Numeric)>(pageBottom, $r7);
+        bodyBottom = (org.apache.fop.datatypes.Length) $r8;
+        $r7 = bodyMargin.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.datatypes.Length marginLeft>;
+        $r8 = staticinvoke <org.apache.fop.fo.expr.NumericOp: org.apache.fop.datatypes.Numeric addition(org.apache.fop.datatypes.Numeric,org.apache.fop.datatypes.Numeric)>(pageLeft, $r7);
+        bodyLeft = (org.apache.fop.datatypes.Length) $r8;
+        $r7 = bodyMargin.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.datatypes.Length marginRight>;
+        $r8 = staticinvoke <org.apache.fop.fo.expr.NumericOp: org.apache.fop.datatypes.Numeric addition(org.apache.fop.datatypes.Numeric,org.apache.fop.datatypes.Numeric)>(pageRight, $r7);
+        bodyRight = (org.apache.fop.datatypes.Length) $r8;
+
+     label2:
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes setTwips(java.lang.String,org.apache.fop.datatypes.Length)>("margt", bodyTop);
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes setTwips(java.lang.String,org.apache.fop.datatypes.Length)>("margb", bodyBottom);
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes setTwips(java.lang.String,org.apache.fop.datatypes.Length)>("margl", bodyLeft);
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes setTwips(java.lang.String,org.apache.fop.datatypes.Length)>("margr", bodyRight);
+        beforeTop = pageTop;
+        if before == null goto label3;
+
+        $r7 = virtualinvoke before.<org.apache.fop.fo.pagination.RegionBA: org.apache.fop.datatypes.Length getExtent()>();
+        $r8 = staticinvoke <org.apache.fop.fo.expr.NumericOp: org.apache.fop.datatypes.Numeric addition(org.apache.fop.datatypes.Numeric,org.apache.fop.datatypes.Numeric)>(pageTop, $r7);
+        beforeTop = (org.apache.fop.datatypes.Length) $r8;
+
+     label3:
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes setTwips(java.lang.String,org.apache.fop.datatypes.Length)>("headery", beforeTop);
+        afterBottom = pageBottom;
+        if after == null goto label4;
+
+        $r7 = virtualinvoke after.<org.apache.fop.fo.pagination.RegionBA: org.apache.fop.datatypes.Length getExtent()>();
+        $r8 = staticinvoke <org.apache.fop.fo.expr.NumericOp: org.apache.fop.datatypes.Numeric addition(org.apache.fop.datatypes.Numeric,org.apache.fop.datatypes.Numeric)>(pageBottom, $r7);
+        afterBottom = (org.apache.fop.datatypes.Length) $r8;
+
+     label4:
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes setTwips(java.lang.String,org.apache.fop.datatypes.Length)>("footery", afterBottom);
+
+     label5:
+        goto label7;
+
+     label6:
+        $r9 := @caughtexception;
+        e = $r9;
+        $r10 = <org.apache.fop.render.rtf.PageAttributesConverter: org.apache.commons.logging.Log log>;
+        $r11 = new java.lang.StringBuffer;
+        specialinvoke $r11.<java.lang.StringBuffer: void <init>()>();
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Exception in convertPageAttributes: ");
+        $r12 = virtualinvoke e.<java.lang.Exception: java.lang.String getMessage()>();
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r12);
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("- page attributes ignored");
+        $r13 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r10.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r13);
+        $r0 = new org.apache.fop.render.rtf.FOPRtfAttributes;
+        specialinvoke $r0.<org.apache.fop.render.rtf.FOPRtfAttributes: void <init>()>();
+        attrib = $r0;
+
+     label7:
+        return attrib;
+
+        catch java.lang.Exception from label0 to label5 with label6;
+    }
+
+    static void <clinit>()
+    {
+        org.apache.commons.logging.impl.SimpleLog $r0;
+
+        $r0 = new org.apache.commons.logging.impl.SimpleLog;
+        specialinvoke $r0.<org.apache.commons.logging.impl.SimpleLog: void <init>(java.lang.String)>("FOP/RTF");
+        <org.apache.fop.render.rtf.PageAttributesConverter: org.apache.commons.logging.Log log> = $r0;
+        return;
+    }
+}

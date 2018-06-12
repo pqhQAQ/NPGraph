@@ -1,0 +1,171 @@
+public class org.apache.fop.fo.properties.LengthRangeProperty$Maker extends org.apache.fop.fo.properties.CompoundPropertyMaker
+{
+
+    public void <init>(int)
+    {
+        org.apache.fop.fo.properties.LengthRangeProperty$Maker this;
+        int propId;
+
+        this := @this: org.apache.fop.fo.properties.LengthRangeProperty$Maker;
+        propId := @parameter0: int;
+        specialinvoke this.<org.apache.fop.fo.properties.CompoundPropertyMaker: void <init>(int)>(propId);
+        return;
+    }
+
+    public org.apache.fop.fo.properties.Property makeNewProperty()
+    {
+        org.apache.fop.fo.properties.LengthRangeProperty$Maker this;
+        org.apache.fop.fo.properties.LengthRangeProperty $r0;
+
+        this := @this: org.apache.fop.fo.properties.LengthRangeProperty$Maker;
+        $r0 = new org.apache.fop.fo.properties.LengthRangeProperty;
+        specialinvoke $r0.<org.apache.fop.fo.properties.LengthRangeProperty: void <init>()>();
+        return $r0;
+    }
+
+    private boolean isNegativeLength(org.apache.fop.datatypes.Length)
+    {
+        org.apache.fop.fo.properties.LengthRangeProperty$Maker this;
+        org.apache.fop.datatypes.Length len;
+        boolean $z0;
+        org.apache.fop.fo.properties.PercentLength $r0;
+        double $d0;
+        byte $b0;
+        int $i1;
+
+        this := @this: org.apache.fop.fo.properties.LengthRangeProperty$Maker;
+        len := @parameter0: org.apache.fop.datatypes.Length;
+        $z0 = len instanceof org.apache.fop.fo.properties.PercentLength;
+        if $z0 == 0 goto label0;
+
+        $r0 = (org.apache.fop.fo.properties.PercentLength) len;
+        $d0 = virtualinvoke $r0.<org.apache.fop.fo.properties.PercentLength: double getPercentage()>();
+        $b0 = $d0 cmpg 0.0;
+        if $b0 < 0 goto label1;
+
+     label0:
+        $z0 = interfaceinvoke len.<org.apache.fop.datatypes.Length: boolean isAbsolute()>();
+        if $z0 == 0 goto label2;
+
+        $i1 = interfaceinvoke len.<org.apache.fop.datatypes.Length: int getValue()>();
+        if $i1 >= 0 goto label2;
+
+     label1:
+        $z0 = 1;
+        goto label3;
+
+     label2:
+        $z0 = 0;
+
+     label3:
+        return $z0;
+    }
+
+    public org.apache.fop.fo.properties.Property convertProperty(org.apache.fop.fo.properties.Property, org.apache.fop.fo.PropertyList, org.apache.fop.fo.FObj) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.properties.LengthRangeProperty$Maker this;
+        org.apache.fop.fo.properties.Property p, $r4;
+        org.apache.fop.fo.PropertyList propertyList;
+        org.apache.fop.fo.FObj fo;
+        org.apache.fop.datatypes.Length len;
+        boolean $z0;
+        int $i0;
+        org.apache.commons.logging.Log $r0;
+        java.lang.StringBuffer $r1;
+        java.lang.String $r2, $r3;
+
+        this := @this: org.apache.fop.fo.properties.LengthRangeProperty$Maker;
+        p := @parameter0: org.apache.fop.fo.properties.Property;
+        propertyList := @parameter1: org.apache.fop.fo.PropertyList;
+        fo := @parameter2: org.apache.fop.fo.FObj;
+        $z0 = p instanceof org.apache.fop.fo.properties.LengthRangeProperty;
+        if $z0 == 0 goto label0;
+
+        return p;
+
+     label0:
+        $i0 = this.<org.apache.fop.fo.properties.LengthRangeProperty$Maker: int propId>;
+        if $i0 == 17 goto label1;
+
+        $i0 = this.<org.apache.fop.fo.properties.LengthRangeProperty$Maker: int propId>;
+        if $i0 != 116 goto label2;
+
+     label1:
+        len = virtualinvoke p.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        if len == null goto label2;
+
+        $z0 = specialinvoke this.<org.apache.fop.fo.properties.LengthRangeProperty$Maker: boolean isNegativeLength(org.apache.fop.datatypes.Length)>(len);
+        if $z0 == 0 goto label2;
+
+        $r0 = <org.apache.fop.fo.properties.Property: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Replaced negative value (");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(len);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(") for ");
+        $r2 = virtualinvoke this.<org.apache.fop.fo.properties.LengthRangeProperty$Maker: java.lang.String getName()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" with 0mpt");
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r3 = staticinvoke <org.apache.fop.fo.FObj: java.lang.String decorateWithContextInfo(java.lang.String,org.apache.fop.fo.FONode)>($r3, fo);
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r3);
+        p = <org.apache.fop.fo.properties.FixedLength: org.apache.fop.fo.properties.FixedLength ZERO_FIXED_LENGTH>;
+
+     label2:
+        $r4 = specialinvoke this.<org.apache.fop.fo.properties.CompoundPropertyMaker: org.apache.fop.fo.properties.Property convertProperty(org.apache.fop.fo.properties.Property,org.apache.fop.fo.PropertyList,org.apache.fop.fo.FObj)>(p, propertyList, fo);
+        return $r4;
+    }
+
+    protected org.apache.fop.fo.properties.Property setSubprop(org.apache.fop.fo.properties.Property, int, org.apache.fop.fo.properties.Property)
+    {
+        org.apache.fop.fo.properties.LengthRangeProperty$Maker this;
+        org.apache.fop.fo.properties.Property baseProperty, subproperty;
+        int subpropertyId, $i0;
+        org.apache.fop.datatypes.CompoundDatatype val;
+        org.apache.fop.datatypes.Length len;
+        java.lang.Object $r0;
+        boolean $z0;
+        org.apache.commons.logging.Log $r1;
+        java.lang.StringBuffer $r2;
+        java.lang.String $r3, $r4;
+        org.apache.fop.fo.properties.FixedLength $r5;
+
+        this := @this: org.apache.fop.fo.properties.LengthRangeProperty$Maker;
+        baseProperty := @parameter0: org.apache.fop.fo.properties.Property;
+        subpropertyId := @parameter1: int;
+        subproperty := @parameter2: org.apache.fop.fo.properties.Property;
+        $r0 = virtualinvoke baseProperty.<org.apache.fop.fo.properties.Property: java.lang.Object getObject()>();
+        val = (org.apache.fop.datatypes.CompoundDatatype) $r0;
+        $i0 = this.<org.apache.fop.fo.properties.LengthRangeProperty$Maker: int propId>;
+        if $i0 == 17 goto label0;
+
+        $i0 = this.<org.apache.fop.fo.properties.LengthRangeProperty$Maker: int propId>;
+        if $i0 != 116 goto label1;
+
+     label0:
+        len = virtualinvoke subproperty.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        if len == null goto label1;
+
+        $z0 = specialinvoke this.<org.apache.fop.fo.properties.LengthRangeProperty$Maker: boolean isNegativeLength(org.apache.fop.datatypes.Length)>(len);
+        if $z0 == 0 goto label1;
+
+        $r1 = <org.apache.fop.fo.properties.Property: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Replaced negative value (");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(len);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(") for ");
+        $r3 = virtualinvoke this.<org.apache.fop.fo.properties.LengthRangeProperty$Maker: java.lang.String getName()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" with 0mpt");
+        $r4 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r4);
+        $r5 = <org.apache.fop.fo.properties.FixedLength: org.apache.fop.fo.properties.FixedLength ZERO_FIXED_LENGTH>;
+        interfaceinvoke val.<org.apache.fop.datatypes.CompoundDatatype: void setComponent(int,org.apache.fop.fo.properties.Property,boolean)>(subpropertyId, $r5, 0);
+        return baseProperty;
+
+     label1:
+        interfaceinvoke val.<org.apache.fop.datatypes.CompoundDatatype: void setComponent(int,org.apache.fop.fo.properties.Property,boolean)>(subpropertyId, subproperty, 0);
+        return baseProperty;
+    }
+}

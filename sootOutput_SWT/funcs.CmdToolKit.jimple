@@ -1,0 +1,188 @@
+public final class funcs.CmdToolKit extends java.lang.Object
+{
+    private static org.apache.commons.logging.Log log;
+
+    static void <clinit>()
+    {
+        org.apache.commons.logging.Log $r0;
+
+        $r0 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>(class "funcs/CmdToolKit");
+        <funcs.CmdToolKit: org.apache.commons.logging.Log log> = $r0;
+        return;
+    }
+
+    private void <init>()
+    {
+        funcs.CmdToolKit this;
+
+        this := @this: funcs.CmdToolKit;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public static java.lang.String readConsole(java.lang.String, java.lang.Boolean) throws java.io.IOException
+    {
+        java.lang.String cmd, $r3, $r9, line;
+        java.lang.Boolean isPrettify;
+        java.lang.StringBuffer $r0, cmdout;
+        java.lang.Process process;
+        java.lang.InterruptedException e, $r5;
+        java.io.InputStream fis;
+        java.io.BufferedReader br, $r7;
+        null_type line;
+        org.apache.commons.logging.Log $r1;
+        java.lang.StringBuilder $r2;
+        java.lang.Runtime $r4;
+        java.io.PrintStream $r6;
+        java.io.InputStreamReader $r8;
+        boolean $z0;
+
+        cmd := @parameter0: java.lang.String;
+        isPrettify := @parameter1: java.lang.Boolean;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        cmdout = $r0;
+        $r1 = <funcs.CmdToolKit: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuilder;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>(java.lang.String)>("\u05b4\ufffd\ufffd\ufffd\ufffd\ufffd\ue8fa");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(cmd);
+        $r3 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void info(java.lang.Object)>($r3);
+        $r4 = staticinvoke <java.lang.Runtime: java.lang.Runtime getRuntime()>();
+        process = virtualinvoke $r4.<java.lang.Runtime: java.lang.Process exec(java.lang.String)>(cmd);
+
+     label0:
+        virtualinvoke process.<java.lang.Process: int waitFor()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r5 := @caughtexception;
+        e = $r5;
+        virtualinvoke e.<java.lang.InterruptedException: void printStackTrace()>();
+
+     label3:
+        $r6 = <java.lang.System: java.io.PrintStream out>;
+        $r2 = new java.lang.StringBuilder;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>(java.lang.String)>("\ufffd\ufffd\ufffd\ufffd\u05b4\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd: ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(cmd);
+        $r3 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke $r6.<java.io.PrintStream: void println(java.lang.String)>($r3);
+        fis = virtualinvoke process.<java.lang.Process: java.io.InputStream getInputStream()>();
+        $r7 = new java.io.BufferedReader;
+        $r8 = new java.io.InputStreamReader;
+        specialinvoke $r8.<java.io.InputStreamReader: void <init>(java.io.InputStream)>(fis);
+        specialinvoke $r7.<java.io.BufferedReader: void <init>(java.io.Reader)>($r8);
+        br = $r7;
+        line = null;
+        if isPrettify == null goto label5;
+
+        $z0 = virtualinvoke isPrettify.<java.lang.Boolean: boolean booleanValue()>();
+        if $z0 == 0 goto label7;
+
+        goto label5;
+
+     label4:
+        virtualinvoke cmdout.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(line);
+
+     label5:
+        $r9 = virtualinvoke br.<java.io.BufferedReader: java.lang.String readLine()>();
+        line = $r9;
+        if $r9 != null goto label4;
+
+        goto label8;
+
+     label6:
+        $r0 = virtualinvoke cmdout.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(line);
+        $r3 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("line.separator");
+        virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+
+     label7:
+        $r9 = virtualinvoke br.<java.io.BufferedReader: java.lang.String readLine()>();
+        line = $r9;
+        if $r9 != null goto label6;
+
+     label8:
+        $r9 = virtualinvoke cmdout.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r9 = virtualinvoke $r9.<java.lang.String: java.lang.String trim()>();
+        return $r9;
+
+        catch java.lang.InterruptedException from label0 to label1 with label2;
+    }
+
+    public static java.lang.String readConsole2(java.lang.String, java.lang.Boolean) throws java.io.IOException
+    {
+        java.lang.String cmd, $r3, $r8, line;
+        java.lang.Boolean isPrettify;
+        java.lang.StringBuffer $r0, cmdout;
+        java.lang.Process process;
+        java.io.InputStream fis;
+        java.io.BufferedReader br, $r6;
+        null_type line;
+        org.apache.commons.logging.Log $r1;
+        java.lang.StringBuilder $r2;
+        java.lang.Runtime $r4;
+        java.io.PrintStream $r5;
+        java.io.InputStreamReader $r7;
+        boolean $z0;
+
+        cmd := @parameter0: java.lang.String;
+        isPrettify := @parameter1: java.lang.Boolean;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        cmdout = $r0;
+        $r1 = <funcs.CmdToolKit: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuilder;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>(java.lang.String)>("\u05b4\ufffd\ufffd\ufffd\ufffd\ufffd\ue8fa");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(cmd);
+        $r3 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void info(java.lang.Object)>($r3);
+        $r4 = staticinvoke <java.lang.Runtime: java.lang.Runtime getRuntime()>();
+        process = virtualinvoke $r4.<java.lang.Runtime: java.lang.Process exec(java.lang.String)>(cmd);
+        $r5 = <java.lang.System: java.io.PrintStream out>;
+        $r2 = new java.lang.StringBuilder;
+        specialinvoke $r2.<java.lang.StringBuilder: void <init>(java.lang.String)>("\ufffd\ufffd\ufffd\ufffd\u05b4\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd: ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(cmd);
+        $r3 = virtualinvoke $r2.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke $r5.<java.io.PrintStream: void println(java.lang.String)>($r3);
+        fis = virtualinvoke process.<java.lang.Process: java.io.InputStream getInputStream()>();
+        $r6 = new java.io.BufferedReader;
+        $r7 = new java.io.InputStreamReader;
+        specialinvoke $r7.<java.io.InputStreamReader: void <init>(java.io.InputStream)>(fis);
+        specialinvoke $r6.<java.io.BufferedReader: void <init>(java.io.Reader)>($r7);
+        br = $r6;
+        line = null;
+        if isPrettify == null goto label1;
+
+        $z0 = virtualinvoke isPrettify.<java.lang.Boolean: boolean booleanValue()>();
+        if $z0 == 0 goto label3;
+
+        goto label1;
+
+     label0:
+        virtualinvoke cmdout.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(line);
+
+     label1:
+        $r8 = virtualinvoke br.<java.io.BufferedReader: java.lang.String readLine()>();
+        line = $r8;
+        if $r8 != null goto label0;
+
+        goto label4;
+
+     label2:
+        $r0 = virtualinvoke cmdout.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(line);
+        $r3 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("line.separator");
+        virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+
+     label3:
+        $r8 = virtualinvoke br.<java.io.BufferedReader: java.lang.String readLine()>();
+        line = $r8;
+        if $r8 != null goto label2;
+
+     label4:
+        $r8 = virtualinvoke cmdout.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r8 = virtualinvoke $r8.<java.lang.String: java.lang.String trim()>();
+        return $r8;
+    }
+}

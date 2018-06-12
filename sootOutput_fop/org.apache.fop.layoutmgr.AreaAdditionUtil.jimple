@@ -1,0 +1,163 @@
+public class org.apache.fop.layoutmgr.AreaAdditionUtil extends java.lang.Object
+{
+
+    public void <init>()
+    {
+        org.apache.fop.layoutmgr.AreaAdditionUtil this;
+
+        this := @this: org.apache.fop.layoutmgr.AreaAdditionUtil;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public static void addAreas(org.apache.fop.layoutmgr.BlockStackingLayoutManager, org.apache.fop.layoutmgr.PositionIterator, org.apache.fop.layoutmgr.LayoutContext)
+    {
+        org.apache.fop.layoutmgr.BlockStackingLayoutManager bslm;
+        org.apache.fop.layoutmgr.PositionIterator parentIter;
+        org.apache.fop.layoutmgr.LayoutContext layoutContext, lc, $r0;
+        null_type childLM;
+        org.apache.fop.layoutmgr.LayoutManager firstLM, lastLM, $r9, childLM;
+        org.apache.fop.layoutmgr.Position firstPos, lastPos, pos, $r4, $r6;
+        java.util.LinkedList positionList, $r1;
+        org.apache.fop.layoutmgr.AreaAdditionUtil$StackingIter childPosIter, $r7;
+        boolean $z0, $z1, $z2;
+        java.lang.Object $r2;
+        int $i0, $i3;
+        org.apache.fop.layoutmgr.NonLeafPosition $r3, $r5;
+        java.util.ListIterator $r8;
+        byte $b1;
+        short $s2;
+        double $d0;
+
+        bslm := @parameter0: org.apache.fop.layoutmgr.BlockStackingLayoutManager;
+        parentIter := @parameter1: org.apache.fop.layoutmgr.PositionIterator;
+        layoutContext := @parameter2: org.apache.fop.layoutmgr.LayoutContext;
+        childLM = null;
+        $r0 = new org.apache.fop.layoutmgr.LayoutContext;
+        specialinvoke $r0.<org.apache.fop.layoutmgr.LayoutContext: void <init>(int)>(0);
+        lc = $r0;
+        firstLM = null;
+        lastLM = null;
+        firstPos = null;
+        lastPos = null;
+        $r1 = new java.util.LinkedList;
+        specialinvoke $r1.<java.util.LinkedList: void <init>()>();
+        positionList = $r1;
+
+     label0:
+        $z0 = virtualinvoke parentIter.<org.apache.fop.layoutmgr.PositionIterator: boolean hasNext()>();
+        if $z0 == 0 goto label5;
+
+        $r2 = virtualinvoke parentIter.<org.apache.fop.layoutmgr.PositionIterator: java.lang.Object next()>();
+        pos = (org.apache.fop.layoutmgr.Position) $r2;
+        if pos != null goto label1;
+
+        goto label0;
+
+     label1:
+        $i0 = virtualinvoke pos.<org.apache.fop.layoutmgr.Position: int getIndex()>();
+        if $i0 < 0 goto label3;
+
+        if firstPos != null goto label2;
+
+        firstPos = pos;
+
+     label2:
+        lastPos = pos;
+
+     label3:
+        $z0 = pos instanceof org.apache.fop.layoutmgr.NonLeafPosition;
+        if $z0 == 0 goto label4;
+
+        $r3 = (org.apache.fop.layoutmgr.NonLeafPosition) pos;
+        $r4 = virtualinvoke $r3.<org.apache.fop.layoutmgr.NonLeafPosition: org.apache.fop.layoutmgr.Position getPosition()>();
+        virtualinvoke positionList.<java.util.LinkedList: boolean add(java.lang.Object)>($r4);
+        $r5 = (org.apache.fop.layoutmgr.NonLeafPosition) pos;
+        $r6 = virtualinvoke $r5.<org.apache.fop.layoutmgr.NonLeafPosition: org.apache.fop.layoutmgr.Position getPosition()>();
+        lastLM = virtualinvoke $r6.<org.apache.fop.layoutmgr.Position: org.apache.fop.layoutmgr.LayoutManager getLM()>();
+        if firstLM != null goto label0;
+
+        firstLM = lastLM;
+        goto label0;
+
+     label4:
+        $z0 = pos instanceof org.apache.fop.layoutmgr.SpaceResolver$SpaceHandlingBreakPosition;
+        if $z0 == 0 goto label0;
+
+        virtualinvoke positionList.<java.util.LinkedList: boolean add(java.lang.Object)>(pos);
+        goto label0;
+
+     label5:
+        if firstPos != null goto label6;
+
+        return;
+
+     label6:
+        if bslm == null goto label7;
+
+        $z1 = virtualinvoke bslm.<org.apache.fop.layoutmgr.BlockStackingLayoutManager: boolean isFirst(org.apache.fop.layoutmgr.Position)>(firstPos);
+        $z2 = virtualinvoke bslm.<org.apache.fop.layoutmgr.BlockStackingLayoutManager: boolean isLast(org.apache.fop.layoutmgr.Position)>(lastPos);
+        virtualinvoke bslm.<org.apache.fop.layoutmgr.BlockStackingLayoutManager: void addMarkersToPage(boolean,boolean,boolean)>(1, $z1, $z2);
+
+     label7:
+        $r7 = new org.apache.fop.layoutmgr.AreaAdditionUtil$StackingIter;
+        $r8 = virtualinvoke positionList.<java.util.LinkedList: java.util.ListIterator listIterator()>();
+        specialinvoke $r7.<org.apache.fop.layoutmgr.AreaAdditionUtil$StackingIter: void <init>(java.util.Iterator)>($r8);
+        childPosIter = $r7;
+
+     label8:
+        $r9 = virtualinvoke childPosIter.<org.apache.fop.layoutmgr.AreaAdditionUtil$StackingIter: org.apache.fop.layoutmgr.LayoutManager getNextChildLM()>();
+        childLM = $r9;
+        if $r9 == null goto label15;
+
+        $b1 = 32;
+        if childLM != firstLM goto label9;
+
+        $z1 = 1;
+        goto label10;
+
+     label9:
+        $z1 = 0;
+
+     label10:
+        virtualinvoke lc.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int,boolean)>($b1, $z1);
+        $s2 = 128;
+        if childLM != lastLM goto label11;
+
+        $z1 = 1;
+        goto label12;
+
+     label11:
+        $z1 = 0;
+
+     label12:
+        virtualinvoke lc.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int,boolean)>($s2, $z1);
+        $d0 = virtualinvoke layoutContext.<org.apache.fop.layoutmgr.LayoutContext: double getSpaceAdjust()>();
+        virtualinvoke lc.<org.apache.fop.layoutmgr.LayoutContext: void setSpaceAdjust(double)>($d0);
+        if childLM != firstLM goto label13;
+
+        $i3 = virtualinvoke layoutContext.<org.apache.fop.layoutmgr.LayoutContext: int getSpaceBefore()>();
+        goto label14;
+
+     label13:
+        $i3 = 0;
+
+     label14:
+        virtualinvoke lc.<org.apache.fop.layoutmgr.LayoutContext: void setSpaceBefore(int)>($i3);
+        $i3 = virtualinvoke layoutContext.<org.apache.fop.layoutmgr.LayoutContext: int getSpaceAfter()>();
+        virtualinvoke lc.<org.apache.fop.layoutmgr.LayoutContext: void setSpaceAfter(int)>($i3);
+        virtualinvoke lc.<org.apache.fop.layoutmgr.LayoutContext: void setStackLimitsFrom(org.apache.fop.layoutmgr.LayoutContext)>(layoutContext);
+        interfaceinvoke childLM.<org.apache.fop.layoutmgr.LayoutManager: void addAreas(org.apache.fop.layoutmgr.PositionIterator,org.apache.fop.layoutmgr.LayoutContext)>(childPosIter, lc);
+        goto label8;
+
+     label15:
+        if bslm == null goto label16;
+
+        $z1 = virtualinvoke bslm.<org.apache.fop.layoutmgr.BlockStackingLayoutManager: boolean isFirst(org.apache.fop.layoutmgr.Position)>(firstPos);
+        $z2 = virtualinvoke bslm.<org.apache.fop.layoutmgr.BlockStackingLayoutManager: boolean isLast(org.apache.fop.layoutmgr.Position)>(lastPos);
+        virtualinvoke bslm.<org.apache.fop.layoutmgr.BlockStackingLayoutManager: void addMarkersToPage(boolean,boolean,boolean)>(0, $z1, $z2);
+
+     label16:
+        return;
+    }
+}

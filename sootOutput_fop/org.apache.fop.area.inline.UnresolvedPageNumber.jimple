@@ -1,0 +1,157 @@
+public class org.apache.fop.area.inline.UnresolvedPageNumber extends org.apache.fop.area.inline.TextArea implements org.apache.fop.area.Resolvable
+{
+    private boolean resolved;
+    private java.lang.String pageIDRef;
+    private java.lang.String text;
+    private boolean pageType;
+    public static final boolean FIRST;
+    public static final boolean LAST;
+    private transient org.apache.fop.fonts.Font font;
+
+    public void <init>(java.lang.String, org.apache.fop.fonts.Font)
+    {
+        org.apache.fop.area.inline.UnresolvedPageNumber this;
+        java.lang.String id;
+        org.apache.fop.fonts.Font f;
+
+        this := @this: org.apache.fop.area.inline.UnresolvedPageNumber;
+        id := @parameter0: java.lang.String;
+        f := @parameter1: org.apache.fop.fonts.Font;
+        specialinvoke this.<org.apache.fop.area.inline.UnresolvedPageNumber: void <init>(java.lang.String,org.apache.fop.fonts.Font,boolean)>(id, f, 1);
+        return;
+    }
+
+    public void <init>(java.lang.String, org.apache.fop.fonts.Font, boolean)
+    {
+        org.apache.fop.area.inline.UnresolvedPageNumber this;
+        java.lang.String id;
+        org.apache.fop.fonts.Font f;
+        boolean type;
+
+        this := @this: org.apache.fop.area.inline.UnresolvedPageNumber;
+        id := @parameter0: java.lang.String;
+        f := @parameter1: org.apache.fop.fonts.Font;
+        type := @parameter2: boolean;
+        specialinvoke this.<org.apache.fop.area.inline.TextArea: void <init>()>();
+        this.<org.apache.fop.area.inline.UnresolvedPageNumber: boolean resolved> = 0;
+        this.<org.apache.fop.area.inline.UnresolvedPageNumber: java.lang.String pageIDRef> = id;
+        this.<org.apache.fop.area.inline.UnresolvedPageNumber: org.apache.fop.fonts.Font font> = f;
+        this.<org.apache.fop.area.inline.UnresolvedPageNumber: java.lang.String text> = "?";
+        this.<org.apache.fop.area.inline.UnresolvedPageNumber: boolean pageType> = type;
+        return;
+    }
+
+    public java.lang.String[] getIDRefs()
+    {
+        org.apache.fop.area.inline.UnresolvedPageNumber this;
+        java.lang.String[] $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.area.inline.UnresolvedPageNumber;
+        $r0 = newarray (java.lang.String)[1];
+        $r1 = this.<org.apache.fop.area.inline.UnresolvedPageNumber: java.lang.String pageIDRef>;
+        $r0[0] = $r1;
+        return $r0;
+    }
+
+    public void resolveIDRef(java.lang.String, java.util.List)
+    {
+        org.apache.fop.area.inline.UnresolvedPageNumber this;
+        java.lang.String id, $r0, $r3, $r7;
+        java.util.List pages;
+        org.apache.fop.area.PageViewport page;
+        boolean $z0;
+        org.apache.commons.logging.Log $r1;
+        java.lang.StringBuffer $r2;
+        java.lang.Object $r4;
+        int $i0, $i1;
+        org.apache.fop.fonts.Font $r5, $r6;
+
+        this := @this: org.apache.fop.area.inline.UnresolvedPageNumber;
+        id := @parameter0: java.lang.String;
+        pages := @parameter1: java.util.List;
+        $z0 = this.<org.apache.fop.area.inline.UnresolvedPageNumber: boolean resolved>;
+        if $z0 != 0 goto label4;
+
+        $r0 = this.<org.apache.fop.area.inline.UnresolvedPageNumber: java.lang.String pageIDRef>;
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(id);
+        if $z0 == 0 goto label4;
+
+        if pages == null goto label4;
+
+        $r1 = <org.apache.fop.area.inline.UnresolvedPageNumber: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r1 = <org.apache.fop.area.inline.UnresolvedPageNumber: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Resolving pageNumber: ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(id);
+        $r3 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r3);
+
+     label0:
+        this.<org.apache.fop.area.inline.UnresolvedPageNumber: boolean resolved> = 1;
+        $z0 = this.<org.apache.fop.area.inline.UnresolvedPageNumber: boolean pageType>;
+        if $z0 != 1 goto label1;
+
+        $r4 = interfaceinvoke pages.<java.util.List: java.lang.Object get(int)>(0);
+        page = (org.apache.fop.area.PageViewport) $r4;
+        goto label2;
+
+     label1:
+        $i0 = interfaceinvoke pages.<java.util.List: int size()>();
+        $i0 = $i0 - 1;
+        $r4 = interfaceinvoke pages.<java.util.List: java.lang.Object get(int)>($i0);
+        page = (org.apache.fop.area.PageViewport) $r4;
+
+     label2:
+        virtualinvoke this.<org.apache.fop.area.inline.UnresolvedPageNumber: void removeText()>();
+        $r3 = virtualinvoke page.<org.apache.fop.area.PageViewport: java.lang.String getPageNumberString()>();
+        this.<org.apache.fop.area.inline.UnresolvedPageNumber: java.lang.String text> = $r3;
+        $r3 = this.<org.apache.fop.area.inline.UnresolvedPageNumber: java.lang.String text>;
+        virtualinvoke this.<org.apache.fop.area.inline.UnresolvedPageNumber: void addWord(java.lang.String,int)>($r3, 0);
+        $r5 = this.<org.apache.fop.area.inline.UnresolvedPageNumber: org.apache.fop.fonts.Font font>;
+        if $r5 == null goto label3;
+
+        $r6 = this.<org.apache.fop.area.inline.UnresolvedPageNumber: org.apache.fop.fonts.Font font>;
+        $r7 = this.<org.apache.fop.area.inline.UnresolvedPageNumber: java.lang.String text>;
+        $i0 = virtualinvoke $r6.<org.apache.fop.fonts.Font: int getWordWidth(java.lang.String)>($r7);
+        $i1 = virtualinvoke this.<org.apache.fop.area.inline.UnresolvedPageNumber: int getIPD()>();
+        $i0 = $i0 - $i1;
+        virtualinvoke this.<org.apache.fop.area.inline.UnresolvedPageNumber: void handleIPDVariation(int)>($i0);
+        this.<org.apache.fop.area.inline.UnresolvedPageNumber: org.apache.fop.fonts.Font font> = null;
+        goto label4;
+
+     label3:
+        $r1 = <org.apache.fop.area.inline.UnresolvedPageNumber: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void warn(java.lang.Object)>("Cannot update the IPD of an unresolved page number. No font information available.");
+
+     label4:
+        return;
+    }
+
+    public boolean isResolved()
+    {
+        org.apache.fop.area.inline.UnresolvedPageNumber this;
+        boolean $z0;
+
+        this := @this: org.apache.fop.area.inline.UnresolvedPageNumber;
+        $z0 = this.<org.apache.fop.area.inline.UnresolvedPageNumber: boolean resolved>;
+        return $z0;
+    }
+
+    public boolean applyVariationFactor(double, int, int)
+    {
+        org.apache.fop.area.inline.UnresolvedPageNumber this;
+        double variationFactor;
+        int lineStretch, lineShrink;
+
+        this := @this: org.apache.fop.area.inline.UnresolvedPageNumber;
+        variationFactor := @parameter0: double;
+        lineStretch := @parameter1: int;
+        lineShrink := @parameter2: int;
+        return 1;
+    }
+}

@@ -1,0 +1,283 @@
+public abstract class org.apache.fop.fonts.apps.AbstractFontReader extends java.lang.Object
+{
+    protected static org.apache.commons.logging.Log log;
+    static java.lang.Class class$org$apache$fop$fonts$apps$AbstractFontReader;
+
+    protected void <init>()
+    {
+        org.apache.fop.fonts.apps.AbstractFontReader this;
+        org.apache.commons.logging.Log $r0;
+        java.lang.Class $r1;
+
+        this := @this: org.apache.fop.fonts.apps.AbstractFontReader;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $r0 = <org.apache.fop.fonts.apps.AbstractFontReader: org.apache.commons.logging.Log log>;
+        if $r0 != null goto label2;
+
+        $r1 = <org.apache.fop.fonts.apps.AbstractFontReader: java.lang.Class class$org$apache$fop$fonts$apps$AbstractFontReader>;
+        if $r1 != null goto label0;
+
+        $r1 = staticinvoke <org.apache.fop.fonts.apps.AbstractFontReader: java.lang.Class class$(java.lang.String)>("org.apache.fop.fonts.apps.AbstractFontReader");
+        <org.apache.fop.fonts.apps.AbstractFontReader: java.lang.Class class$org$apache$fop$fonts$apps$AbstractFontReader> = $r1;
+        goto label1;
+
+     label0:
+        $r1 = <org.apache.fop.fonts.apps.AbstractFontReader: java.lang.Class class$org$apache$fop$fonts$apps$AbstractFontReader>;
+
+     label1:
+        $r0 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r1);
+        <org.apache.fop.fonts.apps.AbstractFontReader: org.apache.commons.logging.Log log> = $r0;
+
+     label2:
+        return;
+    }
+
+    protected static java.lang.String[] parseArguments(java.util.Map, java.lang.String[])
+    {
+        java.util.Map options;
+        java.lang.String[] args, $r5, $r7;
+        java.util.ArrayList $r0, arguments;
+        int i, $i0, $i1, $i2;
+        java.lang.String $r1, $r2, $r4;
+        boolean $z0;
+        java.lang.Object[] $r6;
+
+        options := @parameter0: java.util.Map;
+        args := @parameter1: java.lang.String[];
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        arguments = $r0;
+        i = 0;
+
+     label0:
+        $i0 = lengthof args;
+        if i >= $i0 goto label6;
+
+        $r1 = args[i];
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean startsWith(java.lang.String)>("-");
+        if $z0 == 0 goto label4;
+
+        $r1 = "-d";
+        $r2 = args[i];
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>($r2);
+        if $z0 != 0 goto label1;
+
+        $r1 = "-q";
+        $r2 = args[i];
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>($r2);
+        if $z0 == 0 goto label2;
+
+     label1:
+        $r2 = args[i];
+        interfaceinvoke options.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r2, "");
+        goto label5;
+
+     label2:
+        $i1 = i + 1;
+        $i0 = lengthof args;
+        if $i1 >= $i0 goto label3;
+
+        $i0 = i + 1;
+        $r1 = args[$i0];
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean startsWith(java.lang.String)>("-");
+        if $z0 != 0 goto label3;
+
+        $r2 = args[i];
+        $i2 = i + 1;
+        $r4 = args[$i2];
+        interfaceinvoke options.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r2, $r4);
+        i = i + 1;
+        goto label5;
+
+     label3:
+        $r2 = args[i];
+        interfaceinvoke options.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r2, "");
+        goto label5;
+
+     label4:
+        $r2 = args[i];
+        interfaceinvoke arguments.<java.util.List: boolean add(java.lang.Object)>($r2);
+
+     label5:
+        i = i + 1;
+        goto label0;
+
+     label6:
+        $r5 = newarray (java.lang.String)[0];
+        $r6 = interfaceinvoke arguments.<java.util.List: java.lang.Object[] toArray(java.lang.Object[])>($r5);
+        $r7 = (java.lang.String[]) $r6;
+        $r7 = (java.lang.String[]) $r7;
+        return $r7;
+    }
+
+    protected static void setLogLevel(java.lang.String)
+    {
+        java.lang.String level;
+        org.apache.commons.logging.LogFactory $r0;
+        org.apache.commons.logging.Log $r1;
+        boolean $z0;
+        org.apache.fop.util.CommandLineLogger $r2;
+
+        level := @parameter0: java.lang.String;
+        $r0 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.LogFactory getFactory()>();
+        virtualinvoke $r0.<org.apache.commons.logging.LogFactory: void setAttribute(java.lang.String,java.lang.Object)>("level", level);
+        $r1 = <org.apache.fop.fonts.apps.AbstractFontReader: org.apache.commons.logging.Log log>;
+        $z0 = $r1 instanceof org.apache.fop.util.CommandLineLogger;
+        if $z0 == 0 goto label0;
+
+        $r1 = <org.apache.fop.fonts.apps.AbstractFontReader: org.apache.commons.logging.Log log>;
+        $r2 = (org.apache.fop.util.CommandLineLogger) $r1;
+        virtualinvoke $r2.<org.apache.fop.util.CommandLineLogger: void setLogLevel(java.lang.String)>(level);
+
+     label0:
+        return;
+    }
+
+    protected static void determineLogLevel(java.util.Map)
+    {
+        java.util.Map options;
+        java.lang.Object $r0;
+
+        options := @parameter0: java.util.Map;
+        $r0 = interfaceinvoke options.<java.util.Map: java.lang.Object get(java.lang.Object)>("-d");
+        if $r0 == null goto label0;
+
+        staticinvoke <org.apache.fop.fonts.apps.AbstractFontReader: void setLogLevel(java.lang.String)>("debug");
+        goto label2;
+
+     label0:
+        $r0 = interfaceinvoke options.<java.util.Map: java.lang.Object get(java.lang.Object)>("-q");
+        if $r0 == null goto label1;
+
+        staticinvoke <org.apache.fop.fonts.apps.AbstractFontReader: void setLogLevel(java.lang.String)>("error");
+        goto label2;
+
+     label1:
+        staticinvoke <org.apache.fop.fonts.apps.AbstractFontReader: void setLogLevel(java.lang.String)>("info");
+
+     label2:
+        return;
+    }
+
+    public void writeFontXML(org.w3c.dom.Document, java.lang.String) throws javax.xml.transform.TransformerException
+    {
+        org.apache.fop.fonts.apps.AbstractFontReader this;
+        org.w3c.dom.Document doc;
+        java.lang.String target;
+        java.io.File $r0;
+
+        this := @this: org.apache.fop.fonts.apps.AbstractFontReader;
+        doc := @parameter0: org.w3c.dom.Document;
+        target := @parameter1: java.lang.String;
+        $r0 = new java.io.File;
+        specialinvoke $r0.<java.io.File: void <init>(java.lang.String)>(target);
+        virtualinvoke this.<org.apache.fop.fonts.apps.AbstractFontReader: void writeFontXML(org.w3c.dom.Document,java.io.File)>(doc, $r0);
+        return;
+    }
+
+    public void writeFontXML(org.w3c.dom.Document, java.io.File) throws javax.xml.transform.TransformerException
+    {
+        org.apache.fop.fonts.apps.AbstractFontReader this;
+        org.w3c.dom.Document doc;
+        java.io.File target;
+        org.apache.commons.logging.Log $r0;
+        java.lang.StringBuffer $r1;
+        java.io.FileOutputStream out, $r3;
+        javax.xml.transform.TransformerFactory factory;
+        javax.xml.transform.Transformer transformer;
+        java.lang.Throwable l6, $r7;
+        java.io.IOException ioe, $r8;
+        java.lang.String $r2;
+        java.io.BufferedOutputStream $r4, out;
+        javax.xml.transform.dom.DOMSource $r5;
+        javax.xml.transform.stream.StreamResult $r6;
+        javax.xml.transform.TransformerException $r9;
+
+        this := @this: org.apache.fop.fonts.apps.AbstractFontReader;
+        doc := @parameter0: org.w3c.dom.Document;
+        target := @parameter1: java.io.File;
+        $r0 = <org.apache.fop.fonts.apps.AbstractFontReader: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Writing xml font file ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(target);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("...");
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>($r2);
+
+     label0:
+        $r3 = new java.io.FileOutputStream;
+        specialinvoke $r3.<java.io.FileOutputStream: void <init>(java.io.File)>(target);
+        out = $r3;
+        $r4 = new java.io.BufferedOutputStream;
+        specialinvoke $r4.<java.io.BufferedOutputStream: void <init>(java.io.OutputStream)>(out);
+        out = $r4;
+
+     label1:
+        factory = staticinvoke <javax.xml.transform.TransformerFactory: javax.xml.transform.TransformerFactory newInstance()>();
+        transformer = virtualinvoke factory.<javax.xml.transform.TransformerFactory: javax.xml.transform.Transformer newTransformer()>();
+        $r5 = new javax.xml.transform.dom.DOMSource;
+        specialinvoke $r5.<javax.xml.transform.dom.DOMSource: void <init>(org.w3c.dom.Node)>(doc);
+        $r6 = new javax.xml.transform.stream.StreamResult;
+        specialinvoke $r6.<javax.xml.transform.stream.StreamResult: void <init>(java.io.OutputStream)>(out);
+        virtualinvoke transformer.<javax.xml.transform.Transformer: void transform(javax.xml.transform.Source,javax.xml.transform.Result)>($r5, $r6);
+
+     label2:
+        virtualinvoke out.<java.io.OutputStream: void close()>();
+        goto label6;
+
+     label3:
+        $r7 := @caughtexception;
+
+     label4:
+        l6 = $r7;
+
+     label5:
+        virtualinvoke out.<java.io.OutputStream: void close()>();
+        throw l6;
+
+     label6:
+        goto label8;
+
+     label7:
+        $r8 := @caughtexception;
+        ioe = $r8;
+        $r9 = new javax.xml.transform.TransformerException;
+        specialinvoke $r9.<javax.xml.transform.TransformerException: void <init>(java.lang.String,java.lang.Throwable)>("Error writing the output file", ioe);
+        throw $r9;
+
+     label8:
+        return;
+
+        catch java.lang.Throwable from label1 to label2 with label3;
+        catch java.lang.Throwable from label4 to label5 with label3;
+        catch java.io.IOException from label0 to label6 with label7;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+}

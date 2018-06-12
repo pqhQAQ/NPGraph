@@ -1,0 +1,277 @@
+public abstract class org.apache.fop.fo.FObjMixed extends org.apache.fop.fo.FObj
+{
+    protected org.apache.fop.fo.FOText ft;
+    protected org.apache.fop.fo.FONode currentTextNode;
+    protected org.apache.fop.fo.FOText lastFOTextProcessed;
+
+    protected void <init>(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.FObjMixed this;
+        org.apache.fop.fo.FONode parent;
+
+        this := @this: org.apache.fop.fo.FObjMixed;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        specialinvoke this.<org.apache.fop.fo.FObj: void <init>(org.apache.fop.fo.FONode)>(parent);
+        this.<org.apache.fop.fo.FObjMixed: org.apache.fop.fo.FOText ft> = null;
+        this.<org.apache.fop.fo.FObjMixed: org.apache.fop.fo.FOText lastFOTextProcessed> = null;
+        return;
+    }
+
+    protected void addCharacters(char[], int, int, org.apache.fop.fo.PropertyList, org.xml.sax.Locator) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.FObjMixed this;
+        char[] data;
+        int start, end;
+        org.apache.fop.fo.PropertyList pList;
+        org.xml.sax.Locator locator;
+        org.apache.fop.fo.FOText $r0, $r1;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.FObjMixed;
+        data := @parameter0: char[];
+        start := @parameter1: int;
+        end := @parameter2: int;
+        pList := @parameter3: org.apache.fop.fo.PropertyList;
+        locator := @parameter4: org.xml.sax.Locator;
+        $r1 = this.<org.apache.fop.fo.FObjMixed: org.apache.fop.fo.FOText ft>;
+        if $r1 != null goto label0;
+
+        $r0 = new org.apache.fop.fo.FOText;
+        specialinvoke $r0.<org.apache.fop.fo.FOText: void <init>(org.apache.fop.fo.FONode)>(this);
+        this.<org.apache.fop.fo.FObjMixed: org.apache.fop.fo.FOText ft> = $r0;
+        $r1 = this.<org.apache.fop.fo.FObjMixed: org.apache.fop.fo.FOText ft>;
+        virtualinvoke $r1.<org.apache.fop.fo.FOText: void setLocator(org.xml.sax.Locator)>(locator);
+        $z0 = virtualinvoke this.<org.apache.fop.fo.FObjMixed: boolean inMarker()>();
+        if $z0 != 0 goto label0;
+
+        $r1 = this.<org.apache.fop.fo.FObjMixed: org.apache.fop.fo.FOText ft>;
+        virtualinvoke $r1.<org.apache.fop.fo.FOText: void bind(org.apache.fop.fo.PropertyList)>(pList);
+
+     label0:
+        $r1 = this.<org.apache.fop.fo.FObjMixed: org.apache.fop.fo.FOText ft>;
+        virtualinvoke $r1.<org.apache.fop.fo.FOText: void addCharacters(char[],int,int,org.apache.fop.fo.PropertyList,org.xml.sax.Locator)>(data, start, end, null, null);
+        return;
+    }
+
+    protected void endOfNode() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.FObjMixed this;
+        boolean $z0;
+        int $i0;
+        org.apache.fop.fo.FOEventHandler $r0;
+        org.apache.fop.fo.XMLWhiteSpaceHandler $r1;
+        org.apache.fop.fo.FONode $r2;
+
+        this := @this: org.apache.fop.fo.FObjMixed;
+        virtualinvoke this.<org.apache.fop.fo.FObjMixed: void flushText()>();
+        $z0 = virtualinvoke this.<org.apache.fop.fo.FObjMixed: boolean inMarker()>();
+        if $z0 == 0 goto label0;
+
+        $i0 = virtualinvoke this.<org.apache.fop.fo.FObjMixed: int getNameId()>();
+        if $i0 != 24 goto label1;
+
+     label0:
+        $r0 = virtualinvoke this.<org.apache.fop.fo.FObjMixed: org.apache.fop.fo.FOEventHandler getFOEventHandler()>();
+        $r1 = $r0.<org.apache.fop.fo.FOEventHandler: org.apache.fop.fo.XMLWhiteSpaceHandler whiteSpaceHandler>;
+        $r2 = this.<org.apache.fop.fo.FObjMixed: org.apache.fop.fo.FONode currentTextNode>;
+        virtualinvoke $r1.<org.apache.fop.fo.XMLWhiteSpaceHandler: void handleWhiteSpace(org.apache.fop.fo.FObjMixed,org.apache.fop.fo.FONode)>(this, $r2);
+
+     label1:
+        specialinvoke this.<org.apache.fop.fo.FObj: void endOfNode()>();
+        return;
+    }
+
+    protected static void handleWhiteSpaceFor(org.apache.fop.fo.FObjMixed)
+    {
+        org.apache.fop.fo.FObjMixed fobj;
+        org.apache.fop.fo.FOEventHandler $r0;
+        org.apache.fop.fo.XMLWhiteSpaceHandler $r1;
+        org.apache.fop.fo.FONode $r2;
+
+        fobj := @parameter0: org.apache.fop.fo.FObjMixed;
+        $r0 = virtualinvoke fobj.<org.apache.fop.fo.FObjMixed: org.apache.fop.fo.FOEventHandler getFOEventHandler()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.FOEventHandler: org.apache.fop.fo.XMLWhiteSpaceHandler getXMLWhiteSpaceHandler()>();
+        $r2 = fobj.<org.apache.fop.fo.FObjMixed: org.apache.fop.fo.FONode currentTextNode>;
+        virtualinvoke $r1.<org.apache.fop.fo.XMLWhiteSpaceHandler: void handleWhiteSpace(org.apache.fop.fo.FObjMixed,org.apache.fop.fo.FONode)>(fobj, $r2);
+        return;
+    }
+
+    protected void flushText() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.FObjMixed this, $r6;
+        org.apache.fop.fo.FOText lft, tmpText, $r0;
+        int indexStart, indexEnd, charCount, foNameId, $i0, $i1, $i2;
+        short tmpSize;
+        org.apache.fop.fo.FONode fo, $r3;
+        char[] $r1, $r2, $r4;
+        org.apache.fop.fo.flow.Block $r5;
+        org.apache.commons.logging.Log $r7;
+
+        this := @this: org.apache.fop.fo.FObjMixed;
+        $r0 = this.<org.apache.fop.fo.FObjMixed: org.apache.fop.fo.FOText ft>;
+        if $r0 == null goto label10;
+
+        lft = this.<org.apache.fop.fo.FObjMixed: org.apache.fop.fo.FOText ft>;
+        this.<org.apache.fop.fo.FObjMixed: org.apache.fop.fo.FOText ft> = null;
+        indexStart = 0;
+        $r1 = lft.<org.apache.fop.fo.FOText: char[] ca>;
+        $i0 = lengthof $r1;
+        if $i0 <= 32767 goto label0;
+
+        $i0 = 32767;
+        goto label1;
+
+     label0:
+        $r1 = lft.<org.apache.fop.fo.FOText: char[] ca>;
+        $i0 = lengthof $r1;
+
+     label1:
+        indexEnd = $i0 - 1;
+        charCount = 0;
+
+     label2:
+        $r2 = lft.<org.apache.fop.fo.FOText: char[] ca>;
+        $i1 = lengthof $r2;
+        if charCount >= $i1 goto label10;
+
+        $i0 = indexEnd - indexStart;
+        $i0 = $i0 + 1;
+        tmpSize = (short) $i0;
+        charCount = charCount + tmpSize;
+        $r3 = virtualinvoke lft.<org.apache.fop.fo.FOText: org.apache.fop.fo.FONode clone(org.apache.fop.fo.FONode,boolean)>(this, 0);
+        tmpText = (org.apache.fop.fo.FOText) $r3;
+        $r2 = newarray (char)[tmpSize];
+        tmpText.<org.apache.fop.fo.FOText: char[] ca> = $r2;
+        tmpText.<org.apache.fop.fo.FOText: int startIndex> = 0;
+        tmpText.<org.apache.fop.fo.FOText: int endIndex> = tmpSize;
+        $r1 = lft.<org.apache.fop.fo.FOText: char[] ca>;
+        $r4 = tmpText.<org.apache.fop.fo.FOText: char[] ca>;
+        $i2 = indexEnd - indexStart;
+        $i2 = $i2 + 1;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r1, indexStart, $r4, 0, $i2);
+        $i0 = virtualinvoke this.<org.apache.fop.fo.FObjMixed: int getNameId()>();
+        if $i0 != 3 goto label3;
+
+        $r5 = (org.apache.fop.fo.flow.Block) this;
+        virtualinvoke tmpText.<org.apache.fop.fo.FOText: void createBlockPointers(org.apache.fop.fo.flow.Block)>($r5);
+        this.<org.apache.fop.fo.FObjMixed: org.apache.fop.fo.FOText lastFOTextProcessed> = tmpText;
+        goto label7;
+
+     label3:
+        $i0 = virtualinvoke this.<org.apache.fop.fo.FObjMixed: int getNameId()>();
+        if $i0 == 24 goto label7;
+
+        $i0 = virtualinvoke this.<org.apache.fop.fo.FObjMixed: int getNameId()>();
+        if $i0 == 55 goto label7;
+
+        $i0 = virtualinvoke this.<org.apache.fop.fo.FObjMixed: int getNameId()>();
+        if $i0 == 59 goto label7;
+
+        fo = this.<org.apache.fop.fo.FObjMixed: org.apache.fop.fo.FONode parent>;
+        foNameId = virtualinvoke fo.<org.apache.fop.fo.FONode: int getNameId()>();
+
+     label4:
+        if foNameId == 3 goto label5;
+
+        if foNameId == 24 goto label5;
+
+        if foNameId == 55 goto label5;
+
+        if foNameId == 59 goto label5;
+
+        if foNameId == 32 goto label5;
+
+        fo = virtualinvoke fo.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode getParent()>();
+        foNameId = virtualinvoke fo.<org.apache.fop.fo.FONode: int getNameId()>();
+        goto label4;
+
+     label5:
+        if foNameId != 3 goto label6;
+
+        $r5 = (org.apache.fop.fo.flow.Block) fo;
+        virtualinvoke tmpText.<org.apache.fop.fo.FOText: void createBlockPointers(org.apache.fop.fo.flow.Block)>($r5);
+        $r6 = (org.apache.fop.fo.FObjMixed) fo;
+        $r6.<org.apache.fop.fo.FObjMixed: org.apache.fop.fo.FOText lastFOTextProcessed> = tmpText;
+        goto label7;
+
+     label6:
+        if foNameId != 32 goto label7;
+
+        $r7 = <org.apache.fop.fo.FObjMixed: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r7.<org.apache.commons.logging.Log: void error(java.lang.Object)>("Could not create block pointers. FOText w/o Block ancestor.");
+
+     label7:
+        virtualinvoke tmpText.<org.apache.fop.fo.FOText: void endOfNode()>();
+        virtualinvoke this.<org.apache.fop.fo.FObjMixed: void addChildNode(org.apache.fop.fo.FONode)>(tmpText);
+        indexStart = indexEnd + 1;
+        $r1 = lft.<org.apache.fop.fo.FOText: char[] ca>;
+        $i0 = lengthof $r1;
+        $i0 = $i0 - charCount;
+        if $i0 >= 32767 goto label8;
+
+        $r1 = lft.<org.apache.fop.fo.FOText: char[] ca>;
+        $i0 = lengthof $r1;
+        goto label9;
+
+     label8:
+        $i0 = charCount + 32767;
+
+     label9:
+        indexEnd = $i0 - 1;
+        goto label2;
+
+     label10:
+        return;
+    }
+
+    protected void addChildNode(org.apache.fop.fo.FONode) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.FObjMixed this;
+        org.apache.fop.fo.FONode child, $r0, $r3;
+        boolean $z0;
+        int $i0;
+        org.apache.fop.fo.FOEventHandler $r1;
+        org.apache.fop.fo.XMLWhiteSpaceHandler $r2;
+
+        this := @this: org.apache.fop.fo.FObjMixed;
+        child := @parameter0: org.apache.fop.fo.FONode;
+        virtualinvoke this.<org.apache.fop.fo.FObjMixed: void flushText()>();
+        $z0 = virtualinvoke this.<org.apache.fop.fo.FObjMixed: boolean inMarker()>();
+        if $z0 != 0 goto label2;
+
+        $z0 = child instanceof org.apache.fop.fo.FOText;
+        if $z0 != 0 goto label0;
+
+        $i0 = virtualinvoke child.<org.apache.fop.fo.FONode: int getNameId()>();
+        if $i0 != 5 goto label1;
+
+     label0:
+        $r0 = this.<org.apache.fop.fo.FObjMixed: org.apache.fop.fo.FONode currentTextNode>;
+        if $r0 != null goto label2;
+
+        this.<org.apache.fop.fo.FObjMixed: org.apache.fop.fo.FONode currentTextNode> = child;
+        goto label2;
+
+     label1:
+        $r1 = virtualinvoke this.<org.apache.fop.fo.FObjMixed: org.apache.fop.fo.FOEventHandler getFOEventHandler()>();
+        $r2 = $r1.<org.apache.fop.fo.FOEventHandler: org.apache.fop.fo.XMLWhiteSpaceHandler whiteSpaceHandler>;
+        $r3 = this.<org.apache.fop.fo.FObjMixed: org.apache.fop.fo.FONode currentTextNode>;
+        virtualinvoke $r2.<org.apache.fop.fo.XMLWhiteSpaceHandler: void handleWhiteSpace(org.apache.fop.fo.FObjMixed,org.apache.fop.fo.FONode,org.apache.fop.fo.FONode)>(this, $r3, child);
+        this.<org.apache.fop.fo.FObjMixed: org.apache.fop.fo.FONode currentTextNode> = null;
+
+     label2:
+        specialinvoke this.<org.apache.fop.fo.FObj: void addChildNode(org.apache.fop.fo.FONode)>(child);
+        return;
+    }
+
+    public org.apache.fop.fo.CharIterator charIterator()
+    {
+        org.apache.fop.fo.FObjMixed this;
+        org.apache.fop.fo.RecursiveCharIterator $r0;
+
+        this := @this: org.apache.fop.fo.FObjMixed;
+        $r0 = new org.apache.fop.fo.RecursiveCharIterator;
+        specialinvoke $r0.<org.apache.fop.fo.RecursiveCharIterator: void <init>(org.apache.fop.fo.FObj)>(this);
+        return $r0;
+    }
+}

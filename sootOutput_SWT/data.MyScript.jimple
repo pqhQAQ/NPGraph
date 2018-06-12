@@ -1,0 +1,386 @@
+public class data.MyScript extends java.lang.Object
+{
+    public java.lang.String scriptname;
+    public java.lang.String scriptpath;
+    public java.lang.String os;
+    public java.util.ArrayList actionseq;
+    public java.util.ArrayList locators;
+    public boolean finishanalyse;
+    static final java.lang.String[] pythonFstLocators;
+    static final java.lang.String[] seqLocators;
+    static final java.lang.String[] pythonFstActions;
+    static java.lang.String rootpath;
+
+    static void <clinit>()
+    {
+        java.lang.String[] $r0;
+
+        $r0 = newarray (java.lang.String)[3];
+        $r0[0] = "find_element_by_name";
+        $r0[1] = "find_element_by_id";
+        $r0[2] = "find_element_by_xpath";
+        <data.MyScript: java.lang.String[] pythonFstLocators> = $r0;
+        $r0 = newarray (java.lang.String)[3];
+        $r0[0] = "name";
+        $r0[1] = "id";
+        $r0[2] = "xpath";
+        <data.MyScript: java.lang.String[] seqLocators> = $r0;
+        $r0 = newarray (java.lang.String)[3];
+        $r0[0] = "execute_script";
+        $r0[1] = "shake";
+        $r0[2] = "quit";
+        <data.MyScript: java.lang.String[] pythonFstActions> = $r0;
+        return;
+    }
+
+    public void <init>(java.lang.String) throws java.lang.Exception
+    {
+        data.MyScript this;
+        java.lang.String path, $r2;
+        java.io.File appfile, $r0;
+        boolean $z0;
+        java.lang.Exception $r1;
+
+        this := @this: data.MyScript;
+        path := @parameter0: java.lang.String;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<data.MyScript: java.lang.String scriptname> = "";
+        this.<data.MyScript: java.lang.String scriptpath> = "";
+        this.<data.MyScript: java.lang.String os> = "";
+        this.<data.MyScript: java.util.ArrayList actionseq> = null;
+        this.<data.MyScript: java.util.ArrayList locators> = null;
+        this.<data.MyScript: boolean finishanalyse> = 0;
+        $r0 = new java.io.File;
+        specialinvoke $r0.<java.io.File: void <init>(java.lang.String)>(path);
+        appfile = $r0;
+        $z0 = virtualinvoke appfile.<java.io.File: boolean exists()>();
+        if $z0 != 0 goto label0;
+
+        $r1 = new java.lang.Exception;
+        specialinvoke $r1.<java.lang.Exception: void <init>()>();
+        throw $r1;
+
+     label0:
+        $r2 = virtualinvoke appfile.<java.io.File: java.lang.String getAbsolutePath()>();
+        this.<data.MyScript: java.lang.String scriptpath> = $r2;
+        $r2 = virtualinvoke this.<data.MyScript: java.lang.String analyze_name(java.lang.String)>(path);
+        this.<data.MyScript: java.lang.String scriptname> = $r2;
+        return;
+    }
+
+    public java.lang.String analyze_name(java.lang.String)
+    {
+        data.MyScript this;
+        java.lang.String path, $r1;
+        java.io.File $r0, f;
+        boolean $z0;
+
+        this := @this: data.MyScript;
+        path := @parameter0: java.lang.String;
+        $r0 = new java.io.File;
+        specialinvoke $r0.<java.io.File: void <init>(java.lang.String)>(path);
+        f = $r0;
+        $z0 = virtualinvoke f.<java.io.File: boolean exists()>();
+        if $z0 == 0 goto label0;
+
+        $r1 = virtualinvoke f.<java.io.File: java.lang.String getName()>();
+        return $r1;
+
+     label0:
+        return null;
+    }
+
+    public java.lang.String[] toStringArray()
+    {
+        data.MyScript this;
+        java.lang.String[] array;
+        java.lang.StringBuilder $r0;
+        java.lang.String $r1, $r2;
+        byte $b0;
+        boolean $z0;
+
+        this := @this: data.MyScript;
+        array = newarray (java.lang.String)[3];
+        $r0 = new java.lang.StringBuilder;
+        specialinvoke $r0.<java.lang.StringBuilder: void <init>(java.lang.String)>("\u6d4b\u8bd5\u811a\u672c\u540d\u79f0\uff1a ");
+        $r1 = this.<data.MyScript: java.lang.String scriptname>;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r1);
+        $r2 = virtualinvoke $r0.<java.lang.StringBuilder: java.lang.String toString()>();
+        array[0] = $r2;
+        $r0 = new java.lang.StringBuilder;
+        specialinvoke $r0.<java.lang.StringBuilder: void <init>(java.lang.String)>("\u6d4b\u8bd5\u811a\u672c\u8def\u5f84\uff1a ");
+        $r1 = this.<data.MyScript: java.lang.String scriptpath>;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r1);
+        $r2 = virtualinvoke $r0.<java.lang.StringBuilder: java.lang.String toString()>();
+        array[1] = $r2;
+        $b0 = 2;
+        $r0 = new java.lang.StringBuilder;
+        specialinvoke $r0.<java.lang.StringBuilder: void <init>(java.lang.String)>("\u811a\u672c\u89e3\u6790\u72b6\u6001\uff1a ");
+        $z0 = this.<data.MyScript: boolean finishanalyse>;
+        if $z0 == 0 goto label0;
+
+        $r1 = "\u811a\u672c\u5df2\u89e3\u6790";
+        goto label1;
+
+     label0:
+        $r1 = "\u811a\u672c\u672a\u89e3\u6790";
+
+     label1:
+        $r0 = virtualinvoke $r0.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r1);
+        $r2 = virtualinvoke $r0.<java.lang.StringBuilder: java.lang.String toString()>();
+        array[$b0] = $r2;
+        return array;
+    }
+
+    public void startAnalyse()
+    {
+        data.MyScript this, source;
+        java.io.File srcfile, file, $r1;
+        java.io.BufferedReader reader, $r3;
+        null_type templine, locator;
+        int line, i, $i0, $i1, $i2;
+        java.lang.String fstcall, tempvalue, $r2, $r7, $r10, templine, $r16;
+        java.util.regex.Pattern locatorpatt, actionpatt;
+        java.util.regex.Matcher locatormatcher, actionmatcher;
+        data.action.ActionTap newaction, $r14;
+        java.io.BufferedWriter bw, $r18;
+        java.util.Iterator l10;
+        data.action.Action action;
+        java.io.IOException e, e1, $r21, $r22, $r24, $r25;
+        java.lang.Throwable l15, $r23;
+        java.util.ArrayList $r0, $r13;
+        java.io.FileReader $r4;
+        boolean $z0;
+        java.io.PrintStream $r5;
+        java.lang.StringBuilder $r6, $r9;
+        java.lang.String[] $r8, $r12, $r17;
+        data.Locator $r11, locator;
+        data.action.ActionText $r15, newaction;
+        java.io.FileWriter $r19;
+        java.lang.Object $r20;
+
+        this := @this: data.MyScript;
+        source = this;
+        this.<data.MyScript: boolean finishanalyse> = 0;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<data.MyScript: java.util.ArrayList actionseq> = $r0;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<data.MyScript: java.util.ArrayList locators> = $r0;
+        $r1 = new java.io.File;
+        $r2 = source.<data.MyScript: java.lang.String scriptpath>;
+        specialinvoke $r1.<java.io.File: void <init>(java.lang.String)>($r2);
+        srcfile = $r1;
+        reader = null;
+
+     label0:
+        $r3 = new java.io.BufferedReader;
+        $r4 = new java.io.FileReader;
+        specialinvoke $r4.<java.io.FileReader: void <init>(java.io.File)>(srcfile);
+        specialinvoke $r3.<java.io.BufferedReader: void <init>(java.io.Reader)>($r4);
+        reader = $r3;
+        templine = null;
+        line = 1;
+        goto label12;
+
+     label1:
+        line = line + 1;
+        $z0 = virtualinvoke templine.<java.lang.String: boolean contains(java.lang.CharSequence)>("wd");
+        if $z0 == 0 goto label12;
+
+        $r5 = <java.lang.System: java.io.PrintStream out>;
+        $r6 = new java.lang.StringBuilder;
+        specialinvoke $r6.<java.lang.StringBuilder: void <init>(java.lang.String)>("line ");
+        $r6 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(line);
+        $r6 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(": ");
+        $r6 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(templine);
+        $r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.String toString()>();
+        virtualinvoke $r5.<java.io.PrintStream: void println(java.lang.String)>($r7);
+        locator = null;
+        i = 0;
+        goto label8;
+
+     label2:
+        $r8 = <data.MyScript: java.lang.String[] pythonFstLocators>;
+        fstcall = $r8[i];
+        $r9 = new java.lang.StringBuilder;
+        specialinvoke $r9.<java.lang.StringBuilder: void <init>(java.lang.String)>("\\s*wd\\s*\\.\\s*");
+        $r9 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(fstcall);
+        $r9 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\\s*\\(\\s*\"(.+)[^\\\\]\"\\s*\\)");
+        $r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.String toString()>();
+        locatorpatt = staticinvoke <java.util.regex.Pattern: java.util.regex.Pattern compile(java.lang.String)>($r10);
+        locatormatcher = virtualinvoke locatorpatt.<java.util.regex.Pattern: java.util.regex.Matcher matcher(java.lang.CharSequence)>(templine);
+        $z0 = virtualinvoke locatormatcher.<java.util.regex.Matcher: boolean find()>();
+        if $z0 == 0 goto label7;
+
+        $i0 = virtualinvoke locatormatcher.<java.util.regex.Matcher: int start(int)>(1);
+        $i1 = virtualinvoke locatormatcher.<java.util.regex.Matcher: int end(int)>(1);
+        $i1 = $i1 + 1;
+        tempvalue = virtualinvoke templine.<java.lang.String: java.lang.String substring(int,int)>($i0, $i1);
+        $r11 = new data.Locator;
+        $r12 = <data.MyScript: java.lang.String[] seqLocators>;
+        $r2 = $r12[i];
+        specialinvoke $r11.<data.Locator: void <init>(java.lang.String,java.lang.String)>($r2, tempvalue);
+        locator = $r11;
+        $r13 = this.<data.MyScript: java.util.ArrayList locators>;
+        virtualinvoke $r13.<java.util.ArrayList: boolean add(java.lang.Object)>(locator);
+        $i0 = virtualinvoke locatormatcher.<java.util.regex.Matcher: int end()>();
+        templine = virtualinvoke templine.<java.lang.String: java.lang.String substring(int)>($i0);
+        actionpatt = staticinvoke <java.util.regex.Pattern: java.util.regex.Pattern compile(java.lang.String)>("\\s*\\.\\s*click\\s*\\(\\s*\\)");
+        actionmatcher = virtualinvoke actionpatt.<java.util.regex.Pattern: java.util.regex.Matcher matcher(java.lang.CharSequence)>(templine);
+        $z0 = virtualinvoke actionmatcher.<java.util.regex.Matcher: boolean find()>();
+        if $z0 == 0 goto label3;
+
+        $r5 = <java.lang.System: java.io.PrintStream out>;
+        $r7 = virtualinvoke actionmatcher.<java.util.regex.Matcher: java.lang.String group(int)>(0);
+        virtualinvoke $r5.<java.io.PrintStream: void println(java.lang.String)>($r7);
+        $r14 = new data.action.ActionTap;
+        specialinvoke $r14.<data.action.ActionTap: void <init>(data.Locator)>(locator);
+        newaction = $r14;
+        $r13 = this.<data.MyScript: java.util.ArrayList actionseq>;
+        virtualinvoke $r13.<java.util.ArrayList: boolean add(java.lang.Object)>(newaction);
+        goto label9;
+
+     label3:
+        actionpatt = staticinvoke <java.util.regex.Pattern: java.util.regex.Pattern compile(java.lang.String)>("\\s*\\.\\s*send_keys\\s*\\(\\s*(.*)[^\\\\]\\)");
+        actionmatcher = virtualinvoke actionpatt.<java.util.regex.Pattern: java.util.regex.Matcher matcher(java.lang.CharSequence)>(templine);
+        $z0 = virtualinvoke actionmatcher.<java.util.regex.Matcher: boolean find()>();
+        if $z0 == 0 goto label6;
+
+        $i2 = virtualinvoke actionmatcher.<java.util.regex.Matcher: int groupCount()>();
+        if $i2 <= 0 goto label4;
+
+        $r5 = <java.lang.System: java.io.PrintStream out>;
+        $r7 = virtualinvoke actionmatcher.<java.util.regex.Matcher: java.lang.String group(int)>(1);
+        virtualinvoke $r5.<java.io.PrintStream: void println(java.lang.String)>($r7);
+        $r15 = new data.action.ActionText;
+        $r16 = virtualinvoke actionmatcher.<java.util.regex.Matcher: java.lang.String group(int)>(1);
+        specialinvoke $r15.<data.action.ActionText: void <init>(data.Locator,java.lang.String)>(locator, $r16);
+        newaction = $r15;
+        goto label5;
+
+     label4:
+        $r15 = new data.action.ActionText;
+        specialinvoke $r15.<data.action.ActionText: void <init>(data.Locator,java.lang.String)>(locator, "");
+        newaction = $r15;
+
+     label5:
+        $r13 = this.<data.MyScript: java.util.ArrayList actionseq>;
+        virtualinvoke $r13.<java.util.ArrayList: boolean add(java.lang.Object)>(newaction);
+        goto label9;
+
+     label6:
+        $r5 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r5.<java.io.PrintStream: void println(java.lang.String)>("Error: Do not find action.");
+        goto label9;
+
+     label7:
+        i = i + 1;
+
+     label8:
+        $r17 = <data.MyScript: java.lang.String[] pythonFstLocators>;
+        $i0 = lengthof $r17;
+        if i < $i0 goto label2;
+
+     label9:
+        $r1 = new java.io.File;
+        specialinvoke $r1.<java.io.File: void <init>(java.lang.String)>("Scripts/appium.seq");
+        file = $r1;
+        virtualinvoke file.<java.io.File: boolean createNewFile()>();
+        $r18 = new java.io.BufferedWriter;
+        $r19 = new java.io.FileWriter;
+        specialinvoke $r19.<java.io.FileWriter: void <init>(java.io.File)>(file);
+        specialinvoke $r18.<java.io.BufferedWriter: void <init>(java.io.Writer)>($r19);
+        bw = $r18;
+        $r13 = this.<data.MyScript: java.util.ArrayList actionseq>;
+        l10 = virtualinvoke $r13.<java.util.ArrayList: java.util.Iterator iterator()>();
+        goto label11;
+
+     label10:
+        $r20 = interfaceinvoke l10.<java.util.Iterator: java.lang.Object next()>();
+        action = (data.action.Action) $r20;
+        $r7 = virtualinvoke action.<java.lang.Object: java.lang.String toString()>();
+        virtualinvoke bw.<java.io.BufferedWriter: void write(java.lang.String)>($r7);
+
+     label11:
+        $z0 = interfaceinvoke l10.<java.util.Iterator: boolean hasNext()>();
+        if $z0 != 0 goto label10;
+
+        virtualinvoke bw.<java.io.BufferedWriter: void flush()>();
+        virtualinvoke bw.<java.io.BufferedWriter: void close()>();
+
+     label12:
+        $r10 = virtualinvoke reader.<java.io.BufferedReader: java.lang.String readLine()>();
+        templine = $r10;
+        if $r10 != null goto label1;
+
+        virtualinvoke reader.<java.io.BufferedReader: void close()>();
+        this.<data.MyScript: boolean finishanalyse> = 1;
+
+     label13:
+        goto label24;
+
+     label14:
+        $r21 := @caughtexception;
+        e = $r21;
+        virtualinvoke e.<java.io.IOException: void printStackTrace()>();
+
+     label15:
+        if reader == null goto label28;
+
+     label16:
+        virtualinvoke reader.<java.io.BufferedReader: void close()>();
+
+     label17:
+        goto label28;
+
+     label18:
+        $r22 := @caughtexception;
+        e1 = $r22;
+        virtualinvoke e1.<java.io.IOException: void printStackTrace()>();
+        goto label28;
+
+     label19:
+        $r23 := @caughtexception;
+        l15 = $r23;
+        if reader == null goto label23;
+
+     label20:
+        virtualinvoke reader.<java.io.BufferedReader: void close()>();
+
+     label21:
+        goto label23;
+
+     label22:
+        $r24 := @caughtexception;
+        e1 = $r24;
+        virtualinvoke e1.<java.io.IOException: void printStackTrace()>();
+
+     label23:
+        throw l15;
+
+     label24:
+        if reader == null goto label28;
+
+     label25:
+        virtualinvoke reader.<java.io.BufferedReader: void close()>();
+
+     label26:
+        goto label28;
+
+     label27:
+        $r25 := @caughtexception;
+        e1 = $r25;
+        virtualinvoke e1.<java.io.IOException: void printStackTrace()>();
+
+     label28:
+        return;
+
+        catch java.io.IOException from label0 to label13 with label14;
+        catch java.io.IOException from label16 to label17 with label18;
+        catch java.lang.Throwable from label0 to label15 with label19;
+        catch java.io.IOException from label20 to label21 with label22;
+        catch java.io.IOException from label25 to label26 with label27;
+    }
+}

@@ -1,0 +1,344 @@
+class funcs.DeviceFunction$UpdateDevices extends java.lang.Thread
+{
+    public java.util.ArrayList temp;
+    public volatile boolean stop;
+    boolean change;
+    final funcs.DeviceFunction this$0;
+
+    void <init>(funcs.DeviceFunction)
+    {
+        funcs.DeviceFunction$UpdateDevices this;
+        funcs.DeviceFunction l1;
+        java.util.ArrayList $r0;
+
+        this := @this: funcs.DeviceFunction$UpdateDevices;
+        l1 := @parameter0: funcs.DeviceFunction;
+        this.<funcs.DeviceFunction$UpdateDevices: funcs.DeviceFunction this$0> = l1;
+        specialinvoke this.<java.lang.Thread: void <init>()>();
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<funcs.DeviceFunction$UpdateDevices: java.util.ArrayList temp> = $r0;
+        this.<funcs.DeviceFunction$UpdateDevices: boolean stop> = 0;
+        return;
+    }
+
+    public void run()
+    {
+        funcs.DeviceFunction$UpdateDevices this;
+        boolean change, $z0;
+        null_type devices;
+        com.android.ddmlib.IDevice[] l6, devices;
+        int l5, l4, index, i, $i0, $i1;
+        com.android.ddmlib.IDevice d;
+        java.lang.String name, emulator, state, Dimension, dim, str, $r3, $r9, d;
+        data.MyDevice device, $r4;
+        funcs.getInfoThread t, $r5;
+        com.android.ddmlib.TimeoutException e, $r11;
+        java.io.File wd, $r15;
+        java.lang.Process proc;
+        funcs.DeviceFunction$UpdateDevices$readThread rt, $r18;
+        java.io.PrintWriter out, $r19;
+        java.util.ArrayList $r0, $r23;
+        funcs.DeviceFunction $r2, $r6, $r8;
+        java.lang.Object $r7;
+        java.lang.Integer $r10;
+        com.android.ddmlib.AdbCommandRejectedException $r12, e;
+        java.io.IOException $r13, e, $r17;
+        com.android.ddmlib.ShellCommandUnresponsiveException $r14, e;
+        java.lang.Runtime $r16;
+        java.io.BufferedWriter $r20;
+        java.io.OutputStreamWriter $r21;
+        java.io.OutputStream $r22;
+        java.lang.InterruptedException $r24, e;
+
+        this := @this: funcs.DeviceFunction$UpdateDevices;
+        goto label30;
+
+     label0:
+        $r0 = this.<funcs.DeviceFunction$UpdateDevices: java.util.ArrayList temp>;
+        virtualinvoke $r0.<java.util.ArrayList: void clear()>();
+        change = 0;
+        devices = null;
+        devices = staticinvoke <com.android.hierarchyviewerlib.device.DeviceBridge: com.android.ddmlib.IDevice[] getDevices()>();
+        l6 = devices;
+        l5 = lengthof devices;
+        l4 = 0;
+        goto label18;
+
+     label1:
+        d = l6[l4];
+        name = "";
+        name = interfaceinvoke d.<com.android.ddmlib.IDevice: java.lang.String getSerialNumber()>();
+        $r2 = this.<funcs.DeviceFunction$UpdateDevices: funcs.DeviceFunction this$0>;
+        index = virtualinvoke $r2.<funcs.DeviceFunction: int getIndex(java.lang.String)>(name);
+        if index != -1 goto label7;
+
+        $z0 = interfaceinvoke d.<com.android.ddmlib.IDevice: boolean isEmulator()>();
+        if $z0 == 0 goto label2;
+
+        $r3 = "\u6a21\u62df\u5668";
+        goto label3;
+
+     label2:
+        $r3 = "\u8bbe\u5907";
+
+     label3:
+        emulator = $r3;
+        $z0 = interfaceinvoke d.<com.android.ddmlib.IDevice: boolean isOnline()>();
+        if $z0 == 0 goto label4;
+
+        $r3 = "Online";
+        goto label5;
+
+     label4:
+        $r3 = "Offline";
+
+     label5:
+        state = $r3;
+        $r4 = new data.MyDevice;
+        specialinvoke $r4.<data.MyDevice: void <init>(java.lang.String,java.lang.String,java.lang.String,java.lang.String)>(name, state, emulator, "Android");
+        device = $r4;
+        $r2 = this.<funcs.DeviceFunction$UpdateDevices: funcs.DeviceFunction this$0>;
+        $r0 = staticinvoke <funcs.DeviceFunction: java.util.ArrayList access$0(funcs.DeviceFunction)>($r2);
+        virtualinvoke $r0.<java.util.ArrayList: boolean add(java.lang.Object)>(device);
+        $r0 = <funcs.DeviceFunction: java.util.ArrayList androidDevices>;
+        virtualinvoke $r0.<java.util.ArrayList: boolean add(java.lang.Object)>(device);
+        Dimension = "";
+        $z0 = interfaceinvoke d.<com.android.ddmlib.IDevice: boolean isOnline()>();
+        if $z0 == 0 goto label6;
+
+        $r2 = this.<funcs.DeviceFunction$UpdateDevices: funcs.DeviceFunction this$0>;
+        Dimension = virtualinvoke $r2.<funcs.DeviceFunction: java.lang.String getDimension(com.android.ddmlib.IDevice)>(d);
+        $r5 = new funcs.getInfoThread;
+        $r6 = this.<funcs.DeviceFunction$UpdateDevices: funcs.DeviceFunction this$0>;
+        $i0 = virtualinvoke $r6.<funcs.DeviceFunction: int getIndex(java.lang.String)>(name);
+        specialinvoke $r5.<funcs.getInfoThread: void <init>(com.android.ddmlib.IDevice,int)>(d, $i0);
+        t = $r5;
+        virtualinvoke t.<funcs.getInfoThread: void start()>();
+
+     label6:
+        device.<data.MyDevice: java.lang.String Dimension> = Dimension;
+        staticinvoke <com.android.hierarchyviewerlib.device.DeviceBridge: void setupDeviceForward(com.android.ddmlib.IDevice)>(d);
+        staticinvoke <com.android.hierarchyviewerlib.device.DeviceBridge: boolean startViewServer(com.android.ddmlib.IDevice)>(d);
+        change = 1;
+        goto label17;
+
+     label7:
+        $z0 = interfaceinvoke d.<com.android.ddmlib.IDevice: boolean isOffline()>();
+        if $z0 == 0 goto label8;
+
+        $r2 = this.<funcs.DeviceFunction$UpdateDevices: funcs.DeviceFunction this$0>;
+        $r0 = staticinvoke <funcs.DeviceFunction: java.util.ArrayList access$0(funcs.DeviceFunction)>($r2);
+        $r7 = virtualinvoke $r0.<java.util.ArrayList: java.lang.Object get(int)>(index);
+        $r4 = (data.MyDevice) $r7;
+        state = $r4.<data.MyDevice: java.lang.String State>;
+        $z0 = virtualinvoke state.<java.lang.String: boolean equals(java.lang.Object)>("Offline");
+        if $z0 != 0 goto label17;
+
+        $r2 = this.<funcs.DeviceFunction$UpdateDevices: funcs.DeviceFunction this$0>;
+        $r0 = staticinvoke <funcs.DeviceFunction: java.util.ArrayList access$0(funcs.DeviceFunction)>($r2);
+        $r7 = virtualinvoke $r0.<java.util.ArrayList: java.lang.Object get(int)>(index);
+        $r4 = (data.MyDevice) $r7;
+        $r4.<data.MyDevice: java.lang.String State> = "Offline";
+        change = 1;
+        goto label17;
+
+     label8:
+        $z0 = interfaceinvoke d.<com.android.ddmlib.IDevice: boolean isOnline()>();
+        if $z0 == 0 goto label17;
+
+        $r2 = this.<funcs.DeviceFunction$UpdateDevices: funcs.DeviceFunction this$0>;
+        $r0 = staticinvoke <funcs.DeviceFunction: java.util.ArrayList access$0(funcs.DeviceFunction)>($r2);
+        $r7 = virtualinvoke $r0.<java.util.ArrayList: java.lang.Object get(int)>(index);
+        $r4 = (data.MyDevice) $r7;
+        state = $r4.<data.MyDevice: java.lang.String State>;
+        $z0 = virtualinvoke state.<java.lang.String: boolean equals(java.lang.Object)>("Offline");
+        if $z0 == 0 goto label9;
+
+        $r2 = this.<funcs.DeviceFunction$UpdateDevices: funcs.DeviceFunction this$0>;
+        $r0 = staticinvoke <funcs.DeviceFunction: java.util.ArrayList access$0(funcs.DeviceFunction)>($r2);
+        $r7 = virtualinvoke $r0.<java.util.ArrayList: java.lang.Object get(int)>(index);
+        $r4 = (data.MyDevice) $r7;
+        $r4.<data.MyDevice: java.lang.String State> = "Online";
+        $r2 = this.<funcs.DeviceFunction$UpdateDevices: funcs.DeviceFunction this$0>;
+        $r0 = staticinvoke <funcs.DeviceFunction: java.util.ArrayList access$0(funcs.DeviceFunction)>($r2);
+        $r7 = virtualinvoke $r0.<java.util.ArrayList: java.lang.Object get(int)>(index);
+        $r4 = (data.MyDevice) $r7;
+        $r8 = this.<funcs.DeviceFunction$UpdateDevices: funcs.DeviceFunction this$0>;
+        $r9 = virtualinvoke $r8.<funcs.DeviceFunction: java.lang.String getDimension(com.android.ddmlib.IDevice)>(d);
+        $r4.<data.MyDevice: java.lang.String Dimension> = $r9;
+        staticinvoke <com.android.hierarchyviewerlib.device.DeviceBridge: void setupDeviceForward(com.android.ddmlib.IDevice)>(d);
+        staticinvoke <com.android.hierarchyviewerlib.device.DeviceBridge: boolean startViewServer(com.android.ddmlib.IDevice)>(d);
+        change = 1;
+        $r5 = new funcs.getInfoThread;
+        specialinvoke $r5.<funcs.getInfoThread: void <init>(com.android.ddmlib.IDevice,int)>(d, index);
+        t = $r5;
+        virtualinvoke t.<funcs.getInfoThread: void start()>();
+        goto label17;
+
+     label9:
+        $r2 = this.<funcs.DeviceFunction$UpdateDevices: funcs.DeviceFunction this$0>;
+        $r0 = staticinvoke <funcs.DeviceFunction: java.util.ArrayList access$0(funcs.DeviceFunction)>($r2);
+        $r7 = virtualinvoke $r0.<java.util.ArrayList: java.lang.Object get(int)>(index);
+        $r4 = (data.MyDevice) $r7;
+        $r10 = interfaceinvoke d.<com.android.ddmlib.IDevice: java.lang.Integer getBatteryLevel()>();
+        $r9 = virtualinvoke $r10.<java.lang.Integer: java.lang.String toString()>();
+        $r4.<data.MyDevice: java.lang.String Battery> = $r9;
+
+     label10:
+        goto label15;
+
+     label11:
+        $r11 := @caughtexception;
+        e = $r11;
+        virtualinvoke e.<com.android.ddmlib.TimeoutException: void printStackTrace()>();
+        goto label15;
+
+     label12:
+        $r12 := @caughtexception;
+        e = $r12;
+        virtualinvoke e.<com.android.ddmlib.AdbCommandRejectedException: void printStackTrace()>();
+        goto label15;
+
+     label13:
+        $r13 := @caughtexception;
+        e = $r13;
+        virtualinvoke e.<java.io.IOException: void printStackTrace()>();
+        goto label15;
+
+     label14:
+        $r14 := @caughtexception;
+        e = $r14;
+        virtualinvoke e.<com.android.ddmlib.ShellCommandUnresponsiveException: void printStackTrace()>();
+
+     label15:
+        $r2 = this.<funcs.DeviceFunction$UpdateDevices: funcs.DeviceFunction this$0>;
+        $r0 = staticinvoke <funcs.DeviceFunction: java.util.ArrayList access$0(funcs.DeviceFunction)>($r2);
+        $r7 = virtualinvoke $r0.<java.util.ArrayList: java.lang.Object get(int)>(index);
+        $r4 = (data.MyDevice) $r7;
+        dim = $r4.<data.MyDevice: java.lang.String Dimension>;
+        $z0 = virtualinvoke dim.<java.lang.String: boolean equals(java.lang.Object)>("");
+        if $z0 != 0 goto label16;
+
+        if dim != null goto label17;
+
+     label16:
+        $r2 = this.<funcs.DeviceFunction$UpdateDevices: funcs.DeviceFunction this$0>;
+        $r0 = staticinvoke <funcs.DeviceFunction: java.util.ArrayList access$0(funcs.DeviceFunction)>($r2);
+        $r7 = virtualinvoke $r0.<java.util.ArrayList: java.lang.Object get(int)>(index);
+        $r4 = (data.MyDevice) $r7;
+        $r8 = this.<funcs.DeviceFunction$UpdateDevices: funcs.DeviceFunction this$0>;
+        $r9 = virtualinvoke $r8.<funcs.DeviceFunction: java.lang.String getDimension(com.android.ddmlib.IDevice)>(d);
+        $r4.<data.MyDevice: java.lang.String Dimension> = $r9;
+
+     label17:
+        $r0 = this.<funcs.DeviceFunction$UpdateDevices: java.util.ArrayList temp>;
+        virtualinvoke $r0.<java.util.ArrayList: boolean add(java.lang.Object)>(name);
+        l4 = l4 + 1;
+
+     label18:
+        if l4 < l5 goto label1;
+
+        str = "system_profiler SPUSBDataType | sed -n -e \'/iPad/,/Extra/p\' -e \'/iPod/,/Extra/p\' -e \'/iPhone/,/Extra/p\'";
+        $r15 = new java.io.File;
+        specialinvoke $r15.<java.io.File: void <init>(java.lang.String)>("/bin");
+        wd = $r15;
+        proc = null;
+
+     label19:
+        $r16 = staticinvoke <java.lang.Runtime: java.lang.Runtime getRuntime()>();
+        proc = virtualinvoke $r16.<java.lang.Runtime: java.lang.Process exec(java.lang.String,java.lang.String[],java.io.File)>("/bin/bash", null, wd);
+
+     label20:
+        goto label22;
+
+     label21:
+        $r17 := @caughtexception;
+        e = $r17;
+        virtualinvoke e.<java.io.IOException: void printStackTrace()>();
+
+     label22:
+        if proc == null goto label23;
+
+        $r18 = new funcs.DeviceFunction$UpdateDevices$readThread;
+        specialinvoke $r18.<funcs.DeviceFunction$UpdateDevices$readThread: void <init>(funcs.DeviceFunction$UpdateDevices,java.lang.Process)>(this, proc);
+        rt = $r18;
+        $r19 = new java.io.PrintWriter;
+        $r20 = new java.io.BufferedWriter;
+        $r21 = new java.io.OutputStreamWriter;
+        $r22 = virtualinvoke proc.<java.lang.Process: java.io.OutputStream getOutputStream()>();
+        specialinvoke $r21.<java.io.OutputStreamWriter: void <init>(java.io.OutputStream)>($r22);
+        specialinvoke $r20.<java.io.BufferedWriter: void <init>(java.io.Writer)>($r21);
+        specialinvoke $r19.<java.io.PrintWriter: void <init>(java.io.Writer,boolean)>($r20, 1);
+        out = $r19;
+        virtualinvoke out.<java.io.PrintWriter: void println(java.lang.String)>(str);
+        virtualinvoke rt.<funcs.DeviceFunction$UpdateDevices$readThread: void start()>();
+
+     label23:
+        i = 0;
+        goto label26;
+
+     label24:
+        $r2 = this.<funcs.DeviceFunction$UpdateDevices: funcs.DeviceFunction this$0>;
+        $r0 = staticinvoke <funcs.DeviceFunction: java.util.ArrayList access$0(funcs.DeviceFunction)>($r2);
+        $r7 = virtualinvoke $r0.<java.util.ArrayList: java.lang.Object get(int)>(i);
+        $r4 = (data.MyDevice) $r7;
+        d = $r4.<data.MyDevice: java.lang.String SerialNumber>;
+        $r0 = this.<funcs.DeviceFunction$UpdateDevices: java.util.ArrayList temp>;
+        $z0 = virtualinvoke $r0.<java.util.ArrayList: boolean contains(java.lang.Object)>(d);
+        if $z0 != 0 goto label25;
+
+        $r2 = this.<funcs.DeviceFunction$UpdateDevices: funcs.DeviceFunction this$0>;
+        $r0 = staticinvoke <funcs.DeviceFunction: java.util.ArrayList access$0(funcs.DeviceFunction)>($r2);
+        virtualinvoke $r0.<java.util.ArrayList: java.lang.Object remove(int)>(i);
+        change = 1;
+
+     label25:
+        i = i + 1;
+
+     label26:
+        $r8 = this.<funcs.DeviceFunction$UpdateDevices: funcs.DeviceFunction this$0>;
+        $r23 = staticinvoke <funcs.DeviceFunction: java.util.ArrayList access$0(funcs.DeviceFunction)>($r8);
+        $i1 = virtualinvoke $r23.<java.util.ArrayList: int size()>();
+        if i < $i1 goto label24;
+
+        if change == 0 goto label27;
+
+        $r2 = this.<funcs.DeviceFunction$UpdateDevices: funcs.DeviceFunction this$0>;
+        virtualinvoke $r2.<funcs.DeviceFunction: void updateTree()>();
+
+     label27:
+        staticinvoke <java.lang.Thread: void sleep(long)>(1000L);
+
+     label28:
+        goto label30;
+
+     label29:
+        $r24 := @caughtexception;
+        e = $r24;
+        virtualinvoke e.<java.lang.InterruptedException: void printStackTrace()>();
+
+     label30:
+        $z0 = this.<funcs.DeviceFunction$UpdateDevices: boolean stop>;
+        if $z0 == 0 goto label0;
+
+        return;
+
+        catch com.android.ddmlib.TimeoutException from label9 to label10 with label11;
+        catch com.android.ddmlib.AdbCommandRejectedException from label9 to label10 with label12;
+        catch java.io.IOException from label9 to label10 with label13;
+        catch com.android.ddmlib.ShellCommandUnresponsiveException from label9 to label10 with label14;
+        catch java.io.IOException from label19 to label20 with label21;
+        catch java.lang.InterruptedException from label27 to label28 with label29;
+    }
+
+    static funcs.DeviceFunction access$0(funcs.DeviceFunction$UpdateDevices)
+    {
+        funcs.DeviceFunction$UpdateDevices l0;
+        funcs.DeviceFunction $r0;
+
+        l0 := @parameter0: funcs.DeviceFunction$UpdateDevices;
+        $r0 = l0.<funcs.DeviceFunction$UpdateDevices: funcs.DeviceFunction this$0>;
+        return $r0;
+    }
+}

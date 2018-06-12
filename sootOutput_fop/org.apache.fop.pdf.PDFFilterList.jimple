@@ -1,0 +1,730 @@
+public class org.apache.fop.pdf.PDFFilterList extends java.lang.Object
+{
+    public static final java.lang.String DEFAULT_FILTER;
+    public static final java.lang.String CONTENT_FILTER;
+    public static final java.lang.String PRECOMPRESSED_FILTER;
+    public static final java.lang.String IMAGE_FILTER;
+    public static final java.lang.String JPEG_FILTER;
+    public static final java.lang.String TIFF_FILTER;
+    public static final java.lang.String FONT_FILTER;
+    public static final java.lang.String METADATA_FILTER;
+    private java.util.List filters;
+    private boolean ignoreASCIIFilters;
+    private boolean disableAllFilters;
+
+    public void <init>()
+    {
+        org.apache.fop.pdf.PDFFilterList this;
+        java.util.ArrayList $r0;
+
+        this := @this: org.apache.fop.pdf.PDFFilterList;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.pdf.PDFFilterList: java.util.List filters> = $r0;
+        this.<org.apache.fop.pdf.PDFFilterList: boolean ignoreASCIIFilters> = 0;
+        this.<org.apache.fop.pdf.PDFFilterList: boolean disableAllFilters> = 0;
+        return;
+    }
+
+    public void <init>(boolean)
+    {
+        org.apache.fop.pdf.PDFFilterList this;
+        boolean ignoreASCIIFilters;
+        java.util.ArrayList $r0;
+
+        this := @this: org.apache.fop.pdf.PDFFilterList;
+        ignoreASCIIFilters := @parameter0: boolean;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.pdf.PDFFilterList: java.util.List filters> = $r0;
+        this.<org.apache.fop.pdf.PDFFilterList: boolean ignoreASCIIFilters> = 0;
+        this.<org.apache.fop.pdf.PDFFilterList: boolean disableAllFilters> = 0;
+        this.<org.apache.fop.pdf.PDFFilterList: boolean ignoreASCIIFilters> = ignoreASCIIFilters;
+        return;
+    }
+
+    public void setDisableAllFilters(boolean)
+    {
+        org.apache.fop.pdf.PDFFilterList this;
+        boolean value;
+
+        this := @this: org.apache.fop.pdf.PDFFilterList;
+        value := @parameter0: boolean;
+        this.<org.apache.fop.pdf.PDFFilterList: boolean disableAllFilters> = value;
+        return;
+    }
+
+    public boolean isDisableAllFilters()
+    {
+        org.apache.fop.pdf.PDFFilterList this;
+        boolean $z0;
+
+        this := @this: org.apache.fop.pdf.PDFFilterList;
+        $z0 = this.<org.apache.fop.pdf.PDFFilterList: boolean disableAllFilters>;
+        return $z0;
+    }
+
+    public boolean isInitialized()
+    {
+        org.apache.fop.pdf.PDFFilterList this;
+        java.util.List $r0;
+        int $i0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.pdf.PDFFilterList;
+        $r0 = this.<org.apache.fop.pdf.PDFFilterList: java.util.List filters>;
+        $i0 = interfaceinvoke $r0.<java.util.List: int size()>();
+        if $i0 <= 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public void addFilter(org.apache.fop.pdf.PDFFilter)
+    {
+        org.apache.fop.pdf.PDFFilterList this;
+        org.apache.fop.pdf.PDFFilter filter;
+        boolean $z0;
+        java.util.List $r0;
+
+        this := @this: org.apache.fop.pdf.PDFFilterList;
+        filter := @parameter0: org.apache.fop.pdf.PDFFilter;
+        if filter == null goto label1;
+
+        $z0 = this.<org.apache.fop.pdf.PDFFilterList: boolean ignoreASCIIFilters>;
+        if $z0 == 0 goto label0;
+
+        $z0 = virtualinvoke filter.<org.apache.fop.pdf.PDFFilter: boolean isASCIIFilter()>();
+        if $z0 == 0 goto label0;
+
+        return;
+
+     label0:
+        $r0 = this.<org.apache.fop.pdf.PDFFilterList: java.util.List filters>;
+        interfaceinvoke $r0.<java.util.List: boolean add(java.lang.Object)>(filter);
+
+     label1:
+        return;
+    }
+
+    public void addFilter(java.lang.String)
+    {
+        org.apache.fop.pdf.PDFFilterList this;
+        java.lang.String filterType, $r6;
+        boolean $z0;
+        org.apache.fop.pdf.FlateFilter $r0;
+        org.apache.fop.pdf.NullFilter $r1;
+        org.apache.fop.pdf.ASCII85Filter $r2;
+        org.apache.fop.pdf.ASCIIHexFilter $r3;
+        java.lang.IllegalArgumentException $r4;
+        java.lang.StringBuffer $r5;
+
+        this := @this: org.apache.fop.pdf.PDFFilterList;
+        filterType := @parameter0: java.lang.String;
+        if filterType != null goto label0;
+
+        return;
+
+     label0:
+        $z0 = virtualinvoke filterType.<java.lang.String: boolean equals(java.lang.Object)>("flate");
+        if $z0 == 0 goto label1;
+
+        $r0 = new org.apache.fop.pdf.FlateFilter;
+        specialinvoke $r0.<org.apache.fop.pdf.FlateFilter: void <init>()>();
+        virtualinvoke this.<org.apache.fop.pdf.PDFFilterList: void addFilter(org.apache.fop.pdf.PDFFilter)>($r0);
+        goto label8;
+
+     label1:
+        $z0 = virtualinvoke filterType.<java.lang.String: boolean equals(java.lang.Object)>("null");
+        if $z0 == 0 goto label2;
+
+        $r1 = new org.apache.fop.pdf.NullFilter;
+        specialinvoke $r1.<org.apache.fop.pdf.NullFilter: void <init>()>();
+        virtualinvoke this.<org.apache.fop.pdf.PDFFilterList: void addFilter(org.apache.fop.pdf.PDFFilter)>($r1);
+        goto label8;
+
+     label2:
+        $z0 = virtualinvoke filterType.<java.lang.String: boolean equals(java.lang.Object)>("ascii-85");
+        if $z0 == 0 goto label4;
+
+        $z0 = this.<org.apache.fop.pdf.PDFFilterList: boolean ignoreASCIIFilters>;
+        if $z0 == 0 goto label3;
+
+        return;
+
+     label3:
+        $r2 = new org.apache.fop.pdf.ASCII85Filter;
+        specialinvoke $r2.<org.apache.fop.pdf.ASCII85Filter: void <init>()>();
+        virtualinvoke this.<org.apache.fop.pdf.PDFFilterList: void addFilter(org.apache.fop.pdf.PDFFilter)>($r2);
+        goto label8;
+
+     label4:
+        $z0 = virtualinvoke filterType.<java.lang.String: boolean equals(java.lang.Object)>("ascii-hex");
+        if $z0 == 0 goto label6;
+
+        $z0 = this.<org.apache.fop.pdf.PDFFilterList: boolean ignoreASCIIFilters>;
+        if $z0 == 0 goto label5;
+
+        return;
+
+     label5:
+        $r3 = new org.apache.fop.pdf.ASCIIHexFilter;
+        specialinvoke $r3.<org.apache.fop.pdf.ASCIIHexFilter: void <init>()>();
+        virtualinvoke this.<org.apache.fop.pdf.PDFFilterList: void addFilter(org.apache.fop.pdf.PDFFilter)>($r3);
+        goto label8;
+
+     label6:
+        $z0 = virtualinvoke filterType.<java.lang.String: boolean equals(java.lang.Object)>("");
+        if $z0 == 0 goto label7;
+
+        return;
+
+     label7:
+        $r4 = new java.lang.IllegalArgumentException;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unsupported filter type in stream-filter-list: ");
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(filterType);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r4.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r6);
+        throw $r4;
+
+     label8:
+        return;
+    }
+
+    public void ensureFilterInPlace(org.apache.fop.pdf.PDFFilter)
+    {
+        org.apache.fop.pdf.PDFFilterList this;
+        org.apache.fop.pdf.PDFFilter pdfFilter;
+        java.util.List $r0;
+        int $i0;
+        java.lang.Object $r1;
+        boolean $z0;
+
+        this := @this: org.apache.fop.pdf.PDFFilterList;
+        pdfFilter := @parameter0: org.apache.fop.pdf.PDFFilter;
+        $r0 = this.<org.apache.fop.pdf.PDFFilterList: java.util.List filters>;
+        $i0 = interfaceinvoke $r0.<java.util.List: int size()>();
+        if $i0 != 0 goto label0;
+
+        virtualinvoke this.<org.apache.fop.pdf.PDFFilterList: void addFilter(org.apache.fop.pdf.PDFFilter)>(pdfFilter);
+        goto label1;
+
+     label0:
+        $r0 = this.<org.apache.fop.pdf.PDFFilterList: java.util.List filters>;
+        $r1 = interfaceinvoke $r0.<java.util.List: java.lang.Object get(int)>(0);
+        $z0 = virtualinvoke $r1.<java.lang.Object: boolean equals(java.lang.Object)>(pdfFilter);
+        if $z0 != 0 goto label1;
+
+        $r0 = this.<org.apache.fop.pdf.PDFFilterList: java.util.List filters>;
+        interfaceinvoke $r0.<java.util.List: void add(int,java.lang.Object)>(0, pdfFilter);
+
+     label1:
+        return;
+    }
+
+    public void addDefaultFilters(java.util.Map, java.lang.String)
+    {
+        org.apache.fop.pdf.PDFFilterList this;
+        java.util.Map filters;
+        java.lang.String type, v, $r1;
+        java.util.List filterset;
+        int i, $i0, $i1;
+        java.lang.Object $r0;
+        boolean $z0;
+        org.apache.fop.pdf.NullFilter $r2;
+        org.apache.fop.pdf.FlateFilter $r3;
+
+        this := @this: org.apache.fop.pdf.PDFFilterList;
+        filters := @parameter0: java.util.Map;
+        type := @parameter1: java.lang.String;
+        filterset = null;
+        if filters == null goto label0;
+
+        $r0 = interfaceinvoke filters.<java.util.Map: java.lang.Object get(java.lang.Object)>(type);
+        filterset = (java.util.List) $r0;
+        if filterset != null goto label0;
+
+        $r0 = interfaceinvoke filters.<java.util.Map: java.lang.Object get(java.lang.Object)>("default");
+        filterset = (java.util.List) $r0;
+
+     label0:
+        if filterset == null goto label1;
+
+        $i0 = interfaceinvoke filterset.<java.util.List: int size()>();
+        if $i0 != 0 goto label6;
+
+     label1:
+        $r1 = "metadata";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(type);
+        if $z0 == 0 goto label2;
+
+        $r2 = new org.apache.fop.pdf.NullFilter;
+        specialinvoke $r2.<org.apache.fop.pdf.NullFilter: void <init>()>();
+        virtualinvoke this.<org.apache.fop.pdf.PDFFilterList: void addFilter(org.apache.fop.pdf.PDFFilter)>($r2);
+        goto label8;
+
+     label2:
+        $r1 = "jpeg";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(type);
+        if $z0 == 0 goto label3;
+
+        $r2 = new org.apache.fop.pdf.NullFilter;
+        specialinvoke $r2.<org.apache.fop.pdf.NullFilter: void <init>()>();
+        virtualinvoke this.<org.apache.fop.pdf.PDFFilterList: void addFilter(org.apache.fop.pdf.PDFFilter)>($r2);
+        goto label8;
+
+     label3:
+        $r1 = "tiff";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(type);
+        if $z0 == 0 goto label4;
+
+        $r2 = new org.apache.fop.pdf.NullFilter;
+        specialinvoke $r2.<org.apache.fop.pdf.NullFilter: void <init>()>();
+        virtualinvoke this.<org.apache.fop.pdf.PDFFilterList: void addFilter(org.apache.fop.pdf.PDFFilter)>($r2);
+        goto label8;
+
+     label4:
+        $r1 = "precompressed";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(type);
+        if $z0 == 0 goto label5;
+
+        $r2 = new org.apache.fop.pdf.NullFilter;
+        specialinvoke $r2.<org.apache.fop.pdf.NullFilter: void <init>()>();
+        virtualinvoke this.<org.apache.fop.pdf.PDFFilterList: void addFilter(org.apache.fop.pdf.PDFFilter)>($r2);
+        goto label8;
+
+     label5:
+        $r3 = new org.apache.fop.pdf.FlateFilter;
+        specialinvoke $r3.<org.apache.fop.pdf.FlateFilter: void <init>()>();
+        virtualinvoke this.<org.apache.fop.pdf.PDFFilterList: void addFilter(org.apache.fop.pdf.PDFFilter)>($r3);
+        goto label8;
+
+     label6:
+        i = 0;
+
+     label7:
+        $i1 = interfaceinvoke filterset.<java.util.List: int size()>();
+        if i >= $i1 goto label8;
+
+        $r0 = interfaceinvoke filterset.<java.util.List: java.lang.Object get(int)>(i);
+        v = (java.lang.String) $r0;
+        virtualinvoke this.<org.apache.fop.pdf.PDFFilterList: void addFilter(java.lang.String)>(v);
+        i = i + 1;
+        goto label7;
+
+     label8:
+        return;
+    }
+
+    protected java.lang.String buildFilterDictEntries()
+    {
+        org.apache.fop.pdf.PDFFilterList this;
+        java.util.ArrayList names, parms, $r1;
+        int nonNullParams, $i0;
+        java.util.List $r0;
+        java.lang.StringBuffer $r2;
+        java.lang.String $r3, $r4;
+
+        this := @this: org.apache.fop.pdf.PDFFilterList;
+        $r0 = this.<org.apache.fop.pdf.PDFFilterList: java.util.List filters>;
+        if $r0 == null goto label2;
+
+        $r0 = this.<org.apache.fop.pdf.PDFFilterList: java.util.List filters>;
+        $i0 = interfaceinvoke $r0.<java.util.List: int size()>();
+        if $i0 <= 0 goto label2;
+
+        $r1 = new java.util.ArrayList;
+        specialinvoke $r1.<java.util.ArrayList: void <init>()>();
+        names = $r1;
+        $r1 = new java.util.ArrayList;
+        specialinvoke $r1.<java.util.ArrayList: void <init>()>();
+        parms = $r1;
+        nonNullParams = specialinvoke this.<org.apache.fop.pdf.PDFFilterList: int populateNamesAndParms(java.util.List,java.util.List)>(names, parms);
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r3 = specialinvoke this.<org.apache.fop.pdf.PDFFilterList: java.lang.String buildFilterEntries(java.util.List)>(names);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        if nonNullParams <= 0 goto label0;
+
+        $r3 = specialinvoke this.<org.apache.fop.pdf.PDFFilterList: java.lang.String buildDecodeParms(java.util.List)>(parms);
+        goto label1;
+
+     label0:
+        $r3 = "";
+
+     label1:
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r4 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r4;
+
+     label2:
+        return "";
+    }
+
+    protected void putFilterDictEntries(org.apache.fop.pdf.PDFDictionary)
+    {
+        org.apache.fop.pdf.PDFFilterList this;
+        org.apache.fop.pdf.PDFDictionary dict;
+        java.util.ArrayList names, parms, $r1;
+        java.util.List $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.pdf.PDFFilterList;
+        dict := @parameter0: org.apache.fop.pdf.PDFDictionary;
+        $r0 = this.<org.apache.fop.pdf.PDFFilterList: java.util.List filters>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.pdf.PDFFilterList: java.util.List filters>;
+        $i0 = interfaceinvoke $r0.<java.util.List: int size()>();
+        if $i0 <= 0 goto label0;
+
+        $r1 = new java.util.ArrayList;
+        specialinvoke $r1.<java.util.ArrayList: void <init>()>();
+        names = $r1;
+        $r1 = new java.util.ArrayList;
+        specialinvoke $r1.<java.util.ArrayList: void <init>()>();
+        parms = $r1;
+        specialinvoke this.<org.apache.fop.pdf.PDFFilterList: int populateNamesAndParms(java.util.List,java.util.List)>(names, parms);
+        specialinvoke this.<org.apache.fop.pdf.PDFFilterList: void putFilterEntries(org.apache.fop.pdf.PDFDictionary,java.util.List)>(dict, names);
+        specialinvoke this.<org.apache.fop.pdf.PDFFilterList: void putDecodeParams(org.apache.fop.pdf.PDFDictionary,java.util.List)>(dict, parms);
+
+     label0:
+        return;
+    }
+
+    private int populateNamesAndParms(java.util.List, java.util.List)
+    {
+        org.apache.fop.pdf.PDFFilterList this;
+        java.util.List names, parms, $r0, $r1;
+        int nonNullParams, count, $i0, $i1;
+        org.apache.fop.pdf.PDFFilter filter;
+        org.apache.fop.pdf.PDFObject param;
+        java.lang.Object $r2;
+        java.lang.String $r3, $r4;
+
+        this := @this: org.apache.fop.pdf.PDFFilterList;
+        names := @parameter0: java.util.List;
+        parms := @parameter1: java.util.List;
+        nonNullParams = 0;
+        count = 0;
+
+     label0:
+        $r0 = this.<org.apache.fop.pdf.PDFFilterList: java.util.List filters>;
+        $i0 = interfaceinvoke $r0.<java.util.List: int size()>();
+        if count >= $i0 goto label3;
+
+        $r1 = this.<org.apache.fop.pdf.PDFFilterList: java.util.List filters>;
+        $r2 = interfaceinvoke $r1.<java.util.List: java.lang.Object get(int)>(count);
+        filter = (org.apache.fop.pdf.PDFFilter) $r2;
+        $r3 = virtualinvoke filter.<org.apache.fop.pdf.PDFFilter: java.lang.String getName()>();
+        $i1 = virtualinvoke $r3.<java.lang.String: int length()>();
+        if $i1 <= 0 goto label2;
+
+        $r4 = virtualinvoke filter.<org.apache.fop.pdf.PDFFilter: java.lang.String getName()>();
+        interfaceinvoke names.<java.util.List: void add(int,java.lang.Object)>(0, $r4);
+        param = virtualinvoke filter.<org.apache.fop.pdf.PDFFilter: org.apache.fop.pdf.PDFObject getDecodeParms()>();
+        if param == null goto label1;
+
+        interfaceinvoke parms.<java.util.List: void add(int,java.lang.Object)>(0, param);
+        nonNullParams = nonNullParams + 1;
+        goto label2;
+
+     label1:
+        interfaceinvoke parms.<java.util.List: void add(int,java.lang.Object)>(0, null);
+
+     label2:
+        count = count + 1;
+        goto label0;
+
+     label3:
+        return nonNullParams;
+    }
+
+    private java.lang.String buildFilterEntries(java.util.List)
+    {
+        org.apache.fop.pdf.PDFFilterList this;
+        java.util.List names;
+        int filterCount, i, $i0, $i1;
+        java.lang.StringBuffer sb, $r0;
+        java.lang.String name, $r2, $r3;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.pdf.PDFFilterList;
+        names := @parameter0: java.util.List;
+        filterCount = 0;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>(int)>(64);
+        sb = $r0;
+        i = 0;
+
+     label0:
+        $i0 = interfaceinvoke names.<java.util.List: int size()>();
+        if i >= $i0 goto label2;
+
+        $r1 = interfaceinvoke names.<java.util.List: java.lang.Object get(int)>(i);
+        name = (java.lang.String) $r1;
+        $i1 = virtualinvoke name.<java.lang.String: int length()>();
+        if $i1 <= 0 goto label1;
+
+        filterCount = filterCount + 1;
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(name);
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+
+     label1:
+        i = i + 1;
+        goto label0;
+
+     label2:
+        if filterCount <= 0 goto label4;
+
+        if filterCount <= 1 goto label3;
+
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("/Filter [ ");
+        $r2 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("]");
+        $r3 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r3;
+
+     label3:
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("/Filter ");
+        $r2 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r3 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r3;
+
+     label4:
+        return "";
+    }
+
+    private void putFilterEntries(org.apache.fop.pdf.PDFDictionary, java.util.List)
+    {
+        org.apache.fop.pdf.PDFFilterList this;
+        org.apache.fop.pdf.PDFDictionary dict;
+        java.util.List names;
+        org.apache.fop.pdf.PDFArray $r0, array;
+        int i, c, $i0;
+        java.lang.String name;
+        java.lang.Object $r1, $r3;
+        org.apache.fop.pdf.PDFName $r2;
+
+        this := @this: org.apache.fop.pdf.PDFFilterList;
+        dict := @parameter0: org.apache.fop.pdf.PDFDictionary;
+        names := @parameter1: java.util.List;
+        $r0 = new org.apache.fop.pdf.PDFArray;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFArray: void <init>(org.apache.fop.pdf.PDFObject)>(dict);
+        array = $r0;
+        i = 0;
+        c = interfaceinvoke names.<java.util.List: int size()>();
+
+     label0:
+        if i >= c goto label2;
+
+        $r1 = interfaceinvoke names.<java.util.List: java.lang.Object get(int)>(i);
+        name = (java.lang.String) $r1;
+        $i0 = virtualinvoke name.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label1;
+
+        $r2 = new org.apache.fop.pdf.PDFName;
+        specialinvoke $r2.<org.apache.fop.pdf.PDFName: void <init>(java.lang.String)>(name);
+        virtualinvoke array.<org.apache.fop.pdf.PDFArray: void add(java.lang.Object)>($r2);
+
+     label1:
+        i = i + 1;
+        goto label0;
+
+     label2:
+        $i0 = virtualinvoke array.<org.apache.fop.pdf.PDFArray: int length()>();
+        if $i0 <= 0 goto label4;
+
+        $i0 = virtualinvoke array.<org.apache.fop.pdf.PDFArray: int length()>();
+        if $i0 <= 1 goto label3;
+
+        virtualinvoke dict.<org.apache.fop.pdf.PDFDictionary: void put(java.lang.String,java.lang.Object)>("Filter", array);
+        goto label4;
+
+     label3:
+        $r3 = virtualinvoke array.<org.apache.fop.pdf.PDFArray: java.lang.Object get(int)>(0);
+        virtualinvoke dict.<org.apache.fop.pdf.PDFDictionary: void put(java.lang.String,java.lang.Object)>("Filter", $r3);
+
+     label4:
+        return;
+    }
+
+    private java.lang.String buildDecodeParms(java.util.List)
+    {
+        org.apache.fop.pdf.PDFFilterList this;
+        java.util.List parms;
+        java.lang.StringBuffer $r0, sb;
+        boolean needParmsEntry;
+        int count, $i0, $i1;
+        java.lang.String s, $r2;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.pdf.PDFFilterList;
+        parms := @parameter0: java.util.List;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        sb = $r0;
+        needParmsEntry = 0;
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\n/DecodeParms ");
+        $i0 = interfaceinvoke parms.<java.util.List: int size()>();
+        if $i0 <= 1 goto label0;
+
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("[ ");
+
+     label0:
+        count = 0;
+
+     label1:
+        $i1 = interfaceinvoke parms.<java.util.List: int size()>();
+        if count >= $i1 goto label4;
+
+        $r1 = interfaceinvoke parms.<java.util.List: java.lang.Object get(int)>(count);
+        s = (java.lang.String) $r1;
+        if s == null goto label2;
+
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(s);
+        needParmsEntry = 1;
+        goto label3;
+
+     label2:
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("null");
+
+     label3:
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        count = count + 1;
+        goto label1;
+
+     label4:
+        $i0 = interfaceinvoke parms.<java.util.List: int size()>();
+        if $i0 <= 1 goto label5;
+
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("]");
+
+     label5:
+        if needParmsEntry == 0 goto label6;
+
+        $r2 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r2;
+
+     label6:
+        return "";
+    }
+
+    private void putDecodeParams(org.apache.fop.pdf.PDFDictionary, java.util.List)
+    {
+        org.apache.fop.pdf.PDFFilterList this;
+        org.apache.fop.pdf.PDFDictionary dict;
+        java.util.List parms;
+        boolean needParmsEntry, $z0;
+        org.apache.fop.pdf.PDFArray array, $r0;
+        int i, c, $i0;
+        java.lang.Object obj, $r1;
+
+        this := @this: org.apache.fop.pdf.PDFFilterList;
+        dict := @parameter0: org.apache.fop.pdf.PDFDictionary;
+        parms := @parameter1: java.util.List;
+        needParmsEntry = 0;
+        $r0 = new org.apache.fop.pdf.PDFArray;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFArray: void <init>(org.apache.fop.pdf.PDFObject)>(dict);
+        array = $r0;
+        i = 0;
+        c = interfaceinvoke parms.<java.util.List: int size()>();
+
+     label0:
+        if i >= c goto label3;
+
+        obj = interfaceinvoke parms.<java.util.List: java.lang.Object get(int)>(i);
+        if obj == null goto label1;
+
+        virtualinvoke array.<org.apache.fop.pdf.PDFArray: void add(java.lang.Object)>(obj);
+        needParmsEntry = 1;
+        goto label2;
+
+     label1:
+        virtualinvoke array.<org.apache.fop.pdf.PDFArray: void add(java.lang.Object)>(null);
+
+     label2:
+        i = i + 1;
+        goto label0;
+
+     label3:
+        $i0 = virtualinvoke array.<org.apache.fop.pdf.PDFArray: int length()>();
+        if $i0 <= 0 goto label4;
+
+        $z0 = 1;
+        goto label5;
+
+     label4:
+        $z0 = 0;
+
+     label5:
+        $z0 = $z0 & needParmsEntry;
+        if $z0 == 0 goto label7;
+
+        $i0 = virtualinvoke array.<org.apache.fop.pdf.PDFArray: int length()>();
+        if $i0 <= 1 goto label6;
+
+        virtualinvoke dict.<org.apache.fop.pdf.PDFDictionary: void put(java.lang.String,java.lang.Object)>("DecodeParms", array);
+        goto label7;
+
+     label6:
+        $r1 = virtualinvoke array.<org.apache.fop.pdf.PDFArray: java.lang.Object get(int)>(0);
+        virtualinvoke dict.<org.apache.fop.pdf.PDFDictionary: void put(java.lang.String,java.lang.Object)>("DecodeParms", $r1);
+
+     label7:
+        return;
+    }
+
+    public java.io.OutputStream applyFilters(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFFilterList this;
+        java.io.OutputStream stream, out;
+        int count, $i0;
+        org.apache.fop.pdf.PDFFilter filter;
+        java.util.List $r0;
+        boolean $z0;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.pdf.PDFFilterList;
+        stream := @parameter0: java.io.OutputStream;
+        out = stream;
+        $r0 = this.<org.apache.fop.pdf.PDFFilterList: java.util.List filters>;
+        if $r0 == null goto label1;
+
+        $z0 = virtualinvoke this.<org.apache.fop.pdf.PDFFilterList: boolean isDisableAllFilters()>();
+        if $z0 != 0 goto label1;
+
+        $r0 = this.<org.apache.fop.pdf.PDFFilterList: java.util.List filters>;
+        $i0 = interfaceinvoke $r0.<java.util.List: int size()>();
+        count = $i0 - 1;
+
+     label0:
+        if count < 0 goto label1;
+
+        $r0 = this.<org.apache.fop.pdf.PDFFilterList: java.util.List filters>;
+        $r1 = interfaceinvoke $r0.<java.util.List: java.lang.Object get(int)>(count);
+        filter = (org.apache.fop.pdf.PDFFilter) $r1;
+        out = virtualinvoke filter.<org.apache.fop.pdf.PDFFilter: java.io.OutputStream applyFilter(java.io.OutputStream)>(out);
+        count = count + -1;
+        goto label0;
+
+     label1:
+        return out;
+    }
+}

@@ -1,0 +1,311 @@
+public class org.apache.fop.layoutmgr.list.ListItemContentLayoutManager extends org.apache.fop.layoutmgr.BlockStackingLayoutManager
+{
+    private org.apache.fop.area.Block curBlockArea;
+    private int xoffset;
+    private int itemIPD;
+
+    public void <init>(org.apache.fop.fo.flow.ListItemLabel)
+    {
+        org.apache.fop.layoutmgr.list.ListItemContentLayoutManager this;
+        org.apache.fop.fo.flow.ListItemLabel node;
+
+        this := @this: org.apache.fop.layoutmgr.list.ListItemContentLayoutManager;
+        node := @parameter0: org.apache.fop.fo.flow.ListItemLabel;
+        specialinvoke this.<org.apache.fop.layoutmgr.BlockStackingLayoutManager: void <init>(org.apache.fop.fo.FObj)>(node);
+        return;
+    }
+
+    public void <init>(org.apache.fop.fo.flow.ListItemBody)
+    {
+        org.apache.fop.layoutmgr.list.ListItemContentLayoutManager this;
+        org.apache.fop.fo.flow.ListItemBody node;
+
+        this := @this: org.apache.fop.layoutmgr.list.ListItemContentLayoutManager;
+        node := @parameter0: org.apache.fop.fo.flow.ListItemBody;
+        specialinvoke this.<org.apache.fop.layoutmgr.BlockStackingLayoutManager: void <init>(org.apache.fop.fo.FObj)>(node);
+        return;
+    }
+
+    protected org.apache.fop.fo.flow.AbstractListItemPart getPartFO()
+    {
+        org.apache.fop.layoutmgr.list.ListItemContentLayoutManager this;
+        org.apache.fop.fo.FObj $r0;
+        org.apache.fop.fo.flow.AbstractListItemPart $r1;
+
+        this := @this: org.apache.fop.layoutmgr.list.ListItemContentLayoutManager;
+        $r0 = this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: org.apache.fop.fo.FObj fobj>;
+        $r1 = (org.apache.fop.fo.flow.AbstractListItemPart) $r0;
+        return $r1;
+    }
+
+    public void setXOffset(int)
+    {
+        org.apache.fop.layoutmgr.list.ListItemContentLayoutManager this;
+        int off;
+
+        this := @this: org.apache.fop.layoutmgr.list.ListItemContentLayoutManager;
+        off := @parameter0: int;
+        this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: int xoffset> = off;
+        return;
+    }
+
+    public java.util.LinkedList getChangedKnuthElements(java.util.List, int)
+    {
+        org.apache.fop.layoutmgr.list.ListItemContentLayoutManager this;
+        java.util.List oldList;
+        int alignment;
+        java.util.LinkedList $r0;
+
+        this := @this: org.apache.fop.layoutmgr.list.ListItemContentLayoutManager;
+        oldList := @parameter0: java.util.List;
+        alignment := @parameter1: int;
+        $r0 = specialinvoke this.<org.apache.fop.layoutmgr.BlockStackingLayoutManager: java.util.LinkedList getChangedKnuthElements(java.util.List,int)>(oldList, alignment);
+        return $r0;
+    }
+
+    public void addAreas(org.apache.fop.layoutmgr.PositionIterator, org.apache.fop.layoutmgr.LayoutContext)
+    {
+        org.apache.fop.layoutmgr.list.ListItemContentLayoutManager this;
+        org.apache.fop.layoutmgr.PositionIterator parentIter;
+        org.apache.fop.layoutmgr.LayoutContext layoutContext, lc, $r4;
+        null_type childLM;
+        org.apache.fop.layoutmgr.LayoutManager firstLM, lastLM, $r13, childLM;
+        org.apache.fop.layoutmgr.Position firstPos, lastPos, pos, $r8, $r10;
+        java.util.LinkedList positionList, $r5;
+        org.apache.fop.layoutmgr.list.ListItemContentLayoutManager$StackingIter childPosIter, $r11;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager $r1;
+        org.apache.fop.fo.flow.AbstractListItemPart $r2;
+        java.lang.String $r3;
+        boolean $z0, $z1, $z2;
+        java.lang.Object $r6;
+        int $i0;
+        org.apache.fop.layoutmgr.NonLeafPosition $r7, $r9;
+        java.util.ListIterator $r12;
+        byte $b1;
+        short $s2;
+        double $d0;
+        org.apache.fop.traits.MinOptMax $r14;
+        org.apache.fop.fo.FObj $r15;
+
+        this := @this: org.apache.fop.layoutmgr.list.ListItemContentLayoutManager;
+        parentIter := @parameter0: org.apache.fop.layoutmgr.PositionIterator;
+        layoutContext := @parameter1: org.apache.fop.layoutmgr.LayoutContext;
+        virtualinvoke this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: org.apache.fop.area.Area getParentArea(org.apache.fop.area.Area)>(null);
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: org.apache.fop.layoutmgr.PageSequenceLayoutManager getPSLM()>();
+        $r2 = virtualinvoke this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: org.apache.fop.fo.flow.AbstractListItemPart getPartFO()>();
+        $r3 = virtualinvoke $r2.<org.apache.fop.fo.flow.AbstractListItemPart: java.lang.String getId()>();
+        virtualinvoke $r1.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: void addIDToPage(java.lang.String)>($r3);
+        childLM = null;
+        $r4 = new org.apache.fop.layoutmgr.LayoutContext;
+        specialinvoke $r4.<org.apache.fop.layoutmgr.LayoutContext: void <init>(int)>(0);
+        lc = $r4;
+        firstLM = null;
+        lastLM = null;
+        firstPos = null;
+        lastPos = null;
+        $r5 = new java.util.LinkedList;
+        specialinvoke $r5.<java.util.LinkedList: void <init>()>();
+        positionList = $r5;
+
+     label0:
+        $z0 = virtualinvoke parentIter.<org.apache.fop.layoutmgr.PositionIterator: boolean hasNext()>();
+        if $z0 == 0 goto label5;
+
+        $r6 = virtualinvoke parentIter.<org.apache.fop.layoutmgr.PositionIterator: java.lang.Object next()>();
+        pos = (org.apache.fop.layoutmgr.Position) $r6;
+        if pos != null goto label1;
+
+        goto label0;
+
+     label1:
+        $i0 = virtualinvoke pos.<org.apache.fop.layoutmgr.Position: int getIndex()>();
+        if $i0 < 0 goto label3;
+
+        if firstPos != null goto label2;
+
+        firstPos = pos;
+
+     label2:
+        lastPos = pos;
+
+     label3:
+        $z0 = pos instanceof org.apache.fop.layoutmgr.NonLeafPosition;
+        if $z0 == 0 goto label4;
+
+        $r7 = (org.apache.fop.layoutmgr.NonLeafPosition) pos;
+        $r8 = virtualinvoke $r7.<org.apache.fop.layoutmgr.NonLeafPosition: org.apache.fop.layoutmgr.Position getPosition()>();
+        virtualinvoke positionList.<java.util.LinkedList: boolean add(java.lang.Object)>($r8);
+        $r9 = (org.apache.fop.layoutmgr.NonLeafPosition) pos;
+        $r10 = virtualinvoke $r9.<org.apache.fop.layoutmgr.NonLeafPosition: org.apache.fop.layoutmgr.Position getPosition()>();
+        lastLM = virtualinvoke $r10.<org.apache.fop.layoutmgr.Position: org.apache.fop.layoutmgr.LayoutManager getLM()>();
+        if firstLM != null goto label0;
+
+        firstLM = lastLM;
+        goto label0;
+
+     label4:
+        $z0 = pos instanceof org.apache.fop.layoutmgr.SpaceResolver$SpaceHandlingBreakPosition;
+        if $z0 == 0 goto label0;
+
+        virtualinvoke positionList.<java.util.LinkedList: boolean add(java.lang.Object)>(pos);
+        goto label0;
+
+     label5:
+        $z1 = virtualinvoke this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: boolean isFirst(org.apache.fop.layoutmgr.Position)>(firstPos);
+        $z2 = virtualinvoke this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: boolean isLast(org.apache.fop.layoutmgr.Position)>(lastPos);
+        virtualinvoke this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: void addMarkersToPage(boolean,boolean,boolean)>(1, $z1, $z2);
+        $r11 = new org.apache.fop.layoutmgr.list.ListItemContentLayoutManager$StackingIter;
+        $r12 = virtualinvoke positionList.<java.util.LinkedList: java.util.ListIterator listIterator()>();
+        specialinvoke $r11.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager$StackingIter: void <init>(java.util.Iterator)>($r12);
+        childPosIter = $r11;
+
+     label6:
+        $r13 = virtualinvoke childPosIter.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager$StackingIter: org.apache.fop.layoutmgr.LayoutManager getNextChildLM()>();
+        childLM = $r13;
+        if $r13 == null goto label11;
+
+        $b1 = 32;
+        if childLM != firstLM goto label7;
+
+        $z1 = 1;
+        goto label8;
+
+     label7:
+        $z1 = 0;
+
+     label8:
+        virtualinvoke lc.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int,boolean)>($b1, $z1);
+        $s2 = 128;
+        if childLM != lastLM goto label9;
+
+        $z1 = 1;
+        goto label10;
+
+     label9:
+        $z1 = 0;
+
+     label10:
+        virtualinvoke lc.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int,boolean)>($s2, $z1);
+        $d0 = virtualinvoke layoutContext.<org.apache.fop.layoutmgr.LayoutContext: double getSpaceAdjust()>();
+        virtualinvoke lc.<org.apache.fop.layoutmgr.LayoutContext: void setSpaceAdjust(double)>($d0);
+        $r14 = virtualinvoke layoutContext.<org.apache.fop.layoutmgr.LayoutContext: org.apache.fop.traits.MinOptMax getStackLimitBP()>();
+        virtualinvoke lc.<org.apache.fop.layoutmgr.LayoutContext: void setStackLimitBP(org.apache.fop.traits.MinOptMax)>($r14);
+        interfaceinvoke childLM.<org.apache.fop.layoutmgr.LayoutManager: void addAreas(org.apache.fop.layoutmgr.PositionIterator,org.apache.fop.layoutmgr.LayoutContext)>(childPosIter, lc);
+        goto label6;
+
+     label11:
+        $z1 = virtualinvoke this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: boolean isFirst(org.apache.fop.layoutmgr.Position)>(firstPos);
+        $z2 = virtualinvoke this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: boolean isLast(org.apache.fop.layoutmgr.Position)>(lastPos);
+        virtualinvoke this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: void addMarkersToPage(boolean,boolean,boolean)>(0, $z1, $z2);
+        virtualinvoke this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: void flush()>();
+        this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: org.apache.fop.area.Block curBlockArea> = null;
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: org.apache.fop.layoutmgr.PageSequenceLayoutManager getPSLM()>();
+        $r15 = virtualinvoke this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: org.apache.fop.fo.FObj getFObj()>();
+        $r2 = (org.apache.fop.fo.flow.AbstractListItemPart) $r15;
+        $r3 = virtualinvoke $r2.<org.apache.fop.fo.flow.AbstractListItemPart: java.lang.String getId()>();
+        virtualinvoke $r1.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: void notifyEndOfLayout(java.lang.String)>($r3);
+        return;
+    }
+
+    public org.apache.fop.area.Area getParentArea(org.apache.fop.area.Area)
+    {
+        org.apache.fop.layoutmgr.list.ListItemContentLayoutManager this;
+        org.apache.fop.area.Area childArea, parentArea;
+        org.apache.fop.area.Block $r0, $r1;
+        int referenceIPD, $i0;
+        org.apache.fop.fo.flow.AbstractListItemPart $r2;
+        java.lang.String $r3;
+        org.apache.fop.layoutmgr.LayoutManager $r4;
+
+        this := @this: org.apache.fop.layoutmgr.list.ListItemContentLayoutManager;
+        childArea := @parameter0: org.apache.fop.area.Area;
+        $r1 = this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        if $r1 != null goto label0;
+
+        $r0 = new org.apache.fop.area.Block;
+        specialinvoke $r0.<org.apache.fop.area.Block: void <init>()>();
+        this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: org.apache.fop.area.Block curBlockArea> = $r0;
+        $r1 = this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        virtualinvoke $r1.<org.apache.fop.area.Block: void setPositioning(int)>(2);
+        $r1 = this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        $i0 = this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: int xoffset>;
+        virtualinvoke $r1.<org.apache.fop.area.Block: void setXOffset(int)>($i0);
+        $r1 = this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        $i0 = this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: int itemIPD>;
+        virtualinvoke $r1.<org.apache.fop.area.Block: void setIPD(int)>($i0);
+        $r1 = this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        $r2 = virtualinvoke this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: org.apache.fop.fo.flow.AbstractListItemPart getPartFO()>();
+        $r3 = virtualinvoke $r2.<org.apache.fop.fo.flow.AbstractListItemPart: java.lang.String getId()>();
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void setProducerID(org.apache.fop.area.Area,java.lang.String)>($r1, $r3);
+        $r4 = this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: org.apache.fop.layoutmgr.LayoutManager parentLM>;
+        $r0 = this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        parentArea = interfaceinvoke $r4.<org.apache.fop.layoutmgr.LayoutManager: org.apache.fop.area.Area getParentArea(org.apache.fop.area.Area)>($r0);
+        referenceIPD = virtualinvoke parentArea.<org.apache.fop.area.Area: int getIPD()>();
+        $r1 = this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        virtualinvoke $r1.<org.apache.fop.area.Block: void setIPD(int)>(referenceIPD);
+        $r0 = this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        virtualinvoke this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: void setCurrentArea(org.apache.fop.area.BlockParent)>($r0);
+
+     label0:
+        $r1 = this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        return $r1;
+    }
+
+    public void addChildArea(org.apache.fop.area.Area)
+    {
+        org.apache.fop.layoutmgr.list.ListItemContentLayoutManager this;
+        org.apache.fop.area.Area childArea;
+        org.apache.fop.area.Block $r0, $r1;
+
+        this := @this: org.apache.fop.layoutmgr.list.ListItemContentLayoutManager;
+        childArea := @parameter0: org.apache.fop.area.Area;
+        $r0 = this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: org.apache.fop.area.Block curBlockArea>;
+        $r1 = (org.apache.fop.area.Block) childArea;
+        virtualinvoke $r0.<org.apache.fop.area.Block: void addBlock(org.apache.fop.area.Block)>($r1);
+
+     label0:
+        return;
+    }
+
+    public boolean mustKeepTogether()
+    {
+        org.apache.fop.layoutmgr.list.ListItemContentLayoutManager this;
+        org.apache.fop.layoutmgr.LayoutManager $r0;
+        org.apache.fop.layoutmgr.BlockLevelLayoutManager $r1;
+        boolean $z0;
+        org.apache.fop.fo.flow.AbstractListItemPart $r2;
+        org.apache.fop.fo.properties.KeepProperty $r3;
+        org.apache.fop.fo.properties.Property $r4;
+
+        this := @this: org.apache.fop.layoutmgr.list.ListItemContentLayoutManager;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: org.apache.fop.layoutmgr.LayoutManager getParent()>();
+        $r1 = (org.apache.fop.layoutmgr.BlockLevelLayoutManager) $r0;
+        $z0 = interfaceinvoke $r1.<org.apache.fop.layoutmgr.BlockLevelLayoutManager: boolean mustKeepTogether()>();
+        if $z0 != 0 goto label0;
+
+        $r2 = virtualinvoke this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: org.apache.fop.fo.flow.AbstractListItemPart getPartFO()>();
+        $r3 = virtualinvoke $r2.<org.apache.fop.fo.flow.AbstractListItemPart: org.apache.fop.fo.properties.KeepProperty getKeepTogether()>();
+        $r4 = virtualinvoke $r3.<org.apache.fop.fo.properties.KeepProperty: org.apache.fop.fo.properties.Property getWithinPage()>();
+        $z0 = virtualinvoke $r4.<org.apache.fop.fo.properties.Property: boolean isAuto()>();
+        if $z0 == 0 goto label0;
+
+        $r2 = virtualinvoke this.<org.apache.fop.layoutmgr.list.ListItemContentLayoutManager: org.apache.fop.fo.flow.AbstractListItemPart getPartFO()>();
+        $r3 = virtualinvoke $r2.<org.apache.fop.fo.flow.AbstractListItemPart: org.apache.fop.fo.properties.KeepProperty getKeepTogether()>();
+        $r4 = virtualinvoke $r3.<org.apache.fop.fo.properties.KeepProperty: org.apache.fop.fo.properties.Property getWithinColumn()>();
+        $z0 = virtualinvoke $r4.<org.apache.fop.fo.properties.Property: boolean isAuto()>();
+        if $z0 != 0 goto label1;
+
+     label0:
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+}

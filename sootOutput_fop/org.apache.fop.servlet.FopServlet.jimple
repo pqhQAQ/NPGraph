@@ -1,0 +1,269 @@
+public class org.apache.fop.servlet.FopServlet extends javax.servlet.http.HttpServlet
+{
+    protected static final java.lang.String FO_REQUEST_PARAM;
+    protected static final java.lang.String XML_REQUEST_PARAM;
+    protected static final java.lang.String XSLT_REQUEST_PARAM;
+    protected org.apache.commons.logging.impl.SimpleLog log;
+    protected javax.xml.transform.TransformerFactory transFactory;
+    protected org.apache.fop.apps.FopFactory fopFactory;
+    protected javax.xml.transform.URIResolver uriResolver;
+
+    public void <init>()
+    {
+        org.apache.fop.servlet.FopServlet this;
+
+        this := @this: org.apache.fop.servlet.FopServlet;
+        specialinvoke this.<javax.servlet.http.HttpServlet: void <init>()>();
+        this.<org.apache.fop.servlet.FopServlet: org.apache.commons.logging.impl.SimpleLog log> = null;
+        this.<org.apache.fop.servlet.FopServlet: javax.xml.transform.TransformerFactory transFactory> = null;
+        this.<org.apache.fop.servlet.FopServlet: org.apache.fop.apps.FopFactory fopFactory> = null;
+        return;
+    }
+
+    public void init() throws javax.servlet.ServletException
+    {
+        org.apache.fop.servlet.FopServlet this;
+        org.apache.commons.logging.impl.SimpleLog $r0, $r1;
+        org.apache.fop.servlet.ServletContextURIResolver $r2;
+        javax.servlet.ServletContext $r3;
+        javax.xml.transform.TransformerFactory $r4, $r5;
+        javax.xml.transform.URIResolver $r6;
+        org.apache.fop.apps.FopFactory $r7, $r8;
+
+        this := @this: org.apache.fop.servlet.FopServlet;
+        $r0 = new org.apache.commons.logging.impl.SimpleLog;
+        specialinvoke $r0.<org.apache.commons.logging.impl.SimpleLog: void <init>(java.lang.String)>("FOP/Servlet");
+        this.<org.apache.fop.servlet.FopServlet: org.apache.commons.logging.impl.SimpleLog log> = $r0;
+        $r1 = this.<org.apache.fop.servlet.FopServlet: org.apache.commons.logging.impl.SimpleLog log>;
+        virtualinvoke $r1.<org.apache.commons.logging.impl.SimpleLog: void setLevel(int)>(4);
+        $r2 = new org.apache.fop.servlet.ServletContextURIResolver;
+        $r3 = virtualinvoke this.<org.apache.fop.servlet.FopServlet: javax.servlet.ServletContext getServletContext()>();
+        specialinvoke $r2.<org.apache.fop.servlet.ServletContextURIResolver: void <init>(javax.servlet.ServletContext)>($r3);
+        this.<org.apache.fop.servlet.FopServlet: javax.xml.transform.URIResolver uriResolver> = $r2;
+        $r4 = staticinvoke <javax.xml.transform.TransformerFactory: javax.xml.transform.TransformerFactory newInstance()>();
+        this.<org.apache.fop.servlet.FopServlet: javax.xml.transform.TransformerFactory transFactory> = $r4;
+        $r5 = this.<org.apache.fop.servlet.FopServlet: javax.xml.transform.TransformerFactory transFactory>;
+        $r6 = this.<org.apache.fop.servlet.FopServlet: javax.xml.transform.URIResolver uriResolver>;
+        virtualinvoke $r5.<javax.xml.transform.TransformerFactory: void setURIResolver(javax.xml.transform.URIResolver)>($r6);
+        $r7 = staticinvoke <org.apache.fop.apps.FopFactory: org.apache.fop.apps.FopFactory newInstance()>();
+        this.<org.apache.fop.servlet.FopServlet: org.apache.fop.apps.FopFactory fopFactory> = $r7;
+        $r8 = this.<org.apache.fop.servlet.FopServlet: org.apache.fop.apps.FopFactory fopFactory>;
+        $r6 = this.<org.apache.fop.servlet.FopServlet: javax.xml.transform.URIResolver uriResolver>;
+        virtualinvoke $r8.<org.apache.fop.apps.FopFactory: void setURIResolver(javax.xml.transform.URIResolver)>($r6);
+        virtualinvoke this.<org.apache.fop.servlet.FopServlet: void configureFopFactory()>();
+        return;
+    }
+
+    protected void configureFopFactory()
+    {
+        org.apache.fop.servlet.FopServlet this;
+
+        this := @this: org.apache.fop.servlet.FopServlet;
+        return;
+    }
+
+    public void doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse) throws javax.servlet.ServletException
+    {
+        org.apache.fop.servlet.FopServlet this;
+        javax.servlet.http.HttpServletRequest request;
+        javax.servlet.http.HttpServletResponse response;
+        java.lang.String foParam, xmlParam, xsltParam;
+        java.io.PrintWriter out;
+        java.lang.Exception ex, $r0;
+        javax.servlet.ServletException $r1;
+
+        this := @this: org.apache.fop.servlet.FopServlet;
+        request := @parameter0: javax.servlet.http.HttpServletRequest;
+        response := @parameter1: javax.servlet.http.HttpServletResponse;
+
+     label0:
+        foParam = interfaceinvoke request.<javax.servlet.http.HttpServletRequest: java.lang.String getParameter(java.lang.String)>("fo");
+        xmlParam = interfaceinvoke request.<javax.servlet.http.HttpServletRequest: java.lang.String getParameter(java.lang.String)>("xml");
+        xsltParam = interfaceinvoke request.<javax.servlet.http.HttpServletRequest: java.lang.String getParameter(java.lang.String)>("xslt");
+        if foParam == null goto label1;
+
+        virtualinvoke this.<org.apache.fop.servlet.FopServlet: void renderFO(java.lang.String,javax.servlet.http.HttpServletResponse)>(foParam, response);
+        goto label3;
+
+     label1:
+        if xmlParam == null goto label2;
+
+        if xsltParam == null goto label2;
+
+        virtualinvoke this.<org.apache.fop.servlet.FopServlet: void renderXML(java.lang.String,java.lang.String,javax.servlet.http.HttpServletResponse)>(xmlParam, xsltParam, response);
+        goto label3;
+
+     label2:
+        interfaceinvoke response.<javax.servlet.http.HttpServletResponse: void setContentType(java.lang.String)>("text/html");
+        out = interfaceinvoke response.<javax.servlet.http.HttpServletResponse: java.io.PrintWriter getWriter()>();
+        virtualinvoke out.<java.io.PrintWriter: void println(java.lang.String)>("<html><head><title>Error</title></head>\n<body><h1>FopServlet Error</h1><h3>No \'fo\' request param given.</body></html>");
+
+     label3:
+        goto label5;
+
+     label4:
+        $r0 := @caughtexception;
+        ex = $r0;
+        $r1 = new javax.servlet.ServletException;
+        specialinvoke $r1.<javax.servlet.ServletException: void <init>(java.lang.Throwable)>(ex);
+        throw $r1;
+
+     label5:
+        return;
+
+        catch java.lang.Exception from label0 to label3 with label4;
+    }
+
+    protected javax.xml.transform.Source convertString2Source(java.lang.String)
+    {
+        org.apache.fop.servlet.FopServlet this;
+        java.lang.String param;
+        javax.xml.transform.Source src;
+        javax.xml.transform.TransformerException e, $r1;
+        javax.xml.transform.URIResolver $r0;
+        javax.xml.transform.stream.StreamSource $r2;
+        java.io.File $r3;
+
+        this := @this: org.apache.fop.servlet.FopServlet;
+        param := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = this.<org.apache.fop.servlet.FopServlet: javax.xml.transform.URIResolver uriResolver>;
+        src = interfaceinvoke $r0.<javax.xml.transform.URIResolver: javax.xml.transform.Source resolve(java.lang.String,java.lang.String)>(param, null);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r1 := @caughtexception;
+        e = $r1;
+        src = null;
+
+     label3:
+        if src != null goto label4;
+
+        $r2 = new javax.xml.transform.stream.StreamSource;
+        $r3 = new java.io.File;
+        specialinvoke $r3.<java.io.File: void <init>(java.lang.String)>(param);
+        specialinvoke $r2.<javax.xml.transform.stream.StreamSource: void <init>(java.io.File)>($r3);
+        src = $r2;
+
+     label4:
+        return src;
+
+        catch javax.xml.transform.TransformerException from label0 to label1 with label2;
+    }
+
+    private void sendPDF(byte[], javax.servlet.http.HttpServletResponse) throws java.io.IOException
+    {
+        org.apache.fop.servlet.FopServlet this;
+        byte[] content;
+        javax.servlet.http.HttpServletResponse response;
+        int $i0;
+        javax.servlet.ServletOutputStream $r0;
+
+        this := @this: org.apache.fop.servlet.FopServlet;
+        content := @parameter0: byte[];
+        response := @parameter1: javax.servlet.http.HttpServletResponse;
+        interfaceinvoke response.<javax.servlet.http.HttpServletResponse: void setContentType(java.lang.String)>("application/pdf");
+        $i0 = lengthof content;
+        interfaceinvoke response.<javax.servlet.http.HttpServletResponse: void setContentLength(int)>($i0);
+        $r0 = interfaceinvoke response.<javax.servlet.http.HttpServletResponse: javax.servlet.ServletOutputStream getOutputStream()>();
+        virtualinvoke $r0.<javax.servlet.ServletOutputStream: void write(byte[])>(content);
+        $r0 = interfaceinvoke response.<javax.servlet.http.HttpServletResponse: javax.servlet.ServletOutputStream getOutputStream()>();
+        virtualinvoke $r0.<javax.servlet.ServletOutputStream: void flush()>();
+        return;
+    }
+
+    protected void renderFO(java.lang.String, javax.servlet.http.HttpServletResponse) throws org.apache.fop.apps.FOPException, javax.xml.transform.TransformerException, java.io.IOException
+    {
+        org.apache.fop.servlet.FopServlet this;
+        java.lang.String fo;
+        javax.servlet.http.HttpServletResponse response;
+        javax.xml.transform.Source foSrc;
+        javax.xml.transform.Transformer transformer;
+        javax.xml.transform.TransformerFactory $r0;
+        javax.xml.transform.URIResolver $r1;
+
+        this := @this: org.apache.fop.servlet.FopServlet;
+        fo := @parameter0: java.lang.String;
+        response := @parameter1: javax.servlet.http.HttpServletResponse;
+        foSrc = virtualinvoke this.<org.apache.fop.servlet.FopServlet: javax.xml.transform.Source convertString2Source(java.lang.String)>(fo);
+        $r0 = this.<org.apache.fop.servlet.FopServlet: javax.xml.transform.TransformerFactory transFactory>;
+        transformer = virtualinvoke $r0.<javax.xml.transform.TransformerFactory: javax.xml.transform.Transformer newTransformer()>();
+        $r1 = this.<org.apache.fop.servlet.FopServlet: javax.xml.transform.URIResolver uriResolver>;
+        virtualinvoke transformer.<javax.xml.transform.Transformer: void setURIResolver(javax.xml.transform.URIResolver)>($r1);
+        virtualinvoke this.<org.apache.fop.servlet.FopServlet: void render(javax.xml.transform.Source,javax.xml.transform.Transformer,javax.servlet.http.HttpServletResponse)>(foSrc, transformer, response);
+        return;
+    }
+
+    protected void renderXML(java.lang.String, java.lang.String, javax.servlet.http.HttpServletResponse) throws org.apache.fop.apps.FOPException, javax.xml.transform.TransformerException, java.io.IOException
+    {
+        org.apache.fop.servlet.FopServlet this;
+        java.lang.String xml, xslt;
+        javax.servlet.http.HttpServletResponse response;
+        javax.xml.transform.Source xmlSrc, xsltSrc;
+        javax.xml.transform.Transformer transformer;
+        javax.xml.transform.TransformerFactory $r0;
+        javax.xml.transform.URIResolver $r1;
+
+        this := @this: org.apache.fop.servlet.FopServlet;
+        xml := @parameter0: java.lang.String;
+        xslt := @parameter1: java.lang.String;
+        response := @parameter2: javax.servlet.http.HttpServletResponse;
+        xmlSrc = virtualinvoke this.<org.apache.fop.servlet.FopServlet: javax.xml.transform.Source convertString2Source(java.lang.String)>(xml);
+        xsltSrc = virtualinvoke this.<org.apache.fop.servlet.FopServlet: javax.xml.transform.Source convertString2Source(java.lang.String)>(xslt);
+        $r0 = this.<org.apache.fop.servlet.FopServlet: javax.xml.transform.TransformerFactory transFactory>;
+        transformer = virtualinvoke $r0.<javax.xml.transform.TransformerFactory: javax.xml.transform.Transformer newTransformer(javax.xml.transform.Source)>(xsltSrc);
+        $r1 = this.<org.apache.fop.servlet.FopServlet: javax.xml.transform.URIResolver uriResolver>;
+        virtualinvoke transformer.<javax.xml.transform.Transformer: void setURIResolver(javax.xml.transform.URIResolver)>($r1);
+        virtualinvoke this.<org.apache.fop.servlet.FopServlet: void render(javax.xml.transform.Source,javax.xml.transform.Transformer,javax.servlet.http.HttpServletResponse)>(xmlSrc, transformer, response);
+        return;
+    }
+
+    protected void render(javax.xml.transform.Source, javax.xml.transform.Transformer, javax.servlet.http.HttpServletResponse) throws org.apache.fop.apps.FOPException, javax.xml.transform.TransformerException, java.io.IOException
+    {
+        org.apache.fop.servlet.FopServlet this;
+        javax.xml.transform.Source src;
+        javax.xml.transform.Transformer transformer;
+        javax.servlet.http.HttpServletResponse response;
+        org.apache.fop.apps.FOUserAgent foUserAgent;
+        org.apache.commons.io.output.ByteArrayOutputStream out, $r0;
+        org.apache.fop.apps.Fop fop;
+        javax.xml.transform.sax.SAXResult res, $r2;
+        org.apache.fop.apps.FopFactory $r1;
+        org.xml.sax.helpers.DefaultHandler $r3;
+        byte[] $r4;
+
+        this := @this: org.apache.fop.servlet.FopServlet;
+        src := @parameter0: javax.xml.transform.Source;
+        transformer := @parameter1: javax.xml.transform.Transformer;
+        response := @parameter2: javax.servlet.http.HttpServletResponse;
+        foUserAgent = virtualinvoke this.<org.apache.fop.servlet.FopServlet: org.apache.fop.apps.FOUserAgent getFOUserAgent()>();
+        $r0 = new org.apache.commons.io.output.ByteArrayOutputStream;
+        specialinvoke $r0.<org.apache.commons.io.output.ByteArrayOutputStream: void <init>()>();
+        out = $r0;
+        $r1 = this.<org.apache.fop.servlet.FopServlet: org.apache.fop.apps.FopFactory fopFactory>;
+        fop = virtualinvoke $r1.<org.apache.fop.apps.FopFactory: org.apache.fop.apps.Fop newFop(java.lang.String,org.apache.fop.apps.FOUserAgent,java.io.OutputStream)>("application/pdf", foUserAgent, out);
+        $r2 = new javax.xml.transform.sax.SAXResult;
+        $r3 = virtualinvoke fop.<org.apache.fop.apps.Fop: org.xml.sax.helpers.DefaultHandler getDefaultHandler()>();
+        specialinvoke $r2.<javax.xml.transform.sax.SAXResult: void <init>(org.xml.sax.ContentHandler)>($r3);
+        res = $r2;
+        virtualinvoke transformer.<javax.xml.transform.Transformer: void transform(javax.xml.transform.Source,javax.xml.transform.Result)>(src, res);
+        $r4 = virtualinvoke out.<org.apache.commons.io.output.ByteArrayOutputStream: byte[] toByteArray()>();
+        specialinvoke this.<org.apache.fop.servlet.FopServlet: void sendPDF(byte[],javax.servlet.http.HttpServletResponse)>($r4, response);
+        return;
+    }
+
+    protected org.apache.fop.apps.FOUserAgent getFOUserAgent()
+    {
+        org.apache.fop.servlet.FopServlet this;
+        org.apache.fop.apps.FOUserAgent userAgent;
+        org.apache.fop.apps.FopFactory $r0;
+
+        this := @this: org.apache.fop.servlet.FopServlet;
+        $r0 = this.<org.apache.fop.servlet.FopServlet: org.apache.fop.apps.FopFactory fopFactory>;
+        userAgent = virtualinvoke $r0.<org.apache.fop.apps.FopFactory: org.apache.fop.apps.FOUserAgent newFOUserAgent()>();
+        return userAgent;
+    }
+}

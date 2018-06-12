@@ -1,0 +1,301 @@
+public class org.apache.fop.fo.properties.FontShorthandProperty$Maker extends org.apache.fop.fo.properties.PropertyMaker
+{
+    private static final int[] PROP_IDS;
+
+    public void <init>(int)
+    {
+        org.apache.fop.fo.properties.FontShorthandProperty$Maker this;
+        int propId;
+
+        this := @this: org.apache.fop.fo.properties.FontShorthandProperty$Maker;
+        propId := @parameter0: int;
+        specialinvoke this.<org.apache.fop.fo.properties.PropertyMaker: void <init>(int)>(propId);
+        return;
+    }
+
+    public org.apache.fop.fo.properties.Property make(org.apache.fop.fo.PropertyList, java.lang.String, org.apache.fop.fo.FObj) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.properties.FontShorthandProperty$Maker this;
+        org.apache.fop.fo.PropertyList propertyList;
+        java.lang.String value, specVal, fontSize, lineHeight, val, $r1, $r6, $r13;
+        org.apache.fop.fo.FObj fo, $r11;
+        org.apache.fop.fo.properties.FontShorthandProperty $r0, newProp;
+        null_type prop, m, $n0;
+        int i, pos, spaceIndex, quoteIndex, fromIndex, toIndex, commaIndex, slashIndex, $i0, $i1, $i2;
+        boolean fontFamilyParsed, $z0;
+        org.apache.fop.fo.expr.PropertyException pe, $r4, $r10;
+        int[] $r2, $r3;
+        org.apache.fop.fo.properties.Property prop;
+        java.lang.StringBuffer $r5;
+        org.apache.fop.fo.properties.PropertyMaker m;
+        byte $b3;
+        java.util.List $r7;
+        java.lang.Object $r8;
+        org.apache.commons.logging.Log $r9;
+        org.xml.sax.Locator $r12;
+
+        this := @this: org.apache.fop.fo.properties.FontShorthandProperty$Maker;
+        propertyList := @parameter0: org.apache.fop.fo.PropertyList;
+        value := @parameter1: java.lang.String;
+        fo := @parameter2: org.apache.fop.fo.FObj;
+
+     label0:
+        $r0 = new org.apache.fop.fo.properties.FontShorthandProperty;
+        specialinvoke $r0.<org.apache.fop.fo.properties.FontShorthandProperty: void <init>()>();
+        newProp = $r0;
+        virtualinvoke newProp.<org.apache.fop.fo.properties.FontShorthandProperty: void setSpecifiedValue(java.lang.String)>(value);
+        specVal = value;
+        prop = null;
+        $r1 = "inherit";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(specVal);
+        if $z0 == 0 goto label3;
+
+        $r2 = <org.apache.fop.fo.properties.FontShorthandProperty$Maker: int[] PROP_IDS>;
+        i = lengthof $r2;
+
+     label1:
+        i = i + -1;
+        if i < 0 goto label2;
+
+        $r3 = <org.apache.fop.fo.properties.FontShorthandProperty$Maker: int[] PROP_IDS>;
+        $i0 = $r3[i];
+        prop = virtualinvoke propertyList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property getFromParent(int)>($i0);
+        staticinvoke <org.apache.fop.fo.properties.FontShorthandProperty: void access$000(org.apache.fop.fo.properties.FontShorthandProperty,org.apache.fop.fo.properties.Property,int)>(newProp, prop, i);
+        goto label1;
+
+     label2:
+        goto label27;
+
+     label3:
+        $r2 = <org.apache.fop.fo.properties.FontShorthandProperty$Maker: int[] PROP_IDS>;
+        pos = lengthof $r2;
+
+     label4:
+        pos = pos + -1;
+        if pos < 0 goto label5;
+
+        staticinvoke <org.apache.fop.fo.properties.FontShorthandProperty: void access$000(org.apache.fop.fo.properties.FontShorthandProperty,org.apache.fop.fo.properties.Property,int)>(newProp, null, pos);
+        goto label4;
+
+     label5:
+        prop = virtualinvoke this.<org.apache.fop.fo.properties.FontShorthandProperty$Maker: org.apache.fop.fo.properties.Property checkEnumValues(java.lang.String)>(specVal);
+        if prop != null goto label25;
+
+        spaceIndex = virtualinvoke value.<java.lang.String: int indexOf(int)>(32);
+        $i1 = virtualinvoke value.<java.lang.String: int indexOf(int)>(39);
+        if $i1 != -1 goto label6;
+
+        $i1 = virtualinvoke value.<java.lang.String: int indexOf(int)>(34);
+        goto label7;
+
+     label6:
+        $i1 = virtualinvoke value.<java.lang.String: int indexOf(int)>(39);
+
+     label7:
+        quoteIndex = $i1;
+        if spaceIndex == -1 goto label8;
+
+        if quoteIndex == -1 goto label9;
+
+        if spaceIndex <= quoteIndex goto label9;
+
+     label8:
+        $r4 = new org.apache.fop.fo.expr.PropertyException;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Invalid property value: font=\"");
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(value);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\"");
+        $r6 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r4.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>($r6);
+        throw $r4;
+
+     label9:
+        m = null;
+        fromIndex = spaceIndex + 1;
+        virtualinvoke specVal.<java.lang.String: int length()>();
+        fontFamilyParsed = 0;
+        commaIndex = virtualinvoke value.<java.lang.String: int indexOf(int)>(44);
+
+     label10:
+        if fontFamilyParsed != 0 goto label15;
+
+        if commaIndex != -1 goto label12;
+
+        if quoteIndex == -1 goto label11;
+
+        fromIndex = quoteIndex;
+
+     label11:
+        $r2 = <org.apache.fop.fo.properties.FontShorthandProperty$Maker: int[] PROP_IDS>;
+        $i1 = $r2[1];
+        m = staticinvoke <org.apache.fop.fo.FObj: org.apache.fop.fo.properties.PropertyMaker getPropertyMakerFor(int)>($i1);
+        $r6 = virtualinvoke specVal.<java.lang.String: java.lang.String substring(int)>(fromIndex);
+        prop = virtualinvoke m.<org.apache.fop.fo.properties.PropertyMaker: org.apache.fop.fo.properties.Property make(org.apache.fop.fo.PropertyList,java.lang.String,org.apache.fop.fo.FObj)>(propertyList, $r6, fo);
+        staticinvoke <org.apache.fop.fo.properties.FontShorthandProperty: void access$000(org.apache.fop.fo.properties.FontShorthandProperty,org.apache.fop.fo.properties.Property,int)>(newProp, prop, 1);
+        fontFamilyParsed = 1;
+        goto label10;
+
+     label12:
+        if quoteIndex == -1 goto label13;
+
+        if quoteIndex >= commaIndex goto label13;
+
+        fromIndex = quoteIndex;
+        quoteIndex = -1;
+        goto label14;
+
+     label13:
+        $i1 = virtualinvoke value.<java.lang.String: int lastIndexOf(int,int)>(32, commaIndex);
+        fromIndex = $i1 + 1;
+
+     label14:
+        commaIndex = -1;
+        goto label10;
+
+     label15:
+        toIndex = fromIndex - 1;
+        $i2 = toIndex - 1;
+        $i1 = virtualinvoke value.<java.lang.String: int lastIndexOf(int,int)>(32, $i2);
+        fromIndex = $i1 + 1;
+        value = virtualinvoke specVal.<java.lang.String: java.lang.String substring(int,int)>(fromIndex, toIndex);
+        slashIndex = virtualinvoke value.<java.lang.String: int indexOf(int)>(47);
+        $r1 = value;
+        $b3 = 0;
+        if slashIndex != -1 goto label16;
+
+        $i2 = virtualinvoke value.<java.lang.String: int length()>();
+        goto label17;
+
+     label16:
+        $i2 = slashIndex;
+
+     label17:
+        fontSize = virtualinvoke $r1.<java.lang.String: java.lang.String substring(int,int)>($b3, $i2);
+        $r2 = <org.apache.fop.fo.properties.FontShorthandProperty$Maker: int[] PROP_IDS>;
+        $i1 = $r2[0];
+        m = staticinvoke <org.apache.fop.fo.FObj: org.apache.fop.fo.properties.PropertyMaker getPropertyMakerFor(int)>($i1);
+        prop = virtualinvoke m.<org.apache.fop.fo.properties.PropertyMaker: org.apache.fop.fo.properties.Property make(org.apache.fop.fo.PropertyList,java.lang.String,org.apache.fop.fo.FObj)>(propertyList, fontSize, fo);
+        $r3 = <org.apache.fop.fo.properties.FontShorthandProperty$Maker: int[] PROP_IDS>;
+        $i0 = $r3[0];
+        virtualinvoke propertyList.<org.apache.fop.fo.PropertyList: void putExplicit(int,org.apache.fop.fo.properties.Property)>($i0, prop);
+        staticinvoke <org.apache.fop.fo.properties.FontShorthandProperty: void access$000(org.apache.fop.fo.properties.FontShorthandProperty,org.apache.fop.fo.properties.Property,int)>(newProp, prop, 0);
+        if slashIndex == -1 goto label18;
+
+        $i0 = slashIndex + 1;
+        lineHeight = virtualinvoke value.<java.lang.String: java.lang.String substring(int)>($i0);
+        $r2 = <org.apache.fop.fo.properties.FontShorthandProperty$Maker: int[] PROP_IDS>;
+        $i1 = $r2[2];
+        m = staticinvoke <org.apache.fop.fo.FObj: org.apache.fop.fo.properties.PropertyMaker getPropertyMakerFor(int)>($i1);
+        prop = virtualinvoke m.<org.apache.fop.fo.properties.PropertyMaker: org.apache.fop.fo.properties.Property make(org.apache.fop.fo.PropertyList,java.lang.String,org.apache.fop.fo.FObj)>(propertyList, lineHeight, fo);
+        staticinvoke <org.apache.fop.fo.properties.FontShorthandProperty: void access$000(org.apache.fop.fo.properties.FontShorthandProperty,org.apache.fop.fo.properties.Property,int)>(newProp, prop, 2);
+
+     label18:
+        if fromIndex == 0 goto label24;
+
+        toIndex = fromIndex - 1;
+        value = virtualinvoke specVal.<java.lang.String: java.lang.String substring(int,int)>(0, toIndex);
+        fromIndex = 0;
+        spaceIndex = virtualinvoke value.<java.lang.String: int indexOf(int)>(32);
+
+     label19:
+        if spaceIndex != -1 goto label20;
+
+        $i1 = virtualinvoke value.<java.lang.String: int length()>();
+        goto label21;
+
+     label20:
+        $i1 = spaceIndex;
+
+     label21:
+        toIndex = $i1;
+        val = virtualinvoke value.<java.lang.String: java.lang.String substring(int,int)>(fromIndex, toIndex);
+        i = 6;
+
+     label22:
+        i = i + -1;
+        if i < 3 goto label23;
+
+        $r7 = newProp.<org.apache.fop.fo.properties.FontShorthandProperty: java.util.List list>;
+        $r8 = interfaceinvoke $r7.<java.util.List: java.lang.Object get(int)>(i);
+        if $r8 != null goto label22;
+
+        $r2 = <org.apache.fop.fo.properties.FontShorthandProperty$Maker: int[] PROP_IDS>;
+        $i1 = $r2[i];
+        m = staticinvoke <org.apache.fop.fo.FObj: org.apache.fop.fo.properties.PropertyMaker getPropertyMakerFor(int)>($i1);
+        val = virtualinvoke m.<org.apache.fop.fo.properties.PropertyMaker: java.lang.String checkValueKeywords(java.lang.String)>(val);
+        prop = virtualinvoke m.<org.apache.fop.fo.properties.PropertyMaker: org.apache.fop.fo.properties.Property checkEnumValues(java.lang.String)>(val);
+        if prop == null goto label22;
+
+        staticinvoke <org.apache.fop.fo.properties.FontShorthandProperty: void access$000(org.apache.fop.fo.properties.FontShorthandProperty,org.apache.fop.fo.properties.Property,int)>(newProp, prop, i);
+        goto label22;
+
+     label23:
+        fromIndex = toIndex + 1;
+        spaceIndex = virtualinvoke value.<java.lang.String: int indexOf(int,int)>(32, fromIndex);
+        $i0 = virtualinvoke value.<java.lang.String: int length()>();
+        if toIndex != $i0 goto label19;
+
+     label24:
+        goto label27;
+
+     label25:
+        $r9 = <org.apache.fop.fo.properties.Property: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r9.<org.apache.commons.logging.Log: void warn(java.lang.Object)>("Enum values other than \"inherit\" not yet supported for the font shorthand.");
+        $n0 = null;
+
+     label26:
+        return $n0;
+
+     label27:
+        $r7 = newProp.<org.apache.fop.fo.properties.FontShorthandProperty: java.util.List list>;
+        $r8 = interfaceinvoke $r7.<java.util.List: java.lang.Object get(int)>(0);
+        if $r8 == null goto label28;
+
+        $r7 = newProp.<org.apache.fop.fo.properties.FontShorthandProperty: java.util.List list>;
+        $r8 = interfaceinvoke $r7.<java.util.List: java.lang.Object get(int)>(1);
+        if $r8 != null goto label29;
+
+     label28:
+        $r4 = new org.apache.fop.fo.expr.PropertyException;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Invalid property value: font-size and font-family are required for the font shorthand\nfont=\"");
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(value);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\"");
+        $r6 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r4.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>($r6);
+        throw $r4;
+
+     label29:
+        return newProp;
+
+     label30:
+        $r10 := @caughtexception;
+        pe = $r10;
+        $r11 = virtualinvoke propertyList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.FObj getFObj()>();
+        $r12 = virtualinvoke $r11.<org.apache.fop.fo.FObj: org.xml.sax.Locator getLocator()>();
+        virtualinvoke pe.<org.apache.fop.fo.expr.PropertyException: void setLocator(org.xml.sax.Locator)>($r12);
+        $r13 = virtualinvoke this.<org.apache.fop.fo.properties.FontShorthandProperty$Maker: java.lang.String getName()>();
+        virtualinvoke pe.<org.apache.fop.fo.expr.PropertyException: void setPropertyName(java.lang.String)>($r13);
+        throw pe;
+
+        catch org.apache.fop.fo.expr.PropertyException from label0 to label26 with label30;
+        catch org.apache.fop.fo.expr.PropertyException from label27 to label29 with label30;
+    }
+
+    static void <clinit>()
+    {
+        int[] $r0;
+
+        $r0 = newarray (int)[6];
+        $r0[0] = 94;
+        $r0[1] = 92;
+        $r0[2] = 131;
+        $r0[3] = 97;
+        $r0[4] = 98;
+        $r0[5] = 99;
+        <org.apache.fop.fo.properties.FontShorthandProperty$Maker: int[] PROP_IDS> = $r0;
+        return;
+    }
+}

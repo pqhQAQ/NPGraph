@@ -1,0 +1,86 @@
+public abstract class org.apache.fop.fo.pagination.RegionSE extends org.apache.fop.fo.pagination.SideRegion
+{
+
+    protected void <init>(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.pagination.RegionSE this;
+        org.apache.fop.fo.FONode parent;
+
+        this := @this: org.apache.fop.fo.pagination.RegionSE;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        specialinvoke this.<org.apache.fop.fo.pagination.SideRegion: void <init>(org.apache.fop.fo.FONode)>(parent);
+        return;
+    }
+
+    public void bind(org.apache.fop.fo.PropertyList) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.pagination.RegionSE this;
+        org.apache.fop.fo.PropertyList pList;
+
+        this := @this: org.apache.fop.fo.pagination.RegionSE;
+        pList := @parameter0: org.apache.fop.fo.PropertyList;
+        specialinvoke this.<org.apache.fop.fo.pagination.SideRegion: void bind(org.apache.fop.fo.PropertyList)>(pList);
+        return;
+    }
+
+    protected void adjustIPD(java.awt.Rectangle, int, org.apache.fop.datatypes.PercentBaseContext)
+    {
+        org.apache.fop.fo.pagination.RegionSE this;
+        java.awt.Rectangle vpRefRect;
+        int wm, offset, $i0, $i1;
+        org.apache.fop.datatypes.PercentBaseContext siblingContext;
+        org.apache.fop.fo.pagination.RegionBefore before;
+        org.apache.fop.fo.pagination.RegionAfter after;
+        org.apache.fop.fo.pagination.Region $r0;
+        org.apache.fop.datatypes.Length $r1, $r2;
+
+        this := @this: org.apache.fop.fo.pagination.RegionSE;
+        vpRefRect := @parameter0: java.awt.Rectangle;
+        wm := @parameter1: int;
+        siblingContext := @parameter2: org.apache.fop.datatypes.PercentBaseContext;
+        offset = 0;
+        $r0 = virtualinvoke this.<org.apache.fop.fo.pagination.RegionSE: org.apache.fop.fo.pagination.Region getSiblingRegion(int)>(35);
+        before = (org.apache.fop.fo.pagination.RegionBefore) $r0;
+        if before == null goto label0;
+
+        $i0 = virtualinvoke before.<org.apache.fop.fo.pagination.RegionBefore: int getPrecedence()>();
+        if $i0 != 149 goto label0;
+
+        $r1 = virtualinvoke before.<org.apache.fop.fo.pagination.RegionBefore: org.apache.fop.datatypes.Length getExtent()>();
+        offset = interfaceinvoke $r1.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(siblingContext);
+        virtualinvoke vpRefRect.<java.awt.Rectangle: void translate(int,int)>(0, offset);
+
+     label0:
+        $r0 = virtualinvoke this.<org.apache.fop.fo.pagination.RegionSE: org.apache.fop.fo.pagination.Region getSiblingRegion(int)>(34);
+        after = (org.apache.fop.fo.pagination.RegionAfter) $r0;
+        if after == null goto label1;
+
+        $i0 = virtualinvoke after.<org.apache.fop.fo.pagination.RegionAfter: int getPrecedence()>();
+        if $i0 != 149 goto label1;
+
+        $r2 = virtualinvoke after.<org.apache.fop.fo.pagination.RegionAfter: org.apache.fop.datatypes.Length getExtent()>();
+        $i1 = interfaceinvoke $r2.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(siblingContext);
+        offset = offset + $i1;
+
+     label1:
+        if offset <= 0 goto label4;
+
+        if wm == 79 goto label2;
+
+        if wm != 121 goto label3;
+
+     label2:
+        $i1 = vpRefRect.<java.awt.Rectangle: int height>;
+        $i1 = $i1 - offset;
+        vpRefRect.<java.awt.Rectangle: int height> = $i1;
+        goto label4;
+
+     label3:
+        $i1 = vpRefRect.<java.awt.Rectangle: int width>;
+        $i1 = $i1 - offset;
+        vpRefRect.<java.awt.Rectangle: int width> = $i1;
+
+     label4:
+        return;
+    }
+}

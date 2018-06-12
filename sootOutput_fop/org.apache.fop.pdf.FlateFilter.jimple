@@ -1,0 +1,218 @@
+public class org.apache.fop.pdf.FlateFilter extends org.apache.fop.pdf.PDFFilter
+{
+    public static final int PREDICTION_NONE;
+    public static final int PREDICTION_TIFF2;
+    public static final int PREDICTION_PNG_NONE;
+    public static final int PREDICTION_PNG_SUB;
+    public static final int PREDICTION_PNG_UP;
+    public static final int PREDICTION_PNG_AVG;
+    public static final int PREDICTION_PNG_PAETH;
+    public static final int PREDICTION_PNG_OPT;
+    private int predictor;
+    private int colors;
+    private int bitsPerComponent;
+    private int columns;
+
+    public void <init>()
+    {
+        org.apache.fop.pdf.FlateFilter this;
+
+        this := @this: org.apache.fop.pdf.FlateFilter;
+        specialinvoke this.<org.apache.fop.pdf.PDFFilter: void <init>()>();
+        this.<org.apache.fop.pdf.FlateFilter: int predictor> = 1;
+        return;
+    }
+
+    public java.lang.String getName()
+    {
+        org.apache.fop.pdf.FlateFilter this;
+
+        this := @this: org.apache.fop.pdf.FlateFilter;
+        return "/FlateDecode";
+    }
+
+    public org.apache.fop.pdf.PDFObject getDecodeParms()
+    {
+        org.apache.fop.pdf.FlateFilter this;
+        org.apache.fop.pdf.PDFDictionary dict, $r0;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.pdf.FlateFilter;
+        $i0 = this.<org.apache.fop.pdf.FlateFilter: int predictor>;
+        if $i0 <= 1 goto label3;
+
+        $r0 = new org.apache.fop.pdf.PDFDictionary;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFDictionary: void <init>()>();
+        dict = $r0;
+        $i1 = this.<org.apache.fop.pdf.FlateFilter: int predictor>;
+        virtualinvoke dict.<org.apache.fop.pdf.PDFDictionary: void put(java.lang.String,int)>("Predictor", $i1);
+        $i0 = this.<org.apache.fop.pdf.FlateFilter: int colors>;
+        if $i0 <= 1 goto label0;
+
+        $i1 = this.<org.apache.fop.pdf.FlateFilter: int colors>;
+        virtualinvoke dict.<org.apache.fop.pdf.PDFDictionary: void put(java.lang.String,int)>("Colors", $i1);
+
+     label0:
+        $i0 = this.<org.apache.fop.pdf.FlateFilter: int bitsPerComponent>;
+        if $i0 <= 0 goto label1;
+
+        $i0 = this.<org.apache.fop.pdf.FlateFilter: int bitsPerComponent>;
+        if $i0 == 8 goto label1;
+
+        $i1 = this.<org.apache.fop.pdf.FlateFilter: int bitsPerComponent>;
+        virtualinvoke dict.<org.apache.fop.pdf.PDFDictionary: void put(java.lang.String,int)>("BitsPerComponent", $i1);
+
+     label1:
+        $i0 = this.<org.apache.fop.pdf.FlateFilter: int columns>;
+        if $i0 <= 1 goto label2;
+
+        $i1 = this.<org.apache.fop.pdf.FlateFilter: int columns>;
+        virtualinvoke dict.<org.apache.fop.pdf.PDFDictionary: void put(java.lang.String,int)>("Columns", $i1);
+
+     label2:
+        return dict;
+
+     label3:
+        return null;
+    }
+
+    public void setPredictor(int) throws org.apache.fop.pdf.PDFFilterException
+    {
+        org.apache.fop.pdf.FlateFilter this;
+        int predictor;
+
+        this := @this: org.apache.fop.pdf.FlateFilter;
+        predictor := @parameter0: int;
+        this.<org.apache.fop.pdf.FlateFilter: int predictor> = predictor;
+        return;
+    }
+
+    public int getPredictor()
+    {
+        org.apache.fop.pdf.FlateFilter this;
+        int $i0;
+
+        this := @this: org.apache.fop.pdf.FlateFilter;
+        $i0 = this.<org.apache.fop.pdf.FlateFilter: int predictor>;
+        return $i0;
+    }
+
+    public void setColors(int) throws org.apache.fop.pdf.PDFFilterException
+    {
+        org.apache.fop.pdf.FlateFilter this;
+        int colors, $i0;
+        org.apache.fop.pdf.PDFFilterException $r0;
+
+        this := @this: org.apache.fop.pdf.FlateFilter;
+        colors := @parameter0: int;
+        $i0 = this.<org.apache.fop.pdf.FlateFilter: int predictor>;
+        if $i0 == 1 goto label0;
+
+        this.<org.apache.fop.pdf.FlateFilter: int colors> = colors;
+        goto label1;
+
+     label0:
+        $r0 = new org.apache.fop.pdf.PDFFilterException;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFFilterException: void <init>(java.lang.String)>("Prediction must not be PREDICTION_NONE in order to set Colors");
+        throw $r0;
+
+     label1:
+        return;
+    }
+
+    public int getColors()
+    {
+        org.apache.fop.pdf.FlateFilter this;
+        int $i0;
+
+        this := @this: org.apache.fop.pdf.FlateFilter;
+        $i0 = this.<org.apache.fop.pdf.FlateFilter: int colors>;
+        return $i0;
+    }
+
+    public void setBitsPerComponent(int) throws org.apache.fop.pdf.PDFFilterException
+    {
+        org.apache.fop.pdf.FlateFilter this;
+        int bits, $i0;
+        org.apache.fop.pdf.PDFFilterException $r0;
+
+        this := @this: org.apache.fop.pdf.FlateFilter;
+        bits := @parameter0: int;
+        $i0 = this.<org.apache.fop.pdf.FlateFilter: int predictor>;
+        if $i0 == 1 goto label0;
+
+        this.<org.apache.fop.pdf.FlateFilter: int bitsPerComponent> = bits;
+        goto label1;
+
+     label0:
+        $r0 = new org.apache.fop.pdf.PDFFilterException;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFFilterException: void <init>(java.lang.String)>("Prediction must not be PREDICTION_NONE in order to set bitsPerComponent");
+        throw $r0;
+
+     label1:
+        return;
+    }
+
+    public int getBitsPerComponent()
+    {
+        org.apache.fop.pdf.FlateFilter this;
+        int $i0;
+
+        this := @this: org.apache.fop.pdf.FlateFilter;
+        $i0 = this.<org.apache.fop.pdf.FlateFilter: int bitsPerComponent>;
+        return $i0;
+    }
+
+    public void setColumns(int) throws org.apache.fop.pdf.PDFFilterException
+    {
+        org.apache.fop.pdf.FlateFilter this;
+        int columns, $i0;
+        org.apache.fop.pdf.PDFFilterException $r0;
+
+        this := @this: org.apache.fop.pdf.FlateFilter;
+        columns := @parameter0: int;
+        $i0 = this.<org.apache.fop.pdf.FlateFilter: int predictor>;
+        if $i0 == 1 goto label0;
+
+        this.<org.apache.fop.pdf.FlateFilter: int columns> = columns;
+        goto label1;
+
+     label0:
+        $r0 = new org.apache.fop.pdf.PDFFilterException;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFFilterException: void <init>(java.lang.String)>("Prediction must not be PREDICTION_NONE in order to set Columns");
+        throw $r0;
+
+     label1:
+        return;
+    }
+
+    public int getColumns()
+    {
+        org.apache.fop.pdf.FlateFilter this;
+        int $i0;
+
+        this := @this: org.apache.fop.pdf.FlateFilter;
+        $i0 = this.<org.apache.fop.pdf.FlateFilter: int columns>;
+        return $i0;
+    }
+
+    public java.io.OutputStream applyFilter(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.pdf.FlateFilter this;
+        java.io.OutputStream out;
+        boolean $z0;
+        org.apache.xmlgraphics.util.io.FlateEncodeOutputStream $r0;
+
+        this := @this: org.apache.fop.pdf.FlateFilter;
+        out := @parameter0: java.io.OutputStream;
+        $z0 = virtualinvoke this.<org.apache.fop.pdf.FlateFilter: boolean isApplied()>();
+        if $z0 == 0 goto label0;
+
+        return out;
+
+     label0:
+        $r0 = new org.apache.xmlgraphics.util.io.FlateEncodeOutputStream;
+        specialinvoke $r0.<org.apache.xmlgraphics.util.io.FlateEncodeOutputStream: void <init>(java.io.OutputStream)>(out);
+        return $r0;
+    }
+}

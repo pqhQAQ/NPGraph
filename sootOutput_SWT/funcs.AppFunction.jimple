@@ -1,0 +1,226 @@
+public class funcs.AppFunction extends java.lang.Object
+{
+    private static java.lang.String appsAdd;
+    private static java.io.File appFile;
+    private static java.lang.String[] androidAppSuffix;
+    private static java.lang.String[] iosAppSuffix;
+    private java.util.ArrayList AllApps;
+    public java.util.ArrayList androidAppFiles;
+    public java.util.ArrayList iosAppFiles;
+    private static boolean isInit;
+    private static funcs.AppFunction af;
+
+    static void <clinit>()
+    {
+        java.lang.String $r0;
+        java.io.File $r1;
+        java.lang.String[] $r2;
+
+        <funcs.AppFunction: java.lang.String appsAdd> = "Apps/";
+        $r1 = new java.io.File;
+        $r0 = <funcs.AppFunction: java.lang.String appsAdd>;
+        specialinvoke $r1.<java.io.File: void <init>(java.lang.String)>($r0);
+        <funcs.AppFunction: java.io.File appFile> = $r1;
+        $r2 = newarray (java.lang.String)[1];
+        $r2[0] = ".apk";
+        <funcs.AppFunction: java.lang.String[] androidAppSuffix> = $r2;
+        $r2 = newarray (java.lang.String)[1];
+        $r2[0] = ".app";
+        <funcs.AppFunction: java.lang.String[] iosAppSuffix> = $r2;
+        <funcs.AppFunction: boolean isInit> = 0;
+        return;
+    }
+
+    public static funcs.AppFunction getAppFunction()
+    {
+        boolean $z0;
+        funcs.AppFunction $r0;
+
+        $z0 = <funcs.AppFunction: boolean isInit>;
+        if $z0 != 0 goto label0;
+
+        $r0 = new funcs.AppFunction;
+        specialinvoke $r0.<funcs.AppFunction: void <init>()>();
+        return $r0;
+
+     label0:
+        $r0 = <funcs.AppFunction: funcs.AppFunction af>;
+        return $r0;
+    }
+
+    public static void main(java.lang.String[])
+    {
+        java.lang.String[] args;
+        funcs.AppFunction $r0;
+        java.lang.Exception e, $r1;
+
+        args := @parameter0: java.lang.String[];
+
+     label0:
+        $r0 = new funcs.AppFunction;
+        specialinvoke $r0.<funcs.AppFunction: void <init>()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r1 := @caughtexception;
+        e = $r1;
+        virtualinvoke e.<java.lang.Exception: void printStackTrace()>();
+
+     label3:
+        return;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+
+    private void <init>()
+    {
+        funcs.AppFunction this;
+        java.util.ArrayList $r0;
+        java.io.File $r1;
+        boolean $z0;
+        funcs.AppFunction$checkNewFile $r2;
+
+        this := @this: funcs.AppFunction;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<funcs.AppFunction: java.util.ArrayList AllApps> = $r0;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<funcs.AppFunction: java.util.ArrayList androidAppFiles> = $r0;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<funcs.AppFunction: java.util.ArrayList iosAppFiles> = $r0;
+        $r1 = <funcs.AppFunction: java.io.File appFile>;
+        $z0 = virtualinvoke $r1.<java.io.File: boolean exists()>();
+        if $z0 != 0 goto label0;
+
+        $r1 = <funcs.AppFunction: java.io.File appFile>;
+        virtualinvoke $r1.<java.io.File: boolean mkdir()>();
+
+     label0:
+        $r2 = new funcs.AppFunction$checkNewFile;
+        specialinvoke $r2.<funcs.AppFunction$checkNewFile: void <init>(funcs.AppFunction)>(this);
+        virtualinvoke $r2.<funcs.AppFunction$checkNewFile: void start()>();
+        <funcs.AppFunction: funcs.AppFunction af> = this;
+        <funcs.AppFunction: boolean isInit> = 1;
+        return;
+    }
+
+    public int getIndex(java.lang.String)
+    {
+        funcs.AppFunction this;
+        java.lang.String appname, $r3;
+        int i, $i0;
+        java.util.ArrayList $r0, $r4;
+        java.lang.Object $r1;
+        data.MyApp $r2;
+        boolean $z0;
+
+        this := @this: funcs.AppFunction;
+        appname := @parameter0: java.lang.String;
+        i = 0;
+        goto label2;
+
+     label0:
+        $r0 = this.<funcs.AppFunction: java.util.ArrayList AllApps>;
+        $r1 = virtualinvoke $r0.<java.util.ArrayList: java.lang.Object get(int)>(i);
+        $r2 = (data.MyApp) $r1;
+        $r3 = $r2.<data.MyApp: java.lang.String appname>;
+        $z0 = virtualinvoke $r3.<java.lang.String: boolean equals(java.lang.Object)>(appname);
+        if $z0 == 0 goto label1;
+
+        return i;
+
+     label1:
+        i = i + 1;
+
+     label2:
+        $r4 = this.<funcs.AppFunction: java.util.ArrayList AllApps>;
+        $i0 = virtualinvoke $r4.<java.util.ArrayList: int size()>();
+        if i < $i0 goto label0;
+
+        return -1;
+    }
+
+    public data.MyApp getApp(java.lang.String)
+    {
+        funcs.AppFunction this;
+        java.lang.String appname, $r2;
+        java.util.Iterator l3;
+        data.MyApp a;
+        java.util.ArrayList $r0;
+        java.lang.Object $r1;
+        boolean $z0;
+
+        this := @this: funcs.AppFunction;
+        appname := @parameter0: java.lang.String;
+        $r0 = this.<funcs.AppFunction: java.util.ArrayList AllApps>;
+        l3 = virtualinvoke $r0.<java.util.ArrayList: java.util.Iterator iterator()>();
+        goto label1;
+
+     label0:
+        $r1 = interfaceinvoke l3.<java.util.Iterator: java.lang.Object next()>();
+        a = (data.MyApp) $r1;
+        $r2 = a.<data.MyApp: java.lang.String appname>;
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>(appname);
+        if $z0 == 0 goto label1;
+
+        return a;
+
+     label1:
+        $z0 = interfaceinvoke l3.<java.util.Iterator: boolean hasNext()>();
+        if $z0 != 0 goto label0;
+
+        return null;
+    }
+
+    public java.util.ArrayList getAllApps()
+    {
+        funcs.AppFunction this;
+        java.util.ArrayList $r0;
+        java.lang.Object $r1;
+
+        this := @this: funcs.AppFunction;
+        $r0 = this.<funcs.AppFunction: java.util.ArrayList AllApps>;
+        $r1 = virtualinvoke $r0.<java.util.ArrayList: java.lang.Object clone()>();
+        $r0 = (java.util.ArrayList) $r1;
+        return $r0;
+    }
+
+    static java.io.File access$0()
+    {
+        java.io.File $r0;
+
+        $r0 = <funcs.AppFunction: java.io.File appFile>;
+        return $r0;
+    }
+
+    static java.lang.String[] access$1()
+    {
+        java.lang.String[] $r0;
+
+        $r0 = <funcs.AppFunction: java.lang.String[] androidAppSuffix>;
+        return $r0;
+    }
+
+    static java.util.ArrayList access$2(funcs.AppFunction)
+    {
+        funcs.AppFunction l0;
+        java.util.ArrayList $r0;
+
+        l0 := @parameter0: funcs.AppFunction;
+        $r0 = l0.<funcs.AppFunction: java.util.ArrayList AllApps>;
+        return $r0;
+    }
+
+    static java.lang.String[] access$3()
+    {
+        java.lang.String[] $r0;
+
+        $r0 = <funcs.AppFunction: java.lang.String[] iosAppSuffix>;
+        return $r0;
+    }
+}

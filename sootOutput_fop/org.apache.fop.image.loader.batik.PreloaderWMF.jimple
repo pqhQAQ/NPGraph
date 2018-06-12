@@ -1,0 +1,137 @@
+public class org.apache.fop.image.loader.batik.PreloaderWMF extends org.apache.xmlgraphics.image.loader.impl.AbstractImagePreloader
+{
+    private static org.apache.commons.logging.Log log;
+    private boolean batikAvailable;
+    static java.lang.Class class$org$apache$fop$image$loader$batik$PreloaderWMF;
+
+    public void <init>()
+    {
+        org.apache.fop.image.loader.batik.PreloaderWMF this;
+
+        this := @this: org.apache.fop.image.loader.batik.PreloaderWMF;
+        specialinvoke this.<org.apache.xmlgraphics.image.loader.impl.AbstractImagePreloader: void <init>()>();
+        this.<org.apache.fop.image.loader.batik.PreloaderWMF: boolean batikAvailable> = 1;
+        return;
+    }
+
+    public org.apache.xmlgraphics.image.loader.ImageInfo preloadImage(java.lang.String, javax.xml.transform.Source, org.apache.xmlgraphics.image.loader.ImageContext) throws java.io.IOException
+    {
+        org.apache.fop.image.loader.batik.PreloaderWMF this;
+        java.lang.String uri;
+        javax.xml.transform.Source src;
+        org.apache.xmlgraphics.image.loader.ImageContext context;
+        org.apache.xmlgraphics.image.loader.ImageInfo info;
+        org.apache.fop.image.loader.batik.PreloaderWMF$Loader loader, $r0;
+        java.lang.NoClassDefFoundError e, $r1;
+        boolean $z0;
+        org.apache.commons.logging.Log $r2;
+
+        this := @this: org.apache.fop.image.loader.batik.PreloaderWMF;
+        uri := @parameter0: java.lang.String;
+        src := @parameter1: javax.xml.transform.Source;
+        context := @parameter2: org.apache.xmlgraphics.image.loader.ImageContext;
+        $z0 = staticinvoke <org.apache.xmlgraphics.image.loader.util.ImageUtil: boolean hasInputStream(javax.xml.transform.Source)>(src);
+        if $z0 != 0 goto label0;
+
+        return null;
+
+     label0:
+        info = null;
+        $z0 = this.<org.apache.fop.image.loader.batik.PreloaderWMF: boolean batikAvailable>;
+        if $z0 == 0 goto label4;
+
+     label1:
+        $r0 = new org.apache.fop.image.loader.batik.PreloaderWMF$Loader;
+        specialinvoke $r0.<org.apache.fop.image.loader.batik.PreloaderWMF$Loader: void <init>(org.apache.fop.image.loader.batik.PreloaderWMF)>(this);
+        loader = $r0;
+        info = staticinvoke <org.apache.fop.image.loader.batik.PreloaderWMF$Loader: org.apache.xmlgraphics.image.loader.ImageInfo access$000(org.apache.fop.image.loader.batik.PreloaderWMF$Loader,java.lang.String,javax.xml.transform.Source,org.apache.xmlgraphics.image.loader.ImageContext)>(loader, uri, src, context);
+
+     label2:
+        goto label4;
+
+     label3:
+        $r1 := @caughtexception;
+        e = $r1;
+        this.<org.apache.fop.image.loader.batik.PreloaderWMF: boolean batikAvailable> = 0;
+        $r2 = <org.apache.fop.image.loader.batik.PreloaderWMF: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void warn(java.lang.Object,java.lang.Throwable)>("Batik not in class path", e);
+        return null;
+
+     label4:
+        if info == null goto label5;
+
+        staticinvoke <org.apache.xmlgraphics.image.loader.util.ImageUtil: void closeQuietly(javax.xml.transform.Source)>(src);
+
+     label5:
+        return info;
+
+        catch java.lang.NoClassDefFoundError from label1 to label2 with label3;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static boolean access$102(org.apache.fop.image.loader.batik.PreloaderWMF, boolean)
+    {
+        org.apache.fop.image.loader.batik.PreloaderWMF x0;
+        boolean x1;
+
+        x0 := @parameter0: org.apache.fop.image.loader.batik.PreloaderWMF;
+        x1 := @parameter1: boolean;
+        x0.<org.apache.fop.image.loader.batik.PreloaderWMF: boolean batikAvailable> = x1;
+        return x1;
+    }
+
+    static org.apache.commons.logging.Log access$200()
+    {
+        org.apache.commons.logging.Log $r0;
+
+        $r0 = <org.apache.fop.image.loader.batik.PreloaderWMF: org.apache.commons.logging.Log log>;
+        return $r0;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.image.loader.batik.PreloaderWMF: java.lang.Class class$org$apache$fop$image$loader$batik$PreloaderWMF>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.image.loader.batik.PreloaderWMF: java.lang.Class class$(java.lang.String)>("org.apache.fop.image.loader.batik.PreloaderWMF");
+        <org.apache.fop.image.loader.batik.PreloaderWMF: java.lang.Class class$org$apache$fop$image$loader$batik$PreloaderWMF> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.image.loader.batik.PreloaderWMF: java.lang.Class class$org$apache$fop$image$loader$batik$PreloaderWMF>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.image.loader.batik.PreloaderWMF: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

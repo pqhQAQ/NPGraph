@@ -1,0 +1,2668 @@
+public class org.apache.fop.cli.CommandLineOptions extends java.lang.Object
+{
+    public static final int RENDER_NONE;
+    public static final int NOT_SET;
+    public static final int FO_INPUT;
+    public static final int XSLT_INPUT;
+    public static final int AREATREE_INPUT;
+    public static final int IMAGE_INPUT;
+    private java.lang.Boolean showConfiguration;
+    private java.lang.Boolean suppressLowLevelAreas;
+    private java.io.File userConfigFile;
+    private java.io.File fofile;
+    private java.io.File xsltfile;
+    private java.io.File xmlfile;
+    private java.io.File areatreefile;
+    private java.io.File imagefile;
+    private java.io.File outfile;
+    private int inputmode;
+    private java.lang.String outputmode;
+    private java.util.Map renderingOptions;
+    private int targetResolution;
+    private org.apache.fop.apps.FopFactory factory;
+    private org.apache.fop.apps.FOUserAgent foUserAgent;
+    private org.apache.fop.cli.InputHandler inputHandler;
+    private org.apache.commons.logging.Log log;
+    private java.util.Vector xsltParams;
+    private java.lang.String mimicRenderer;
+    static java.lang.Class class$org$apache$fop$util$CommandLineLogger;
+
+    public void <init>()
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.Boolean $r0;
+        org.apache.commons.logging.LogFactory logFactory;
+        java.util.HashMap $r1;
+        org.apache.fop.apps.FopFactory $r2;
+        java.lang.String $r3, $r5, $r7;
+        java.lang.Class $r6;
+        org.apache.commons.logging.Log $r8;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $r0 = <java.lang.Boolean: java.lang.Boolean FALSE>;
+        this.<org.apache.fop.cli.CommandLineOptions: java.lang.Boolean showConfiguration> = $r0;
+        $r0 = <java.lang.Boolean: java.lang.Boolean FALSE>;
+        this.<org.apache.fop.cli.CommandLineOptions: java.lang.Boolean suppressLowLevelAreas> = $r0;
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File userConfigFile> = null;
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File fofile> = null;
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File xsltfile> = null;
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File xmlfile> = null;
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File areatreefile> = null;
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File imagefile> = null;
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File outfile> = null;
+        this.<org.apache.fop.cli.CommandLineOptions: int inputmode> = 0;
+        this.<org.apache.fop.cli.CommandLineOptions: java.lang.String outputmode> = null;
+        $r1 = new java.util.HashMap;
+        specialinvoke $r1.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.cli.CommandLineOptions: java.util.Map renderingOptions> = $r1;
+        this.<org.apache.fop.cli.CommandLineOptions: int targetResolution> = 0;
+        $r2 = staticinvoke <org.apache.fop.apps.FopFactory: org.apache.fop.apps.FopFactory newInstance()>();
+        this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.apps.FopFactory factory> = $r2;
+        this.<org.apache.fop.cli.CommandLineOptions: java.util.Vector xsltParams> = null;
+        this.<org.apache.fop.cli.CommandLineOptions: java.lang.String mimicRenderer> = null;
+        logFactory = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.LogFactory getFactory()>();
+        $r3 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("org.apache.commons.logging.Log");
+        if $r3 != null goto label2;
+
+        $r5 = "org.apache.commons.logging.Log";
+        $r6 = <org.apache.fop.cli.CommandLineOptions: java.lang.Class class$org$apache$fop$util$CommandLineLogger>;
+        if $r6 != null goto label0;
+
+        $r6 = staticinvoke <org.apache.fop.cli.CommandLineOptions: java.lang.Class class$(java.lang.String)>("org.apache.fop.util.CommandLineLogger");
+        <org.apache.fop.cli.CommandLineOptions: java.lang.Class class$org$apache$fop$util$CommandLineLogger> = $r6;
+        goto label1;
+
+     label0:
+        $r6 = <org.apache.fop.cli.CommandLineOptions: java.lang.Class class$org$apache$fop$util$CommandLineLogger>;
+
+     label1:
+        $r7 = virtualinvoke $r6.<java.lang.Class: java.lang.String getName()>();
+        virtualinvoke logFactory.<org.apache.commons.logging.LogFactory: void setAttribute(java.lang.String,java.lang.Object)>($r5, $r7);
+        specialinvoke this.<org.apache.fop.cli.CommandLineOptions: void setLogLevel(java.lang.String)>("info");
+
+     label2:
+        $r8 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.String)>("FOP");
+        this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log> = $r8;
+        return;
+    }
+
+    public void parse(java.lang.String[]) throws org.apache.fop.apps.FOPException, java.io.IOException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        boolean optionsParsed, $z0;
+        org.apache.fop.apps.FOPException e, $r8;
+        org.apache.fop.render.awt.AWTRenderer renderer, $r15;
+        org.apache.fop.render.Renderer targetRenderer;
+        org.apache.fop.render.xml.XMLRenderer xmlRenderer, $r17;
+        java.lang.Boolean $r0, $r1;
+        org.apache.fop.apps.FopFactory $r2;
+        org.apache.fop.apps.FOUserAgent $r3, $r4;
+        java.util.Map $r5, $r6;
+        int $i0, $i1;
+        java.lang.String $r7, $r11, $r12;
+        java.io.FileNotFoundException $r9, e;
+        org.apache.fop.cli.InputHandler $r10;
+        java.lang.Exception $r13, e;
+        java.io.PrintStream $r14;
+        org.apache.fop.render.RendererFactory $r16;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        optionsParsed = 1;
+
+     label0:
+        optionsParsed = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: boolean parseOptions(java.lang.String[])>(args);
+        if optionsParsed == 0 goto label3;
+
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: java.lang.Boolean showConfiguration>;
+        $r1 = <java.lang.Boolean: java.lang.Boolean TRUE>;
+        if $r0 != $r1 goto label1;
+
+        specialinvoke this.<org.apache.fop.cli.CommandLineOptions: void dumpConfiguration()>();
+
+     label1:
+        specialinvoke this.<org.apache.fop.cli.CommandLineOptions: void checkSettings()>();
+        specialinvoke this.<org.apache.fop.cli.CommandLineOptions: void setUserConfig()>();
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.apps.FopFactory factory>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.apps.FopFactory: org.apache.fop.apps.FOUserAgent newFOUserAgent()>();
+        this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.apps.FOUserAgent foUserAgent> = $r3;
+        $r4 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.apps.FOUserAgent foUserAgent>;
+        $r5 = virtualinvoke $r4.<org.apache.fop.apps.FOUserAgent: java.util.Map getRendererOptions()>();
+        $r6 = this.<org.apache.fop.cli.CommandLineOptions: java.util.Map renderingOptions>;
+        interfaceinvoke $r5.<java.util.Map: void putAll(java.util.Map)>($r6);
+        $i0 = this.<org.apache.fop.cli.CommandLineOptions: int targetResolution>;
+        if $i0 == 0 goto label2;
+
+        $r4 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.apps.FOUserAgent foUserAgent>;
+        $i1 = this.<org.apache.fop.cli.CommandLineOptions: int targetResolution>;
+        virtualinvoke $r4.<org.apache.fop.apps.FOUserAgent: void setTargetResolution(int)>($i1);
+
+     label2:
+        $r7 = virtualinvoke this.<org.apache.fop.cli.CommandLineOptions: java.lang.String getOutputFormat()>();
+        specialinvoke this.<org.apache.fop.cli.CommandLineOptions: void addXSLTParameter(java.lang.String,java.lang.String)>("fop-output-format", $r7);
+        $r7 = staticinvoke <org.apache.fop.Version: java.lang.String getVersion()>();
+        specialinvoke this.<org.apache.fop.cli.CommandLineOptions: void addXSLTParameter(java.lang.String,java.lang.String)>("fop-version", $r7);
+
+     label3:
+        goto label6;
+
+     label4:
+        $r8 := @caughtexception;
+        e = $r8;
+        staticinvoke <org.apache.fop.cli.CommandLineOptions: void printUsage()>();
+        throw e;
+
+     label5:
+        $r9 := @caughtexception;
+        e = $r9;
+        staticinvoke <org.apache.fop.cli.CommandLineOptions: void printUsage()>();
+        throw e;
+
+     label6:
+        $r10 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.cli.InputHandler createInputHandler()>();
+        this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.cli.InputHandler inputHandler> = $r10;
+        $r11 = "application/X-fop-awt-preview";
+        $r12 = this.<org.apache.fop.cli.CommandLineOptions: java.lang.String outputmode>;
+        $z0 = virtualinvoke $r11.<java.lang.String: boolean equals(java.lang.Object)>($r12);
+        if $z0 == 0 goto label11;
+
+     label7:
+        $r11 = staticinvoke <javax.swing.UIManager: java.lang.String getSystemLookAndFeelClassName()>();
+        staticinvoke <javax.swing.UIManager: void setLookAndFeel(java.lang.String)>($r11);
+
+     label8:
+        goto label10;
+
+     label9:
+        $r13 := @caughtexception;
+        e = $r13;
+        $r14 = <java.lang.System: java.io.PrintStream err>;
+        virtualinvoke $r14.<java.io.PrintStream: void println(java.lang.String)>("Couldn\'t set system look & feel!");
+
+     label10:
+        $r15 = new org.apache.fop.render.awt.AWTRenderer;
+        specialinvoke $r15.<org.apache.fop.render.awt.AWTRenderer: void <init>(boolean)>(1);
+        renderer = $r15;
+        $r10 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.cli.InputHandler inputHandler>;
+        virtualinvoke renderer.<org.apache.fop.render.awt.AWTRenderer: void setRenderable(org.apache.fop.render.awt.viewer.Renderable)>($r10);
+        $r3 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.apps.FOUserAgent foUserAgent>;
+        virtualinvoke renderer.<org.apache.fop.render.awt.AWTRenderer: void setUserAgent(org.apache.fop.apps.FOUserAgent)>($r3);
+        $r4 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.apps.FOUserAgent foUserAgent>;
+        virtualinvoke $r4.<org.apache.fop.apps.FOUserAgent: void setRendererOverride(org.apache.fop.render.Renderer)>(renderer);
+        goto label12;
+
+     label11:
+        $r11 = "application/X-fop-areatree";
+        $r12 = this.<org.apache.fop.cli.CommandLineOptions: java.lang.String outputmode>;
+        $z0 = virtualinvoke $r11.<java.lang.String: boolean equals(java.lang.Object)>($r12);
+        if $z0 == 0 goto label12;
+
+        $r11 = this.<org.apache.fop.cli.CommandLineOptions: java.lang.String mimicRenderer>;
+        if $r11 == null goto label12;
+
+        $r4 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.apps.FOUserAgent foUserAgent>;
+        $r16 = virtualinvoke $r4.<org.apache.fop.apps.FOUserAgent: org.apache.fop.render.RendererFactory getRendererFactory()>();
+        $r3 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.apps.FOUserAgent foUserAgent>;
+        $r7 = this.<org.apache.fop.cli.CommandLineOptions: java.lang.String mimicRenderer>;
+        targetRenderer = virtualinvoke $r16.<org.apache.fop.render.RendererFactory: org.apache.fop.render.Renderer createRenderer(org.apache.fop.apps.FOUserAgent,java.lang.String)>($r3, $r7);
+        $r17 = new org.apache.fop.render.xml.XMLRenderer;
+        specialinvoke $r17.<org.apache.fop.render.xml.XMLRenderer: void <init>()>();
+        xmlRenderer = $r17;
+        $r3 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.apps.FOUserAgent foUserAgent>;
+        virtualinvoke xmlRenderer.<org.apache.fop.render.xml.XMLRenderer: void setUserAgent(org.apache.fop.apps.FOUserAgent)>($r3);
+        virtualinvoke xmlRenderer.<org.apache.fop.render.xml.XMLRenderer: void mimicRenderer(org.apache.fop.render.Renderer)>(targetRenderer);
+        $r4 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.apps.FOUserAgent foUserAgent>;
+        virtualinvoke $r4.<org.apache.fop.apps.FOUserAgent: void setRendererOverride(org.apache.fop.render.Renderer)>(xmlRenderer);
+
+     label12:
+        return;
+
+        catch org.apache.fop.apps.FOPException from label0 to label3 with label4;
+        catch java.io.FileNotFoundException from label0 to label3 with label5;
+        catch java.lang.Exception from label7 to label8 with label9;
+    }
+
+    public org.apache.fop.cli.InputHandler getInputHandler()
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        org.apache.fop.cli.InputHandler $r0;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.cli.InputHandler inputHandler>;
+        return $r0;
+    }
+
+    public org.apache.commons.logging.Log getLogger()
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        org.apache.commons.logging.Log $r0;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        return $r0;
+    }
+
+    private void addXSLTParameter(java.lang.String, java.lang.String)
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String name, value;
+        java.util.Vector $r0, $r1;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        name := @parameter0: java.lang.String;
+        value := @parameter1: java.lang.String;
+        $r1 = this.<org.apache.fop.cli.CommandLineOptions: java.util.Vector xsltParams>;
+        if $r1 != null goto label0;
+
+        $r0 = new java.util.Vector;
+        specialinvoke $r0.<java.util.Vector: void <init>()>();
+        this.<org.apache.fop.cli.CommandLineOptions: java.util.Vector xsltParams> = $r0;
+
+     label0:
+        $r1 = this.<org.apache.fop.cli.CommandLineOptions: java.util.Vector xsltParams>;
+        virtualinvoke $r1.<java.util.Vector: void addElement(java.lang.Object)>(name);
+        $r1 = this.<org.apache.fop.cli.CommandLineOptions: java.util.Vector xsltParams>;
+        virtualinvoke $r1.<java.util.Vector: void addElement(java.lang.Object)>(value);
+        return;
+    }
+
+    private boolean parseOptions(java.lang.String[]) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i, $i0, $i1;
+        java.lang.String name, expression, $r0, $r5, $r6;
+        boolean $z0;
+        java.lang.Boolean $r1;
+        org.apache.fop.apps.FopFactory $r2;
+        char $c2;
+        java.io.PrintStream $r3;
+        java.lang.StringBuffer $r4;
+        org.apache.fop.apps.FOPException $r7;
+        org.apache.fop.pdf.PDFEncryptionParams $r8;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i = 0;
+
+     label0:
+        $i0 = lengthof args;
+        if i >= $i0 goto label44;
+
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-x");
+        if $z0 != 0 goto label1;
+
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("--dump-config");
+        if $z0 == 0 goto label2;
+
+     label1:
+        $r1 = <java.lang.Boolean: java.lang.Boolean TRUE>;
+        this.<org.apache.fop.cli.CommandLineOptions: java.lang.Boolean showConfiguration> = $r1;
+        goto label43;
+
+     label2:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-c");
+        if $z0 == 0 goto label3;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parseConfigurationOption(java.lang.String[],int)>(args, i);
+        i = i + $i0;
+        goto label43;
+
+     label3:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-l");
+        if $z0 == 0 goto label4;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parseLanguageOption(java.lang.String[],int)>(args, i);
+        i = i + $i0;
+        goto label43;
+
+     label4:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-s");
+        if $z0 == 0 goto label5;
+
+        $r1 = <java.lang.Boolean: java.lang.Boolean TRUE>;
+        this.<org.apache.fop.cli.CommandLineOptions: java.lang.Boolean suppressLowLevelAreas> = $r1;
+        goto label43;
+
+     label5:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-d");
+        if $z0 == 0 goto label6;
+
+        specialinvoke this.<org.apache.fop.cli.CommandLineOptions: void setLogOption(java.lang.String,java.lang.String)>("debug", "debug");
+        goto label43;
+
+     label6:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-r");
+        if $z0 == 0 goto label7;
+
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.apps.FopFactory factory>;
+        virtualinvoke $r2.<org.apache.fop.apps.FopFactory: void setStrictValidation(boolean)>(0);
+        goto label43;
+
+     label7:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-dpi");
+        if $z0 == 0 goto label8;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parseResolution(java.lang.String[],int)>(args, i);
+        i = i + $i0;
+        goto label43;
+
+     label8:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-q");
+        if $z0 != 0 goto label9;
+
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("--quiet");
+        if $z0 == 0 goto label10;
+
+     label9:
+        specialinvoke this.<org.apache.fop.cli.CommandLineOptions: void setLogOption(java.lang.String,java.lang.String)>("quiet", "error");
+        goto label43;
+
+     label10:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-fo");
+        if $z0 == 0 goto label11;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parseFOInputOption(java.lang.String[],int)>(args, i);
+        i = i + $i0;
+        goto label43;
+
+     label11:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-xsl");
+        if $z0 == 0 goto label12;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parseXSLInputOption(java.lang.String[],int)>(args, i);
+        i = i + $i0;
+        goto label43;
+
+     label12:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-xml");
+        if $z0 == 0 goto label13;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parseXMLInputOption(java.lang.String[],int)>(args, i);
+        i = i + $i0;
+        goto label43;
+
+     label13:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-atin");
+        if $z0 == 0 goto label14;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parseAreaTreeInputOption(java.lang.String[],int)>(args, i);
+        i = i + $i0;
+        goto label43;
+
+     label14:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-imagein");
+        if $z0 == 0 goto label15;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parseImageInputOption(java.lang.String[],int)>(args, i);
+        i = i + $i0;
+        goto label43;
+
+     label15:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-awt");
+        if $z0 == 0 goto label16;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parseAWTOutputOption(java.lang.String[],int)>(args, i);
+        i = i + $i0;
+        goto label43;
+
+     label16:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-pdf");
+        if $z0 == 0 goto label17;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parsePDFOutputOption(java.lang.String[],int,java.lang.String)>(args, i, null);
+        i = i + $i0;
+        goto label43;
+
+     label17:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-pdfa1b");
+        if $z0 == 0 goto label18;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parsePDFOutputOption(java.lang.String[],int,java.lang.String)>(args, i, "PDF/A-1b");
+        i = i + $i0;
+        goto label43;
+
+     label18:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-mif");
+        if $z0 == 0 goto label19;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parseMIFOutputOption(java.lang.String[],int)>(args, i);
+        i = i + $i0;
+        goto label43;
+
+     label19:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-rtf");
+        if $z0 == 0 goto label20;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parseRTFOutputOption(java.lang.String[],int)>(args, i);
+        i = i + $i0;
+        goto label43;
+
+     label20:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-tiff");
+        if $z0 == 0 goto label21;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parseTIFFOutputOption(java.lang.String[],int)>(args, i);
+        i = i + $i0;
+        goto label43;
+
+     label21:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-png");
+        if $z0 == 0 goto label22;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parsePNGOutputOption(java.lang.String[],int)>(args, i);
+        i = i + $i0;
+        goto label43;
+
+     label22:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-print");
+        if $z0 == 0 goto label23;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parsePrintOutputOption(java.lang.String[],int)>(args, i);
+        i = i + $i0;
+        $i1 = i + 1;
+        $i0 = lengthof args;
+        if $i1 >= $i0 goto label43;
+
+        $i0 = i + 1;
+        $r0 = args[$i0];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("help");
+        if $z0 == 0 goto label43;
+
+        specialinvoke this.<org.apache.fop.cli.CommandLineOptions: void printUsagePrintOutput()>();
+        return 0;
+
+     label23:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-pcl");
+        if $z0 == 0 goto label24;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parsePCLOutputOption(java.lang.String[],int)>(args, i);
+        i = i + $i0;
+        goto label43;
+
+     label24:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-ps");
+        if $z0 == 0 goto label25;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parsePostscriptOutputOption(java.lang.String[],int)>(args, i);
+        i = i + $i0;
+        goto label43;
+
+     label25:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-txt");
+        if $z0 == 0 goto label26;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parseTextOutputOption(java.lang.String[],int)>(args, i);
+        i = i + $i0;
+        goto label43;
+
+     label26:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-svg");
+        if $z0 == 0 goto label27;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parseSVGOutputOption(java.lang.String[],int)>(args, i);
+        i = i + $i0;
+        goto label43;
+
+     label27:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-afp");
+        if $z0 == 0 goto label28;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parseAFPOutputOption(java.lang.String[],int)>(args, i);
+        i = i + $i0;
+        goto label43;
+
+     label28:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-foout");
+        if $z0 == 0 goto label29;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parseFOOutputOption(java.lang.String[],int)>(args, i);
+        i = i + $i0;
+        goto label43;
+
+     label29:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-out");
+        if $z0 == 0 goto label30;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parseCustomOutputOption(java.lang.String[],int)>(args, i);
+        i = i + $i0;
+        goto label43;
+
+     label30:
+        $r0 = args[i];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 == 45 goto label31;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parseUnknownOption(java.lang.String[],int)>(args, i);
+        i = i + $i0;
+        goto label43;
+
+     label31:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-at");
+        if $z0 == 0 goto label32;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parseAreaTreeOption(java.lang.String[],int)>(args, i);
+        i = i + $i0;
+        goto label43;
+
+     label32:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-v");
+        if $z0 == 0 goto label33;
+
+        $r3 = <java.lang.System: java.io.PrintStream out>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("FOP Version ");
+        $r5 = staticinvoke <org.apache.fop.Version: java.lang.String getVersion()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r6 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<java.io.PrintStream: void println(java.lang.String)>($r6);
+        goto label43;
+
+     label33:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-param");
+        if $z0 == 0 goto label35;
+
+        $i1 = i + 2;
+        $i0 = lengthof args;
+        if $i1 >= $i0 goto label34;
+
+        i = i + 1;
+        name = args[i];
+        i = i + 1;
+        expression = args[i];
+        specialinvoke this.<org.apache.fop.cli.CommandLineOptions: void addXSLTParameter(java.lang.String,java.lang.String)>(name, expression);
+        goto label43;
+
+     label34:
+        $r7 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r7.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("invalid param usage: use -param <name> <value>");
+        throw $r7;
+
+     label35:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-o");
+        if $z0 == 0 goto label36;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parsePDFOwnerPassword(java.lang.String[],int)>(args, i);
+        i = i + $i0;
+        goto label43;
+
+     label36:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-u");
+        if $z0 == 0 goto label37;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parsePDFUserPassword(java.lang.String[],int)>(args, i);
+        i = i + $i0;
+        goto label43;
+
+     label37:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-pdfprofile");
+        if $z0 == 0 goto label38;
+
+        $i0 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: int parsePDFProfile(java.lang.String[],int)>(args, i);
+        i = i + $i0;
+        goto label43;
+
+     label38:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-noprint");
+        if $z0 == 0 goto label39;
+
+        $r8 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.pdf.PDFEncryptionParams getPDFEncryptionParams()>();
+        virtualinvoke $r8.<org.apache.fop.pdf.PDFEncryptionParams: void setAllowPrint(boolean)>(0);
+        goto label43;
+
+     label39:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-nocopy");
+        if $z0 == 0 goto label40;
+
+        $r8 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.pdf.PDFEncryptionParams getPDFEncryptionParams()>();
+        virtualinvoke $r8.<org.apache.fop.pdf.PDFEncryptionParams: void setAllowCopyContent(boolean)>(0);
+        goto label43;
+
+     label40:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-noedit");
+        if $z0 == 0 goto label41;
+
+        $r8 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.pdf.PDFEncryptionParams getPDFEncryptionParams()>();
+        virtualinvoke $r8.<org.apache.fop.pdf.PDFEncryptionParams: void setAllowEditContent(boolean)>(0);
+        goto label43;
+
+     label41:
+        $r0 = args[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("-noannotations");
+        if $z0 == 0 goto label42;
+
+        $r8 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.pdf.PDFEncryptionParams getPDFEncryptionParams()>();
+        virtualinvoke $r8.<org.apache.fop.pdf.PDFEncryptionParams: void setAllowEditAnnotations(boolean)>(0);
+        goto label43;
+
+     label42:
+        staticinvoke <org.apache.fop.cli.CommandLineOptions: void printUsage()>();
+        return 0;
+
+     label43:
+        i = i + 1;
+        goto label0;
+
+     label44:
+        return 1;
+    }
+
+    private int parseConfigurationOption(java.lang.String[], int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i, $i0, $i1, $i3;
+        java.lang.String $r0, $r3;
+        char $c2;
+        org.apache.fop.apps.FOPException $r1;
+        java.io.File $r2;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        $i0 = i + 1;
+        $i1 = lengthof args;
+        if $i0 == $i1 goto label0;
+
+        $i1 = i + 1;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 != 45 goto label1;
+
+     label0:
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("if you use \'-c\', you must specify the name of the configuration file");
+        throw $r1;
+
+     label1:
+        $r2 = new java.io.File;
+        $i3 = i + 1;
+        $r3 = args[$i3];
+        specialinvoke $r2.<java.io.File: void <init>(java.lang.String)>($r3);
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File userConfigFile> = $r2;
+        return 1;
+    }
+
+    private int parseLanguageOption(java.lang.String[], int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i, $i0, $i1, $i3;
+        java.lang.String $r0, $r3;
+        char $c2;
+        org.apache.fop.apps.FOPException $r1;
+        java.util.Locale $r2;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        $i0 = i + 1;
+        $i1 = lengthof args;
+        if $i0 == $i1 goto label0;
+
+        $i1 = i + 1;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 != 45 goto label1;
+
+     label0:
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("if you use \'-l\', you must specify a language");
+        throw $r1;
+
+     label1:
+        $r2 = new java.util.Locale;
+        $i3 = i + 1;
+        $r3 = args[$i3];
+        specialinvoke $r2.<java.util.Locale: void <init>(java.lang.String,java.lang.String)>($r3, "");
+        staticinvoke <java.util.Locale: void setDefault(java.util.Locale)>($r2);
+        return 1;
+    }
+
+    private int parseResolution(java.lang.String[], int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i, $i0, $i1, $i3;
+        java.lang.String $r0, $r2;
+        char $c2;
+        org.apache.fop.apps.FOPException $r1;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        $i0 = i + 1;
+        $i1 = lengthof args;
+        if $i0 == $i1 goto label0;
+
+        $i1 = i + 1;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 != 45 goto label1;
+
+     label0:
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("if you use \'-dpi\', you must specify a resolution (dots per inch)");
+        throw $r1;
+
+     label1:
+        $i3 = i + 1;
+        $r2 = args[$i3];
+        $i1 = staticinvoke <java.lang.Integer: int parseInt(java.lang.String)>($r2);
+        this.<org.apache.fop.cli.CommandLineOptions: int targetResolution> = $i1;
+        return 1;
+    }
+
+    private int parseFOInputOption(java.lang.String[], int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i, $i0, $i1, $i3;
+        java.lang.String $r0, $r3;
+        char $c2;
+        org.apache.fop.apps.FOPException $r1;
+        java.io.File $r2;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        this.<org.apache.fop.cli.CommandLineOptions: int inputmode> = 1;
+        $i0 = i + 1;
+        $i1 = lengthof args;
+        if $i0 == $i1 goto label0;
+
+        $i1 = i + 1;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 != 45 goto label1;
+
+     label0:
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("you must specify the fo file for the \'-fo\' option");
+        throw $r1;
+
+     label1:
+        $r2 = new java.io.File;
+        $i3 = i + 1;
+        $r3 = args[$i3];
+        specialinvoke $r2.<java.io.File: void <init>(java.lang.String)>($r3);
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File fofile> = $r2;
+        return 1;
+    }
+
+    private int parseXSLInputOption(java.lang.String[], int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i, $i0, $i1, $i3;
+        java.lang.String $r0, $r3;
+        char $c2;
+        org.apache.fop.apps.FOPException $r1;
+        java.io.File $r2;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        this.<org.apache.fop.cli.CommandLineOptions: int inputmode> = 2;
+        $i0 = i + 1;
+        $i1 = lengthof args;
+        if $i0 == $i1 goto label0;
+
+        $i1 = i + 1;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 != 45 goto label1;
+
+     label0:
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("you must specify the stylesheet file for the \'-xsl\' option");
+        throw $r1;
+
+     label1:
+        $r2 = new java.io.File;
+        $i3 = i + 1;
+        $r3 = args[$i3];
+        specialinvoke $r2.<java.io.File: void <init>(java.lang.String)>($r3);
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File xsltfile> = $r2;
+        return 1;
+    }
+
+    private int parseXMLInputOption(java.lang.String[], int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i, $i0, $i1, $i3;
+        java.lang.String $r0, $r3;
+        char $c2;
+        org.apache.fop.apps.FOPException $r1;
+        java.io.File $r2;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        this.<org.apache.fop.cli.CommandLineOptions: int inputmode> = 2;
+        $i0 = i + 1;
+        $i1 = lengthof args;
+        if $i0 == $i1 goto label0;
+
+        $i1 = i + 1;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 != 45 goto label1;
+
+     label0:
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("you must specify the input file for the \'-xml\' option");
+        throw $r1;
+
+     label1:
+        $r2 = new java.io.File;
+        $i3 = i + 1;
+        $r3 = args[$i3];
+        specialinvoke $r2.<java.io.File: void <init>(java.lang.String)>($r3);
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File xmlfile> = $r2;
+        return 1;
+    }
+
+    private int parseAWTOutputOption(java.lang.String[], int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        specialinvoke this.<org.apache.fop.cli.CommandLineOptions: void setOutputMode(java.lang.String)>("application/X-fop-awt-preview");
+        return 0;
+    }
+
+    private int parsePDFOutputOption(java.lang.String[], int, java.lang.String) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i, $i0, $i1, $i3;
+        java.lang.String pdfAMode, $r0, $r3;
+        char $c2;
+        org.apache.fop.apps.FOPException $r1;
+        java.io.File $r2;
+        java.util.Map $r4;
+        java.lang.Object $r5;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        pdfAMode := @parameter2: java.lang.String;
+        specialinvoke this.<org.apache.fop.cli.CommandLineOptions: void setOutputMode(java.lang.String)>("application/pdf");
+        $i0 = i + 1;
+        $i1 = lengthof args;
+        if $i0 == $i1 goto label0;
+
+        $i1 = i + 1;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 != 45 goto label1;
+
+     label0:
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("you must specify the PDF output file");
+        throw $r1;
+
+     label1:
+        $r2 = new java.io.File;
+        $i3 = i + 1;
+        $r3 = args[$i3];
+        specialinvoke $r2.<java.io.File: void <init>(java.lang.String)>($r3);
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File outfile> = $r2;
+        if pdfAMode == null goto label3;
+
+        $r4 = this.<org.apache.fop.cli.CommandLineOptions: java.util.Map renderingOptions>;
+        $r5 = interfaceinvoke $r4.<java.util.Map: java.lang.Object get(java.lang.Object)>("pdf-a-mode");
+        if $r5 == null goto label2;
+
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("PDF/A mode already set");
+        throw $r1;
+
+     label2:
+        $r4 = this.<org.apache.fop.cli.CommandLineOptions: java.util.Map renderingOptions>;
+        interfaceinvoke $r4.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("pdf-a-mode", pdfAMode);
+
+     label3:
+        return 1;
+    }
+
+    private int parseMIFOutputOption(java.lang.String[], int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i, $i0, $i1, $i3;
+        java.lang.String $r0, $r3;
+        char $c2;
+        org.apache.fop.apps.FOPException $r1;
+        java.io.File $r2;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        specialinvoke this.<org.apache.fop.cli.CommandLineOptions: void setOutputMode(java.lang.String)>("application/mif");
+        $i0 = i + 1;
+        $i1 = lengthof args;
+        if $i0 == $i1 goto label0;
+
+        $i1 = i + 1;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 != 45 goto label1;
+
+     label0:
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("you must specify the MIF output file");
+        throw $r1;
+
+     label1:
+        $r2 = new java.io.File;
+        $i3 = i + 1;
+        $r3 = args[$i3];
+        specialinvoke $r2.<java.io.File: void <init>(java.lang.String)>($r3);
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File outfile> = $r2;
+        return 1;
+    }
+
+    private int parseRTFOutputOption(java.lang.String[], int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i, $i0, $i1, $i3;
+        java.lang.String $r0, $r3;
+        char $c2;
+        org.apache.fop.apps.FOPException $r1;
+        java.io.File $r2;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        specialinvoke this.<org.apache.fop.cli.CommandLineOptions: void setOutputMode(java.lang.String)>("application/rtf");
+        $i0 = i + 1;
+        $i1 = lengthof args;
+        if $i0 == $i1 goto label0;
+
+        $i1 = i + 1;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 != 45 goto label1;
+
+     label0:
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("you must specify the RTF output file");
+        throw $r1;
+
+     label1:
+        $r2 = new java.io.File;
+        $i3 = i + 1;
+        $r3 = args[$i3];
+        specialinvoke $r2.<java.io.File: void <init>(java.lang.String)>($r3);
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File outfile> = $r2;
+        return 1;
+    }
+
+    private int parseTIFFOutputOption(java.lang.String[], int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i, $i0, $i1, $i3;
+        java.lang.String $r0, $r3;
+        char $c2;
+        org.apache.fop.apps.FOPException $r1;
+        java.io.File $r2;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        specialinvoke this.<org.apache.fop.cli.CommandLineOptions: void setOutputMode(java.lang.String)>("image/tiff");
+        $i0 = i + 1;
+        $i1 = lengthof args;
+        if $i0 == $i1 goto label0;
+
+        $i1 = i + 1;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 != 45 goto label1;
+
+     label0:
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("you must specify the TIFF output file");
+        throw $r1;
+
+     label1:
+        $r2 = new java.io.File;
+        $i3 = i + 1;
+        $r3 = args[$i3];
+        specialinvoke $r2.<java.io.File: void <init>(java.lang.String)>($r3);
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File outfile> = $r2;
+        return 1;
+    }
+
+    private int parsePNGOutputOption(java.lang.String[], int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i, $i0, $i1, $i3;
+        java.lang.String $r0, $r3;
+        char $c2;
+        org.apache.fop.apps.FOPException $r1;
+        java.io.File $r2;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        specialinvoke this.<org.apache.fop.cli.CommandLineOptions: void setOutputMode(java.lang.String)>("image/png");
+        $i0 = i + 1;
+        $i1 = lengthof args;
+        if $i0 == $i1 goto label0;
+
+        $i1 = i + 1;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 != 45 goto label1;
+
+     label0:
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("you must specify the PNG output file");
+        throw $r1;
+
+     label1:
+        $r2 = new java.io.File;
+        $i3 = i + 1;
+        $r3 = args[$i3];
+        specialinvoke $r2.<java.io.File: void <init>(java.lang.String)>($r3);
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File outfile> = $r2;
+        return 1;
+    }
+
+    private int parsePrintOutputOption(java.lang.String[], int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        specialinvoke this.<org.apache.fop.cli.CommandLineOptions: void setOutputMode(java.lang.String)>("application/X-fop-print");
+        return 0;
+    }
+
+    private int parsePCLOutputOption(java.lang.String[], int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i, $i0, $i1, $i3;
+        java.lang.String $r0, $r3;
+        char $c2;
+        org.apache.fop.apps.FOPException $r1;
+        java.io.File $r2;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        specialinvoke this.<org.apache.fop.cli.CommandLineOptions: void setOutputMode(java.lang.String)>("application/x-pcl");
+        $i0 = i + 1;
+        $i1 = lengthof args;
+        if $i0 == $i1 goto label0;
+
+        $i1 = i + 1;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 != 45 goto label1;
+
+     label0:
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("you must specify the PDF output file");
+        throw $r1;
+
+     label1:
+        $r2 = new java.io.File;
+        $i3 = i + 1;
+        $r3 = args[$i3];
+        specialinvoke $r2.<java.io.File: void <init>(java.lang.String)>($r3);
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File outfile> = $r2;
+        return 1;
+    }
+
+    private int parsePostscriptOutputOption(java.lang.String[], int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i, $i0, $i1, $i3;
+        java.lang.String $r0, $r3;
+        char $c2;
+        org.apache.fop.apps.FOPException $r1;
+        java.io.File $r2;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        specialinvoke this.<org.apache.fop.cli.CommandLineOptions: void setOutputMode(java.lang.String)>("application/postscript");
+        $i0 = i + 1;
+        $i1 = lengthof args;
+        if $i0 == $i1 goto label0;
+
+        $i1 = i + 1;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 != 45 goto label1;
+
+     label0:
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("you must specify the PostScript output file");
+        throw $r1;
+
+     label1:
+        $r2 = new java.io.File;
+        $i3 = i + 1;
+        $r3 = args[$i3];
+        specialinvoke $r2.<java.io.File: void <init>(java.lang.String)>($r3);
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File outfile> = $r2;
+        return 1;
+    }
+
+    private int parseTextOutputOption(java.lang.String[], int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i, $i0, $i1, $i3;
+        java.lang.String $r0, $r3;
+        char $c2;
+        org.apache.fop.apps.FOPException $r1;
+        java.io.File $r2;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        specialinvoke this.<org.apache.fop.cli.CommandLineOptions: void setOutputMode(java.lang.String)>("text/plain");
+        $i0 = i + 1;
+        $i1 = lengthof args;
+        if $i0 == $i1 goto label0;
+
+        $i1 = i + 1;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 != 45 goto label1;
+
+     label0:
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("you must specify the text output file");
+        throw $r1;
+
+     label1:
+        $r2 = new java.io.File;
+        $i3 = i + 1;
+        $r3 = args[$i3];
+        specialinvoke $r2.<java.io.File: void <init>(java.lang.String)>($r3);
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File outfile> = $r2;
+        return 1;
+    }
+
+    private int parseSVGOutputOption(java.lang.String[], int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i, $i0, $i1, $i3;
+        java.lang.String $r0, $r3;
+        char $c2;
+        org.apache.fop.apps.FOPException $r1;
+        java.io.File $r2;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        specialinvoke this.<org.apache.fop.cli.CommandLineOptions: void setOutputMode(java.lang.String)>("image/svg+xml");
+        $i0 = i + 1;
+        $i1 = lengthof args;
+        if $i0 == $i1 goto label0;
+
+        $i1 = i + 1;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 != 45 goto label1;
+
+     label0:
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("you must specify the SVG output file");
+        throw $r1;
+
+     label1:
+        $r2 = new java.io.File;
+        $i3 = i + 1;
+        $r3 = args[$i3];
+        specialinvoke $r2.<java.io.File: void <init>(java.lang.String)>($r3);
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File outfile> = $r2;
+        return 1;
+    }
+
+    private int parseAFPOutputOption(java.lang.String[], int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i, $i0, $i1, $i3;
+        java.lang.String $r0, $r3;
+        char $c2;
+        org.apache.fop.apps.FOPException $r1;
+        java.io.File $r2;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        specialinvoke this.<org.apache.fop.cli.CommandLineOptions: void setOutputMode(java.lang.String)>("application/x-afp");
+        $i0 = i + 1;
+        $i1 = lengthof args;
+        if $i0 == $i1 goto label0;
+
+        $i1 = i + 1;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 != 45 goto label1;
+
+     label0:
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("you must specify the AFP output file");
+        throw $r1;
+
+     label1:
+        $r2 = new java.io.File;
+        $i3 = i + 1;
+        $r3 = args[$i3];
+        specialinvoke $r2.<java.io.File: void <init>(java.lang.String)>($r3);
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File outfile> = $r2;
+        return 1;
+    }
+
+    private int parseFOOutputOption(java.lang.String[], int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i, $i0, $i1, $i3;
+        java.lang.String $r0, $r3;
+        char $c2;
+        org.apache.fop.apps.FOPException $r1;
+        java.io.File $r2;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        specialinvoke this.<org.apache.fop.cli.CommandLineOptions: void setOutputMode(java.lang.String)>("text/xsl");
+        $i0 = i + 1;
+        $i1 = lengthof args;
+        if $i0 == $i1 goto label0;
+
+        $i1 = i + 1;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 != 45 goto label1;
+
+     label0:
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("you must specify the FO output file");
+        throw $r1;
+
+     label1:
+        $r2 = new java.io.File;
+        $i3 = i + 1;
+        $r3 = args[$i3];
+        specialinvoke $r2.<java.io.File: void <init>(java.lang.String)>($r3);
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File outfile> = $r2;
+        return 1;
+    }
+
+    private int parseCustomOutputOption(java.lang.String[], int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args, mimes;
+        int i, j, $i0, $i1, $i3;
+        java.lang.String mime, $r0, $r5, $r6, $r9;
+        char $c2;
+        boolean $z0;
+        org.apache.fop.apps.FopFactory $r1;
+        org.apache.fop.render.RendererFactory $r2;
+        java.io.PrintStream $r3;
+        java.lang.StringBuffer $r4;
+        org.apache.fop.apps.FOPException $r7;
+        java.io.File $r8;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        mime = null;
+        $i0 = i + 1;
+        $i1 = lengthof args;
+        if $i0 < $i1 goto label0;
+
+        $i1 = i + 1;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 == 45 goto label3;
+
+     label0:
+        $i1 = i + 1;
+        mime = args[$i1];
+        $r0 = "list";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(mime);
+        if $z0 == 0 goto label3;
+
+        $r1 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.apps.FopFactory factory>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.apps.FopFactory: org.apache.fop.render.RendererFactory getRendererFactory()>();
+        mimes = virtualinvoke $r2.<org.apache.fop.render.RendererFactory: java.lang.String[] listSupportedMimeTypes()>();
+        $r3 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r3.<java.io.PrintStream: void println(java.lang.String)>("Supported MIME types:");
+        j = 0;
+
+     label1:
+        $i1 = lengthof mimes;
+        if j >= $i1 goto label2;
+
+        $r3 = <java.lang.System: java.io.PrintStream out>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("  ");
+        $r5 = mimes[j];
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r6 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<java.io.PrintStream: void println(java.lang.String)>($r6);
+        j = j + 1;
+        goto label1;
+
+     label2:
+        staticinvoke <java.lang.System: void exit(int)>(0);
+
+     label3:
+        $i0 = i + 2;
+        $i1 = lengthof args;
+        if $i0 >= $i1 goto label4;
+
+        $i1 = i + 1;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 == 45 goto label4;
+
+        $i1 = i + 2;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 != 45 goto label5;
+
+     label4:
+        $r7 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r7.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("you must specify the output format and the output file");
+        throw $r7;
+
+     label5:
+        specialinvoke this.<org.apache.fop.cli.CommandLineOptions: void setOutputMode(java.lang.String)>(mime);
+        $r8 = new java.io.File;
+        $i3 = i + 2;
+        $r9 = args[$i3];
+        specialinvoke $r8.<java.io.File: void <init>(java.lang.String)>($r9);
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File outfile> = $r8;
+        return 2;
+    }
+
+    private int parseUnknownOption(java.lang.String[], int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i, $i0;
+        java.io.File $r0;
+        java.lang.String $r1, $r2, $r5;
+        org.apache.fop.apps.FOPException $r3;
+        java.lang.StringBuffer $r4;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        $i0 = this.<org.apache.fop.cli.CommandLineOptions: int inputmode>;
+        if $i0 != 0 goto label0;
+
+        this.<org.apache.fop.cli.CommandLineOptions: int inputmode> = 1;
+        $r0 = new java.io.File;
+        $r1 = args[i];
+        specialinvoke $r0.<java.io.File: void <init>(java.lang.String)>($r1);
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File fofile> = $r0;
+        goto label2;
+
+     label0:
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: java.lang.String outputmode>;
+        if $r2 != null goto label1;
+
+        this.<org.apache.fop.cli.CommandLineOptions: java.lang.String outputmode> = "application/pdf";
+        $r0 = new java.io.File;
+        $r1 = args[i];
+        specialinvoke $r0.<java.io.File: void <init>(java.lang.String)>($r1);
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File outfile> = $r0;
+        goto label2;
+
+     label1:
+        $r3 = new org.apache.fop.apps.FOPException;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Don\'t know what to do with ");
+        $r1 = args[i];
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r3.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>($r5);
+        throw $r3;
+
+     label2:
+        return 0;
+    }
+
+    private int parseAreaTreeOption(java.lang.String[], int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i, $i0, $i1, $i3, $i4;
+        java.lang.String $r0, $r3, $r4;
+        char $c2;
+        org.apache.fop.apps.FOPException $r1;
+        java.io.File $r2;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        specialinvoke this.<org.apache.fop.cli.CommandLineOptions: void setOutputMode(java.lang.String)>("application/X-fop-areatree");
+        $i0 = i + 1;
+        $i1 = lengthof args;
+        if $i0 == $i1 goto label0;
+
+        $i1 = i + 1;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 != 45 goto label1;
+
+     label0:
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("you must specify the area-tree output file");
+        throw $r1;
+
+     label1:
+        $i0 = i + 2;
+        $i1 = lengthof args;
+        if $i0 == $i1 goto label2;
+
+        $i1 = i + 2;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 != 45 goto label3;
+
+     label2:
+        $r2 = new java.io.File;
+        $i3 = i + 1;
+        $r3 = args[$i3];
+        specialinvoke $r2.<java.io.File: void <init>(java.lang.String)>($r3);
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File outfile> = $r2;
+        return 1;
+
+     label3:
+        $i4 = i + 1;
+        $r4 = args[$i4];
+        this.<org.apache.fop.cli.CommandLineOptions: java.lang.String mimicRenderer> = $r4;
+        $r2 = new java.io.File;
+        $i3 = i + 2;
+        $r3 = args[$i3];
+        specialinvoke $r2.<java.io.File: void <init>(java.lang.String)>($r3);
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File outfile> = $r2;
+        return 2;
+    }
+
+    private int parseAreaTreeInputOption(java.lang.String[], int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i, $i0, $i1, $i3;
+        java.lang.String $r0, $r3;
+        char $c2;
+        org.apache.fop.apps.FOPException $r1;
+        java.io.File $r2;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        this.<org.apache.fop.cli.CommandLineOptions: int inputmode> = 3;
+        $i0 = i + 1;
+        $i1 = lengthof args;
+        if $i0 == $i1 goto label0;
+
+        $i1 = i + 1;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 != 45 goto label1;
+
+     label0:
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("you must specify the Area Tree file for the \'-atin\' option");
+        throw $r1;
+
+     label1:
+        $r2 = new java.io.File;
+        $i3 = i + 1;
+        $r3 = args[$i3];
+        specialinvoke $r2.<java.io.File: void <init>(java.lang.String)>($r3);
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File areatreefile> = $r2;
+        return 1;
+    }
+
+    private int parseImageInputOption(java.lang.String[], int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i, $i0, $i1, $i3;
+        java.lang.String $r0, $r3;
+        char $c2;
+        org.apache.fop.apps.FOPException $r1;
+        java.io.File $r2;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        this.<org.apache.fop.cli.CommandLineOptions: int inputmode> = 4;
+        $i0 = i + 1;
+        $i1 = lengthof args;
+        if $i0 == $i1 goto label0;
+
+        $i1 = i + 1;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 != 45 goto label1;
+
+     label0:
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("you must specify the image file for the \'-imagein\' option");
+        throw $r1;
+
+     label1:
+        $r2 = new java.io.File;
+        $i3 = i + 1;
+        $r3 = args[$i3];
+        specialinvoke $r2.<java.io.File: void <init>(java.lang.String)>($r3);
+        this.<org.apache.fop.cli.CommandLineOptions: java.io.File imagefile> = $r2;
+        return 1;
+    }
+
+    private org.apache.fop.pdf.PDFEncryptionParams getPDFEncryptionParams() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        org.apache.fop.pdf.PDFEncryptionParams params, $r3;
+        java.util.Map $r0;
+        java.lang.Object $r1;
+        boolean $z0;
+        org.apache.fop.apps.FOPException $r2;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: java.util.Map renderingOptions>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>("encryption-params");
+        params = (org.apache.fop.pdf.PDFEncryptionParams) $r1;
+        if params != null goto label1;
+
+        $z0 = staticinvoke <org.apache.fop.pdf.PDFEncryptionManager: boolean checkAvailableAlgorithms()>();
+        if $z0 != 0 goto label0;
+
+        $r2 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r2.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("PDF encryption requested but it is not available. Please make sure MD5 and RC4 algorithms are available.");
+        throw $r2;
+
+     label0:
+        $r3 = new org.apache.fop.pdf.PDFEncryptionParams;
+        specialinvoke $r3.<org.apache.fop.pdf.PDFEncryptionParams: void <init>()>();
+        params = $r3;
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: java.util.Map renderingOptions>;
+        interfaceinvoke $r0.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("encryption-params", params);
+
+     label1:
+        return params;
+    }
+
+    private int parsePDFOwnerPassword(java.lang.String[], int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i, $i0, $i1, $i3;
+        java.lang.String $r0, $r2;
+        char $c2;
+        org.apache.fop.pdf.PDFEncryptionParams $r1;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        $i0 = i + 1;
+        $i1 = lengthof args;
+        if $i0 == $i1 goto label0;
+
+        $i1 = i + 1;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 != 45 goto label1;
+
+     label0:
+        $r1 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.pdf.PDFEncryptionParams getPDFEncryptionParams()>();
+        virtualinvoke $r1.<org.apache.fop.pdf.PDFEncryptionParams: void setOwnerPassword(java.lang.String)>("");
+        return 0;
+
+     label1:
+        $r1 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.pdf.PDFEncryptionParams getPDFEncryptionParams()>();
+        $i3 = i + 1;
+        $r2 = args[$i3];
+        virtualinvoke $r1.<org.apache.fop.pdf.PDFEncryptionParams: void setOwnerPassword(java.lang.String)>($r2);
+        return 1;
+    }
+
+    private int parsePDFUserPassword(java.lang.String[], int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i, $i0, $i1, $i3;
+        java.lang.String $r0, $r2;
+        char $c2;
+        org.apache.fop.pdf.PDFEncryptionParams $r1;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        $i0 = i + 1;
+        $i1 = lengthof args;
+        if $i0 == $i1 goto label0;
+
+        $i1 = i + 1;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 != 45 goto label1;
+
+     label0:
+        $r1 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.pdf.PDFEncryptionParams getPDFEncryptionParams()>();
+        virtualinvoke $r1.<org.apache.fop.pdf.PDFEncryptionParams: void setUserPassword(java.lang.String)>("");
+        return 0;
+
+     label1:
+        $r1 = specialinvoke this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.pdf.PDFEncryptionParams getPDFEncryptionParams()>();
+        $i3 = i + 1;
+        $r2 = args[$i3];
+        virtualinvoke $r1.<org.apache.fop.pdf.PDFEncryptionParams: void setUserPassword(java.lang.String)>($r2);
+        return 1;
+    }
+
+    private int parsePDFProfile(java.lang.String[], int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String[] args;
+        int i, $i0, $i1;
+        java.lang.String profile, $r0, $r5;
+        org.apache.fop.pdf.PDFAMode pdfAMode, $r2;
+        org.apache.fop.pdf.PDFXMode pdfXMode, $r6;
+        char $c2;
+        org.apache.fop.apps.FOPException $r1;
+        java.util.Map $r3;
+        java.lang.Object $r4;
+        java.lang.StringBuffer $r7;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        args := @parameter0: java.lang.String[];
+        i := @parameter1: int;
+        $i0 = i + 1;
+        $i1 = lengthof args;
+        if $i0 == $i1 goto label0;
+
+        $i1 = i + 1;
+        $r0 = args[$i1];
+        $c2 = virtualinvoke $r0.<java.lang.String: char charAt(int)>(0);
+        if $c2 != 45 goto label1;
+
+     label0:
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("You must specify a PDF profile");
+        throw $r1;
+
+     label1:
+        $i1 = i + 1;
+        profile = args[$i1];
+        pdfAMode = staticinvoke <org.apache.fop.pdf.PDFAMode: org.apache.fop.pdf.PDFAMode valueOf(java.lang.String)>(profile);
+        if pdfAMode == null goto label3;
+
+        $r2 = <org.apache.fop.pdf.PDFAMode: org.apache.fop.pdf.PDFAMode DISABLED>;
+        if pdfAMode == $r2 goto label3;
+
+        $r3 = this.<org.apache.fop.cli.CommandLineOptions: java.util.Map renderingOptions>;
+        $r4 = interfaceinvoke $r3.<java.util.Map: java.lang.Object get(java.lang.Object)>("pdf-a-mode");
+        if $r4 == null goto label2;
+
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("PDF/A mode already set");
+        throw $r1;
+
+     label2:
+        $r3 = this.<org.apache.fop.cli.CommandLineOptions: java.util.Map renderingOptions>;
+        $r5 = virtualinvoke pdfAMode.<org.apache.fop.pdf.PDFAMode: java.lang.String getName()>();
+        interfaceinvoke $r3.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("pdf-a-mode", $r5);
+        return 1;
+
+     label3:
+        pdfXMode = staticinvoke <org.apache.fop.pdf.PDFXMode: org.apache.fop.pdf.PDFXMode valueOf(java.lang.String)>(profile);
+        if pdfXMode == null goto label5;
+
+        $r6 = <org.apache.fop.pdf.PDFXMode: org.apache.fop.pdf.PDFXMode DISABLED>;
+        if pdfXMode == $r6 goto label5;
+
+        $r3 = this.<org.apache.fop.cli.CommandLineOptions: java.util.Map renderingOptions>;
+        $r4 = interfaceinvoke $r3.<java.util.Map: java.lang.Object get(java.lang.Object)>("pdf-x-mode");
+        if $r4 == null goto label4;
+
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("PDF/X mode already set");
+        throw $r1;
+
+     label4:
+        $r3 = this.<org.apache.fop.cli.CommandLineOptions: java.util.Map renderingOptions>;
+        $r5 = virtualinvoke pdfXMode.<org.apache.fop.pdf.PDFXMode: java.lang.String getName()>();
+        interfaceinvoke $r3.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("pdf-x-mode", $r5);
+        return 1;
+
+     label5:
+        $r1 = new org.apache.fop.apps.FOPException;
+        $r7 = new java.lang.StringBuffer;
+        specialinvoke $r7.<java.lang.StringBuffer: void <init>()>();
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unsupported PDF profile: ");
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(profile);
+        $r5 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>($r5);
+        throw $r1;
+    }
+
+    private void setOutputMode(java.lang.String) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String mime, $r0;
+        org.apache.fop.apps.FOPException $r1;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        mime := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: java.lang.String outputmode>;
+        if $r0 != null goto label0;
+
+        this.<org.apache.fop.cli.CommandLineOptions: java.lang.String outputmode> = mime;
+        goto label1;
+
+     label0:
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("you can only set one output method");
+        throw $r1;
+
+     label1:
+        return;
+    }
+
+    private void setLogOption(java.lang.String, java.lang.String)
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String option, level, $r1, $r3;
+        org.apache.commons.logging.Log $r0;
+        boolean $z0;
+        java.lang.StringBuffer $r2;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        option := @parameter0: java.lang.String;
+        level := @parameter1: java.lang.String;
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        $z0 = $r0 instanceof org.apache.fop.util.CommandLineLogger;
+        if $z0 != 0 goto label0;
+
+        $r1 = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("org.apache.commons.logging.Log");
+        if $r1 != null goto label1;
+
+     label0:
+        specialinvoke this.<org.apache.fop.cli.CommandLineOptions: void setLogLevel(java.lang.String)>(level);
+        goto label2;
+
+     label1:
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        if $r0 == null goto label2;
+
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("The option ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(option);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" can only be used");
+        $r3 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r3);
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void warn(java.lang.Object)>("with FOP\'s command line logger,");
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void warn(java.lang.Object)>("which is the default on the command line.");
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void warn(java.lang.Object)>("Configure other loggers using Java system properties.");
+
+     label2:
+        return;
+    }
+
+    private void setLogLevel(java.lang.String)
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String level;
+        org.apache.commons.logging.LogFactory $r0;
+        org.apache.commons.logging.Log $r1;
+        boolean $z0;
+        org.apache.fop.util.CommandLineLogger $r2;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        level := @parameter0: java.lang.String;
+        $r0 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.LogFactory getFactory()>();
+        virtualinvoke $r0.<org.apache.commons.logging.LogFactory: void setAttribute(java.lang.String,java.lang.Object)>("level", level);
+        $r1 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        $z0 = $r1 instanceof org.apache.fop.util.CommandLineLogger;
+        if $z0 == 0 goto label0;
+
+        $r1 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        $r2 = (org.apache.fop.util.CommandLineLogger) $r1;
+        virtualinvoke $r2.<org.apache.fop.util.CommandLineLogger: void setLogLevel(java.lang.String)>(level);
+
+     label0:
+        return;
+    }
+
+    private void checkSettings() throws org.apache.fop.apps.FOPException, java.io.FileNotFoundException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        int $i0;
+        org.apache.fop.apps.FOPException $r0;
+        java.lang.String $r1, $r6, $r7, $r11;
+        boolean $z0;
+        java.io.File $r2, $r5, $r10;
+        org.apache.commons.logging.Log $r3;
+        java.lang.StringBuffer $r4, $r9;
+        java.io.FileNotFoundException $r8;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        $i0 = this.<org.apache.fop.cli.CommandLineOptions: int inputmode>;
+        if $i0 != 0 goto label0;
+
+        $r0 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r0.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("No input file specified");
+        throw $r0;
+
+     label0:
+        $r1 = this.<org.apache.fop.cli.CommandLineOptions: java.lang.String outputmode>;
+        if $r1 != null goto label1;
+
+        $r0 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r0.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("No output file specified");
+        throw $r0;
+
+     label1:
+        $r1 = this.<org.apache.fop.cli.CommandLineOptions: java.lang.String outputmode>;
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>("application/X-fop-awt-preview");
+        if $z0 != 0 goto label2;
+
+        $r1 = this.<org.apache.fop.cli.CommandLineOptions: java.lang.String outputmode>;
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>("application/X-fop-print");
+        if $z0 == 0 goto label3;
+
+     label2:
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File outfile>;
+        if $r2 == null goto label3;
+
+        $r0 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r0.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("Output file may not be specified for AWT or PRINT output");
+        throw $r0;
+
+     label3:
+        $i0 = this.<org.apache.fop.cli.CommandLineOptions: int inputmode>;
+        if $i0 != 2 goto label8;
+
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File xmlfile>;
+        if $r2 != null goto label4;
+
+        $r0 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r0.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("XML file must be specified for the transform mode");
+        throw $r0;
+
+     label4:
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File xsltfile>;
+        if $r2 != null goto label5;
+
+        $r0 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r0.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("XSLT file must be specified for the transform mode");
+        throw $r0;
+
+     label5:
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File fofile>;
+        if $r2 == null goto label6;
+
+        $r3 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Can\'t use fo file with transform mode! Ignoring.\nYour input is \n xmlfile: ");
+        $r5 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File xmlfile>;
+        $r6 = virtualinvoke $r5.<java.io.File: java.lang.String getAbsolutePath()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\nxsltfile: ");
+        $r5 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File xsltfile>;
+        $r6 = virtualinvoke $r5.<java.io.File: java.lang.String getAbsolutePath()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\n  fofile: ");
+        $r5 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File fofile>;
+        $r6 = virtualinvoke $r5.<java.io.File: java.lang.String getAbsolutePath()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r7 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r7);
+
+     label6:
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File xmlfile>;
+        $z0 = virtualinvoke $r2.<java.io.File: boolean exists()>();
+        if $z0 != 0 goto label7;
+
+        $r8 = new java.io.FileNotFoundException;
+        $r9 = new java.lang.StringBuffer;
+        specialinvoke $r9.<java.lang.StringBuffer: void <init>()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Error: xml file ");
+        $r10 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File xmlfile>;
+        $r11 = virtualinvoke $r10.<java.io.File: java.lang.String getAbsolutePath()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r11);
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" not found ");
+        $r6 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r8.<java.io.FileNotFoundException: void <init>(java.lang.String)>($r6);
+        throw $r8;
+
+     label7:
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File xsltfile>;
+        $z0 = virtualinvoke $r2.<java.io.File: boolean exists()>();
+        if $z0 != 0 goto label20;
+
+        $r8 = new java.io.FileNotFoundException;
+        $r9 = new java.lang.StringBuffer;
+        specialinvoke $r9.<java.lang.StringBuffer: void <init>()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Error: xsl file ");
+        $r10 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File xsltfile>;
+        $r11 = virtualinvoke $r10.<java.io.File: java.lang.String getAbsolutePath()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r11);
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" not found ");
+        $r6 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r8.<java.io.FileNotFoundException: void <init>(java.lang.String)>($r6);
+        throw $r8;
+
+     label8:
+        $i0 = this.<org.apache.fop.cli.CommandLineOptions: int inputmode>;
+        if $i0 != 1 goto label12;
+
+        $r1 = this.<org.apache.fop.cli.CommandLineOptions: java.lang.String outputmode>;
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>("text/xsl");
+        if $z0 == 0 goto label9;
+
+        $r0 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r0.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("FO output mode is only available if you use -xml and -xsl");
+        throw $r0;
+
+     label9:
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File xmlfile>;
+        if $r2 != null goto label10;
+
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File xsltfile>;
+        if $r2 == null goto label11;
+
+     label10:
+        $r3 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void warn(java.lang.Object)>("fo input mode, but xmlfile or xslt file are set:");
+        $r3 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("xml file: ");
+        $r5 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File xmlfile>;
+        $r6 = virtualinvoke $r5.<java.io.File: java.lang.String toString()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r7 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r7);
+        $r3 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("xslt file: ");
+        $r5 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File xsltfile>;
+        $r6 = virtualinvoke $r5.<java.io.File: java.lang.String toString()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r7 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r7);
+
+     label11:
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File fofile>;
+        $z0 = virtualinvoke $r2.<java.io.File: boolean exists()>();
+        if $z0 != 0 goto label20;
+
+        $r8 = new java.io.FileNotFoundException;
+        $r9 = new java.lang.StringBuffer;
+        specialinvoke $r9.<java.lang.StringBuffer: void <init>()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Error: fo file ");
+        $r10 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File fofile>;
+        $r11 = virtualinvoke $r10.<java.io.File: java.lang.String getAbsolutePath()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r11);
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" not found ");
+        $r6 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r8.<java.io.FileNotFoundException: void <init>(java.lang.String)>($r6);
+        throw $r8;
+
+     label12:
+        $i0 = this.<org.apache.fop.cli.CommandLineOptions: int inputmode>;
+        if $i0 != 3 goto label17;
+
+        $r1 = this.<org.apache.fop.cli.CommandLineOptions: java.lang.String outputmode>;
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>("text/xsl");
+        if $z0 == 0 goto label13;
+
+        $r0 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r0.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("FO output mode is only available if you use -xml and -xsl");
+        throw $r0;
+
+     label13:
+        $r1 = this.<org.apache.fop.cli.CommandLineOptions: java.lang.String outputmode>;
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>("application/X-fop-areatree");
+        if $z0 == 0 goto label14;
+
+        $r0 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r0.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("Area Tree Output is not available if Area Tree is used as input!");
+        throw $r0;
+
+     label14:
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File xmlfile>;
+        if $r2 != null goto label15;
+
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File xsltfile>;
+        if $r2 == null goto label16;
+
+     label15:
+        $r3 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void warn(java.lang.Object)>("area tree input mode, but xmlfile or xslt file are set:");
+        $r3 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("xml file: ");
+        $r5 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File xmlfile>;
+        $r6 = virtualinvoke $r5.<java.io.File: java.lang.String toString()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r7 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r7);
+        $r3 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("xslt file: ");
+        $r5 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File xsltfile>;
+        $r6 = virtualinvoke $r5.<java.io.File: java.lang.String toString()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r7 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r7);
+
+     label16:
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File areatreefile>;
+        $z0 = virtualinvoke $r2.<java.io.File: boolean exists()>();
+        if $z0 != 0 goto label20;
+
+        $r8 = new java.io.FileNotFoundException;
+        $r9 = new java.lang.StringBuffer;
+        specialinvoke $r9.<java.lang.StringBuffer: void <init>()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Error: area tree file ");
+        $r10 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File areatreefile>;
+        $r11 = virtualinvoke $r10.<java.io.File: java.lang.String getAbsolutePath()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r11);
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" not found ");
+        $r6 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r8.<java.io.FileNotFoundException: void <init>(java.lang.String)>($r6);
+        throw $r8;
+
+     label17:
+        $i0 = this.<org.apache.fop.cli.CommandLineOptions: int inputmode>;
+        if $i0 != 4 goto label20;
+
+        $r1 = this.<org.apache.fop.cli.CommandLineOptions: java.lang.String outputmode>;
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>("text/xsl");
+        if $z0 == 0 goto label18;
+
+        $r0 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r0.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("FO output mode is only available if you use -xml and -xsl");
+        throw $r0;
+
+     label18:
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File xmlfile>;
+        if $r2 == null goto label19;
+
+        $r3 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void warn(java.lang.Object)>("image input mode, but XML file is set:");
+        $r3 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("XML file: ");
+        $r5 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File xmlfile>;
+        $r6 = virtualinvoke $r5.<java.io.File: java.lang.String toString()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r7 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r7);
+
+     label19:
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File imagefile>;
+        $z0 = virtualinvoke $r2.<java.io.File: boolean exists()>();
+        if $z0 != 0 goto label20;
+
+        $r8 = new java.io.FileNotFoundException;
+        $r9 = new java.lang.StringBuffer;
+        specialinvoke $r9.<java.lang.StringBuffer: void <init>()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Error: image file ");
+        $r10 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File imagefile>;
+        $r11 = virtualinvoke $r10.<java.io.File: java.lang.String getAbsolutePath()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r11);
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" not found ");
+        $r6 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r8.<java.io.FileNotFoundException: void <init>(java.lang.String)>($r6);
+        throw $r8;
+
+     label20:
+        return;
+    }
+
+    private void setUserConfig() throws org.apache.fop.apps.FOPException, java.io.IOException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        org.xml.sax.SAXException e, $r3;
+        java.io.File $r0, $r2;
+        org.apache.fop.apps.FopFactory $r1;
+        org.apache.fop.apps.FOPException $r4;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File userConfigFile>;
+        if $r0 != null goto label0;
+
+        return;
+
+     label0:
+        $r1 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.apps.FopFactory factory>;
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File userConfigFile>;
+        virtualinvoke $r1.<org.apache.fop.apps.FopFactory: void setUserConfig(java.io.File)>($r2);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r3 := @caughtexception;
+        e = $r3;
+        $r4 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r4.<org.apache.fop.apps.FOPException: void <init>(java.lang.Exception)>(e);
+        throw $r4;
+
+     label3:
+        return;
+
+        catch org.xml.sax.SAXException from label0 to label1 with label2;
+    }
+
+    protected java.lang.String getOutputFormat() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.String $r0;
+        org.apache.fop.apps.FOPException $r1;
+        boolean $z0;
+        java.util.Map $r2;
+        java.lang.Boolean $r3;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: java.lang.String outputmode>;
+        if $r0 != null goto label0;
+
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("Renderer has not been set!");
+        throw $r1;
+
+     label0:
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: java.lang.String outputmode>;
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("application/X-fop-areatree");
+        if $z0 == 0 goto label1;
+
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: java.util.Map renderingOptions>;
+        $r3 = virtualinvoke this.<org.apache.fop.cli.CommandLineOptions: java.lang.Boolean isCoarseAreaXml()>();
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("fineDetail", $r3);
+
+     label1:
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: java.lang.String outputmode>;
+        return $r0;
+    }
+
+    private org.apache.fop.cli.InputHandler createInputHandler() throws java.lang.IllegalArgumentException
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        int $i0;
+        org.apache.fop.cli.InputHandler $r0;
+        java.io.File $r1, $r3;
+        org.apache.fop.cli.AreaTreeInputHandler $r2;
+        java.util.Vector $r4;
+        org.apache.fop.cli.ImageInputHandler $r5;
+        java.lang.IllegalArgumentException $r6;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        $i0 = this.<org.apache.fop.cli.CommandLineOptions: int inputmode>;
+        tableswitch($i0)
+        {
+            case 1: goto label0;
+            case 2: goto label2;
+            case 3: goto label1;
+            case 4: goto label3;
+            default: goto label4;
+        };
+
+     label0:
+        $r0 = new org.apache.fop.cli.InputHandler;
+        $r1 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File fofile>;
+        specialinvoke $r0.<org.apache.fop.cli.InputHandler: void <init>(java.io.File)>($r1);
+        return $r0;
+
+     label1:
+        $r2 = new org.apache.fop.cli.AreaTreeInputHandler;
+        $r1 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File areatreefile>;
+        specialinvoke $r2.<org.apache.fop.cli.AreaTreeInputHandler: void <init>(java.io.File)>($r1);
+        return $r2;
+
+     label2:
+        $r0 = new org.apache.fop.cli.InputHandler;
+        $r1 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File xmlfile>;
+        $r3 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File xsltfile>;
+        $r4 = this.<org.apache.fop.cli.CommandLineOptions: java.util.Vector xsltParams>;
+        specialinvoke $r0.<org.apache.fop.cli.InputHandler: void <init>(java.io.File,java.io.File,java.util.Vector)>($r1, $r3, $r4);
+        return $r0;
+
+     label3:
+        $r5 = new org.apache.fop.cli.ImageInputHandler;
+        $r1 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File imagefile>;
+        $r3 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File xsltfile>;
+        $r4 = this.<org.apache.fop.cli.CommandLineOptions: java.util.Vector xsltParams>;
+        specialinvoke $r5.<org.apache.fop.cli.ImageInputHandler: void <init>(java.io.File,java.io.File,java.util.Vector)>($r1, $r3, $r4);
+        return $r5;
+
+     label4:
+        $r6 = new java.lang.IllegalArgumentException;
+        specialinvoke $r6.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Error creating InputHandler object.");
+        throw $r6;
+    }
+
+    protected org.apache.fop.apps.FOUserAgent getFOUserAgent()
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        org.apache.fop.apps.FOUserAgent $r0;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.fop.apps.FOUserAgent foUserAgent>;
+        return $r0;
+    }
+
+    public java.io.File getFOFile()
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.io.File $r0;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File fofile>;
+        return $r0;
+    }
+
+    public java.io.File getXMLFile()
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.io.File $r0;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File xmlfile>;
+        return $r0;
+    }
+
+    public java.io.File getXSLFile()
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.io.File $r0;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File xsltfile>;
+        return $r0;
+    }
+
+    public java.io.File getOutputFile()
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.io.File $r0;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File outfile>;
+        return $r0;
+    }
+
+    public java.io.File getUserConfigFile()
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.io.File $r0;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File userConfigFile>;
+        return $r0;
+    }
+
+    public java.lang.Boolean isCoarseAreaXml()
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.lang.Boolean $r0;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: java.lang.Boolean suppressLowLevelAreas>;
+        return $r0;
+    }
+
+    public java.io.File getInputFile()
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        int $i0;
+        java.io.File $r0;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        $i0 = this.<org.apache.fop.cli.CommandLineOptions: int inputmode>;
+        lookupswitch($i0)
+        {
+            case 1: goto label0;
+            case 2: goto label1;
+            default: goto label2;
+        };
+
+     label0:
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File fofile>;
+        return $r0;
+
+     label1:
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File xmlfile>;
+        return $r0;
+
+     label2:
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File fofile>;
+        return $r0;
+    }
+
+    public static void printUsage()
+    {
+        java.io.PrintStream $r0;
+
+        $r0 = <java.lang.System: java.io.PrintStream err>;
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>("\nUSAGE\nFop [options] [-fo|-xml] infile [-xsl file] [-awt|-pdf|-mif|-rtf|-tiff|-png|-pcl|-ps|-txt|-at [mime]|-print] <outfile>\n [OPTIONS]  \n  -d                debug mode   \n  -x                dump configuration settings  \n  -q                quiet mode  \n  -c cfg.xml        use additional configuration file cfg.xml\n  -l lang           the language to use for user information \n  -r                relaxed/less strict validation (where available)\n  -dpi xxx          target resolution in dots per inch (dpi) where xxx is a number\n  -s                for area tree XML, down to block areas only\n  -v                to show FOP version being used\n\n  -o [password]     PDF file will be encrypted with option owner password\n  -u [password]     PDF file will be encrypted with option user password\n  -noprint          PDF file will be encrypted without printing permission\n  -nocopy           PDF file will be encrypted without copy content permission\n  -noedit           PDF file will be encrypted without edit content permission\n  -noannotations    PDF file will be encrypted without edit annotation permission\n  -pdfprofile prof  PDF file will be generated with the specified profile\n                    (Examples for prof: PDF/A-1b or PDF/X-3:2003)\n\n [INPUT]  \n  infile            xsl:fo input file (the same as the next) \n  -fo  infile       xsl:fo input file  \n  -xml infile       xml input file, must be used together with -xsl \n  -atin infile      area tree input file \n  -imagein infile   image input file \n  -xsl stylesheet   xslt stylesheet \n \n  -param name value <value> to use for parameter <name> in xslt stylesheet\n                    (repeat \'-param name value\' for each parameter)\n \n [OUTPUT] \n  outfile           input will be rendered as PDF into outfile\n  -pdf outfile      input will be rendered as PDF (outfile req\'d)\n  -pdfa1b outfile   input will be rendered as PDF/A-1b compliant PDF\n                    (outfile req\'d, same as \"-pdf outfile -pdfprofile PDF/A-1b\")\n  -awt              input will be displayed on screen \n  -rtf outfile      input will be rendered as RTF (outfile req\'d)\n  -pcl outfile      input will be rendered as PCL (outfile req\'d) \n  -ps outfile       input will be rendered as PostScript (outfile req\'d) \n  -afp outfile      input will be rendered as AFP (outfile req\'d)\n  -tiff outfile     input will be rendered as TIFF (outfile req\'d)\n  -png outfile      input will be rendered as PNG (outfile req\'d)\n  -txt outfile      input will be rendered as plain text (outfile req\'d) \n  -at [mime] out    representation of area tree as XML (outfile req\'d) \n                    specify optional mime output to allow AT to be converted\n                    to final format later\n  -print            input file will be rendered and sent to the printer \n                    see options with \"-print help\" \n  -out mime outfile input will be rendered using the given MIME type\n                    (outfile req\'d) Example: \"-out application/pdf D:\\out.pdf\"\n                    (Tip: \"-out list\" prints the list of supported MIME types)\n  -mif outfile      input will be rendered as MIF (FrameMaker) (outfile req\'d)\n                    Experimental feature - requires additional fop-sandbox.jar.\n  -svg outfile      input will be rendered as an SVG slides file (outfile req\'d) \n                    Experimental feature - requires additional fop-sandbox.jar.\n\n  -foout outfile    input will only be XSL transformed. The intermediate \n                    XSL-FO file is saved and no rendering is performed. \n                    (Only available if you use -xml and -xsl parameters)\n\n\n [Examples]\n  Fop foo.fo foo.pdf \n  Fop -fo foo.fo -pdf foo.pdf (does the same as the previous line)\n  Fop -xml foo.xml -xsl foo.xsl -pdf foo.pdf\n  Fop -xml foo.xml -xsl foo.xsl -foout foo.fo\n  Fop foo.fo -mif foo.mif\n  Fop foo.fo -rtf foo.rtf\n  Fop foo.fo -print or Fop -print foo.fo \n  Fop foo.fo -awt \n");
+        return;
+    }
+
+    private void printUsagePrintOutput()
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        java.io.PrintStream $r0;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        $r0 = <java.lang.System: java.io.PrintStream err>;
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>("USAGE: -print [-Dstart=i] [-Dend=i] [-Dcopies=i] [-Deven=true|false]  org.apache.fop.apps.Fop (..) -print \nExample:\njava -Dstart=1 -Dend=2 org.apache.Fop.apps.Fop infile.fo -print ");
+        return;
+    }
+
+    private void dumpConfiguration()
+    {
+        org.apache.fop.cli.CommandLineOptions this;
+        org.apache.commons.logging.Log $r0;
+        int $i0;
+        java.lang.StringBuffer $r1;
+        java.io.File $r2, $r6;
+        java.lang.String $r3, $r4, $r5;
+        boolean $z0;
+
+        this := @this: org.apache.fop.cli.CommandLineOptions;
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>("Input mode: ");
+        $i0 = this.<org.apache.fop.cli.CommandLineOptions: int inputmode>;
+        tableswitch($i0)
+        {
+            case 0: goto label0;
+            case 1: goto label1;
+            case 2: goto label2;
+            default: goto label3;
+        };
+
+     label0:
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>("not set");
+        goto label4;
+
+     label1:
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>("FO ");
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("fo input file: ");
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File fofile>;
+        $r3 = virtualinvoke $r2.<java.io.File: java.lang.String toString()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r4 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>($r4);
+        goto label4;
+
+     label2:
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>("xslt transformation");
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("xml input file: ");
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File xmlfile>;
+        $r3 = virtualinvoke $r2.<java.io.File: java.lang.String toString()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r4 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>($r4);
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("xslt stylesheet: ");
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File xsltfile>;
+        $r3 = virtualinvoke $r2.<java.io.File: java.lang.String toString()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r4 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>($r4);
+        goto label4;
+
+     label3:
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>("unknown input type");
+
+     label4:
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>("Output mode: ");
+        $r5 = this.<org.apache.fop.cli.CommandLineOptions: java.lang.String outputmode>;
+        if $r5 != null goto label5;
+
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>("not set");
+        goto label10;
+
+     label5:
+        $r5 = "application/X-fop-awt-preview";
+        $r4 = this.<org.apache.fop.cli.CommandLineOptions: java.lang.String outputmode>;
+        $z0 = virtualinvoke $r5.<java.lang.String: boolean equals(java.lang.Object)>($r4);
+        if $z0 == 0 goto label6;
+
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>("awt on screen");
+        $r6 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File outfile>;
+        if $r6 == null goto label10;
+
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void error(java.lang.Object)>("awt mode, but outfile is set:");
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("out file: ");
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File outfile>;
+        $r3 = virtualinvoke $r2.<java.io.File: java.lang.String toString()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r4 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>($r4);
+        goto label10;
+
+     label6:
+        $r5 = "application/X-fop-print";
+        $r4 = this.<org.apache.fop.cli.CommandLineOptions: java.lang.String outputmode>;
+        $z0 = virtualinvoke $r5.<java.lang.String: boolean equals(java.lang.Object)>($r4);
+        if $z0 == 0 goto label7;
+
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>("print directly");
+        $r6 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File outfile>;
+        if $r6 == null goto label10;
+
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void error(java.lang.Object)>("print mode, but outfile is set:");
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("out file: ");
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File outfile>;
+        $r3 = virtualinvoke $r2.<java.io.File: java.lang.String toString()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r4 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r4);
+        goto label10;
+
+     label7:
+        $r5 = "application/X-fop-areatree";
+        $r4 = this.<org.apache.fop.cli.CommandLineOptions: java.lang.String outputmode>;
+        $z0 = virtualinvoke $r5.<java.lang.String: boolean equals(java.lang.Object)>($r4);
+        if $z0 == 0 goto label9;
+
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>("area tree");
+        $r5 = this.<org.apache.fop.cli.CommandLineOptions: java.lang.String mimicRenderer>;
+        if $r5 == null goto label8;
+
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("mimic renderer: ");
+        $r3 = this.<org.apache.fop.cli.CommandLineOptions: java.lang.String mimicRenderer>;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r4 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>($r4);
+
+     label8:
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("output file: ");
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File outfile>;
+        $r3 = virtualinvoke $r2.<java.io.File: java.lang.String toString()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r4 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>($r4);
+        goto label10;
+
+     label9:
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        $r4 = this.<org.apache.fop.cli.CommandLineOptions: java.lang.String outputmode>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>($r4);
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("output file: ");
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File outfile>;
+        $r3 = virtualinvoke $r2.<java.io.File: java.lang.String toString()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r4 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>($r4);
+
+     label10:
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>("OPTIONS");
+        $r6 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File userConfigFile>;
+        if $r6 == null goto label11;
+
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("user configuration file: ");
+        $r2 = this.<org.apache.fop.cli.CommandLineOptions: java.io.File userConfigFile>;
+        $r3 = virtualinvoke $r2.<java.io.File: java.lang.String toString()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r4 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>($r4);
+        goto label12;
+
+     label11:
+        $r0 = this.<org.apache.fop.cli.CommandLineOptions: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>("no user configuration file is used [default]");
+
+     label12:
+        return;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+}

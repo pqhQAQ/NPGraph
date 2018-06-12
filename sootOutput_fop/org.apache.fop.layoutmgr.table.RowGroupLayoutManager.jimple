@@ -1,0 +1,443 @@
+class org.apache.fop.layoutmgr.table.RowGroupLayoutManager extends java.lang.Object
+{
+    private static org.apache.commons.logging.Log log;
+    private org.apache.fop.fo.flow.table.EffRow[] rowGroup;
+    private org.apache.fop.layoutmgr.table.TableLayoutManager tableLM;
+    private org.apache.fop.layoutmgr.table.TableStepper tableStepper;
+    static java.lang.Class class$org$apache$fop$layoutmgr$table$RowGroupLayoutManager;
+
+    void <init>(org.apache.fop.layoutmgr.table.TableLayoutManager, org.apache.fop.fo.flow.table.EffRow[], org.apache.fop.layoutmgr.table.TableStepper)
+    {
+        org.apache.fop.layoutmgr.table.RowGroupLayoutManager this;
+        org.apache.fop.layoutmgr.table.TableLayoutManager tableLM;
+        org.apache.fop.fo.flow.table.EffRow[] rowGroup;
+        org.apache.fop.layoutmgr.table.TableStepper tableStepper;
+
+        this := @this: org.apache.fop.layoutmgr.table.RowGroupLayoutManager;
+        tableLM := @parameter0: org.apache.fop.layoutmgr.table.TableLayoutManager;
+        rowGroup := @parameter1: org.apache.fop.fo.flow.table.EffRow[];
+        tableStepper := @parameter2: org.apache.fop.layoutmgr.table.TableStepper;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.layoutmgr.table.TableLayoutManager tableLM> = tableLM;
+        this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.fo.flow.table.EffRow[] rowGroup> = rowGroup;
+        this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.layoutmgr.table.TableStepper tableStepper> = tableStepper;
+        return;
+    }
+
+    public java.util.LinkedList getNextKnuthElements(org.apache.fop.layoutmgr.LayoutContext, int, int)
+    {
+        org.apache.fop.layoutmgr.table.RowGroupLayoutManager this;
+        org.apache.fop.layoutmgr.LayoutContext context;
+        int alignment, bodyType, breakBefore, breakAfter, $i0, $i1, $i2;
+        java.util.LinkedList $r0, returnList;
+        org.apache.fop.fo.flow.table.TableRow firstRow, lastRow;
+        org.apache.fop.fo.flow.table.EffRow[] $r1, $r3, $r4, $r6;
+        org.apache.fop.fo.flow.table.EffRow $r2, $r5;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.table.RowGroupLayoutManager;
+        context := @parameter0: org.apache.fop.layoutmgr.LayoutContext;
+        alignment := @parameter1: int;
+        bodyType := @parameter2: int;
+        $r0 = new java.util.LinkedList;
+        specialinvoke $r0.<java.util.LinkedList: void <init>()>();
+        returnList = $r0;
+        specialinvoke this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: void createElementsForRowGroup(org.apache.fop.layoutmgr.LayoutContext,int,int,java.util.LinkedList)>(context, alignment, bodyType, returnList);
+        $r1 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $r2 = $r1[0];
+        $z0 = virtualinvoke $r2.<org.apache.fop.fo.flow.table.EffRow: boolean mustKeepWithPrevious()>();
+        virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int,boolean)>(1024, $z0);
+        $r1 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $r3 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $i0 = lengthof $r3;
+        $i0 = $i0 - 1;
+        $r2 = $r1[$i0];
+        $z0 = virtualinvoke $r2.<org.apache.fop.fo.flow.table.EffRow: boolean mustKeepWithNext()>();
+        virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int,boolean)>(512, $z0);
+        breakBefore = 9;
+        $r4 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $r5 = $r4[0];
+        firstRow = virtualinvoke $r5.<org.apache.fop.fo.flow.table.EffRow: org.apache.fop.fo.flow.table.TableRow getTableRow()>();
+        if firstRow == null goto label0;
+
+        breakBefore = virtualinvoke firstRow.<org.apache.fop.fo.flow.table.TableRow: int getBreakBefore()>();
+
+     label0:
+        $r1 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $r2 = $r1[0];
+        $i1 = virtualinvoke $r2.<org.apache.fop.fo.flow.table.EffRow: int getBreakBefore()>();
+        $i2 = staticinvoke <org.apache.fop.util.BreakUtil: int compareBreakClasses(int,int)>(breakBefore, $i1);
+        virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: void setBreakBefore(int)>($i2);
+        breakAfter = 9;
+        $r4 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $r6 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $i2 = lengthof $r6;
+        $i2 = $i2 - 1;
+        $r5 = $r4[$i2];
+        lastRow = virtualinvoke $r5.<org.apache.fop.fo.flow.table.EffRow: org.apache.fop.fo.flow.table.TableRow getTableRow()>();
+        if lastRow == null goto label1;
+
+        breakAfter = virtualinvoke lastRow.<org.apache.fop.fo.flow.table.TableRow: int getBreakAfter()>();
+
+     label1:
+        $r1 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $r3 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $i0 = lengthof $r3;
+        $i0 = $i0 - 1;
+        $r2 = $r1[$i0];
+        $i1 = virtualinvoke $r2.<org.apache.fop.fo.flow.table.EffRow: int getBreakAfter()>();
+        $i2 = staticinvoke <org.apache.fop.util.BreakUtil: int compareBreakClasses(int,int)>(breakAfter, $i1);
+        virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: void setBreakAfter(int)>($i2);
+        return returnList;
+    }
+
+    private void createElementsForRowGroup(org.apache.fop.layoutmgr.LayoutContext, int, int, java.util.LinkedList)
+    {
+        org.apache.fop.layoutmgr.table.RowGroupLayoutManager this;
+        org.apache.fop.layoutmgr.LayoutContext context, childLC, $r17;
+        int alignment, bodyType, rgi, spanWidth, i, c, $i0, $i1;
+        java.util.LinkedList returnList, elems, elements;
+        org.apache.commons.logging.Log $r0;
+        java.lang.StringBuffer $r1;
+        org.apache.fop.fo.flow.table.EffRow row;
+        java.util.Iterator iter;
+        org.apache.fop.fo.flow.table.GridUnit gu;
+        org.apache.fop.fo.flow.table.PrimaryGridUnit primary;
+        java.util.ListIterator colIter;
+        org.apache.fop.fo.flow.table.EffRow[] $r2, $r4, $r5;
+        java.lang.String $r3, $r20;
+        java.util.List $r6;
+        boolean $z0;
+        java.lang.Object $r7, $r13;
+        org.apache.fop.layoutmgr.table.TableCellLayoutManager $r8;
+        org.apache.fop.layoutmgr.table.TableLayoutManager $r9, $r10, $r16;
+        org.apache.fop.fo.flow.table.Table $r11;
+        org.apache.fop.fo.flow.table.TableCell $r12, $r19;
+        org.apache.fop.fo.flow.table.TableColumn $r14;
+        org.apache.fop.datatypes.Length $r15;
+        org.apache.fop.traits.MinOptMax $r18;
+        org.apache.fop.layoutmgr.table.TableStepper $r21;
+
+        this := @this: org.apache.fop.layoutmgr.table.RowGroupLayoutManager;
+        context := @parameter0: org.apache.fop.layoutmgr.LayoutContext;
+        alignment := @parameter1: int;
+        bodyType := @parameter2: int;
+        returnList := @parameter3: java.util.LinkedList;
+        $r0 = <org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Handling row group with ");
+        $r2 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $i0 = lengthof $r2;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" rows...");
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r3);
+        rgi = 0;
+
+     label0:
+        $r4 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $i1 = lengthof $r4;
+        if rgi >= $i1 goto label6;
+
+        $r5 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        row = $r5[rgi];
+        $r6 = virtualinvoke row.<org.apache.fop.fo.flow.table.EffRow: java.util.List getGridUnits()>();
+        iter = interfaceinvoke $r6.<java.util.List: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label5;
+
+        $r7 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        gu = (org.apache.fop.fo.flow.table.GridUnit) $r7;
+        $z0 = virtualinvoke gu.<org.apache.fop.fo.flow.table.GridUnit: boolean isPrimary()>();
+        if $z0 == 0 goto label4;
+
+        primary = virtualinvoke gu.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.PrimaryGridUnit getPrimary()>();
+        virtualinvoke primary.<org.apache.fop.fo.flow.table.PrimaryGridUnit: void createCellLM()>();
+        $r8 = virtualinvoke primary.<org.apache.fop.fo.flow.table.PrimaryGridUnit: org.apache.fop.layoutmgr.table.TableCellLayoutManager getCellLM()>();
+        $r9 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.layoutmgr.table.TableLayoutManager tableLM>;
+        virtualinvoke $r8.<org.apache.fop.layoutmgr.table.TableCellLayoutManager: void setParent(org.apache.fop.layoutmgr.LayoutManager)>($r9);
+        spanWidth = 0;
+        $r10 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.layoutmgr.table.TableLayoutManager tableLM>;
+        $r11 = virtualinvoke $r10.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r6 = virtualinvoke $r11.<org.apache.fop.fo.flow.table.Table: java.util.List getColumns()>();
+        $i1 = virtualinvoke primary.<org.apache.fop.fo.flow.table.PrimaryGridUnit: int getColIndex()>();
+        colIter = interfaceinvoke $r6.<java.util.List: java.util.ListIterator listIterator(int)>($i1);
+        i = 0;
+        $r12 = virtualinvoke primary.<org.apache.fop.fo.flow.table.PrimaryGridUnit: org.apache.fop.fo.flow.table.TableCell getCell()>();
+        c = virtualinvoke $r12.<org.apache.fop.fo.flow.table.TableCell: int getNumberColumnsSpanned()>();
+
+     label2:
+        if i >= c goto label3;
+
+        $r13 = interfaceinvoke colIter.<java.util.Iterator: java.lang.Object next()>();
+        $r14 = (org.apache.fop.fo.flow.table.TableColumn) $r13;
+        $r15 = virtualinvoke $r14.<org.apache.fop.fo.flow.table.TableColumn: org.apache.fop.datatypes.Length getColumnWidth()>();
+        $r16 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.layoutmgr.table.TableLayoutManager tableLM>;
+        $i1 = interfaceinvoke $r15.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>($r16);
+        spanWidth = spanWidth + $i1;
+        i = i + 1;
+        goto label2;
+
+     label3:
+        $r17 = new org.apache.fop.layoutmgr.LayoutContext;
+        specialinvoke $r17.<org.apache.fop.layoutmgr.LayoutContext: void <init>(int)>(0);
+        childLC = $r17;
+        $r18 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: org.apache.fop.traits.MinOptMax getStackLimitBP()>();
+        virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: void setStackLimitBP(org.apache.fop.traits.MinOptMax)>($r18);
+        virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: void setRefIPD(int)>(spanWidth);
+        $r8 = virtualinvoke primary.<org.apache.fop.fo.flow.table.PrimaryGridUnit: org.apache.fop.layoutmgr.table.TableCellLayoutManager getCellLM()>();
+        elems = virtualinvoke $r8.<org.apache.fop.layoutmgr.table.TableCellLayoutManager: java.util.LinkedList getNextKnuthElements(org.apache.fop.layoutmgr.LayoutContext,int)>(childLC, alignment);
+        $r19 = virtualinvoke primary.<org.apache.fop.fo.flow.table.PrimaryGridUnit: org.apache.fop.fo.flow.table.TableCell getCell()>();
+        $r20 = virtualinvoke $r19.<org.apache.fop.fo.flow.table.TableCell: java.lang.String getId()>();
+        staticinvoke <org.apache.fop.layoutmgr.ElementListObserver: void observe(java.util.List,java.lang.String,java.lang.String)>(elems, "table-cell", $r20);
+        virtualinvoke primary.<org.apache.fop.fo.flow.table.PrimaryGridUnit: void setElements(java.util.LinkedList)>(elems);
+
+     label4:
+        goto label1;
+
+     label5:
+        rgi = rgi + 1;
+        goto label0;
+
+     label6:
+        specialinvoke this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: void computeRowHeights()>();
+        $r21 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.layoutmgr.table.TableStepper tableStepper>;
+        $r2 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        elements = virtualinvoke $r21.<org.apache.fop.layoutmgr.table.TableStepper: java.util.LinkedList getCombinedKnuthElementsForRowGroup(org.apache.fop.layoutmgr.LayoutContext,org.apache.fop.fo.flow.table.EffRow[],int)>(context, $r2, bodyType);
+        virtualinvoke returnList.<java.util.LinkedList: boolean addAll(java.util.Collection)>(elements);
+        return;
+    }
+
+    private void computeRowHeights()
+    {
+        org.apache.fop.layoutmgr.table.RowGroupLayoutManager this;
+        org.apache.commons.logging.Log $r0;
+        org.apache.fop.traits.MinOptMax[] rowHeights;
+        int rgi, effectiveCellBPD, borderWidths, effRowHeight, prev, $i0, $i1, padding, $i2;
+        org.apache.fop.fo.flow.table.EffRow row, $r4;
+        org.apache.fop.fo.flow.table.TableRow tableRowFO;
+        org.apache.fop.traits.MinOptMax $r1, explicitRowHeight, $r5, $r14;
+        org.apache.fop.fo.properties.LengthRangeProperty rowBPD, cellBPD;
+        java.util.Iterator iter;
+        org.apache.fop.fo.flow.table.GridUnit gu;
+        org.apache.fop.fo.flow.table.PrimaryGridUnit primary;
+        byte padding;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground cbpb;
+        org.apache.fop.fo.flow.table.EffRow[] $r2, $r3;
+        org.apache.fop.layoutmgr.table.TableLayoutManager $r6, $r7;
+        java.util.List $r8;
+        boolean $z0;
+        java.lang.Object $r9;
+        org.apache.fop.fo.flow.table.TableCell $r10;
+        org.apache.fop.fo.properties.Property $r11;
+        org.apache.fop.datatypes.Length $r12;
+        org.apache.fop.layoutmgr.table.TableCellLayoutManager $r13;
+        java.lang.StringBuffer $r15;
+        java.lang.String $r16;
+
+        this := @this: org.apache.fop.layoutmgr.table.RowGroupLayoutManager;
+        $r0 = <org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("rowGroup:");
+        $r2 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $i0 = lengthof $r2;
+        rowHeights = newarray (org.apache.fop.traits.MinOptMax)[$i0];
+        rgi = 0;
+
+     label0:
+        $r3 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $i1 = lengthof $r3;
+        if rgi >= $i1 goto label12;
+
+        $r2 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        row = $r2[rgi];
+        $r2 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.fo.flow.table.EffRow[] rowGroup>;
+        $r4 = $r2[rgi];
+        tableRowFO = virtualinvoke $r4.<org.apache.fop.fo.flow.table.EffRow: org.apache.fop.fo.flow.table.TableRow getTableRow()>();
+        if tableRowFO != null goto label1;
+
+        $r1 = new org.apache.fop.traits.MinOptMax;
+        specialinvoke $r1.<org.apache.fop.traits.MinOptMax: void <init>(int,int,int)>(0, 0, 2147483647);
+        rowHeights[rgi] = $r1;
+        $r5 = new org.apache.fop.traits.MinOptMax;
+        specialinvoke $r5.<org.apache.fop.traits.MinOptMax: void <init>(int,int,int)>(0, 0, 2147483647);
+        explicitRowHeight = $r5;
+        goto label2;
+
+     label1:
+        rowBPD = virtualinvoke tableRowFO.<org.apache.fop.fo.flow.table.TableRow: org.apache.fop.fo.properties.LengthRangeProperty getBlockProgressionDimension()>();
+        $r6 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.layoutmgr.table.TableLayoutManager tableLM>;
+        $r1 = staticinvoke <org.apache.fop.layoutmgr.MinOptMaxUtil: org.apache.fop.traits.MinOptMax toMinOptMax(org.apache.fop.fo.properties.LengthRangeProperty,org.apache.fop.datatypes.PercentBaseContext)>(rowBPD, $r6);
+        rowHeights[rgi] = $r1;
+        $r7 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.layoutmgr.table.TableLayoutManager tableLM>;
+        explicitRowHeight = staticinvoke <org.apache.fop.layoutmgr.MinOptMaxUtil: org.apache.fop.traits.MinOptMax toMinOptMax(org.apache.fop.fo.properties.LengthRangeProperty,org.apache.fop.datatypes.PercentBaseContext)>(rowBPD, $r7);
+
+     label2:
+        $r8 = virtualinvoke row.<org.apache.fop.fo.flow.table.EffRow: java.util.List getGridUnits()>();
+        iter = interfaceinvoke $r8.<java.util.List: java.util.Iterator iterator()>();
+
+     label3:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label10;
+
+        $r9 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        gu = (org.apache.fop.fo.flow.table.GridUnit) $r9;
+        $z0 = virtualinvoke gu.<org.apache.fop.fo.flow.table.GridUnit: boolean isEmpty()>();
+        if $z0 != 0 goto label9;
+
+        $i0 = virtualinvoke gu.<org.apache.fop.fo.flow.table.GridUnit: int getColSpanIndex()>();
+        if $i0 != 0 goto label9;
+
+        $z0 = virtualinvoke gu.<org.apache.fop.fo.flow.table.GridUnit: boolean isLastGridUnitRowSpan()>();
+        if $z0 == 0 goto label9;
+
+        primary = virtualinvoke gu.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.PrimaryGridUnit getPrimary()>();
+        effectiveCellBPD = 0;
+        $r10 = virtualinvoke primary.<org.apache.fop.fo.flow.table.PrimaryGridUnit: org.apache.fop.fo.flow.table.TableCell getCell()>();
+        cellBPD = virtualinvoke $r10.<org.apache.fop.fo.flow.table.TableCell: org.apache.fop.fo.properties.LengthRangeProperty getBlockProgressionDimension()>();
+        $r7 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.layoutmgr.table.TableLayoutManager tableLM>;
+        $r11 = virtualinvoke cellBPD.<org.apache.fop.fo.properties.LengthRangeProperty: org.apache.fop.fo.properties.Property getMinimum(org.apache.fop.datatypes.PercentBaseContext)>($r7);
+        $z0 = virtualinvoke $r11.<org.apache.fop.fo.properties.Property: boolean isAuto()>();
+        if $z0 != 0 goto label4;
+
+        $r7 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.layoutmgr.table.TableLayoutManager tableLM>;
+        $r11 = virtualinvoke cellBPD.<org.apache.fop.fo.properties.LengthRangeProperty: org.apache.fop.fo.properties.Property getMinimum(org.apache.fop.datatypes.PercentBaseContext)>($r7);
+        $r12 = virtualinvoke $r11.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        $r7 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.layoutmgr.table.TableLayoutManager tableLM>;
+        effectiveCellBPD = interfaceinvoke $r12.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>($r7);
+
+     label4:
+        $r7 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.layoutmgr.table.TableLayoutManager tableLM>;
+        $r11 = virtualinvoke cellBPD.<org.apache.fop.fo.properties.LengthRangeProperty: org.apache.fop.fo.properties.Property getOptimum(org.apache.fop.datatypes.PercentBaseContext)>($r7);
+        $z0 = virtualinvoke $r11.<org.apache.fop.fo.properties.Property: boolean isAuto()>();
+        if $z0 != 0 goto label5;
+
+        $r7 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.layoutmgr.table.TableLayoutManager tableLM>;
+        $r11 = virtualinvoke cellBPD.<org.apache.fop.fo.properties.LengthRangeProperty: org.apache.fop.fo.properties.Property getOptimum(org.apache.fop.datatypes.PercentBaseContext)>($r7);
+        $r12 = virtualinvoke $r11.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        $r7 = this.<org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.fop.layoutmgr.table.TableLayoutManager tableLM>;
+        effectiveCellBPD = interfaceinvoke $r12.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>($r7);
+
+     label5:
+        $i0 = virtualinvoke gu.<org.apache.fop.fo.flow.table.GridUnit: int getRowSpanIndex()>();
+        if $i0 != 0 goto label6;
+
+        $i1 = explicitRowHeight.<org.apache.fop.traits.MinOptMax: int opt>;
+        effectiveCellBPD = staticinvoke <java.lang.Math: int max(int,int)>(effectiveCellBPD, $i1);
+
+     label6:
+        $i1 = virtualinvoke primary.<org.apache.fop.fo.flow.table.PrimaryGridUnit: int getContentLength()>();
+        effectiveCellBPD = staticinvoke <java.lang.Math: int max(int,int)>(effectiveCellBPD, $i1);
+        borderWidths = virtualinvoke primary.<org.apache.fop.fo.flow.table.PrimaryGridUnit: int getBeforeAfterBorderWidth()>();
+        padding = 0;
+        $r10 = virtualinvoke primary.<org.apache.fop.fo.flow.table.PrimaryGridUnit: org.apache.fop.fo.flow.table.TableCell getCell()>();
+        cbpb = virtualinvoke $r10.<org.apache.fop.fo.flow.table.TableCell: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        $r13 = virtualinvoke primary.<org.apache.fop.fo.flow.table.PrimaryGridUnit: org.apache.fop.layoutmgr.table.TableCellLayoutManager getCellLM()>();
+        $i1 = virtualinvoke cbpb.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPaddingBefore(boolean,org.apache.fop.datatypes.PercentBaseContext)>(0, $r13);
+        padding = padding + $i1;
+        $r13 = virtualinvoke primary.<org.apache.fop.fo.flow.table.PrimaryGridUnit: org.apache.fop.layoutmgr.table.TableCellLayoutManager getCellLM()>();
+        $i1 = virtualinvoke cbpb.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPaddingAfter(boolean,org.apache.fop.datatypes.PercentBaseContext)>(0, $r13);
+        padding = padding + $i1;
+        $i0 = effectiveCellBPD + padding;
+        effRowHeight = $i0 + borderWidths;
+        prev = rgi - 1;
+
+     label7:
+        $i2 = virtualinvoke gu.<org.apache.fop.fo.flow.table.GridUnit: int getRowSpanIndex()>();
+        $i1 = rgi - $i2;
+        if prev < $i1 goto label8;
+
+        $r14 = rowHeights[prev];
+        $i1 = $r14.<org.apache.fop.traits.MinOptMax: int opt>;
+        effRowHeight = effRowHeight - $i1;
+        prev = prev + -1;
+        goto label7;
+
+     label8:
+        $r14 = rowHeights[rgi];
+        $i1 = $r14.<org.apache.fop.traits.MinOptMax: int min>;
+        if effRowHeight <= $i1 goto label9;
+
+        $r5 = rowHeights[rgi];
+        staticinvoke <org.apache.fop.layoutmgr.MinOptMaxUtil: void extendMinimum(org.apache.fop.traits.MinOptMax,int)>($r5, effRowHeight);
+
+     label9:
+        goto label3;
+
+     label10:
+        $r14 = rowHeights[rgi];
+        virtualinvoke row.<org.apache.fop.fo.flow.table.EffRow: void setHeight(org.apache.fop.traits.MinOptMax)>($r14);
+        virtualinvoke row.<org.apache.fop.fo.flow.table.EffRow: void setExplicitHeight(org.apache.fop.traits.MinOptMax)>(explicitRowHeight);
+        $r0 = <org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label11;
+
+        $r0 = <org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.commons.logging.Log log>;
+        $r15 = new java.lang.StringBuffer;
+        specialinvoke $r15.<java.lang.StringBuffer: void <init>()>();
+        $r15 = virtualinvoke $r15.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("  height=");
+        $r1 = rowHeights[rgi];
+        $r15 = virtualinvoke $r15.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r1);
+        $r15 = virtualinvoke $r15.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" explicit=");
+        $r15 = virtualinvoke $r15.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(explicitRowHeight);
+        $r16 = virtualinvoke $r15.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r16);
+
+     label11:
+        rgi = rgi + 1;
+        goto label0;
+
+     label12:
+        return;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.layoutmgr.table.RowGroupLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$table$RowGroupLayoutManager>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.layoutmgr.table.RowGroupLayoutManager: java.lang.Class class$(java.lang.String)>("org.apache.fop.layoutmgr.table.RowGroupLayoutManager");
+        <org.apache.fop.layoutmgr.table.RowGroupLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$table$RowGroupLayoutManager> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.layoutmgr.table.RowGroupLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$table$RowGroupLayoutManager>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.layoutmgr.table.RowGroupLayoutManager: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

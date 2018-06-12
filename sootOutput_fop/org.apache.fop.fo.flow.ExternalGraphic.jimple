@@ -1,0 +1,213 @@
+public class org.apache.fop.fo.flow.ExternalGraphic extends org.apache.fop.fo.flow.AbstractGraphics
+{
+    private java.lang.String src;
+    private java.lang.String url;
+    private int intrinsicWidth;
+    private int intrinsicHeight;
+    private org.apache.fop.datatypes.Length intrinsicAlignmentAdjust;
+
+    public void <init>(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.flow.ExternalGraphic this;
+        org.apache.fop.fo.FONode parent;
+
+        this := @this: org.apache.fop.fo.flow.ExternalGraphic;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        specialinvoke this.<org.apache.fop.fo.flow.AbstractGraphics: void <init>(org.apache.fop.fo.FONode)>(parent);
+        return;
+    }
+
+    public void bind(org.apache.fop.fo.PropertyList) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.ExternalGraphic this;
+        org.apache.fop.fo.PropertyList pList;
+        org.apache.fop.apps.FOUserAgent userAgent;
+        org.apache.xmlgraphics.image.loader.ImageManager manager;
+        org.apache.xmlgraphics.image.loader.ImageInfo info;
+        org.apache.xmlgraphics.image.loader.ImageException e, $r4;
+        java.io.FileNotFoundException fnfe, $r8;
+        java.io.IOException ioe, $r9;
+        int baseline, $i0;
+        org.apache.fop.fo.properties.Property $r0;
+        java.lang.String $r1, $r7;
+        org.apache.fop.apps.FopFactory $r2;
+        org.apache.xmlgraphics.image.loader.ImageSessionContext $r3;
+        org.apache.commons.logging.Log $r5;
+        java.lang.StringBuffer $r6;
+        org.apache.xmlgraphics.image.loader.ImageSize $r10, $r11;
+        double $d0;
+        org.apache.fop.fo.properties.FixedLength $r12;
+
+        this := @this: org.apache.fop.fo.flow.ExternalGraphic;
+        pList := @parameter0: org.apache.fop.fo.PropertyList;
+        specialinvoke this.<org.apache.fop.fo.flow.AbstractGraphics: void bind(org.apache.fop.fo.PropertyList)>(pList);
+        $r0 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(210);
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.properties.Property: java.lang.String getString()>();
+        this.<org.apache.fop.fo.flow.ExternalGraphic: java.lang.String src> = $r1;
+        $r1 = this.<org.apache.fop.fo.flow.ExternalGraphic: java.lang.String src>;
+        $r1 = staticinvoke <org.apache.fop.datatypes.URISpecification: java.lang.String getURL(java.lang.String)>($r1);
+        this.<org.apache.fop.fo.flow.ExternalGraphic: java.lang.String url> = $r1;
+        userAgent = virtualinvoke this.<org.apache.fop.fo.flow.ExternalGraphic: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        $r2 = virtualinvoke userAgent.<org.apache.fop.apps.FOUserAgent: org.apache.fop.apps.FopFactory getFactory()>();
+        manager = virtualinvoke $r2.<org.apache.fop.apps.FopFactory: org.apache.xmlgraphics.image.loader.ImageManager getImageManager()>();
+        info = null;
+
+     label0:
+        $r1 = this.<org.apache.fop.fo.flow.ExternalGraphic: java.lang.String url>;
+        $r3 = virtualinvoke userAgent.<org.apache.fop.apps.FOUserAgent: org.apache.xmlgraphics.image.loader.ImageSessionContext getImageSessionContext()>();
+        info = virtualinvoke manager.<org.apache.xmlgraphics.image.loader.ImageManager: org.apache.xmlgraphics.image.loader.ImageInfo getImageInfo(java.lang.String,org.apache.xmlgraphics.image.loader.ImageSessionContext)>($r1, $r3);
+
+     label1:
+        goto label5;
+
+     label2:
+        $r4 := @caughtexception;
+        e = $r4;
+        $r5 = <org.apache.fop.fo.flow.ExternalGraphic: org.apache.commons.logging.Log log>;
+        $r6 = new java.lang.StringBuffer;
+        specialinvoke $r6.<java.lang.StringBuffer: void <init>()>();
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Image not available: ");
+        $r7 = virtualinvoke e.<org.apache.xmlgraphics.image.loader.ImageException: java.lang.String getMessage()>();
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r7);
+        $r1 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r1);
+        goto label5;
+
+     label3:
+        $r8 := @caughtexception;
+        fnfe = $r8;
+        $r5 = <org.apache.fop.fo.flow.ExternalGraphic: org.apache.commons.logging.Log log>;
+        $r1 = virtualinvoke fnfe.<java.io.FileNotFoundException: java.lang.String getMessage()>();
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r1);
+        goto label5;
+
+     label4:
+        $r9 := @caughtexception;
+        ioe = $r9;
+        $r5 = <org.apache.fop.fo.flow.ExternalGraphic: org.apache.commons.logging.Log log>;
+        $r6 = new java.lang.StringBuffer;
+        specialinvoke $r6.<java.lang.StringBuffer: void <init>()>();
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("I/O error while loading image: ");
+        $r7 = virtualinvoke ioe.<java.io.IOException: java.lang.String getMessage()>();
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r7);
+        $r1 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r1);
+
+     label5:
+        if info == null goto label6;
+
+        $r10 = virtualinvoke info.<org.apache.xmlgraphics.image.loader.ImageInfo: org.apache.xmlgraphics.image.loader.ImageSize getSize()>();
+        $i0 = virtualinvoke $r10.<org.apache.xmlgraphics.image.loader.ImageSize: int getWidthMpt()>();
+        this.<org.apache.fop.fo.flow.ExternalGraphic: int intrinsicWidth> = $i0;
+        $r10 = virtualinvoke info.<org.apache.xmlgraphics.image.loader.ImageInfo: org.apache.xmlgraphics.image.loader.ImageSize getSize()>();
+        $i0 = virtualinvoke $r10.<org.apache.xmlgraphics.image.loader.ImageSize: int getHeightMpt()>();
+        this.<org.apache.fop.fo.flow.ExternalGraphic: int intrinsicHeight> = $i0;
+        $r11 = virtualinvoke info.<org.apache.xmlgraphics.image.loader.ImageInfo: org.apache.xmlgraphics.image.loader.ImageSize getSize()>();
+        baseline = virtualinvoke $r11.<org.apache.xmlgraphics.image.loader.ImageSize: int getBaselinePositionFromBottom()>();
+        if baseline == 0 goto label6;
+
+        $i0 = neg baseline;
+        $d0 = (double) $i0;
+        $r12 = staticinvoke <org.apache.fop.fo.properties.FixedLength: org.apache.fop.fo.properties.FixedLength getInstance(double)>($d0);
+        this.<org.apache.fop.fo.flow.ExternalGraphic: org.apache.fop.datatypes.Length intrinsicAlignmentAdjust> = $r12;
+
+     label6:
+        return;
+
+        catch org.apache.xmlgraphics.image.loader.ImageException from label0 to label1 with label2;
+        catch java.io.FileNotFoundException from label0 to label1 with label3;
+        catch java.io.IOException from label0 to label1 with label4;
+    }
+
+    protected void startOfNode() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.ExternalGraphic this;
+        org.apache.fop.fo.FOEventHandler $r0;
+
+        this := @this: org.apache.fop.fo.flow.ExternalGraphic;
+        specialinvoke this.<org.apache.fop.fo.flow.AbstractGraphics: void startOfNode()>();
+        $r0 = virtualinvoke this.<org.apache.fop.fo.flow.ExternalGraphic: org.apache.fop.fo.FOEventHandler getFOEventHandler()>();
+        virtualinvoke $r0.<org.apache.fop.fo.FOEventHandler: void image(org.apache.fop.fo.flow.ExternalGraphic)>(this);
+        return;
+    }
+
+    protected void validateChildNode(org.xml.sax.Locator, java.lang.String, java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.flow.ExternalGraphic this;
+        org.xml.sax.Locator loc;
+        java.lang.String nsURI, localName;
+
+        this := @this: org.apache.fop.fo.flow.ExternalGraphic;
+        loc := @parameter0: org.xml.sax.Locator;
+        nsURI := @parameter1: java.lang.String;
+        localName := @parameter2: java.lang.String;
+        virtualinvoke this.<org.apache.fop.fo.flow.ExternalGraphic: void invalidChildError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, nsURI, localName);
+        return;
+    }
+
+    public java.lang.String getSrc()
+    {
+        org.apache.fop.fo.flow.ExternalGraphic this;
+        java.lang.String $r0;
+
+        this := @this: org.apache.fop.fo.flow.ExternalGraphic;
+        $r0 = this.<org.apache.fop.fo.flow.ExternalGraphic: java.lang.String src>;
+        return $r0;
+    }
+
+    public java.lang.String getURL()
+    {
+        org.apache.fop.fo.flow.ExternalGraphic this;
+        java.lang.String $r0;
+
+        this := @this: org.apache.fop.fo.flow.ExternalGraphic;
+        $r0 = this.<org.apache.fop.fo.flow.ExternalGraphic: java.lang.String url>;
+        return $r0;
+    }
+
+    public java.lang.String getLocalName()
+    {
+        org.apache.fop.fo.flow.ExternalGraphic this;
+
+        this := @this: org.apache.fop.fo.flow.ExternalGraphic;
+        return "external-graphic";
+    }
+
+    public int getNameId()
+    {
+        org.apache.fop.fo.flow.ExternalGraphic this;
+
+        this := @this: org.apache.fop.fo.flow.ExternalGraphic;
+        return 9;
+    }
+
+    public int getIntrinsicWidth()
+    {
+        org.apache.fop.fo.flow.ExternalGraphic this;
+        int $i0;
+
+        this := @this: org.apache.fop.fo.flow.ExternalGraphic;
+        $i0 = this.<org.apache.fop.fo.flow.ExternalGraphic: int intrinsicWidth>;
+        return $i0;
+    }
+
+    public int getIntrinsicHeight()
+    {
+        org.apache.fop.fo.flow.ExternalGraphic this;
+        int $i0;
+
+        this := @this: org.apache.fop.fo.flow.ExternalGraphic;
+        $i0 = this.<org.apache.fop.fo.flow.ExternalGraphic: int intrinsicHeight>;
+        return $i0;
+    }
+
+    public org.apache.fop.datatypes.Length getIntrinsicAlignmentAdjust()
+    {
+        org.apache.fop.fo.flow.ExternalGraphic this;
+        org.apache.fop.datatypes.Length $r0;
+
+        this := @this: org.apache.fop.fo.flow.ExternalGraphic;
+        $r0 = this.<org.apache.fop.fo.flow.ExternalGraphic: org.apache.fop.datatypes.Length intrinsicAlignmentAdjust>;
+        return $r0;
+    }
+}

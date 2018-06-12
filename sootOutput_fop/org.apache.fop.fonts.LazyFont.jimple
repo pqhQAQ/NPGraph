@@ -1,0 +1,709 @@
+public class org.apache.fop.fonts.LazyFont extends org.apache.fop.fonts.Typeface implements org.apache.fop.fonts.FontDescriptor
+{
+    private static org.apache.commons.logging.Log log;
+    private java.lang.String metricsFileName;
+    private java.lang.String fontEmbedPath;
+    private boolean useKerning;
+    private boolean isMetricsLoaded;
+    private org.apache.fop.fonts.Typeface realFont;
+    private org.apache.fop.fonts.FontDescriptor realFontDescriptor;
+    private org.apache.fop.fonts.FontResolver resolver;
+    static java.lang.Class class$org$apache$fop$fonts$LazyFont;
+
+    public void <init>(org.apache.fop.fonts.EmbedFontInfo, org.apache.fop.fonts.FontResolver)
+    {
+        org.apache.fop.fonts.LazyFont this;
+        org.apache.fop.fonts.EmbedFontInfo fontInfo;
+        org.apache.fop.fonts.FontResolver resolver;
+        java.lang.String $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        fontInfo := @parameter0: org.apache.fop.fonts.EmbedFontInfo;
+        resolver := @parameter1: org.apache.fop.fonts.FontResolver;
+        specialinvoke this.<org.apache.fop.fonts.Typeface: void <init>()>();
+        this.<org.apache.fop.fonts.LazyFont: java.lang.String metricsFileName> = null;
+        this.<org.apache.fop.fonts.LazyFont: java.lang.String fontEmbedPath> = null;
+        this.<org.apache.fop.fonts.LazyFont: boolean useKerning> = 0;
+        this.<org.apache.fop.fonts.LazyFont: boolean isMetricsLoaded> = 0;
+        this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.Typeface realFont> = null;
+        this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.FontDescriptor realFontDescriptor> = null;
+        this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.FontResolver resolver> = null;
+        $r0 = virtualinvoke fontInfo.<org.apache.fop.fonts.EmbedFontInfo: java.lang.String getMetricsFile()>();
+        this.<org.apache.fop.fonts.LazyFont: java.lang.String metricsFileName> = $r0;
+        $r0 = virtualinvoke fontInfo.<org.apache.fop.fonts.EmbedFontInfo: java.lang.String getEmbedFile()>();
+        this.<org.apache.fop.fonts.LazyFont: java.lang.String fontEmbedPath> = $r0;
+        $z0 = virtualinvoke fontInfo.<org.apache.fop.fonts.EmbedFontInfo: boolean getKerning()>();
+        this.<org.apache.fop.fonts.LazyFont: boolean useKerning> = $z0;
+        this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.FontResolver resolver> = resolver;
+        return;
+    }
+
+    public java.lang.String toString()
+    {
+        org.apache.fop.fonts.LazyFont this;
+        java.lang.StringBuffer $r0;
+        java.lang.String $r1, $r2;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("metrics-url=");
+        $r1 = this.<org.apache.fop.fonts.LazyFont: java.lang.String metricsFileName>;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", embed-url=");
+        $r1 = this.<org.apache.fop.fonts.LazyFont: java.lang.String fontEmbedPath>;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", kerning=");
+        $z0 = this.<org.apache.fop.fonts.LazyFont: boolean useKerning>;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(boolean)>($z0);
+        $r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r2;
+    }
+
+    private void load(boolean)
+    {
+        org.apache.fop.fonts.LazyFont this;
+        boolean fail, $z0, $z1;
+        null_type reader;
+        javax.xml.transform.Source source;
+        java.lang.String err, $r1, $r3, $r9, $r13;
+        java.io.InputStream in, $r14;
+        org.xml.sax.InputSource src, $r10, $r12;
+        java.net.URL $r0, $r8;
+        org.apache.fop.apps.FOPException fopex, $r21;
+        java.io.IOException ioex, $r23;
+        org.apache.fop.fonts.FontResolver $r2, $r15, $r17;
+        java.lang.StringBuffer $r4, $r22;
+        java.lang.RuntimeException $r5;
+        org.apache.commons.logging.Log $r6;
+        javax.xml.transform.stream.StreamSource $r7;
+        org.apache.fop.fonts.FontReader $r11, reader;
+        org.apache.fop.fonts.Typeface $r16, $r19;
+        org.apache.fop.fonts.CustomFont $r18;
+        org.apache.fop.fonts.FontDescriptor $r20;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        fail := @parameter0: boolean;
+        $z0 = this.<org.apache.fop.fonts.LazyFont: boolean isMetricsLoaded>;
+        if $z0 != 0 goto label19;
+
+     label0:
+        $r1 = this.<org.apache.fop.fonts.LazyFont: java.lang.String metricsFileName>;
+        if $r1 == null goto label11;
+
+        reader = null;
+        $r2 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.FontResolver resolver>;
+        if $r2 == null goto label9;
+
+        $r2 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.FontResolver resolver>;
+        $r3 = this.<org.apache.fop.fonts.LazyFont: java.lang.String metricsFileName>;
+        source = interfaceinvoke $r2.<org.apache.fop.fonts.FontResolver: javax.xml.transform.Source resolve(java.lang.String)>($r3);
+        if source != null goto label3;
+
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Cannot load font: failed to create Source from metrics file ");
+        $r3 = this.<org.apache.fop.fonts.LazyFont: java.lang.String metricsFileName>;
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        err = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        if fail == 0 goto label1;
+
+        $r5 = new java.lang.RuntimeException;
+        specialinvoke $r5.<java.lang.RuntimeException: void <init>(java.lang.String)>(err);
+        throw $r5;
+
+     label1:
+        $r6 = <org.apache.fop.fonts.LazyFont: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r6.<org.apache.commons.logging.Log: void error(java.lang.Object)>(err);
+
+     label2:
+        return;
+
+     label3:
+        in = null;
+        $z0 = source instanceof javax.xml.transform.stream.StreamSource;
+        if $z0 == 0 goto label4;
+
+        $r7 = (javax.xml.transform.stream.StreamSource) source;
+        in = virtualinvoke $r7.<javax.xml.transform.stream.StreamSource: java.io.InputStream getInputStream()>();
+
+     label4:
+        if in != null goto label5;
+
+        $r1 = interfaceinvoke source.<javax.xml.transform.Source: java.lang.String getSystemId()>();
+        if $r1 == null goto label5;
+
+        $r8 = new java.net.URL;
+        $r9 = interfaceinvoke source.<javax.xml.transform.Source: java.lang.String getSystemId()>();
+        specialinvoke $r8.<java.net.URL: void <init>(java.lang.String)>($r9);
+        in = virtualinvoke $r8.<java.net.URL: java.io.InputStream openStream()>();
+
+     label5:
+        if in != null goto label8;
+
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Cannot load font: After URI resolution, the returned Source object does not contain an InputStream or a valid URL (system identifier) for metrics file: ");
+        $r3 = this.<org.apache.fop.fonts.LazyFont: java.lang.String metricsFileName>;
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        err = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        if fail == 0 goto label6;
+
+        $r5 = new java.lang.RuntimeException;
+        specialinvoke $r5.<java.lang.RuntimeException: void <init>(java.lang.String)>(err);
+        throw $r5;
+
+     label6:
+        $r6 = <org.apache.fop.fonts.LazyFont: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r6.<org.apache.commons.logging.Log: void error(java.lang.Object)>(err);
+
+     label7:
+        return;
+
+     label8:
+        $r10 = new org.xml.sax.InputSource;
+        specialinvoke $r10.<org.xml.sax.InputSource: void <init>(java.io.InputStream)>(in);
+        src = $r10;
+        $r3 = interfaceinvoke source.<javax.xml.transform.Source: java.lang.String getSystemId()>();
+        virtualinvoke src.<org.xml.sax.InputSource: void setSystemId(java.lang.String)>($r3);
+        $r11 = new org.apache.fop.fonts.FontReader;
+        specialinvoke $r11.<org.apache.fop.fonts.FontReader: void <init>(org.xml.sax.InputSource)>(src);
+        reader = $r11;
+        goto label10;
+
+     label9:
+        $r11 = new org.apache.fop.fonts.FontReader;
+        $r12 = new org.xml.sax.InputSource;
+        $r0 = new java.net.URL;
+        $r13 = this.<org.apache.fop.fonts.LazyFont: java.lang.String metricsFileName>;
+        specialinvoke $r0.<java.net.URL: void <init>(java.lang.String)>($r13);
+        $r14 = virtualinvoke $r0.<java.net.URL: java.io.InputStream openStream()>();
+        specialinvoke $r12.<org.xml.sax.InputSource: void <init>(java.io.InputStream)>($r14);
+        specialinvoke $r11.<org.apache.fop.fonts.FontReader: void <init>(org.xml.sax.InputSource)>($r12);
+        reader = $r11;
+
+     label10:
+        $z1 = this.<org.apache.fop.fonts.LazyFont: boolean useKerning>;
+        virtualinvoke reader.<org.apache.fop.fonts.FontReader: void setKerningEnabled(boolean)>($z1);
+        $r3 = this.<org.apache.fop.fonts.LazyFont: java.lang.String fontEmbedPath>;
+        virtualinvoke reader.<org.apache.fop.fonts.FontReader: void setFontEmbedPath(java.lang.String)>($r3);
+        $r15 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.FontResolver resolver>;
+        virtualinvoke reader.<org.apache.fop.fonts.FontReader: void setResolver(org.apache.fop.fonts.FontResolver)>($r15);
+        $r16 = virtualinvoke reader.<org.apache.fop.fonts.FontReader: org.apache.fop.fonts.Typeface getFont()>();
+        this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.Typeface realFont> = $r16;
+        goto label13;
+
+     label11:
+        $r1 = this.<org.apache.fop.fonts.LazyFont: java.lang.String fontEmbedPath>;
+        if $r1 != null goto label12;
+
+        $r5 = new java.lang.RuntimeException;
+        specialinvoke $r5.<java.lang.RuntimeException: void <init>(java.lang.String)>("Cannot load font. No font URIs available.");
+        throw $r5;
+
+     label12:
+        $r3 = this.<org.apache.fop.fonts.LazyFont: java.lang.String fontEmbedPath>;
+        $r17 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.FontResolver resolver>;
+        $r18 = staticinvoke <org.apache.fop.fonts.FontLoader: org.apache.fop.fonts.CustomFont loadFont(java.lang.String,org.apache.fop.fonts.FontResolver)>($r3, $r17);
+        this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.Typeface realFont> = $r18;
+
+     label13:
+        $r19 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.Typeface realFont>;
+        $z0 = $r19 instanceof org.apache.fop.fonts.FontDescriptor;
+        if $z0 == 0 goto label14;
+
+        $r16 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.Typeface realFont>;
+        $r20 = (org.apache.fop.fonts.FontDescriptor) $r16;
+        this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.FontDescriptor realFontDescriptor> = $r20;
+
+     label14:
+        goto label18;
+
+     label15:
+        $r21 := @caughtexception;
+        fopex = $r21;
+        $r6 = <org.apache.fop.fonts.LazyFont: org.apache.commons.logging.Log log>;
+        $r22 = new java.lang.StringBuffer;
+        specialinvoke $r22.<java.lang.StringBuffer: void <init>()>();
+        $r22 = virtualinvoke $r22.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Failed to read font metrics file ");
+        $r9 = this.<org.apache.fop.fonts.LazyFont: java.lang.String metricsFileName>;
+        $r22 = virtualinvoke $r22.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r9);
+        $r3 = virtualinvoke $r22.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r6.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r3, fopex);
+        if fail == 0 goto label16;
+
+        $r5 = new java.lang.RuntimeException;
+        $r9 = virtualinvoke fopex.<org.apache.fop.apps.FOPException: java.lang.String getMessage()>();
+        specialinvoke $r5.<java.lang.RuntimeException: void <init>(java.lang.String)>($r9);
+        throw $r5;
+
+     label16:
+        goto label18;
+
+     label17:
+        $r23 := @caughtexception;
+        ioex = $r23;
+        $r6 = <org.apache.fop.fonts.LazyFont: org.apache.commons.logging.Log log>;
+        $r22 = new java.lang.StringBuffer;
+        specialinvoke $r22.<java.lang.StringBuffer: void <init>()>();
+        $r22 = virtualinvoke $r22.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Failed to read font metrics file ");
+        $r9 = this.<org.apache.fop.fonts.LazyFont: java.lang.String metricsFileName>;
+        $r22 = virtualinvoke $r22.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r9);
+        $r3 = virtualinvoke $r22.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r6.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r3, ioex);
+        if fail == 0 goto label18;
+
+        $r5 = new java.lang.RuntimeException;
+        $r9 = virtualinvoke ioex.<java.io.IOException: java.lang.String getMessage()>();
+        specialinvoke $r5.<java.lang.RuntimeException: void <init>(java.lang.String)>($r9);
+        throw $r5;
+
+     label18:
+        this.<org.apache.fop.fonts.LazyFont: boolean isMetricsLoaded> = 1;
+
+     label19:
+        return;
+
+        catch org.apache.fop.apps.FOPException from label0 to label2 with label15;
+        catch org.apache.fop.apps.FOPException from label3 to label7 with label15;
+        catch org.apache.fop.apps.FOPException from label8 to label14 with label15;
+        catch java.io.IOException from label0 to label2 with label17;
+        catch java.io.IOException from label3 to label7 with label17;
+        catch java.io.IOException from label8 to label14 with label17;
+    }
+
+    public org.apache.fop.fonts.Typeface getRealFont()
+    {
+        org.apache.fop.fonts.LazyFont this;
+        org.apache.fop.fonts.Typeface $r0;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(0);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.Typeface realFont>;
+        return $r0;
+    }
+
+    public java.lang.String getEncoding()
+    {
+        org.apache.fop.fonts.LazyFont this;
+        org.apache.fop.fonts.Typeface $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.Typeface realFont>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: java.lang.String getEncoding()>();
+        return $r1;
+    }
+
+    public char mapChar(char)
+    {
+        org.apache.fop.fonts.LazyFont this;
+        char c, $c0;
+        org.apache.fop.fonts.Typeface $r0;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        c := @parameter0: char;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.Typeface realFont>;
+        $c0 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: char mapChar(char)>(c);
+        return $c0;
+    }
+
+    public boolean hadMappingOperations()
+    {
+        org.apache.fop.fonts.LazyFont this;
+        org.apache.fop.fonts.Typeface $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.Typeface realFont>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: boolean hadMappingOperations()>();
+        return $z0;
+    }
+
+    public boolean hasChar(char)
+    {
+        org.apache.fop.fonts.LazyFont this;
+        char c;
+        org.apache.fop.fonts.Typeface $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        c := @parameter0: char;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.Typeface realFont>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: boolean hasChar(char)>(c);
+        return $z0;
+    }
+
+    public boolean isMultiByte()
+    {
+        org.apache.fop.fonts.LazyFont this;
+        org.apache.fop.fonts.Typeface $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.Typeface realFont>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: boolean isMultiByte()>();
+        return $z0;
+    }
+
+    public java.lang.String getFontName()
+    {
+        org.apache.fop.fonts.LazyFont this;
+        org.apache.fop.fonts.Typeface $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.Typeface realFont>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: java.lang.String getFontName()>();
+        return $r1;
+    }
+
+    public java.lang.String getEmbedFontName()
+    {
+        org.apache.fop.fonts.LazyFont this;
+        org.apache.fop.fonts.Typeface $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.Typeface realFont>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: java.lang.String getEmbedFontName()>();
+        return $r1;
+    }
+
+    public java.lang.String getFullName()
+    {
+        org.apache.fop.fonts.LazyFont this;
+        org.apache.fop.fonts.Typeface $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.Typeface realFont>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: java.lang.String getFullName()>();
+        return $r1;
+    }
+
+    public java.util.Set getFamilyNames()
+    {
+        org.apache.fop.fonts.LazyFont this;
+        org.apache.fop.fonts.Typeface $r0;
+        java.util.Set $r1;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.Typeface realFont>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: java.util.Set getFamilyNames()>();
+        return $r1;
+    }
+
+    public int getMaxAscent(int)
+    {
+        org.apache.fop.fonts.LazyFont this;
+        int size, $i0;
+        org.apache.fop.fonts.Typeface $r0;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        size := @parameter0: int;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.Typeface realFont>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: int getMaxAscent(int)>(size);
+        return $i0;
+    }
+
+    public int getAscender(int)
+    {
+        org.apache.fop.fonts.LazyFont this;
+        int size, $i0;
+        org.apache.fop.fonts.Typeface $r0;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        size := @parameter0: int;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.Typeface realFont>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: int getAscender(int)>(size);
+        return $i0;
+    }
+
+    public int getCapHeight(int)
+    {
+        org.apache.fop.fonts.LazyFont this;
+        int size, $i0;
+        org.apache.fop.fonts.Typeface $r0;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        size := @parameter0: int;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.Typeface realFont>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: int getCapHeight(int)>(size);
+        return $i0;
+    }
+
+    public int getDescender(int)
+    {
+        org.apache.fop.fonts.LazyFont this;
+        int size, $i0;
+        org.apache.fop.fonts.Typeface $r0;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        size := @parameter0: int;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.Typeface realFont>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: int getDescender(int)>(size);
+        return $i0;
+    }
+
+    public int getXHeight(int)
+    {
+        org.apache.fop.fonts.LazyFont this;
+        int size, $i0;
+        org.apache.fop.fonts.Typeface $r0;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        size := @parameter0: int;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.Typeface realFont>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: int getXHeight(int)>(size);
+        return $i0;
+    }
+
+    public int getWidth(int, int)
+    {
+        org.apache.fop.fonts.LazyFont this;
+        int i, size, $i0;
+        org.apache.fop.fonts.Typeface $r0;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        i := @parameter0: int;
+        size := @parameter1: int;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.Typeface realFont>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: int getWidth(int,int)>(i, size);
+        return $i0;
+    }
+
+    public int[] getWidths()
+    {
+        org.apache.fop.fonts.LazyFont this;
+        org.apache.fop.fonts.Typeface $r0;
+        int[] $r1;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.Typeface realFont>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: int[] getWidths()>();
+        return $r1;
+    }
+
+    public boolean hasKerningInfo()
+    {
+        org.apache.fop.fonts.LazyFont this;
+        org.apache.fop.fonts.Typeface $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.Typeface realFont>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: boolean hasKerningInfo()>();
+        return $z0;
+    }
+
+    public java.util.Map getKerningInfo()
+    {
+        org.apache.fop.fonts.LazyFont this;
+        org.apache.fop.fonts.Typeface $r0;
+        java.util.Map $r1;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.Typeface realFont>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: java.util.Map getKerningInfo()>();
+        return $r1;
+    }
+
+    public int getCapHeight()
+    {
+        org.apache.fop.fonts.LazyFont this;
+        org.apache.fop.fonts.FontDescriptor $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.FontDescriptor realFontDescriptor>;
+        $i0 = interfaceinvoke $r0.<org.apache.fop.fonts.FontDescriptor: int getCapHeight()>();
+        return $i0;
+    }
+
+    public int getDescender()
+    {
+        org.apache.fop.fonts.LazyFont this;
+        org.apache.fop.fonts.FontDescriptor $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.FontDescriptor realFontDescriptor>;
+        $i0 = interfaceinvoke $r0.<org.apache.fop.fonts.FontDescriptor: int getDescender()>();
+        return $i0;
+    }
+
+    public int getAscender()
+    {
+        org.apache.fop.fonts.LazyFont this;
+        org.apache.fop.fonts.FontDescriptor $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.FontDescriptor realFontDescriptor>;
+        $i0 = interfaceinvoke $r0.<org.apache.fop.fonts.FontDescriptor: int getAscender()>();
+        return $i0;
+    }
+
+    public int getFlags()
+    {
+        org.apache.fop.fonts.LazyFont this;
+        org.apache.fop.fonts.FontDescriptor $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.FontDescriptor realFontDescriptor>;
+        $i0 = interfaceinvoke $r0.<org.apache.fop.fonts.FontDescriptor: int getFlags()>();
+        return $i0;
+    }
+
+    public boolean isSymbolicFont()
+    {
+        org.apache.fop.fonts.LazyFont this;
+        org.apache.fop.fonts.FontDescriptor $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.FontDescriptor realFontDescriptor>;
+        $z0 = interfaceinvoke $r0.<org.apache.fop.fonts.FontDescriptor: boolean isSymbolicFont()>();
+        return $z0;
+    }
+
+    public int[] getFontBBox()
+    {
+        org.apache.fop.fonts.LazyFont this;
+        org.apache.fop.fonts.FontDescriptor $r0;
+        int[] $r1;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.FontDescriptor realFontDescriptor>;
+        $r1 = interfaceinvoke $r0.<org.apache.fop.fonts.FontDescriptor: int[] getFontBBox()>();
+        return $r1;
+    }
+
+    public int getItalicAngle()
+    {
+        org.apache.fop.fonts.LazyFont this;
+        org.apache.fop.fonts.FontDescriptor $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.FontDescriptor realFontDescriptor>;
+        $i0 = interfaceinvoke $r0.<org.apache.fop.fonts.FontDescriptor: int getItalicAngle()>();
+        return $i0;
+    }
+
+    public int getStemV()
+    {
+        org.apache.fop.fonts.LazyFont this;
+        org.apache.fop.fonts.FontDescriptor $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.FontDescriptor realFontDescriptor>;
+        $i0 = interfaceinvoke $r0.<org.apache.fop.fonts.FontDescriptor: int getStemV()>();
+        return $i0;
+    }
+
+    public org.apache.fop.fonts.FontType getFontType()
+    {
+        org.apache.fop.fonts.LazyFont this;
+        org.apache.fop.fonts.FontDescriptor $r0;
+        org.apache.fop.fonts.FontType $r1;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.FontDescriptor realFontDescriptor>;
+        $r1 = interfaceinvoke $r0.<org.apache.fop.fonts.FontDescriptor: org.apache.fop.fonts.FontType getFontType()>();
+        return $r1;
+    }
+
+    public boolean isEmbeddable()
+    {
+        org.apache.fop.fonts.LazyFont this;
+        org.apache.fop.fonts.FontDescriptor $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.LazyFont;
+        specialinvoke this.<org.apache.fop.fonts.LazyFont: void load(boolean)>(1);
+        $r0 = this.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.FontDescriptor realFontDescriptor>;
+        $z0 = interfaceinvoke $r0.<org.apache.fop.fonts.FontDescriptor: boolean isEmbeddable()>();
+        return $z0;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.fonts.LazyFont: java.lang.Class class$org$apache$fop$fonts$LazyFont>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.fonts.LazyFont: java.lang.Class class$(java.lang.String)>("org.apache.fop.fonts.LazyFont");
+        <org.apache.fop.fonts.LazyFont: java.lang.Class class$org$apache$fop$fonts$LazyFont> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.fonts.LazyFont: java.lang.Class class$org$apache$fop$fonts$LazyFont>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.fonts.LazyFont: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

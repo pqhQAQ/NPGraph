@@ -1,0 +1,58 @@
+public class org.apache.fop.util.LogUtil extends java.lang.Object
+{
+
+    public void <init>()
+    {
+        org.apache.fop.util.LogUtil this;
+
+        this := @this: org.apache.fop.util.LogUtil;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public static void handleError(org.apache.commons.logging.Log, java.lang.String, boolean) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.commons.logging.Log log;
+        java.lang.String errorStr;
+        boolean strict;
+        org.apache.fop.apps.FOPException $r0;
+
+        log := @parameter0: org.apache.commons.logging.Log;
+        errorStr := @parameter1: java.lang.String;
+        strict := @parameter2: boolean;
+        $r0 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r0.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>(errorStr);
+        staticinvoke <org.apache.fop.util.LogUtil: void handleException(org.apache.commons.logging.Log,java.lang.Exception,boolean)>(log, $r0, strict);
+        return;
+    }
+
+    public static void handleException(org.apache.commons.logging.Log, java.lang.Exception, boolean) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.commons.logging.Log log;
+        java.lang.Exception e;
+        boolean strict, $z0;
+        org.apache.fop.apps.FOPException $r0;
+        java.lang.String $r1;
+
+        log := @parameter0: org.apache.commons.logging.Log;
+        e := @parameter1: java.lang.Exception;
+        strict := @parameter2: boolean;
+        if strict == 0 goto label1;
+
+        $z0 = e instanceof org.apache.fop.apps.FOPException;
+        if $z0 == 0 goto label0;
+
+        $r0 = (org.apache.fop.apps.FOPException) e;
+        throw $r0;
+
+     label0:
+        $r0 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r0.<org.apache.fop.apps.FOPException: void <init>(java.lang.Exception)>(e);
+        throw $r0;
+
+     label1:
+        $r1 = virtualinvoke e.<java.lang.Exception: java.lang.String getMessage()>();
+        interfaceinvoke log.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r1);
+        return;
+    }
+}

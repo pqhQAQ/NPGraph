@@ -1,0 +1,227 @@
+public class org.apache.fop.fonts.autodetect.WindowsFontDirFinder extends java.lang.Object implements org.apache.fop.fonts.autodetect.FontFinder
+{
+
+    public void <init>()
+    {
+        org.apache.fop.fonts.autodetect.WindowsFontDirFinder this;
+
+        this := @this: org.apache.fop.fonts.autodetect.WindowsFontDirFinder;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    private java.lang.String getWinDir(java.lang.String) throws java.io.IOException
+    {
+        org.apache.fop.fonts.autodetect.WindowsFontDirFinder this;
+        java.lang.String osName, $r3;
+        null_type process;
+        java.lang.Runtime runtime;
+        java.io.InputStreamReader $r0;
+        java.io.BufferedReader bufferedReader, $r1;
+        boolean $z0;
+        java.lang.Process process;
+        java.io.InputStream $r2;
+
+        this := @this: org.apache.fop.fonts.autodetect.WindowsFontDirFinder;
+        osName := @parameter0: java.lang.String;
+        process = null;
+        runtime = staticinvoke <java.lang.Runtime: java.lang.Runtime getRuntime()>();
+        $z0 = virtualinvoke osName.<java.lang.String: boolean startsWith(java.lang.String)>("Windows 9");
+        if $z0 == 0 goto label0;
+
+        process = virtualinvoke runtime.<java.lang.Runtime: java.lang.Process exec(java.lang.String)>("command.com /c echo %windir%");
+        goto label1;
+
+     label0:
+        process = virtualinvoke runtime.<java.lang.Runtime: java.lang.Process exec(java.lang.String)>("cmd.exe /c echo %windir%");
+
+     label1:
+        $r1 = new java.io.BufferedReader;
+        $r0 = new java.io.InputStreamReader;
+        $r2 = virtualinvoke process.<java.lang.Process: java.io.InputStream getInputStream()>();
+        specialinvoke $r0.<java.io.InputStreamReader: void <init>(java.io.InputStream)>($r2);
+        specialinvoke $r1.<java.io.BufferedReader: void <init>(java.io.Reader)>($r0);
+        bufferedReader = $r1;
+        $r3 = virtualinvoke bufferedReader.<java.io.BufferedReader: java.lang.String readLine()>();
+        return $r3;
+    }
+
+    public java.util.List find()
+    {
+        org.apache.fop.fonts.autodetect.WindowsFontDirFinder this;
+        java.util.ArrayList $r0, fontDirList;
+        java.lang.String windir, osName, windowsDirName, $r5, $r6, $r7;
+        java.lang.SecurityException l3, $r1;
+        java.io.IOException l4, $r2;
+        null_type osFontsDir, psFontsDir;
+        char driveLetter;
+        boolean $z0;
+        int $i0, $i1;
+        java.io.File $r3, osFontsDir, psFontsDir;
+        java.lang.StringBuffer $r4;
+
+        this := @this: org.apache.fop.fonts.autodetect.WindowsFontDirFinder;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        fontDirList = $r0;
+        windir = null;
+
+     label0:
+        windir = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("env.windir");
+
+     label1:
+        goto label3;
+
+     label2:
+        $r1 := @caughtexception;
+        l3 = $r1;
+
+     label3:
+        osName = staticinvoke <java.lang.System: java.lang.String getProperty(java.lang.String)>("os.name");
+        if windir != null goto label7;
+
+     label4:
+        windir = specialinvoke this.<org.apache.fop.fonts.autodetect.WindowsFontDirFinder: java.lang.String getWinDir(java.lang.String)>(osName);
+
+     label5:
+        goto label7;
+
+     label6:
+        $r2 := @caughtexception;
+        l4 = $r2;
+
+     label7:
+        osFontsDir = null;
+        psFontsDir = null;
+        if windir == null goto label10;
+
+        $z0 = virtualinvoke windir.<java.lang.String: boolean endsWith(java.lang.String)>("/");
+        if $z0 == 0 goto label8;
+
+        $i0 = virtualinvoke windir.<java.lang.String: int length()>();
+        $i0 = $i0 - 1;
+        windir = virtualinvoke windir.<java.lang.String: java.lang.String substring(int,int)>(0, $i0);
+
+     label8:
+        $r3 = new java.io.File;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(windir);
+        $r5 = <java.io.File: java.lang.String separator>;
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("FONTS");
+        $r6 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r3.<java.io.File: void <init>(java.lang.String)>($r6);
+        osFontsDir = $r3;
+        $z0 = virtualinvoke osFontsDir.<java.io.File: boolean exists()>();
+        if $z0 == 0 goto label9;
+
+        $z0 = virtualinvoke osFontsDir.<java.io.File: boolean canRead()>();
+        if $z0 == 0 goto label9;
+
+        interfaceinvoke fontDirList.<java.util.List: boolean add(java.lang.Object)>(osFontsDir);
+
+     label9:
+        $r3 = new java.io.File;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke windir.<java.lang.String: java.lang.String substring(int,int)>(0, 2);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r5 = <java.io.File: java.lang.String separator>;
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("PSFONTS");
+        $r6 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r3.<java.io.File: void <init>(java.lang.String)>($r6);
+        psFontsDir = $r3;
+        $z0 = virtualinvoke psFontsDir.<java.io.File: boolean exists()>();
+        if $z0 == 0 goto label18;
+
+        $z0 = virtualinvoke psFontsDir.<java.io.File: boolean canRead()>();
+        if $z0 == 0 goto label18;
+
+        interfaceinvoke fontDirList.<java.util.List: boolean add(java.lang.Object)>(psFontsDir);
+        goto label18;
+
+     label10:
+        $z0 = virtualinvoke osName.<java.lang.String: boolean endsWith(java.lang.String)>("NT");
+        if $z0 == 0 goto label11;
+
+        $r7 = "WINNT";
+        goto label12;
+
+     label11:
+        $r7 = "WINDOWS";
+
+     label12:
+        windowsDirName = $r7;
+        driveLetter = 67;
+
+     label13:
+        if driveLetter > 69 goto label15;
+
+        $r3 = new java.io.File;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(driveLetter);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(":");
+        $r5 = <java.io.File: java.lang.String separator>;
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(windowsDirName);
+        $r5 = <java.io.File: java.lang.String separator>;
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("FONTS");
+        $r6 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r3.<java.io.File: void <init>(java.lang.String)>($r6);
+        osFontsDir = $r3;
+        $z0 = virtualinvoke osFontsDir.<java.io.File: boolean exists()>();
+        if $z0 == 0 goto label14;
+
+        $z0 = virtualinvoke osFontsDir.<java.io.File: boolean canRead()>();
+        if $z0 == 0 goto label14;
+
+        interfaceinvoke fontDirList.<java.util.List: boolean add(java.lang.Object)>(osFontsDir);
+        goto label15;
+
+     label14:
+        $i1 = driveLetter + 1;
+        driveLetter = (char) $i1;
+        goto label13;
+
+     label15:
+        driveLetter = 67;
+
+     label16:
+        if driveLetter > 69 goto label18;
+
+        $r3 = new java.io.File;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(driveLetter);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(":");
+        $r5 = <java.io.File: java.lang.String separator>;
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("PSFONTS");
+        $r6 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r3.<java.io.File: void <init>(java.lang.String)>($r6);
+        psFontsDir = $r3;
+        $z0 = virtualinvoke psFontsDir.<java.io.File: boolean exists()>();
+        if $z0 == 0 goto label17;
+
+        $z0 = virtualinvoke psFontsDir.<java.io.File: boolean canRead()>();
+        if $z0 == 0 goto label17;
+
+        interfaceinvoke fontDirList.<java.util.List: boolean add(java.lang.Object)>(psFontsDir);
+        goto label18;
+
+     label17:
+        $i1 = driveLetter + 1;
+        driveLetter = (char) $i1;
+        goto label16;
+
+     label18:
+        return fontDirList;
+
+        catch java.lang.SecurityException from label0 to label1 with label2;
+        catch java.io.IOException from label4 to label5 with label6;
+    }
+}

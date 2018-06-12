@@ -1,0 +1,428 @@
+public class org.apache.fop.area.Page extends org.apache.fop.area.AreaTreeObject implements java.io.Serializable, java.lang.Cloneable
+{
+    private org.apache.fop.area.RegionViewport regionBefore;
+    private org.apache.fop.area.RegionViewport regionStart;
+    private org.apache.fop.area.RegionViewport regionBody;
+    private org.apache.fop.area.RegionViewport regionEnd;
+    private org.apache.fop.area.RegionViewport regionAfter;
+    private java.util.Map unresolved;
+    private boolean fakeNonEmpty;
+
+    public void <init>()
+    {
+        org.apache.fop.area.Page this;
+
+        this := @this: org.apache.fop.area.Page;
+        specialinvoke this.<org.apache.fop.area.AreaTreeObject: void <init>()>();
+        this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionBefore> = null;
+        this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionStart> = null;
+        this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionBody> = null;
+        this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionEnd> = null;
+        this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionAfter> = null;
+        this.<org.apache.fop.area.Page: java.util.Map unresolved> = null;
+        this.<org.apache.fop.area.Page: boolean fakeNonEmpty> = 0;
+        return;
+    }
+
+    public void <init>(org.apache.fop.fo.pagination.SimplePageMaster)
+    {
+        org.apache.fop.area.Page this;
+        org.apache.fop.fo.pagination.SimplePageMaster spm;
+        org.apache.fop.datatypes.FODimension pageViewPortDims, reldims, $r0;
+        org.apache.fop.fo.properties.CommonMarginBlock mProps;
+        org.apache.fop.datatypes.SimplePercentBaseContext pageWidthContext, pageHeightContext, $r3;
+        java.awt.Rectangle pageRefRect, $r4;
+        org.apache.fop.area.CTM pageCTM;
+        null_type rr;
+        java.util.Iterator regenum;
+        org.apache.fop.fo.pagination.Region r;
+        org.apache.fop.area.RegionViewport rvp;
+        org.apache.fop.datatypes.Length $r1, $r2, $r5, $r6;
+        int $i0, $i1, $i2, $i3, $i4, $i5, $i6;
+        java.util.Map $r7;
+        java.util.Collection $r8;
+        boolean $z0;
+        java.lang.Object $r9;
+        org.apache.fop.area.BodyRegion $r10;
+        org.apache.fop.fo.pagination.RegionBody $r11;
+        org.apache.fop.area.RegionReference rr, $r12;
+        java.awt.geom.Rectangle2D $r13;
+
+        this := @this: org.apache.fop.area.Page;
+        spm := @parameter0: org.apache.fop.fo.pagination.SimplePageMaster;
+        specialinvoke this.<org.apache.fop.area.AreaTreeObject: void <init>()>();
+        this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionBefore> = null;
+        this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionStart> = null;
+        this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionBody> = null;
+        this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionEnd> = null;
+        this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionAfter> = null;
+        this.<org.apache.fop.area.Page: java.util.Map unresolved> = null;
+        this.<org.apache.fop.area.Page: boolean fakeNonEmpty> = 0;
+        $r0 = new org.apache.fop.datatypes.FODimension;
+        $r1 = virtualinvoke spm.<org.apache.fop.fo.pagination.SimplePageMaster: org.apache.fop.datatypes.Length getPageWidth()>();
+        $i0 = interfaceinvoke $r1.<org.apache.fop.datatypes.Length: int getValue()>();
+        $r2 = virtualinvoke spm.<org.apache.fop.fo.pagination.SimplePageMaster: org.apache.fop.datatypes.Length getPageHeight()>();
+        $i1 = interfaceinvoke $r2.<org.apache.fop.datatypes.Length: int getValue()>();
+        specialinvoke $r0.<org.apache.fop.datatypes.FODimension: void <init>(int,int)>($i0, $i1);
+        pageViewPortDims = $r0;
+        mProps = virtualinvoke spm.<org.apache.fop.fo.pagination.SimplePageMaster: org.apache.fop.fo.properties.CommonMarginBlock getCommonMarginBlock()>();
+        $r3 = new org.apache.fop.datatypes.SimplePercentBaseContext;
+        $i2 = pageViewPortDims.<org.apache.fop.datatypes.FODimension: int ipd>;
+        specialinvoke $r3.<org.apache.fop.datatypes.SimplePercentBaseContext: void <init>(org.apache.fop.datatypes.PercentBaseContext,int,int)>(null, 5, $i2);
+        pageWidthContext = $r3;
+        $r3 = new org.apache.fop.datatypes.SimplePercentBaseContext;
+        $i2 = pageViewPortDims.<org.apache.fop.datatypes.FODimension: int bpd>;
+        specialinvoke $r3.<org.apache.fop.datatypes.SimplePercentBaseContext: void <init>(org.apache.fop.datatypes.PercentBaseContext,int,int)>(null, 5, $i2);
+        pageHeightContext = $r3;
+        $r4 = new java.awt.Rectangle;
+        $r1 = mProps.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.datatypes.Length marginLeft>;
+        $i0 = interfaceinvoke $r1.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(pageWidthContext);
+        $r2 = mProps.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.datatypes.Length marginTop>;
+        $i1 = interfaceinvoke $r2.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(pageHeightContext);
+        $i2 = pageViewPortDims.<org.apache.fop.datatypes.FODimension: int ipd>;
+        $r5 = mProps.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.datatypes.Length marginLeft>;
+        $i3 = interfaceinvoke $r5.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(pageWidthContext);
+        $i2 = $i2 - $i3;
+        $r5 = mProps.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.datatypes.Length marginRight>;
+        $i3 = interfaceinvoke $r5.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(pageWidthContext);
+        $i2 = $i2 - $i3;
+        $i3 = pageViewPortDims.<org.apache.fop.datatypes.FODimension: int bpd>;
+        $r6 = mProps.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.datatypes.Length marginTop>;
+        $i4 = interfaceinvoke $r6.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(pageHeightContext);
+        $i3 = $i3 - $i4;
+        $r6 = mProps.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.datatypes.Length marginBottom>;
+        $i4 = interfaceinvoke $r6.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(pageHeightContext);
+        $i3 = $i3 - $i4;
+        specialinvoke $r4.<java.awt.Rectangle: void <init>(int,int,int,int)>($i0, $i1, $i2, $i3);
+        pageRefRect = $r4;
+        $r0 = new org.apache.fop.datatypes.FODimension;
+        specialinvoke $r0.<org.apache.fop.datatypes.FODimension: void <init>(int,int)>(0, 0);
+        reldims = $r0;
+        $i5 = virtualinvoke spm.<org.apache.fop.fo.pagination.SimplePageMaster: int getReferenceOrientation()>();
+        $i6 = virtualinvoke spm.<org.apache.fop.fo.pagination.SimplePageMaster: int getWritingMode()>();
+        pageCTM = staticinvoke <org.apache.fop.area.CTM: org.apache.fop.area.CTM getCTMandRelDims(int,int,java.awt.geom.Rectangle2D,org.apache.fop.datatypes.FODimension)>($i5, $i6, pageRefRect, reldims);
+        rr = null;
+        $r7 = virtualinvoke spm.<org.apache.fop.fo.pagination.SimplePageMaster: java.util.Map getRegions()>();
+        $r8 = interfaceinvoke $r7.<java.util.Map: java.util.Collection values()>();
+        regenum = interfaceinvoke $r8.<java.util.Collection: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke regenum.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label3;
+
+        $r9 = interfaceinvoke regenum.<java.util.Iterator: java.lang.Object next()>();
+        r = (org.apache.fop.fo.pagination.Region) $r9;
+        rvp = specialinvoke this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport makeRegionViewport(org.apache.fop.fo.pagination.Region,org.apache.fop.datatypes.FODimension,org.apache.fop.area.CTM,org.apache.fop.fo.pagination.SimplePageMaster)>(r, reldims, pageCTM, spm);
+        $i5 = virtualinvoke r.<org.apache.fop.fo.pagination.Region: int getNameId()>();
+        if $i5 != 36 goto label1;
+
+        $r10 = new org.apache.fop.area.BodyRegion;
+        $r11 = (org.apache.fop.fo.pagination.RegionBody) r;
+        specialinvoke $r10.<org.apache.fop.area.BodyRegion: void <init>(org.apache.fop.fo.pagination.RegionBody,org.apache.fop.area.RegionViewport)>($r11, rvp);
+        rr = $r10;
+        goto label2;
+
+     label1:
+        $r12 = new org.apache.fop.area.RegionReference;
+        specialinvoke $r12.<org.apache.fop.area.RegionReference: void <init>(org.apache.fop.fo.pagination.Region,org.apache.fop.area.RegionViewport)>(r, rvp);
+        rr = $r12;
+
+     label2:
+        $r13 = virtualinvoke rvp.<org.apache.fop.area.RegionViewport: java.awt.geom.Rectangle2D getViewArea()>();
+        specialinvoke this.<org.apache.fop.area.Page: void setRegionReferencePosition(org.apache.fop.area.RegionReference,org.apache.fop.fo.pagination.Region,java.awt.geom.Rectangle2D)>(rr, r, $r13);
+        virtualinvoke rvp.<org.apache.fop.area.RegionViewport: void setRegionReference(org.apache.fop.area.RegionReference)>(rr);
+        $i6 = virtualinvoke r.<org.apache.fop.fo.pagination.Region: int getNameId()>();
+        virtualinvoke this.<org.apache.fop.area.Page: void setRegionViewport(int,org.apache.fop.area.RegionViewport)>($i6, rvp);
+        goto label0;
+
+     label3:
+        return;
+    }
+
+    public void fakeNonEmpty()
+    {
+        org.apache.fop.area.Page this;
+
+        this := @this: org.apache.fop.area.Page;
+        this.<org.apache.fop.area.Page: boolean fakeNonEmpty> = 1;
+        return;
+    }
+
+    private org.apache.fop.area.RegionViewport makeRegionViewport(org.apache.fop.fo.pagination.Region, org.apache.fop.datatypes.FODimension, org.apache.fop.area.CTM, org.apache.fop.fo.pagination.SimplePageMaster)
+    {
+        org.apache.fop.area.Page this;
+        org.apache.fop.fo.pagination.Region r;
+        org.apache.fop.datatypes.FODimension reldims;
+        org.apache.fop.area.CTM pageCTM;
+        org.apache.fop.fo.pagination.SimplePageMaster spm;
+        java.awt.Rectangle relRegionRect;
+        java.awt.geom.Rectangle2D absRegionRect;
+        org.apache.fop.area.RegionViewport rv, $r0;
+        double $d0;
+        int $i0;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground $r1;
+        boolean $z0;
+
+        this := @this: org.apache.fop.area.Page;
+        r := @parameter0: org.apache.fop.fo.pagination.Region;
+        reldims := @parameter1: org.apache.fop.datatypes.FODimension;
+        pageCTM := @parameter2: org.apache.fop.area.CTM;
+        spm := @parameter3: org.apache.fop.fo.pagination.SimplePageMaster;
+        relRegionRect = virtualinvoke r.<org.apache.fop.fo.pagination.Region: java.awt.Rectangle getViewportRectangle(org.apache.fop.datatypes.FODimension,org.apache.fop.fo.pagination.SimplePageMaster)>(reldims, spm);
+        absRegionRect = virtualinvoke pageCTM.<org.apache.fop.area.CTM: java.awt.geom.Rectangle2D transform(java.awt.geom.Rectangle2D)>(relRegionRect);
+        $r0 = new org.apache.fop.area.RegionViewport;
+        specialinvoke $r0.<org.apache.fop.area.RegionViewport: void <init>(java.awt.geom.Rectangle2D)>(absRegionRect);
+        rv = $r0;
+        $d0 = virtualinvoke relRegionRect.<java.awt.geom.Rectangle2D: double getHeight()>();
+        $i0 = (int) $d0;
+        virtualinvoke rv.<org.apache.fop.area.RegionViewport: void setBPD(int)>($i0);
+        $d0 = virtualinvoke relRegionRect.<java.awt.geom.Rectangle2D: double getWidth()>();
+        $i0 = (int) $d0;
+        virtualinvoke rv.<org.apache.fop.area.RegionViewport: void setIPD(int)>($i0);
+        $r1 = virtualinvoke r.<org.apache.fop.fo.pagination.Region: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addBackground(org.apache.fop.area.Area,org.apache.fop.fo.properties.CommonBorderPaddingBackground,org.apache.fop.datatypes.PercentBaseContext)>(rv, $r1, null);
+        $i0 = virtualinvoke r.<org.apache.fop.fo.pagination.Region: int getOverflow()>();
+        if $i0 == 57 goto label0;
+
+        $i0 = virtualinvoke r.<org.apache.fop.fo.pagination.Region: int getOverflow()>();
+        if $i0 != 42 goto label1;
+
+     label0:
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        virtualinvoke rv.<org.apache.fop.area.RegionViewport: void setClip(boolean)>($z0);
+        return rv;
+    }
+
+    private void setRegionReferencePosition(org.apache.fop.area.RegionReference, org.apache.fop.fo.pagination.Region, java.awt.geom.Rectangle2D)
+    {
+        org.apache.fop.area.Page this;
+        org.apache.fop.area.RegionReference rr;
+        org.apache.fop.fo.pagination.Region r;
+        java.awt.geom.Rectangle2D absRegVPRect;
+        org.apache.fop.datatypes.FODimension $r0, reldims;
+        int $i0, $i1;
+        org.apache.fop.area.CTM $r1;
+
+        this := @this: org.apache.fop.area.Page;
+        rr := @parameter0: org.apache.fop.area.RegionReference;
+        r := @parameter1: org.apache.fop.fo.pagination.Region;
+        absRegVPRect := @parameter2: java.awt.geom.Rectangle2D;
+        $r0 = new org.apache.fop.datatypes.FODimension;
+        specialinvoke $r0.<org.apache.fop.datatypes.FODimension: void <init>(int,int)>(0, 0);
+        reldims = $r0;
+        $i0 = virtualinvoke r.<org.apache.fop.fo.pagination.Region: int getReferenceOrientation()>();
+        $i1 = virtualinvoke r.<org.apache.fop.fo.pagination.Region: int getWritingMode()>();
+        $r1 = staticinvoke <org.apache.fop.area.CTM: org.apache.fop.area.CTM getCTMandRelDims(int,int,java.awt.geom.Rectangle2D,org.apache.fop.datatypes.FODimension)>($i0, $i1, absRegVPRect, reldims);
+        virtualinvoke rr.<org.apache.fop.area.RegionReference: void setCTM(org.apache.fop.area.CTM)>($r1);
+        $i0 = reldims.<org.apache.fop.datatypes.FODimension: int ipd>;
+        virtualinvoke rr.<org.apache.fop.area.RegionReference: void setIPD(int)>($i0);
+        $i0 = reldims.<org.apache.fop.datatypes.FODimension: int bpd>;
+        virtualinvoke rr.<org.apache.fop.area.RegionReference: void setBPD(int)>($i0);
+        return;
+    }
+
+    public void setRegionViewport(int, org.apache.fop.area.RegionViewport)
+    {
+        org.apache.fop.area.Page this;
+        int areaclass;
+        org.apache.fop.area.RegionViewport port;
+
+        this := @this: org.apache.fop.area.Page;
+        areaclass := @parameter0: int;
+        port := @parameter1: org.apache.fop.area.RegionViewport;
+        if areaclass != 35 goto label0;
+
+        this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionBefore> = port;
+        goto label4;
+
+     label0:
+        if areaclass != 38 goto label1;
+
+        this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionStart> = port;
+        goto label4;
+
+     label1:
+        if areaclass != 36 goto label2;
+
+        this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionBody> = port;
+        goto label4;
+
+     label2:
+        if areaclass != 37 goto label3;
+
+        this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionEnd> = port;
+        goto label4;
+
+     label3:
+        if areaclass != 34 goto label4;
+
+        this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionAfter> = port;
+
+     label4:
+        return;
+    }
+
+    public org.apache.fop.area.RegionViewport getRegionViewport(int)
+    {
+        org.apache.fop.area.Page this;
+        int areaclass;
+        java.lang.StringBuffer $r0;
+        org.apache.fop.area.RegionViewport $r1;
+        java.lang.IllegalArgumentException $r2;
+        java.lang.String $r3;
+
+        this := @this: org.apache.fop.area.Page;
+        areaclass := @parameter0: int;
+        if areaclass != 35 goto label0;
+
+        $r1 = this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionBefore>;
+        return $r1;
+
+     label0:
+        if areaclass != 38 goto label1;
+
+        $r1 = this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionStart>;
+        return $r1;
+
+     label1:
+        if areaclass != 36 goto label2;
+
+        $r1 = this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionBody>;
+        return $r1;
+
+     label2:
+        if areaclass != 37 goto label3;
+
+        $r1 = this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionEnd>;
+        return $r1;
+
+     label3:
+        if areaclass != 34 goto label4;
+
+        $r1 = this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionAfter>;
+        return $r1;
+
+     label4:
+        $r2 = new java.lang.IllegalArgumentException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("No such area class with ID = ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(areaclass);
+        $r3 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r3);
+        throw $r2;
+    }
+
+    public boolean isEmpty()
+    {
+        org.apache.fop.area.Page this;
+        org.apache.fop.area.BodyRegion body;
+        boolean $z0;
+        org.apache.fop.area.RegionViewport $r0;
+        org.apache.fop.area.RegionReference $r1;
+
+        this := @this: org.apache.fop.area.Page;
+        $z0 = this.<org.apache.fop.area.Page: boolean fakeNonEmpty>;
+        if $z0 == 0 goto label0;
+
+        return 0;
+
+     label0:
+        $r0 = this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionBody>;
+        if $r0 != null goto label1;
+
+        return 1;
+
+     label1:
+        $r0 = this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionBody>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.area.RegionViewport: org.apache.fop.area.RegionReference getRegionReference()>();
+        body = (org.apache.fop.area.BodyRegion) $r1;
+        $z0 = virtualinvoke body.<org.apache.fop.area.BodyRegion: boolean isEmpty()>();
+        return $z0;
+    }
+
+    public java.lang.Object clone()
+    {
+        org.apache.fop.area.Page this, $r0, p;
+        org.apache.fop.area.RegionViewport $r1, $r2;
+        java.lang.Object $r3;
+
+        this := @this: org.apache.fop.area.Page;
+        $r0 = new org.apache.fop.area.Page;
+        specialinvoke $r0.<org.apache.fop.area.Page: void <init>()>();
+        p = $r0;
+        $r1 = this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionBefore>;
+        if $r1 == null goto label0;
+
+        $r2 = this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionBefore>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.area.RegionViewport: java.lang.Object clone()>();
+        $r2 = (org.apache.fop.area.RegionViewport) $r3;
+        p.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionBefore> = $r2;
+
+     label0:
+        $r1 = this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionStart>;
+        if $r1 == null goto label1;
+
+        $r2 = this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionStart>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.area.RegionViewport: java.lang.Object clone()>();
+        $r2 = (org.apache.fop.area.RegionViewport) $r3;
+        p.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionStart> = $r2;
+
+     label1:
+        $r1 = this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionBody>;
+        if $r1 == null goto label2;
+
+        $r2 = this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionBody>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.area.RegionViewport: java.lang.Object clone()>();
+        $r2 = (org.apache.fop.area.RegionViewport) $r3;
+        p.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionBody> = $r2;
+
+     label2:
+        $r1 = this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionEnd>;
+        if $r1 == null goto label3;
+
+        $r2 = this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionEnd>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.area.RegionViewport: java.lang.Object clone()>();
+        $r2 = (org.apache.fop.area.RegionViewport) $r3;
+        p.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionEnd> = $r2;
+
+     label3:
+        $r1 = this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionAfter>;
+        if $r1 == null goto label4;
+
+        $r2 = this.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionAfter>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.area.RegionViewport: java.lang.Object clone()>();
+        $r2 = (org.apache.fop.area.RegionViewport) $r3;
+        p.<org.apache.fop.area.Page: org.apache.fop.area.RegionViewport regionAfter> = $r2;
+
+     label4:
+        return p;
+    }
+
+    public void setUnresolvedReferences(java.util.Map)
+    {
+        org.apache.fop.area.Page this;
+        java.util.Map unres;
+
+        this := @this: org.apache.fop.area.Page;
+        unres := @parameter0: java.util.Map;
+        this.<org.apache.fop.area.Page: java.util.Map unresolved> = unres;
+        return;
+    }
+
+    public java.util.Map getUnresolvedReferences()
+    {
+        org.apache.fop.area.Page this;
+        java.util.Map $r0;
+
+        this := @this: org.apache.fop.area.Page;
+        $r0 = this.<org.apache.fop.area.Page: java.util.Map unresolved>;
+        return $r0;
+    }
+}

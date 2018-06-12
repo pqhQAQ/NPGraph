@@ -1,0 +1,44 @@
+method: org.apache.fop.render.afp.AFPRenderer.drawBufferedImage:1968340746
+1184010535:this := @this: org.apache.fop.render.afp.AFPRenderer
+1081588643:image := @parameter0: java.awt.image.RenderedImage
+1958734693:imageResolution := @parameter1: int
+1677160388:x := @parameter2: int
+164290594:y := @parameter3: int
+1715526963:w := @parameter4: int
+746222519:h := @parameter5: int
+1682765270:afpx = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int mpts2units(int)>(x)
+175446749:afpy = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int mpts2units(int)>(y)
+1233493764:afpw = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int mpts2units(int)>(w)
+1257033893:afph = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int mpts2units(int)>(h)
+1568397336:afpres = virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: int getResolution()>()
+1839742874:$r0 = new org.apache.commons.io.output.ByteArrayOutputStream
+854938550:specialinvoke $r0.<org.apache.commons.io.output.ByteArrayOutputStream: void <init>()>()
+139127773:baout = $r0
+1597604234:staticinvoke <org.apache.fop.render.afp.AFPRenderer: void writeImage(java.awt.image.RenderedImage,java.io.OutputStream)>(image, baout)
+2086751215:buf = virtualinvoke baout.<org.apache.commons.io.output.ByteArrayOutputStream: byte[] toByteArray()>()
+485685102:$r1 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>
+550594643:io = virtualinvoke $r1.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.ImageObject getImageObject(int,int,int,int,int,int)>(afpx, afpy, afpw, afph, afpres, afpres)
+1900629448:$i0 = interfaceinvoke image.<java.awt.image.RenderedImage: int getWidth()>()
+1438141881:$i1 = interfaceinvoke image.<java.awt.image.RenderedImage: int getHeight()>()
+922146982:virtualinvoke io.<org.apache.fop.render.afp.modca.ImageObject: void setImageParameters(int,int,int,int)>(imageResolution, imageResolution, $i0, $i1)
+762734940:$z0 = this.<org.apache.fop.render.afp.AFPRenderer: boolean colorImages>
+956247637:if $z0 == 0 goto $i2 = interfaceinvoke image.<java.awt.image.RenderedImage: int getWidth()>()
+1833143960:virtualinvoke io.<org.apache.fop.render.afp.modca.ImageObject: void setImageIDESize(byte)>(24)
+1128887276:virtualinvoke io.<org.apache.fop.render.afp.modca.ImageObject: void setImageData(byte[])>(buf)
+190426487:goto [?= (branch)]
+825211395:$i2 = interfaceinvoke image.<java.awt.image.RenderedImage: int getWidth()>()
+1393366148:$i0 = interfaceinvoke image.<java.awt.image.RenderedImage: int getHeight()>()
+389733105:$i1 = this.<org.apache.fop.render.afp.AFPRenderer: int bitsPerPixel>
+419172385:staticinvoke <org.apache.fop.render.afp.AFPRenderer: void convertToGrayScaleImage(org.apache.fop.render.afp.modca.ImageObject,byte[],int,int,int)>(io, buf, $i2, $i0, $i1)
+1283912535:goto [?= return]
+805867284:$r2 := @caughtexception
+802290689:ioe = $r2
+49790510:$r3 = <org.apache.fop.render.afp.AFPRenderer: org.apache.commons.logging.Log log>
+1457962887:$r4 = new java.lang.StringBuffer
+753348052:specialinvoke $r4.<java.lang.StringBuffer: void <init>()>()
+992229756:$r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Error while serializing bitmap: ")
+932165815:$r5 = virtualinvoke ioe.<java.io.IOException: java.lang.String getMessage()>()
+1017647840:$r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5)
+1047482172:$r6 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>()
+52140092:interfaceinvoke $r3.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r6, ioe)
+145198268:return

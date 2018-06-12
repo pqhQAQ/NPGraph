@@ -1,0 +1,354 @@
+public class org.apache.fop.pdf.PDFMetadata extends org.apache.fop.pdf.PDFStream
+{
+    private org.apache.xmlgraphics.xmp.Metadata xmpMetadata;
+    private boolean readOnly;
+
+    public void <init>(org.apache.xmlgraphics.xmp.Metadata, boolean)
+    {
+        org.apache.fop.pdf.PDFMetadata this;
+        org.apache.xmlgraphics.xmp.Metadata xmp;
+        boolean readOnly;
+        java.lang.NullPointerException $r0;
+
+        this := @this: org.apache.fop.pdf.PDFMetadata;
+        xmp := @parameter0: org.apache.xmlgraphics.xmp.Metadata;
+        readOnly := @parameter1: boolean;
+        specialinvoke this.<org.apache.fop.pdf.PDFStream: void <init>()>();
+        this.<org.apache.fop.pdf.PDFMetadata: boolean readOnly> = 1;
+        if xmp != null goto label0;
+
+        $r0 = new java.lang.NullPointerException;
+        specialinvoke $r0.<java.lang.NullPointerException: void <init>(java.lang.String)>("The parameter for the XMP Document must not be null");
+        throw $r0;
+
+     label0:
+        this.<org.apache.fop.pdf.PDFMetadata: org.apache.xmlgraphics.xmp.Metadata xmpMetadata> = xmp;
+        this.<org.apache.fop.pdf.PDFMetadata: boolean readOnly> = readOnly;
+        return;
+    }
+
+    protected void setupFilterList()
+    {
+        org.apache.fop.pdf.PDFMetadata this;
+        org.apache.fop.pdf.PDFFilterList $r0;
+        boolean $z0;
+        org.apache.fop.pdf.PDFDocument $r1;
+        java.util.Map $r2;
+
+        this := @this: org.apache.fop.pdf.PDFMetadata;
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFMetadata: org.apache.fop.pdf.PDFFilterList getFilterList()>();
+        $z0 = virtualinvoke $r0.<org.apache.fop.pdf.PDFFilterList: boolean isInitialized()>();
+        if $z0 != 0 goto label0;
+
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFMetadata: org.apache.fop.pdf.PDFFilterList getFilterList()>();
+        $r1 = virtualinvoke this.<org.apache.fop.pdf.PDFMetadata: org.apache.fop.pdf.PDFDocument getDocumentSafely()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.pdf.PDFDocument: java.util.Map getFilterMap()>();
+        virtualinvoke $r0.<org.apache.fop.pdf.PDFFilterList: void addDefaultFilters(java.util.Map,java.lang.String)>($r2, "metadata");
+
+     label0:
+        specialinvoke this.<org.apache.fop.pdf.PDFStream: void setupFilterList()>();
+        return;
+    }
+
+    public org.apache.xmlgraphics.xmp.Metadata getMetadata()
+    {
+        org.apache.fop.pdf.PDFMetadata this;
+        org.apache.xmlgraphics.xmp.Metadata $r0;
+
+        this := @this: org.apache.fop.pdf.PDFMetadata;
+        $r0 = this.<org.apache.fop.pdf.PDFMetadata: org.apache.xmlgraphics.xmp.Metadata xmpMetadata>;
+        return $r0;
+    }
+
+    protected int output(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFMetadata this;
+        java.io.OutputStream stream;
+        int length;
+
+        this := @this: org.apache.fop.pdf.PDFMetadata;
+        stream := @parameter0: java.io.OutputStream;
+        length = specialinvoke this.<org.apache.fop.pdf.PDFStream: int output(java.io.OutputStream)>(stream);
+        this.<org.apache.fop.pdf.PDFMetadata: org.apache.xmlgraphics.xmp.Metadata xmpMetadata> = null;
+        return length;
+    }
+
+    protected void outputRawStreamData(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFMetadata this;
+        java.io.OutputStream out;
+        javax.xml.transform.TransformerConfigurationException tce, $r1;
+        org.xml.sax.SAXException saxe, $r6;
+        org.apache.xmlgraphics.xmp.Metadata $r0;
+        boolean $z0;
+        java.io.IOException $r2;
+        java.lang.StringBuffer $r3;
+        java.lang.String $r4, $r5;
+
+        this := @this: org.apache.fop.pdf.PDFMetadata;
+        out := @parameter0: java.io.OutputStream;
+
+     label0:
+        $r0 = this.<org.apache.fop.pdf.PDFMetadata: org.apache.xmlgraphics.xmp.Metadata xmpMetadata>;
+        $z0 = this.<org.apache.fop.pdf.PDFMetadata: boolean readOnly>;
+        staticinvoke <org.apache.xmlgraphics.xmp.XMPSerializer: void writeXMPPacket(org.apache.xmlgraphics.xmp.Metadata,java.io.OutputStream,boolean)>($r0, out, $z0);
+
+     label1:
+        goto label4;
+
+     label2:
+        $r1 := @caughtexception;
+        tce = $r1;
+        $r2 = new java.io.IOException;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Error setting up Transformer for XMP stream serialization: ");
+        $r4 = virtualinvoke tce.<javax.xml.transform.TransformerConfigurationException: java.lang.String getMessage()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r5 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<java.io.IOException: void <init>(java.lang.String)>($r5);
+        throw $r2;
+
+     label3:
+        $r6 := @caughtexception;
+        saxe = $r6;
+        $r2 = new java.io.IOException;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Error while serializing XMP stream: ");
+        $r4 = virtualinvoke saxe.<org.xml.sax.SAXException: java.lang.String getMessage()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r5 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<java.io.IOException: void <init>(java.lang.String)>($r5);
+        throw $r2;
+
+     label4:
+        return;
+
+        catch javax.xml.transform.TransformerConfigurationException from label0 to label1 with label2;
+        catch org.xml.sax.SAXException from label0 to label1 with label3;
+    }
+
+    protected void populateStreamDict(java.lang.Object)
+    {
+        org.apache.fop.pdf.PDFMetadata this;
+        java.lang.Object lengthEntry;
+        java.lang.String filterEntry;
+        org.apache.fop.pdf.PDFFilterList $r0;
+        org.apache.fop.pdf.PDFDocument $r1;
+        org.apache.fop.pdf.PDFProfile $r2;
+        org.apache.fop.pdf.PDFAMode $r3;
+        boolean $z0;
+        int $i0;
+        org.apache.fop.pdf.PDFConformanceException $r4;
+        org.apache.fop.pdf.PDFName $r5;
+
+        this := @this: org.apache.fop.pdf.PDFMetadata;
+        lengthEntry := @parameter0: java.lang.Object;
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFMetadata: org.apache.fop.pdf.PDFFilterList getFilterList()>();
+        filterEntry = virtualinvoke $r0.<org.apache.fop.pdf.PDFFilterList: java.lang.String buildFilterDictEntries()>();
+        $r1 = virtualinvoke this.<org.apache.fop.pdf.PDFMetadata: org.apache.fop.pdf.PDFDocument getDocumentSafely()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFProfile getProfile()>();
+        $r3 = virtualinvoke $r2.<org.apache.fop.pdf.PDFProfile: org.apache.fop.pdf.PDFAMode getPDFAMode()>();
+        $z0 = virtualinvoke $r3.<org.apache.fop.pdf.PDFAMode: boolean isPDFA1LevelB()>();
+        if $z0 == 0 goto label0;
+
+        if filterEntry == null goto label0;
+
+        $i0 = virtualinvoke filterEntry.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label0;
+
+        $r4 = new org.apache.fop.pdf.PDFConformanceException;
+        specialinvoke $r4.<org.apache.fop.pdf.PDFConformanceException: void <init>(java.lang.String)>("The Filter key is prohibited when PDF/A-1 is active");
+        throw $r4;
+
+     label0:
+        $r5 = new org.apache.fop.pdf.PDFName;
+        specialinvoke $r5.<org.apache.fop.pdf.PDFName: void <init>(java.lang.String)>("Metadata");
+        virtualinvoke this.<org.apache.fop.pdf.PDFMetadata: void put(java.lang.String,java.lang.Object)>("Type", $r5);
+        $r5 = new org.apache.fop.pdf.PDFName;
+        specialinvoke $r5.<org.apache.fop.pdf.PDFName: void <init>(java.lang.String)>("XML");
+        virtualinvoke this.<org.apache.fop.pdf.PDFMetadata: void put(java.lang.String,java.lang.Object)>("Subtype", $r5);
+        specialinvoke this.<org.apache.fop.pdf.PDFStream: void populateStreamDict(java.lang.Object)>(lengthEntry);
+        return;
+    }
+
+    public static org.apache.xmlgraphics.xmp.Metadata createXMPFromPDFDocument(org.apache.fop.pdf.PDFDocument)
+    {
+        org.apache.fop.pdf.PDFDocument pdfDoc;
+        org.apache.xmlgraphics.xmp.Metadata $r0, meta;
+        org.apache.fop.pdf.PDFInfo info;
+        org.apache.fop.pdf.PDFRoot root;
+        java.util.Date d, $r1, $r5;
+        org.apache.xmlgraphics.xmp.schemas.DublinCoreAdapter dc;
+        org.apache.fop.pdf.PDFAMode pdfaMode, $r7;
+        org.apache.xmlgraphics.xmp.schemas.pdf.PDFAAdapter pdfa;
+        org.apache.xmlgraphics.xmp.schemas.XMPBasicAdapter xmpBasic;
+        org.apache.fop.pdf.PDFProfile profile, $r6;
+        org.apache.xmlgraphics.xmp.schemas.pdf.AdobePDFAdapter adobePDF;
+        java.lang.String $r2, $r3, $r4;
+        boolean $z0;
+
+        pdfDoc := @parameter0: org.apache.fop.pdf.PDFDocument;
+        $r0 = new org.apache.xmlgraphics.xmp.Metadata;
+        specialinvoke $r0.<org.apache.xmlgraphics.xmp.Metadata: void <init>()>();
+        meta = $r0;
+        info = virtualinvoke pdfDoc.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFInfo getInfo()>();
+        root = virtualinvoke pdfDoc.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFRoot getRoot()>();
+        $r1 = virtualinvoke info.<org.apache.fop.pdf.PDFInfo: java.util.Date getCreationDate()>();
+        if $r1 != null goto label0;
+
+        $r1 = new java.util.Date;
+        specialinvoke $r1.<java.util.Date: void <init>()>();
+        d = $r1;
+        virtualinvoke info.<org.apache.fop.pdf.PDFInfo: void setCreationDate(java.util.Date)>(d);
+
+     label0:
+        dc = staticinvoke <org.apache.xmlgraphics.xmp.schemas.DublinCoreSchema: org.apache.xmlgraphics.xmp.schemas.DublinCoreAdapter getAdapter(org.apache.xmlgraphics.xmp.Metadata)>(meta);
+        $r2 = virtualinvoke info.<org.apache.fop.pdf.PDFInfo: java.lang.String getAuthor()>();
+        if $r2 == null goto label1;
+
+        $r3 = virtualinvoke info.<org.apache.fop.pdf.PDFInfo: java.lang.String getAuthor()>();
+        virtualinvoke dc.<org.apache.xmlgraphics.xmp.schemas.DublinCoreAdapter: void addCreator(java.lang.String)>($r3);
+
+     label1:
+        $r2 = virtualinvoke info.<org.apache.fop.pdf.PDFInfo: java.lang.String getTitle()>();
+        if $r2 == null goto label2;
+
+        $r3 = virtualinvoke info.<org.apache.fop.pdf.PDFInfo: java.lang.String getTitle()>();
+        virtualinvoke dc.<org.apache.xmlgraphics.xmp.schemas.DublinCoreAdapter: void setTitle(java.lang.String)>($r3);
+
+     label2:
+        $r2 = virtualinvoke info.<org.apache.fop.pdf.PDFInfo: java.lang.String getSubject()>();
+        if $r2 == null goto label3;
+
+        $r4 = virtualinvoke info.<org.apache.fop.pdf.PDFInfo: java.lang.String getSubject()>();
+        virtualinvoke dc.<org.apache.xmlgraphics.xmp.schemas.DublinCoreAdapter: void setDescription(java.lang.String,java.lang.String)>(null, $r4);
+
+     label3:
+        $r2 = virtualinvoke root.<org.apache.fop.pdf.PDFRoot: java.lang.String getLanguage()>();
+        if $r2 == null goto label4;
+
+        $r3 = virtualinvoke root.<org.apache.fop.pdf.PDFRoot: java.lang.String getLanguage()>();
+        virtualinvoke dc.<org.apache.xmlgraphics.xmp.schemas.DublinCoreAdapter: void addLanguage(java.lang.String)>($r3);
+
+     label4:
+        $r5 = virtualinvoke info.<org.apache.fop.pdf.PDFInfo: java.util.Date getCreationDate()>();
+        virtualinvoke dc.<org.apache.xmlgraphics.xmp.schemas.DublinCoreAdapter: void addDate(java.util.Date)>($r5);
+        $r6 = virtualinvoke pdfDoc.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFProfile getProfile()>();
+        pdfaMode = virtualinvoke $r6.<org.apache.fop.pdf.PDFProfile: org.apache.fop.pdf.PDFAMode getPDFAMode()>();
+        $z0 = virtualinvoke pdfaMode.<org.apache.fop.pdf.PDFAMode: boolean isPDFA1LevelB()>();
+        if $z0 == 0 goto label6;
+
+        pdfa = staticinvoke <org.apache.xmlgraphics.xmp.schemas.pdf.PDFAXMPSchema: org.apache.xmlgraphics.xmp.schemas.pdf.PDFAAdapter getAdapter(org.apache.xmlgraphics.xmp.Metadata)>(meta);
+        virtualinvoke pdfa.<org.apache.xmlgraphics.xmp.schemas.pdf.PDFAAdapter: void setPart(int)>(1);
+        $r7 = <org.apache.fop.pdf.PDFAMode: org.apache.fop.pdf.PDFAMode PDFA_1A>;
+        if pdfaMode != $r7 goto label5;
+
+        virtualinvoke pdfa.<org.apache.xmlgraphics.xmp.schemas.pdf.PDFAAdapter: void setConformance(java.lang.String)>("A");
+        goto label6;
+
+     label5:
+        virtualinvoke pdfa.<org.apache.xmlgraphics.xmp.schemas.pdf.PDFAAdapter: void setConformance(java.lang.String)>("B");
+
+     label6:
+        xmpBasic = staticinvoke <org.apache.xmlgraphics.xmp.schemas.XMPBasicSchema: org.apache.xmlgraphics.xmp.schemas.XMPBasicAdapter getAdapter(org.apache.xmlgraphics.xmp.Metadata)>(meta);
+        $r5 = virtualinvoke info.<org.apache.fop.pdf.PDFInfo: java.util.Date getCreationDate()>();
+        virtualinvoke xmpBasic.<org.apache.xmlgraphics.xmp.schemas.XMPBasicAdapter: void setCreateDate(java.util.Date)>($r5);
+        profile = virtualinvoke pdfDoc.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFProfile getProfile()>();
+        $r1 = virtualinvoke info.<org.apache.fop.pdf.PDFInfo: java.util.Date getModDate()>();
+        if $r1 == null goto label7;
+
+        $r5 = virtualinvoke info.<org.apache.fop.pdf.PDFInfo: java.util.Date getModDate()>();
+        virtualinvoke xmpBasic.<org.apache.xmlgraphics.xmp.schemas.XMPBasicAdapter: void setModifyDate(java.util.Date)>($r5);
+        goto label8;
+
+     label7:
+        $z0 = virtualinvoke profile.<org.apache.fop.pdf.PDFProfile: boolean isModDateRequired()>();
+        if $z0 == 0 goto label8;
+
+        $r5 = virtualinvoke info.<org.apache.fop.pdf.PDFInfo: java.util.Date getCreationDate()>();
+        virtualinvoke xmpBasic.<org.apache.xmlgraphics.xmp.schemas.XMPBasicAdapter: void setModifyDate(java.util.Date)>($r5);
+
+     label8:
+        $r2 = virtualinvoke info.<org.apache.fop.pdf.PDFInfo: java.lang.String getCreator()>();
+        if $r2 == null goto label9;
+
+        $r3 = virtualinvoke info.<org.apache.fop.pdf.PDFInfo: java.lang.String getCreator()>();
+        virtualinvoke xmpBasic.<org.apache.xmlgraphics.xmp.schemas.XMPBasicAdapter: void setCreatorTool(java.lang.String)>($r3);
+
+     label9:
+        adobePDF = staticinvoke <org.apache.xmlgraphics.xmp.schemas.pdf.AdobePDFSchema: org.apache.xmlgraphics.xmp.schemas.pdf.AdobePDFAdapter getAdapter(org.apache.xmlgraphics.xmp.Metadata)>(meta);
+        $r2 = virtualinvoke info.<org.apache.fop.pdf.PDFInfo: java.lang.String getKeywords()>();
+        if $r2 == null goto label10;
+
+        $r3 = virtualinvoke info.<org.apache.fop.pdf.PDFInfo: java.lang.String getKeywords()>();
+        virtualinvoke adobePDF.<org.apache.xmlgraphics.xmp.schemas.pdf.AdobePDFAdapter: void setKeywords(java.lang.String)>($r3);
+
+     label10:
+        $r2 = virtualinvoke info.<org.apache.fop.pdf.PDFInfo: java.lang.String getProducer()>();
+        if $r2 == null goto label11;
+
+        $r3 = virtualinvoke info.<org.apache.fop.pdf.PDFInfo: java.lang.String getProducer()>();
+        virtualinvoke adobePDF.<org.apache.xmlgraphics.xmp.schemas.pdf.AdobePDFAdapter: void setProducer(java.lang.String)>($r3);
+
+     label11:
+        $r3 = virtualinvoke pdfDoc.<org.apache.fop.pdf.PDFDocument: java.lang.String getPDFVersionString()>();
+        virtualinvoke adobePDF.<org.apache.xmlgraphics.xmp.schemas.pdf.AdobePDFAdapter: void setPDFVersion(java.lang.String)>($r3);
+        return meta;
+    }
+
+    public static void updateInfoFromMetadata(org.apache.xmlgraphics.xmp.Metadata, org.apache.fop.pdf.PDFInfo)
+    {
+        org.apache.xmlgraphics.xmp.Metadata meta;
+        org.apache.fop.pdf.PDFInfo info;
+        org.apache.xmlgraphics.xmp.schemas.DublinCoreAdapter dc;
+        java.lang.String[] creators;
+        org.apache.xmlgraphics.xmp.schemas.pdf.AdobePDFAdapter pdf;
+        org.apache.xmlgraphics.xmp.schemas.XMPBasicAdapter xmpBasic;
+        java.util.Date d;
+        java.lang.String $r0;
+        int $i0;
+
+        meta := @parameter0: org.apache.xmlgraphics.xmp.Metadata;
+        info := @parameter1: org.apache.fop.pdf.PDFInfo;
+        dc = staticinvoke <org.apache.xmlgraphics.xmp.schemas.DublinCoreSchema: org.apache.xmlgraphics.xmp.schemas.DublinCoreAdapter getAdapter(org.apache.xmlgraphics.xmp.Metadata)>(meta);
+        $r0 = virtualinvoke dc.<org.apache.xmlgraphics.xmp.schemas.DublinCoreAdapter: java.lang.String getTitle()>();
+        virtualinvoke info.<org.apache.fop.pdf.PDFInfo: void setTitle(java.lang.String)>($r0);
+        creators = virtualinvoke dc.<org.apache.xmlgraphics.xmp.schemas.DublinCoreAdapter: java.lang.String[] getCreators()>();
+        if creators == null goto label0;
+
+        $i0 = lengthof creators;
+        if $i0 <= 0 goto label0;
+
+        $r0 = creators[0];
+        virtualinvoke info.<org.apache.fop.pdf.PDFInfo: void setAuthor(java.lang.String)>($r0);
+        goto label1;
+
+     label0:
+        virtualinvoke info.<org.apache.fop.pdf.PDFInfo: void setAuthor(java.lang.String)>(null);
+
+     label1:
+        $r0 = virtualinvoke dc.<org.apache.xmlgraphics.xmp.schemas.DublinCoreAdapter: java.lang.String getDescription()>();
+        virtualinvoke info.<org.apache.fop.pdf.PDFInfo: void setSubject(java.lang.String)>($r0);
+        pdf = staticinvoke <org.apache.xmlgraphics.xmp.schemas.pdf.AdobePDFSchema: org.apache.xmlgraphics.xmp.schemas.pdf.AdobePDFAdapter getAdapter(org.apache.xmlgraphics.xmp.Metadata)>(meta);
+        $r0 = virtualinvoke pdf.<org.apache.xmlgraphics.xmp.schemas.pdf.AdobePDFAdapter: java.lang.String getKeywords()>();
+        virtualinvoke info.<org.apache.fop.pdf.PDFInfo: void setKeywords(java.lang.String)>($r0);
+        $r0 = virtualinvoke pdf.<org.apache.xmlgraphics.xmp.schemas.pdf.AdobePDFAdapter: java.lang.String getProducer()>();
+        virtualinvoke info.<org.apache.fop.pdf.PDFInfo: void setProducer(java.lang.String)>($r0);
+        xmpBasic = staticinvoke <org.apache.xmlgraphics.xmp.schemas.XMPBasicSchema: org.apache.xmlgraphics.xmp.schemas.XMPBasicAdapter getAdapter(org.apache.xmlgraphics.xmp.Metadata)>(meta);
+        $r0 = virtualinvoke xmpBasic.<org.apache.xmlgraphics.xmp.schemas.XMPBasicAdapter: java.lang.String getCreatorTool()>();
+        virtualinvoke info.<org.apache.fop.pdf.PDFInfo: void setCreator(java.lang.String)>($r0);
+        d = virtualinvoke xmpBasic.<org.apache.xmlgraphics.xmp.schemas.XMPBasicAdapter: java.util.Date getCreateDate()>();
+        virtualinvoke xmpBasic.<org.apache.xmlgraphics.xmp.schemas.XMPBasicAdapter: void setCreateDate(java.util.Date)>(d);
+        virtualinvoke info.<org.apache.fop.pdf.PDFInfo: void setCreationDate(java.util.Date)>(d);
+        d = virtualinvoke xmpBasic.<org.apache.xmlgraphics.xmp.schemas.XMPBasicAdapter: java.util.Date getModifyDate()>();
+        if d == null goto label2;
+
+        virtualinvoke xmpBasic.<org.apache.xmlgraphics.xmp.schemas.XMPBasicAdapter: void setModifyDate(java.util.Date)>(d);
+        virtualinvoke info.<org.apache.fop.pdf.PDFInfo: void setModDate(java.util.Date)>(d);
+
+     label2:
+        return;
+    }
+}

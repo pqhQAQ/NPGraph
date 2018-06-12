@@ -1,0 +1,510 @@
+public class org.apache.fop.fo.flow.table.TableBody extends org.apache.fop.fo.flow.table.TableCellContainer
+{
+    private org.apache.fop.fo.properties.CommonBorderPaddingBackground commonBorderPaddingBackground;
+    protected boolean tableRowsFound;
+    protected boolean tableCellsFound;
+    private boolean firstRow;
+    private boolean rowsStarted;
+    private boolean lastCellEndsRow;
+    private org.apache.fop.fo.flow.table.TableRow lastRow;
+    private java.util.List rowGroups;
+
+    public void <init>(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.flow.table.TableBody this;
+        org.apache.fop.fo.FONode parent;
+        java.util.LinkedList $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.TableBody;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        specialinvoke this.<org.apache.fop.fo.flow.table.TableCellContainer: void <init>(org.apache.fop.fo.FONode)>(parent);
+        this.<org.apache.fop.fo.flow.table.TableBody: boolean tableRowsFound> = 0;
+        this.<org.apache.fop.fo.flow.table.TableBody: boolean tableCellsFound> = 0;
+        this.<org.apache.fop.fo.flow.table.TableBody: boolean firstRow> = 1;
+        this.<org.apache.fop.fo.flow.table.TableBody: boolean rowsStarted> = 0;
+        this.<org.apache.fop.fo.flow.table.TableBody: boolean lastCellEndsRow> = 1;
+        $r0 = new java.util.LinkedList;
+        specialinvoke $r0.<java.util.LinkedList: void <init>()>();
+        this.<org.apache.fop.fo.flow.table.TableBody: java.util.List rowGroups> = $r0;
+        return;
+    }
+
+    public void bind(org.apache.fop.fo.PropertyList) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.table.TableBody this;
+        org.apache.fop.fo.PropertyList pList;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.TableBody;
+        pList := @parameter0: org.apache.fop.fo.PropertyList;
+        $r0 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.CommonBorderPaddingBackground getBorderPaddingBackgroundProps()>();
+        this.<org.apache.fop.fo.flow.table.TableBody: org.apache.fop.fo.properties.CommonBorderPaddingBackground commonBorderPaddingBackground> = $r0;
+        specialinvoke this.<org.apache.fop.fo.flow.table.TableCellContainer: void bind(org.apache.fop.fo.PropertyList)>(pList);
+        return;
+    }
+
+    public void processNode(java.lang.String, org.xml.sax.Locator, org.xml.sax.Attributes, org.apache.fop.fo.PropertyList) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.table.TableBody this;
+        java.lang.String elementName;
+        org.xml.sax.Locator locator;
+        org.xml.sax.Attributes attlist;
+        org.apache.fop.fo.PropertyList pList;
+        org.apache.fop.fo.flow.table.Table t;
+        int size, i;
+        java.util.ArrayList $r0;
+        boolean $z0;
+        java.util.List $r1;
+        org.apache.fop.fo.flow.table.ColumnNumberManager $r2;
+
+        this := @this: org.apache.fop.fo.flow.table.TableBody;
+        elementName := @parameter0: java.lang.String;
+        locator := @parameter1: org.xml.sax.Locator;
+        attlist := @parameter2: org.xml.sax.Attributes;
+        pList := @parameter3: org.apache.fop.fo.PropertyList;
+        $z0 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: boolean inMarker()>();
+        if $z0 != 0 goto label4;
+
+        t = virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: org.apache.fop.fo.flow.table.Table getTable()>();
+        $z0 = virtualinvoke t.<org.apache.fop.fo.flow.table.Table: boolean hasExplicitColumns()>();
+        if $z0 == 0 goto label2;
+
+        size = virtualinvoke t.<org.apache.fop.fo.flow.table.Table: int getNumberOfColumns()>();
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>(int)>(size);
+        this.<org.apache.fop.fo.flow.table.TableBody: java.util.List pendingSpans> = $r0;
+        i = 0;
+
+     label0:
+        if i >= size goto label1;
+
+        $r1 = this.<org.apache.fop.fo.flow.table.TableBody: java.util.List pendingSpans>;
+        interfaceinvoke $r1.<java.util.List: boolean add(java.lang.Object)>(null);
+        i = i + 1;
+        goto label0;
+
+     label1:
+        goto label3;
+
+     label2:
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.fo.flow.table.TableBody: java.util.List pendingSpans> = $r0;
+
+     label3:
+        $r2 = new org.apache.fop.fo.flow.table.ColumnNumberManager;
+        specialinvoke $r2.<org.apache.fop.fo.flow.table.ColumnNumberManager: void <init>()>();
+        this.<org.apache.fop.fo.flow.table.TableBody: org.apache.fop.fo.flow.table.ColumnNumberManager columnNumberManager> = $r2;
+
+     label4:
+        specialinvoke this.<org.apache.fop.fo.flow.table.TableCellContainer: void processNode(java.lang.String,org.xml.sax.Locator,org.xml.sax.Attributes,org.apache.fop.fo.PropertyList)>(elementName, locator, attlist, pList);
+        return;
+    }
+
+    public void startOfNode() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.table.TableBody this;
+        org.apache.fop.fo.FOEventHandler $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.TableBody;
+        specialinvoke this.<org.apache.fop.fo.flow.table.TableCellContainer: void startOfNode()>();
+        $r0 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: org.apache.fop.fo.FOEventHandler getFOEventHandler()>();
+        virtualinvoke $r0.<org.apache.fop.fo.FOEventHandler: void startBody(org.apache.fop.fo.flow.table.TableBody)>(this);
+        return;
+    }
+
+    public void endOfNode() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.table.TableBody this;
+        boolean $z0;
+        org.apache.fop.fo.FOEventHandler $r0;
+        org.apache.fop.apps.FOUserAgent $r1;
+        org.apache.commons.logging.Log $r2;
+        org.apache.fop.fo.FONode $r3;
+
+        this := @this: org.apache.fop.fo.flow.table.TableBody;
+        $z0 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: boolean inMarker()>();
+        if $z0 != 0 goto label0;
+
+        this.<org.apache.fop.fo.flow.table.TableBody: java.util.List pendingSpans> = null;
+        this.<org.apache.fop.fo.flow.table.TableBody: org.apache.fop.fo.flow.table.ColumnNumberManager columnNumberManager> = null;
+
+     label0:
+        $r0 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: org.apache.fop.fo.FOEventHandler getFOEventHandler()>();
+        virtualinvoke $r0.<org.apache.fop.fo.FOEventHandler: void endBody(org.apache.fop.fo.flow.table.TableBody)>(this);
+        $z0 = this.<org.apache.fop.fo.flow.table.TableBody: boolean tableRowsFound>;
+        if $z0 != 0 goto label2;
+
+        $z0 = this.<org.apache.fop.fo.flow.table.TableBody: boolean tableCellsFound>;
+        if $z0 != 0 goto label2;
+
+        $r1 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        $z0 = virtualinvoke $r1.<org.apache.fop.apps.FOUserAgent: boolean validateStrictly()>();
+        if $z0 == 0 goto label1;
+
+        virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: void missingChildElementError(java.lang.String)>("marker* (table-row+|table-cell+)");
+        goto label3;
+
+     label1:
+        $r2 = <org.apache.fop.fo.flow.table.TableBody: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void error(java.lang.Object)>("fo:table-body must not be empty. Expected: marker* (table-row+|table-cell+)");
+        $r3 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: org.apache.fop.fo.FONode getParent()>();
+        virtualinvoke $r3.<org.apache.fop.fo.FONode: void removeChild(org.apache.fop.fo.FONode)>(this);
+        goto label3;
+
+     label2:
+        virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: void finishLastRowGroup()>();
+
+     label3:
+        return;
+    }
+
+    org.apache.fop.fo.flow.table.TableBody getTablePart()
+    {
+        org.apache.fop.fo.flow.table.TableBody this;
+
+        this := @this: org.apache.fop.fo.flow.table.TableBody;
+        return this;
+    }
+
+    protected void finishLastRowGroup() throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.flow.table.TableBody this;
+        org.apache.fop.fo.flow.table.RowGroupBuilder rowGroupBuilder;
+        org.apache.fop.fo.ValidationException e, $r1;
+        boolean $z0;
+        org.apache.fop.fo.flow.table.Table $r0;
+        org.xml.sax.Locator $r2;
+
+        this := @this: org.apache.fop.fo.flow.table.TableBody;
+        $z0 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: boolean inMarker()>();
+        if $z0 != 0 goto label4;
+
+        $r0 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: org.apache.fop.fo.flow.table.Table getTable()>();
+        rowGroupBuilder = virtualinvoke $r0.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.flow.table.RowGroupBuilder getRowGroupBuilder()>();
+        $z0 = this.<org.apache.fop.fo.flow.table.TableBody: boolean tableRowsFound>;
+        if $z0 == 0 goto label0;
+
+        virtualinvoke rowGroupBuilder.<org.apache.fop.fo.flow.table.RowGroupBuilder: void endTableRow()>();
+        goto label1;
+
+     label0:
+        $z0 = this.<org.apache.fop.fo.flow.table.TableBody: boolean lastCellEndsRow>;
+        if $z0 != 0 goto label1;
+
+        virtualinvoke rowGroupBuilder.<org.apache.fop.fo.flow.table.RowGroupBuilder: void endRow(org.apache.fop.fo.flow.table.TableBody)>(this);
+
+     label1:
+        virtualinvoke rowGroupBuilder.<org.apache.fop.fo.flow.table.RowGroupBuilder: void endTablePart()>();
+
+     label2:
+        goto label4;
+
+     label3:
+        $r1 := @caughtexception;
+        e = $r1;
+        $r2 = this.<org.apache.fop.fo.flow.table.TableBody: org.xml.sax.Locator locator>;
+        virtualinvoke e.<org.apache.fop.fo.ValidationException: void setLocator(org.xml.sax.Locator)>($r2);
+        throw e;
+
+     label4:
+        return;
+
+        catch org.apache.fop.fo.ValidationException from label1 to label2 with label3;
+    }
+
+    protected void validateChildNode(org.xml.sax.Locator, java.lang.String, java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.flow.table.TableBody this;
+        org.xml.sax.Locator loc;
+        java.lang.String nsURI, localName, $r0, $r2, $r3;
+        java.lang.StringBuffer $r1;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.flow.table.TableBody;
+        loc := @parameter0: org.xml.sax.Locator;
+        nsURI := @parameter1: java.lang.String;
+        localName := @parameter2: java.lang.String;
+        $r0 = "http://www.w3.org/1999/XSL/Format";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(nsURI);
+        if $z0 == 0 goto label4;
+
+        $z0 = virtualinvoke localName.<java.lang.String: boolean equals(java.lang.Object)>("marker");
+        if $z0 == 0 goto label1;
+
+        $z0 = this.<org.apache.fop.fo.flow.table.TableBody: boolean tableRowsFound>;
+        if $z0 != 0 goto label0;
+
+        $z0 = this.<org.apache.fop.fo.flow.table.TableBody: boolean tableCellsFound>;
+        if $z0 == 0 goto label5;
+
+     label0:
+        virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: void nodesOutOfOrderError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, "fo:marker", "(table-row+|table-cell+)");
+        goto label5;
+
+     label1:
+        $z0 = virtualinvoke localName.<java.lang.String: boolean equals(java.lang.Object)>("table-row");
+        if $z0 == 0 goto label2;
+
+        this.<org.apache.fop.fo.flow.table.TableBody: boolean tableRowsFound> = 1;
+        $z0 = this.<org.apache.fop.fo.flow.table.TableBody: boolean tableCellsFound>;
+        if $z0 == 0 goto label5;
+
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Either fo:table-rows or fo:table-cells may be children of an ");
+        $r2 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: java.lang.String getName()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" but not both");
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: void invalidChildError(org.xml.sax.Locator,java.lang.String,java.lang.String,java.lang.String)>(loc, nsURI, localName, $r3);
+        goto label5;
+
+     label2:
+        $z0 = virtualinvoke localName.<java.lang.String: boolean equals(java.lang.Object)>("table-cell");
+        if $z0 == 0 goto label3;
+
+        this.<org.apache.fop.fo.flow.table.TableBody: boolean tableCellsFound> = 1;
+        $z0 = this.<org.apache.fop.fo.flow.table.TableBody: boolean tableRowsFound>;
+        if $z0 == 0 goto label5;
+
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Either fo:table-rows or fo:table-cells may be children of an ");
+        $r2 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: java.lang.String getName()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" but not both");
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: void invalidChildError(org.xml.sax.Locator,java.lang.String,java.lang.String,java.lang.String)>(loc, nsURI, localName, $r3);
+        goto label5;
+
+     label3:
+        virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: void invalidChildError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, nsURI, localName);
+        goto label5;
+
+     label4:
+        virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: void invalidChildError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, nsURI, localName);
+
+     label5:
+        return;
+    }
+
+    protected void addChildNode(org.apache.fop.fo.FONode) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.table.TableBody this;
+        org.apache.fop.fo.FONode child;
+        org.apache.fop.fo.flow.table.TableCell cell;
+        boolean $z0, $z1, $z2;
+        int $i0;
+        org.apache.fop.fo.flow.table.Table $r0;
+        org.apache.fop.fo.flow.table.RowGroupBuilder $r1;
+        org.apache.fop.fo.flow.table.ColumnNumberManager $r2;
+        java.util.List $r3;
+        org.apache.fop.fo.flow.table.TableRow $r4;
+
+        this := @this: org.apache.fop.fo.flow.table.TableBody;
+        child := @parameter0: org.apache.fop.fo.FONode;
+        $z0 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: boolean inMarker()>();
+        if $z0 != 0 goto label5;
+
+        $i0 = virtualinvoke child.<org.apache.fop.fo.FONode: int getNameId()>();
+        lookupswitch($i0)
+        {
+            case 50: goto label3;
+            case 54: goto label0;
+            default: goto label5;
+        };
+
+     label0:
+        $z0 = this.<org.apache.fop.fo.flow.table.TableBody: boolean rowsStarted>;
+        if $z0 != 0 goto label1;
+
+        $r0 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.flow.table.RowGroupBuilder getRowGroupBuilder()>();
+        virtualinvoke $r1.<org.apache.fop.fo.flow.table.RowGroupBuilder: void startTablePart(org.apache.fop.fo.flow.table.TableBody)>(this);
+        goto label2;
+
+     label1:
+        $r2 = this.<org.apache.fop.fo.flow.table.TableBody: org.apache.fop.fo.flow.table.ColumnNumberManager columnNumberManager>;
+        $r3 = this.<org.apache.fop.fo.flow.table.TableBody: java.util.List pendingSpans>;
+        virtualinvoke $r2.<org.apache.fop.fo.flow.table.ColumnNumberManager: void prepareForNextRow(java.util.List)>($r3);
+        $r0 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.flow.table.RowGroupBuilder getRowGroupBuilder()>();
+        virtualinvoke $r1.<org.apache.fop.fo.flow.table.RowGroupBuilder: void endTableRow()>();
+
+     label2:
+        this.<org.apache.fop.fo.flow.table.TableBody: boolean rowsStarted> = 1;
+        $r4 = (org.apache.fop.fo.flow.table.TableRow) child;
+        this.<org.apache.fop.fo.flow.table.TableBody: org.apache.fop.fo.flow.table.TableRow lastRow> = $r4;
+        $r0 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.flow.table.RowGroupBuilder getRowGroupBuilder()>();
+        $r4 = this.<org.apache.fop.fo.flow.table.TableBody: org.apache.fop.fo.flow.table.TableRow lastRow>;
+        virtualinvoke $r1.<org.apache.fop.fo.flow.table.RowGroupBuilder: void startTableRow(org.apache.fop.fo.flow.table.TableRow)>($r4);
+        goto label5;
+
+     label3:
+        $z0 = this.<org.apache.fop.fo.flow.table.TableBody: boolean rowsStarted>;
+        if $z0 != 0 goto label4;
+
+        $r0 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.flow.table.RowGroupBuilder getRowGroupBuilder()>();
+        virtualinvoke $r1.<org.apache.fop.fo.flow.table.RowGroupBuilder: void startTablePart(org.apache.fop.fo.flow.table.TableBody)>(this);
+
+     label4:
+        this.<org.apache.fop.fo.flow.table.TableBody: boolean rowsStarted> = 1;
+        cell = (org.apache.fop.fo.flow.table.TableCell) child;
+        $z1 = this.<org.apache.fop.fo.flow.table.TableBody: boolean firstRow>;
+        virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: void addTableCellChild(org.apache.fop.fo.flow.table.TableCell,boolean)>(cell, $z1);
+        $z2 = virtualinvoke cell.<org.apache.fop.fo.flow.table.TableCell: boolean endsRow()>();
+        this.<org.apache.fop.fo.flow.table.TableBody: boolean lastCellEndsRow> = $z2;
+        $z0 = this.<org.apache.fop.fo.flow.table.TableBody: boolean lastCellEndsRow>;
+        if $z0 == 0 goto label5;
+
+        this.<org.apache.fop.fo.flow.table.TableBody: boolean firstRow> = 0;
+        $r2 = this.<org.apache.fop.fo.flow.table.TableBody: org.apache.fop.fo.flow.table.ColumnNumberManager columnNumberManager>;
+        $r3 = this.<org.apache.fop.fo.flow.table.TableBody: java.util.List pendingSpans>;
+        virtualinvoke $r2.<org.apache.fop.fo.flow.table.ColumnNumberManager: void prepareForNextRow(java.util.List)>($r3);
+        $r0 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.flow.table.RowGroupBuilder getRowGroupBuilder()>();
+        virtualinvoke $r1.<org.apache.fop.fo.flow.table.RowGroupBuilder: void endRow(org.apache.fop.fo.flow.table.TableBody)>(this);
+        goto label5;
+
+     label5:
+        specialinvoke this.<org.apache.fop.fo.flow.table.TableCellContainer: void addChildNode(org.apache.fop.fo.FONode)>(child);
+        return;
+    }
+
+    protected void setCollapsedBorders()
+    {
+        org.apache.fop.fo.flow.table.TableBody this;
+        org.apache.fop.fo.flow.table.Table table;
+        org.apache.fop.fo.FONode $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.TableBody;
+        $r0 = this.<org.apache.fop.fo.flow.table.TableBody: org.apache.fop.fo.FONode parent>;
+        table = (org.apache.fop.fo.flow.table.Table) $r0;
+        virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: void createBorder(int,org.apache.fop.fo.flow.table.TableFObj)>(2, table);
+        virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: void createBorder(int,org.apache.fop.fo.flow.table.TableFObj)>(3, table);
+        virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: void createBorder(int)>(0);
+        virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: void createBorder(int)>(1);
+        return;
+    }
+
+    void addRowGroup(java.util.List)
+    {
+        org.apache.fop.fo.flow.table.TableBody this;
+        java.util.List rowGroup, $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.TableBody;
+        rowGroup := @parameter0: java.util.List;
+        $r0 = this.<org.apache.fop.fo.flow.table.TableBody: java.util.List rowGroups>;
+        interfaceinvoke $r0.<java.util.List: boolean add(java.lang.Object)>(rowGroup);
+        return;
+    }
+
+    public java.util.List getRowGroups()
+    {
+        org.apache.fop.fo.flow.table.TableBody this;
+        java.util.List $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.TableBody;
+        $r0 = this.<org.apache.fop.fo.flow.table.TableBody: java.util.List rowGroups>;
+        return $r0;
+    }
+
+    public org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()
+    {
+        org.apache.fop.fo.flow.table.TableBody this;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.TableBody;
+        $r0 = this.<org.apache.fop.fo.flow.table.TableBody: org.apache.fop.fo.properties.CommonBorderPaddingBackground commonBorderPaddingBackground>;
+        return $r0;
+    }
+
+    public java.lang.String getLocalName()
+    {
+        org.apache.fop.fo.flow.table.TableBody this;
+
+        this := @this: org.apache.fop.fo.flow.table.TableBody;
+        return "table-body";
+    }
+
+    public int getNameId()
+    {
+        org.apache.fop.fo.flow.table.TableBody this;
+
+        this := @this: org.apache.fop.fo.flow.table.TableBody;
+        return 48;
+    }
+
+    protected boolean isTableHeader()
+    {
+        org.apache.fop.fo.flow.table.TableBody this;
+
+        this := @this: org.apache.fop.fo.flow.table.TableBody;
+        return 0;
+    }
+
+    protected boolean isTableFooter()
+    {
+        org.apache.fop.fo.flow.table.TableBody this;
+
+        this := @this: org.apache.fop.fo.flow.table.TableBody;
+        return 0;
+    }
+
+    public boolean isFirst(org.apache.fop.fo.flow.table.TableRow)
+    {
+        org.apache.fop.fo.flow.table.TableBody this;
+        org.apache.fop.fo.flow.table.TableRow obj;
+        org.apache.fop.fo.FONode $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.flow.table.TableBody;
+        obj := @parameter0: org.apache.fop.fo.flow.table.TableRow;
+        $r0 = this.<org.apache.fop.fo.flow.table.TableBody: org.apache.fop.fo.FONode firstChild>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.fo.flow.table.TableBody: org.apache.fop.fo.FONode firstChild>;
+        if $r0 != obj goto label1;
+
+     label0:
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    void signalNewRow()
+    {
+        org.apache.fop.fo.flow.table.TableBody this;
+        boolean $z0;
+        org.apache.fop.fo.flow.table.ColumnNumberManager $r0;
+        java.util.List $r1;
+        org.apache.fop.fo.flow.table.Table $r2;
+        org.apache.fop.fo.flow.table.RowGroupBuilder $r3;
+
+        this := @this: org.apache.fop.fo.flow.table.TableBody;
+        $z0 = this.<org.apache.fop.fo.flow.table.TableBody: boolean rowsStarted>;
+        if $z0 == 0 goto label0;
+
+        this.<org.apache.fop.fo.flow.table.TableBody: boolean firstRow> = 0;
+        $z0 = this.<org.apache.fop.fo.flow.table.TableBody: boolean lastCellEndsRow>;
+        if $z0 != 0 goto label0;
+
+        $r0 = this.<org.apache.fop.fo.flow.table.TableBody: org.apache.fop.fo.flow.table.ColumnNumberManager columnNumberManager>;
+        $r1 = this.<org.apache.fop.fo.flow.table.TableBody: java.util.List pendingSpans>;
+        virtualinvoke $r0.<org.apache.fop.fo.flow.table.ColumnNumberManager: void prepareForNextRow(java.util.List)>($r1);
+        $r2 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableBody: org.apache.fop.fo.flow.table.Table getTable()>();
+        $r3 = virtualinvoke $r2.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.flow.table.RowGroupBuilder getRowGroupBuilder()>();
+        virtualinvoke $r3.<org.apache.fop.fo.flow.table.RowGroupBuilder: void endRow(org.apache.fop.fo.flow.table.TableBody)>(this);
+
+     label0:
+        return;
+    }
+}

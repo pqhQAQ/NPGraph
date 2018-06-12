@@ -1,0 +1,199 @@
+public class org.apache.fop.render.rtf.rtflib.tools.BuilderContext extends java.lang.Object
+{
+    private final java.util.Stack containers;
+    private final java.util.Stack tableContexts;
+    private final java.util.Stack builders;
+    private org.apache.fop.render.rtf.rtflib.rtfdoc.IRtfOptions options;
+
+    public void <init>(org.apache.fop.render.rtf.rtflib.rtfdoc.IRtfOptions)
+    {
+        org.apache.fop.render.rtf.rtflib.tools.BuilderContext this;
+        org.apache.fop.render.rtf.rtflib.rtfdoc.IRtfOptions rtfOptions;
+        java.util.Stack $r0;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.tools.BuilderContext;
+        rtfOptions := @parameter0: org.apache.fop.render.rtf.rtflib.rtfdoc.IRtfOptions;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $r0 = new java.util.Stack;
+        specialinvoke $r0.<java.util.Stack: void <init>()>();
+        this.<org.apache.fop.render.rtf.rtflib.tools.BuilderContext: java.util.Stack containers> = $r0;
+        $r0 = new java.util.Stack;
+        specialinvoke $r0.<java.util.Stack: void <init>()>();
+        this.<org.apache.fop.render.rtf.rtflib.tools.BuilderContext: java.util.Stack tableContexts> = $r0;
+        $r0 = new java.util.Stack;
+        specialinvoke $r0.<java.util.Stack: void <init>()>();
+        this.<org.apache.fop.render.rtf.rtflib.tools.BuilderContext: java.util.Stack builders> = $r0;
+        this.<org.apache.fop.render.rtf.rtflib.tools.BuilderContext: org.apache.fop.render.rtf.rtflib.rtfdoc.IRtfOptions options> = rtfOptions;
+        return;
+    }
+
+    private java.lang.Object getObjectFromStack(java.util.Stack, java.lang.Class)
+    {
+        org.apache.fop.render.rtf.rtflib.tools.BuilderContext this;
+        java.util.Stack s, copy;
+        java.lang.Class desiredClass, $r1;
+        java.lang.Object result, o, $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.tools.BuilderContext;
+        s := @parameter0: java.util.Stack;
+        desiredClass := @parameter1: java.lang.Class;
+        result = null;
+        $r0 = virtualinvoke s.<java.util.Stack: java.lang.Object clone()>();
+        copy = (java.util.Stack) $r0;
+
+     label0:
+        $z0 = virtualinvoke copy.<java.util.Stack: boolean isEmpty()>();
+        if $z0 != 0 goto label2;
+
+        o = virtualinvoke copy.<java.util.Stack: java.lang.Object pop()>();
+        $r1 = virtualinvoke o.<java.lang.Object: java.lang.Class getClass()>();
+        $z0 = virtualinvoke desiredClass.<java.lang.Class: boolean isAssignableFrom(java.lang.Class)>($r1);
+        if $z0 == 0 goto label1;
+
+        result = o;
+        goto label2;
+
+     label1:
+        goto label0;
+
+     label2:
+        return result;
+    }
+
+    public org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer getContainer(java.lang.Class, boolean, java.lang.Object) throws org.apache.fop.render.rtf.rtflib.exceptions.RtfException
+    {
+        org.apache.fop.render.rtf.rtflib.tools.BuilderContext this;
+        java.lang.Class containerClass, $r5;
+        boolean required;
+        java.lang.Object forWhichBuilder, $r1;
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer result;
+        java.util.Stack $r0;
+        org.apache.fop.render.rtf.rtflib.exceptions.RtfException $r2;
+        java.lang.StringBuffer $r3;
+        java.lang.String $r4, $r6;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.tools.BuilderContext;
+        containerClass := @parameter0: java.lang.Class;
+        required := @parameter1: boolean;
+        forWhichBuilder := @parameter2: java.lang.Object;
+        $r0 = this.<org.apache.fop.render.rtf.rtflib.tools.BuilderContext: java.util.Stack containers>;
+        $r1 = specialinvoke this.<org.apache.fop.render.rtf.rtflib.tools.BuilderContext: java.lang.Object getObjectFromStack(java.util.Stack,java.lang.Class)>($r0, containerClass);
+        result = (org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer) $r1;
+        if result != null goto label0;
+
+        if required == 0 goto label0;
+
+        $r2 = new org.apache.fop.render.rtf.rtflib.exceptions.RtfException;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("No RtfContainer of class \'");
+        $r4 = virtualinvoke containerClass.<java.lang.Class: java.lang.String getName()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\' available for \'");
+        $r5 = virtualinvoke forWhichBuilder.<java.lang.Object: java.lang.Class getClass()>();
+        $r4 = virtualinvoke $r5.<java.lang.Class: java.lang.String getName()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\' builder");
+        $r6 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<org.apache.fop.render.rtf.rtflib.exceptions.RtfException: void <init>(java.lang.String)>($r6);
+        throw $r2;
+
+     label0:
+        return result;
+    }
+
+    public void pushContainer(org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer)
+    {
+        org.apache.fop.render.rtf.rtflib.tools.BuilderContext this;
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer c;
+        java.util.Stack $r0;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.tools.BuilderContext;
+        c := @parameter0: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer;
+        $r0 = this.<org.apache.fop.render.rtf.rtflib.tools.BuilderContext: java.util.Stack containers>;
+        virtualinvoke $r0.<java.util.Stack: java.lang.Object push(java.lang.Object)>(c);
+        return;
+    }
+
+    public void replaceContainer(org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer, org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer) throws java.lang.Exception
+    {
+        org.apache.fop.render.rtf.rtflib.tools.BuilderContext this;
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer oldC, newC;
+        int index;
+        java.lang.StringBuffer $r0;
+        java.util.Stack $r1;
+        java.lang.Exception $r2;
+        java.lang.String $r3;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.tools.BuilderContext;
+        oldC := @parameter0: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer;
+        newC := @parameter1: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer;
+        $r1 = this.<org.apache.fop.render.rtf.rtflib.tools.BuilderContext: java.util.Stack containers>;
+        index = virtualinvoke $r1.<java.util.Stack: int indexOf(java.lang.Object)>(oldC);
+        if index >= 0 goto label0;
+
+        $r2 = new java.lang.Exception;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("container to replace not found:");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(oldC);
+        $r3 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.Exception: void <init>(java.lang.String)>($r3);
+        throw $r2;
+
+     label0:
+        $r1 = this.<org.apache.fop.render.rtf.rtflib.tools.BuilderContext: java.util.Stack containers>;
+        virtualinvoke $r1.<java.util.Stack: void setElementAt(java.lang.Object,int)>(newC, index);
+        return;
+    }
+
+    public void popContainer()
+    {
+        org.apache.fop.render.rtf.rtflib.tools.BuilderContext this;
+        java.util.Stack $r0;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.tools.BuilderContext;
+        $r0 = this.<org.apache.fop.render.rtf.rtflib.tools.BuilderContext: java.util.Stack containers>;
+        virtualinvoke $r0.<java.util.Stack: java.lang.Object pop()>();
+        return;
+    }
+
+    public org.apache.fop.render.rtf.rtflib.tools.TableContext getTableContext()
+    {
+        org.apache.fop.render.rtf.rtflib.tools.BuilderContext this;
+        java.util.Stack $r0;
+        java.lang.Object $r1;
+        org.apache.fop.render.rtf.rtflib.tools.TableContext $r2;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.tools.BuilderContext;
+        $r0 = this.<org.apache.fop.render.rtf.rtflib.tools.BuilderContext: java.util.Stack tableContexts>;
+        $r1 = virtualinvoke $r0.<java.util.Stack: java.lang.Object peek()>();
+        $r2 = (org.apache.fop.render.rtf.rtflib.tools.TableContext) $r1;
+        return $r2;
+    }
+
+    public void pushTableContext(org.apache.fop.render.rtf.rtflib.tools.TableContext)
+    {
+        org.apache.fop.render.rtf.rtflib.tools.BuilderContext this;
+        org.apache.fop.render.rtf.rtflib.tools.TableContext tc;
+        java.util.Stack $r0;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.tools.BuilderContext;
+        tc := @parameter0: org.apache.fop.render.rtf.rtflib.tools.TableContext;
+        $r0 = this.<org.apache.fop.render.rtf.rtflib.tools.BuilderContext: java.util.Stack tableContexts>;
+        virtualinvoke $r0.<java.util.Stack: java.lang.Object push(java.lang.Object)>(tc);
+        return;
+    }
+
+    public void popTableContext()
+    {
+        org.apache.fop.render.rtf.rtflib.tools.BuilderContext this;
+        java.util.Stack $r0;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.tools.BuilderContext;
+        $r0 = this.<org.apache.fop.render.rtf.rtflib.tools.BuilderContext: java.util.Stack tableContexts>;
+        virtualinvoke $r0.<java.util.Stack: java.lang.Object pop()>();
+        return;
+    }
+}

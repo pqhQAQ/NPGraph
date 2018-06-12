@@ -1,0 +1,71 @@
+public class org.apache.fop.fo.properties.LengthProperty$Maker extends org.apache.fop.fo.properties.PropertyMaker
+{
+
+    public void <init>(int)
+    {
+        org.apache.fop.fo.properties.LengthProperty$Maker this;
+        int propId;
+
+        this := @this: org.apache.fop.fo.properties.LengthProperty$Maker;
+        propId := @parameter0: int;
+        specialinvoke this.<org.apache.fop.fo.properties.PropertyMaker: void <init>(int)>(propId);
+        return;
+    }
+
+    public org.apache.fop.fo.properties.Property convertProperty(org.apache.fop.fo.properties.Property, org.apache.fop.fo.PropertyList, org.apache.fop.fo.FObj) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.properties.LengthProperty$Maker this;
+        org.apache.fop.fo.properties.Property p, $r5;
+        org.apache.fop.fo.PropertyList propertyList;
+        org.apache.fop.fo.FObj fo, $r2;
+        org.apache.fop.datatypes.Length val;
+        boolean $z0;
+        org.apache.fop.fo.properties.EnumLength $r0;
+        org.apache.fop.datatypes.Numeric $r1;
+        double $d0;
+        org.apache.fop.apps.FOUserAgent $r3;
+        float $f0;
+        org.apache.fop.fo.properties.FixedLength $r4;
+
+        this := @this: org.apache.fop.fo.properties.LengthProperty$Maker;
+        p := @parameter0: org.apache.fop.fo.properties.Property;
+        propertyList := @parameter1: org.apache.fop.fo.PropertyList;
+        fo := @parameter2: org.apache.fop.fo.FObj;
+        $z0 = p instanceof org.apache.fop.fo.properties.EnumProperty;
+        if $z0 == 0 goto label0;
+
+        $r0 = new org.apache.fop.fo.properties.EnumLength;
+        specialinvoke $r0.<org.apache.fop.fo.properties.EnumLength: void <init>(org.apache.fop.fo.properties.Property)>(p);
+        return $r0;
+
+     label0:
+        $z0 = p instanceof org.apache.fop.fo.properties.LengthProperty;
+        if $z0 == 0 goto label1;
+
+        return p;
+
+     label1:
+        $z0 = p instanceof org.apache.fop.fo.properties.NumberProperty;
+        if $z0 == 0 goto label2;
+
+        $r1 = virtualinvoke p.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        $d0 = interfaceinvoke $r1.<org.apache.fop.datatypes.Numeric: double getNumericValue()>();
+        $r2 = virtualinvoke propertyList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.FObj getFObj()>();
+        $r3 = virtualinvoke $r2.<org.apache.fop.fo.FObj: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        $f0 = virtualinvoke $r3.<org.apache.fop.apps.FOUserAgent: float getSourceResolution()>();
+        $f0 = $f0 / 72.0F;
+        $r4 = staticinvoke <org.apache.fop.fo.properties.FixedLength: org.apache.fop.fo.properties.FixedLength getInstance(double,java.lang.String,float)>($d0, "px", $f0);
+        return $r4;
+
+     label2:
+        val = virtualinvoke p.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        if val == null goto label3;
+
+        $r5 = (org.apache.fop.fo.properties.Property) val;
+        return $r5;
+
+     label3:
+        $r5 = virtualinvoke this.<org.apache.fop.fo.properties.LengthProperty$Maker: org.apache.fop.fo.properties.Property convertPropertyDatatype(org.apache.fop.fo.properties.Property,org.apache.fop.fo.PropertyList,org.apache.fop.fo.FObj)>(p, propertyList, fo);
+        return $r5;
+    }
+}

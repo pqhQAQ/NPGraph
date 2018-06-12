@@ -1,0 +1,579 @@
+public class org.apache.fop.layoutmgr.PageProvider extends java.lang.Object implements org.apache.fop.fo.Constants
+{
+    private org.apache.commons.logging.Log log;
+    public static final int RELTO_PAGE_SEQUENCE;
+    public static final int RELTO_CURRENT_ELEMENT_LIST;
+    private int startPageOfPageSequence;
+    private int startPageOfCurrentElementList;
+    private int startColumnOfCurrentElementList;
+    private java.util.List cachedPages;
+    private int lastPageIndex;
+    private int indexOfCachedLastPage;
+    private int lastRequestedIndex;
+    private int lastReportedBPD;
+    private org.apache.fop.area.AreaTreeHandler areaTreeHandler;
+    private org.apache.fop.fo.pagination.PageSequence pageSeq;
+    static java.lang.Class class$org$apache$fop$layoutmgr$PageProvider;
+
+    public void <init>(org.apache.fop.area.AreaTreeHandler, org.apache.fop.fo.pagination.PageSequence)
+    {
+        org.apache.fop.layoutmgr.PageProvider this;
+        org.apache.fop.area.AreaTreeHandler ath;
+        org.apache.fop.fo.pagination.PageSequence ps;
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r2;
+        java.util.ArrayList $r3;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.PageProvider;
+        ath := @parameter0: org.apache.fop.area.AreaTreeHandler;
+        ps := @parameter1: org.apache.fop.fo.pagination.PageSequence;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $r0 = <org.apache.fop.layoutmgr.PageProvider: java.lang.Class class$org$apache$fop$layoutmgr$PageProvider>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.layoutmgr.PageProvider: java.lang.Class class$(java.lang.String)>("org.apache.fop.layoutmgr.PageProvider");
+        <org.apache.fop.layoutmgr.PageProvider: java.lang.Class class$org$apache$fop$layoutmgr$PageProvider> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.layoutmgr.PageProvider: java.lang.Class class$org$apache$fop$layoutmgr$PageProvider>;
+
+     label1:
+        $r2 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        this.<org.apache.fop.layoutmgr.PageProvider: org.apache.commons.logging.Log log> = $r2;
+        $r3 = new java.util.ArrayList;
+        specialinvoke $r3.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.layoutmgr.PageProvider: java.util.List cachedPages> = $r3;
+        this.<org.apache.fop.layoutmgr.PageProvider: int lastPageIndex> = -1;
+        this.<org.apache.fop.layoutmgr.PageProvider: int indexOfCachedLastPage> = -1;
+        this.<org.apache.fop.layoutmgr.PageProvider: int lastRequestedIndex> = -1;
+        this.<org.apache.fop.layoutmgr.PageProvider: int lastReportedBPD> = -1;
+        this.<org.apache.fop.layoutmgr.PageProvider: org.apache.fop.area.AreaTreeHandler areaTreeHandler> = ath;
+        this.<org.apache.fop.layoutmgr.PageProvider: org.apache.fop.fo.pagination.PageSequence pageSeq> = ps;
+        $i0 = virtualinvoke ps.<org.apache.fop.fo.pagination.PageSequence: int getStartingPageNumber()>();
+        this.<org.apache.fop.layoutmgr.PageProvider: int startPageOfPageSequence> = $i0;
+        return;
+    }
+
+    public void setStartOfNextElementList(int, int)
+    {
+        org.apache.fop.layoutmgr.PageProvider this;
+        int startPage, startColumn, $i0, $i1;
+        java.lang.StringBuffer $r0;
+        org.apache.commons.logging.Log $r1;
+        java.lang.String $r2;
+
+        this := @this: org.apache.fop.layoutmgr.PageProvider;
+        startPage := @parameter0: int;
+        startColumn := @parameter1: int;
+        $r1 = this.<org.apache.fop.layoutmgr.PageProvider: org.apache.commons.logging.Log log>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("start of the next element list is: page=");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(startPage);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" col=");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(startColumn);
+        $r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r2);
+        $i0 = this.<org.apache.fop.layoutmgr.PageProvider: int startPageOfPageSequence>;
+        $i1 = startPage - $i0;
+        $i1 = $i1 + 1;
+        this.<org.apache.fop.layoutmgr.PageProvider: int startPageOfCurrentElementList> = $i1;
+        this.<org.apache.fop.layoutmgr.PageProvider: int startColumnOfCurrentElementList> = startColumn;
+        this.<org.apache.fop.layoutmgr.PageProvider: int lastRequestedIndex> = -1;
+        this.<org.apache.fop.layoutmgr.PageProvider: int lastReportedBPD> = -1;
+        return;
+    }
+
+    public void setLastPageIndex(int)
+    {
+        org.apache.fop.layoutmgr.PageProvider this;
+        int index;
+
+        this := @this: org.apache.fop.layoutmgr.PageProvider;
+        index := @parameter0: int;
+        this.<org.apache.fop.layoutmgr.PageProvider: int lastPageIndex> = index;
+        return;
+    }
+
+    public int getAvailableBPD(int)
+    {
+        org.apache.fop.layoutmgr.PageProvider this;
+        int index, c, pageIndex, colIndex, $i0, $i1, $i2;
+        org.apache.fop.layoutmgr.Page page;
+        org.apache.commons.logging.Log $r0;
+        boolean $z0;
+        java.lang.StringBuffer $r1;
+        java.lang.String $r2;
+        org.apache.fop.area.PageViewport $r3;
+        org.apache.fop.area.Span $r4;
+        org.apache.fop.area.BodyRegion $r5;
+
+        this := @this: org.apache.fop.layoutmgr.PageProvider;
+        index := @parameter0: int;
+        $i0 = this.<org.apache.fop.layoutmgr.PageProvider: int lastRequestedIndex>;
+        if $i0 != index goto label1;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PageProvider: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PageProvider: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("getAvailableBPD(");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(index);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(") -> (cached) ");
+        $i1 = this.<org.apache.fop.layoutmgr.PageProvider: int lastReportedBPD>;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r2);
+
+     label0:
+        $i0 = this.<org.apache.fop.layoutmgr.PageProvider: int lastReportedBPD>;
+        return $i0;
+
+     label1:
+        c = index;
+        pageIndex = 0;
+        colIndex = this.<org.apache.fop.layoutmgr.PageProvider: int startColumnOfCurrentElementList>;
+        page = virtualinvoke this.<org.apache.fop.layoutmgr.PageProvider: org.apache.fop.layoutmgr.Page getPage(boolean,int,int)>(0, pageIndex, 1);
+
+     label2:
+        if c <= 0 goto label4;
+
+        colIndex = colIndex + 1;
+        $r3 = virtualinvoke page.<org.apache.fop.layoutmgr.Page: org.apache.fop.area.PageViewport getPageViewport()>();
+        $r4 = virtualinvoke $r3.<org.apache.fop.area.PageViewport: org.apache.fop.area.Span getCurrentSpan()>();
+        $i2 = virtualinvoke $r4.<org.apache.fop.area.Span: int getColumnCount()>();
+        if colIndex < $i2 goto label3;
+
+        colIndex = 0;
+        pageIndex = pageIndex + 1;
+        page = virtualinvoke this.<org.apache.fop.layoutmgr.PageProvider: org.apache.fop.layoutmgr.Page getPage(boolean,int,int)>(0, pageIndex, 1);
+
+     label3:
+        c = c + -1;
+        goto label2;
+
+     label4:
+        this.<org.apache.fop.layoutmgr.PageProvider: int lastRequestedIndex> = index;
+        $r3 = virtualinvoke page.<org.apache.fop.layoutmgr.Page: org.apache.fop.area.PageViewport getPageViewport()>();
+        $r5 = virtualinvoke $r3.<org.apache.fop.area.PageViewport: org.apache.fop.area.BodyRegion getBodyRegion()>();
+        $i2 = virtualinvoke $r5.<org.apache.fop.area.BodyRegion: int getRemainingBPD()>();
+        this.<org.apache.fop.layoutmgr.PageProvider: int lastReportedBPD> = $i2;
+        $r0 = this.<org.apache.fop.layoutmgr.PageProvider: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label5;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PageProvider: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("getAvailableBPD(");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(index);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(") -> ");
+        $i1 = this.<org.apache.fop.layoutmgr.PageProvider: int lastReportedBPD>;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r2);
+
+     label5:
+        $i0 = this.<org.apache.fop.layoutmgr.PageProvider: int lastReportedBPD>;
+        return $i0;
+    }
+
+    public int getStartingPartIndexForLastPage(int)
+    {
+        org.apache.fop.layoutmgr.PageProvider this;
+        int partCount, result, idx, pageIndex, colIndex, $i0;
+        org.apache.fop.layoutmgr.Page page;
+        org.apache.fop.area.PageViewport $r0;
+        org.apache.fop.area.Span $r1;
+
+        this := @this: org.apache.fop.layoutmgr.PageProvider;
+        partCount := @parameter0: int;
+        result = 0;
+        idx = 0;
+        pageIndex = 0;
+        colIndex = this.<org.apache.fop.layoutmgr.PageProvider: int startColumnOfCurrentElementList>;
+        page = virtualinvoke this.<org.apache.fop.layoutmgr.PageProvider: org.apache.fop.layoutmgr.Page getPage(boolean,int,int)>(0, pageIndex, 1);
+
+     label0:
+        if idx >= partCount goto label2;
+
+        $r0 = virtualinvoke page.<org.apache.fop.layoutmgr.Page: org.apache.fop.area.PageViewport getPageViewport()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.area.PageViewport: org.apache.fop.area.Span getCurrentSpan()>();
+        $i0 = virtualinvoke $r1.<org.apache.fop.area.Span: int getColumnCount()>();
+        if colIndex < $i0 goto label1;
+
+        colIndex = 0;
+        pageIndex = pageIndex + 1;
+        page = virtualinvoke this.<org.apache.fop.layoutmgr.PageProvider: org.apache.fop.layoutmgr.Page getPage(boolean,int,int)>(0, pageIndex, 1);
+        result = idx;
+
+     label1:
+        colIndex = colIndex + 1;
+        idx = idx + 1;
+        goto label0;
+
+     label2:
+        return result;
+    }
+
+    public org.apache.fop.layoutmgr.Page getPage(boolean, int, int)
+    {
+        org.apache.fop.layoutmgr.PageProvider this;
+        boolean isBlank;
+        int index, relativeTo, effIndex, $i0, $i1;
+        org.apache.fop.layoutmgr.Page $r0;
+        java.lang.IllegalArgumentException $r1;
+        java.lang.StringBuffer $r2;
+        java.lang.String $r3;
+
+        this := @this: org.apache.fop.layoutmgr.PageProvider;
+        isBlank := @parameter0: boolean;
+        index := @parameter1: int;
+        relativeTo := @parameter2: int;
+        if relativeTo != 0 goto label0;
+
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.PageProvider: org.apache.fop.layoutmgr.Page getPage(boolean,int)>(isBlank, index);
+        return $r0;
+
+     label0:
+        if relativeTo != 1 goto label1;
+
+        $i0 = this.<org.apache.fop.layoutmgr.PageProvider: int startPageOfCurrentElementList>;
+        effIndex = $i0 + index;
+        $i1 = this.<org.apache.fop.layoutmgr.PageProvider: int startPageOfPageSequence>;
+        $i1 = $i1 - 1;
+        effIndex = effIndex + $i1;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.PageProvider: org.apache.fop.layoutmgr.Page getPage(boolean,int)>(isBlank, effIndex);
+        return $r0;
+
+     label1:
+        $r1 = new java.lang.IllegalArgumentException;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Illegal value for relativeTo: ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(relativeTo);
+        $r3 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r1.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r3);
+        throw $r1;
+    }
+
+    protected org.apache.fop.layoutmgr.Page getPage(boolean, int)
+    {
+        org.apache.fop.layoutmgr.PageProvider this;
+        boolean isBlank, isLastPage, replace, $z0;
+        int index, intIndex, $i0, $i1;
+        org.apache.fop.layoutmgr.Page page;
+        org.apache.commons.logging.Log $r0;
+        java.lang.StringBuffer $r1;
+        java.lang.String $r2, $r3;
+        java.util.List $r4, $r6;
+        java.lang.Object $r7;
+        org.apache.fop.area.PageViewport $r8;
+
+        this := @this: org.apache.fop.layoutmgr.PageProvider;
+        isBlank := @parameter0: boolean;
+        index := @parameter1: int;
+        $i0 = this.<org.apache.fop.layoutmgr.PageProvider: int lastPageIndex>;
+        if $i0 < 0 goto label0;
+
+        $i1 = this.<org.apache.fop.layoutmgr.PageProvider: int lastPageIndex>;
+        if index != $i1 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        isLastPage = $z0;
+        $r0 = this.<org.apache.fop.layoutmgr.PageProvider: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label6;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PageProvider: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("getPage(");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(index);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        if isBlank == 0 goto label2;
+
+        $r2 = "blank";
+        goto label3;
+
+     label2:
+        $r2 = "non-blank";
+
+     label3:
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        if isLastPage == 0 goto label4;
+
+        $r2 = " <LAST>";
+        goto label5;
+
+     label4:
+        $r2 = "";
+
+     label5:
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(")");
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r3);
+
+     label6:
+        $i1 = this.<org.apache.fop.layoutmgr.PageProvider: int startPageOfPageSequence>;
+        intIndex = index - $i1;
+        $r0 = this.<org.apache.fop.layoutmgr.PageProvider: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label8;
+
+        if isBlank == 0 goto label7;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PageProvider: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("blank page requested: ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(index);
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r3);
+
+     label7:
+        if isLastPage == 0 goto label8;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PageProvider: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("last page requested: ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(index);
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r3);
+
+     label8:
+        $r4 = this.<org.apache.fop.layoutmgr.PageProvider: java.util.List cachedPages>;
+        $i1 = interfaceinvoke $r4.<java.util.List: int size()>();
+        if intIndex < $i1 goto label10;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PageProvider: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label9;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PageProvider: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Caching ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(index);
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r3);
+
+     label9:
+        specialinvoke this.<org.apache.fop.layoutmgr.PageProvider: org.apache.fop.layoutmgr.Page cacheNextPage(int,boolean,boolean)>(index, isBlank, isLastPage);
+        goto label8;
+
+     label10:
+        $r6 = this.<org.apache.fop.layoutmgr.PageProvider: java.util.List cachedPages>;
+        $r7 = interfaceinvoke $r6.<java.util.List: java.lang.Object get(int)>(intIndex);
+        page = (org.apache.fop.layoutmgr.Page) $r7;
+        replace = 0;
+        $r8 = virtualinvoke page.<org.apache.fop.layoutmgr.Page: org.apache.fop.area.PageViewport getPageViewport()>();
+        $z0 = virtualinvoke $r8.<org.apache.fop.area.PageViewport: boolean isBlank()>();
+        if $z0 == isBlank goto label11;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PageProvider: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("blank condition doesn\'t match. Replacing PageViewport.");
+        replace = 1;
+
+     label11:
+        if isLastPage == 0 goto label12;
+
+        $i0 = this.<org.apache.fop.layoutmgr.PageProvider: int indexOfCachedLastPage>;
+        if $i0 != intIndex goto label13;
+
+     label12:
+        if isLastPage != 0 goto label16;
+
+        $i0 = this.<org.apache.fop.layoutmgr.PageProvider: int indexOfCachedLastPage>;
+        if $i0 < 0 goto label16;
+
+     label13:
+        $r0 = this.<org.apache.fop.layoutmgr.PageProvider: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("last page condition doesn\'t match. Replacing PageViewport.");
+        replace = 1;
+        if isLastPage == 0 goto label14;
+
+        $i1 = intIndex;
+        goto label15;
+
+     label14:
+        $i1 = -1;
+
+     label15:
+        this.<org.apache.fop.layoutmgr.PageProvider: int indexOfCachedLastPage> = $i1;
+
+     label16:
+        if replace == 0 goto label17;
+
+        specialinvoke this.<org.apache.fop.layoutmgr.PageProvider: void disardCacheStartingWith(int)>(intIndex);
+        page = specialinvoke this.<org.apache.fop.layoutmgr.PageProvider: org.apache.fop.layoutmgr.Page cacheNextPage(int,boolean,boolean)>(index, isBlank, isLastPage);
+
+     label17:
+        return page;
+    }
+
+    private void disardCacheStartingWith(int)
+    {
+        org.apache.fop.layoutmgr.PageProvider this;
+        int index, $i0;
+        java.util.List $r0, $r1;
+        org.apache.fop.fo.pagination.PageSequence $r3;
+        boolean $z0;
+        org.apache.commons.logging.Log $r4;
+
+        this := @this: org.apache.fop.layoutmgr.PageProvider;
+        index := @parameter0: int;
+
+     label0:
+        $r0 = this.<org.apache.fop.layoutmgr.PageProvider: java.util.List cachedPages>;
+        $i0 = interfaceinvoke $r0.<java.util.List: int size()>();
+        if index >= $i0 goto label1;
+
+        $r1 = this.<org.apache.fop.layoutmgr.PageProvider: java.util.List cachedPages>;
+        $r0 = this.<org.apache.fop.layoutmgr.PageProvider: java.util.List cachedPages>;
+        $i0 = interfaceinvoke $r0.<java.util.List: int size()>();
+        $i0 = $i0 - 1;
+        interfaceinvoke $r1.<java.util.List: java.lang.Object remove(int)>($i0);
+        $r3 = this.<org.apache.fop.layoutmgr.PageProvider: org.apache.fop.fo.pagination.PageSequence pageSeq>;
+        $z0 = virtualinvoke $r3.<org.apache.fop.fo.pagination.PageSequence: boolean goToPreviousSimplePageMaster()>();
+        if $z0 != 0 goto label0;
+
+        $r4 = this.<org.apache.fop.layoutmgr.PageProvider: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r4.<org.apache.commons.logging.Log: void warn(java.lang.Object)>("goToPreviousSimplePageMaster() on the first page called!");
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    private org.apache.fop.layoutmgr.Page cacheNextPage(int, boolean, boolean)
+    {
+        org.apache.fop.layoutmgr.PageProvider this;
+        int index, $i1;
+        boolean isBlank, isLastPage, $z0, $z1;
+        java.lang.String pageNumberString, $r2, $r3, $r8, $r9;
+        org.apache.fop.fo.pagination.SimplePageMaster spm;
+        org.apache.fop.fo.pagination.Region body;
+        org.apache.fop.layoutmgr.Page page, $r10;
+        org.apache.fop.apps.FOPException e, $r4, $r15;
+        org.apache.fop.fo.pagination.PageSequence $r0, $r6;
+        org.apache.fop.fo.pagination.Flow $r1, $r7;
+        java.lang.StringBuffer $r5;
+        org.apache.fop.area.PageViewport $r11;
+        org.apache.fop.area.AreaTreeHandler $r12;
+        java.util.Map $r13;
+        java.util.List $r14;
+        java.lang.IllegalStateException $r16;
+
+        this := @this: org.apache.fop.layoutmgr.PageProvider;
+        index := @parameter0: int;
+        isBlank := @parameter1: boolean;
+        isLastPage := @parameter2: boolean;
+
+     label0:
+        $r0 = this.<org.apache.fop.layoutmgr.PageProvider: org.apache.fop.fo.pagination.PageSequence pageSeq>;
+        pageNumberString = virtualinvoke $r0.<org.apache.fop.fo.pagination.PageSequence: java.lang.String makeFormattedPageNumber(int)>(index);
+        $r0 = this.<org.apache.fop.layoutmgr.PageProvider: org.apache.fop.fo.pagination.PageSequence pageSeq>;
+        $i1 = this.<org.apache.fop.layoutmgr.PageProvider: int startPageOfPageSequence>;
+        if $i1 != index goto label1;
+
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        spm = virtualinvoke $r0.<org.apache.fop.fo.pagination.PageSequence: org.apache.fop.fo.pagination.SimplePageMaster getNextSimplePageMaster(int,boolean,boolean,boolean,boolean)>(index, $z0, isLastPage, 0, isBlank);
+        body = virtualinvoke spm.<org.apache.fop.fo.pagination.SimplePageMaster: org.apache.fop.fo.pagination.Region getRegion(int)>(36);
+        $r0 = this.<org.apache.fop.layoutmgr.PageProvider: org.apache.fop.fo.pagination.PageSequence pageSeq>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.pagination.PageSequence: org.apache.fop.fo.pagination.Flow getMainFlow()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.pagination.Flow: java.lang.String getFlowName()>();
+        $r3 = virtualinvoke body.<org.apache.fop.fo.pagination.Region: java.lang.String getRegionName()>();
+        $z1 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>($r3);
+        if $z1 != 0 goto label3;
+
+        $r4 = new org.apache.fop.apps.FOPException;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Flow \'");
+        $r6 = this.<org.apache.fop.layoutmgr.PageProvider: org.apache.fop.fo.pagination.PageSequence pageSeq>;
+        $r7 = virtualinvoke $r6.<org.apache.fop.fo.pagination.PageSequence: org.apache.fop.fo.pagination.Flow getMainFlow()>();
+        $r8 = virtualinvoke $r7.<org.apache.fop.fo.pagination.Flow: java.lang.String getFlowName()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r8);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\' does not map to the region-body in page-master \'");
+        $r8 = virtualinvoke spm.<org.apache.fop.fo.pagination.SimplePageMaster: java.lang.String getMasterName()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r8);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\'.  FOP presently does not support this.");
+        $r9 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r4.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>($r9);
+        throw $r4;
+
+     label3:
+        $r10 = new org.apache.fop.layoutmgr.Page;
+        specialinvoke $r10.<org.apache.fop.layoutmgr.Page: void <init>(org.apache.fop.fo.pagination.SimplePageMaster,int,java.lang.String,boolean)>(spm, index, pageNumberString, isBlank);
+        page = $r10;
+        $r11 = virtualinvoke page.<org.apache.fop.layoutmgr.Page: org.apache.fop.area.PageViewport getPageViewport()>();
+        $r12 = this.<org.apache.fop.layoutmgr.PageProvider: org.apache.fop.area.AreaTreeHandler areaTreeHandler>;
+        $r3 = virtualinvoke $r12.<org.apache.fop.area.AreaTreeHandler: java.lang.String generatePageViewportKey()>();
+        virtualinvoke $r11.<org.apache.fop.area.PageViewport: void setKey(java.lang.String)>($r3);
+        $r11 = virtualinvoke page.<org.apache.fop.layoutmgr.Page: org.apache.fop.area.PageViewport getPageViewport()>();
+        $r13 = virtualinvoke spm.<org.apache.fop.fo.pagination.SimplePageMaster: java.util.Map getForeignAttributes()>();
+        virtualinvoke $r11.<org.apache.fop.area.PageViewport: void setForeignAttributes(java.util.Map)>($r13);
+        $r14 = this.<org.apache.fop.layoutmgr.PageProvider: java.util.List cachedPages>;
+        interfaceinvoke $r14.<java.util.List: boolean add(java.lang.Object)>(page);
+
+     label4:
+        return page;
+
+     label5:
+        $r15 := @caughtexception;
+        e = $r15;
+        $r16 = new java.lang.IllegalStateException;
+        $r9 = virtualinvoke e.<org.apache.fop.apps.FOPException: java.lang.String getMessage()>();
+        specialinvoke $r16.<java.lang.IllegalStateException: void <init>(java.lang.String)>($r9);
+        throw $r16;
+
+        catch org.apache.fop.apps.FOPException from label0 to label4 with label5;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+}

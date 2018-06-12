@@ -1,0 +1,503 @@
+public class org.apache.fop.svg.PDFTextPainter extends org.apache.batik.gvt.renderer.StrokingTextPainter
+{
+    private static final boolean DEBUG;
+    private boolean strokeText;
+    private org.apache.fop.fonts.FontInfo fontInfo;
+
+    public void <init>(org.apache.fop.fonts.FontInfo)
+    {
+        org.apache.fop.svg.PDFTextPainter this;
+        org.apache.fop.fonts.FontInfo fi;
+
+        this := @this: org.apache.fop.svg.PDFTextPainter;
+        fi := @parameter0: org.apache.fop.fonts.FontInfo;
+        specialinvoke this.<org.apache.batik.gvt.renderer.StrokingTextPainter: void <init>()>();
+        this.<org.apache.fop.svg.PDFTextPainter: boolean strokeText> = 0;
+        this.<org.apache.fop.svg.PDFTextPainter: org.apache.fop.fonts.FontInfo fontInfo> = fi;
+        return;
+    }
+
+    protected void paintTextRuns(java.util.List, java.awt.Graphics2D)
+    {
+        org.apache.fop.svg.PDFTextPainter this;
+        java.util.List textRuns;
+        java.awt.Graphics2D g2d;
+        org.apache.fop.svg.PDFGraphics2D pdf;
+        org.apache.fop.svg.PDFTextUtil textUtil, $r0;
+        int i, index, c, $i0, $i2, $i5;
+        org.apache.batik.gvt.renderer.StrokingTextPainter$TextRun textRun;
+        java.text.AttributedCharacterIterator runaci;
+        org.apache.batik.gvt.text.TextPaintInfo tpi;
+        org.apache.batik.gvt.text.TextSpanLayout layout, $r6;
+        java.lang.StringBuffer chars, $r5;
+        null_type debugShapes;
+        org.apache.fop.fonts.Font[] fonts;
+        java.awt.Shape imclip;
+        java.awt.geom.AffineTransform localTransform, glyphTransform, $r9;
+        java.awt.geom.Point2D prevPos, p;
+        double prevVisibleCharWidth, xdiff, cw, effxdiff, adjust, $d0, $d1, $d2, $d3;
+        org.apache.batik.gvt.font.GVTGlyphVector gv;
+        char ch, paintChar, $c1, $c3;
+        boolean visibleChar, yPosChanged, $z0, $z1, $z2;
+        org.apache.fop.fonts.Font font, f, $r10, $r11;
+        java.lang.Object $r1;
+        java.text.AttributedCharacterIterator$Attribute $r2;
+        java.awt.Composite $r3, $r4;
+        java.awt.Paint $r7, $r8;
+        byte $b4;
+
+        this := @this: org.apache.fop.svg.PDFTextPainter;
+        textRuns := @parameter0: java.util.List;
+        g2d := @parameter1: java.awt.Graphics2D;
+        $z0 = g2d instanceof org.apache.fop.svg.PDFGraphics2D;
+        if $z0 == 0 goto label0;
+
+        $z0 = this.<org.apache.fop.svg.PDFTextPainter: boolean strokeText>;
+        if $z0 == 0 goto label1;
+
+     label0:
+        specialinvoke this.<org.apache.batik.gvt.renderer.StrokingTextPainter: void paintTextRuns(java.util.List,java.awt.Graphics2D)>(textRuns, g2d);
+        return;
+
+     label1:
+        pdf = (org.apache.fop.svg.PDFGraphics2D) g2d;
+        $r0 = new org.apache.fop.svg.PDFTextUtil;
+        specialinvoke $r0.<org.apache.fop.svg.PDFTextUtil: void <init>(org.apache.fop.svg.PDFGraphics2D)>(pdf);
+        textUtil = $r0;
+        i = 0;
+
+     label2:
+        $i0 = interfaceinvoke textRuns.<java.util.List: int size()>();
+        if i >= $i0 goto label30;
+
+        $r1 = interfaceinvoke textRuns.<java.util.List: java.lang.Object get(int)>(i);
+        textRun = (org.apache.batik.gvt.renderer.StrokingTextPainter$TextRun) $r1;
+        runaci = virtualinvoke textRun.<org.apache.batik.gvt.renderer.StrokingTextPainter$TextRun: java.text.AttributedCharacterIterator getACI()>();
+        interfaceinvoke runaci.<java.text.AttributedCharacterIterator: char first()>();
+        $r2 = <org.apache.fop.svg.PDFTextPainter: java.text.AttributedCharacterIterator$Attribute PAINT_INFO>;
+        $r1 = interfaceinvoke runaci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r2);
+        tpi = (org.apache.batik.gvt.text.TextPaintInfo) $r1;
+        if tpi == null goto label29;
+
+        $z0 = tpi.<org.apache.batik.gvt.text.TextPaintInfo: boolean visible>;
+        if $z0 != 0 goto label3;
+
+        goto label29;
+
+     label3:
+        if tpi == null goto label4;
+
+        $r3 = tpi.<org.apache.batik.gvt.text.TextPaintInfo: java.awt.Composite composite>;
+        if $r3 == null goto label4;
+
+        $r4 = tpi.<org.apache.batik.gvt.text.TextPaintInfo: java.awt.Composite composite>;
+        virtualinvoke g2d.<java.awt.Graphics2D: void setComposite(java.awt.Composite)>($r4);
+
+     label4:
+        layout = virtualinvoke textRun.<org.apache.batik.gvt.renderer.StrokingTextPainter$TextRun: org.apache.batik.gvt.text.TextSpanLayout getLayout()>();
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        chars = $r5;
+        interfaceinvoke runaci.<java.text.AttributedCharacterIterator: char first()>();
+
+     label5:
+        $i2 = interfaceinvoke runaci.<java.text.AttributedCharacterIterator: int getIndex()>();
+        $i0 = interfaceinvoke runaci.<java.text.AttributedCharacterIterator: int getEndIndex()>();
+        if $i2 >= $i0 goto label6;
+
+        $c3 = interfaceinvoke runaci.<java.text.AttributedCharacterIterator: char current()>();
+        virtualinvoke chars.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c3);
+        interfaceinvoke runaci.<java.text.AttributedCharacterIterator: char next()>();
+        goto label5;
+
+     label6:
+        interfaceinvoke runaci.<java.text.AttributedCharacterIterator: char first()>();
+        debugShapes = null;
+        fonts = specialinvoke this.<org.apache.fop.svg.PDFTextPainter: org.apache.fop.fonts.Font[] findFonts(java.text.AttributedCharacterIterator)>(runaci);
+        if fonts == null goto label7;
+
+        $i2 = lengthof fonts;
+        if $i2 != 0 goto label8;
+
+     label7:
+        $r6 = virtualinvoke textRun.<org.apache.batik.gvt.renderer.StrokingTextPainter$TextRun: org.apache.batik.gvt.text.TextSpanLayout getLayout()>();
+        interfaceinvoke $r6.<org.apache.batik.gvt.text.TextSpanLayout: void draw(java.awt.Graphics2D)>(g2d);
+        goto label29;
+
+     label8:
+        virtualinvoke textUtil.<org.apache.fop.svg.PDFTextUtil: void saveGraphicsState()>();
+        virtualinvoke textUtil.<org.apache.fop.svg.PDFTextUtil: void concatMatrixCurrentTransform()>();
+        imclip = virtualinvoke g2d.<java.awt.Graphics2D: java.awt.Shape getClip()>();
+        virtualinvoke pdf.<org.apache.fop.svg.PDFGraphics2D: void writeClip(java.awt.Shape)>(imclip);
+        specialinvoke this.<org.apache.fop.svg.PDFTextPainter: void applyColorAndPaint(org.apache.batik.gvt.text.TextPaintInfo,org.apache.fop.svg.PDFGraphics2D)>(tpi, pdf);
+        virtualinvoke textUtil.<org.apache.fop.svg.PDFTextUtil: void beginTextObject()>();
+        virtualinvoke textUtil.<org.apache.fop.svg.PDFTextUtil: void setFonts(org.apache.fop.fonts.Font[])>(fonts);
+        $r7 = tpi.<org.apache.batik.gvt.text.TextPaintInfo: java.awt.Paint fillPaint>;
+        if $r7 == null goto label9;
+
+        $z1 = 1;
+        goto label10;
+
+     label9:
+        $z1 = 0;
+
+     label10:
+        $r8 = tpi.<org.apache.batik.gvt.text.TextPaintInfo: java.awt.Paint strokePaint>;
+        if $r8 == null goto label11;
+
+        $z2 = 1;
+        goto label12;
+
+     label11:
+        $z2 = 0;
+
+     label12:
+        virtualinvoke textUtil.<org.apache.fop.svg.PDFTextUtil: void setTextRenderingMode(boolean,boolean,boolean)>($z1, $z2, 0);
+        $r9 = new java.awt.geom.AffineTransform;
+        specialinvoke $r9.<java.awt.geom.AffineTransform: void <init>()>();
+        localTransform = $r9;
+        prevPos = null;
+        prevVisibleCharWidth = 0.0;
+        gv = interfaceinvoke layout.<org.apache.batik.gvt.text.TextSpanLayout: org.apache.batik.gvt.font.GVTGlyphVector getGlyphVector()>();
+        index = 0;
+        c = interfaceinvoke gv.<org.apache.batik.gvt.font.GVTGlyphVector: int getNumGlyphs()>();
+
+     label13:
+        if index >= c goto label28;
+
+        ch = virtualinvoke chars.<java.lang.StringBuffer: char charAt(int)>(index);
+        $z0 = interfaceinvoke gv.<org.apache.batik.gvt.font.GVTGlyphVector: boolean isGlyphVisible(int)>(index);
+        if $z0 != 0 goto label14;
+
+        $z0 = staticinvoke <org.apache.fop.util.CharUtilities: boolean isAnySpace(char)>(ch);
+        if $z0 == 0 goto label15;
+
+        $z0 = staticinvoke <org.apache.fop.util.CharUtilities: boolean isZeroWidthSpace(char)>(ch);
+        if $z0 != 0 goto label15;
+
+     label14:
+        $z0 = 1;
+        goto label16;
+
+     label15:
+        $z0 = 0;
+
+     label16:
+        visibleChar = $z0;
+        if visibleChar != 0 goto label17;
+
+        goto label27;
+
+     label17:
+        p = interfaceinvoke gv.<org.apache.batik.gvt.font.GVTGlyphVector: java.awt.geom.Point2D getGlyphPosition(int)>(index);
+        glyphTransform = interfaceinvoke gv.<org.apache.batik.gvt.font.GVTGlyphVector: java.awt.geom.AffineTransform getGlyphTransform(int)>(index);
+        virtualinvoke localTransform.<java.awt.geom.AffineTransform: void setToIdentity()>();
+        $d0 = virtualinvoke p.<java.awt.geom.Point2D: double getX()>();
+        $d1 = virtualinvoke p.<java.awt.geom.Point2D: double getY()>();
+        virtualinvoke localTransform.<java.awt.geom.AffineTransform: void translate(double,double)>($d0, $d1);
+        if glyphTransform == null goto label18;
+
+        virtualinvoke localTransform.<java.awt.geom.AffineTransform: void concatenate(java.awt.geom.AffineTransform)>(glyphTransform);
+
+     label18:
+        virtualinvoke localTransform.<java.awt.geom.AffineTransform: void scale(double,double)>(1.0, -1.0);
+        if prevPos == null goto label19;
+
+        $d2 = virtualinvoke prevPos.<java.awt.geom.Point2D: double getY()>();
+        $d3 = virtualinvoke p.<java.awt.geom.Point2D: double getY()>();
+        $b4 = $d2 cmpl $d3;
+        if $b4 != 0 goto label19;
+
+        if glyphTransform == null goto label20;
+
+     label19:
+        $z0 = 1;
+        goto label21;
+
+     label20:
+        $z0 = 0;
+
+     label21:
+        yPosChanged = $z0;
+        if yPosChanged == 0 goto label22;
+
+        if index <= 0 goto label23;
+
+        virtualinvoke textUtil.<org.apache.fop.svg.PDFTextUtil: void writeTJ()>();
+        virtualinvoke textUtil.<org.apache.fop.svg.PDFTextUtil: void writeTextMatrix(java.awt.geom.AffineTransform)>(localTransform);
+        goto label23;
+
+     label22:
+        $d2 = virtualinvoke p.<java.awt.geom.Point2D: double getX()>();
+        $d3 = virtualinvoke prevPos.<java.awt.geom.Point2D: double getX()>();
+        xdiff = $d2 - $d3;
+        font = virtualinvoke textUtil.<org.apache.fop.svg.PDFTextUtil: org.apache.fop.fonts.Font getCurrentFont()>();
+        cw = prevVisibleCharWidth;
+        $d2 = 1000.0 * xdiff;
+        effxdiff = $d2 - cw;
+        $b4 = effxdiff cmpl 0.0;
+        if $b4 == 0 goto label23;
+
+        $d2 = neg effxdiff;
+        $i5 = virtualinvoke font.<org.apache.fop.fonts.Font: int getFontSize()>();
+        $d3 = (double) $i5;
+        adjust = $d2 / $d3;
+        $d0 = adjust * 1000.0;
+        virtualinvoke textUtil.<org.apache.fop.svg.PDFTextUtil: void adjustGlyphTJ(double)>($d0);
+
+     label23:
+        f = virtualinvoke textUtil.<org.apache.fop.svg.PDFTextUtil: org.apache.fop.fonts.Font selectFontForChar(char)>(ch);
+        $r10 = virtualinvoke textUtil.<org.apache.fop.svg.PDFTextUtil: org.apache.fop.fonts.Font getCurrentFont()>();
+        if f == $r10 goto label24;
+
+        virtualinvoke textUtil.<org.apache.fop.svg.PDFTextUtil: void writeTJ()>();
+        virtualinvoke textUtil.<org.apache.fop.svg.PDFTextUtil: void setCurrentFont(org.apache.fop.fonts.Font)>(f);
+        virtualinvoke textUtil.<org.apache.fop.svg.PDFTextUtil: void writeTf(org.apache.fop.fonts.Font)>(f);
+        virtualinvoke textUtil.<org.apache.fop.svg.PDFTextUtil: void writeTextMatrix(java.awt.geom.AffineTransform)>(localTransform);
+
+     label24:
+        $z0 = staticinvoke <org.apache.fop.util.CharUtilities: boolean isAnySpace(char)>(ch);
+        if $z0 == 0 goto label25;
+
+        $c1 = 32;
+        goto label26;
+
+     label25:
+        $c1 = ch;
+
+     label26:
+        paintChar = $c1;
+        virtualinvoke textUtil.<org.apache.fop.svg.PDFTextUtil: void writeTJChar(char)>(paintChar);
+        prevPos = p;
+        $r11 = virtualinvoke textUtil.<org.apache.fop.svg.PDFTextUtil: org.apache.fop.fonts.Font getCurrentFont()>();
+        $c3 = virtualinvoke chars.<java.lang.StringBuffer: char charAt(int)>(index);
+        $i2 = virtualinvoke $r11.<org.apache.fop.fonts.Font: int getCharWidth(char)>($c3);
+        prevVisibleCharWidth = (double) $i2;
+
+     label27:
+        index = index + 1;
+        goto label13;
+
+     label28:
+        virtualinvoke textUtil.<org.apache.fop.svg.PDFTextUtil: void writeTJ()>();
+        virtualinvoke textUtil.<org.apache.fop.svg.PDFTextUtil: void endTextObject()>();
+        virtualinvoke textUtil.<org.apache.fop.svg.PDFTextUtil: void restoreGraphicsState()>();
+
+     label29:
+        i = i + 1;
+        goto label2;
+
+     label30:
+        return;
+    }
+
+    private void applyColorAndPaint(org.apache.batik.gvt.text.TextPaintInfo, org.apache.fop.svg.PDFGraphics2D)
+    {
+        org.apache.fop.svg.PDFTextPainter this;
+        org.apache.batik.gvt.text.TextPaintInfo tpi;
+        org.apache.fop.svg.PDFGraphics2D pdf;
+        java.awt.Paint fillPaint, strokePaint;
+        java.awt.Stroke stroke;
+        int fillAlpha;
+        java.awt.Color col;
+        boolean $z0;
+
+        this := @this: org.apache.fop.svg.PDFTextPainter;
+        tpi := @parameter0: org.apache.batik.gvt.text.TextPaintInfo;
+        pdf := @parameter1: org.apache.fop.svg.PDFGraphics2D;
+        fillPaint = tpi.<org.apache.batik.gvt.text.TextPaintInfo: java.awt.Paint fillPaint>;
+        strokePaint = tpi.<org.apache.batik.gvt.text.TextPaintInfo: java.awt.Paint strokePaint>;
+        stroke = tpi.<org.apache.batik.gvt.text.TextPaintInfo: java.awt.Stroke strokeStroke>;
+        fillAlpha = 255;
+        $z0 = fillPaint instanceof java.awt.Color;
+        if $z0 == 0 goto label0;
+
+        col = (java.awt.Color) fillPaint;
+        virtualinvoke pdf.<org.apache.fop.svg.PDFGraphics2D: void applyColor(java.awt.Color,boolean)>(col, 1);
+        fillAlpha = virtualinvoke col.<java.awt.Color: int getAlpha()>();
+
+     label0:
+        $z0 = strokePaint instanceof java.awt.Color;
+        if $z0 == 0 goto label1;
+
+        col = (java.awt.Color) strokePaint;
+        virtualinvoke pdf.<org.apache.fop.svg.PDFGraphics2D: void applyColor(java.awt.Color,boolean)>(col, 0);
+
+     label1:
+        virtualinvoke pdf.<org.apache.fop.svg.PDFGraphics2D: boolean applyPaint(java.awt.Paint,boolean)>(fillPaint, 1);
+        virtualinvoke pdf.<org.apache.fop.svg.PDFGraphics2D: void applyStroke(java.awt.Stroke)>(stroke);
+        if strokePaint == null goto label2;
+
+        virtualinvoke pdf.<org.apache.fop.svg.PDFGraphics2D: boolean applyPaint(java.awt.Paint,boolean)>(strokePaint, 0);
+
+     label2:
+        virtualinvoke pdf.<org.apache.fop.svg.PDFGraphics2D: void applyAlpha(int,int)>(fillAlpha, 255);
+        return;
+    }
+
+    private org.apache.fop.fonts.Font[] findFonts(java.text.AttributedCharacterIterator)
+    {
+        org.apache.fop.svg.PDFTextPainter this;
+        java.text.AttributedCharacterIterator aci;
+        java.util.ArrayList $r0, fonts;
+        java.util.List gvtFonts;
+        java.lang.Float posture, taWeight, fontSize;
+        java.lang.String style, gvtFontFamily, $r4, fontFamily;
+        short weight, $s1;
+        null_type fontFamily;
+        org.apache.batik.gvt.font.GVTFont gvtFont;
+        java.lang.reflect.Method method;
+        org.apache.fop.fonts.FontTriplet triplet;
+        int fsize, $i2, $i3;
+        java.lang.Exception l11, $r9;
+        java.util.Iterator i;
+        org.apache.batik.gvt.font.GVTFontFamily fam;
+        org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute $r1;
+        java.lang.Object $r2;
+        java.awt.font.TextAttribute $r3;
+        float $f0;
+        double $d0;
+        byte $b0;
+        java.lang.Class $r5;
+        org.apache.fop.fonts.FontInfo $r6, $r7;
+        boolean $z0;
+        org.apache.fop.fonts.Font $r8;
+        org.apache.fop.fonts.Font[] $r10, $r12;
+        java.lang.Object[] $r11;
+
+        this := @this: org.apache.fop.svg.PDFTextPainter;
+        aci := @parameter0: java.text.AttributedCharacterIterator;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        fonts = $r0;
+        $r1 = <org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute: org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute GVT_FONT_FAMILIES>;
+        $r2 = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r1);
+        gvtFonts = (java.util.List) $r2;
+        $r3 = <java.awt.font.TextAttribute: java.awt.font.TextAttribute POSTURE>;
+        $r2 = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r3);
+        posture = (java.lang.Float) $r2;
+        $r3 = <java.awt.font.TextAttribute: java.awt.font.TextAttribute WEIGHT>;
+        $r2 = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r3);
+        taWeight = (java.lang.Float) $r2;
+        $r3 = <java.awt.font.TextAttribute: java.awt.font.TextAttribute SIZE>;
+        $r2 = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r3);
+        fontSize = (java.lang.Float) $r2;
+        if posture == null goto label0;
+
+        $f0 = virtualinvoke posture.<java.lang.Float: float floatValue()>();
+        $d0 = (double) $f0;
+        $b0 = $d0 cmpl 0.0;
+        if $b0 <= 0 goto label0;
+
+        $r4 = "italic";
+        goto label1;
+
+     label0:
+        $r4 = "normal";
+
+     label1:
+        style = $r4;
+        if taWeight == null goto label2;
+
+        $f0 = virtualinvoke taWeight.<java.lang.Float: float floatValue()>();
+        $d0 = (double) $f0;
+        $b0 = $d0 cmpl 1.0;
+        if $b0 <= 0 goto label2;
+
+        $s1 = 700;
+        goto label3;
+
+     label2:
+        $s1 = 400;
+
+     label3:
+        weight = $s1;
+        fontFamily = null;
+        $r1 = <org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute: org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute GVT_FONT>;
+        $r2 = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r1);
+        gvtFont = (org.apache.batik.gvt.font.GVTFont) $r2;
+        if gvtFont == null goto label7;
+
+     label4:
+        $r5 = virtualinvoke gvtFont.<java.lang.Object: java.lang.Class getClass()>();
+        method = virtualinvoke $r5.<java.lang.Class: java.lang.reflect.Method getMethod(java.lang.String,java.lang.Class[])>("getFamilyName", null);
+        $r2 = virtualinvoke method.<java.lang.reflect.Method: java.lang.Object invoke(java.lang.Object,java.lang.Object[])>(gvtFont, null);
+        gvtFontFamily = (java.lang.String) $r2;
+        $r6 = this.<org.apache.fop.svg.PDFTextPainter: org.apache.fop.fonts.FontInfo fontInfo>;
+        $z0 = virtualinvoke $r6.<org.apache.fop.fonts.FontInfo: boolean hasFont(java.lang.String,java.lang.String,int)>(gvtFontFamily, style, weight);
+        if $z0 == 0 goto label5;
+
+        $r6 = this.<org.apache.fop.svg.PDFTextPainter: org.apache.fop.fonts.FontInfo fontInfo>;
+        triplet = virtualinvoke $r6.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet fontLookup(java.lang.String,java.lang.String,int)>(gvtFontFamily, style, weight);
+        $f0 = virtualinvoke fontSize.<java.lang.Float: float floatValue()>();
+        $f0 = $f0 * 1000.0F;
+        fsize = (int) $f0;
+        $r7 = this.<org.apache.fop.svg.PDFTextPainter: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r8 = virtualinvoke $r7.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.Font getFontInstance(org.apache.fop.fonts.FontTriplet,int)>(triplet, fsize);
+        interfaceinvoke fonts.<java.util.List: boolean add(java.lang.Object)>($r8);
+
+     label5:
+        goto label7;
+
+     label6:
+        $r9 := @caughtexception;
+        l11 = $r9;
+
+     label7:
+        if gvtFonts == null goto label11;
+
+        i = interfaceinvoke gvtFonts.<java.util.List: java.util.Iterator iterator()>();
+
+     label8:
+        $z0 = interfaceinvoke i.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label11;
+
+        $r2 = interfaceinvoke i.<java.util.Iterator: java.lang.Object next()>();
+        fam = (org.apache.batik.gvt.font.GVTFontFamily) $r2;
+        $z0 = fam instanceof org.apache.batik.bridge.SVGFontFamily;
+        if $z0 == 0 goto label9;
+
+        return null;
+
+     label9:
+        fontFamily = interfaceinvoke fam.<org.apache.batik.gvt.font.GVTFontFamily: java.lang.String getFamilyName()>();
+        $r6 = this.<org.apache.fop.svg.PDFTextPainter: org.apache.fop.fonts.FontInfo fontInfo>;
+        $z0 = virtualinvoke $r6.<org.apache.fop.fonts.FontInfo: boolean hasFont(java.lang.String,java.lang.String,int)>(fontFamily, style, weight);
+        if $z0 == 0 goto label10;
+
+        $r6 = this.<org.apache.fop.svg.PDFTextPainter: org.apache.fop.fonts.FontInfo fontInfo>;
+        triplet = virtualinvoke $r6.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet fontLookup(java.lang.String,java.lang.String,int)>(fontFamily, style, weight);
+        $f0 = virtualinvoke fontSize.<java.lang.Float: float floatValue()>();
+        $f0 = $f0 * 1000.0F;
+        fsize = (int) $f0;
+        $r7 = this.<org.apache.fop.svg.PDFTextPainter: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r8 = virtualinvoke $r7.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.Font getFontInstance(org.apache.fop.fonts.FontTriplet,int)>(triplet, fsize);
+        interfaceinvoke fonts.<java.util.List: boolean add(java.lang.Object)>($r8);
+
+     label10:
+        goto label8;
+
+     label11:
+        $i2 = interfaceinvoke fonts.<java.util.List: int size()>();
+        if $i2 != 0 goto label12;
+
+        $r6 = this.<org.apache.fop.svg.PDFTextPainter: org.apache.fop.fonts.FontInfo fontInfo>;
+        triplet = virtualinvoke $r6.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet fontLookup(java.lang.String,java.lang.String,int)>("any", style, 400);
+        $f0 = virtualinvoke fontSize.<java.lang.Float: float floatValue()>();
+        $f0 = $f0 * 1000.0F;
+        fsize = (int) $f0;
+        $r7 = this.<org.apache.fop.svg.PDFTextPainter: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r8 = virtualinvoke $r7.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.Font getFontInstance(org.apache.fop.fonts.FontTriplet,int)>(triplet, fsize);
+        interfaceinvoke fonts.<java.util.List: boolean add(java.lang.Object)>($r8);
+
+     label12:
+        $i3 = interfaceinvoke fonts.<java.util.List: int size()>();
+        $r10 = newarray (org.apache.fop.fonts.Font)[$i3];
+        $r11 = interfaceinvoke fonts.<java.util.List: java.lang.Object[] toArray(java.lang.Object[])>($r10);
+        $r12 = (org.apache.fop.fonts.Font[]) $r11;
+        $r12 = (org.apache.fop.fonts.Font[]) $r12;
+        return $r12;
+
+        catch java.lang.Exception from label4 to label5 with label6;
+    }
+}

@@ -1,0 +1,126 @@
+public class org.apache.fop.fo.properties.PageDimensionMaker extends org.apache.fop.fo.properties.LengthProperty$Maker
+{
+
+    public void <init>(int)
+    {
+        org.apache.fop.fo.properties.PageDimensionMaker this;
+        int propId;
+
+        this := @this: org.apache.fop.fo.properties.PageDimensionMaker;
+        propId := @parameter0: int;
+        specialinvoke this.<org.apache.fop.fo.properties.LengthProperty$Maker: void <init>(int)>(propId);
+        return;
+    }
+
+    public org.apache.fop.fo.properties.Property get(int, org.apache.fop.fo.PropertyList, boolean, boolean) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.properties.PageDimensionMaker this;
+        int subpropId, writingMode, refOrientation, $i0;
+        org.apache.fop.fo.PropertyList propertyList;
+        boolean tryInherit, tryDefault, $z0;
+        org.apache.fop.fo.properties.Property p, $r3;
+        org.apache.fop.fo.FObj fo;
+        java.lang.String fallbackValue, $r2;
+        short otherId, $s1;
+        org.apache.fop.fo.FOEventHandler $r0;
+        org.apache.fop.apps.FOUserAgent $r1;
+        org.apache.fop.datatypes.Numeric $r4;
+        org.apache.commons.logging.Log $r5;
+
+        this := @this: org.apache.fop.fo.properties.PageDimensionMaker;
+        subpropId := @parameter0: int;
+        propertyList := @parameter1: org.apache.fop.fo.PropertyList;
+        tryInherit := @parameter2: boolean;
+        tryDefault := @parameter3: boolean;
+        p = specialinvoke this.<org.apache.fop.fo.properties.LengthProperty$Maker: org.apache.fop.fo.properties.Property get(int,org.apache.fop.fo.PropertyList,boolean,boolean)>(0, propertyList, tryInherit, tryDefault);
+        fo = virtualinvoke propertyList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.FObj getFObj()>();
+        $i0 = this.<org.apache.fop.fo.properties.PageDimensionMaker: int propId>;
+        if $i0 != 166 goto label0;
+
+        $r0 = virtualinvoke fo.<org.apache.fop.fo.FObj: org.apache.fop.fo.FOEventHandler getFOEventHandler()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.FOEventHandler: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.apps.FOUserAgent: java.lang.String getPageHeight()>();
+        goto label1;
+
+     label0:
+        $r0 = virtualinvoke fo.<org.apache.fop.fo.FObj: org.apache.fop.fo.FOEventHandler getFOEventHandler()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.FOEventHandler: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.apps.FOUserAgent: java.lang.String getPageWidth()>();
+
+     label1:
+        fallbackValue = $r2;
+        $i0 = virtualinvoke p.<org.apache.fop.fo.properties.Property: int getEnum()>();
+        if $i0 != 64 goto label8;
+
+        $i0 = this.<org.apache.fop.fo.properties.PageDimensionMaker: int propId>;
+        if $i0 != 166 goto label2;
+
+        $s1 = 168;
+        goto label3;
+
+     label2:
+        $s1 = 166;
+
+     label3:
+        otherId = $s1;
+        $r3 = virtualinvoke propertyList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(245);
+        writingMode = virtualinvoke $r3.<org.apache.fop.fo.properties.Property: int getEnum()>();
+        $r3 = virtualinvoke propertyList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(179);
+        $r4 = virtualinvoke $r3.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        refOrientation = interfaceinvoke $r4.<org.apache.fop.datatypes.Numeric: int getValue()>();
+        $r3 = virtualinvoke propertyList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property getExplicit(int)>(otherId);
+        if $r3 == null goto label7;
+
+        $r3 = virtualinvoke propertyList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property getExplicit(int)>(otherId);
+        $i0 = virtualinvoke $r3.<org.apache.fop.fo.properties.Property: int getEnum()>();
+        if $i0 != 64 goto label7;
+
+        if writingMode == 140 goto label4;
+
+        if refOrientation == 0 goto label5;
+
+        if refOrientation == 180 goto label5;
+
+        if refOrientation == -180 goto label5;
+
+     label4:
+        if writingMode != 140 goto label6;
+
+        if refOrientation == 90 goto label5;
+
+        if refOrientation == 270 goto label5;
+
+        if refOrientation != -270 goto label6;
+
+     label5:
+        $i0 = this.<org.apache.fop.fo.properties.PageDimensionMaker: int propId>;
+        if $i0 != 168 goto label7;
+
+        $r5 = <org.apache.fop.fo.properties.Property: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void warn(java.lang.Object)>("Both page-width and page-height set to \"indefinite\". Forcing page-width to \"auto\"");
+        $r3 = virtualinvoke this.<org.apache.fop.fo.properties.PageDimensionMaker: org.apache.fop.fo.properties.Property make(org.apache.fop.fo.PropertyList,java.lang.String,org.apache.fop.fo.FObj)>(propertyList, fallbackValue, fo);
+        return $r3;
+
+     label6:
+        $r5 = <org.apache.fop.fo.properties.Property: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void warn(java.lang.Object)>("Both page-width and page-height set to \"indefinite\". Forcing page-height to \"auto\"");
+        $i0 = this.<org.apache.fop.fo.properties.PageDimensionMaker: int propId>;
+        if $i0 != 166 goto label7;
+
+        $r3 = virtualinvoke this.<org.apache.fop.fo.properties.PageDimensionMaker: org.apache.fop.fo.properties.Property make(org.apache.fop.fo.PropertyList,java.lang.String,org.apache.fop.fo.FObj)>(propertyList, fallbackValue, fo);
+        return $r3;
+
+     label7:
+        goto label9;
+
+     label8:
+        $z0 = virtualinvoke p.<org.apache.fop.fo.properties.Property: boolean isAuto()>();
+        if $z0 == 0 goto label9;
+
+        $r3 = virtualinvoke this.<org.apache.fop.fo.properties.PageDimensionMaker: org.apache.fop.fo.properties.Property make(org.apache.fop.fo.PropertyList,java.lang.String,org.apache.fop.fo.FObj)>(propertyList, fallbackValue, fo);
+        return $r3;
+
+     label9:
+        return p;
+    }
+}

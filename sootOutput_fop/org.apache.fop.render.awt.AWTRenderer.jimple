@@ -1,0 +1,347 @@
+public class org.apache.fop.render.awt.AWTRenderer extends org.apache.fop.render.java2d.Java2DRenderer implements java.awt.print.Pageable
+{
+    public static final java.lang.String MIME_TYPE;
+    public boolean debug;
+    public boolean dialogDisplay;
+    private boolean previewAsMainWindow;
+    protected org.apache.fop.render.awt.viewer.Renderable renderable;
+    protected org.apache.fop.render.awt.viewer.StatusListener statusListener;
+
+    public void <init>()
+    {
+        org.apache.fop.render.awt.AWTRenderer this;
+
+        this := @this: org.apache.fop.render.awt.AWTRenderer;
+        specialinvoke this.<org.apache.fop.render.awt.AWTRenderer: void <init>(boolean)>(0);
+        return;
+    }
+
+    public void <init>(boolean)
+    {
+        org.apache.fop.render.awt.AWTRenderer this;
+        boolean previewAsMainWindow;
+
+        this := @this: org.apache.fop.render.awt.AWTRenderer;
+        previewAsMainWindow := @parameter0: boolean;
+        specialinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void <init>()>();
+        this.<org.apache.fop.render.awt.AWTRenderer: boolean dialogDisplay> = 1;
+        this.<org.apache.fop.render.awt.AWTRenderer: org.apache.fop.render.awt.viewer.StatusListener statusListener> = null;
+        this.<org.apache.fop.render.awt.AWTRenderer: boolean previewAsMainWindow> = previewAsMainWindow;
+        return;
+    }
+
+    public void setUserAgent(org.apache.fop.apps.FOUserAgent)
+    {
+        org.apache.fop.render.awt.AWTRenderer this;
+        org.apache.fop.apps.FOUserAgent foUserAgent, $r0;
+        boolean $z0, $z1;
+        org.apache.fop.render.awt.viewer.Renderable $r1;
+        org.apache.fop.render.awt.viewer.PreviewDialog $r2;
+
+        this := @this: org.apache.fop.render.awt.AWTRenderer;
+        foUserAgent := @parameter0: org.apache.fop.apps.FOUserAgent;
+        specialinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void setUserAgent(org.apache.fop.apps.FOUserAgent)>(foUserAgent);
+        $z0 = this.<org.apache.fop.render.awt.AWTRenderer: boolean dialogDisplay>;
+        if $z0 == 0 goto label0;
+
+        $r0 = this.<org.apache.fop.render.awt.AWTRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        $r1 = this.<org.apache.fop.render.awt.AWTRenderer: org.apache.fop.render.awt.viewer.Renderable renderable>;
+        $z1 = this.<org.apache.fop.render.awt.AWTRenderer: boolean previewAsMainWindow>;
+        $r2 = staticinvoke <org.apache.fop.render.awt.viewer.PreviewDialog: org.apache.fop.render.awt.viewer.PreviewDialog createPreviewDialog(org.apache.fop.apps.FOUserAgent,org.apache.fop.render.awt.viewer.Renderable,boolean)>($r0, $r1, $z1);
+        virtualinvoke this.<org.apache.fop.render.awt.AWTRenderer: void setStatusListener(org.apache.fop.render.awt.viewer.StatusListener)>($r2);
+
+     label0:
+        return;
+    }
+
+    public void setRenderable(org.apache.fop.render.awt.viewer.Renderable)
+    {
+        org.apache.fop.render.awt.AWTRenderer this;
+        org.apache.fop.render.awt.viewer.Renderable renderable;
+
+        this := @this: org.apache.fop.render.awt.AWTRenderer;
+        renderable := @parameter0: org.apache.fop.render.awt.viewer.Renderable;
+        this.<org.apache.fop.render.awt.AWTRenderer: org.apache.fop.render.awt.viewer.Renderable renderable> = renderable;
+        return;
+    }
+
+    public void setPreviewDialogDisplayed(boolean)
+    {
+        org.apache.fop.render.awt.AWTRenderer this;
+        boolean show;
+
+        this := @this: org.apache.fop.render.awt.AWTRenderer;
+        show := @parameter0: boolean;
+        this.<org.apache.fop.render.awt.AWTRenderer: boolean dialogDisplay> = show;
+        return;
+    }
+
+    public void renderPage(org.apache.fop.area.PageViewport) throws java.io.IOException
+    {
+        org.apache.fop.render.awt.AWTRenderer this;
+        org.apache.fop.area.PageViewport pageViewport;
+        org.apache.fop.render.awt.viewer.StatusListener $r0;
+
+        this := @this: org.apache.fop.render.awt.AWTRenderer;
+        pageViewport := @parameter0: org.apache.fop.area.PageViewport;
+        specialinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void renderPage(org.apache.fop.area.PageViewport)>(pageViewport);
+        $r0 = this.<org.apache.fop.render.awt.AWTRenderer: org.apache.fop.render.awt.viewer.StatusListener statusListener>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.render.awt.AWTRenderer: org.apache.fop.render.awt.viewer.StatusListener statusListener>;
+        interfaceinvoke $r0.<org.apache.fop.render.awt.viewer.StatusListener: void notifyPageRendered()>();
+
+     label0:
+        return;
+    }
+
+    public void stopRenderer() throws java.io.IOException
+    {
+        org.apache.fop.render.awt.AWTRenderer this;
+        org.apache.fop.render.awt.viewer.StatusListener $r0;
+
+        this := @this: org.apache.fop.render.awt.AWTRenderer;
+        specialinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void stopRenderer()>();
+        $r0 = this.<org.apache.fop.render.awt.AWTRenderer: org.apache.fop.render.awt.viewer.StatusListener statusListener>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.render.awt.AWTRenderer: org.apache.fop.render.awt.viewer.StatusListener statusListener>;
+        interfaceinvoke $r0.<org.apache.fop.render.awt.viewer.StatusListener: void notifyRendererStopped()>();
+
+     label0:
+        return;
+    }
+
+    public java.awt.Dimension getPageImageSize(int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.render.awt.AWTRenderer this;
+        int pageNum, bitmapWidth, bitmapHeight, $i1, $i2;
+        java.awt.geom.Rectangle2D bounds;
+        double scaleX, scaleY, $d0, $d1, $d2;
+        org.apache.fop.area.PageViewport $r0;
+        long $l0;
+        org.apache.fop.apps.FOUserAgent $r1;
+        float $f0;
+        java.awt.Dimension $r2;
+
+        this := @this: org.apache.fop.render.awt.AWTRenderer;
+        pageNum := @parameter0: int;
+        $r0 = virtualinvoke this.<org.apache.fop.render.awt.AWTRenderer: org.apache.fop.area.PageViewport getPageViewport(int)>(pageNum);
+        bounds = virtualinvoke $r0.<org.apache.fop.area.PageViewport: java.awt.geom.Rectangle2D getViewArea()>();
+        $d0 = virtualinvoke bounds.<java.awt.geom.Rectangle2D: double getWidth()>();
+        $d0 = $d0 / 1000.0;
+        $l0 = staticinvoke <java.lang.Math: long round(double)>($d0);
+        $i1 = (int) $l0;
+        this.<org.apache.fop.render.awt.AWTRenderer: int pageWidth> = $i1;
+        $d0 = virtualinvoke bounds.<java.awt.geom.Rectangle2D: double getHeight()>();
+        $d0 = $d0 / 1000.0;
+        $l0 = staticinvoke <java.lang.Math: long round(double)>($d0);
+        $i1 = (int) $l0;
+        this.<org.apache.fop.render.awt.AWTRenderer: int pageHeight> = $i1;
+        $d1 = this.<org.apache.fop.render.awt.AWTRenderer: double scaleFactor>;
+        $d1 = $d1 * 0.35277777777777775;
+        $r1 = this.<org.apache.fop.render.awt.AWTRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        $f0 = virtualinvoke $r1.<org.apache.fop.apps.FOUserAgent: float getTargetPixelUnitToMillimeter()>();
+        $d2 = (double) $f0;
+        scaleX = $d1 / $d2;
+        $d1 = this.<org.apache.fop.render.awt.AWTRenderer: double scaleFactor>;
+        $d1 = $d1 * 0.35277777777777775;
+        $r1 = this.<org.apache.fop.render.awt.AWTRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        $f0 = virtualinvoke $r1.<org.apache.fop.apps.FOUserAgent: float getTargetPixelUnitToMillimeter()>();
+        $d2 = (double) $f0;
+        scaleY = $d1 / $d2;
+        $i2 = this.<org.apache.fop.render.awt.AWTRenderer: int pageWidth>;
+        $d1 = (double) $i2;
+        $d1 = $d1 * scaleX;
+        $d1 = $d1 + 0.5;
+        bitmapWidth = (int) $d1;
+        $i2 = this.<org.apache.fop.render.awt.AWTRenderer: int pageHeight>;
+        $d1 = (double) $i2;
+        $d1 = $d1 * scaleY;
+        $d1 = $d1 + 0.5;
+        bitmapHeight = (int) $d1;
+        $r2 = new java.awt.Dimension;
+        specialinvoke $r2.<java.awt.Dimension: void <init>(int,int)>(bitmapWidth, bitmapHeight);
+        return $r2;
+    }
+
+    public java.awt.print.PageFormat getPageFormat(int) throws java.lang.IndexOutOfBoundsException
+    {
+        org.apache.fop.render.awt.AWTRenderer this;
+        int pageIndex, $i0;
+        java.awt.print.PageFormat pageFormat, $r0;
+        java.awt.print.Paper paper, $r1;
+        java.awt.geom.Rectangle2D dim;
+        double width, height, $d0, $d1, $d2, $d3;
+        org.apache.fop.apps.FOPException fopEx, $r3;
+        null_type $n0;
+        org.apache.fop.area.PageViewport $r2;
+        byte $b1;
+        java.lang.IndexOutOfBoundsException $r4;
+        java.lang.String $r5;
+
+        this := @this: org.apache.fop.render.awt.AWTRenderer;
+        pageIndex := @parameter0: int;
+
+     label0:
+        $i0 = virtualinvoke this.<org.apache.fop.render.awt.AWTRenderer: int getNumberOfPages()>();
+        if pageIndex < $i0 goto label2;
+
+        $n0 = null;
+
+     label1:
+        return $n0;
+
+     label2:
+        $r0 = new java.awt.print.PageFormat;
+        specialinvoke $r0.<java.awt.print.PageFormat: void <init>()>();
+        pageFormat = $r0;
+        $r1 = new java.awt.print.Paper;
+        specialinvoke $r1.<java.awt.print.Paper: void <init>()>();
+        paper = $r1;
+        $r2 = virtualinvoke this.<org.apache.fop.render.awt.AWTRenderer: org.apache.fop.area.PageViewport getPageViewport(int)>(pageIndex);
+        dim = virtualinvoke $r2.<org.apache.fop.area.PageViewport: java.awt.geom.Rectangle2D getViewArea()>();
+        width = virtualinvoke dim.<java.awt.geom.Rectangle2D: double getWidth()>();
+        height = virtualinvoke dim.<java.awt.geom.Rectangle2D: double getHeight()>();
+        $b1 = width cmpl height;
+        if $b1 <= 0 goto label3;
+
+        $d0 = height / 1000.0;
+        $d1 = width / 1000.0;
+        virtualinvoke paper.<java.awt.print.Paper: void setImageableArea(double,double,double,double)>(0.0, 0.0, $d0, $d1);
+        $d2 = height / 1000.0;
+        $d3 = width / 1000.0;
+        virtualinvoke paper.<java.awt.print.Paper: void setSize(double,double)>($d2, $d3);
+        virtualinvoke pageFormat.<java.awt.print.PageFormat: void setOrientation(int)>(0);
+        goto label4;
+
+     label3:
+        $d0 = width / 1000.0;
+        $d1 = height / 1000.0;
+        virtualinvoke paper.<java.awt.print.Paper: void setImageableArea(double,double,double,double)>(0.0, 0.0, $d0, $d1);
+        $d2 = width / 1000.0;
+        $d3 = height / 1000.0;
+        virtualinvoke paper.<java.awt.print.Paper: void setSize(double,double)>($d2, $d3);
+        virtualinvoke pageFormat.<java.awt.print.PageFormat: void setOrientation(int)>(1);
+
+     label4:
+        virtualinvoke pageFormat.<java.awt.print.PageFormat: void setPaper(java.awt.print.Paper)>(paper);
+
+     label5:
+        return pageFormat;
+
+     label6:
+        $r3 := @caughtexception;
+        fopEx = $r3;
+        $r4 = new java.lang.IndexOutOfBoundsException;
+        $r5 = virtualinvoke fopEx.<org.apache.fop.apps.FOPException: java.lang.String getMessage()>();
+        specialinvoke $r4.<java.lang.IndexOutOfBoundsException: void <init>(java.lang.String)>($r5);
+        throw $r4;
+
+        catch org.apache.fop.apps.FOPException from label0 to label1 with label6;
+        catch org.apache.fop.apps.FOPException from label2 to label5 with label6;
+    }
+
+    public java.awt.print.Printable getPrintable(int) throws java.lang.IndexOutOfBoundsException
+    {
+        org.apache.fop.render.awt.AWTRenderer this;
+        int pageIndex;
+
+        this := @this: org.apache.fop.render.awt.AWTRenderer;
+        pageIndex := @parameter0: int;
+        return this;
+    }
+
+    public boolean supportsOutOfOrder()
+    {
+        org.apache.fop.render.awt.AWTRenderer this;
+
+        this := @this: org.apache.fop.render.awt.AWTRenderer;
+        return 0;
+    }
+
+    public java.lang.String getMimeType()
+    {
+        org.apache.fop.render.awt.AWTRenderer this;
+
+        this := @this: org.apache.fop.render.awt.AWTRenderer;
+        return "application/X-fop-awt-preview";
+    }
+
+    protected void drawBackAndBorders(org.apache.fop.area.Area, float, float, float, float)
+    {
+        org.apache.fop.render.awt.AWTRenderer this;
+        org.apache.fop.area.Area area;
+        float startx, starty, width, height;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.awt.AWTRenderer;
+        area := @parameter0: org.apache.fop.area.Area;
+        startx := @parameter1: float;
+        starty := @parameter2: float;
+        width := @parameter3: float;
+        height := @parameter4: float;
+        $z0 = this.<org.apache.fop.render.awt.AWTRenderer: boolean debug>;
+        if $z0 == 0 goto label0;
+
+        specialinvoke this.<org.apache.fop.render.awt.AWTRenderer: void debugBackAndBorders(org.apache.fop.area.Area,float,float,float,float)>(area, startx, starty, width, height);
+
+     label0:
+        specialinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void drawBackAndBorders(org.apache.fop.area.Area,float,float,float,float)>(area, startx, starty, width, height);
+        return;
+    }
+
+    private void debugBackAndBorders(org.apache.fop.area.Area, float, float, float, float)
+    {
+        org.apache.fop.render.awt.AWTRenderer this;
+        org.apache.fop.area.Area area;
+        float startx, starty, width, height;
+        java.awt.Color col, $r0;
+        org.apache.fop.render.java2d.Java2DGraphicsState $r1;
+        java.awt.Graphics2D $r2;
+        java.awt.geom.Rectangle2D$Float $r3;
+
+        this := @this: org.apache.fop.render.awt.AWTRenderer;
+        area := @parameter0: org.apache.fop.area.Area;
+        startx := @parameter1: float;
+        starty := @parameter2: float;
+        width := @parameter3: float;
+        height := @parameter4: float;
+        virtualinvoke this.<org.apache.fop.render.awt.AWTRenderer: void saveGraphicsState()>();
+        $r0 = new java.awt.Color;
+        specialinvoke $r0.<java.awt.Color: void <init>(float,float,float)>(0.7F, 0.7F, 0.7F);
+        col = $r0;
+        $r1 = this.<org.apache.fop.render.awt.AWTRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        virtualinvoke $r1.<org.apache.fop.render.java2d.Java2DGraphicsState: boolean updateColor(java.awt.Color)>(col);
+        $r1 = this.<org.apache.fop.render.awt.AWTRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        virtualinvoke $r1.<org.apache.fop.render.java2d.Java2DGraphicsState: boolean updateStroke(float,int)>(0.4F, 133);
+        $r1 = this.<org.apache.fop.render.awt.AWTRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.render.java2d.Java2DGraphicsState: java.awt.Graphics2D getGraph()>();
+        $r3 = new java.awt.geom.Rectangle2D$Float;
+        specialinvoke $r3.<java.awt.geom.Rectangle2D$Float: void <init>(float,float,float,float)>(startx, starty, width, height);
+        virtualinvoke $r2.<java.awt.Graphics2D: void draw(java.awt.Shape)>($r3);
+        virtualinvoke this.<org.apache.fop.render.awt.AWTRenderer: void restoreGraphicsState()>();
+        return;
+    }
+
+    public org.apache.fop.render.awt.viewer.StatusListener getStatusListener()
+    {
+        org.apache.fop.render.awt.AWTRenderer this;
+        org.apache.fop.render.awt.viewer.StatusListener $r0;
+
+        this := @this: org.apache.fop.render.awt.AWTRenderer;
+        $r0 = this.<org.apache.fop.render.awt.AWTRenderer: org.apache.fop.render.awt.viewer.StatusListener statusListener>;
+        return $r0;
+    }
+
+    public void setStatusListener(org.apache.fop.render.awt.viewer.StatusListener)
+    {
+        org.apache.fop.render.awt.AWTRenderer this;
+        org.apache.fop.render.awt.viewer.StatusListener statusListener;
+
+        this := @this: org.apache.fop.render.awt.AWTRenderer;
+        statusListener := @parameter0: org.apache.fop.render.awt.viewer.StatusListener;
+        this.<org.apache.fop.render.awt.AWTRenderer: org.apache.fop.render.awt.viewer.StatusListener statusListener> = statusListener;
+        return;
+    }
+}

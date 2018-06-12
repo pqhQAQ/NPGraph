@@ -1,0 +1,88 @@
+public class org.apache.fop.fo.expr.PPColWidthFunction extends org.apache.fop.fo.expr.FunctionBase
+{
+
+    public void <init>()
+    {
+        org.apache.fop.fo.expr.PPColWidthFunction this;
+
+        this := @this: org.apache.fop.fo.expr.PPColWidthFunction;
+        specialinvoke this.<org.apache.fop.fo.expr.FunctionBase: void <init>()>();
+        return;
+    }
+
+    public int nbArgs()
+    {
+        org.apache.fop.fo.expr.PPColWidthFunction this;
+
+        this := @this: org.apache.fop.fo.expr.PPColWidthFunction;
+        return 1;
+    }
+
+    public org.apache.fop.datatypes.PercentBase getPercentBase()
+    {
+        org.apache.fop.fo.expr.PPColWidthFunction this;
+        org.apache.fop.fo.expr.PPColWidthFunction$PPColWidthPercentBase $r0;
+
+        this := @this: org.apache.fop.fo.expr.PPColWidthFunction;
+        $r0 = new org.apache.fop.fo.expr.PPColWidthFunction$PPColWidthPercentBase;
+        specialinvoke $r0.<org.apache.fop.fo.expr.PPColWidthFunction$PPColWidthPercentBase: void <init>(org.apache.fop.fo.expr.PPColWidthFunction$1)>(null);
+        return $r0;
+    }
+
+    public org.apache.fop.fo.properties.Property eval(org.apache.fop.fo.properties.Property[], org.apache.fop.fo.expr.PropertyInfo) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.expr.PPColWidthFunction this;
+        org.apache.fop.fo.properties.Property[] args;
+        org.apache.fop.fo.expr.PropertyInfo pInfo;
+        java.lang.Number d;
+        org.apache.fop.fo.PropertyList pList;
+        org.apache.fop.fo.flow.table.Table t;
+        org.apache.fop.fo.properties.Property $r0;
+        org.apache.fop.fo.expr.PropertyException $r1;
+        java.lang.String $r2, $r4;
+        org.apache.fop.fo.FObj $r3, $r5, $r7;
+        boolean $z0;
+        org.apache.fop.fo.properties.TableColLength $r6;
+        double $d0;
+
+        this := @this: org.apache.fop.fo.expr.PPColWidthFunction;
+        args := @parameter0: org.apache.fop.fo.properties.Property[];
+        pInfo := @parameter1: org.apache.fop.fo.expr.PropertyInfo;
+        $r0 = args[0];
+        d = virtualinvoke $r0.<org.apache.fop.fo.properties.Property: java.lang.Number getNumber()>();
+        if d != null goto label0;
+
+        $r1 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r1.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>("Non numeric operand to proportional-column-width() function.");
+        throw $r1;
+
+     label0:
+        pList = virtualinvoke pInfo.<org.apache.fop.fo.expr.PropertyInfo: org.apache.fop.fo.PropertyList getPropertyList()>();
+        $r2 = "fo:table-column";
+        $r3 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.FObj getFObj()>();
+        $r4 = virtualinvoke $r3.<org.apache.fop.fo.FObj: java.lang.String getName()>();
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>($r4);
+        if $z0 != 0 goto label1;
+
+        $r1 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r1.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>("proportional-column-width() function may only be used on fo:table-column.");
+        throw $r1;
+
+     label1:
+        $r5 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.FObj getParentFObj()>();
+        t = (org.apache.fop.fo.flow.table.Table) $r5;
+        $z0 = virtualinvoke t.<org.apache.fop.fo.flow.table.Table: boolean isAutoLayout()>();
+        if $z0 == 0 goto label2;
+
+        $r1 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r1.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>("proportional-column-width() function may only be used when fo:table has table-layout=\"fixed\".");
+        throw $r1;
+
+     label2:
+        $r6 = new org.apache.fop.fo.properties.TableColLength;
+        $d0 = virtualinvoke d.<java.lang.Number: double doubleValue()>();
+        $r7 = virtualinvoke pInfo.<org.apache.fop.fo.expr.PropertyInfo: org.apache.fop.fo.FObj getFO()>();
+        specialinvoke $r6.<org.apache.fop.fo.properties.TableColLength: void <init>(double,org.apache.fop.fo.FObj)>($d0, $r7);
+        return $r6;
+    }
+}

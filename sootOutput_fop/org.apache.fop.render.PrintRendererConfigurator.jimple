@@ -1,0 +1,631 @@
+public class org.apache.fop.render.PrintRendererConfigurator extends org.apache.fop.render.AbstractRendererConfigurator implements org.apache.fop.render.RendererConfigurator
+{
+    protected static org.apache.commons.logging.Log log;
+    static java.lang.Class class$org$apache$fop$render$PrintRendererConfigurator;
+
+    public void <init>(org.apache.fop.apps.FOUserAgent)
+    {
+        org.apache.fop.render.PrintRendererConfigurator this;
+        org.apache.fop.apps.FOUserAgent userAgent;
+
+        this := @this: org.apache.fop.render.PrintRendererConfigurator;
+        userAgent := @parameter0: org.apache.fop.apps.FOUserAgent;
+        specialinvoke this.<org.apache.fop.render.AbstractRendererConfigurator: void <init>(org.apache.fop.apps.FOUserAgent)>(userAgent);
+        return;
+    }
+
+    public void configure(org.apache.fop.render.Renderer) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.render.PrintRendererConfigurator this;
+        org.apache.fop.render.Renderer renderer;
+        org.apache.avalon.framework.configuration.Configuration cfg;
+        org.apache.fop.render.PrintRenderer printRenderer;
+        org.apache.fop.fonts.FontResolver fontResolver;
+        org.apache.fop.apps.FopFactory factory;
+        boolean strict, $z0;
+        org.apache.fop.fonts.FontCache fontCache;
+        java.util.List fontInfoList;
+        org.apache.fop.apps.FOUserAgent $r0, $r1;
+        java.lang.String $r2;
+
+        this := @this: org.apache.fop.render.PrintRendererConfigurator;
+        renderer := @parameter0: org.apache.fop.render.Renderer;
+        cfg = virtualinvoke this.<org.apache.fop.render.PrintRendererConfigurator: org.apache.avalon.framework.configuration.Configuration getRendererConfig(org.apache.fop.render.Renderer)>(renderer);
+        if cfg != null goto label0;
+
+        return;
+
+     label0:
+        printRenderer = (org.apache.fop.render.PrintRenderer) renderer;
+        fontResolver = virtualinvoke printRenderer.<org.apache.fop.render.PrintRenderer: org.apache.fop.fonts.FontResolver getFontResolver()>();
+        if fontResolver != null goto label1;
+
+        fontResolver = staticinvoke <org.apache.fop.fonts.FontSetup: org.apache.fop.fonts.FontResolver createMinimalFontResolver()>();
+
+     label1:
+        $r0 = this.<org.apache.fop.render.PrintRendererConfigurator: org.apache.fop.apps.FOUserAgent userAgent>;
+        factory = virtualinvoke $r0.<org.apache.fop.apps.FOUserAgent: org.apache.fop.apps.FopFactory getFactory()>();
+        strict = virtualinvoke factory.<org.apache.fop.apps.FopFactory: boolean validateUserConfigStrictly()>();
+        fontCache = virtualinvoke factory.<org.apache.fop.apps.FopFactory: org.apache.fop.fonts.FontCache getFontCache()>();
+        $r1 = this.<org.apache.fop.render.PrintRendererConfigurator: org.apache.fop.apps.FOUserAgent userAgent>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.apps.FOUserAgent: java.lang.String getFontBaseURL()>();
+        fontInfoList = staticinvoke <org.apache.fop.render.PrintRendererConfigurator: java.util.List buildFontListFromConfiguration(org.apache.avalon.framework.configuration.Configuration,java.lang.String,org.apache.fop.fonts.FontResolver,boolean,org.apache.fop.fonts.FontCache)>(cfg, $r2, fontResolver, strict, fontCache);
+        if fontCache == null goto label2;
+
+        $z0 = virtualinvoke fontCache.<org.apache.fop.fonts.FontCache: boolean hasChanged()>();
+        if $z0 == 0 goto label2;
+
+        virtualinvoke fontCache.<org.apache.fop.fonts.FontCache: void save()>();
+
+     label2:
+        virtualinvoke printRenderer.<org.apache.fop.render.PrintRenderer: void addFontList(java.util.List)>(fontInfoList);
+        return;
+    }
+
+    public static java.util.List buildFontListFromConfiguration(org.apache.avalon.framework.configuration.Configuration, java.lang.String, org.apache.fop.fonts.FontResolver, boolean, org.apache.fop.fonts.FontCache) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.avalon.framework.configuration.Configuration cfg, fonts, $r2;
+        java.lang.String fontBaseURL, $r5, directory;
+        org.apache.fop.fonts.FontResolver fontResolver;
+        boolean strict, autodetectFonts, recursive, $z0;
+        org.apache.fop.fonts.FontCache fontCache;
+        java.util.ArrayList $r0, fontInfoList;
+        long start, $l2;
+        org.apache.fop.fonts.autodetect.FontFileFinder fontFileFinder, $r3, $r12;
+        java.io.File fontBase;
+        java.io.IOException e, $r7, $r8, $r13;
+        org.apache.avalon.framework.configuration.Configuration[] directories, font;
+        int i, $i0;
+        null_type directory;
+        org.apache.fop.fonts.EmbedFontInfo fontInfo;
+        org.apache.commons.logging.Log $r1;
+        java.net.URL $r4;
+        java.util.List $r6;
+        org.apache.xmlgraphics.util.ClasspathResource $r9;
+        org.apache.avalon.framework.configuration.ConfigurationException $r10, e;
+        org.apache.fop.apps.FOPException $r11;
+        byte $b1;
+        java.lang.StringBuffer $r14;
+
+        cfg := @parameter0: org.apache.avalon.framework.configuration.Configuration;
+        fontBaseURL := @parameter1: java.lang.String;
+        fontResolver := @parameter2: org.apache.fop.fonts.FontResolver;
+        strict := @parameter3: boolean;
+        fontCache := @parameter4: org.apache.fop.fonts.FontCache;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        fontInfoList = $r0;
+        fonts = interfaceinvoke cfg.<org.apache.avalon.framework.configuration.Configuration: org.apache.avalon.framework.configuration.Configuration getChild(java.lang.String,boolean)>("fonts", 0);
+        if fonts == null goto label27;
+
+        start = 0L;
+        $r1 = <org.apache.fop.render.PrintRendererConfigurator: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r1 = <org.apache.fop.render.PrintRendererConfigurator: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("Starting font configuration...");
+        start = staticinvoke <java.lang.System: long currentTimeMillis()>();
+
+     label0:
+        $r2 = interfaceinvoke fonts.<org.apache.avalon.framework.configuration.Configuration: org.apache.avalon.framework.configuration.Configuration getChild(java.lang.String,boolean)>("auto-detect", 0);
+        if $r2 == null goto label1;
+
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        autodetectFonts = $z0;
+        if autodetectFonts == 0 goto label10;
+
+        $r3 = new org.apache.fop.fonts.autodetect.FontFileFinder;
+        specialinvoke $r3.<org.apache.fop.fonts.autodetect.FontFileFinder: void <init>()>();
+        fontFileFinder = $r3;
+        if fontBaseURL == null goto label6;
+
+     label3:
+        $r4 = new java.net.URL;
+        specialinvoke $r4.<java.net.URL: void <init>(java.lang.String)>(fontBaseURL);
+        fontBase = staticinvoke <org.apache.commons.io.FileUtils: java.io.File toFile(java.net.URL)>($r4);
+        if fontBase == null goto label4;
+
+        $r5 = virtualinvoke fontBase.<java.io.File: java.lang.String getAbsolutePath()>();
+        $r6 = virtualinvoke fontFileFinder.<org.apache.fop.fonts.autodetect.FontFileFinder: java.util.List find(java.lang.String)>($r5);
+        staticinvoke <org.apache.fop.render.PrintRendererConfigurator: void addFontInfoListFromFileList(java.util.List,java.util.List,org.apache.fop.fonts.FontResolver,org.apache.fop.fonts.FontCache)>($r6, fontInfoList, fontResolver, fontCache);
+
+     label4:
+        goto label6;
+
+     label5:
+        $r7 := @caughtexception;
+        e = $r7;
+        $r1 = <org.apache.fop.render.PrintRendererConfigurator: org.apache.commons.logging.Log log>;
+        staticinvoke <org.apache.fop.util.LogUtil: void handleException(org.apache.commons.logging.Log,java.lang.Exception,boolean)>($r1, e, strict);
+
+     label6:
+        $r6 = virtualinvoke fontFileFinder.<org.apache.fop.fonts.autodetect.FontFileFinder: java.util.List find()>();
+        staticinvoke <org.apache.fop.render.PrintRendererConfigurator: void addFontInfoListFromFileList(java.util.List,java.util.List,org.apache.fop.fonts.FontResolver,org.apache.fop.fonts.FontCache)>($r6, fontInfoList, fontResolver, fontCache);
+
+     label7:
+        goto label9;
+
+     label8:
+        $r8 := @caughtexception;
+        e = $r8;
+        $r1 = <org.apache.fop.render.PrintRendererConfigurator: org.apache.commons.logging.Log log>;
+        staticinvoke <org.apache.fop.util.LogUtil: void handleException(org.apache.commons.logging.Log,java.lang.Exception,boolean)>($r1, e, strict);
+
+     label9:
+        $r9 = staticinvoke <org.apache.xmlgraphics.util.ClasspathResource: org.apache.xmlgraphics.util.ClasspathResource getInstance()>();
+        $r6 = virtualinvoke $r9.<org.apache.xmlgraphics.util.ClasspathResource: java.util.List listResourcesOfMimeType(java.lang.String)>("application/x-font");
+        staticinvoke <org.apache.fop.render.PrintRendererConfigurator: void addFontInfoListFromFileList(java.util.List,java.util.List,org.apache.fop.fonts.FontResolver,org.apache.fop.fonts.FontCache)>($r6, fontInfoList, fontResolver, fontCache);
+        $r9 = staticinvoke <org.apache.xmlgraphics.util.ClasspathResource: org.apache.xmlgraphics.util.ClasspathResource getInstance()>();
+        $r6 = virtualinvoke $r9.<org.apache.xmlgraphics.util.ClasspathResource: java.util.List listResourcesOfMimeType(java.lang.String)>("application/x-font-truetype");
+        staticinvoke <org.apache.fop.render.PrintRendererConfigurator: void addFontInfoListFromFileList(java.util.List,java.util.List,org.apache.fop.fonts.FontResolver,org.apache.fop.fonts.FontCache)>($r6, fontInfoList, fontResolver, fontCache);
+
+     label10:
+        directories = interfaceinvoke fonts.<org.apache.avalon.framework.configuration.Configuration: org.apache.avalon.framework.configuration.Configuration[] getChildren(java.lang.String)>("directory");
+        i = 0;
+
+     label11:
+        $i0 = lengthof directories;
+        if i >= $i0 goto label23;
+
+        $r2 = directories[i];
+        recursive = interfaceinvoke $r2.<org.apache.avalon.framework.configuration.Configuration: boolean getAttributeAsBoolean(java.lang.String,boolean)>("recursive", 0);
+        directory = null;
+
+     label12:
+        $r2 = directories[i];
+        directory = interfaceinvoke $r2.<org.apache.avalon.framework.configuration.Configuration: java.lang.String getValue()>();
+
+     label13:
+        goto label15;
+
+     label14:
+        $r10 := @caughtexception;
+        e = $r10;
+        $r1 = <org.apache.fop.render.PrintRendererConfigurator: org.apache.commons.logging.Log log>;
+        staticinvoke <org.apache.fop.util.LogUtil: void handleException(org.apache.commons.logging.Log,java.lang.Exception,boolean)>($r1, e, strict);
+        goto label22;
+
+     label15:
+        if directory != null goto label16;
+
+        $r1 = <org.apache.fop.render.PrintRendererConfigurator: org.apache.commons.logging.Log log>;
+        $r11 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r11.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("directory defined without value");
+        staticinvoke <org.apache.fop.util.LogUtil: void handleException(org.apache.commons.logging.Log,java.lang.Exception,boolean)>($r1, $r11, strict);
+        goto label22;
+
+     label16:
+        $r3 = new org.apache.fop.fonts.autodetect.FontFileFinder;
+        $r12 = $r3;
+        if recursive == 0 goto label17;
+
+        $b1 = -1;
+        goto label18;
+
+     label17:
+        $b1 = 1;
+
+     label18:
+        specialinvoke $r12.<org.apache.fop.fonts.autodetect.FontFileFinder: void <init>(int)>($b1);
+        fontFileFinder = $r3;
+
+     label19:
+        $r6 = virtualinvoke fontFileFinder.<org.apache.fop.fonts.autodetect.FontFileFinder: java.util.List find(java.lang.String)>(directory);
+        staticinvoke <org.apache.fop.render.PrintRendererConfigurator: void addFontInfoListFromFileList(java.util.List,java.util.List,org.apache.fop.fonts.FontResolver,org.apache.fop.fonts.FontCache)>($r6, fontInfoList, fontResolver, fontCache);
+
+     label20:
+        goto label22;
+
+     label21:
+        $r13 := @caughtexception;
+        e = $r13;
+        $r1 = <org.apache.fop.render.PrintRendererConfigurator: org.apache.commons.logging.Log log>;
+        staticinvoke <org.apache.fop.util.LogUtil: void handleException(org.apache.commons.logging.Log,java.lang.Exception,boolean)>($r1, e, strict);
+
+     label22:
+        i = i + 1;
+        goto label11;
+
+     label23:
+        font = interfaceinvoke fonts.<org.apache.avalon.framework.configuration.Configuration: org.apache.avalon.framework.configuration.Configuration[] getChildren(java.lang.String)>("font");
+        i = 0;
+
+     label24:
+        $i0 = lengthof font;
+        if i >= $i0 goto label26;
+
+        $r2 = font[i];
+        fontInfo = staticinvoke <org.apache.fop.render.PrintRendererConfigurator: org.apache.fop.fonts.EmbedFontInfo getFontInfoFromConfiguration(org.apache.avalon.framework.configuration.Configuration,org.apache.fop.fonts.FontResolver,boolean,org.apache.fop.fonts.FontCache)>($r2, fontResolver, strict, fontCache);
+        if fontInfo == null goto label25;
+
+        interfaceinvoke fontInfoList.<java.util.List: boolean add(java.lang.Object)>(fontInfo);
+
+     label25:
+        i = i + 1;
+        goto label24;
+
+     label26:
+        $r1 = <org.apache.fop.render.PrintRendererConfigurator: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label27;
+
+        $r1 = <org.apache.fop.render.PrintRendererConfigurator: org.apache.commons.logging.Log log>;
+        $r14 = new java.lang.StringBuffer;
+        specialinvoke $r14.<java.lang.StringBuffer: void <init>()>();
+        $r14 = virtualinvoke $r14.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Finished font configuration in ");
+        $l2 = staticinvoke <java.lang.System: long currentTimeMillis()>();
+        $l2 = $l2 - start;
+        $r14 = virtualinvoke $r14.<java.lang.StringBuffer: java.lang.StringBuffer append(long)>($l2);
+        $r14 = virtualinvoke $r14.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("ms");
+        $r5 = virtualinvoke $r14.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r5);
+
+     label27:
+        return fontInfoList;
+
+        catch java.io.IOException from label3 to label4 with label5;
+        catch java.io.IOException from label6 to label7 with label8;
+        catch org.apache.avalon.framework.configuration.ConfigurationException from label12 to label13 with label14;
+        catch java.io.IOException from label19 to label20 with label21;
+    }
+
+    private static void addFontInfoListFromFileList(java.util.List, java.util.List, org.apache.fop.fonts.FontResolver, org.apache.fop.fonts.FontCache)
+    {
+        java.util.List fontFileList, fontInfoList;
+        org.apache.fop.fonts.FontResolver resolver;
+        org.apache.fop.fonts.FontCache fontCache;
+        java.util.Iterator iter;
+        java.net.URL fontUrl;
+        org.apache.fop.fonts.autodetect.FontInfoFinder finder, $r1;
+        org.apache.fop.fonts.EmbedFontInfo fontInfo;
+        boolean $z0;
+        java.lang.Object $r0;
+
+        fontFileList := @parameter0: java.util.List;
+        fontInfoList := @parameter1: java.util.List;
+        resolver := @parameter2: org.apache.fop.fonts.FontResolver;
+        fontCache := @parameter3: org.apache.fop.fonts.FontCache;
+        iter = interfaceinvoke fontFileList.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label2;
+
+        $r0 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        fontUrl = (java.net.URL) $r0;
+        $r1 = new org.apache.fop.fonts.autodetect.FontInfoFinder;
+        specialinvoke $r1.<org.apache.fop.fonts.autodetect.FontInfoFinder: void <init>()>();
+        finder = $r1;
+        fontInfo = virtualinvoke finder.<org.apache.fop.fonts.autodetect.FontInfoFinder: org.apache.fop.fonts.EmbedFontInfo find(java.net.URL,org.apache.fop.fonts.FontResolver,org.apache.fop.fonts.FontCache)>(fontUrl, resolver, fontCache);
+        if fontInfo == null goto label1;
+
+        interfaceinvoke fontInfoList.<java.util.List: boolean add(java.lang.Object)>(fontInfo);
+
+     label1:
+        goto label0;
+
+     label2:
+        return;
+    }
+
+    private static void closeSource(javax.xml.transform.Source)
+    {
+        javax.xml.transform.Source src;
+        javax.xml.transform.stream.StreamSource streamSource;
+        boolean $z0;
+        java.io.InputStream $r0;
+        java.io.Reader $r1;
+
+        src := @parameter0: javax.xml.transform.Source;
+        $z0 = src instanceof javax.xml.transform.stream.StreamSource;
+        if $z0 == 0 goto label0;
+
+        streamSource = (javax.xml.transform.stream.StreamSource) src;
+        $r0 = virtualinvoke streamSource.<javax.xml.transform.stream.StreamSource: java.io.InputStream getInputStream()>();
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.InputStream)>($r0);
+        $r1 = virtualinvoke streamSource.<javax.xml.transform.stream.StreamSource: java.io.Reader getReader()>();
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.Reader)>($r1);
+
+     label0:
+        return;
+    }
+
+    public static org.apache.fop.fonts.EmbedFontInfo getFontInfoFromConfiguration(org.apache.avalon.framework.configuration.Configuration, org.apache.fop.fonts.FontResolver, boolean, org.apache.fop.fonts.FontCache) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.avalon.framework.configuration.Configuration fontCfg, $r10;
+        org.apache.fop.fonts.FontResolver fontResolver;
+        boolean strict, useKerning, $z0;
+        org.apache.fop.fonts.FontCache fontCache;
+        java.lang.String metricsUrl, embedUrl, name, weightStr, style, $r2, $r6;
+        javax.xml.transform.Source source;
+        null_type fontInfo;
+        org.apache.avalon.framework.configuration.Configuration[] tripletCfg;
+        java.io.File fontFile;
+        java.net.URL fontUrl;
+        java.net.MalformedURLException e, $r5;
+        org.apache.fop.fonts.autodetect.FontInfoFinder finder, $r7;
+        java.util.ArrayList tripleList, $r9;
+        int j, weight, $i0, $i1, $i2;
+        org.apache.fop.fonts.FontTriplet triplet, $r11;
+        org.apache.commons.logging.Log $r0;
+        java.lang.StringBuffer $r1;
+        java.lang.String[] $r3;
+        java.net.URI $r4;
+        org.apache.fop.fonts.EmbedFontInfo $r8, fontInfo;
+        org.apache.avalon.framework.configuration.ConfigurationException $r12, e;
+        java.lang.Object $r13;
+
+        fontCfg := @parameter0: org.apache.avalon.framework.configuration.Configuration;
+        fontResolver := @parameter1: org.apache.fop.fonts.FontResolver;
+        strict := @parameter2: boolean;
+        fontCache := @parameter3: org.apache.fop.fonts.FontCache;
+        metricsUrl = interfaceinvoke fontCfg.<org.apache.avalon.framework.configuration.Configuration: java.lang.String getAttribute(java.lang.String,java.lang.String)>("metrics-url", null);
+        embedUrl = interfaceinvoke fontCfg.<org.apache.avalon.framework.configuration.Configuration: java.lang.String getAttribute(java.lang.String,java.lang.String)>("embed-url", null);
+        if metricsUrl != null goto label0;
+
+        if embedUrl != null goto label0;
+
+        $r0 = <org.apache.fop.render.PrintRendererConfigurator: org.apache.commons.logging.Log log>;
+        staticinvoke <org.apache.fop.util.LogUtil: void handleError(org.apache.commons.logging.Log,java.lang.String,boolean)>($r0, "Font configuration without metric-url or embed-url", strict);
+        return null;
+
+     label0:
+        if strict == 0 goto label2;
+
+        if embedUrl == null goto label1;
+
+        source = interfaceinvoke fontResolver.<org.apache.fop.fonts.FontResolver: javax.xml.transform.Source resolve(java.lang.String)>(embedUrl);
+        staticinvoke <org.apache.fop.render.PrintRendererConfigurator: void closeSource(javax.xml.transform.Source)>(source);
+        if source != null goto label1;
+
+        $r0 = <org.apache.fop.render.PrintRendererConfigurator: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Failed to resolve font with embed-url \'");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(embedUrl);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\'");
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        staticinvoke <org.apache.fop.util.LogUtil: void handleError(org.apache.commons.logging.Log,java.lang.String,boolean)>($r0, $r2, strict);
+        return null;
+
+     label1:
+        if metricsUrl == null goto label2;
+
+        source = interfaceinvoke fontResolver.<org.apache.fop.fonts.FontResolver: javax.xml.transform.Source resolve(java.lang.String)>(metricsUrl);
+        staticinvoke <org.apache.fop.render.PrintRendererConfigurator: void closeSource(javax.xml.transform.Source)>(source);
+        if source != null goto label2;
+
+        $r0 = <org.apache.fop.render.PrintRendererConfigurator: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Failed to resolve font with metric-url \'");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(metricsUrl);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\'");
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        staticinvoke <org.apache.fop.util.LogUtil: void handleError(org.apache.commons.logging.Log,java.lang.String,boolean)>($r0, $r2, strict);
+        return null;
+
+     label2:
+        useKerning = interfaceinvoke fontCfg.<org.apache.avalon.framework.configuration.Configuration: boolean getAttributeAsBoolean(java.lang.String,boolean)>("kerning", 1);
+        fontInfo = null;
+        tripletCfg = interfaceinvoke fontCfg.<org.apache.avalon.framework.configuration.Configuration: org.apache.avalon.framework.configuration.Configuration[] getChildren(java.lang.String)>("font-triplet");
+        $i0 = lengthof tripletCfg;
+        if $i0 != 0 goto label8;
+
+        $r0 = <org.apache.fop.render.PrintRendererConfigurator: org.apache.commons.logging.Log log>;
+        staticinvoke <org.apache.fop.util.LogUtil: void handleError(org.apache.commons.logging.Log,java.lang.String,boolean)>($r0, "font without font-triplet", strict);
+        $r3 = newarray (java.lang.String)[2];
+        $r3[0] = embedUrl;
+        $r3[1] = metricsUrl;
+        fontFile = staticinvoke <org.apache.fop.fonts.CachedFontInfo: java.io.File getFileFromUrls(java.lang.String[])>($r3);
+
+     label3:
+        $r4 = virtualinvoke fontFile.<java.io.File: java.net.URI toURI()>();
+        fontUrl = virtualinvoke $r4.<java.net.URI: java.net.URL toURL()>();
+
+     label4:
+        goto label6;
+
+     label5:
+        $r5 := @caughtexception;
+        e = $r5;
+        $r0 = <org.apache.fop.render.PrintRendererConfigurator: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Malformed Url: ");
+        $r6 = virtualinvoke e.<java.net.MalformedURLException: java.lang.String getMessage()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r2);
+        return null;
+
+     label6:
+        if fontFile == null goto label7;
+
+        $r7 = new org.apache.fop.fonts.autodetect.FontInfoFinder;
+        specialinvoke $r7.<org.apache.fop.fonts.autodetect.FontInfoFinder: void <init>()>();
+        finder = $r7;
+        $r8 = virtualinvoke finder.<org.apache.fop.fonts.autodetect.FontInfoFinder: org.apache.fop.fonts.EmbedFontInfo find(java.net.URL,org.apache.fop.fonts.FontResolver,org.apache.fop.fonts.FontCache)>(fontUrl, fontResolver, fontCache);
+        return $r8;
+
+     label7:
+        return null;
+
+     label8:
+        $r9 = new java.util.ArrayList;
+        specialinvoke $r9.<java.util.ArrayList: void <init>()>();
+        tripleList = $r9;
+        j = 0;
+
+     label9:
+        $i1 = lengthof tripletCfg;
+        if j >= $i1 goto label20;
+
+     label10:
+        $r10 = tripletCfg[j];
+        name = interfaceinvoke $r10.<org.apache.avalon.framework.configuration.Configuration: java.lang.String getAttribute(java.lang.String)>("name");
+        if name != null goto label12;
+
+        $r0 = <org.apache.fop.render.PrintRendererConfigurator: org.apache.commons.logging.Log log>;
+        staticinvoke <org.apache.fop.util.LogUtil: void handleError(org.apache.commons.logging.Log,java.lang.String,boolean)>($r0, "font-triplet without name", strict);
+
+     label11:
+        goto label19;
+
+     label12:
+        $r10 = tripletCfg[j];
+        weightStr = interfaceinvoke $r10.<org.apache.avalon.framework.configuration.Configuration: java.lang.String getAttribute(java.lang.String)>("weight");
+        if weightStr != null goto label14;
+
+        $r0 = <org.apache.fop.render.PrintRendererConfigurator: org.apache.commons.logging.Log log>;
+        staticinvoke <org.apache.fop.util.LogUtil: void handleError(org.apache.commons.logging.Log,java.lang.String,boolean)>($r0, "font-triplet without weight", strict);
+
+     label13:
+        goto label19;
+
+     label14:
+        weight = staticinvoke <org.apache.fop.fonts.FontUtil: int parseCSS2FontWeight(java.lang.String)>(weightStr);
+        $r10 = tripletCfg[j];
+        style = interfaceinvoke $r10.<org.apache.avalon.framework.configuration.Configuration: java.lang.String getAttribute(java.lang.String)>("style");
+        if style != null goto label16;
+
+        $r0 = <org.apache.fop.render.PrintRendererConfigurator: org.apache.commons.logging.Log log>;
+        staticinvoke <org.apache.fop.util.LogUtil: void handleError(org.apache.commons.logging.Log,java.lang.String,boolean)>($r0, "font-triplet without style", strict);
+
+     label15:
+        goto label19;
+
+     label16:
+        $r11 = staticinvoke <org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet createFontKey(java.lang.String,java.lang.String,int)>(name, style, weight);
+        interfaceinvoke tripleList.<java.util.List: boolean add(java.lang.Object)>($r11);
+
+     label17:
+        goto label19;
+
+     label18:
+        $r12 := @caughtexception;
+        e = $r12;
+        $r0 = <org.apache.fop.render.PrintRendererConfigurator: org.apache.commons.logging.Log log>;
+        staticinvoke <org.apache.fop.util.LogUtil: void handleException(org.apache.commons.logging.Log,java.lang.Exception,boolean)>($r0, e, strict);
+
+     label19:
+        j = j + 1;
+        goto label9;
+
+     label20:
+        $r8 = new org.apache.fop.fonts.EmbedFontInfo;
+        specialinvoke $r8.<org.apache.fop.fonts.EmbedFontInfo: void <init>(java.lang.String,boolean,java.util.List,java.lang.String)>(metricsUrl, useKerning, tripleList, embedUrl);
+        fontInfo = $r8;
+        if fontCache == null goto label21;
+
+        $z0 = virtualinvoke fontCache.<org.apache.fop.fonts.FontCache: boolean containsFont(org.apache.fop.fonts.EmbedFontInfo)>(fontInfo);
+        if $z0 != 0 goto label21;
+
+        virtualinvoke fontCache.<org.apache.fop.fonts.FontCache: void addFont(org.apache.fop.fonts.EmbedFontInfo)>(fontInfo);
+
+     label21:
+        $r0 = <org.apache.fop.render.PrintRendererConfigurator: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label23;
+
+        $r0 = <org.apache.fop.render.PrintRendererConfigurator: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Adding font ");
+        $r6 = virtualinvoke fontInfo.<org.apache.fop.fonts.EmbedFontInfo: java.lang.String getEmbedFile()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", metric file ");
+        $r6 = virtualinvoke fontInfo.<org.apache.fop.fonts.EmbedFontInfo: java.lang.String getMetricsFile()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r2);
+        j = 0;
+
+     label22:
+        $i1 = interfaceinvoke tripleList.<java.util.List: int size()>();
+        if j >= $i1 goto label23;
+
+        $r13 = interfaceinvoke tripleList.<java.util.List: java.lang.Object get(int)>(j);
+        triplet = (org.apache.fop.fonts.FontTriplet) $r13;
+        $r0 = <org.apache.fop.render.PrintRendererConfigurator: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("  Font triplet ");
+        $r6 = virtualinvoke triplet.<org.apache.fop.fonts.FontTriplet: java.lang.String getName()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", ");
+        $r6 = virtualinvoke triplet.<org.apache.fop.fonts.FontTriplet: java.lang.String getStyle()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", ");
+        $i2 = virtualinvoke triplet.<org.apache.fop.fonts.FontTriplet: int getWeight()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i2);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r2);
+        j = j + 1;
+        goto label22;
+
+     label23:
+        return fontInfo;
+
+        catch java.net.MalformedURLException from label3 to label4 with label5;
+        catch org.apache.avalon.framework.configuration.ConfigurationException from label10 to label11 with label18;
+        catch org.apache.avalon.framework.configuration.ConfigurationException from label12 to label13 with label18;
+        catch org.apache.avalon.framework.configuration.ConfigurationException from label14 to label15 with label18;
+        catch org.apache.avalon.framework.configuration.ConfigurationException from label16 to label17 with label18;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.render.PrintRendererConfigurator: java.lang.Class class$org$apache$fop$render$PrintRendererConfigurator>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.render.PrintRendererConfigurator: java.lang.Class class$(java.lang.String)>("org.apache.fop.render.PrintRendererConfigurator");
+        <org.apache.fop.render.PrintRendererConfigurator: java.lang.Class class$org$apache$fop$render$PrintRendererConfigurator> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.render.PrintRendererConfigurator: java.lang.Class class$org$apache$fop$render$PrintRendererConfigurator>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.render.PrintRendererConfigurator: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

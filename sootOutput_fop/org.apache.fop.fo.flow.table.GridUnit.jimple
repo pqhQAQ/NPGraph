@@ -1,0 +1,855 @@
+public class org.apache.fop.fo.flow.table.GridUnit extends java.lang.Object
+{
+    public static final int FIRST_IN_PART;
+    public static final int LAST_IN_PART;
+    public static final int KEEP_WITH_NEXT_PENDING;
+    public static final int KEEP_WITH_PREVIOUS_PENDING;
+    private org.apache.fop.fo.flow.table.PrimaryGridUnit primary;
+    protected org.apache.fop.fo.flow.table.TableCell cell;
+    private org.apache.fop.fo.flow.table.TableRow row;
+    private int colSpanIndex;
+    private int rowSpanIndex;
+    private byte flags;
+    org.apache.fop.fo.flow.table.ConditionalBorder borderBefore;
+    org.apache.fop.fo.flow.table.ConditionalBorder borderAfter;
+    org.apache.fop.fo.flow.table.BorderSpecification borderStart;
+    org.apache.fop.fo.flow.table.BorderSpecification borderEnd;
+    protected org.apache.fop.layoutmgr.table.CollapsingBorderModel collapsingBorderModel;
+    static final boolean $assertionsDisabled;
+    static java.lang.Class class$org$apache$fop$fo$flow$table$GridUnit;
+
+    protected void <init>(org.apache.fop.fo.flow.table.Table, int, int)
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+        org.apache.fop.fo.flow.table.Table table;
+        int colSpanIndex, rowSpanIndex;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        table := @parameter0: org.apache.fop.fo.flow.table.Table;
+        colSpanIndex := @parameter1: int;
+        rowSpanIndex := @parameter2: int;
+        specialinvoke this.<org.apache.fop.fo.flow.table.GridUnit: void <init>(int,int)>(colSpanIndex, rowSpanIndex);
+        specialinvoke this.<org.apache.fop.fo.flow.table.GridUnit: void setBorders(org.apache.fop.fo.flow.table.Table)>(table);
+        return;
+    }
+
+    protected void <init>(org.apache.fop.fo.flow.table.TableCell, int, int)
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+        org.apache.fop.fo.flow.table.TableCell cell;
+        int colSpanIndex, rowSpanIndex;
+        org.apache.fop.fo.flow.table.Table $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        cell := @parameter0: org.apache.fop.fo.flow.table.TableCell;
+        colSpanIndex := @parameter1: int;
+        rowSpanIndex := @parameter2: int;
+        specialinvoke this.<org.apache.fop.fo.flow.table.GridUnit: void <init>(int,int)>(colSpanIndex, rowSpanIndex);
+        this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.TableCell cell> = cell;
+        $r0 = virtualinvoke cell.<org.apache.fop.fo.flow.table.TableCell: org.apache.fop.fo.flow.table.Table getTable()>();
+        specialinvoke this.<org.apache.fop.fo.flow.table.GridUnit: void setBorders(org.apache.fop.fo.flow.table.Table)>($r0);
+        return;
+    }
+
+    void <init>(org.apache.fop.fo.flow.table.PrimaryGridUnit, int, int)
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+        org.apache.fop.fo.flow.table.PrimaryGridUnit primary;
+        int colSpanIndex, rowSpanIndex;
+        org.apache.fop.fo.flow.table.TableCell $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        primary := @parameter0: org.apache.fop.fo.flow.table.PrimaryGridUnit;
+        colSpanIndex := @parameter1: int;
+        rowSpanIndex := @parameter2: int;
+        $r0 = virtualinvoke primary.<org.apache.fop.fo.flow.table.PrimaryGridUnit: org.apache.fop.fo.flow.table.TableCell getCell()>();
+        specialinvoke this.<org.apache.fop.fo.flow.table.GridUnit: void <init>(org.apache.fop.fo.flow.table.TableCell,int,int)>($r0, colSpanIndex, rowSpanIndex);
+        this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.PrimaryGridUnit primary> = primary;
+        return;
+    }
+
+    private void <init>(int, int)
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+        int colSpanIndex, rowSpanIndex;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        colSpanIndex := @parameter0: int;
+        rowSpanIndex := @parameter1: int;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.fo.flow.table.GridUnit: byte flags> = 0;
+        this.<org.apache.fop.fo.flow.table.GridUnit: int colSpanIndex> = colSpanIndex;
+        this.<org.apache.fop.fo.flow.table.GridUnit: int rowSpanIndex> = rowSpanIndex;
+        return;
+    }
+
+    private void setBorders(org.apache.fop.fo.flow.table.Table)
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+        org.apache.fop.fo.flow.table.Table table;
+        boolean $z0;
+        int $i0;
+        org.apache.fop.layoutmgr.table.CollapsingBorderModel $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        table := @parameter0: org.apache.fop.fo.flow.table.Table;
+        $z0 = virtualinvoke table.<org.apache.fop.fo.flow.table.Table: boolean isSeparateBorderModel()>();
+        if $z0 != 0 goto label0;
+
+        $i0 = virtualinvoke table.<org.apache.fop.fo.flow.table.Table: int getBorderCollapse()>();
+        $r0 = staticinvoke <org.apache.fop.layoutmgr.table.CollapsingBorderModel: org.apache.fop.layoutmgr.table.CollapsingBorderModel getBorderModelFor(int)>($i0);
+        this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.layoutmgr.table.CollapsingBorderModel collapsingBorderModel> = $r0;
+        virtualinvoke this.<org.apache.fop.fo.flow.table.GridUnit: void setBordersFromCell()>();
+
+     label0:
+        return;
+    }
+
+    protected void setBordersFromCell()
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+        org.apache.fop.fo.flow.table.TableCell $r0;
+        org.apache.fop.fo.flow.table.ConditionalBorder $r1, $r2;
+        int $i0;
+        org.apache.fop.fo.flow.table.BorderSpecification $r3;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        $r0 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.TableCell cell>;
+        $r1 = $r0.<org.apache.fop.fo.flow.table.TableCell: org.apache.fop.fo.flow.table.ConditionalBorder borderBefore>;
+        $r1 = virtualinvoke $r1.<org.apache.fop.fo.flow.table.ConditionalBorder: org.apache.fop.fo.flow.table.ConditionalBorder copy()>();
+        this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.ConditionalBorder borderBefore> = $r1;
+        $i0 = this.<org.apache.fop.fo.flow.table.GridUnit: int rowSpanIndex>;
+        if $i0 <= 0 goto label0;
+
+        $r2 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.ConditionalBorder borderBefore>;
+        $r3 = staticinvoke <org.apache.fop.fo.flow.table.BorderSpecification: org.apache.fop.fo.flow.table.BorderSpecification getDefaultBorder()>();
+        $r2.<org.apache.fop.fo.flow.table.ConditionalBorder: org.apache.fop.fo.flow.table.BorderSpecification nonLeadingTrailing> = $r3;
+
+     label0:
+        $r0 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.TableCell cell>;
+        $r1 = $r0.<org.apache.fop.fo.flow.table.TableCell: org.apache.fop.fo.flow.table.ConditionalBorder borderAfter>;
+        $r1 = virtualinvoke $r1.<org.apache.fop.fo.flow.table.ConditionalBorder: org.apache.fop.fo.flow.table.ConditionalBorder copy()>();
+        this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.ConditionalBorder borderAfter> = $r1;
+        $z0 = virtualinvoke this.<org.apache.fop.fo.flow.table.GridUnit: boolean isLastGridUnitRowSpan()>();
+        if $z0 != 0 goto label1;
+
+        $r2 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.ConditionalBorder borderAfter>;
+        $r3 = staticinvoke <org.apache.fop.fo.flow.table.BorderSpecification: org.apache.fop.fo.flow.table.BorderSpecification getDefaultBorder()>();
+        $r2.<org.apache.fop.fo.flow.table.ConditionalBorder: org.apache.fop.fo.flow.table.BorderSpecification nonLeadingTrailing> = $r3;
+
+     label1:
+        $i0 = this.<org.apache.fop.fo.flow.table.GridUnit: int colSpanIndex>;
+        if $i0 != 0 goto label2;
+
+        $r0 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.TableCell cell>;
+        $r3 = $r0.<org.apache.fop.fo.flow.table.TableCell: org.apache.fop.fo.flow.table.BorderSpecification borderStart>;
+        this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.BorderSpecification borderStart> = $r3;
+        goto label3;
+
+     label2:
+        $r3 = staticinvoke <org.apache.fop.fo.flow.table.BorderSpecification: org.apache.fop.fo.flow.table.BorderSpecification getDefaultBorder()>();
+        this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.BorderSpecification borderStart> = $r3;
+
+     label3:
+        $z0 = virtualinvoke this.<org.apache.fop.fo.flow.table.GridUnit: boolean isLastGridUnitColSpan()>();
+        if $z0 == 0 goto label4;
+
+        $r0 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.TableCell cell>;
+        $r3 = $r0.<org.apache.fop.fo.flow.table.TableCell: org.apache.fop.fo.flow.table.BorderSpecification borderEnd>;
+        this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.BorderSpecification borderEnd> = $r3;
+        goto label5;
+
+     label4:
+        $r3 = staticinvoke <org.apache.fop.fo.flow.table.BorderSpecification: org.apache.fop.fo.flow.table.BorderSpecification getDefaultBorder()>();
+        this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.BorderSpecification borderEnd> = $r3;
+
+     label5:
+        return;
+    }
+
+    public org.apache.fop.fo.flow.table.TableCell getCell()
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+        org.apache.fop.fo.flow.table.TableCell $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        $r0 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.TableCell cell>;
+        return $r0;
+    }
+
+    public org.apache.fop.fo.flow.table.TableRow getRow()
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+        org.apache.fop.fo.flow.table.TableRow $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        $r0 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.TableRow row>;
+        return $r0;
+    }
+
+    void setRow(org.apache.fop.fo.flow.table.TableRow)
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+        org.apache.fop.fo.flow.table.TableRow row;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        row := @parameter0: org.apache.fop.fo.flow.table.TableRow;
+        this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.TableRow row> = row;
+        return;
+    }
+
+    public org.apache.fop.fo.flow.table.PrimaryGridUnit getPrimary()
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+        org.apache.fop.fo.flow.table.PrimaryGridUnit $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        $r0 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.PrimaryGridUnit primary>;
+        return $r0;
+    }
+
+    public boolean isPrimary()
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        return 0;
+    }
+
+    public boolean isEmpty()
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+        org.apache.fop.fo.flow.table.TableCell $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        $r0 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.TableCell cell>;
+        if $r0 != null goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public boolean isLastGridUnitColSpan()
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+        int $i0, $i1;
+        org.apache.fop.fo.flow.table.TableCell $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        $i0 = this.<org.apache.fop.fo.flow.table.GridUnit: int colSpanIndex>;
+        $r0 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.TableCell cell>;
+        $i1 = virtualinvoke $r0.<org.apache.fop.fo.flow.table.TableCell: int getNumberColumnsSpanned()>();
+        $i1 = $i1 - 1;
+        if $i0 != $i1 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public boolean isLastGridUnitRowSpan()
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+        int $i0, $i1;
+        org.apache.fop.fo.flow.table.TableCell $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        $i0 = this.<org.apache.fop.fo.flow.table.GridUnit: int rowSpanIndex>;
+        $r0 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.TableCell cell>;
+        $i1 = virtualinvoke $r0.<org.apache.fop.fo.flow.table.TableCell: int getNumberRowsSpanned()>();
+        $i1 = $i1 - 1;
+        if $i0 != $i1 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public int getRowSpanIndex()
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+        int $i0;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        $i0 = this.<org.apache.fop.fo.flow.table.GridUnit: int rowSpanIndex>;
+        return $i0;
+    }
+
+    public int getColSpanIndex()
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+        int $i0;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        $i0 = this.<org.apache.fop.fo.flow.table.GridUnit: int colSpanIndex>;
+        return $i0;
+    }
+
+    public org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo getBorderBefore(int)
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+        int which;
+        org.apache.fop.fo.flow.table.ConditionalBorder $r0;
+        org.apache.fop.fo.flow.table.BorderSpecification $r1;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo $r2;
+        boolean $z0;
+        java.lang.AssertionError $r3;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        which := @parameter0: int;
+        tableswitch(which)
+        {
+            case 0: goto label0;
+            case 1: goto label1;
+            case 2: goto label2;
+            default: goto label3;
+        };
+
+     label0:
+        $r0 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.ConditionalBorder borderBefore>;
+        $r1 = $r0.<org.apache.fop.fo.flow.table.ConditionalBorder: org.apache.fop.fo.flow.table.BorderSpecification nonLeadingTrailing>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.flow.table.BorderSpecification: org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo getBorderInfo()>();
+        return $r2;
+
+     label1:
+        $r0 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.ConditionalBorder borderBefore>;
+        $r1 = $r0.<org.apache.fop.fo.flow.table.ConditionalBorder: org.apache.fop.fo.flow.table.BorderSpecification leadingTrailing>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.flow.table.BorderSpecification: org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo getBorderInfo()>();
+        return $r2;
+
+     label2:
+        $r0 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.ConditionalBorder borderBefore>;
+        $r1 = $r0.<org.apache.fop.fo.flow.table.ConditionalBorder: org.apache.fop.fo.flow.table.BorderSpecification rest>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.flow.table.BorderSpecification: org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo getBorderInfo()>();
+        return $r2;
+
+     label3:
+        $z0 = <org.apache.fop.fo.flow.table.GridUnit: boolean $assertionsDisabled>;
+        if $z0 != 0 goto label4;
+
+        $r3 = new java.lang.AssertionError;
+        specialinvoke $r3.<java.lang.AssertionError: void <init>()>();
+        throw $r3;
+
+     label4:
+        return null;
+    }
+
+    public org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo getBorderAfter(int)
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+        int which;
+        org.apache.fop.fo.flow.table.ConditionalBorder $r0;
+        org.apache.fop.fo.flow.table.BorderSpecification $r1;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo $r2;
+        boolean $z0;
+        java.lang.AssertionError $r3;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        which := @parameter0: int;
+        tableswitch(which)
+        {
+            case 0: goto label0;
+            case 1: goto label1;
+            case 2: goto label2;
+            default: goto label3;
+        };
+
+     label0:
+        $r0 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.ConditionalBorder borderAfter>;
+        $r1 = $r0.<org.apache.fop.fo.flow.table.ConditionalBorder: org.apache.fop.fo.flow.table.BorderSpecification nonLeadingTrailing>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.flow.table.BorderSpecification: org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo getBorderInfo()>();
+        return $r2;
+
+     label1:
+        $r0 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.ConditionalBorder borderAfter>;
+        $r1 = $r0.<org.apache.fop.fo.flow.table.ConditionalBorder: org.apache.fop.fo.flow.table.BorderSpecification leadingTrailing>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.flow.table.BorderSpecification: org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo getBorderInfo()>();
+        return $r2;
+
+     label2:
+        $r0 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.ConditionalBorder borderAfter>;
+        $r1 = $r0.<org.apache.fop.fo.flow.table.ConditionalBorder: org.apache.fop.fo.flow.table.BorderSpecification rest>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.flow.table.BorderSpecification: org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo getBorderInfo()>();
+        return $r2;
+
+     label3:
+        $z0 = <org.apache.fop.fo.flow.table.GridUnit: boolean $assertionsDisabled>;
+        if $z0 != 0 goto label4;
+
+        $r3 = new java.lang.AssertionError;
+        specialinvoke $r3.<java.lang.AssertionError: void <init>()>();
+        throw $r3;
+
+     label4:
+        return null;
+    }
+
+    public org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo getBorderStart()
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+        org.apache.fop.fo.flow.table.BorderSpecification $r0;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo $r1;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        $r0 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.BorderSpecification borderStart>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.table.BorderSpecification: org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo getBorderInfo()>();
+        return $r1;
+    }
+
+    public org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo getBorderEnd()
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+        org.apache.fop.fo.flow.table.BorderSpecification $r0;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo $r1;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        $r0 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.BorderSpecification borderEnd>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.table.BorderSpecification: org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo getBorderInfo()>();
+        return $r1;
+    }
+
+    void resolveBorder(org.apache.fop.fo.flow.table.GridUnit, int)
+    {
+        org.apache.fop.fo.flow.table.GridUnit this, other;
+        int side;
+        org.apache.fop.fo.flow.table.BorderSpecification resolvedBorder, $r3, $r4;
+        org.apache.fop.fo.flow.table.ConditionalBorder $r0, $r1;
+        org.apache.fop.layoutmgr.table.CollapsingBorderModel $r2;
+        boolean $z0;
+        java.lang.AssertionError $r5;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        other := @parameter0: org.apache.fop.fo.flow.table.GridUnit;
+        side := @parameter1: int;
+        tableswitch(side)
+        {
+            case 0: goto label0;
+            case 1: goto label1;
+            case 2: goto label2;
+            case 3: goto label3;
+            default: goto label4;
+        };
+
+     label0:
+        $r0 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.ConditionalBorder borderBefore>;
+        $r1 = other.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.ConditionalBorder borderAfter>;
+        virtualinvoke $r0.<org.apache.fop.fo.flow.table.ConditionalBorder: void resolve(org.apache.fop.fo.flow.table.ConditionalBorder,boolean,boolean,boolean)>($r1, 0, 1, 0);
+        goto label5;
+
+     label1:
+        $r0 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.ConditionalBorder borderAfter>;
+        $r1 = other.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.ConditionalBorder borderBefore>;
+        virtualinvoke $r0.<org.apache.fop.fo.flow.table.ConditionalBorder: void resolve(org.apache.fop.fo.flow.table.ConditionalBorder,boolean,boolean,boolean)>($r1, 0, 1, 0);
+        goto label5;
+
+     label2:
+        $r2 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.layoutmgr.table.CollapsingBorderModel collapsingBorderModel>;
+        $r3 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.BorderSpecification borderStart>;
+        $r4 = other.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.BorderSpecification borderEnd>;
+        resolvedBorder = virtualinvoke $r2.<org.apache.fop.layoutmgr.table.CollapsingBorderModel: org.apache.fop.fo.flow.table.BorderSpecification determineWinner(org.apache.fop.fo.flow.table.BorderSpecification,org.apache.fop.fo.flow.table.BorderSpecification)>($r3, $r4);
+        if resolvedBorder == null goto label5;
+
+        this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.BorderSpecification borderStart> = resolvedBorder;
+        other.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.BorderSpecification borderEnd> = resolvedBorder;
+        goto label5;
+
+     label3:
+        $r2 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.layoutmgr.table.CollapsingBorderModel collapsingBorderModel>;
+        $r3 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.BorderSpecification borderEnd>;
+        $r4 = other.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.BorderSpecification borderStart>;
+        resolvedBorder = virtualinvoke $r2.<org.apache.fop.layoutmgr.table.CollapsingBorderModel: org.apache.fop.fo.flow.table.BorderSpecification determineWinner(org.apache.fop.fo.flow.table.BorderSpecification,org.apache.fop.fo.flow.table.BorderSpecification)>($r3, $r4);
+        if resolvedBorder == null goto label5;
+
+        this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.BorderSpecification borderEnd> = resolvedBorder;
+        other.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.BorderSpecification borderStart> = resolvedBorder;
+        goto label5;
+
+     label4:
+        $z0 = <org.apache.fop.fo.flow.table.GridUnit: boolean $assertionsDisabled>;
+        if $z0 != 0 goto label5;
+
+        $r5 = new java.lang.AssertionError;
+        specialinvoke $r5.<java.lang.AssertionError: void <init>()>();
+        throw $r5;
+
+     label5:
+        return;
+    }
+
+    void integrateBorderSegment(int, org.apache.fop.fo.flow.table.TableFObj, boolean, boolean, boolean)
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+        int side;
+        org.apache.fop.fo.flow.table.TableFObj parent;
+        boolean withLeadingTrailing, withNonLeadingTrailing, withRest, $z0;
+        org.apache.fop.fo.flow.table.ConditionalBorder $r0, $r1;
+        java.lang.AssertionError $r2;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        side := @parameter0: int;
+        parent := @parameter1: org.apache.fop.fo.flow.table.TableFObj;
+        withLeadingTrailing := @parameter2: boolean;
+        withNonLeadingTrailing := @parameter3: boolean;
+        withRest := @parameter4: boolean;
+        lookupswitch(side)
+        {
+            case 0: goto label0;
+            case 1: goto label1;
+            default: goto label2;
+        };
+
+     label0:
+        $r0 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.ConditionalBorder borderBefore>;
+        $r1 = parent.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.fo.flow.table.ConditionalBorder borderBefore>;
+        virtualinvoke $r0.<org.apache.fop.fo.flow.table.ConditionalBorder: void integrateSegment(org.apache.fop.fo.flow.table.ConditionalBorder,boolean,boolean,boolean)>($r1, withLeadingTrailing, withNonLeadingTrailing, withRest);
+        goto label3;
+
+     label1:
+        $r0 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.ConditionalBorder borderAfter>;
+        $r1 = parent.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.fo.flow.table.ConditionalBorder borderAfter>;
+        virtualinvoke $r0.<org.apache.fop.fo.flow.table.ConditionalBorder: void integrateSegment(org.apache.fop.fo.flow.table.ConditionalBorder,boolean,boolean,boolean)>($r1, withLeadingTrailing, withNonLeadingTrailing, withRest);
+        goto label3;
+
+     label2:
+        $z0 = <org.apache.fop.fo.flow.table.GridUnit: boolean $assertionsDisabled>;
+        if $z0 != 0 goto label3;
+
+        $r2 = new java.lang.AssertionError;
+        specialinvoke $r2.<java.lang.AssertionError: void <init>()>();
+        throw $r2;
+
+     label3:
+        return;
+    }
+
+    void integrateBorderSegment(int, org.apache.fop.fo.flow.table.TableFObj)
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+        int side;
+        org.apache.fop.fo.flow.table.TableFObj parent;
+        org.apache.fop.layoutmgr.table.CollapsingBorderModel $r0;
+        org.apache.fop.fo.flow.table.BorderSpecification $r1, $r2, $r3;
+        boolean $z0;
+        java.lang.AssertionError $r4;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        side := @parameter0: int;
+        parent := @parameter1: org.apache.fop.fo.flow.table.TableFObj;
+        tableswitch(side)
+        {
+            case 0: goto label0;
+            case 1: goto label0;
+            case 2: goto label1;
+            case 3: goto label2;
+            default: goto label3;
+        };
+
+     label0:
+        virtualinvoke this.<org.apache.fop.fo.flow.table.GridUnit: void integrateBorderSegment(int,org.apache.fop.fo.flow.table.TableFObj,boolean,boolean,boolean)>(side, parent, 1, 1, 1);
+        goto label4;
+
+     label1:
+        $r0 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.layoutmgr.table.CollapsingBorderModel collapsingBorderModel>;
+        $r1 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.BorderSpecification borderStart>;
+        $r2 = parent.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.fo.flow.table.BorderSpecification borderStart>;
+        $r3 = virtualinvoke $r0.<org.apache.fop.layoutmgr.table.CollapsingBorderModel: org.apache.fop.fo.flow.table.BorderSpecification determineWinner(org.apache.fop.fo.flow.table.BorderSpecification,org.apache.fop.fo.flow.table.BorderSpecification)>($r1, $r2);
+        this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.BorderSpecification borderStart> = $r3;
+        goto label4;
+
+     label2:
+        $r0 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.layoutmgr.table.CollapsingBorderModel collapsingBorderModel>;
+        $r1 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.BorderSpecification borderEnd>;
+        $r2 = parent.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.fo.flow.table.BorderSpecification borderEnd>;
+        $r3 = virtualinvoke $r0.<org.apache.fop.layoutmgr.table.CollapsingBorderModel: org.apache.fop.fo.flow.table.BorderSpecification determineWinner(org.apache.fop.fo.flow.table.BorderSpecification,org.apache.fop.fo.flow.table.BorderSpecification)>($r1, $r2);
+        this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.BorderSpecification borderEnd> = $r3;
+        goto label4;
+
+     label3:
+        $z0 = <org.apache.fop.fo.flow.table.GridUnit: boolean $assertionsDisabled>;
+        if $z0 != 0 goto label4;
+
+        $r4 = new java.lang.AssertionError;
+        specialinvoke $r4.<java.lang.AssertionError: void <init>()>();
+        throw $r4;
+
+     label4:
+        return;
+    }
+
+    void integrateCompetingBorder(int, org.apache.fop.fo.flow.table.ConditionalBorder, boolean, boolean, boolean)
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+        int side;
+        org.apache.fop.fo.flow.table.ConditionalBorder competitor, $r0;
+        boolean withLeadingTrailing, withNonLeadingTrailing, withRest, $z0;
+        java.lang.AssertionError $r1;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        side := @parameter0: int;
+        competitor := @parameter1: org.apache.fop.fo.flow.table.ConditionalBorder;
+        withLeadingTrailing := @parameter2: boolean;
+        withNonLeadingTrailing := @parameter3: boolean;
+        withRest := @parameter4: boolean;
+        lookupswitch(side)
+        {
+            case 0: goto label0;
+            case 1: goto label1;
+            default: goto label2;
+        };
+
+     label0:
+        $r0 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.ConditionalBorder borderBefore>;
+        virtualinvoke $r0.<org.apache.fop.fo.flow.table.ConditionalBorder: void integrateCompetingSegment(org.apache.fop.fo.flow.table.ConditionalBorder,boolean,boolean,boolean)>(competitor, withLeadingTrailing, withNonLeadingTrailing, withRest);
+        goto label3;
+
+     label1:
+        $r0 = this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.ConditionalBorder borderAfter>;
+        virtualinvoke $r0.<org.apache.fop.fo.flow.table.ConditionalBorder: void integrateCompetingSegment(org.apache.fop.fo.flow.table.ConditionalBorder,boolean,boolean,boolean)>(competitor, withLeadingTrailing, withNonLeadingTrailing, withRest);
+        goto label3;
+
+     label2:
+        $z0 = <org.apache.fop.fo.flow.table.GridUnit: boolean $assertionsDisabled>;
+        if $z0 != 0 goto label3;
+
+        $r1 = new java.lang.AssertionError;
+        specialinvoke $r1.<java.lang.AssertionError: void <init>()>();
+        throw $r1;
+
+     label3:
+        return;
+    }
+
+    public boolean getFlag(int)
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+        int which, $i1, $i2;
+        byte $b0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        which := @parameter0: int;
+        $b0 = this.<org.apache.fop.fo.flow.table.GridUnit: byte flags>;
+        $i1 = 1 << which;
+        $i2 = $b0 & $i1;
+        if $i2 == 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public void setFlag(int, boolean)
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+        int which, $i1, $i2;
+        boolean value;
+        byte $b0;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        which := @parameter0: int;
+        value := @parameter1: boolean;
+        if value == 0 goto label0;
+
+        $b0 = this.<org.apache.fop.fo.flow.table.GridUnit: byte flags>;
+        $i1 = 1 << which;
+        $i2 = $b0 | $i1;
+        $b0 = (byte) $i2;
+        this.<org.apache.fop.fo.flow.table.GridUnit: byte flags> = $b0;
+        goto label1;
+
+     label0:
+        $b0 = this.<org.apache.fop.fo.flow.table.GridUnit: byte flags>;
+        $i1 = 1 << which;
+        $i1 = $i1 ^ -1;
+        $i2 = $b0 & $i1;
+        $b0 = (byte) $i2;
+        this.<org.apache.fop.fo.flow.table.GridUnit: byte flags> = $b0;
+
+     label1:
+        return;
+    }
+
+    public void setFlag(int)
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+        int which;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        which := @parameter0: int;
+        virtualinvoke this.<org.apache.fop.fo.flow.table.GridUnit: void setFlag(int,boolean)>(which, 1);
+        return;
+    }
+
+    public java.lang.String toString()
+    {
+        org.apache.fop.fo.flow.table.GridUnit this;
+        java.lang.StringBuffer $r0, buffer, $r4;
+        boolean $z0;
+        int $i0, $i1;
+        org.apache.fop.fo.flow.table.PrimaryGridUnit $r1, $r2, $r5;
+        org.apache.fop.fo.flow.table.TableCell $r3, $r6;
+        java.lang.String $r7, $r8, $r9;
+        byte $b2;
+
+        this := @this: org.apache.fop.fo.flow.table.GridUnit;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        buffer = $r0;
+        $z0 = virtualinvoke this.<org.apache.fop.fo.flow.table.GridUnit: boolean isEmpty()>();
+        if $z0 == 0 goto label0;
+
+        virtualinvoke buffer.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("EMPTY");
+        goto label1;
+
+     label0:
+        $z0 = virtualinvoke this.<org.apache.fop.fo.flow.table.GridUnit: boolean isPrimary()>();
+        if $z0 == 0 goto label1;
+
+        virtualinvoke buffer.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Primary");
+
+     label1:
+        virtualinvoke buffer.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("GridUnit:");
+        $i0 = this.<org.apache.fop.fo.flow.table.GridUnit: int colSpanIndex>;
+        if $i0 <= 0 goto label2;
+
+        $r0 = virtualinvoke buffer.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" colSpan=");
+        $i1 = this.<org.apache.fop.fo.flow.table.GridUnit: int colSpanIndex>;
+        virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $z0 = virtualinvoke this.<org.apache.fop.fo.flow.table.GridUnit: boolean isLastGridUnitColSpan()>();
+        if $z0 == 0 goto label2;
+
+        virtualinvoke buffer.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("(last)");
+
+     label2:
+        $i0 = this.<org.apache.fop.fo.flow.table.GridUnit: int rowSpanIndex>;
+        if $i0 <= 0 goto label3;
+
+        $r0 = virtualinvoke buffer.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" rowSpan=");
+        $i1 = this.<org.apache.fop.fo.flow.table.GridUnit: int rowSpanIndex>;
+        virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $z0 = virtualinvoke this.<org.apache.fop.fo.flow.table.GridUnit: boolean isLastGridUnitRowSpan()>();
+        if $z0 == 0 goto label3;
+
+        virtualinvoke buffer.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("(last)");
+
+     label3:
+        $z0 = virtualinvoke this.<org.apache.fop.fo.flow.table.GridUnit: boolean isPrimary()>();
+        if $z0 != 0 goto label4;
+
+        $r1 = virtualinvoke this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.PrimaryGridUnit getPrimary()>();
+        if $r1 == null goto label4;
+
+        $r0 = virtualinvoke buffer.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" primary=");
+        $r2 = virtualinvoke this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.PrimaryGridUnit getPrimary()>();
+        $i1 = virtualinvoke $r2.<org.apache.fop.fo.flow.table.PrimaryGridUnit: int getRowIndex()>();
+        virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r0 = virtualinvoke buffer.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("/");
+        $r2 = virtualinvoke this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.PrimaryGridUnit getPrimary()>();
+        $i1 = virtualinvoke $r2.<org.apache.fop.fo.flow.table.PrimaryGridUnit: int getColIndex()>();
+        virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r1 = virtualinvoke this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.PrimaryGridUnit getPrimary()>();
+        $r3 = virtualinvoke $r1.<org.apache.fop.fo.flow.table.PrimaryGridUnit: org.apache.fop.fo.flow.table.TableCell getCell()>();
+        if $r3 == null goto label4;
+
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" id=");
+        $r5 = virtualinvoke this.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.PrimaryGridUnit getPrimary()>();
+        $r6 = virtualinvoke $r5.<org.apache.fop.fo.flow.table.PrimaryGridUnit: org.apache.fop.fo.flow.table.TableCell getCell()>();
+        $r7 = virtualinvoke $r6.<org.apache.fop.fo.flow.table.TableCell: java.lang.String getId()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r7);
+        $r8 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke buffer.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r8);
+
+     label4:
+        $r0 = virtualinvoke buffer.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" flags=");
+        $b2 = this.<org.apache.fop.fo.flow.table.GridUnit: byte flags>;
+        $r8 = staticinvoke <java.lang.Integer: java.lang.String toBinaryString(int)>($b2);
+        virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r8);
+        $r9 = virtualinvoke buffer.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r9;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        boolean $z0;
+
+        $r0 = <org.apache.fop.fo.flow.table.GridUnit: java.lang.Class class$org$apache$fop$fo$flow$table$GridUnit>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.fo.flow.table.GridUnit: java.lang.Class class$(java.lang.String)>("org.apache.fop.fo.flow.table.GridUnit");
+        <org.apache.fop.fo.flow.table.GridUnit: java.lang.Class class$org$apache$fop$fo$flow$table$GridUnit> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.fo.flow.table.GridUnit: java.lang.Class class$org$apache$fop$fo$flow$table$GridUnit>;
+
+     label1:
+        $z0 = virtualinvoke $r0.<java.lang.Class: boolean desiredAssertionStatus()>();
+        if $z0 != 0 goto label2;
+
+        $z0 = 1;
+        goto label3;
+
+     label2:
+        $z0 = 0;
+
+     label3:
+        <org.apache.fop.fo.flow.table.GridUnit: boolean $assertionsDisabled> = $z0;
+        return;
+    }
+}

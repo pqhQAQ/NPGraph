@@ -1,0 +1,650 @@
+public class org.apache.fop.layoutmgr.inline.ContentLayoutManager extends org.apache.fop.layoutmgr.AbstractBaseLayoutManager implements org.apache.fop.layoutmgr.inline.InlineLevelLayoutManager
+{
+    private static org.apache.commons.logging.Log log;
+    private org.apache.fop.apps.FOUserAgent userAgent;
+    private org.apache.fop.area.Area holder;
+    private int stackSize;
+    private org.apache.fop.layoutmgr.LayoutManager parentLM;
+    private org.apache.fop.layoutmgr.inline.InlineLevelLayoutManager childLM;
+    static java.lang.Class class$org$apache$fop$layoutmgr$inline$ContentLayoutManager;
+
+    public void <init>(org.apache.fop.area.Area, org.apache.fop.layoutmgr.LayoutManager)
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        org.apache.fop.area.Area area;
+        org.apache.fop.layoutmgr.LayoutManager parentLM;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        area := @parameter0: org.apache.fop.area.Area;
+        parentLM := @parameter1: org.apache.fop.layoutmgr.LayoutManager;
+        specialinvoke this.<org.apache.fop.layoutmgr.AbstractBaseLayoutManager: void <init>()>();
+        this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.fop.layoutmgr.inline.InlineLevelLayoutManager childLM> = null;
+        this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.fop.area.Area holder> = area;
+        this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.fop.layoutmgr.LayoutManager parentLM> = parentLM;
+        return;
+    }
+
+    public void <init>(org.apache.fop.layoutmgr.PageSequenceLayoutManager, org.apache.fop.fo.pagination.Title)
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm;
+        org.apache.fop.fo.pagination.Title foTitle;
+        org.apache.fop.layoutmgr.LayoutManager lm;
+        java.lang.IllegalStateException e, $r2;
+        org.apache.fop.area.LineArea $r0;
+        org.apache.fop.layoutmgr.LayoutManagerMaker $r1;
+        org.apache.commons.logging.Log $r3;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        pslm := @parameter0: org.apache.fop.layoutmgr.PageSequenceLayoutManager;
+        foTitle := @parameter1: org.apache.fop.fo.pagination.Title;
+        specialinvoke this.<org.apache.fop.layoutmgr.AbstractBaseLayoutManager: void <init>()>();
+        this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.fop.layoutmgr.inline.InlineLevelLayoutManager childLM> = null;
+        this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.fop.layoutmgr.LayoutManager parentLM> = pslm;
+        $r0 = new org.apache.fop.area.LineArea;
+        specialinvoke $r0.<org.apache.fop.area.LineArea: void <init>()>();
+        this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.fop.area.Area holder> = $r0;
+
+     label0:
+        $r1 = virtualinvoke pslm.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.layoutmgr.LayoutManagerMaker getLayoutManagerMaker()>();
+        lm = interfaceinvoke $r1.<org.apache.fop.layoutmgr.LayoutManagerMaker: org.apache.fop.layoutmgr.LayoutManager makeLayoutManager(org.apache.fop.fo.FONode)>(foTitle);
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: void addChildLM(org.apache.fop.layoutmgr.LayoutManager)>(lm);
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: void fillArea(org.apache.fop.layoutmgr.LayoutManager)>(lm);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r2 := @caughtexception;
+        e = $r2;
+        $r3 = <org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void warn(java.lang.Object)>("Title has no content");
+        throw e;
+
+     label3:
+        return;
+
+        catch java.lang.IllegalStateException from label0 to label1 with label2;
+    }
+
+    public void initialize()
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        return;
+    }
+
+    public void fillArea(org.apache.fop.layoutmgr.LayoutManager)
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        org.apache.fop.layoutmgr.LayoutManager curLM;
+        int ipd, halfLeading, lineLead, maxtb, middlefollow, $i0, $i1;
+        org.apache.fop.layoutmgr.LayoutContext childLC, lc, $r0;
+        short lineHeight, lead, follow;
+        java.util.LinkedList contentList;
+        java.util.ListIterator contentIter;
+        org.apache.fop.layoutmgr.KnuthElement element;
+        org.apache.fop.layoutmgr.inline.KnuthInlineBox l14;
+        org.apache.fop.layoutmgr.KnuthPossPosIter contentPosIter, $r4;
+        org.apache.fop.layoutmgr.SpaceSpecifier $r1;
+        org.apache.fop.traits.MinOptMax $r2;
+        boolean $z0;
+        java.lang.Object $r3;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        curLM := @parameter0: org.apache.fop.layoutmgr.LayoutManager;
+        ipd = 1000000;
+        $r0 = new org.apache.fop.layoutmgr.LayoutContext;
+        specialinvoke $r0.<org.apache.fop.layoutmgr.LayoutContext: void <init>(int)>(2);
+        childLC = $r0;
+        $r1 = new org.apache.fop.layoutmgr.SpaceSpecifier;
+        specialinvoke $r1.<org.apache.fop.layoutmgr.SpaceSpecifier: void <init>(boolean)>(0);
+        virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: void setLeadingSpace(org.apache.fop.layoutmgr.SpaceSpecifier)>($r1);
+        $r1 = new org.apache.fop.layoutmgr.SpaceSpecifier;
+        specialinvoke $r1.<org.apache.fop.layoutmgr.SpaceSpecifier: void <init>(boolean)>(0);
+        virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: void setTrailingSpace(org.apache.fop.layoutmgr.SpaceSpecifier)>($r1);
+        $r2 = new org.apache.fop.traits.MinOptMax;
+        specialinvoke $r2.<org.apache.fop.traits.MinOptMax: void <init>(int)>(ipd);
+        virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: void setStackLimitIP(org.apache.fop.traits.MinOptMax)>($r2);
+        virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: void setRefIPD(int)>(ipd);
+        lineHeight = 14000;
+        lead = 12000;
+        follow = 2000;
+        $i0 = lineHeight - lead;
+        $i0 = $i0 - follow;
+        halfLeading = $i0 / 2;
+        lineLead = lead + halfLeading;
+        maxtb = follow + halfLeading;
+        middlefollow = maxtb;
+        this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: int stackSize> = 0;
+        contentList = virtualinvoke this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: java.util.LinkedList getNextKnuthElements(org.apache.fop.layoutmgr.LayoutContext,int)>(childLC, 135);
+        contentIter = virtualinvoke contentList.<java.util.LinkedList: java.util.ListIterator listIterator()>();
+
+     label0:
+        $z0 = interfaceinvoke contentIter.<java.util.ListIterator: boolean hasNext()>();
+        if $z0 == 0 goto label2;
+
+        $r3 = interfaceinvoke contentIter.<java.util.ListIterator: java.lang.Object next()>();
+        element = (org.apache.fop.layoutmgr.KnuthElement) $r3;
+        $z0 = element instanceof org.apache.fop.layoutmgr.inline.KnuthInlineBox;
+        if $z0 == 0 goto label1;
+
+        l14 = (org.apache.fop.layoutmgr.inline.KnuthInlineBox) element;
+
+     label1:
+        goto label0;
+
+     label2:
+        $i0 = maxtb - lineLead;
+        if $i0 <= middlefollow goto label3;
+
+        middlefollow = maxtb - lineLead;
+
+     label3:
+        $r0 = new org.apache.fop.layoutmgr.LayoutContext;
+        specialinvoke $r0.<org.apache.fop.layoutmgr.LayoutContext: void <init>(int)>(0);
+        lc = $r0;
+        virtualinvoke lc.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int,boolean)>(256, 1);
+        $r1 = new org.apache.fop.layoutmgr.SpaceSpecifier;
+        specialinvoke $r1.<org.apache.fop.layoutmgr.SpaceSpecifier: void <init>(boolean)>(0);
+        virtualinvoke lc.<org.apache.fop.layoutmgr.LayoutContext: void setLeadingSpace(org.apache.fop.layoutmgr.SpaceSpecifier)>($r1);
+        $r1 = new org.apache.fop.layoutmgr.SpaceSpecifier;
+        specialinvoke $r1.<org.apache.fop.layoutmgr.SpaceSpecifier: void <init>(boolean)>(0);
+        virtualinvoke lc.<org.apache.fop.layoutmgr.LayoutContext: void setTrailingSpace(org.apache.fop.layoutmgr.SpaceSpecifier)>($r1);
+        $r4 = new org.apache.fop.layoutmgr.KnuthPossPosIter;
+        $i1 = virtualinvoke contentList.<java.util.LinkedList: int size()>();
+        specialinvoke $r4.<org.apache.fop.layoutmgr.KnuthPossPosIter: void <init>(java.util.List,int,int)>(contentList, 0, $i1);
+        contentPosIter = $r4;
+        interfaceinvoke curLM.<org.apache.fop.layoutmgr.LayoutManager: void addAreas(org.apache.fop.layoutmgr.PositionIterator,org.apache.fop.layoutmgr.LayoutContext)>(contentPosIter, lc);
+        return;
+    }
+
+    public void addAreas(org.apache.fop.layoutmgr.PositionIterator, org.apache.fop.layoutmgr.LayoutContext)
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        org.apache.fop.layoutmgr.PositionIterator posIter;
+        org.apache.fop.layoutmgr.LayoutContext context, childContext, $r2;
+        int savedIPD;
+        org.apache.fop.area.Area $r0;
+        org.apache.fop.area.inline.InlineArea $r1;
+        org.apache.fop.layoutmgr.inline.InlineLevelLayoutManager $r3;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        posIter := @parameter0: org.apache.fop.layoutmgr.PositionIterator;
+        context := @parameter1: org.apache.fop.layoutmgr.LayoutContext;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.fop.area.Area holder>;
+        $r1 = (org.apache.fop.area.inline.InlineArea) $r0;
+        savedIPD = virtualinvoke $r1.<org.apache.fop.area.inline.InlineArea: int getIPD()>();
+        $r2 = new org.apache.fop.layoutmgr.LayoutContext;
+        specialinvoke $r2.<org.apache.fop.layoutmgr.LayoutContext: void <init>(org.apache.fop.layoutmgr.LayoutContext)>(context);
+        childContext = $r2;
+        virtualinvoke childContext.<org.apache.fop.layoutmgr.LayoutContext: void setIPDAdjust(double)>(0.0);
+        $r3 = this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.fop.layoutmgr.inline.InlineLevelLayoutManager childLM>;
+        interfaceinvoke $r3.<org.apache.fop.layoutmgr.inline.InlineLevelLayoutManager: void addAreas(org.apache.fop.layoutmgr.PositionIterator,org.apache.fop.layoutmgr.LayoutContext)>(posIter, childContext);
+        $r0 = this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.fop.area.Area holder>;
+        $r1 = (org.apache.fop.area.inline.InlineArea) $r0;
+        virtualinvoke $r1.<org.apache.fop.area.inline.InlineArea: void setIPD(int)>(savedIPD);
+        return;
+    }
+
+    public int getStackingSize()
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        $i0 = this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: int stackSize>;
+        return $i0;
+    }
+
+    public org.apache.fop.area.Area getParentArea(org.apache.fop.area.Area)
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        org.apache.fop.area.Area childArea, $r0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        childArea := @parameter0: org.apache.fop.area.Area;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.fop.area.Area holder>;
+        return $r0;
+    }
+
+    public void addChildArea(org.apache.fop.area.Area)
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        org.apache.fop.area.Area childArea, $r0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        childArea := @parameter0: org.apache.fop.area.Area;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.fop.area.Area holder>;
+        virtualinvoke $r0.<org.apache.fop.area.Area: void addChildArea(org.apache.fop.area.Area)>(childArea);
+        return;
+    }
+
+    public void setParent(org.apache.fop.layoutmgr.LayoutManager)
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        org.apache.fop.layoutmgr.LayoutManager lm;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        lm := @parameter0: org.apache.fop.layoutmgr.LayoutManager;
+        this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.fop.layoutmgr.LayoutManager parentLM> = lm;
+        return;
+    }
+
+    public org.apache.fop.layoutmgr.LayoutManager getParent()
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        org.apache.fop.layoutmgr.LayoutManager $r0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.fop.layoutmgr.LayoutManager parentLM>;
+        return $r0;
+    }
+
+    public boolean isFinished()
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        return 0;
+    }
+
+    public void setFinished(boolean)
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        boolean isFinished;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        isFinished := @parameter0: boolean;
+        return;
+    }
+
+    public boolean createNextChildLMs(int)
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        int pos;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        pos := @parameter0: int;
+        return 0;
+    }
+
+    public java.util.List getChildLMs()
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        java.util.ArrayList $r0, childLMs;
+        org.apache.fop.layoutmgr.inline.InlineLevelLayoutManager $r1;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>(int)>(1);
+        childLMs = $r0;
+        $r1 = this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.fop.layoutmgr.inline.InlineLevelLayoutManager childLM>;
+        interfaceinvoke childLMs.<java.util.List: boolean add(java.lang.Object)>($r1);
+        return childLMs;
+    }
+
+    public void addChildLM(org.apache.fop.layoutmgr.LayoutManager)
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        org.apache.fop.layoutmgr.LayoutManager lm;
+        org.apache.fop.layoutmgr.inline.InlineLevelLayoutManager $r0;
+        org.apache.commons.logging.Log $r1;
+        java.lang.StringBuffer $r2;
+        java.lang.Class $r3;
+        java.lang.String $r4, $r5;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        lm := @parameter0: org.apache.fop.layoutmgr.LayoutManager;
+        if lm != null goto label0;
+
+        return;
+
+     label0:
+        interfaceinvoke lm.<org.apache.fop.layoutmgr.LayoutManager: void setParent(org.apache.fop.layoutmgr.LayoutManager)>(this);
+        $r0 = (org.apache.fop.layoutmgr.inline.InlineLevelLayoutManager) lm;
+        this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.fop.layoutmgr.inline.InlineLevelLayoutManager childLM> = $r0;
+        $r1 = <org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke this.<java.lang.Object: java.lang.Class getClass()>();
+        $r4 = virtualinvoke $r3.<java.lang.Class: java.lang.String getName()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": Adding child LM ");
+        $r3 = virtualinvoke lm.<java.lang.Object: java.lang.Class getClass()>();
+        $r4 = virtualinvoke $r3.<java.lang.Class: java.lang.String getName()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r5 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r5);
+        return;
+    }
+
+    public void addChildLMs(java.util.List)
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        java.util.List newLMs;
+        java.util.ListIterator iter;
+        org.apache.fop.layoutmgr.LayoutManager lm;
+        int $i0;
+        boolean $z0;
+        java.lang.Object $r0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        newLMs := @parameter0: java.util.List;
+        if newLMs == null goto label0;
+
+        $i0 = interfaceinvoke newLMs.<java.util.List: int size()>();
+        if $i0 != 0 goto label1;
+
+     label0:
+        return;
+
+     label1:
+        iter = interfaceinvoke newLMs.<java.util.List: java.util.ListIterator listIterator()>();
+
+     label2:
+        $z0 = interfaceinvoke iter.<java.util.ListIterator: boolean hasNext()>();
+        if $z0 == 0 goto label3;
+
+        $r0 = interfaceinvoke iter.<java.util.ListIterator: java.lang.Object next()>();
+        lm = (org.apache.fop.layoutmgr.LayoutManager) $r0;
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: void addChildLM(org.apache.fop.layoutmgr.LayoutManager)>(lm);
+        goto label2;
+
+     label3:
+        return;
+    }
+
+    public java.util.LinkedList getNextKnuthElements(org.apache.fop.layoutmgr.LayoutContext, int)
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        org.apache.fop.layoutmgr.LayoutContext context;
+        int alignment, $i0, $i1, $i2;
+        java.util.LinkedList $r0, contentList, returnedList;
+        java.lang.Object obj, $r2;
+        org.apache.fop.layoutmgr.KnuthSequence ks;
+        java.util.Iterator it;
+        org.apache.fop.layoutmgr.KnuthElement contentElement;
+        org.apache.fop.layoutmgr.inline.InlineLevelLayoutManager $r1;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        context := @parameter0: org.apache.fop.layoutmgr.LayoutContext;
+        alignment := @parameter1: int;
+        $r0 = new java.util.LinkedList;
+        specialinvoke $r0.<java.util.LinkedList: void <init>()>();
+        contentList = $r0;
+        $r1 = this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.fop.layoutmgr.inline.InlineLevelLayoutManager childLM>;
+        interfaceinvoke $r1.<org.apache.fop.layoutmgr.inline.InlineLevelLayoutManager: void initialize()>();
+
+     label0:
+        $r1 = this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.fop.layoutmgr.inline.InlineLevelLayoutManager childLM>;
+        $z0 = interfaceinvoke $r1.<org.apache.fop.layoutmgr.inline.InlineLevelLayoutManager: boolean isFinished()>();
+        if $z0 != 0 goto label6;
+
+        $r1 = this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.fop.layoutmgr.inline.InlineLevelLayoutManager childLM>;
+        returnedList = interfaceinvoke $r1.<org.apache.fop.layoutmgr.inline.InlineLevelLayoutManager: java.util.LinkedList getNextKnuthElements(org.apache.fop.layoutmgr.LayoutContext,int)>(context, alignment);
+        if returnedList == null goto label0;
+
+     label1:
+        $i0 = virtualinvoke returnedList.<java.util.LinkedList: int size()>();
+        if $i0 <= 0 goto label0;
+
+        obj = virtualinvoke returnedList.<java.util.LinkedList: java.lang.Object removeFirst()>();
+        $z0 = obj instanceof org.apache.fop.layoutmgr.KnuthSequence;
+        if $z0 == 0 goto label4;
+
+        ks = (org.apache.fop.layoutmgr.KnuthSequence) obj;
+        it = virtualinvoke ks.<org.apache.fop.layoutmgr.KnuthSequence: java.util.Iterator iterator()>();
+
+     label2:
+        $z0 = interfaceinvoke it.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label3;
+
+        $r2 = interfaceinvoke it.<java.util.Iterator: java.lang.Object next()>();
+        contentElement = (org.apache.fop.layoutmgr.KnuthElement) $r2;
+        $i1 = this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: int stackSize>;
+        $i2 = virtualinvoke contentElement.<org.apache.fop.layoutmgr.KnuthElement: int getW()>();
+        $i1 = $i1 + $i2;
+        this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: int stackSize> = $i1;
+        virtualinvoke contentList.<java.util.LinkedList: boolean add(java.lang.Object)>(contentElement);
+        goto label2;
+
+     label3:
+        goto label5;
+
+     label4:
+        contentElement = (org.apache.fop.layoutmgr.KnuthElement) obj;
+        $i1 = this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: int stackSize>;
+        $i2 = virtualinvoke contentElement.<org.apache.fop.layoutmgr.KnuthElement: int getW()>();
+        $i1 = $i1 + $i2;
+        this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: int stackSize> = $i1;
+        virtualinvoke contentList.<java.util.LinkedList: boolean add(java.lang.Object)>(contentElement);
+
+     label5:
+        goto label1;
+
+     label6:
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: void setFinished(boolean)>(1);
+        return contentList;
+    }
+
+    public java.util.List addALetterSpaceTo(java.util.List)
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        java.util.List oldList;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        oldList := @parameter0: java.util.List;
+        return oldList;
+    }
+
+    public void removeWordSpace(java.util.List)
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        java.util.List oldList;
+        org.apache.commons.logging.Log $r0;
+        java.lang.StringBuffer $r1;
+        java.lang.Class $r2;
+        java.lang.String $r3, $r4;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        oldList := @parameter0: java.util.List;
+        $r0 = <org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke this.<java.lang.Object: java.lang.Class getClass()>();
+        $r3 = virtualinvoke $r2.<java.lang.Class: java.lang.String getName()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" should not receive a call to removeWordSpace(list)");
+        $r4 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r4);
+        return;
+    }
+
+    public void getWordChars(java.lang.StringBuffer, org.apache.fop.layoutmgr.Position)
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        java.lang.StringBuffer sbChars;
+        org.apache.fop.layoutmgr.Position pos;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        sbChars := @parameter0: java.lang.StringBuffer;
+        pos := @parameter1: org.apache.fop.layoutmgr.Position;
+        return;
+    }
+
+    public void hyphenate(org.apache.fop.layoutmgr.Position, org.apache.fop.layoutmgr.inline.HyphContext)
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        org.apache.fop.layoutmgr.Position pos;
+        org.apache.fop.layoutmgr.inline.HyphContext hc;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        pos := @parameter0: org.apache.fop.layoutmgr.Position;
+        hc := @parameter1: org.apache.fop.layoutmgr.inline.HyphContext;
+        return;
+    }
+
+    public boolean applyChanges(java.util.List)
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        java.util.List oldList;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        oldList := @parameter0: java.util.List;
+        return 0;
+    }
+
+    public java.util.LinkedList getChangedKnuthElements(java.util.List, int)
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        java.util.List oldList;
+        int alignment;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        oldList := @parameter0: java.util.List;
+        alignment := @parameter1: int;
+        return null;
+    }
+
+    public org.apache.fop.layoutmgr.PageSequenceLayoutManager getPSLM()
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        org.apache.fop.layoutmgr.LayoutManager $r0;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager $r1;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.fop.layoutmgr.LayoutManager parentLM>;
+        $r1 = interfaceinvoke $r0.<org.apache.fop.layoutmgr.LayoutManager: org.apache.fop.layoutmgr.PageSequenceLayoutManager getPSLM()>();
+        return $r1;
+    }
+
+    public int getContentAreaIPD()
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        org.apache.fop.area.Area $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.fop.area.Area holder>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.area.Area: int getIPD()>();
+        return $i0;
+    }
+
+    public int getContentAreaBPD()
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        org.apache.fop.area.Area $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.fop.area.Area holder>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.area.Area: int getBPD()>();
+        return $i0;
+    }
+
+    public boolean getGeneratesReferenceArea()
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        return 0;
+    }
+
+    public boolean getGeneratesBlockArea()
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        boolean $z0;
+        org.apache.fop.area.Area $r0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        $z0 = virtualinvoke this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: boolean getGeneratesLineArea()>();
+        if $z0 != 0 goto label0;
+
+        $r0 = this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.fop.area.Area holder>;
+        $z0 = $r0 instanceof org.apache.fop.area.Block;
+        if $z0 == 0 goto label1;
+
+     label0:
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    public boolean getGeneratesLineArea()
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        org.apache.fop.area.Area $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.fop.area.Area holder>;
+        $z0 = $r0 instanceof org.apache.fop.area.LineArea;
+        return $z0;
+    }
+
+    public org.apache.fop.layoutmgr.Position notifyPos(org.apache.fop.layoutmgr.Position)
+    {
+        org.apache.fop.layoutmgr.inline.ContentLayoutManager this;
+        org.apache.fop.layoutmgr.Position pos;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ContentLayoutManager;
+        pos := @parameter0: org.apache.fop.layoutmgr.Position;
+        return pos;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.layoutmgr.inline.ContentLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$inline$ContentLayoutManager>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.layoutmgr.inline.ContentLayoutManager: java.lang.Class class$(java.lang.String)>("org.apache.fop.layoutmgr.inline.ContentLayoutManager");
+        <org.apache.fop.layoutmgr.inline.ContentLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$inline$ContentLayoutManager> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.layoutmgr.inline.ContentLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$inline$ContentLayoutManager>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.layoutmgr.inline.ContentLayoutManager: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

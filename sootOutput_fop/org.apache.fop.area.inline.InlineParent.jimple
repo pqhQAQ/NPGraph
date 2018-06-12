@@ -1,0 +1,107 @@
+public class org.apache.fop.area.inline.InlineParent extends org.apache.fop.area.inline.InlineArea
+{
+    protected java.util.List inlines;
+    protected transient boolean autoSize;
+
+    public void <init>()
+    {
+        org.apache.fop.area.inline.InlineParent this;
+        java.util.ArrayList $r0;
+
+        this := @this: org.apache.fop.area.inline.InlineParent;
+        specialinvoke this.<org.apache.fop.area.inline.InlineArea: void <init>()>();
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.area.inline.InlineParent: java.util.List inlines> = $r0;
+        return;
+    }
+
+    public void addChildArea(org.apache.fop.area.Area)
+    {
+        org.apache.fop.area.inline.InlineParent this;
+        org.apache.fop.area.Area childArea;
+        org.apache.fop.area.inline.InlineArea inlineChildArea;
+        java.util.List $r0;
+        int $i0, $i1;
+        boolean $z0, $z1;
+
+        this := @this: org.apache.fop.area.inline.InlineParent;
+        childArea := @parameter0: org.apache.fop.area.Area;
+        $r0 = this.<org.apache.fop.area.inline.InlineParent: java.util.List inlines>;
+        $i0 = interfaceinvoke $r0.<java.util.List: int size()>();
+        if $i0 != 0 goto label2;
+
+        $i1 = virtualinvoke this.<org.apache.fop.area.inline.InlineParent: int getIPD()>();
+        if $i1 != 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        this.<org.apache.fop.area.inline.InlineParent: boolean autoSize> = $z0;
+
+     label2:
+        $z1 = childArea instanceof org.apache.fop.area.inline.InlineArea;
+        if $z1 == 0 goto label3;
+
+        inlineChildArea = (org.apache.fop.area.inline.InlineArea) childArea;
+        $r0 = this.<org.apache.fop.area.inline.InlineParent: java.util.List inlines>;
+        interfaceinvoke $r0.<java.util.List: boolean add(java.lang.Object)>(childArea);
+        virtualinvoke inlineChildArea.<org.apache.fop.area.inline.InlineArea: void setParentArea(org.apache.fop.area.Area)>(this);
+        $z1 = this.<org.apache.fop.area.inline.InlineParent: boolean autoSize>;
+        if $z1 == 0 goto label3;
+
+        $i1 = virtualinvoke inlineChildArea.<org.apache.fop.area.inline.InlineArea: int getAllocIPD()>();
+        virtualinvoke this.<org.apache.fop.area.inline.InlineParent: void increaseIPD(int)>($i1);
+
+     label3:
+        return;
+    }
+
+    public java.util.List getChildAreas()
+    {
+        org.apache.fop.area.inline.InlineParent this;
+        java.util.List $r0;
+
+        this := @this: org.apache.fop.area.inline.InlineParent;
+        $r0 = this.<org.apache.fop.area.inline.InlineParent: java.util.List inlines>;
+        return $r0;
+    }
+
+    public boolean applyVariationFactor(double, int, int)
+    {
+        org.apache.fop.area.inline.InlineParent this;
+        double variationFactor;
+        int lineStretch, lineShrink, i, len;
+        boolean bUnresolvedAreasPresent, $z0;
+        java.util.List $r0, $r1;
+        java.lang.Object $r2;
+        org.apache.fop.area.inline.InlineArea $r3;
+
+        this := @this: org.apache.fop.area.inline.InlineParent;
+        variationFactor := @parameter0: double;
+        lineStretch := @parameter1: int;
+        lineShrink := @parameter2: int;
+        bUnresolvedAreasPresent = 0;
+        i = 0;
+        $r0 = this.<org.apache.fop.area.inline.InlineParent: java.util.List inlines>;
+        len = interfaceinvoke $r0.<java.util.List: int size()>();
+
+     label0:
+        if i >= len goto label1;
+
+        $r1 = this.<org.apache.fop.area.inline.InlineParent: java.util.List inlines>;
+        $r2 = interfaceinvoke $r1.<java.util.List: java.lang.Object get(int)>(i);
+        $r3 = (org.apache.fop.area.inline.InlineArea) $r2;
+        $z0 = virtualinvoke $r3.<org.apache.fop.area.inline.InlineArea: boolean applyVariationFactor(double,int,int)>(variationFactor, lineStretch, lineShrink);
+        bUnresolvedAreasPresent = bUnresolvedAreasPresent | $z0;
+        i = i + 1;
+        goto label0;
+
+     label1:
+        return bUnresolvedAreasPresent;
+    }
+}

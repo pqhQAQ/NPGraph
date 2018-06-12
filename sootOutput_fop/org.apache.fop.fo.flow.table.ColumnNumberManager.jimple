@@ -1,0 +1,144 @@
+public class org.apache.fop.fo.flow.table.ColumnNumberManager extends java.lang.Object
+{
+    private int columnNumber;
+    private java.util.BitSet usedColumnIndices;
+
+    public void <init>()
+    {
+        org.apache.fop.fo.flow.table.ColumnNumberManager this;
+        java.util.BitSet $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.ColumnNumberManager;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.fo.flow.table.ColumnNumberManager: int columnNumber> = 1;
+        $r0 = new java.util.BitSet;
+        specialinvoke $r0.<java.util.BitSet: void <init>()>();
+        this.<org.apache.fop.fo.flow.table.ColumnNumberManager: java.util.BitSet usedColumnIndices> = $r0;
+        return;
+    }
+
+    int getCurrentColumnNumber()
+    {
+        org.apache.fop.fo.flow.table.ColumnNumberManager this;
+        int $i0;
+
+        this := @this: org.apache.fop.fo.flow.table.ColumnNumberManager;
+        $i0 = this.<org.apache.fop.fo.flow.table.ColumnNumberManager: int columnNumber>;
+        return $i0;
+    }
+
+    void signalUsedColumnNumbers(int, int)
+    {
+        org.apache.fop.fo.flow.table.ColumnNumberManager this;
+        int start, end, i, $i0;
+        java.util.BitSet $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.flow.table.ColumnNumberManager;
+        start := @parameter0: int;
+        end := @parameter1: int;
+        i = start - 1;
+
+     label0:
+        if i >= end goto label1;
+
+        $r0 = this.<org.apache.fop.fo.flow.table.ColumnNumberManager: java.util.BitSet usedColumnIndices>;
+        virtualinvoke $r0.<java.util.BitSet: void set(int)>(i);
+        i = i + 1;
+        goto label0;
+
+     label1:
+        $i0 = end + 1;
+        this.<org.apache.fop.fo.flow.table.ColumnNumberManager: int columnNumber> = $i0;
+
+     label2:
+        $r0 = this.<org.apache.fop.fo.flow.table.ColumnNumberManager: java.util.BitSet usedColumnIndices>;
+        $i0 = this.<org.apache.fop.fo.flow.table.ColumnNumberManager: int columnNumber>;
+        $i0 = $i0 - 1;
+        $z0 = virtualinvoke $r0.<java.util.BitSet: boolean get(int)>($i0);
+        if $z0 == 0 goto label3;
+
+        $i0 = this.<org.apache.fop.fo.flow.table.ColumnNumberManager: int columnNumber>;
+        $i0 = $i0 + 1;
+        this.<org.apache.fop.fo.flow.table.ColumnNumberManager: int columnNumber> = $i0;
+        goto label2;
+
+     label3:
+        return;
+    }
+
+    void prepareForNextRow(java.util.List)
+    {
+        org.apache.fop.fo.flow.table.ColumnNumberManager this;
+        java.util.List pendingSpans;
+        int i, $i0, $i1;
+        org.apache.fop.fo.flow.table.PendingSpan pSpan;
+        java.util.BitSet $r0;
+        java.lang.Object $r1;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.flow.table.ColumnNumberManager;
+        pendingSpans := @parameter0: java.util.List;
+        $r0 = this.<org.apache.fop.fo.flow.table.ColumnNumberManager: java.util.BitSet usedColumnIndices>;
+        virtualinvoke $r0.<java.util.BitSet: void clear()>();
+        i = 0;
+
+     label0:
+        $i0 = interfaceinvoke pendingSpans.<java.util.List: int size()>();
+        if i >= $i0 goto label3;
+
+        $r1 = interfaceinvoke pendingSpans.<java.util.List: java.lang.Object get(int)>(i);
+        pSpan = (org.apache.fop.fo.flow.table.PendingSpan) $r1;
+        if pSpan == null goto label2;
+
+        $i0 = pSpan.<org.apache.fop.fo.flow.table.PendingSpan: int rowsLeft>;
+        $i0 = $i0 - 1;
+        pSpan.<org.apache.fop.fo.flow.table.PendingSpan: int rowsLeft> = $i0;
+        $i1 = pSpan.<org.apache.fop.fo.flow.table.PendingSpan: int rowsLeft>;
+        if $i1 != 0 goto label1;
+
+        interfaceinvoke pendingSpans.<java.util.List: java.lang.Object set(int,java.lang.Object)>(i, null);
+        goto label2;
+
+     label1:
+        $r0 = this.<org.apache.fop.fo.flow.table.ColumnNumberManager: java.util.BitSet usedColumnIndices>;
+        virtualinvoke $r0.<java.util.BitSet: void set(int)>(i);
+
+     label2:
+        i = i + 1;
+        goto label0;
+
+     label3:
+        this.<org.apache.fop.fo.flow.table.ColumnNumberManager: int columnNumber> = 1;
+
+     label4:
+        $r0 = this.<org.apache.fop.fo.flow.table.ColumnNumberManager: java.util.BitSet usedColumnIndices>;
+        $i0 = this.<org.apache.fop.fo.flow.table.ColumnNumberManager: int columnNumber>;
+        $i0 = $i0 - 1;
+        $z0 = virtualinvoke $r0.<java.util.BitSet: boolean get(int)>($i0);
+        if $z0 == 0 goto label5;
+
+        $i0 = this.<org.apache.fop.fo.flow.table.ColumnNumberManager: int columnNumber>;
+        $i0 = $i0 + 1;
+        this.<org.apache.fop.fo.flow.table.ColumnNumberManager: int columnNumber> = $i0;
+        goto label4;
+
+     label5:
+        return;
+    }
+
+    public boolean isColumnNumberUsed(int)
+    {
+        org.apache.fop.fo.flow.table.ColumnNumberManager this;
+        int colNr, $i0;
+        java.util.BitSet $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.flow.table.ColumnNumberManager;
+        colNr := @parameter0: int;
+        $r0 = this.<org.apache.fop.fo.flow.table.ColumnNumberManager: java.util.BitSet usedColumnIndices>;
+        $i0 = colNr - 1;
+        $z0 = virtualinvoke $r0.<java.util.BitSet: boolean get(int)>($i0);
+        return $z0;
+    }
+}

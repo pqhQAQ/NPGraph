@@ -1,0 +1,214 @@
+public class org.apache.fop.fo.pagination.RepeatablePageMasterReference extends org.apache.fop.fo.FObj implements org.apache.fop.fo.pagination.SubSequenceSpecifier
+{
+    private java.lang.String masterReference;
+    private org.apache.fop.fo.properties.Property maximumRepeats;
+    private static final int INFINITE;
+    private int numberConsumed;
+
+    public void <init>(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.pagination.RepeatablePageMasterReference this;
+        org.apache.fop.fo.FONode parent;
+
+        this := @this: org.apache.fop.fo.pagination.RepeatablePageMasterReference;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        specialinvoke this.<org.apache.fop.fo.FObj: void <init>(org.apache.fop.fo.FONode)>(parent);
+        this.<org.apache.fop.fo.pagination.RepeatablePageMasterReference: int numberConsumed> = 0;
+        return;
+    }
+
+    public void bind(org.apache.fop.fo.PropertyList) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.pagination.RepeatablePageMasterReference this;
+        org.apache.fop.fo.PropertyList pList;
+        org.apache.fop.fo.properties.Property $r0;
+        java.lang.String $r1, $r2;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.pagination.RepeatablePageMasterReference;
+        pList := @parameter0: org.apache.fop.fo.PropertyList;
+        $r0 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(141);
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.properties.Property: java.lang.String getString()>();
+        this.<org.apache.fop.fo.pagination.RepeatablePageMasterReference: java.lang.String masterReference> = $r1;
+        $r0 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(143);
+        this.<org.apache.fop.fo.pagination.RepeatablePageMasterReference: org.apache.fop.fo.properties.Property maximumRepeats> = $r0;
+        $r2 = this.<org.apache.fop.fo.pagination.RepeatablePageMasterReference: java.lang.String masterReference>;
+        if $r2 == null goto label0;
+
+        $r2 = this.<org.apache.fop.fo.pagination.RepeatablePageMasterReference: java.lang.String masterReference>;
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>("");
+        if $z0 == 0 goto label1;
+
+     label0:
+        virtualinvoke this.<org.apache.fop.fo.pagination.RepeatablePageMasterReference: void missingPropertyError(java.lang.String)>("master-reference");
+
+     label1:
+        return;
+    }
+
+    protected void startOfNode() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.pagination.RepeatablePageMasterReference this;
+        org.apache.fop.fo.pagination.PageSequenceMaster pageSequenceMaster;
+        org.apache.fop.fo.FONode $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.fo.pagination.RepeatablePageMasterReference;
+        $r0 = this.<org.apache.fop.fo.pagination.RepeatablePageMasterReference: org.apache.fop.fo.FONode parent>;
+        pageSequenceMaster = (org.apache.fop.fo.pagination.PageSequenceMaster) $r0;
+        $r1 = this.<org.apache.fop.fo.pagination.RepeatablePageMasterReference: java.lang.String masterReference>;
+        if $r1 != null goto label0;
+
+        virtualinvoke this.<org.apache.fop.fo.pagination.RepeatablePageMasterReference: void missingPropertyError(java.lang.String)>("master-reference");
+        goto label1;
+
+     label0:
+        virtualinvoke pageSequenceMaster.<org.apache.fop.fo.pagination.PageSequenceMaster: void addSubsequenceSpecifier(org.apache.fop.fo.pagination.SubSequenceSpecifier)>(this);
+
+     label1:
+        return;
+    }
+
+    protected void validateChildNode(org.xml.sax.Locator, java.lang.String, java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.pagination.RepeatablePageMasterReference this;
+        org.xml.sax.Locator loc;
+        java.lang.String nsURI, localName;
+
+        this := @this: org.apache.fop.fo.pagination.RepeatablePageMasterReference;
+        loc := @parameter0: org.xml.sax.Locator;
+        nsURI := @parameter1: java.lang.String;
+        localName := @parameter2: java.lang.String;
+        virtualinvoke this.<org.apache.fop.fo.pagination.RepeatablePageMasterReference: void invalidChildError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, nsURI, localName);
+        return;
+    }
+
+    public java.lang.String getNextPageMasterName(boolean, boolean, boolean, boolean, boolean)
+    {
+        org.apache.fop.fo.pagination.RepeatablePageMasterReference this;
+        boolean isOddPage, isFirstPage, isLastPage, isOnlyPage, isEmptyPage;
+        int $i0, $i1;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.fo.pagination.RepeatablePageMasterReference;
+        isOddPage := @parameter0: boolean;
+        isFirstPage := @parameter1: boolean;
+        isLastPage := @parameter2: boolean;
+        isOnlyPage := @parameter3: boolean;
+        isEmptyPage := @parameter4: boolean;
+        $i0 = virtualinvoke this.<org.apache.fop.fo.pagination.RepeatablePageMasterReference: int getMaximumRepeats()>();
+        if $i0 == -1 goto label1;
+
+        $i0 = this.<org.apache.fop.fo.pagination.RepeatablePageMasterReference: int numberConsumed>;
+        $i1 = virtualinvoke this.<org.apache.fop.fo.pagination.RepeatablePageMasterReference: int getMaximumRepeats()>();
+        if $i0 >= $i1 goto label0;
+
+        $i1 = this.<org.apache.fop.fo.pagination.RepeatablePageMasterReference: int numberConsumed>;
+        $i1 = $i1 + 1;
+        this.<org.apache.fop.fo.pagination.RepeatablePageMasterReference: int numberConsumed> = $i1;
+        goto label1;
+
+     label0:
+        return null;
+
+     label1:
+        $r1 = this.<org.apache.fop.fo.pagination.RepeatablePageMasterReference: java.lang.String masterReference>;
+        return $r1;
+    }
+
+    public int getMaximumRepeats()
+    {
+        org.apache.fop.fo.pagination.RepeatablePageMasterReference this;
+        int mr, $i0;
+        org.apache.fop.fo.properties.Property $r0, $r4;
+        org.apache.fop.datatypes.Numeric $r1;
+        org.apache.commons.logging.Log $r2;
+        java.lang.StringBuffer $r3;
+        java.lang.String $r5;
+
+        this := @this: org.apache.fop.fo.pagination.RepeatablePageMasterReference;
+        $r0 = this.<org.apache.fop.fo.pagination.RepeatablePageMasterReference: org.apache.fop.fo.properties.Property maximumRepeats>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fo.properties.Property: int getEnum()>();
+        if $i0 != 89 goto label0;
+
+        return -1;
+
+     label0:
+        $r0 = this.<org.apache.fop.fo.pagination.RepeatablePageMasterReference: org.apache.fop.fo.properties.Property maximumRepeats>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        mr = interfaceinvoke $r1.<org.apache.fop.datatypes.Numeric: int getValue()>();
+        if mr >= 0 goto label1;
+
+        $r2 = <org.apache.fop.fo.pagination.RepeatablePageMasterReference: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("negative maximum-repeats: ");
+        $r4 = this.<org.apache.fop.fo.pagination.RepeatablePageMasterReference: org.apache.fop.fo.properties.Property maximumRepeats>;
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r4);
+        $r5 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r5);
+        mr = 0;
+
+     label1:
+        return mr;
+    }
+
+    public void reset()
+    {
+        org.apache.fop.fo.pagination.RepeatablePageMasterReference this;
+
+        this := @this: org.apache.fop.fo.pagination.RepeatablePageMasterReference;
+        this.<org.apache.fop.fo.pagination.RepeatablePageMasterReference: int numberConsumed> = 0;
+        return;
+    }
+
+    public boolean goToPrevious()
+    {
+        org.apache.fop.fo.pagination.RepeatablePageMasterReference this;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.fo.pagination.RepeatablePageMasterReference;
+        $i0 = this.<org.apache.fop.fo.pagination.RepeatablePageMasterReference: int numberConsumed>;
+        if $i0 != 0 goto label0;
+
+        return 0;
+
+     label0:
+        $i1 = this.<org.apache.fop.fo.pagination.RepeatablePageMasterReference: int numberConsumed>;
+        $i1 = $i1 - 1;
+        this.<org.apache.fop.fo.pagination.RepeatablePageMasterReference: int numberConsumed> = $i1;
+        return 1;
+    }
+
+    public boolean hasPagePositionLast()
+    {
+        org.apache.fop.fo.pagination.RepeatablePageMasterReference this;
+
+        this := @this: org.apache.fop.fo.pagination.RepeatablePageMasterReference;
+        return 0;
+    }
+
+    public boolean hasPagePositionOnly()
+    {
+        org.apache.fop.fo.pagination.RepeatablePageMasterReference this;
+
+        this := @this: org.apache.fop.fo.pagination.RepeatablePageMasterReference;
+        return 0;
+    }
+
+    public java.lang.String getLocalName()
+    {
+        org.apache.fop.fo.pagination.RepeatablePageMasterReference this;
+
+        this := @this: org.apache.fop.fo.pagination.RepeatablePageMasterReference;
+        return "repeatable-page-master-reference";
+    }
+
+    public int getNameId()
+    {
+        org.apache.fop.fo.pagination.RepeatablePageMasterReference this;
+
+        this := @this: org.apache.fop.fo.pagination.RepeatablePageMasterReference;
+        return 40;
+    }
+}

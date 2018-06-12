@@ -1,0 +1,654 @@
+public class org.apache.fop.area.AreaTreeHandler extends org.apache.fop.fo.FOEventHandler
+{
+    private static org.apache.commons.logging.Log log;
+    private org.apache.fop.area.AreaTreeHandler$Statistics statistics;
+    private org.apache.fop.layoutmgr.LayoutManagerMaker lmMaker;
+    protected org.apache.fop.area.AreaTreeModel model;
+    private org.apache.fop.area.IDTracker idTracker;
+    private org.apache.fop.fo.pagination.Root rootFObj;
+    private org.apache.fop.apps.FormattingResults results;
+    private org.apache.fop.layoutmgr.TopLevelLayoutManager prevPageSeqLM;
+    private int idGen;
+    static java.lang.Class class$org$apache$fop$area$AreaTreeHandler;
+
+    public void <init>(org.apache.fop.apps.FOUserAgent, java.lang.String, java.io.OutputStream) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.area.AreaTreeHandler this;
+        org.apache.fop.apps.FOUserAgent userAgent;
+        java.lang.String outputFormat;
+        java.io.OutputStream stream;
+        org.apache.fop.apps.FormattingResults $r0;
+        org.apache.fop.apps.FopFactory $r1;
+        org.apache.fop.layoutmgr.LayoutManagerMaker $r2, $r3;
+        org.apache.fop.layoutmgr.LayoutManagerMapping $r4;
+        org.apache.fop.area.IDTracker $r5;
+        org.apache.commons.logging.Log $r6;
+        boolean $z0;
+        org.apache.fop.area.AreaTreeHandler$Statistics $r7;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler;
+        userAgent := @parameter0: org.apache.fop.apps.FOUserAgent;
+        outputFormat := @parameter1: java.lang.String;
+        stream := @parameter2: java.io.OutputStream;
+        specialinvoke this.<org.apache.fop.fo.FOEventHandler: void <init>(org.apache.fop.apps.FOUserAgent)>(userAgent);
+        this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.AreaTreeHandler$Statistics statistics> = null;
+        $r0 = new org.apache.fop.apps.FormattingResults;
+        specialinvoke $r0.<org.apache.fop.apps.FormattingResults: void <init>()>();
+        this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.apps.FormattingResults results> = $r0;
+        this.<org.apache.fop.area.AreaTreeHandler: int idGen> = 0;
+        virtualinvoke this.<org.apache.fop.area.AreaTreeHandler: void setupModel(org.apache.fop.apps.FOUserAgent,java.lang.String,java.io.OutputStream)>(userAgent, outputFormat, stream);
+        $r1 = virtualinvoke userAgent.<org.apache.fop.apps.FOUserAgent: org.apache.fop.apps.FopFactory getFactory()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.apps.FopFactory: org.apache.fop.layoutmgr.LayoutManagerMaker getLayoutManagerMakerOverride()>();
+        this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.layoutmgr.LayoutManagerMaker lmMaker> = $r2;
+        $r3 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.layoutmgr.LayoutManagerMaker lmMaker>;
+        if $r3 != null goto label0;
+
+        $r4 = new org.apache.fop.layoutmgr.LayoutManagerMapping;
+        specialinvoke $r4.<org.apache.fop.layoutmgr.LayoutManagerMapping: void <init>()>();
+        this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.layoutmgr.LayoutManagerMaker lmMaker> = $r4;
+
+     label0:
+        $r5 = new org.apache.fop.area.IDTracker;
+        specialinvoke $r5.<org.apache.fop.area.IDTracker: void <init>()>();
+        this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.IDTracker idTracker> = $r5;
+        $r6 = <org.apache.fop.area.AreaTreeHandler: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r6.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label1;
+
+        $r7 = new org.apache.fop.area.AreaTreeHandler$Statistics;
+        specialinvoke $r7.<org.apache.fop.area.AreaTreeHandler$Statistics: void <init>(org.apache.fop.area.AreaTreeHandler)>(this);
+        this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.AreaTreeHandler$Statistics statistics> = $r7;
+
+     label1:
+        return;
+    }
+
+    protected void setupModel(org.apache.fop.apps.FOUserAgent, java.lang.String, java.io.OutputStream) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.area.AreaTreeHandler this;
+        org.apache.fop.apps.FOUserAgent userAgent;
+        java.lang.String outputFormat;
+        java.io.OutputStream stream;
+        org.apache.fop.area.RenderPagesModel $r0;
+        org.apache.fop.fonts.FontInfo $r1;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler;
+        userAgent := @parameter0: org.apache.fop.apps.FOUserAgent;
+        outputFormat := @parameter1: java.lang.String;
+        stream := @parameter2: java.io.OutputStream;
+        $r0 = new org.apache.fop.area.RenderPagesModel;
+        $r1 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.fonts.FontInfo fontInfo>;
+        specialinvoke $r0.<org.apache.fop.area.RenderPagesModel: void <init>(org.apache.fop.apps.FOUserAgent,java.lang.String,org.apache.fop.fonts.FontInfo,java.io.OutputStream)>(userAgent, outputFormat, $r1, stream);
+        this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.AreaTreeModel model> = $r0;
+        return;
+    }
+
+    public org.apache.fop.area.AreaTreeModel getAreaTreeModel()
+    {
+        org.apache.fop.area.AreaTreeHandler this;
+        org.apache.fop.area.AreaTreeModel $r0;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler;
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.AreaTreeModel model>;
+        return $r0;
+    }
+
+    public org.apache.fop.layoutmgr.LayoutManagerMaker getLayoutManagerMaker()
+    {
+        org.apache.fop.area.AreaTreeHandler this;
+        org.apache.fop.layoutmgr.LayoutManagerMaker $r0;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler;
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.layoutmgr.LayoutManagerMaker lmMaker>;
+        return $r0;
+    }
+
+    public org.apache.fop.area.IDTracker getIDTracker()
+    {
+        org.apache.fop.area.AreaTreeHandler this;
+        org.apache.fop.area.IDTracker $r0;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler;
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.IDTracker idTracker>;
+        return $r0;
+    }
+
+    public org.apache.fop.apps.FormattingResults getResults()
+    {
+        org.apache.fop.area.AreaTreeHandler this;
+        org.apache.fop.apps.FormattingResults $r0;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler;
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.apps.FormattingResults results>;
+        return $r0;
+    }
+
+    public void startDocument() throws org.xml.sax.SAXException
+    {
+        org.apache.fop.area.AreaTreeHandler this;
+        org.apache.fop.area.AreaTreeHandler$Statistics $r0;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler;
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.AreaTreeHandler$Statistics statistics>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.AreaTreeHandler$Statistics statistics>;
+        virtualinvoke $r0.<org.apache.fop.area.AreaTreeHandler$Statistics: void start()>();
+
+     label0:
+        return;
+    }
+
+    private void finishPrevPageSequence(org.apache.fop.datatypes.Numeric)
+    {
+        org.apache.fop.area.AreaTreeHandler this;
+        org.apache.fop.datatypes.Numeric initialPageNumber;
+        org.apache.fop.layoutmgr.TopLevelLayoutManager $r0;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler;
+        initialPageNumber := @parameter0: org.apache.fop.datatypes.Numeric;
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.layoutmgr.TopLevelLayoutManager prevPageSeqLM>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.layoutmgr.TopLevelLayoutManager prevPageSeqLM>;
+        interfaceinvoke $r0.<org.apache.fop.layoutmgr.TopLevelLayoutManager: void doForcePageCount(org.apache.fop.datatypes.Numeric)>(initialPageNumber);
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.layoutmgr.TopLevelLayoutManager prevPageSeqLM>;
+        interfaceinvoke $r0.<org.apache.fop.layoutmgr.TopLevelLayoutManager: void finishPageSequence()>();
+        this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.layoutmgr.TopLevelLayoutManager prevPageSeqLM> = null;
+
+     label0:
+        return;
+    }
+
+    public void startPageSequence(org.apache.fop.fo.pagination.PageSequence)
+    {
+        org.apache.fop.area.AreaTreeHandler this;
+        org.apache.fop.fo.pagination.PageSequence pageSequence;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler;
+        pageSequence := @parameter0: org.apache.fop.fo.pagination.PageSequence;
+        specialinvoke this.<org.apache.fop.area.AreaTreeHandler: void startAbstractPageSequence(org.apache.fop.fo.pagination.AbstractPageSequence)>(pageSequence);
+        return;
+    }
+
+    private void startAbstractPageSequence(org.apache.fop.fo.pagination.AbstractPageSequence)
+    {
+        org.apache.fop.area.AreaTreeHandler this;
+        org.apache.fop.fo.pagination.AbstractPageSequence pageSequence;
+        org.apache.fop.fo.pagination.Root $r0, $r3;
+        org.apache.fop.datatypes.Numeric $r1;
+        java.util.List $r2;
+        org.apache.fop.fo.pagination.Declarations $r4, $r5;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler;
+        pageSequence := @parameter0: org.apache.fop.fo.pagination.AbstractPageSequence;
+        $r0 = virtualinvoke pageSequence.<org.apache.fop.fo.pagination.AbstractPageSequence: org.apache.fop.fo.pagination.Root getRoot()>();
+        this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.fo.pagination.Root rootFObj> = $r0;
+        $r1 = virtualinvoke pageSequence.<org.apache.fop.fo.pagination.AbstractPageSequence: org.apache.fop.datatypes.Numeric getInitialPageNumber()>();
+        specialinvoke this.<org.apache.fop.area.AreaTreeHandler: void finishPrevPageSequence(org.apache.fop.datatypes.Numeric)>($r1);
+        virtualinvoke pageSequence.<org.apache.fop.fo.pagination.AbstractPageSequence: void initPageNumber()>();
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.fo.pagination.Root rootFObj>;
+        $r2 = virtualinvoke $r0.<org.apache.fop.fo.pagination.Root: java.util.List getExtensionAttachments()>();
+        specialinvoke this.<org.apache.fop.area.AreaTreeHandler: void wrapAndAddExtensionAttachments(java.util.List)>($r2);
+        $r3 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.fo.pagination.Root rootFObj>;
+        $r4 = virtualinvoke $r3.<org.apache.fop.fo.pagination.Root: org.apache.fop.fo.pagination.Declarations getDeclarations()>();
+        if $r4 == null goto label0;
+
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.fo.pagination.Root rootFObj>;
+        $r5 = virtualinvoke $r0.<org.apache.fop.fo.pagination.Root: org.apache.fop.fo.pagination.Declarations getDeclarations()>();
+        $r2 = virtualinvoke $r5.<org.apache.fop.fo.pagination.Declarations: java.util.List getExtensionAttachments()>();
+        specialinvoke this.<org.apache.fop.area.AreaTreeHandler: void wrapAndAddExtensionAttachments(java.util.List)>($r2);
+
+     label0:
+        return;
+    }
+
+    private void wrapAndAddExtensionAttachments(java.util.List)
+    {
+        org.apache.fop.area.AreaTreeHandler this;
+        java.util.List list;
+        java.util.Iterator i;
+        org.apache.fop.fo.extensions.ExtensionAttachment attachment;
+        org.apache.fop.area.OffDocumentExtensionAttachment $r0;
+        boolean $z0;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler;
+        list := @parameter0: java.util.List;
+        i = interfaceinvoke list.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke i.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r1 = interfaceinvoke i.<java.util.Iterator: java.lang.Object next()>();
+        attachment = (org.apache.fop.fo.extensions.ExtensionAttachment) $r1;
+        $r0 = new org.apache.fop.area.OffDocumentExtensionAttachment;
+        specialinvoke $r0.<org.apache.fop.area.OffDocumentExtensionAttachment: void <init>(org.apache.fop.fo.extensions.ExtensionAttachment)>(attachment);
+        specialinvoke this.<org.apache.fop.area.AreaTreeHandler: void addOffDocumentItem(org.apache.fop.area.OffDocumentItem)>($r0);
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    public void endPageSequence(org.apache.fop.fo.pagination.PageSequence)
+    {
+        org.apache.fop.area.AreaTreeHandler this;
+        org.apache.fop.fo.pagination.PageSequence pageSequence;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager pageSLM;
+        org.apache.fop.area.AreaTreeHandler$Statistics $r0;
+        org.apache.fop.fo.pagination.Flow $r1;
+        org.apache.fop.layoutmgr.LayoutManagerMaker $r2;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler;
+        pageSequence := @parameter0: org.apache.fop.fo.pagination.PageSequence;
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.AreaTreeHandler$Statistics statistics>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.AreaTreeHandler$Statistics statistics>;
+        virtualinvoke $r0.<org.apache.fop.area.AreaTreeHandler$Statistics: void end()>();
+
+     label0:
+        $r1 = virtualinvoke pageSequence.<org.apache.fop.fo.pagination.PageSequence: org.apache.fop.fo.pagination.Flow getMainFlow()>();
+        if $r1 == null goto label1;
+
+        $r2 = virtualinvoke this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.layoutmgr.LayoutManagerMaker getLayoutManagerMaker()>();
+        pageSLM = interfaceinvoke $r2.<org.apache.fop.layoutmgr.LayoutManagerMaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager makePageSequenceLayoutManager(org.apache.fop.area.AreaTreeHandler,org.apache.fop.fo.pagination.PageSequence)>(this, pageSequence);
+        virtualinvoke pageSLM.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: void activateLayout()>();
+        this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.layoutmgr.TopLevelLayoutManager prevPageSeqLM> = pageSLM;
+
+     label1:
+        return;
+    }
+
+    public void startExternalDocument(org.apache.fop.fo.extensions.ExternalDocument)
+    {
+        org.apache.fop.area.AreaTreeHandler this;
+        org.apache.fop.fo.extensions.ExternalDocument document;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler;
+        document := @parameter0: org.apache.fop.fo.extensions.ExternalDocument;
+        specialinvoke this.<org.apache.fop.area.AreaTreeHandler: void startAbstractPageSequence(org.apache.fop.fo.pagination.AbstractPageSequence)>(document);
+        return;
+    }
+
+    public void endExternalDocument(org.apache.fop.fo.extensions.ExternalDocument)
+    {
+        org.apache.fop.area.AreaTreeHandler this;
+        org.apache.fop.fo.extensions.ExternalDocument document;
+        org.apache.fop.layoutmgr.ExternalDocumentLayoutManager edLM;
+        org.apache.fop.area.AreaTreeHandler$Statistics $r0;
+        org.apache.fop.layoutmgr.LayoutManagerMaker $r1;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler;
+        document := @parameter0: org.apache.fop.fo.extensions.ExternalDocument;
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.AreaTreeHandler$Statistics statistics>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.AreaTreeHandler$Statistics statistics>;
+        virtualinvoke $r0.<org.apache.fop.area.AreaTreeHandler$Statistics: void end()>();
+
+     label0:
+        $r1 = virtualinvoke this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.layoutmgr.LayoutManagerMaker getLayoutManagerMaker()>();
+        edLM = interfaceinvoke $r1.<org.apache.fop.layoutmgr.LayoutManagerMaker: org.apache.fop.layoutmgr.ExternalDocumentLayoutManager makeExternalDocumentLayoutManager(org.apache.fop.area.AreaTreeHandler,org.apache.fop.fo.extensions.ExternalDocument)>(this, document);
+        virtualinvoke edLM.<org.apache.fop.layoutmgr.ExternalDocumentLayoutManager: void activateLayout()>();
+        this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.layoutmgr.TopLevelLayoutManager prevPageSeqLM> = edLM;
+        return;
+    }
+
+    public void notifyPageSequenceFinished(org.apache.fop.fo.pagination.AbstractPageSequence, int)
+    {
+        org.apache.fop.area.AreaTreeHandler this;
+        org.apache.fop.fo.pagination.AbstractPageSequence pageSequence;
+        int pageCount;
+        org.apache.fop.apps.FormattingResults $r0;
+        org.apache.commons.logging.Log $r1;
+        boolean $z0;
+        java.lang.StringBuffer $r2;
+        java.lang.String $r3;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler;
+        pageSequence := @parameter0: org.apache.fop.fo.pagination.AbstractPageSequence;
+        pageCount := @parameter1: int;
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.apps.FormattingResults results>;
+        virtualinvoke $r0.<org.apache.fop.apps.FormattingResults: void haveFormattedPageSequence(org.apache.fop.fo.pagination.AbstractPageSequence,int)>(pageSequence, pageCount);
+        $r1 = <org.apache.fop.area.AreaTreeHandler: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r1 = <org.apache.fop.area.AreaTreeHandler: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Last page-sequence produced ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(pageCount);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" pages.");
+        $r3 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r3);
+
+     label0:
+        return;
+    }
+
+    public void endDocument() throws org.xml.sax.SAXException
+    {
+        org.apache.fop.area.AreaTreeHandler this;
+        java.util.List destinationList;
+        org.apache.fop.fo.extensions.destination.Destination destination;
+        org.apache.fop.area.DestinationData destinationData, $r2;
+        org.apache.fop.fo.pagination.bookmarks.BookmarkTree bookmarkTree;
+        org.apache.fop.area.BookmarkData data, $r3;
+        org.apache.fop.fo.pagination.Root $r0;
+        int $i0;
+        java.lang.Object $r1;
+        boolean $z0;
+        org.apache.fop.area.AreaTreeModel $r4;
+        org.apache.fop.area.AreaTreeHandler$Statistics $r5;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler;
+        specialinvoke this.<org.apache.fop.area.AreaTreeHandler: void finishPrevPageSequence(org.apache.fop.datatypes.Numeric)>(null);
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.fo.pagination.Root rootFObj>;
+        if $r0 == null goto label2;
+
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.fo.pagination.Root rootFObj>;
+        destinationList = virtualinvoke $r0.<org.apache.fop.fo.pagination.Root: java.util.List getDestinationList()>();
+        if destinationList == null goto label1;
+
+     label0:
+        $i0 = interfaceinvoke destinationList.<java.util.List: int size()>();
+        if $i0 <= 0 goto label1;
+
+        $r1 = interfaceinvoke destinationList.<java.util.List: java.lang.Object remove(int)>(0);
+        destination = (org.apache.fop.fo.extensions.destination.Destination) $r1;
+        $r2 = new org.apache.fop.area.DestinationData;
+        specialinvoke $r2.<org.apache.fop.area.DestinationData: void <init>(org.apache.fop.fo.extensions.destination.Destination)>(destination);
+        destinationData = $r2;
+        specialinvoke this.<org.apache.fop.area.AreaTreeHandler: void addOffDocumentItem(org.apache.fop.area.OffDocumentItem)>(destinationData);
+        goto label0;
+
+     label1:
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.fo.pagination.Root rootFObj>;
+        bookmarkTree = virtualinvoke $r0.<org.apache.fop.fo.pagination.Root: org.apache.fop.fo.pagination.bookmarks.BookmarkTree getBookmarkTree()>();
+        if bookmarkTree == null goto label2;
+
+        $r3 = new org.apache.fop.area.BookmarkData;
+        specialinvoke $r3.<org.apache.fop.area.BookmarkData: void <init>(org.apache.fop.fo.pagination.bookmarks.BookmarkTree)>(bookmarkTree);
+        data = $r3;
+        specialinvoke this.<org.apache.fop.area.AreaTreeHandler: void addOffDocumentItem(org.apache.fop.area.OffDocumentItem)>(data);
+        $z0 = virtualinvoke data.<org.apache.fop.area.BookmarkData: boolean isResolved()>();
+        if $z0 != 0 goto label2;
+
+        $r4 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.AreaTreeModel model>;
+        virtualinvoke $r4.<org.apache.fop.area.AreaTreeModel: void handleOffDocumentItem(org.apache.fop.area.OffDocumentItem)>(data);
+
+     label2:
+        $r4 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.AreaTreeModel model>;
+        virtualinvoke $r4.<org.apache.fop.area.AreaTreeModel: void endDocument()>();
+        $r5 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.AreaTreeHandler$Statistics statistics>;
+        if $r5 == null goto label3;
+
+        $r5 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.AreaTreeHandler$Statistics statistics>;
+        virtualinvoke $r5.<org.apache.fop.area.AreaTreeHandler$Statistics: void logResults()>();
+
+     label3:
+        return;
+    }
+
+    private void addOffDocumentItem(org.apache.fop.area.OffDocumentItem)
+    {
+        org.apache.fop.area.AreaTreeHandler this;
+        org.apache.fop.area.OffDocumentItem odi;
+        org.apache.fop.area.Resolvable res;
+        java.lang.String[] ids;
+        int count, $i0;
+        java.util.List pageVPList;
+        boolean $z0;
+        org.apache.fop.area.IDTracker $r0;
+        java.lang.String $r1, $r4;
+        org.apache.commons.logging.Log $r2;
+        java.lang.StringBuffer $r3;
+        org.apache.fop.area.AreaTreeModel $r5;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler;
+        odi := @parameter0: org.apache.fop.area.OffDocumentItem;
+        $z0 = odi instanceof org.apache.fop.area.Resolvable;
+        if $z0 == 0 goto label5;
+
+        res = (org.apache.fop.area.Resolvable) odi;
+        ids = interfaceinvoke res.<org.apache.fop.area.Resolvable: java.lang.String[] getIDRefs()>();
+        count = 0;
+
+     label0:
+        $i0 = lengthof ids;
+        if count >= $i0 goto label3;
+
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.IDTracker idTracker>;
+        $r1 = ids[count];
+        pageVPList = virtualinvoke $r0.<org.apache.fop.area.IDTracker: java.util.List getPageViewportsContainingID(java.lang.String)>($r1);
+        if pageVPList == null goto label1;
+
+        $r1 = ids[count];
+        interfaceinvoke res.<org.apache.fop.area.Resolvable: void resolveIDRef(java.lang.String,java.util.List)>($r1, pageVPList);
+        goto label2;
+
+     label1:
+        $r2 = <org.apache.fop.area.AreaTreeHandler: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r4 = interfaceinvoke odi.<org.apache.fop.area.OffDocumentItem: java.lang.String getName()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": Unresolved id reference \"");
+        $r4 = ids[count];
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\" found.");
+        $r1 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r1);
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.IDTracker idTracker>;
+        $r1 = ids[count];
+        virtualinvoke $r0.<org.apache.fop.area.IDTracker: void addUnresolvedIDRef(java.lang.String,org.apache.fop.area.Resolvable)>($r1, res);
+
+     label2:
+        count = count + 1;
+        goto label0;
+
+     label3:
+        $z0 = interfaceinvoke res.<org.apache.fop.area.Resolvable: boolean isResolved()>();
+        if $z0 == 0 goto label4;
+
+        $r5 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.AreaTreeModel model>;
+        virtualinvoke $r5.<org.apache.fop.area.AreaTreeModel: void handleOffDocumentItem(org.apache.fop.area.OffDocumentItem)>(odi);
+
+     label4:
+        goto label6;
+
+     label5:
+        $r5 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.AreaTreeModel model>;
+        virtualinvoke $r5.<org.apache.fop.area.AreaTreeModel: void handleOffDocumentItem(org.apache.fop.area.OffDocumentItem)>(odi);
+
+     label6:
+        return;
+    }
+
+    public java.lang.String generatePageViewportKey()
+    {
+        org.apache.fop.area.AreaTreeHandler this;
+        int $i0;
+        java.lang.StringBuffer $r1;
+        java.lang.String $r2;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler;
+        $i0 = this.<org.apache.fop.area.AreaTreeHandler: int idGen>;
+        $i0 = $i0 + 1;
+        this.<org.apache.fop.area.AreaTreeHandler: int idGen> = $i0;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("P");
+        $i0 = this.<org.apache.fop.area.AreaTreeHandler: int idGen>;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r2;
+    }
+
+    public void associateIDWithPageViewport(java.lang.String, org.apache.fop.area.PageViewport)
+    {
+        org.apache.fop.area.AreaTreeHandler this;
+        java.lang.String id;
+        org.apache.fop.area.PageViewport pv;
+        org.apache.fop.area.IDTracker $r0;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler;
+        id := @parameter0: java.lang.String;
+        pv := @parameter1: org.apache.fop.area.PageViewport;
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.IDTracker idTracker>;
+        virtualinvoke $r0.<org.apache.fop.area.IDTracker: void associateIDWithPageViewport(java.lang.String,org.apache.fop.area.PageViewport)>(id, pv);
+        return;
+    }
+
+    public void signalPendingID(java.lang.String)
+    {
+        org.apache.fop.area.AreaTreeHandler this;
+        java.lang.String id;
+        org.apache.fop.area.IDTracker $r0;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler;
+        id := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.IDTracker idTracker>;
+        virtualinvoke $r0.<org.apache.fop.area.IDTracker: void signalPendingID(java.lang.String)>(id);
+        return;
+    }
+
+    public void signalIDProcessed(java.lang.String)
+    {
+        org.apache.fop.area.AreaTreeHandler this;
+        java.lang.String id;
+        org.apache.fop.area.IDTracker $r0;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler;
+        id := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.IDTracker idTracker>;
+        virtualinvoke $r0.<org.apache.fop.area.IDTracker: void signalIDProcessed(java.lang.String)>(id);
+        return;
+    }
+
+    public boolean alreadyResolvedID(java.lang.String)
+    {
+        org.apache.fop.area.AreaTreeHandler this;
+        java.lang.String id;
+        org.apache.fop.area.IDTracker $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler;
+        id := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.IDTracker idTracker>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.area.IDTracker: boolean alreadyResolvedID(java.lang.String)>(id);
+        return $z0;
+    }
+
+    public void tryIDResolution(org.apache.fop.area.PageViewport)
+    {
+        org.apache.fop.area.AreaTreeHandler this;
+        org.apache.fop.area.PageViewport pv;
+        org.apache.fop.area.IDTracker $r0;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler;
+        pv := @parameter0: org.apache.fop.area.PageViewport;
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.IDTracker idTracker>;
+        virtualinvoke $r0.<org.apache.fop.area.IDTracker: void tryIDResolution(org.apache.fop.area.PageViewport)>(pv);
+        return;
+    }
+
+    public java.util.List getPageViewportsContainingID(java.lang.String)
+    {
+        org.apache.fop.area.AreaTreeHandler this;
+        java.lang.String id;
+        org.apache.fop.area.IDTracker $r0;
+        java.util.List $r1;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler;
+        id := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.IDTracker idTracker>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.area.IDTracker: java.util.List getPageViewportsContainingID(java.lang.String)>(id);
+        return $r1;
+    }
+
+    public void addUnresolvedIDRef(java.lang.String, org.apache.fop.area.Resolvable)
+    {
+        org.apache.fop.area.AreaTreeHandler this;
+        java.lang.String idref;
+        org.apache.fop.area.Resolvable res;
+        org.apache.fop.area.IDTracker $r0;
+
+        this := @this: org.apache.fop.area.AreaTreeHandler;
+        idref := @parameter0: java.lang.String;
+        res := @parameter1: org.apache.fop.area.Resolvable;
+        $r0 = this.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.area.IDTracker idTracker>;
+        virtualinvoke $r0.<org.apache.fop.area.IDTracker: void addUnresolvedIDRef(java.lang.String,org.apache.fop.area.Resolvable)>(idref, res);
+        return;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static org.apache.commons.logging.Log access$000()
+    {
+        org.apache.commons.logging.Log $r0;
+
+        $r0 = <org.apache.fop.area.AreaTreeHandler: org.apache.commons.logging.Log log>;
+        return $r0;
+    }
+
+    static org.apache.fop.fo.pagination.Root access$100(org.apache.fop.area.AreaTreeHandler)
+    {
+        org.apache.fop.area.AreaTreeHandler x0;
+        org.apache.fop.fo.pagination.Root $r0;
+
+        x0 := @parameter0: org.apache.fop.area.AreaTreeHandler;
+        $r0 = x0.<org.apache.fop.area.AreaTreeHandler: org.apache.fop.fo.pagination.Root rootFObj>;
+        return $r0;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.area.AreaTreeHandler: java.lang.Class class$org$apache$fop$area$AreaTreeHandler>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.area.AreaTreeHandler: java.lang.Class class$(java.lang.String)>("org.apache.fop.area.AreaTreeHandler");
+        <org.apache.fop.area.AreaTreeHandler: java.lang.Class class$org$apache$fop$area$AreaTreeHandler> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.area.AreaTreeHandler: java.lang.Class class$org$apache$fop$area$AreaTreeHandler>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.area.AreaTreeHandler: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

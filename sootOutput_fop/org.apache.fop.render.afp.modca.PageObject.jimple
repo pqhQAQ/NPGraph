@@ -1,0 +1,173 @@
+public class org.apache.fop.render.afp.modca.PageObject extends org.apache.fop.render.afp.modca.AbstractPageObject
+{
+    private org.apache.fop.render.afp.modca.ResourceGroup resourceGroup;
+
+    public void <init>(java.lang.String, int, int, int, int, int)
+    {
+        org.apache.fop.render.afp.modca.PageObject this;
+        java.lang.String name;
+        int width, height, rotation, widthResolution, heightResolution;
+
+        this := @this: org.apache.fop.render.afp.modca.PageObject;
+        name := @parameter0: java.lang.String;
+        width := @parameter1: int;
+        height := @parameter2: int;
+        rotation := @parameter3: int;
+        widthResolution := @parameter4: int;
+        heightResolution := @parameter5: int;
+        specialinvoke this.<org.apache.fop.render.afp.modca.AbstractPageObject: void <init>(java.lang.String,int,int,int,int,int)>(name, width, height, rotation, widthResolution, heightResolution);
+        this.<org.apache.fop.render.afp.modca.PageObject: org.apache.fop.render.afp.modca.ResourceGroup resourceGroup> = null;
+        return;
+    }
+
+    public void addOverlay(org.apache.fop.render.afp.modca.Overlay)
+    {
+        org.apache.fop.render.afp.modca.PageObject this;
+        org.apache.fop.render.afp.modca.Overlay overlay;
+        org.apache.fop.render.afp.modca.ResourceGroup $r0, $r1;
+
+        this := @this: org.apache.fop.render.afp.modca.PageObject;
+        overlay := @parameter0: org.apache.fop.render.afp.modca.Overlay;
+        $r1 = this.<org.apache.fop.render.afp.modca.PageObject: org.apache.fop.render.afp.modca.ResourceGroup resourceGroup>;
+        if $r1 != null goto label0;
+
+        $r0 = new org.apache.fop.render.afp.modca.ResourceGroup;
+        specialinvoke $r0.<org.apache.fop.render.afp.modca.ResourceGroup: void <init>()>();
+        this.<org.apache.fop.render.afp.modca.PageObject: org.apache.fop.render.afp.modca.ResourceGroup resourceGroup> = $r0;
+
+     label0:
+        $r1 = this.<org.apache.fop.render.afp.modca.PageObject: org.apache.fop.render.afp.modca.ResourceGroup resourceGroup>;
+        virtualinvoke $r1.<org.apache.fop.render.afp.modca.ResourceGroup: void addOverlay(org.apache.fop.render.afp.modca.Overlay)>(overlay);
+        return;
+    }
+
+    public void createIncludePageOverlay(java.lang.String, int, int, int)
+    {
+        org.apache.fop.render.afp.modca.PageObject this;
+        java.lang.String name;
+        int x, y, orientation;
+        org.apache.fop.render.afp.modca.IncludePageOverlay $r0, ipo;
+        java.util.List $r1;
+
+        this := @this: org.apache.fop.render.afp.modca.PageObject;
+        name := @parameter0: java.lang.String;
+        x := @parameter1: int;
+        y := @parameter2: int;
+        orientation := @parameter3: int;
+        $r0 = new org.apache.fop.render.afp.modca.IncludePageOverlay;
+        specialinvoke $r0.<org.apache.fop.render.afp.modca.IncludePageOverlay: void <init>(java.lang.String,int,int,int)>(name, x, y, orientation);
+        ipo = $r0;
+        $r1 = this.<org.apache.fop.render.afp.modca.PageObject: java.util.List objects>;
+        interfaceinvoke $r1.<java.util.List: boolean add(java.lang.Object)>(ipo);
+        return;
+    }
+
+    public void writeDataStream(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.render.afp.modca.PageObject this;
+        java.io.OutputStream os;
+        org.apache.fop.render.afp.modca.ResourceGroup $r0;
+        org.apache.fop.render.afp.modca.ActiveEnvironmentGroup $r1;
+        java.util.ArrayList $r2;
+        java.util.List $r3;
+
+        this := @this: org.apache.fop.render.afp.modca.PageObject;
+        os := @parameter0: java.io.OutputStream;
+        specialinvoke this.<org.apache.fop.render.afp.modca.PageObject: void writeStart(java.io.OutputStream)>(os);
+        $r0 = this.<org.apache.fop.render.afp.modca.PageObject: org.apache.fop.render.afp.modca.ResourceGroup resourceGroup>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.render.afp.modca.PageObject: org.apache.fop.render.afp.modca.ResourceGroup resourceGroup>;
+        virtualinvoke $r0.<org.apache.fop.render.afp.modca.ResourceGroup: void writeDataStream(java.io.OutputStream)>(os);
+
+     label0:
+        $r1 = this.<org.apache.fop.render.afp.modca.PageObject: org.apache.fop.render.afp.modca.ActiveEnvironmentGroup activeEnvironmentGroup>;
+        virtualinvoke $r1.<org.apache.fop.render.afp.modca.ActiveEnvironmentGroup: void writeDataStream(java.io.OutputStream)>(os);
+        $r2 = this.<org.apache.fop.render.afp.modca.PageObject: java.util.ArrayList segments>;
+        virtualinvoke this.<org.apache.fop.render.afp.modca.PageObject: void writeObjectList(java.util.List,java.io.OutputStream)>($r2, os);
+        $r2 = this.<org.apache.fop.render.afp.modca.PageObject: java.util.ArrayList tagLogicalElements>;
+        virtualinvoke this.<org.apache.fop.render.afp.modca.PageObject: void writeObjectList(java.util.List,java.io.OutputStream)>($r2, os);
+        $r3 = this.<org.apache.fop.render.afp.modca.PageObject: java.util.List objects>;
+        virtualinvoke this.<org.apache.fop.render.afp.modca.PageObject: void writeObjectList(java.util.List,java.io.OutputStream)>($r3, os);
+        specialinvoke this.<org.apache.fop.render.afp.modca.PageObject: void writeEnd(java.io.OutputStream)>(os);
+        return;
+    }
+
+    private void writeStart(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.render.afp.modca.PageObject this;
+        java.io.OutputStream os;
+        byte[] data, $r0, $r1;
+        int i, $i0;
+        byte $b1;
+
+        this := @this: org.apache.fop.render.afp.modca.PageObject;
+        os := @parameter0: java.io.OutputStream;
+        data = newarray (byte)[17];
+        data[0] = 90;
+        data[1] = 0;
+        data[2] = 16;
+        data[3] = -45;
+        data[4] = -88;
+        data[5] = -81;
+        data[6] = 0;
+        data[7] = 0;
+        data[8] = 0;
+        i = 0;
+
+     label0:
+        $r0 = this.<org.apache.fop.render.afp.modca.PageObject: byte[] nameBytes>;
+        $i0 = lengthof $r0;
+        if i >= $i0 goto label1;
+
+        $i0 = 9 + i;
+        $r1 = this.<org.apache.fop.render.afp.modca.PageObject: byte[] nameBytes>;
+        $b1 = $r1[i];
+        data[$i0] = $b1;
+        i = i + 1;
+        goto label0;
+
+     label1:
+        virtualinvoke os.<java.io.OutputStream: void write(byte[])>(data);
+        return;
+    }
+
+    private void writeEnd(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.render.afp.modca.PageObject this;
+        java.io.OutputStream os;
+        byte[] data, $r0, $r1;
+        int i, $i0;
+        byte $b1;
+
+        this := @this: org.apache.fop.render.afp.modca.PageObject;
+        os := @parameter0: java.io.OutputStream;
+        data = newarray (byte)[17];
+        data[0] = 90;
+        data[1] = 0;
+        data[2] = 16;
+        data[3] = -45;
+        data[4] = -87;
+        data[5] = -81;
+        data[6] = 0;
+        data[7] = 0;
+        data[8] = 0;
+        i = 0;
+
+     label0:
+        $r0 = this.<org.apache.fop.render.afp.modca.PageObject: byte[] nameBytes>;
+        $i0 = lengthof $r0;
+        if i >= $i0 goto label1;
+
+        $i0 = 9 + i;
+        $r1 = this.<org.apache.fop.render.afp.modca.PageObject: byte[] nameBytes>;
+        $b1 = $r1[i];
+        data[$i0] = $b1;
+        i = i + 1;
+        goto label0;
+
+     label1:
+        virtualinvoke os.<java.io.OutputStream: void write(byte[])>(data);
+        return;
+    }
+}

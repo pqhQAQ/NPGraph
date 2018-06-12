@@ -1,0 +1,318 @@
+public class org.apache.fop.render.ps.NativeTextHandler extends java.lang.Object implements org.apache.xmlgraphics.java2d.ps.PSTextHandler
+{
+    private org.apache.xmlgraphics.java2d.ps.PSGraphics2D g2d;
+    protected org.apache.fop.fonts.FontInfo fontInfo;
+    protected org.apache.fop.fonts.Font font;
+    protected org.apache.fop.fonts.Font overrideFont;
+    protected java.lang.String currentFontName;
+    protected int currentFontSize;
+
+    public void <init>(org.apache.xmlgraphics.java2d.ps.PSGraphics2D, org.apache.fop.fonts.FontInfo)
+    {
+        org.apache.fop.render.ps.NativeTextHandler this;
+        org.apache.xmlgraphics.java2d.ps.PSGraphics2D g2d;
+        org.apache.fop.fonts.FontInfo fontInfo;
+
+        this := @this: org.apache.fop.render.ps.NativeTextHandler;
+        g2d := @parameter0: org.apache.xmlgraphics.java2d.ps.PSGraphics2D;
+        fontInfo := @parameter1: org.apache.fop.fonts.FontInfo;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.fop.fonts.Font overrideFont> = null;
+        this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.xmlgraphics.java2d.ps.PSGraphics2D g2d> = g2d;
+        if fontInfo == null goto label0;
+
+        this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.fop.fonts.FontInfo fontInfo> = fontInfo;
+        goto label1;
+
+     label0:
+        specialinvoke this.<org.apache.fop.render.ps.NativeTextHandler: void setupFontInfo()>();
+
+     label1:
+        return;
+    }
+
+    private void setupFontInfo()
+    {
+        org.apache.fop.render.ps.NativeTextHandler this;
+        org.apache.fop.fonts.FontInfo $r0, $r1;
+
+        this := @this: org.apache.fop.render.ps.NativeTextHandler;
+        $r0 = new org.apache.fop.fonts.FontInfo;
+        specialinvoke $r0.<org.apache.fop.fonts.FontInfo: void <init>()>();
+        this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.fop.fonts.FontInfo fontInfo> = $r0;
+        $r1 = this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.fop.fonts.FontInfo fontInfo>;
+        staticinvoke <org.apache.fop.fonts.FontSetup: void setup(org.apache.fop.fonts.FontInfo,java.util.List,org.apache.fop.fonts.FontResolver)>($r1, null, null);
+        return;
+    }
+
+    public org.apache.fop.fonts.FontInfo getFontInfo()
+    {
+        org.apache.fop.render.ps.NativeTextHandler this;
+        org.apache.fop.fonts.FontInfo $r0;
+
+        this := @this: org.apache.fop.render.ps.NativeTextHandler;
+        $r0 = this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.fop.fonts.FontInfo fontInfo>;
+        return $r0;
+    }
+
+    private org.apache.xmlgraphics.ps.PSGenerator getPSGenerator()
+    {
+        org.apache.fop.render.ps.NativeTextHandler this;
+        org.apache.xmlgraphics.java2d.ps.PSGraphics2D $r0;
+        org.apache.xmlgraphics.ps.PSGenerator $r1;
+
+        this := @this: org.apache.fop.render.ps.NativeTextHandler;
+        $r0 = this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.xmlgraphics.java2d.ps.PSGraphics2D g2d>;
+        $r1 = virtualinvoke $r0.<org.apache.xmlgraphics.java2d.ps.PSGraphics2D: org.apache.xmlgraphics.ps.PSGenerator getPSGenerator()>();
+        return $r1;
+    }
+
+    public void writeSetup() throws java.io.IOException
+    {
+        org.apache.fop.render.ps.NativeTextHandler this;
+        org.apache.fop.fonts.FontInfo $r0, $r2;
+        org.apache.xmlgraphics.ps.PSGenerator $r1;
+
+        this := @this: org.apache.fop.render.ps.NativeTextHandler;
+        $r0 = this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.fop.fonts.FontInfo fontInfo>;
+        if $r0 == null goto label0;
+
+        $r1 = specialinvoke this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.xmlgraphics.ps.PSGenerator getPSGenerator()>();
+        $r2 = this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.fop.fonts.FontInfo fontInfo>;
+        staticinvoke <org.apache.fop.render.ps.PSFontUtils: java.util.Map writeFontDict(org.apache.xmlgraphics.ps.PSGenerator,org.apache.fop.fonts.FontInfo)>($r1, $r2);
+
+     label0:
+        return;
+    }
+
+    public void writePageSetup() throws java.io.IOException
+    {
+        org.apache.fop.render.ps.NativeTextHandler this;
+
+        this := @this: org.apache.fop.render.ps.NativeTextHandler;
+        return;
+    }
+
+    public void drawString(java.lang.String, float, float) throws java.io.IOException
+    {
+        org.apache.fop.render.ps.NativeTextHandler this;
+        java.lang.String s, $r6, $r7;
+        float x, y;
+        java.awt.Font awtFont;
+        org.apache.xmlgraphics.ps.PSGenerator gen;
+        java.awt.Shape imclip;
+        java.awt.geom.AffineTransform trans;
+        java.lang.StringBuffer sb, $r5, $r8;
+        org.apache.xmlgraphics.java2d.ps.PSGraphics2D $r0, $r3;
+        org.apache.fop.fonts.Font $r1, $r2;
+        java.awt.Color $r4;
+        double $d0;
+
+        this := @this: org.apache.fop.render.ps.NativeTextHandler;
+        s := @parameter0: java.lang.String;
+        x := @parameter1: float;
+        y := @parameter2: float;
+        $r0 = this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.xmlgraphics.java2d.ps.PSGraphics2D g2d>;
+        virtualinvoke $r0.<org.apache.xmlgraphics.java2d.ps.PSGraphics2D: void preparePainting()>();
+        $r1 = this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.fop.fonts.Font overrideFont>;
+        if $r1 != null goto label0;
+
+        $r0 = this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.xmlgraphics.java2d.ps.PSGraphics2D g2d>;
+        awtFont = virtualinvoke $r0.<org.apache.xmlgraphics.java2d.ps.PSGraphics2D: java.awt.Font getFont()>();
+        $r2 = specialinvoke this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.fop.fonts.Font createFont(java.awt.Font)>(awtFont);
+        this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.fop.fonts.Font font> = $r2;
+        goto label1;
+
+     label0:
+        $r2 = this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.fop.fonts.Font overrideFont>;
+        this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.fop.fonts.Font font> = $r2;
+        this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.fop.fonts.Font overrideFont> = null;
+
+     label1:
+        $r0 = this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.xmlgraphics.java2d.ps.PSGraphics2D g2d>;
+        $r3 = this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.xmlgraphics.java2d.ps.PSGraphics2D g2d>;
+        $r4 = virtualinvoke $r3.<org.apache.xmlgraphics.java2d.ps.PSGraphics2D: java.awt.Color getColor()>();
+        virtualinvoke $r0.<org.apache.xmlgraphics.java2d.ps.PSGraphics2D: void establishColor(java.awt.Color)>($r4);
+        specialinvoke this.<org.apache.fop.render.ps.NativeTextHandler: void establishCurrentFont()>();
+        gen = specialinvoke this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.xmlgraphics.ps.PSGenerator getPSGenerator()>();
+        virtualinvoke gen.<org.apache.xmlgraphics.ps.PSGenerator: void saveGraphicsState()>();
+        $r0 = this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.xmlgraphics.java2d.ps.PSGraphics2D g2d>;
+        imclip = virtualinvoke $r0.<org.apache.xmlgraphics.java2d.ps.PSGraphics2D: java.awt.Shape getClip()>();
+        $r0 = this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.xmlgraphics.java2d.ps.PSGraphics2D g2d>;
+        virtualinvoke $r0.<org.apache.xmlgraphics.java2d.ps.PSGraphics2D: void writeClip(java.awt.Shape)>(imclip);
+        $r0 = this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.xmlgraphics.java2d.ps.PSGraphics2D g2d>;
+        trans = virtualinvoke $r0.<org.apache.xmlgraphics.java2d.ps.PSGraphics2D: java.awt.geom.AffineTransform getTransform()>();
+        virtualinvoke gen.<org.apache.xmlgraphics.ps.PSGenerator: void concatMatrix(java.awt.geom.AffineTransform)>(trans);
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $d0 = (double) x;
+        $r6 = virtualinvoke gen.<org.apache.xmlgraphics.ps.PSGenerator: java.lang.String formatDouble(double)>($d0);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $d0 = (double) y;
+        $r6 = virtualinvoke gen.<org.apache.xmlgraphics.ps.PSGenerator: java.lang.String formatDouble(double)>($d0);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" moveto ");
+        $r7 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke gen.<org.apache.xmlgraphics.ps.PSGenerator: void writeln(java.lang.String)>($r7);
+        virtualinvoke gen.<org.apache.xmlgraphics.ps.PSGenerator: void writeln(java.lang.String)>("1 -1 scale");
+        $r8 = new java.lang.StringBuffer;
+        specialinvoke $r8.<java.lang.StringBuffer: void <init>(java.lang.String)>("(");
+        sb = $r8;
+        specialinvoke this.<org.apache.fop.render.ps.NativeTextHandler: void escapeText(java.lang.String,java.lang.StringBuffer)>(s, sb);
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(") t ");
+        $r7 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke gen.<org.apache.xmlgraphics.ps.PSGenerator: void writeln(java.lang.String)>($r7);
+        virtualinvoke gen.<org.apache.xmlgraphics.ps.PSGenerator: boolean restoreGraphicsState()>();
+        return;
+    }
+
+    private void escapeText(java.lang.String, java.lang.StringBuffer)
+    {
+        org.apache.fop.render.ps.NativeTextHandler this;
+        java.lang.String text;
+        java.lang.StringBuffer target;
+        int l, i;
+        char ch, mch;
+        org.apache.fop.fonts.Font $r0;
+
+        this := @this: org.apache.fop.render.ps.NativeTextHandler;
+        text := @parameter0: java.lang.String;
+        target := @parameter1: java.lang.StringBuffer;
+        l = virtualinvoke text.<java.lang.String: int length()>();
+        i = 0;
+
+     label0:
+        if i >= l goto label1;
+
+        ch = virtualinvoke text.<java.lang.String: char charAt(int)>(i);
+        $r0 = this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.fop.fonts.Font font>;
+        mch = virtualinvoke $r0.<org.apache.fop.fonts.Font: char mapChar(char)>(ch);
+        staticinvoke <org.apache.xmlgraphics.ps.PSGenerator: void escapeChar(char,java.lang.StringBuffer)>(mch, target);
+        i = i + 1;
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    private org.apache.fop.fonts.Font createFont(java.awt.Font)
+    {
+        org.apache.fop.render.ps.NativeTextHandler this;
+        java.awt.Font f;
+        java.lang.String fontFamily, style, $r0;
+        int fontSize, $i0;
+        short weight, $s1;
+        org.apache.fop.fonts.FontTriplet triplet;
+        boolean $z0;
+        org.apache.fop.fonts.FontInfo $r1;
+        org.apache.fop.fonts.Font $r2;
+
+        this := @this: org.apache.fop.render.ps.NativeTextHandler;
+        f := @parameter0: java.awt.Font;
+        fontFamily = virtualinvoke f.<java.awt.Font: java.lang.String getFamily()>();
+        $z0 = virtualinvoke fontFamily.<java.lang.String: boolean equals(java.lang.Object)>("sanserif");
+        if $z0 == 0 goto label0;
+
+        fontFamily = "sans-serif";
+
+     label0:
+        $i0 = virtualinvoke f.<java.awt.Font: int getSize()>();
+        fontSize = 1000 * $i0;
+        $z0 = virtualinvoke f.<java.awt.Font: boolean isItalic()>();
+        if $z0 == 0 goto label1;
+
+        $r0 = "italic";
+        goto label2;
+
+     label1:
+        $r0 = "normal";
+
+     label2:
+        style = $r0;
+        $z0 = virtualinvoke f.<java.awt.Font: boolean isBold()>();
+        if $z0 == 0 goto label3;
+
+        $s1 = 700;
+        goto label4;
+
+     label3:
+        $s1 = 400;
+
+     label4:
+        weight = $s1;
+        $r1 = this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.fop.fonts.FontInfo fontInfo>;
+        triplet = virtualinvoke $r1.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet findAdjustWeight(java.lang.String,java.lang.String,int)>(fontFamily, style, weight);
+        if triplet != null goto label5;
+
+        $r1 = this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.fop.fonts.FontInfo fontInfo>;
+        triplet = virtualinvoke $r1.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet findAdjustWeight(java.lang.String,java.lang.String,int)>("sans-serif", style, weight);
+
+     label5:
+        $r1 = this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.Font getFontInstance(org.apache.fop.fonts.FontTriplet,int)>(triplet, fontSize);
+        return $r2;
+    }
+
+    private void establishCurrentFont() throws java.io.IOException
+    {
+        org.apache.fop.render.ps.NativeTextHandler this;
+        org.apache.xmlgraphics.ps.PSGenerator gen;
+        java.lang.String $r0, $r2, $r5;
+        org.apache.fop.fonts.Font $r1, $r4, $r6;
+        int $i0, $i1, $i2;
+        java.lang.StringBuffer $r3;
+        float $f0;
+        double $d0;
+
+        this := @this: org.apache.fop.render.ps.NativeTextHandler;
+        $r0 = this.<org.apache.fop.render.ps.NativeTextHandler: java.lang.String currentFontName>;
+        $r1 = this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.fop.fonts.Font font>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.fonts.Font: java.lang.String getFontName()>();
+        if $r0 != $r2 goto label0;
+
+        $i0 = this.<org.apache.fop.render.ps.NativeTextHandler: int currentFontSize>;
+        $r1 = this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.fop.fonts.Font font>;
+        $i1 = virtualinvoke $r1.<org.apache.fop.fonts.Font: int getFontSize()>();
+        if $i0 == $i1 goto label1;
+
+     label0:
+        gen = specialinvoke this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.xmlgraphics.ps.PSGenerator getPSGenerator()>();
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r4 = this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.fop.fonts.Font font>;
+        $r5 = virtualinvoke $r4.<org.apache.fop.fonts.Font: java.lang.String getFontName()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $r6 = this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.fop.fonts.Font font>;
+        $i2 = virtualinvoke $r6.<org.apache.fop.fonts.Font: int getFontSize()>();
+        $f0 = (float) $i2;
+        $f0 = $f0 / 1000.0F;
+        $d0 = (double) $f0;
+        $r5 = virtualinvoke gen.<org.apache.xmlgraphics.ps.PSGenerator: java.lang.String formatDouble(double)>($d0);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" F");
+        $r2 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke gen.<org.apache.xmlgraphics.ps.PSGenerator: void writeln(java.lang.String)>($r2);
+        $r1 = this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.fop.fonts.Font font>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.fonts.Font: java.lang.String getFontName()>();
+        this.<org.apache.fop.render.ps.NativeTextHandler: java.lang.String currentFontName> = $r2;
+        $r1 = this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.fop.fonts.Font font>;
+        $i1 = virtualinvoke $r1.<org.apache.fop.fonts.Font: int getFontSize()>();
+        this.<org.apache.fop.render.ps.NativeTextHandler: int currentFontSize> = $i1;
+
+     label1:
+        return;
+    }
+
+    public void setOverrideFont(org.apache.fop.fonts.Font)
+    {
+        org.apache.fop.render.ps.NativeTextHandler this;
+        org.apache.fop.fonts.Font override;
+
+        this := @this: org.apache.fop.render.ps.NativeTextHandler;
+        override := @parameter0: org.apache.fop.fonts.Font;
+        this.<org.apache.fop.render.ps.NativeTextHandler: org.apache.fop.fonts.Font overrideFont> = override;
+        return;
+    }
+}

@@ -1,0 +1,57 @@
+method: org.apache.fop.pdf.PDFFactory.buildCIDSet:1831872625
+956813493:this := @this: org.apache.fop.pdf.PDFFactory
+806828115:descriptor := @parameter0: org.apache.fop.pdf.PDFFontDescriptor
+1148381647:cidFont := @parameter1: org.apache.fop.fonts.CIDFont
+1414805540:$r0 = new java.util.BitSet
+825273483:specialinvoke $r0.<java.util.BitSet: void <init>()>()
+1922036455:cidSubset = $r0
+45595967:$r1 = cidFont.<org.apache.fop.fonts.CIDFont: java.util.Map usedGlyphs>
+1827239037:$r2 = interfaceinvoke $r1.<java.util.Map: java.util.Set keySet()>()
+721187506:iter = interfaceinvoke $r2.<java.util.Set: java.util.Iterator iterator()>()
+806866371:$z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>()
+1791350239:if $z0 == 0 goto cidSet = virtualinvoke this.<org.apache.fop.pdf.PDFFactory: org.apache.fop.pdf.PDFStream makeStream(java.lang.String,boolean)>(null, 1)
+489180055:$r3 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>()
+941569381:cid = (java.lang.Integer) $r3
+1072631568:$i0 = virtualinvoke cid.<java.lang.Integer: int intValue()>()
+1741030458:virtualinvoke cidSubset.<java.util.BitSet: void set(int)>($i0)
+2034217231:goto [?= $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>()]
+979472612:cidSet = virtualinvoke this.<org.apache.fop.pdf.PDFFactory: org.apache.fop.pdf.PDFStream makeStream(java.lang.String,boolean)>(null, 1)
+1534035629:$r4 = new org.apache.commons.io.output.ByteArrayOutputStream
+1523007122:$i1 = virtualinvoke cidSubset.<java.util.BitSet: int length()>()
+331076142:$i1 = $i1 / 8
+914082477:$i1 = $i1 + 1
+2033663948:specialinvoke $r4.<org.apache.commons.io.output.ByteArrayOutputStream: void <init>(int)>($i1)
+440248384:baout = $r4
+1427997810:value = 0
+860465259:i = 0
+567639444:c = virtualinvoke cidSubset.<java.util.BitSet: int length()>()
+2092141964:if i >= c goto virtualinvoke baout.<org.apache.commons.io.output.ByteArrayOutputStream: void write(int)>(value)
+1699055323:shift = i % 8
+84157178:b = virtualinvoke cidSubset.<java.util.BitSet: boolean get(int)>(i)
+108428019:if b == 0 goto (branch)
+302159958:$i1 = 7 - shift
+1751072598:$i0 = 1 << $i1
+899855150:value = value | $i0
+1169540970:if shift != 7 goto i = i + 1
+981704303:virtualinvoke baout.<org.apache.commons.io.output.ByteArrayOutputStream: void write(int)>(value)
+1347006283:value = 0
+361991707:i = i + 1
+173447598:goto [?= (branch)]
+366671238:virtualinvoke baout.<org.apache.commons.io.output.ByteArrayOutputStream: void write(int)>(value)
+1994242888:$r5 = virtualinvoke baout.<org.apache.commons.io.output.ByteArrayOutputStream: byte[] toByteArray()>()
+1462939887:virtualinvoke cidSet.<org.apache.fop.pdf.PDFStream: void setData(byte[])>($r5)
+1435808643:virtualinvoke descriptor.<org.apache.fop.pdf.PDFFontDescriptor: void setCIDSet(org.apache.fop.pdf.AbstractPDFStream)>(cidSet)
+362121562:goto [?= return]
+983110239:$r6 := @caughtexception
+208436936:ioe = $r6
+1135543613:$r7 = this.<org.apache.fop.pdf.PDFFactory: org.apache.commons.logging.Log log>
+394332802:$r8 = new java.lang.StringBuffer
+1218433090:specialinvoke $r8.<java.lang.StringBuffer: void <init>()>()
+1415284939:$r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Failed to write CIDSet [")
+1005872661:$r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(cidFont)
+2108014781:$r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("] ")
+1429882622:$r9 = virtualinvoke cidFont.<org.apache.fop.fonts.CIDFont: java.lang.String getEmbedFontName()>()
+1695218024:$r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r9)
+863784619:$r10 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.String toString()>()
+462455385:interfaceinvoke $r7.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r10, ioe)
+744337202:return

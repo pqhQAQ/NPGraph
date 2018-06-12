@@ -1,0 +1,50 @@
+method: org.apache.fop.render.pcl.PCLGenerator.getMask:1058451983
+541725027:this := @this: org.apache.fop.render.pcl.PCLGenerator
+1589349156:img := @parameter0: java.awt.image.RenderedImage
+1789663506:targetDim := @parameter1: java.awt.Dimension
+154238248:cm = interfaceinvoke img.<java.awt.image.RenderedImage: java.awt.image.ColorModel getColorModel()>()
+2123855173:$z0 = virtualinvoke cm.<java.awt.image.ColorModel: boolean hasAlpha()>()
+160712177:if $z0 == 0 goto return null
+1702614560:$r1 = new java.awt.image.BufferedImage
+392462799:$i0 = interfaceinvoke img.<java.awt.image.RenderedImage: int getWidth()>()
+1092931815:$i1 = interfaceinvoke img.<java.awt.image.RenderedImage: int getHeight()>()
+1151901984:specialinvoke $r1.<java.awt.image.BufferedImage: void <init>(int,int,int)>($i0, $i1, 10)
+451567383:alpha = $r1
+1985312060:raster = interfaceinvoke img.<java.awt.image.RenderedImage: java.awt.image.Raster getData()>()
+1619170754:$i2 = virtualinvoke cm.<java.awt.image.ColorModel: int getNumColorComponents()>()
+1304086813:$r2 = virtualinvoke alpha.<java.awt.image.BufferedImage: java.awt.image.WritableRaster getRaster()>()
+1994348419:staticinvoke <org.apache.xmlgraphics.image.GraphicsUtil: void copyBand(java.awt.image.Raster,int,java.awt.image.WritableRaster,int)>(raster, $i2, $r2, 0)
+1089115757:$r3 = new java.awt.image.LookupOp
+1519667074:$r4 = new java.awt.image.ByteLookupTable
+169551139:$r0 = <org.apache.fop.render.pcl.PCLGenerator: byte[] THRESHOLD_TABLE>
+2082677251:specialinvoke $r4.<java.awt.image.ByteLookupTable: void <init>(int,byte[])>(0, $r0)
+27122426:specialinvoke $r3.<java.awt.image.LookupOp: void <init>(java.awt.image.LookupTable,java.awt.RenderingHints)>($r4, null)
+580080618:op1 = $r3
+704812384:alphat = interfaceinvoke op1.<java.awt.image.BufferedImageOp: java.awt.image.BufferedImage filter(java.awt.image.BufferedImage,java.awt.image.BufferedImage)>(alpha, null)
+261941036:$r1 = new java.awt.image.BufferedImage
+1938921748:$i0 = targetDim.<java.awt.Dimension: int width>
+246104986:$i1 = targetDim.<java.awt.Dimension: int height>
+1094024579:specialinvoke $r1.<java.awt.image.BufferedImage: void <init>(int,int,int)>($i0, $i1, 12)
+516113639:mask = $r1
+1043346483:g2d = virtualinvoke mask.<java.awt.image.BufferedImage: java.awt.Graphics2D createGraphics()>()
+1320362026:$r5 = new java.awt.geom.AffineTransform
+962651974:specialinvoke $r5.<java.awt.geom.AffineTransform: void <init>()>()
+149930520:at = $r5
+2095846864:$d0 = virtualinvoke targetDim.<java.awt.Dimension: double getWidth()>()
+1669349316:$i0 = interfaceinvoke img.<java.awt.image.RenderedImage: int getWidth()>()
+2027589604:$d1 = (double) $i0
+1658369199:sx = $d0 / $d1
+775701799:$d0 = virtualinvoke targetDim.<java.awt.Dimension: double getHeight()>()
+1930877545:$i0 = interfaceinvoke img.<java.awt.image.RenderedImage: int getHeight()>()
+1633508998:$d1 = (double) $i0
+1092810982:sy = $d0 / $d1
+132487209:virtualinvoke at.<java.awt.geom.AffineTransform: void scale(double,double)>(sx, sy)
+1902712597:virtualinvoke g2d.<java.awt.Graphics2D: void drawRenderedImage(java.awt.image.RenderedImage,java.awt.geom.AffineTransform)>(alphat, at)
+1034055571:virtualinvoke g2d.<java.awt.Graphics2D: void dispose()>()
+1934310273:goto [?= return mask]
+1542887267:$r6 := @caughtexception
+1345310025:l15 = $r6
+118815290:virtualinvoke g2d.<java.awt.Graphics2D: void dispose()>()
+953888310:throw l15
+929909564:return mask
+476174627:return null

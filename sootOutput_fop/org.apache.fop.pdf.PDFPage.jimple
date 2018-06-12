@@ -1,0 +1,186 @@
+public class org.apache.fop.pdf.PDFPage extends org.apache.fop.pdf.PDFResourceContext
+{
+    protected int pageIndex;
+
+    public void <init>(org.apache.fop.pdf.PDFResources, org.apache.fop.pdf.PDFStream, int, int, int)
+    {
+        org.apache.fop.pdf.PDFPage this;
+        org.apache.fop.pdf.PDFResources resources;
+        org.apache.fop.pdf.PDFStream contents;
+        int pageWidth, pageHeight, pageIndex;
+        org.apache.fop.pdf.PDFName $r0;
+
+        this := @this: org.apache.fop.pdf.PDFPage;
+        resources := @parameter0: org.apache.fop.pdf.PDFResources;
+        contents := @parameter1: org.apache.fop.pdf.PDFStream;
+        pageWidth := @parameter2: int;
+        pageHeight := @parameter3: int;
+        pageIndex := @parameter4: int;
+        specialinvoke this.<org.apache.fop.pdf.PDFResourceContext: void <init>(org.apache.fop.pdf.PDFResources)>(resources);
+        $r0 = new org.apache.fop.pdf.PDFName;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFName: void <init>(java.lang.String)>("Page");
+        virtualinvoke this.<org.apache.fop.pdf.PDFPage: void put(java.lang.String,java.lang.Object)>("Type", $r0);
+        virtualinvoke this.<org.apache.fop.pdf.PDFPage: void setContents(org.apache.fop.pdf.PDFStream)>(contents);
+        specialinvoke this.<org.apache.fop.pdf.PDFPage: void setSimplePageSize(int,int)>(pageWidth, pageHeight);
+        this.<org.apache.fop.pdf.PDFPage: int pageIndex> = pageIndex;
+        return;
+    }
+
+    public void <init>(org.apache.fop.pdf.PDFResources, int, int, int)
+    {
+        org.apache.fop.pdf.PDFPage this;
+        org.apache.fop.pdf.PDFResources resources;
+        int pageWidth, pageHeight, pageIndex;
+
+        this := @this: org.apache.fop.pdf.PDFPage;
+        resources := @parameter0: org.apache.fop.pdf.PDFResources;
+        pageWidth := @parameter1: int;
+        pageHeight := @parameter2: int;
+        pageIndex := @parameter3: int;
+        specialinvoke this.<org.apache.fop.pdf.PDFPage: void <init>(org.apache.fop.pdf.PDFResources,org.apache.fop.pdf.PDFStream,int,int,int)>(resources, null, pageWidth, pageHeight, pageIndex);
+        return;
+    }
+
+    private void setSimplePageSize(int, int)
+    {
+        org.apache.fop.pdf.PDFPage this;
+        int width, height;
+        java.awt.geom.Rectangle2D$Double $r0, box;
+        double $d0, $d1;
+
+        this := @this: org.apache.fop.pdf.PDFPage;
+        width := @parameter0: int;
+        height := @parameter1: int;
+        $r0 = new java.awt.geom.Rectangle2D$Double;
+        $d0 = (double) width;
+        $d1 = (double) height;
+        specialinvoke $r0.<java.awt.geom.Rectangle2D$Double: void <init>(double,double,double,double)>(0.0, 0.0, $d0, $d1);
+        box = $r0;
+        virtualinvoke this.<org.apache.fop.pdf.PDFPage: void setMediaBox(java.awt.geom.Rectangle2D)>(box);
+        virtualinvoke this.<org.apache.fop.pdf.PDFPage: void setBleedBox(java.awt.geom.Rectangle2D)>(box);
+        virtualinvoke this.<org.apache.fop.pdf.PDFPage: void setTrimBox(java.awt.geom.Rectangle2D)>(box);
+        return;
+    }
+
+    private org.apache.fop.pdf.PDFArray toPDFArray(java.awt.geom.Rectangle2D)
+    {
+        org.apache.fop.pdf.PDFPage this;
+        java.awt.geom.Rectangle2D box;
+        org.apache.fop.pdf.PDFArray $r0;
+        double[] $r1;
+        double $d0;
+
+        this := @this: org.apache.fop.pdf.PDFPage;
+        box := @parameter0: java.awt.geom.Rectangle2D;
+        $r0 = new org.apache.fop.pdf.PDFArray;
+        $r1 = newarray (double)[4];
+        $d0 = virtualinvoke box.<java.awt.geom.Rectangle2D: double getX()>();
+        $r1[0] = $d0;
+        $d0 = virtualinvoke box.<java.awt.geom.Rectangle2D: double getY()>();
+        $r1[1] = $d0;
+        $d0 = virtualinvoke box.<java.awt.geom.Rectangle2D: double getMaxX()>();
+        $r1[2] = $d0;
+        $d0 = virtualinvoke box.<java.awt.geom.Rectangle2D: double getMaxY()>();
+        $r1[3] = $d0;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFArray: void <init>(org.apache.fop.pdf.PDFObject,double[])>(this, $r1);
+        return $r0;
+    }
+
+    public void setMediaBox(java.awt.geom.Rectangle2D)
+    {
+        org.apache.fop.pdf.PDFPage this;
+        java.awt.geom.Rectangle2D box;
+        org.apache.fop.pdf.PDFArray $r0;
+
+        this := @this: org.apache.fop.pdf.PDFPage;
+        box := @parameter0: java.awt.geom.Rectangle2D;
+        $r0 = specialinvoke this.<org.apache.fop.pdf.PDFPage: org.apache.fop.pdf.PDFArray toPDFArray(java.awt.geom.Rectangle2D)>(box);
+        virtualinvoke this.<org.apache.fop.pdf.PDFPage: void put(java.lang.String,java.lang.Object)>("MediaBox", $r0);
+        return;
+    }
+
+    public void setTrimBox(java.awt.geom.Rectangle2D)
+    {
+        org.apache.fop.pdf.PDFPage this;
+        java.awt.geom.Rectangle2D box;
+        org.apache.fop.pdf.PDFArray $r0;
+
+        this := @this: org.apache.fop.pdf.PDFPage;
+        box := @parameter0: java.awt.geom.Rectangle2D;
+        $r0 = specialinvoke this.<org.apache.fop.pdf.PDFPage: org.apache.fop.pdf.PDFArray toPDFArray(java.awt.geom.Rectangle2D)>(box);
+        virtualinvoke this.<org.apache.fop.pdf.PDFPage: void put(java.lang.String,java.lang.Object)>("TrimBox", $r0);
+        return;
+    }
+
+    public void setBleedBox(java.awt.geom.Rectangle2D)
+    {
+        org.apache.fop.pdf.PDFPage this;
+        java.awt.geom.Rectangle2D box;
+        org.apache.fop.pdf.PDFArray $r0;
+
+        this := @this: org.apache.fop.pdf.PDFPage;
+        box := @parameter0: java.awt.geom.Rectangle2D;
+        $r0 = specialinvoke this.<org.apache.fop.pdf.PDFPage: org.apache.fop.pdf.PDFArray toPDFArray(java.awt.geom.Rectangle2D)>(box);
+        virtualinvoke this.<org.apache.fop.pdf.PDFPage: void put(java.lang.String,java.lang.Object)>("BleedBox", $r0);
+        return;
+    }
+
+    public void setContents(org.apache.fop.pdf.PDFStream)
+    {
+        org.apache.fop.pdf.PDFPage this;
+        org.apache.fop.pdf.PDFStream contents;
+        org.apache.fop.pdf.PDFReference $r0;
+
+        this := @this: org.apache.fop.pdf.PDFPage;
+        contents := @parameter0: org.apache.fop.pdf.PDFStream;
+        if contents == null goto label0;
+
+        $r0 = new org.apache.fop.pdf.PDFReference;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFReference: void <init>(org.apache.fop.pdf.PDFObject)>(contents);
+        virtualinvoke this.<org.apache.fop.pdf.PDFPage: void put(java.lang.String,java.lang.Object)>("Contents", $r0);
+
+     label0:
+        return;
+    }
+
+    public void setParent(org.apache.fop.pdf.PDFPages)
+    {
+        org.apache.fop.pdf.PDFPage this;
+        org.apache.fop.pdf.PDFPages parent;
+        org.apache.fop.pdf.PDFReference $r0;
+
+        this := @this: org.apache.fop.pdf.PDFPage;
+        parent := @parameter0: org.apache.fop.pdf.PDFPages;
+        $r0 = new org.apache.fop.pdf.PDFReference;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFReference: void <init>(org.apache.fop.pdf.PDFObject)>(parent);
+        virtualinvoke this.<org.apache.fop.pdf.PDFPage: void put(java.lang.String,java.lang.Object)>("Parent", $r0);
+        return;
+    }
+
+    public void setTransition(int, org.apache.fop.pdf.TransitionDictionary)
+    {
+        org.apache.fop.pdf.PDFPage this;
+        int dur;
+        org.apache.fop.pdf.TransitionDictionary tr;
+        java.lang.Integer $r0;
+
+        this := @this: org.apache.fop.pdf.PDFPage;
+        dur := @parameter0: int;
+        tr := @parameter1: org.apache.fop.pdf.TransitionDictionary;
+        $r0 = new java.lang.Integer;
+        specialinvoke $r0.<java.lang.Integer: void <init>(int)>(dur);
+        virtualinvoke this.<org.apache.fop.pdf.PDFPage: void put(java.lang.String,java.lang.Object)>("Dur", $r0);
+        virtualinvoke this.<org.apache.fop.pdf.PDFPage: void put(java.lang.String,java.lang.Object)>("Trans", tr);
+        return;
+    }
+
+    public int getPageIndex()
+    {
+        org.apache.fop.pdf.PDFPage this;
+        int $i0;
+
+        this := @this: org.apache.fop.pdf.PDFPage;
+        $i0 = this.<org.apache.fop.pdf.PDFPage: int pageIndex>;
+        return $i0;
+    }
+}

@@ -1,0 +1,114 @@
+public class org.apache.fop.layoutmgr.BlockKnuthSequence extends org.apache.fop.layoutmgr.KnuthSequence
+{
+    private boolean isClosed;
+
+    public void <init>()
+    {
+        org.apache.fop.layoutmgr.BlockKnuthSequence this;
+
+        this := @this: org.apache.fop.layoutmgr.BlockKnuthSequence;
+        specialinvoke this.<org.apache.fop.layoutmgr.KnuthSequence: void <init>()>();
+        this.<org.apache.fop.layoutmgr.BlockKnuthSequence: boolean isClosed> = 0;
+        return;
+    }
+
+    public void <init>(java.util.List)
+    {
+        org.apache.fop.layoutmgr.BlockKnuthSequence this;
+        java.util.List list;
+
+        this := @this: org.apache.fop.layoutmgr.BlockKnuthSequence;
+        list := @parameter0: java.util.List;
+        specialinvoke this.<org.apache.fop.layoutmgr.KnuthSequence: void <init>(java.util.List)>(list);
+        this.<org.apache.fop.layoutmgr.BlockKnuthSequence: boolean isClosed> = 0;
+        return;
+    }
+
+    public boolean isInlineSequence()
+    {
+        org.apache.fop.layoutmgr.BlockKnuthSequence this;
+
+        this := @this: org.apache.fop.layoutmgr.BlockKnuthSequence;
+        return 0;
+    }
+
+    public boolean canAppendSequence(org.apache.fop.layoutmgr.KnuthSequence)
+    {
+        org.apache.fop.layoutmgr.BlockKnuthSequence this;
+        org.apache.fop.layoutmgr.KnuthSequence sequence;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.BlockKnuthSequence;
+        sequence := @parameter0: org.apache.fop.layoutmgr.KnuthSequence;
+        $z0 = virtualinvoke sequence.<org.apache.fop.layoutmgr.KnuthSequence: boolean isInlineSequence()>();
+        if $z0 != 0 goto label0;
+
+        $z0 = this.<org.apache.fop.layoutmgr.BlockKnuthSequence: boolean isClosed>;
+        if $z0 != 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public boolean appendSequence(org.apache.fop.layoutmgr.KnuthSequence)
+    {
+        org.apache.fop.layoutmgr.BlockKnuthSequence this;
+        org.apache.fop.layoutmgr.KnuthSequence sequence;
+
+        this := @this: org.apache.fop.layoutmgr.BlockKnuthSequence;
+        sequence := @parameter0: org.apache.fop.layoutmgr.KnuthSequence;
+        return 0;
+    }
+
+    public boolean appendSequence(org.apache.fop.layoutmgr.KnuthSequence, boolean, org.apache.fop.layoutmgr.BreakElement)
+    {
+        org.apache.fop.layoutmgr.BlockKnuthSequence this;
+        org.apache.fop.layoutmgr.KnuthSequence sequence;
+        boolean keepTogether, $z0;
+        org.apache.fop.layoutmgr.BreakElement breakElement;
+        org.apache.fop.layoutmgr.ListElement $r0;
+
+        this := @this: org.apache.fop.layoutmgr.BlockKnuthSequence;
+        sequence := @parameter0: org.apache.fop.layoutmgr.KnuthSequence;
+        keepTogether := @parameter1: boolean;
+        breakElement := @parameter2: org.apache.fop.layoutmgr.BreakElement;
+        $z0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockKnuthSequence: boolean canAppendSequence(org.apache.fop.layoutmgr.KnuthSequence)>(sequence);
+        if $z0 != 0 goto label0;
+
+        return 0;
+
+     label0:
+        if keepTogether == 0 goto label1;
+
+        virtualinvoke breakElement.<org.apache.fop.layoutmgr.BreakElement: void setPenaltyValue(int)>(1000);
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockKnuthSequence: boolean add(java.lang.Object)>(breakElement);
+        goto label2;
+
+     label1:
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockKnuthSequence: org.apache.fop.layoutmgr.ListElement getLast()>();
+        $z0 = virtualinvoke $r0.<org.apache.fop.layoutmgr.ListElement: boolean isGlue()>();
+        if $z0 != 0 goto label2;
+
+        virtualinvoke breakElement.<org.apache.fop.layoutmgr.BreakElement: void setPenaltyValue(int)>(0);
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockKnuthSequence: boolean add(java.lang.Object)>(breakElement);
+
+     label2:
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockKnuthSequence: boolean addAll(java.util.Collection)>(sequence);
+        return 1;
+    }
+
+    public org.apache.fop.layoutmgr.KnuthSequence endSequence()
+    {
+        org.apache.fop.layoutmgr.BlockKnuthSequence this;
+
+        this := @this: org.apache.fop.layoutmgr.BlockKnuthSequence;
+        this.<org.apache.fop.layoutmgr.BlockKnuthSequence: boolean isClosed> = 1;
+        return this;
+    }
+}

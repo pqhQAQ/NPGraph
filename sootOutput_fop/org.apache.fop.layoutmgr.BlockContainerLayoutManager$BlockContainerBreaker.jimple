@@ -1,0 +1,326 @@
+class org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker extends org.apache.fop.layoutmgr.AbstractBreaker
+{
+    private org.apache.fop.layoutmgr.BlockContainerLayoutManager bclm;
+    private org.apache.fop.traits.MinOptMax ipd;
+    private org.apache.fop.layoutmgr.PageBreakingAlgorithm deferredAlg;
+    private org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence deferredOriginalList;
+    private org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence deferredEffectiveList;
+    private final org.apache.fop.layoutmgr.BlockContainerLayoutManager this$0;
+
+    public void <init>(org.apache.fop.layoutmgr.BlockContainerLayoutManager, org.apache.fop.layoutmgr.BlockContainerLayoutManager, org.apache.fop.traits.MinOptMax)
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker this;
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager l1, bclm;
+        org.apache.fop.traits.MinOptMax ipd;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker;
+        l1 := @parameter0: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        bclm := @parameter1: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        ipd := @parameter2: org.apache.fop.traits.MinOptMax;
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.layoutmgr.BlockContainerLayoutManager this$0> = l1;
+        specialinvoke this.<org.apache.fop.layoutmgr.AbstractBreaker: void <init>()>();
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.layoutmgr.BlockContainerLayoutManager bclm> = bclm;
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.traits.MinOptMax ipd> = ipd;
+        return;
+    }
+
+    protected void observeElementList(java.util.List)
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker this;
+        java.util.List elementList;
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager $r0;
+        org.apache.fop.fo.flow.BlockContainer $r1;
+        java.lang.String $r2;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker;
+        elementList := @parameter0: java.util.List;
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.layoutmgr.BlockContainerLayoutManager bclm>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.flow.BlockContainer: java.lang.String getId()>();
+        staticinvoke <org.apache.fop.layoutmgr.ElementListObserver: void observe(java.util.List,java.lang.String,java.lang.String)>(elementList, "block-container", $r2);
+        return;
+    }
+
+    protected boolean isPartOverflowRecoveryActivated()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker this;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker;
+        return 0;
+    }
+
+    protected boolean isSinglePartFavored()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker this;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker;
+        return 1;
+    }
+
+    public int getDifferenceOfFirstPart()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker this;
+        org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition pbp;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm $r0;
+        java.util.LinkedList $r1;
+        java.lang.Object $r2;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker;
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.layoutmgr.PageBreakingAlgorithm deferredAlg>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.LinkedList getPageBreaks()>();
+        $r2 = virtualinvoke $r1.<java.util.LinkedList: java.lang.Object getFirst()>();
+        pbp = (org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition) $r2;
+        $i0 = pbp.<org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition: int difference>;
+        return $i0;
+    }
+
+    public boolean isOverflow()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker this;
+        boolean $z0;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm $r0;
+        java.util.LinkedList $r1;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker;
+        $z0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: boolean isEmpty()>();
+        if $z0 == 0 goto label0;
+
+        return 0;
+
+     label0:
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.layoutmgr.PageBreakingAlgorithm deferredAlg>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.LinkedList getPageBreaks()>();
+        $i0 = virtualinvoke $r1.<java.util.LinkedList: int size()>();
+        if $i0 <= 1 goto label1;
+
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    protected org.apache.fop.layoutmgr.LayoutManager getTopLevelLM()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker this;
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager $r0;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker;
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.layoutmgr.BlockContainerLayoutManager bclm>;
+        return $r0;
+    }
+
+    protected org.apache.fop.layoutmgr.LayoutContext createLayoutContext()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker this;
+        org.apache.fop.layoutmgr.LayoutContext lc;
+        org.apache.fop.traits.MinOptMax $r0;
+        int $i0;
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager $r1;
+        org.apache.fop.fo.flow.BlockContainer $r2;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker;
+        lc = specialinvoke this.<org.apache.fop.layoutmgr.AbstractBreaker: org.apache.fop.layoutmgr.LayoutContext createLayoutContext()>();
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.traits.MinOptMax ipd>;
+        $i0 = $r0.<org.apache.fop.traits.MinOptMax: int opt>;
+        virtualinvoke lc.<org.apache.fop.layoutmgr.LayoutContext: void setRefIPD(int)>($i0);
+        $r1 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.layoutmgr.BlockContainerLayoutManager this$0>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $i0 = virtualinvoke $r2.<org.apache.fop.fo.flow.BlockContainer: int getWritingMode()>();
+        virtualinvoke lc.<org.apache.fop.layoutmgr.LayoutContext: void setWritingMode(int)>($i0);
+        return lc;
+    }
+
+    protected java.util.LinkedList getNextKnuthElements(org.apache.fop.layoutmgr.LayoutContext, int)
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker this;
+        org.apache.fop.layoutmgr.LayoutContext context, childLC, $r3;
+        int alignment, $i0;
+        java.util.LinkedList $r0, returnList, returnedList;
+        org.apache.fop.layoutmgr.LayoutManager curLM, $r2;
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager $r1, $r5;
+        org.apache.fop.traits.MinOptMax $r4;
+        org.apache.fop.fo.flow.BlockContainer $r6;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker;
+        context := @parameter0: org.apache.fop.layoutmgr.LayoutContext;
+        alignment := @parameter1: int;
+        $r0 = new java.util.LinkedList;
+        specialinvoke $r0.<java.util.LinkedList: void <init>()>();
+        returnList = $r0;
+
+     label0:
+        $r1 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.layoutmgr.BlockContainerLayoutManager this$0>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.layoutmgr.LayoutManager getChildLM()>();
+        curLM = $r2;
+        if $r2 == null goto label3;
+
+        $r3 = new org.apache.fop.layoutmgr.LayoutContext;
+        specialinvoke $r3.<org.apache.fop.layoutmgr.LayoutContext: void <init>(int)>(0);
+        childLC = $r3;
+        $r4 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: org.apache.fop.traits.MinOptMax getStackLimitBP()>();
+        virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: void setStackLimitBP(org.apache.fop.traits.MinOptMax)>($r4);
+        $i0 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: int getRefIPD()>();
+        virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: void setRefIPD(int)>($i0);
+        $r5 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.layoutmgr.BlockContainerLayoutManager this$0>;
+        $r6 = virtualinvoke $r5.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $i0 = virtualinvoke $r6.<org.apache.fop.fo.flow.BlockContainer: int getWritingMode()>();
+        virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: void setWritingMode(int)>($i0);
+        returnedList = null;
+        $z0 = interfaceinvoke curLM.<org.apache.fop.layoutmgr.LayoutManager: boolean isFinished()>();
+        if $z0 != 0 goto label1;
+
+        returnedList = interfaceinvoke curLM.<org.apache.fop.layoutmgr.LayoutManager: java.util.LinkedList getNextKnuthElements(org.apache.fop.layoutmgr.LayoutContext,int)>(childLC, alignment);
+
+     label1:
+        if returnedList == null goto label2;
+
+        $r1 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.layoutmgr.BlockContainerLayoutManager bclm>;
+        virtualinvoke $r1.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void wrapPositionElements(java.util.List,java.util.List)>(returnedList, returnList);
+
+     label2:
+        goto label0;
+
+     label3:
+        staticinvoke <org.apache.fop.layoutmgr.SpaceResolver: void resolveElementList(java.util.LinkedList)>(returnList);
+        $r1 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.layoutmgr.BlockContainerLayoutManager this$0>;
+        virtualinvoke $r1.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void setFinished(boolean)>(1);
+        return returnList;
+    }
+
+    protected int getCurrentDisplayAlign()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker this;
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager $r0;
+        org.apache.fop.fo.flow.BlockContainer $r1;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker;
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.layoutmgr.BlockContainerLayoutManager this$0>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $i0 = virtualinvoke $r1.<org.apache.fop.fo.flow.BlockContainer: int getDisplayAlign()>();
+        return $i0;
+    }
+
+    protected boolean hasMoreContent()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker this;
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker;
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.layoutmgr.BlockContainerLayoutManager this$0>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean isFinished()>();
+        if $z0 != 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    protected void addAreas(org.apache.fop.layoutmgr.PositionIterator, org.apache.fop.layoutmgr.LayoutContext)
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker this;
+        org.apache.fop.layoutmgr.PositionIterator posIter;
+        org.apache.fop.layoutmgr.LayoutContext context;
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager $r0;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker;
+        posIter := @parameter0: org.apache.fop.layoutmgr.PositionIterator;
+        context := @parameter1: org.apache.fop.layoutmgr.LayoutContext;
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.layoutmgr.BlockContainerLayoutManager bclm>;
+        staticinvoke <org.apache.fop.layoutmgr.AreaAdditionUtil: void addAreas(org.apache.fop.layoutmgr.BlockStackingLayoutManager,org.apache.fop.layoutmgr.PositionIterator,org.apache.fop.layoutmgr.LayoutContext)>($r0, posIter, context);
+        return;
+    }
+
+    protected void doPhase3(org.apache.fop.layoutmgr.PageBreakingAlgorithm, int, org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence, org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence)
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker this;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm alg;
+        int partCount;
+        org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence originalList, effectiveList;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker;
+        alg := @parameter0: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        partCount := @parameter1: int;
+        originalList := @parameter2: org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence;
+        effectiveList := @parameter3: org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence;
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.layoutmgr.PageBreakingAlgorithm deferredAlg> = alg;
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence deferredOriginalList> = originalList;
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence deferredEffectiveList> = effectiveList;
+        return;
+    }
+
+    protected void finishPart(org.apache.fop.layoutmgr.PageBreakingAlgorithm, org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition)
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker this;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm alg;
+        org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition pbp;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker;
+        alg := @parameter0: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        pbp := @parameter1: org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition;
+        return;
+    }
+
+    protected org.apache.fop.layoutmgr.LayoutManager getCurrentChildLM()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker this;
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager $r0;
+        org.apache.fop.layoutmgr.LayoutManager $r1;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker;
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.layoutmgr.BlockContainerLayoutManager this$0>;
+        $r1 = $r0.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.layoutmgr.LayoutManager curChildLM>;
+        return $r1;
+    }
+
+    public void addContainedAreas()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker this;
+        boolean $z0;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm $r0, $r1, $r2;
+        java.util.LinkedList $r3;
+        int $i0;
+        org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence $r4, $r5;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker;
+        $z0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: boolean isEmpty()>();
+        if $z0 == 0 goto label0;
+
+        return;
+
+     label0:
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.layoutmgr.PageBreakingAlgorithm deferredAlg>;
+        virtualinvoke $r0.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: void removeAllPageBreaks()>();
+        $r1 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.layoutmgr.PageBreakingAlgorithm deferredAlg>;
+        $r2 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.layoutmgr.PageBreakingAlgorithm deferredAlg>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.LinkedList getPageBreaks()>();
+        $i0 = virtualinvoke $r3.<java.util.LinkedList: int size()>();
+        $r4 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence deferredOriginalList>;
+        $r5 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence deferredEffectiveList>;
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: void addAreas(org.apache.fop.layoutmgr.PageBreakingAlgorithm,int,org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence,org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence)>($r1, $i0, $r4, $r5);
+        return;
+    }
+
+    static org.apache.fop.layoutmgr.PageBreakingAlgorithm access$000(org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker)
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker x0;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm $r0;
+
+        x0 := @parameter0: org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker;
+        $r0 = x0.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.layoutmgr.PageBreakingAlgorithm deferredAlg>;
+        return $r0;
+    }
+}

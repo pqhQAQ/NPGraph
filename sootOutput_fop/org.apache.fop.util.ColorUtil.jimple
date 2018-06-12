@@ -1,0 +1,1707 @@
+public final class org.apache.fop.util.ColorUtil extends java.lang.Object
+{
+    private static java.util.Map colorMap;
+    protected static org.apache.commons.logging.Log log;
+    static java.lang.Class class$org$apache$fop$util$ColorUtil;
+
+    private void <init>()
+    {
+        org.apache.fop.util.ColorUtil this;
+
+        this := @this: org.apache.fop.util.ColorUtil;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public static java.awt.Color parseColorString(org.apache.fop.apps.FOUserAgent, java.lang.String) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.apps.FOUserAgent foUserAgent;
+        java.lang.String value, $r1, $r5;
+        java.awt.Color parsedColor;
+        java.util.Map $r0;
+        java.lang.Object $r2;
+        boolean $z0;
+        org.apache.fop.fo.expr.PropertyException $r3;
+        java.lang.StringBuffer $r4;
+
+        foUserAgent := @parameter0: org.apache.fop.apps.FOUserAgent;
+        value := @parameter1: java.lang.String;
+        if value != null goto label0;
+
+        return null;
+
+     label0:
+        $r0 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = virtualinvoke value.<java.lang.String: java.lang.String toLowerCase()>();
+        $r2 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>($r1);
+        parsedColor = (java.awt.Color) $r2;
+        if parsedColor != null goto label9;
+
+        $z0 = virtualinvoke value.<java.lang.String: boolean startsWith(java.lang.String)>("#");
+        if $z0 == 0 goto label1;
+
+        parsedColor = staticinvoke <org.apache.fop.util.ColorUtil: java.awt.Color parseWithHash(java.lang.String)>(value);
+        goto label7;
+
+     label1:
+        $z0 = virtualinvoke value.<java.lang.String: boolean startsWith(java.lang.String)>("rgb(");
+        if $z0 == 0 goto label2;
+
+        parsedColor = staticinvoke <org.apache.fop.util.ColorUtil: java.awt.Color parseAsRGB(java.lang.String)>(value);
+        goto label7;
+
+     label2:
+        $z0 = virtualinvoke value.<java.lang.String: boolean startsWith(java.lang.String)>("url(");
+        if $z0 == 0 goto label3;
+
+        $r3 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r3.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>("Colors starting with url( are not yet supported!");
+        throw $r3;
+
+     label3:
+        $z0 = virtualinvoke value.<java.lang.String: boolean startsWith(java.lang.String)>("java.awt.Color");
+        if $z0 == 0 goto label4;
+
+        parsedColor = staticinvoke <org.apache.fop.util.ColorUtil: java.awt.Color parseAsJavaAWTColor(java.lang.String)>(value);
+        goto label7;
+
+     label4:
+        $z0 = virtualinvoke value.<java.lang.String: boolean startsWith(java.lang.String)>("system-color(");
+        if $z0 == 0 goto label5;
+
+        parsedColor = staticinvoke <org.apache.fop.util.ColorUtil: java.awt.Color parseAsSystemColor(java.lang.String)>(value);
+        goto label7;
+
+     label5:
+        $z0 = virtualinvoke value.<java.lang.String: boolean startsWith(java.lang.String)>("fop-rgb-icc");
+        if $z0 == 0 goto label6;
+
+        parsedColor = staticinvoke <org.apache.fop.util.ColorUtil: java.awt.Color parseAsFopRgbIcc(org.apache.fop.apps.FOUserAgent,java.lang.String)>(foUserAgent, value);
+        goto label7;
+
+     label6:
+        $z0 = virtualinvoke value.<java.lang.String: boolean startsWith(java.lang.String)>("cmyk");
+        if $z0 == 0 goto label7;
+
+        parsedColor = staticinvoke <org.apache.fop.util.ColorUtil: java.awt.Color parseAsCMYK(java.lang.String)>(value);
+
+     label7:
+        if parsedColor != null goto label8;
+
+        $r3 = new org.apache.fop.fo.expr.PropertyException;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unknown Color: ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(value);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r3.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>($r5);
+        throw $r3;
+
+     label8:
+        $r0 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        interfaceinvoke $r0.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(value, parsedColor);
+
+     label9:
+        return parsedColor;
+    }
+
+    private static java.awt.Color parseAsSystemColor(java.lang.String) throws org.apache.fop.fo.expr.PropertyException
+    {
+        java.lang.String value, value, $r2;
+        int poss, pose, $i0;
+        org.apache.fop.fo.expr.PropertyException $r0;
+        java.lang.StringBuffer $r1;
+        java.util.Map $r3;
+        java.lang.Object $r4;
+        java.awt.Color $r5;
+
+        value := @parameter0: java.lang.String;
+        poss = virtualinvoke value.<java.lang.String: int indexOf(java.lang.String)>("(");
+        pose = virtualinvoke value.<java.lang.String: int indexOf(java.lang.String)>(")");
+        if poss == -1 goto label0;
+
+        if pose == -1 goto label0;
+
+        $i0 = poss + 1;
+        value = virtualinvoke value.<java.lang.String: java.lang.String substring(int,int)>($i0, pose);
+        goto label1;
+
+     label0:
+        $r0 = new org.apache.fop.fo.expr.PropertyException;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unknown color format: ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(value);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(". Must be system-color(x)");
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r0.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>($r2);
+        throw $r0;
+
+     label1:
+        $r3 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r4 = interfaceinvoke $r3.<java.util.Map: java.lang.Object get(java.lang.Object)>(value);
+        $r5 = (java.awt.Color) $r4;
+        return $r5;
+    }
+
+    private static java.awt.Color parseAsJavaAWTColor(java.lang.String) throws org.apache.fop.fo.expr.PropertyException
+    {
+        java.lang.String value, value, $r2, $r3;
+        float red, green, blue, $f0;
+        int poss, pose, $i0, $i1;
+        java.lang.String[] args;
+        org.apache.fop.fo.expr.PropertyException pe, $r0, $r5;
+        java.lang.Exception e, $r6;
+        java.lang.StringBuffer $r1;
+        double $d0;
+        byte $b2;
+        java.lang.IllegalArgumentException $r4;
+        java.awt.Color $r7;
+
+        value := @parameter0: java.lang.String;
+        red = 0.0F;
+        green = 0.0F;
+        blue = 0.0F;
+        poss = virtualinvoke value.<java.lang.String: int indexOf(java.lang.String)>("[");
+        pose = virtualinvoke value.<java.lang.String: int indexOf(java.lang.String)>("]");
+
+     label0:
+        if poss == -1 goto label4;
+
+        if pose == -1 goto label4;
+
+        $i0 = poss + 1;
+        value = virtualinvoke value.<java.lang.String: java.lang.String substring(int,int)>($i0, pose);
+        args = virtualinvoke value.<java.lang.String: java.lang.String[] split(java.lang.String)>(",");
+        $i1 = lengthof args;
+        if $i1 == 3 goto label1;
+
+        $r0 = new org.apache.fop.fo.expr.PropertyException;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Invalid number of arguments for a java.awt.Color: ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(value);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r0.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>($r2);
+        throw $r0;
+
+     label1:
+        $r3 = args[0];
+        $r3 = virtualinvoke $r3.<java.lang.String: java.lang.String trim()>();
+        $r3 = virtualinvoke $r3.<java.lang.String: java.lang.String substring(int)>(2);
+        $f0 = staticinvoke <java.lang.Float: float parseFloat(java.lang.String)>($r3);
+        red = $f0 / 255.0F;
+        $r3 = args[1];
+        $r3 = virtualinvoke $r3.<java.lang.String: java.lang.String trim()>();
+        $r3 = virtualinvoke $r3.<java.lang.String: java.lang.String substring(int)>(2);
+        $f0 = staticinvoke <java.lang.Float: float parseFloat(java.lang.String)>($r3);
+        green = $f0 / 255.0F;
+        $r3 = args[2];
+        $r3 = virtualinvoke $r3.<java.lang.String: java.lang.String trim()>();
+        $r3 = virtualinvoke $r3.<java.lang.String: java.lang.String substring(int)>(2);
+        $f0 = staticinvoke <java.lang.Float: float parseFloat(java.lang.String)>($r3);
+        blue = $f0 / 255.0F;
+        $d0 = (double) red;
+        $b2 = $d0 cmpg 0.0;
+        if $b2 < 0 goto label2;
+
+        $d0 = (double) red;
+        $b2 = $d0 cmpl 1.0;
+        if $b2 > 0 goto label2;
+
+        $d0 = (double) green;
+        $b2 = $d0 cmpg 0.0;
+        if $b2 < 0 goto label2;
+
+        $d0 = (double) green;
+        $b2 = $d0 cmpl 1.0;
+        if $b2 > 0 goto label2;
+
+        $d0 = (double) blue;
+        $b2 = $d0 cmpg 0.0;
+        if $b2 < 0 goto label2;
+
+        $d0 = (double) blue;
+        $b2 = $d0 cmpl 1.0;
+        if $b2 <= 0 goto label3;
+
+     label2:
+        $r0 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r0.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>("Color values out of range");
+        throw $r0;
+
+     label3:
+        goto label5;
+
+     label4:
+        $r4 = new java.lang.IllegalArgumentException;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Invalid format for a java.awt.Color: ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(value);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r4.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r2);
+        throw $r4;
+
+     label5:
+        goto label8;
+
+     label6:
+        $r5 := @caughtexception;
+        pe = $r5;
+        throw pe;
+
+     label7:
+        $r6 := @caughtexception;
+        e = $r6;
+        $r0 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r0.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.Exception)>(e);
+        throw $r0;
+
+     label8:
+        $r7 = new java.awt.Color;
+        specialinvoke $r7.<java.awt.Color: void <init>(float,float,float)>(red, green, blue);
+        return $r7;
+
+        catch org.apache.fop.fo.expr.PropertyException from label0 to label5 with label6;
+        catch java.lang.Exception from label0 to label5 with label7;
+    }
+
+    private static java.awt.Color parseAsRGB(java.lang.String) throws org.apache.fop.fo.expr.PropertyException
+    {
+        java.lang.String value, str, value, $r2, $r3;
+        int poss, pose, $i0, $i1, $i2;
+        java.lang.String[] args;
+        float red, green, blue, $f0;
+        java.awt.Color parsedColor, $r4;
+        org.apache.fop.fo.expr.PropertyException pe, $r0, $r5;
+        java.lang.Exception e, $r6;
+        java.lang.StringBuffer $r1;
+        boolean $z0;
+        double $d0;
+        byte $b3;
+
+        value := @parameter0: java.lang.String;
+        poss = virtualinvoke value.<java.lang.String: int indexOf(java.lang.String)>("(");
+        pose = virtualinvoke value.<java.lang.String: int indexOf(java.lang.String)>(")");
+        if poss == -1 goto label13;
+
+        if pose == -1 goto label13;
+
+        $i0 = poss + 1;
+        value = virtualinvoke value.<java.lang.String: java.lang.String substring(int,int)>($i0, pose);
+
+     label0:
+        args = virtualinvoke value.<java.lang.String: java.lang.String[] split(java.lang.String)>(",");
+        $i1 = lengthof args;
+        if $i1 == 3 goto label1;
+
+        $r0 = new org.apache.fop.fo.expr.PropertyException;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Invalid number of arguments: rgb(");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(value);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(")");
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r0.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>($r2);
+        throw $r0;
+
+     label1:
+        red = 0.0F;
+        green = 0.0F;
+        blue = 0.0F;
+        $r3 = args[0];
+        str = virtualinvoke $r3.<java.lang.String: java.lang.String trim()>();
+        $z0 = virtualinvoke str.<java.lang.String: boolean endsWith(java.lang.String)>("%");
+        if $z0 == 0 goto label2;
+
+        $i2 = virtualinvoke str.<java.lang.String: int length()>();
+        $i2 = $i2 - 1;
+        $r3 = virtualinvoke str.<java.lang.String: java.lang.String substring(int,int)>(0, $i2);
+        $f0 = staticinvoke <java.lang.Float: float parseFloat(java.lang.String)>($r3);
+        red = $f0 / 100.0F;
+        goto label3;
+
+     label2:
+        $f0 = staticinvoke <java.lang.Float: float parseFloat(java.lang.String)>(str);
+        red = $f0 / 255.0F;
+
+     label3:
+        $r3 = args[1];
+        str = virtualinvoke $r3.<java.lang.String: java.lang.String trim()>();
+        $z0 = virtualinvoke str.<java.lang.String: boolean endsWith(java.lang.String)>("%");
+        if $z0 == 0 goto label4;
+
+        $i2 = virtualinvoke str.<java.lang.String: int length()>();
+        $i2 = $i2 - 1;
+        $r3 = virtualinvoke str.<java.lang.String: java.lang.String substring(int,int)>(0, $i2);
+        $f0 = staticinvoke <java.lang.Float: float parseFloat(java.lang.String)>($r3);
+        green = $f0 / 100.0F;
+        goto label5;
+
+     label4:
+        $f0 = staticinvoke <java.lang.Float: float parseFloat(java.lang.String)>(str);
+        green = $f0 / 255.0F;
+
+     label5:
+        $r3 = args[2];
+        str = virtualinvoke $r3.<java.lang.String: java.lang.String trim()>();
+        $z0 = virtualinvoke str.<java.lang.String: boolean endsWith(java.lang.String)>("%");
+        if $z0 == 0 goto label6;
+
+        $i2 = virtualinvoke str.<java.lang.String: int length()>();
+        $i2 = $i2 - 1;
+        $r3 = virtualinvoke str.<java.lang.String: java.lang.String substring(int,int)>(0, $i2);
+        $f0 = staticinvoke <java.lang.Float: float parseFloat(java.lang.String)>($r3);
+        blue = $f0 / 100.0F;
+        goto label7;
+
+     label6:
+        $f0 = staticinvoke <java.lang.Float: float parseFloat(java.lang.String)>(str);
+        blue = $f0 / 255.0F;
+
+     label7:
+        $d0 = (double) red;
+        $b3 = $d0 cmpg 0.0;
+        if $b3 < 0 goto label8;
+
+        $d0 = (double) red;
+        $b3 = $d0 cmpl 1.0;
+        if $b3 > 0 goto label8;
+
+        $d0 = (double) green;
+        $b3 = $d0 cmpg 0.0;
+        if $b3 < 0 goto label8;
+
+        $d0 = (double) green;
+        $b3 = $d0 cmpl 1.0;
+        if $b3 > 0 goto label8;
+
+        $d0 = (double) blue;
+        $b3 = $d0 cmpg 0.0;
+        if $b3 < 0 goto label8;
+
+        $d0 = (double) blue;
+        $b3 = $d0 cmpl 1.0;
+        if $b3 <= 0 goto label9;
+
+     label8:
+        $r0 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r0.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>("Color values out of range");
+        throw $r0;
+
+     label9:
+        $r4 = new java.awt.Color;
+        specialinvoke $r4.<java.awt.Color: void <init>(float,float,float)>(red, green, blue);
+        parsedColor = $r4;
+
+     label10:
+        goto label14;
+
+     label11:
+        $r5 := @caughtexception;
+        pe = $r5;
+        throw pe;
+
+     label12:
+        $r6 := @caughtexception;
+        e = $r6;
+        $r0 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r0.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.Exception)>(e);
+        throw $r0;
+
+     label13:
+        $r0 = new org.apache.fop.fo.expr.PropertyException;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unknown color format: ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(value);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(". Must be rgb(r,g,b)");
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r0.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>($r2);
+        throw $r0;
+
+     label14:
+        return parsedColor;
+
+        catch org.apache.fop.fo.expr.PropertyException from label0 to label10 with label11;
+        catch java.lang.Exception from label0 to label10 with label12;
+    }
+
+    private static java.awt.Color parseWithHash(java.lang.String) throws org.apache.fop.fo.expr.PropertyException
+    {
+        java.lang.String value, $r0, $r6;
+        null_type parsedColor;
+        int len, alpha, $i1, red, green, blue;
+        boolean red, green, blue;
+        java.lang.Exception e, $r3;
+        byte $b0;
+        java.lang.NumberFormatException $r1;
+        java.awt.Color $r2, parsedColor;
+        org.apache.fop.fo.expr.PropertyException $r4;
+        java.lang.StringBuffer $r5;
+
+        value := @parameter0: java.lang.String;
+        parsedColor = null;
+
+     label0:
+        len = virtualinvoke value.<java.lang.String: int length()>();
+        if len == 5 goto label1;
+
+        if len != 9 goto label4;
+
+     label1:
+        if len != 5 goto label2;
+
+        $b0 = 3;
+        goto label3;
+
+     label2:
+        $b0 = 7;
+
+     label3:
+        $r0 = virtualinvoke value.<java.lang.String: java.lang.String substring(int)>($b0);
+        alpha = staticinvoke <java.lang.Integer: int parseInt(java.lang.String,int)>($r0, 16);
+        goto label5;
+
+     label4:
+        alpha = 255;
+
+     label5:
+        red = 0;
+        green = 0;
+        blue = 0;
+        if len == 4 goto label6;
+
+        if len != 5 goto label7;
+
+     label6:
+        $r0 = virtualinvoke value.<java.lang.String: java.lang.String substring(int,int)>(1, 2);
+        $i1 = staticinvoke <java.lang.Integer: int parseInt(java.lang.String,int)>($r0, 16);
+        red = $i1 * 17;
+        $r0 = virtualinvoke value.<java.lang.String: java.lang.String substring(int,int)>(2, 3);
+        $i1 = staticinvoke <java.lang.Integer: int parseInt(java.lang.String,int)>($r0, 16);
+        green = $i1 * 17;
+        $r0 = virtualinvoke value.<java.lang.String: java.lang.String substring(int,int)>(3, 4);
+        $i1 = staticinvoke <java.lang.Integer: int parseInt(java.lang.String,int)>($r0, 16);
+        blue = $i1 * 17;
+        goto label10;
+
+     label7:
+        if len == 7 goto label8;
+
+        if len != 9 goto label9;
+
+     label8:
+        $r0 = virtualinvoke value.<java.lang.String: java.lang.String substring(int,int)>(1, 3);
+        red = staticinvoke <java.lang.Integer: int parseInt(java.lang.String,int)>($r0, 16);
+        $r0 = virtualinvoke value.<java.lang.String: java.lang.String substring(int,int)>(3, 5);
+        green = staticinvoke <java.lang.Integer: int parseInt(java.lang.String,int)>($r0, 16);
+        $r0 = virtualinvoke value.<java.lang.String: java.lang.String substring(int,int)>(5, 7);
+        blue = staticinvoke <java.lang.Integer: int parseInt(java.lang.String,int)>($r0, 16);
+        goto label10;
+
+     label9:
+        $r1 = new java.lang.NumberFormatException;
+        specialinvoke $r1.<java.lang.NumberFormatException: void <init>()>();
+        throw $r1;
+
+     label10:
+        $r2 = new java.awt.Color;
+        specialinvoke $r2.<java.awt.Color: void <init>(int,int,int,int)>(red, green, blue, alpha);
+        parsedColor = $r2;
+
+     label11:
+        goto label13;
+
+     label12:
+        $r3 := @caughtexception;
+        e = $r3;
+        $r4 = new org.apache.fop.fo.expr.PropertyException;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unknown color format: ");
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(value);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(". Must be #RGB. #RGBA, #RRGGBB, or #RRGGBBAA");
+        $r6 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r4.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>($r6);
+        throw $r4;
+
+     label13:
+        return parsedColor;
+
+        catch java.lang.Exception from label0 to label11 with label12;
+    }
+
+    private static java.awt.Color parseAsFopRgbIcc(org.apache.fop.apps.FOUserAgent, java.lang.String) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.apps.FOUserAgent foUserAgent;
+        java.lang.String value, iccProfileName, iccProfileSrc, $r0, $r2, $r4;
+        int poss, pose, ix, $i0, $i1, $i2, $i4, $i5;
+        java.lang.String[] args;
+        float[] iccComponents;
+        java.awt.color.ColorSpace colorSpace, $r5;
+        float red, green, blue, $f0, $f1, $f2;
+        java.awt.Color parsedColor, $r8;
+        org.apache.fop.fo.expr.PropertyException pe, $r1, $r9;
+        java.lang.Exception e, $r10;
+        boolean $z0;
+        org.apache.fop.apps.FopFactory $r3;
+        byte $b3;
+        org.apache.commons.logging.Log $r6;
+        java.lang.StringBuffer $r7, $r11;
+
+        foUserAgent := @parameter0: org.apache.fop.apps.FOUserAgent;
+        value := @parameter1: java.lang.String;
+        poss = virtualinvoke value.<java.lang.String: int indexOf(java.lang.String)>("(");
+        pose = virtualinvoke value.<java.lang.String: int indexOf(java.lang.String)>(")");
+        if poss == -1 goto label21;
+
+        if pose == -1 goto label21;
+
+        $i0 = poss + 1;
+        $r0 = virtualinvoke value.<java.lang.String: java.lang.String substring(int,int)>($i0, pose);
+        args = virtualinvoke $r0.<java.lang.String: java.lang.String[] split(java.lang.String)>(",");
+
+     label0:
+        $i1 = lengthof args;
+        if $i1 >= 5 goto label1;
+
+        $r1 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r1.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>("Too few arguments for rgb-icc() function");
+        throw $r1;
+
+     label1:
+        $r0 = args[3];
+        iccProfileName = virtualinvoke $r0.<java.lang.String: java.lang.String trim()>();
+        if iccProfileName == null goto label2;
+
+        $r0 = "";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(iccProfileName);
+        if $z0 == 0 goto label3;
+
+     label2:
+        $r1 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r1.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>("ICC profile name missing");
+        throw $r1;
+
+     label3:
+        $r0 = args[4];
+        iccProfileSrc = virtualinvoke $r0.<java.lang.String: java.lang.String trim()>();
+        if iccProfileSrc == null goto label4;
+
+        $r0 = "";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(iccProfileSrc);
+        if $z0 == 0 goto label5;
+
+     label4:
+        $r1 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r1.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>("ICC profile source missing");
+        throw $r1;
+
+     label5:
+        $z0 = virtualinvoke iccProfileSrc.<java.lang.String: boolean startsWith(java.lang.String)>("\"");
+        if $z0 != 0 goto label6;
+
+        $z0 = virtualinvoke iccProfileSrc.<java.lang.String: boolean startsWith(java.lang.String)>("\'");
+        if $z0 == 0 goto label7;
+
+     label6:
+        iccProfileSrc = virtualinvoke iccProfileSrc.<java.lang.String: java.lang.String substring(int)>(1);
+
+     label7:
+        $z0 = virtualinvoke iccProfileSrc.<java.lang.String: boolean endsWith(java.lang.String)>("\"");
+        if $z0 != 0 goto label8;
+
+        $z0 = virtualinvoke iccProfileSrc.<java.lang.String: boolean endsWith(java.lang.String)>("\'");
+        if $z0 == 0 goto label9;
+
+     label8:
+        $i2 = virtualinvoke iccProfileSrc.<java.lang.String: int length()>();
+        $i2 = $i2 - 1;
+        iccProfileSrc = virtualinvoke iccProfileSrc.<java.lang.String: java.lang.String substring(int,int)>(0, $i2);
+
+     label9:
+        $i1 = lengthof args;
+        $i1 = $i1 - 5;
+        iccComponents = newarray (float)[$i1];
+        ix = 4;
+
+     label10:
+        ix = ix + 1;
+        $i0 = lengthof args;
+        if ix >= $i0 goto label11;
+
+        $i0 = ix - 5;
+        $r2 = args[ix];
+        $r2 = virtualinvoke $r2.<java.lang.String: java.lang.String trim()>();
+        $f0 = staticinvoke <java.lang.Float: float parseFloat(java.lang.String)>($r2);
+        iccComponents[$i0] = $f0;
+        goto label10;
+
+     label11:
+        if foUserAgent == null goto label12;
+
+        $r3 = virtualinvoke foUserAgent.<org.apache.fop.apps.FOUserAgent: org.apache.fop.apps.FopFactory getFactory()>();
+        $r4 = virtualinvoke foUserAgent.<org.apache.fop.apps.FOUserAgent: java.lang.String getBaseURL()>();
+        $r5 = virtualinvoke $r3.<org.apache.fop.apps.FopFactory: java.awt.color.ColorSpace getColorSpace(java.lang.String,java.lang.String)>($r4, iccProfileSrc);
+        goto label13;
+
+     label12:
+        $r5 = null;
+
+     label13:
+        colorSpace = $r5;
+        red = 0.0F;
+        green = 0.0F;
+        blue = 0.0F;
+        $r0 = args[0];
+        $r0 = virtualinvoke $r0.<java.lang.String: java.lang.String trim()>();
+        red = staticinvoke <java.lang.Float: float parseFloat(java.lang.String)>($r0);
+        $r0 = args[1];
+        $r0 = virtualinvoke $r0.<java.lang.String: java.lang.String trim()>();
+        green = staticinvoke <java.lang.Float: float parseFloat(java.lang.String)>($r0);
+        $r0 = args[2];
+        $r0 = virtualinvoke $r0.<java.lang.String: java.lang.String trim()>();
+        blue = staticinvoke <java.lang.Float: float parseFloat(java.lang.String)>($r0);
+        $b3 = red cmpg 0.0F;
+        if $b3 < 0 goto label14;
+
+        $b3 = red cmpl 1.0F;
+        if $b3 > 0 goto label14;
+
+        $b3 = green cmpg 0.0F;
+        if $b3 < 0 goto label14;
+
+        $b3 = green cmpl 1.0F;
+        if $b3 > 0 goto label14;
+
+        $b3 = blue cmpg 0.0F;
+        if $b3 < 0 goto label14;
+
+        $b3 = blue cmpl 1.0F;
+        if $b3 <= 0 goto label15;
+
+     label14:
+        $r1 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r1.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>("Color values out of range. Fallback RGB arguments to fop-rgb-icc() must be [0..1]");
+        throw $r1;
+
+     label15:
+        if colorSpace == null goto label16;
+
+        parsedColor = staticinvoke <org.apache.fop.util.ColorExt: org.apache.fop.util.ColorExt createFromFoRgbIcc(float,float,float,java.lang.String,java.lang.String,java.awt.color.ColorSpace,float[])>(red, green, blue, iccProfileName, iccProfileSrc, colorSpace, iccComponents);
+        goto label17;
+
+     label16:
+        $r6 = <org.apache.fop.util.ColorUtil: org.apache.commons.logging.Log log>;
+        $r7 = new java.lang.StringBuffer;
+        specialinvoke $r7.<java.lang.StringBuffer: void <init>()>();
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Color profile \'");
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(iccProfileSrc);
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\' not found. Using rgb replacement values.");
+        $r4 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r6.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r4);
+        $r8 = new java.awt.Color;
+        $f0 = red * 255.0F;
+        $i2 = staticinvoke <java.lang.Math: int round(float)>($f0);
+        $f1 = green * 255.0F;
+        $i4 = staticinvoke <java.lang.Math: int round(float)>($f1);
+        $f2 = blue * 255.0F;
+        $i5 = staticinvoke <java.lang.Math: int round(float)>($f2);
+        specialinvoke $r8.<java.awt.Color: void <init>(int,int,int)>($i2, $i4, $i5);
+        parsedColor = $r8;
+
+     label17:
+        goto label20;
+
+     label18:
+        $r9 := @caughtexception;
+        pe = $r9;
+        throw pe;
+
+     label19:
+        $r10 := @caughtexception;
+        e = $r10;
+        $r1 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r1.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.Exception)>(e);
+        throw $r1;
+
+     label20:
+        goto label22;
+
+     label21:
+        $r1 = new org.apache.fop.fo.expr.PropertyException;
+        $r11 = new java.lang.StringBuffer;
+        specialinvoke $r11.<java.lang.StringBuffer: void <init>()>();
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unknown color format: ");
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(value);
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(". Must be fop-rgb-icc(r,g,b,NCNAME,src,....)");
+        $r2 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r1.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>($r2);
+        throw $r1;
+
+     label22:
+        return parsedColor;
+
+        catch org.apache.fop.fo.expr.PropertyException from label0 to label17 with label18;
+        catch java.lang.Exception from label0 to label17 with label19;
+    }
+
+    private static java.awt.Color parseAsCMYK(java.lang.String) throws org.apache.fop.fo.expr.PropertyException
+    {
+        java.lang.String value, str, value, $r2, $r3;
+        int poss, pose, $i0, $i1, $i2;
+        java.lang.String[] args;
+        float cyan, magenta, yellow, black, $f0, $f1, $f2;
+        float[] cmyk, rgb, $r4;
+        org.apache.fop.util.CMYKColorSpace cmykCs;
+        org.apache.fop.util.ColorExt parsedColor;
+        org.apache.fop.fo.expr.PropertyException pe, $r0, $r5;
+        java.lang.Exception e, $r6;
+        java.lang.StringBuffer $r1;
+        boolean $z0;
+        double $d0;
+        byte $b3;
+
+        value := @parameter0: java.lang.String;
+        poss = virtualinvoke value.<java.lang.String: int indexOf(java.lang.String)>("(");
+        pose = virtualinvoke value.<java.lang.String: int indexOf(java.lang.String)>(")");
+        if poss == -1 goto label16;
+
+        if pose == -1 goto label16;
+
+        $i0 = poss + 1;
+        value = virtualinvoke value.<java.lang.String: java.lang.String substring(int,int)>($i0, pose);
+        args = virtualinvoke value.<java.lang.String: java.lang.String[] split(java.lang.String)>(",");
+
+     label0:
+        $i1 = lengthof args;
+        if $i1 == 4 goto label1;
+
+        $r0 = new org.apache.fop.fo.expr.PropertyException;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Invalid number of arguments: cmyk(");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(value);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(")");
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r0.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>($r2);
+        throw $r0;
+
+     label1:
+        cyan = 0.0F;
+        magenta = 0.0F;
+        yellow = 0.0F;
+        black = 0.0F;
+        $r3 = args[0];
+        str = virtualinvoke $r3.<java.lang.String: java.lang.String trim()>();
+        $z0 = virtualinvoke str.<java.lang.String: boolean endsWith(java.lang.String)>("%");
+        if $z0 == 0 goto label2;
+
+        $i2 = virtualinvoke str.<java.lang.String: int length()>();
+        $i2 = $i2 - 1;
+        $r3 = virtualinvoke str.<java.lang.String: java.lang.String substring(int,int)>(0, $i2);
+        $f0 = staticinvoke <java.lang.Float: float parseFloat(java.lang.String)>($r3);
+        cyan = $f0 / 100.0F;
+        goto label3;
+
+     label2:
+        cyan = staticinvoke <java.lang.Float: float parseFloat(java.lang.String)>(str);
+
+     label3:
+        $r3 = args[1];
+        str = virtualinvoke $r3.<java.lang.String: java.lang.String trim()>();
+        $z0 = virtualinvoke str.<java.lang.String: boolean endsWith(java.lang.String)>("%");
+        if $z0 == 0 goto label4;
+
+        $i2 = virtualinvoke str.<java.lang.String: int length()>();
+        $i2 = $i2 - 1;
+        $r3 = virtualinvoke str.<java.lang.String: java.lang.String substring(int,int)>(0, $i2);
+        $f0 = staticinvoke <java.lang.Float: float parseFloat(java.lang.String)>($r3);
+        magenta = $f0 / 100.0F;
+        goto label5;
+
+     label4:
+        magenta = staticinvoke <java.lang.Float: float parseFloat(java.lang.String)>(str);
+
+     label5:
+        $r3 = args[2];
+        str = virtualinvoke $r3.<java.lang.String: java.lang.String trim()>();
+        $z0 = virtualinvoke str.<java.lang.String: boolean endsWith(java.lang.String)>("%");
+        if $z0 == 0 goto label6;
+
+        $i2 = virtualinvoke str.<java.lang.String: int length()>();
+        $i2 = $i2 - 1;
+        $r3 = virtualinvoke str.<java.lang.String: java.lang.String substring(int,int)>(0, $i2);
+        $f0 = staticinvoke <java.lang.Float: float parseFloat(java.lang.String)>($r3);
+        yellow = $f0 / 100.0F;
+        goto label7;
+
+     label6:
+        yellow = staticinvoke <java.lang.Float: float parseFloat(java.lang.String)>(str);
+
+     label7:
+        $r3 = args[3];
+        str = virtualinvoke $r3.<java.lang.String: java.lang.String trim()>();
+        $z0 = virtualinvoke str.<java.lang.String: boolean endsWith(java.lang.String)>("%");
+        if $z0 == 0 goto label8;
+
+        $i2 = virtualinvoke str.<java.lang.String: int length()>();
+        $i2 = $i2 - 1;
+        $r3 = virtualinvoke str.<java.lang.String: java.lang.String substring(int,int)>(0, $i2);
+        $f0 = staticinvoke <java.lang.Float: float parseFloat(java.lang.String)>($r3);
+        black = $f0 / 100.0F;
+        goto label9;
+
+     label8:
+        black = staticinvoke <java.lang.Float: float parseFloat(java.lang.String)>(str);
+
+     label9:
+        $d0 = (double) cyan;
+        $b3 = $d0 cmpg 0.0;
+        if $b3 < 0 goto label10;
+
+        $d0 = (double) cyan;
+        $b3 = $d0 cmpl 1.0;
+        if $b3 > 0 goto label10;
+
+        $d0 = (double) magenta;
+        $b3 = $d0 cmpg 0.0;
+        if $b3 < 0 goto label10;
+
+        $d0 = (double) magenta;
+        $b3 = $d0 cmpl 1.0;
+        if $b3 > 0 goto label10;
+
+        $d0 = (double) yellow;
+        $b3 = $d0 cmpg 0.0;
+        if $b3 < 0 goto label10;
+
+        $d0 = (double) yellow;
+        $b3 = $d0 cmpl 1.0;
+        if $b3 > 0 goto label10;
+
+        $d0 = (double) black;
+        $b3 = $d0 cmpg 0.0;
+        if $b3 < 0 goto label10;
+
+        $d0 = (double) black;
+        $b3 = $d0 cmpl 1.0;
+        if $b3 <= 0 goto label11;
+
+     label10:
+        $r0 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r0.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>("Color values out of rangeArguments to cmyk() must be in the range [0%-100%] or [0.0-1.0]");
+        throw $r0;
+
+     label11:
+        $r4 = newarray (float)[4];
+        $r4[0] = cyan;
+        $r4[1] = magenta;
+        $r4[2] = yellow;
+        $r4[3] = black;
+        cmyk = $r4;
+        cmykCs = staticinvoke <org.apache.fop.util.CMYKColorSpace: org.apache.fop.util.CMYKColorSpace getInstance()>();
+        rgb = virtualinvoke cmykCs.<org.apache.fop.util.CMYKColorSpace: float[] toRGB(float[])>(cmyk);
+        $f0 = rgb[0];
+        $f1 = rgb[1];
+        $f2 = rgb[2];
+        parsedColor = staticinvoke <org.apache.fop.util.ColorExt: org.apache.fop.util.ColorExt createFromFoRgbIcc(float,float,float,java.lang.String,java.lang.String,java.awt.color.ColorSpace,float[])>($f0, $f1, $f2, null, "#CMYK", cmykCs, cmyk);
+
+     label12:
+        goto label15;
+
+     label13:
+        $r5 := @caughtexception;
+        pe = $r5;
+        throw pe;
+
+     label14:
+        $r6 := @caughtexception;
+        e = $r6;
+        $r0 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r0.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.Exception)>(e);
+        throw $r0;
+
+     label15:
+        goto label17;
+
+     label16:
+        $r0 = new org.apache.fop.fo.expr.PropertyException;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unknown color format: ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(value);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(". Must be cmyk(c,m,y,k)");
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r0.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>($r2);
+        throw $r0;
+
+     label17:
+        return parsedColor;
+
+        catch org.apache.fop.fo.expr.PropertyException from label0 to label12 with label13;
+        catch java.lang.Exception from label0 to label12 with label14;
+    }
+
+    public static java.lang.String colorToString(java.awt.Color)
+    {
+        java.awt.Color color;
+        java.awt.color.ColorSpace cs;
+        java.lang.StringBuffer sbuf, $r0, $r1;
+        float[] cmyk;
+        java.lang.String s, $r2, $r3;
+        int $i0;
+        float $f0;
+        boolean $z0;
+        org.apache.fop.util.ColorExt $r4;
+
+        color := @parameter0: java.awt.Color;
+        cs = virtualinvoke color.<java.awt.Color: java.awt.color.ColorSpace getColorSpace()>();
+        if cs == null goto label0;
+
+        $i0 = virtualinvoke cs.<java.awt.color.ColorSpace: int getType()>();
+        if $i0 != 9 goto label0;
+
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>(int)>(24);
+        sbuf = $r0;
+        cmyk = virtualinvoke color.<java.awt.Color: float[] getColorComponents(float[])>(null);
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("cmyk(");
+        $f0 = cmyk[0];
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(float)>($f0);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(",");
+        $f0 = cmyk[1];
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(float)>($f0);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(",");
+        $f0 = cmyk[2];
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(float)>($f0);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(",");
+        $f0 = cmyk[3];
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(float)>($f0);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(")");
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke sbuf.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r3 = virtualinvoke sbuf.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r3;
+
+     label0:
+        $z0 = color instanceof org.apache.fop.util.ColorExt;
+        if $z0 == 0 goto label1;
+
+        $r4 = (org.apache.fop.util.ColorExt) color;
+        $r3 = virtualinvoke $r4.<org.apache.fop.util.ColorExt: java.lang.String toFunctionCall()>();
+        return $r3;
+
+     label1:
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        sbuf = $r0;
+        virtualinvoke sbuf.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(35);
+        $i0 = virtualinvoke color.<java.awt.Color: int getRed()>();
+        s = staticinvoke <java.lang.Integer: java.lang.String toHexString(int)>($i0);
+        $i0 = virtualinvoke s.<java.lang.String: int length()>();
+        if $i0 != 1 goto label2;
+
+        virtualinvoke sbuf.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(48);
+
+     label2:
+        virtualinvoke sbuf.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(s);
+        $i0 = virtualinvoke color.<java.awt.Color: int getGreen()>();
+        s = staticinvoke <java.lang.Integer: java.lang.String toHexString(int)>($i0);
+        $i0 = virtualinvoke s.<java.lang.String: int length()>();
+        if $i0 != 1 goto label3;
+
+        virtualinvoke sbuf.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(48);
+
+     label3:
+        virtualinvoke sbuf.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(s);
+        $i0 = virtualinvoke color.<java.awt.Color: int getBlue()>();
+        s = staticinvoke <java.lang.Integer: java.lang.String toHexString(int)>($i0);
+        $i0 = virtualinvoke s.<java.lang.String: int length()>();
+        if $i0 != 1 goto label4;
+
+        virtualinvoke sbuf.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(48);
+
+     label4:
+        virtualinvoke sbuf.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(s);
+        $i0 = virtualinvoke color.<java.awt.Color: int getAlpha()>();
+        if $i0 == 255 goto label6;
+
+        $i0 = virtualinvoke color.<java.awt.Color: int getAlpha()>();
+        s = staticinvoke <java.lang.Integer: java.lang.String toHexString(int)>($i0);
+        $i0 = virtualinvoke s.<java.lang.String: int length()>();
+        if $i0 != 1 goto label5;
+
+        virtualinvoke sbuf.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(48);
+
+     label5:
+        virtualinvoke sbuf.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(s);
+
+     label6:
+        $r3 = virtualinvoke sbuf.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r3;
+    }
+
+    private static void initializeColorMap()
+    {
+        java.util.HashMap $r0;
+        java.awt.Color $r1;
+        java.util.Map $r2;
+
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        $r2 = staticinvoke <java.util.Collections: java.util.Map synchronizedMap(java.util.Map)>($r0);
+        <org.apache.fop.util.ColorUtil: java.util.Map colorMap> = $r2;
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(240, 248, 255);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("aliceblue", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(250, 235, 215);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("antiquewhite", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(0, 255, 255);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("aqua", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(127, 255, 212);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("aquamarine", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(240, 255, 255);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("azure", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(245, 245, 220);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("beige", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 228, 196);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("bisque", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(0, 0, 0);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("black", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 235, 205);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("blanchedalmond", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(0, 0, 255);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("blue", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(138, 43, 226);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("blueviolet", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(165, 42, 42);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("brown", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(222, 184, 135);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("burlywood", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(95, 158, 160);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("cadetblue", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(127, 255, 0);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("chartreuse", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(210, 105, 30);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("chocolate", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 127, 80);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("coral", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(100, 149, 237);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("cornflowerblue", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 248, 220);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("cornsilk", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(220, 20, 60);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("crimson", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(0, 255, 255);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("cyan", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(0, 0, 139);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("darkblue", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(0, 139, 139);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("darkcyan", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(184, 134, 11);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("darkgoldenrod", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(169, 169, 169);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("darkgray", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(0, 100, 0);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("darkgreen", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(169, 169, 169);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("darkgrey", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(189, 183, 107);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("darkkhaki", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(139, 0, 139);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("darkmagenta", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(85, 107, 47);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("darkolivegreen", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 140, 0);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("darkorange", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(153, 50, 204);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("darkorchid", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(139, 0, 0);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("darkred", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(233, 150, 122);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("darksalmon", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(143, 188, 143);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("darkseagreen", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(72, 61, 139);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("darkslateblue", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(47, 79, 79);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("darkslategray", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(47, 79, 79);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("darkslategrey", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(0, 206, 209);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("darkturquoise", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(148, 0, 211);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("darkviolet", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 20, 147);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("deeppink", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(0, 191, 255);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("deepskyblue", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(105, 105, 105);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("dimgray", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(105, 105, 105);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("dimgrey", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(30, 144, 255);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("dodgerblue", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(178, 34, 34);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("firebrick", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 250, 240);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("floralwhite", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(34, 139, 34);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("forestgreen", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 0, 255);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("fuchsia", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(220, 220, 220);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("gainsboro", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(248, 248, 255);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("ghostwhite", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 215, 0);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("gold", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(218, 165, 32);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("goldenrod", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(128, 128, 128);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("gray", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(0, 128, 0);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("green", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(173, 255, 47);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("greenyellow", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(128, 128, 128);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("grey", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(240, 255, 240);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("honeydew", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 105, 180);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("hotpink", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(205, 92, 92);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("indianred", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(75, 0, 130);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("indigo", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 255, 240);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("ivory", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(240, 230, 140);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("khaki", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(230, 230, 250);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("lavender", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 240, 245);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("lavenderblush", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(124, 252, 0);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("lawngreen", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 250, 205);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("lemonchiffon", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(173, 216, 230);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("lightblue", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(240, 128, 128);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("lightcoral", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(224, 255, 255);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("lightcyan", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(250, 250, 210);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("lightgoldenrodyellow", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(211, 211, 211);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("lightgray", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(144, 238, 144);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("lightgreen", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(211, 211, 211);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("lightgrey", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 182, 193);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("lightpink", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 160, 122);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("lightsalmon", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(32, 178, 170);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("lightseagreen", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(135, 206, 250);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("lightskyblue", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(119, 136, 153);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("lightslategray", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(119, 136, 153);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("lightslategrey", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(176, 196, 222);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("lightsteelblue", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 255, 224);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("lightyellow", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(0, 255, 0);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("lime", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(50, 205, 50);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("limegreen", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(250, 240, 230);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("linen", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 0, 255);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("magenta", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(128, 0, 0);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("maroon", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(102, 205, 170);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("mediumaquamarine", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(0, 0, 205);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("mediumblue", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(186, 85, 211);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("mediumorchid", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(147, 112, 219);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("mediumpurple", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(60, 179, 113);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("mediumseagreen", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(123, 104, 238);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("mediumslateblue", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(0, 250, 154);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("mediumspringgreen", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(72, 209, 204);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("mediumturquoise", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(199, 21, 133);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("mediumvioletred", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(25, 25, 112);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("midnightblue", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(245, 255, 250);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("mintcream", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 228, 225);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("mistyrose", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 228, 181);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("moccasin", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 222, 173);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("navajowhite", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(0, 0, 128);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("navy", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(253, 245, 230);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("oldlace", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(128, 128, 0);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("olive", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(107, 142, 35);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("olivedrab", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 165, 0);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("orange", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 69, 0);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("orangered", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(218, 112, 214);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("orchid", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(238, 232, 170);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("palegoldenrod", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(152, 251, 152);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("palegreen", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(175, 238, 238);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("paleturquoise", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(219, 112, 147);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("palevioletred", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 239, 213);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("papayawhip", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 218, 185);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("peachpuff", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(205, 133, 63);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("peru", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 192, 203);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("pink", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(221, 160, 221);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("plum ", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(221, 160, 221);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("plum", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(176, 224, 230);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("powderblue", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(128, 0, 128);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("purple", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 0, 0);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("red", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(188, 143, 143);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("rosybrown", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(65, 105, 225);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("royalblue", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(139, 69, 19);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("saddlebrown", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(250, 128, 114);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("salmon", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(244, 164, 96);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("sandybrown", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(46, 139, 87);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("seagreen", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 245, 238);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("seashell", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(160, 82, 45);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("sienna", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(192, 192, 192);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("silver", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(135, 206, 235);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("skyblue", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(106, 90, 205);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("slateblue", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(112, 128, 144);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("slategray", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(112, 128, 144);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("slategrey", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 250, 250);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("snow", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(0, 255, 127);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("springgreen", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(70, 130, 180);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("steelblue", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(210, 180, 140);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("tan", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(0, 128, 128);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("teal", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(216, 191, 216);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("thistle", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 99, 71);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("tomato", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(64, 224, 208);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("turquoise", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(238, 130, 238);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("violet", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(245, 222, 179);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("wheat", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 255, 255);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("white", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(245, 245, 245);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("whitesmoke", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 255, 0);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("yellow", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(154, 205, 50);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("yellowgreen", $r1);
+        $r2 = <org.apache.fop.util.ColorUtil: java.util.Map colorMap>;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int,int)>(0, 0, 0, 0);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("transparent", $r1);
+        return;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        <org.apache.fop.util.ColorUtil: java.util.Map colorMap> = null;
+        $r0 = <org.apache.fop.util.ColorUtil: java.lang.Class class$org$apache$fop$util$ColorUtil>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.util.ColorUtil: java.lang.Class class$(java.lang.String)>("org.apache.fop.util.ColorUtil");
+        <org.apache.fop.util.ColorUtil: java.lang.Class class$org$apache$fop$util$ColorUtil> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.util.ColorUtil: java.lang.Class class$org$apache$fop$util$ColorUtil>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.util.ColorUtil: org.apache.commons.logging.Log log> = $r1;
+        staticinvoke <org.apache.fop.util.ColorUtil: void initializeColorMap()>();
+        return;
+    }
+}

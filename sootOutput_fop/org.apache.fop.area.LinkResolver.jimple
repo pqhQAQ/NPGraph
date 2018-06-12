@@ -1,0 +1,95 @@
+public class org.apache.fop.area.LinkResolver extends java.lang.Object implements org.apache.fop.area.Resolvable, java.io.Serializable
+{
+    private boolean resolved;
+    private java.lang.String idRef;
+    private org.apache.fop.area.Area area;
+
+    public void <init>(java.lang.String, org.apache.fop.area.Area)
+    {
+        org.apache.fop.area.LinkResolver this;
+        java.lang.String id;
+        org.apache.fop.area.Area a;
+
+        this := @this: org.apache.fop.area.LinkResolver;
+        id := @parameter0: java.lang.String;
+        a := @parameter1: org.apache.fop.area.Area;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.area.LinkResolver: boolean resolved> = 0;
+        this.<org.apache.fop.area.LinkResolver: java.lang.String idRef> = id;
+        this.<org.apache.fop.area.LinkResolver: org.apache.fop.area.Area area> = a;
+        return;
+    }
+
+    public boolean isResolved()
+    {
+        org.apache.fop.area.LinkResolver this;
+        boolean $z0;
+
+        this := @this: org.apache.fop.area.LinkResolver;
+        $z0 = this.<org.apache.fop.area.LinkResolver: boolean resolved>;
+        return $z0;
+    }
+
+    public java.lang.String[] getIDRefs()
+    {
+        org.apache.fop.area.LinkResolver this;
+        java.lang.String[] $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.area.LinkResolver;
+        $r0 = newarray (java.lang.String)[1];
+        $r1 = this.<org.apache.fop.area.LinkResolver: java.lang.String idRef>;
+        $r0[0] = $r1;
+        return $r0;
+    }
+
+    public void resolveIDRef(java.lang.String, java.util.List)
+    {
+        org.apache.fop.area.LinkResolver this;
+        java.lang.String id;
+        java.util.List pages;
+        java.lang.Object $r0;
+        org.apache.fop.area.PageViewport $r1;
+
+        this := @this: org.apache.fop.area.LinkResolver;
+        id := @parameter0: java.lang.String;
+        pages := @parameter1: java.util.List;
+        $r0 = interfaceinvoke pages.<java.util.List: java.lang.Object get(int)>(0);
+        $r1 = (org.apache.fop.area.PageViewport) $r0;
+        virtualinvoke this.<org.apache.fop.area.LinkResolver: void resolveIDRef(java.lang.String,org.apache.fop.area.PageViewport)>(id, $r1);
+        return;
+    }
+
+    public void resolveIDRef(java.lang.String, org.apache.fop.area.PageViewport)
+    {
+        org.apache.fop.area.LinkResolver this;
+        java.lang.String id, $r0, $r2, $r3;
+        org.apache.fop.area.PageViewport pv;
+        org.apache.fop.area.Trait$InternalLink iLink, $r1;
+        boolean $z0;
+        org.apache.fop.area.Area $r4;
+        java.lang.Integer $r5;
+
+        this := @this: org.apache.fop.area.LinkResolver;
+        id := @parameter0: java.lang.String;
+        pv := @parameter1: org.apache.fop.area.PageViewport;
+        $r0 = this.<org.apache.fop.area.LinkResolver: java.lang.String idRef>;
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(id);
+        if $z0 == 0 goto label0;
+
+        if pv == null goto label0;
+
+        this.<org.apache.fop.area.LinkResolver: boolean resolved> = 1;
+        $r1 = new org.apache.fop.area.Trait$InternalLink;
+        $r2 = virtualinvoke pv.<org.apache.fop.area.PageViewport: java.lang.String getKey()>();
+        $r3 = this.<org.apache.fop.area.LinkResolver: java.lang.String idRef>;
+        specialinvoke $r1.<org.apache.fop.area.Trait$InternalLink: void <init>(java.lang.String,java.lang.String)>($r2, $r3);
+        iLink = $r1;
+        $r4 = this.<org.apache.fop.area.LinkResolver: org.apache.fop.area.Area area>;
+        $r5 = <org.apache.fop.area.Trait: java.lang.Integer INTERNAL_LINK>;
+        virtualinvoke $r4.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r5, iLink);
+
+     label0:
+        return;
+    }
+}

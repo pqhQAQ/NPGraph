@@ -1,0 +1,113 @@
+method: org.apache.fop.pdf.PDFFactory.makeFont:864468097
+636541524:this := @this: org.apache.fop.pdf.PDFFactory
+1737348161:fontname := @parameter0: java.lang.String
+275393668:basefont := @parameter1: java.lang.String
+714118791:encoding := @parameter2: java.lang.String
+2055900901:metrics := @parameter3: org.apache.fop.fonts.FontMetrics
+514562877:descriptor := @parameter4: org.apache.fop.fonts.FontDescriptor
+1505738459:$r1 = virtualinvoke this.<org.apache.fop.pdf.PDFFactory: org.apache.fop.pdf.PDFDocument getDocument()>()
+975275036:preRegisteredfont = virtualinvoke $r1.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFFont findFont(java.lang.String)>(fontname)
+143208877:if preRegisteredfont == null goto (branch)
+1982227807:return preRegisteredfont
+705789876:if descriptor != null goto fonttype = interfaceinvoke metrics.<org.apache.fop.fonts.FontMetrics: org.apache.fop.fonts.FontType getFontType()>()
+1658263551:$r2 = new org.apache.fop.pdf.PDFFont
+1584058915:$r0 = <org.apache.fop.fonts.FontType: org.apache.fop.fonts.FontType TYPE1>
+1813527933:specialinvoke $r2.<org.apache.fop.pdf.PDFFont: void <init>(java.lang.String,org.apache.fop.fonts.FontType,java.lang.String,java.lang.Object)>(fontname, $r0, basefont, encoding)
+728568060:font = $r2
+266626483:$r1 = virtualinvoke this.<org.apache.fop.pdf.PDFFactory: org.apache.fop.pdf.PDFDocument getDocument()>()
+464277618:virtualinvoke $r1.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFObject registerObject(org.apache.fop.pdf.PDFObject)>(font)
+1651055652:return font
+1914246857:fonttype = interfaceinvoke metrics.<org.apache.fop.fonts.FontMetrics: org.apache.fop.fonts.FontType getFontType()>()
+1067510175:pdfdesc = virtualinvoke this.<org.apache.fop.pdf.PDFFactory: org.apache.fop.pdf.PDFFontDescriptor makeFontDescriptor(org.apache.fop.fonts.FontDescriptor)>(descriptor)
+515018806:font = null
+1514887826:font = staticinvoke <org.apache.fop.pdf.PDFFont: org.apache.fop.pdf.PDFFont createFont(java.lang.String,org.apache.fop.fonts.FontType,java.lang.String,java.lang.Object)>(fontname, fonttype, basefont, null)
+1969349203:$r1 = virtualinvoke this.<org.apache.fop.pdf.PDFFactory: org.apache.fop.pdf.PDFDocument getDocument()>()
+1305836175:virtualinvoke $r1.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFObject registerObject(org.apache.fop.pdf.PDFObject)>(font)
+820697892:$r4 = <org.apache.fop.fonts.FontType: org.apache.fop.fonts.FontType TYPE0>
+182006163:if fonttype != $r4 goto nonBase14 = (org.apache.fop.pdf.PDFFontNonBase14) font
+934363124:virtualinvoke font.<org.apache.fop.pdf.PDFFont: void setEncoding(java.lang.String)>(encoding)
+1403378350:$z0 = metrics instanceof org.apache.fop.fonts.LazyFont
+767033449:if $z0 == 0 goto cidMetrics = (org.apache.fop.fonts.CIDFont) metrics
+672772500:$r5 = (org.apache.fop.fonts.LazyFont) metrics
+786006045:$r6 = virtualinvoke $r5.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.Typeface getRealFont()>()
+1345308293:cidMetrics = (org.apache.fop.fonts.CIDFont) $r6
+1888644835:goto [?= $r7 = new org.apache.fop.pdf.PDFCIDSystemInfo]
+133488372:cidMetrics = (org.apache.fop.fonts.CIDFont) metrics
+1566140736:$r7 = new org.apache.fop.pdf.PDFCIDSystemInfo
+919222803:$r8 = virtualinvoke cidMetrics.<org.apache.fop.fonts.CIDFont: java.lang.String getRegistry()>()
+681571449:$r9 = virtualinvoke cidMetrics.<org.apache.fop.fonts.CIDFont: java.lang.String getOrdering()>()
+1853263001:$i0 = virtualinvoke cidMetrics.<org.apache.fop.fonts.CIDFont: int getSupplement()>()
+688441719:specialinvoke $r7.<org.apache.fop.pdf.PDFCIDSystemInfo: void <init>(java.lang.String,java.lang.String,int)>($r8, $r9, $i0)
+2145564844:sysInfo = $r7
+2110416331:$r10 = new org.apache.fop.pdf.PDFCIDFont
+1345509782:$r11 = virtualinvoke cidMetrics.<org.apache.fop.fonts.CIDFont: org.apache.fop.fonts.CIDFontType getCIDType()>()
+1394304858:$i0 = virtualinvoke cidMetrics.<org.apache.fop.fonts.CIDFont: int getDefaultWidth()>()
+1003282997:$r12 = virtualinvoke this.<org.apache.fop.pdf.PDFFactory: org.apache.fop.pdf.PDFWArray getSubsetWidths(org.apache.fop.fonts.CIDFont)>(cidMetrics)
+431608897:$r13 = (org.apache.fop.pdf.PDFCIDFontDescriptor) pdfdesc
+1998455960:specialinvoke $r10.<org.apache.fop.pdf.PDFCIDFont: void <init>(java.lang.String,org.apache.fop.fonts.CIDFontType,int,org.apache.fop.pdf.PDFWArray,org.apache.fop.pdf.PDFCIDSystemInfo,org.apache.fop.pdf.PDFCIDFontDescriptor)>(basefont, $r11, $i0, $r12, sysInfo, $r13)
+1405080640:cidFont = $r10
+1177646607:$r1 = virtualinvoke this.<org.apache.fop.pdf.PDFFactory: org.apache.fop.pdf.PDFDocument getDocument()>()
+2053204532:virtualinvoke $r1.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFObject registerObject(org.apache.fop.pdf.PDFObject)>(cidFont)
+1416807569:$r14 = new org.apache.fop.pdf.PDFToUnicodeCMap
+1422937204:$r15 = virtualinvoke cidMetrics.<org.apache.fop.fonts.CIDFont: char[] getCharsUsed()>()
+1032470032:$r16 = new org.apache.fop.pdf.PDFCIDSystemInfo
+1416252478:specialinvoke $r16.<org.apache.fop.pdf.PDFCIDSystemInfo: void <init>(java.lang.String,java.lang.String,int)>("Adobe", "Identity", 0)
+246654398:specialinvoke $r14.<org.apache.fop.pdf.PDFToUnicodeCMap: void <init>(char[],java.lang.String,org.apache.fop.pdf.PDFCIDSystemInfo)>($r15, "fop-ucs-H", $r16)
+877028476:cmap = $r14
+1871772429:$r1 = virtualinvoke this.<org.apache.fop.pdf.PDFFactory: org.apache.fop.pdf.PDFDocument getDocument()>()
+293845681:virtualinvoke $r1.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFObject registerObject(org.apache.fop.pdf.PDFObject)>(cmap)
+134423148:$r17 = (org.apache.fop.pdf.PDFFontType0) font
+1209380071:virtualinvoke $r17.<org.apache.fop.pdf.PDFFontType0: void setCMAP(org.apache.fop.pdf.PDFCMap)>(cmap)
+1210676866:$r17 = (org.apache.fop.pdf.PDFFontType0) font
+235665855:virtualinvoke $r17.<org.apache.fop.pdf.PDFFontType0: void setDescendantFonts(org.apache.fop.pdf.PDFCIDFont)>(cidFont)
+876179917:goto [?= return font]
+1042823365:nonBase14 = (org.apache.fop.pdf.PDFFontNonBase14) font
+1510397697:virtualinvoke nonBase14.<org.apache.fop.pdf.PDFFontNonBase14: void setDescriptor(org.apache.fop.pdf.PDFFontDescriptor)>(pdfdesc)
+601106869:$z0 = metrics instanceof org.apache.fop.fonts.LazyFont
+1040071795:if $z0 == 0 goto singleByteFont = (org.apache.fop.fonts.SingleByteFont) metrics
+911376234:$r5 = (org.apache.fop.fonts.LazyFont) metrics
+1646994434:$r6 = virtualinvoke $r5.<org.apache.fop.fonts.LazyFont: org.apache.fop.fonts.Typeface getRealFont()>()
+2002455478:singleByteFont = (org.apache.fop.fonts.SingleByteFont) $r6
+2052986609:goto [?= firstChar = virtualinvoke singleByteFont.<org.apache.fop.fonts.SingleByteFont: int getFirstChar()>()]
+334006081:singleByteFont = (org.apache.fop.fonts.SingleByteFont) metrics
+964446429:firstChar = virtualinvoke singleByteFont.<org.apache.fop.fonts.SingleByteFont: int getFirstChar()>()
+1555624779:lastChar = virtualinvoke singleByteFont.<org.apache.fop.fonts.SingleByteFont: int getLastChar()>()
+1807441143:$r18 = interfaceinvoke metrics.<org.apache.fop.fonts.FontMetrics: int[] getWidths()>()
+1507103586:$r19 = virtualinvoke this.<org.apache.fop.pdf.PDFFactory: org.apache.fop.pdf.PDFArray makeArray(int[])>($r18)
+320353537:virtualinvoke nonBase14.<org.apache.fop.pdf.PDFFontNonBase14: void setWidthMetrics(int,int,org.apache.fop.pdf.PDFArray)>(firstChar, lastChar, $r19)
+1162225662:mapping = virtualinvoke singleByteFont.<org.apache.fop.fonts.SingleByteFont: org.apache.fop.fonts.CodePointMapping getCodePointMapping()>()
+1938548814:$z0 = virtualinvoke singleByteFont.<org.apache.fop.fonts.SingleByteFont: boolean isSymbolicFont()>()
+1715508261:if $z0 == 0 goto $r20 = virtualinvoke mapping.<org.apache.fop.fonts.CodePointMapping: java.lang.String getName()>()
+431898005:goto [?= return font]
+603756769:$r20 = virtualinvoke mapping.<org.apache.fop.fonts.CodePointMapping: java.lang.String getName()>()
+479784508:$z0 = staticinvoke <org.apache.fop.pdf.PDFEncoding: boolean isPredefinedEncoding(java.lang.String)>($r20)
+2084615118:if $z0 == 0 goto winansi = staticinvoke <org.apache.fop.fonts.CodePointMapping: org.apache.fop.fonts.CodePointMapping getMapping(java.lang.String)>("WinAnsiEncoding")
+1909171395:$r21 = virtualinvoke mapping.<org.apache.fop.fonts.CodePointMapping: java.lang.String getName()>()
+1890465938:virtualinvoke font.<org.apache.fop.pdf.PDFFont: void setEncoding(java.lang.String)>($r21)
+1040462601:goto [?= return font]
+1847882407:winansi = staticinvoke <org.apache.fop.fonts.CodePointMapping: org.apache.fop.fonts.CodePointMapping getMapping(java.lang.String)>("WinAnsiEncoding")
+451111535:$r22 = new org.apache.fop.pdf.PDFEncoding
+1609691483:$r8 = virtualinvoke winansi.<org.apache.fop.fonts.CodePointMapping: java.lang.String getName()>()
+85769875:specialinvoke $r22.<org.apache.fop.pdf.PDFEncoding: void <init>(java.lang.String)>($r8)
+572761988:pdfEncoding = $r22
+1038969242:builder = virtualinvoke pdfEncoding.<org.apache.fop.pdf.PDFEncoding: org.apache.fop.pdf.PDFEncoding$DifferencesBuilder createDifferencesBuilder()>()
+89039006:start = -1
+1753539576:winansiNames = virtualinvoke winansi.<org.apache.fop.fonts.CodePointMapping: java.lang.String[] getCharNameMap()>()
+655459156:charNameMap = virtualinvoke mapping.<org.apache.fop.fonts.CodePointMapping: java.lang.String[] getCharNameMap()>()
+1285111235:i = 0
+1672099619:if i >= 256 goto $r24 = virtualinvoke builder.<org.apache.fop.pdf.PDFEncoding$DifferencesBuilder: org.apache.fop.pdf.PDFArray toPDFArray()>()
+1811400932:wac = winansiNames[i]
+919249684:c = charNameMap[i]
+1409828341:$z0 = virtualinvoke wac.<java.lang.String: boolean equals(java.lang.Object)>(c)
+1797849836:if $z0 != 0 goto i = i + 1
+1265013140:if start == i goto virtualinvoke builder.<org.apache.fop.pdf.PDFEncoding$DifferencesBuilder: org.apache.fop.pdf.PDFEncoding$DifferencesBuilder addName(java.lang.String)>(c)
+1599456114:virtualinvoke builder.<org.apache.fop.pdf.PDFEncoding$DifferencesBuilder: org.apache.fop.pdf.PDFEncoding$DifferencesBuilder addDifference(int)>(i)
+1779711271:start = i
+2006098499:virtualinvoke builder.<org.apache.fop.pdf.PDFEncoding$DifferencesBuilder: org.apache.fop.pdf.PDFEncoding$DifferencesBuilder addName(java.lang.String)>(c)
+519627551:start = start + 1
+1711740955:i = i + 1
+1539295473:goto [?= (branch)]
+1781382932:$r24 = virtualinvoke builder.<org.apache.fop.pdf.PDFEncoding$DifferencesBuilder: org.apache.fop.pdf.PDFArray toPDFArray()>()
+1633415297:virtualinvoke pdfEncoding.<org.apache.fop.pdf.PDFEncoding: void setDifferences(org.apache.fop.pdf.PDFArray)>($r24)
+1649226404:virtualinvoke font.<org.apache.fop.pdf.PDFFont: void setEncoding(org.apache.fop.pdf.PDFEncoding)>(pdfEncoding)
+707526925:return font

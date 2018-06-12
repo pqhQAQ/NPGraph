@@ -1,0 +1,162 @@
+public class org.apache.fop.fo.properties.FontFamilyProperty$Maker extends org.apache.fop.fo.properties.PropertyMaker
+{
+
+    public void <init>(int)
+    {
+        org.apache.fop.fo.properties.FontFamilyProperty$Maker this;
+        int propId;
+
+        this := @this: org.apache.fop.fo.properties.FontFamilyProperty$Maker;
+        propId := @parameter0: int;
+        specialinvoke this.<org.apache.fop.fo.properties.PropertyMaker: void <init>(int)>(propId);
+        return;
+    }
+
+    public org.apache.fop.fo.properties.Property make(org.apache.fop.fo.PropertyList, java.lang.String, org.apache.fop.fo.FObj) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.properties.FontFamilyProperty$Maker this;
+        org.apache.fop.fo.PropertyList propertyList;
+        java.lang.String value, $r0, tmpVal, $r5;
+        org.apache.fop.fo.FObj fo;
+        org.apache.fop.fo.properties.FontFamilyProperty prop, $r2;
+        int startIndex, commaIndex, aposIndex, quoteIndex, dblSpaceIndex, $i1, $i2, $i3;
+        boolean parsed, $z0;
+        byte qChar, $b0;
+        org.apache.fop.fo.properties.Property $r1;
+        org.apache.commons.logging.Log $r3;
+        java.lang.StringBuffer $r4, $r6;
+        org.apache.fop.fo.properties.StringProperty $r7;
+        org.apache.fop.fo.properties.PropertyCache $r8;
+
+        this := @this: org.apache.fop.fo.properties.FontFamilyProperty$Maker;
+        propertyList := @parameter0: org.apache.fop.fo.PropertyList;
+        value := @parameter1: java.lang.String;
+        fo := @parameter2: org.apache.fop.fo.FObj;
+        $r0 = "inherit";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(value);
+        if $z0 == 0 goto label0;
+
+        $r1 = specialinvoke this.<org.apache.fop.fo.properties.PropertyMaker: org.apache.fop.fo.properties.Property make(org.apache.fop.fo.PropertyList,java.lang.String,org.apache.fop.fo.FObj)>(propertyList, value, fo);
+        return $r1;
+
+     label0:
+        $r2 = new org.apache.fop.fo.properties.FontFamilyProperty;
+        specialinvoke $r2.<org.apache.fop.fo.properties.FontFamilyProperty: void <init>(org.apache.fop.fo.properties.FontFamilyProperty$1)>(null);
+        prop = $r2;
+        startIndex = 0;
+        commaIndex = virtualinvoke value.<java.lang.String: int indexOf(int)>(44);
+        parsed = 0;
+
+     label1:
+        if parsed != 0 goto label11;
+
+        if commaIndex != -1 goto label2;
+
+        $r0 = virtualinvoke value.<java.lang.String: java.lang.String substring(int)>(startIndex);
+        tmpVal = virtualinvoke $r0.<java.lang.String: java.lang.String trim()>();
+        parsed = 1;
+        goto label3;
+
+     label2:
+        $r0 = virtualinvoke value.<java.lang.String: java.lang.String substring(int,int)>(startIndex, commaIndex);
+        tmpVal = virtualinvoke $r0.<java.lang.String: java.lang.String trim()>();
+        startIndex = commaIndex + 1;
+        commaIndex = virtualinvoke value.<java.lang.String: int indexOf(int,int)>(44, startIndex);
+
+     label3:
+        aposIndex = virtualinvoke tmpVal.<java.lang.String: int indexOf(int)>(39);
+        quoteIndex = virtualinvoke tmpVal.<java.lang.String: int indexOf(int)>(34);
+        if aposIndex != -1 goto label4;
+
+        if quoteIndex == -1 goto label8;
+
+     label4:
+        if aposIndex != -1 goto label5;
+
+        $b0 = 34;
+        goto label6;
+
+     label5:
+        $b0 = 39;
+
+     label6:
+        qChar = $b0;
+        $i1 = virtualinvoke tmpVal.<java.lang.String: int lastIndexOf(int)>(qChar);
+        $i2 = virtualinvoke tmpVal.<java.lang.String: int length()>();
+        $i2 = $i2 - 1;
+        if $i1 == $i2 goto label7;
+
+        $r3 = <org.apache.fop.fo.properties.Property: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Skipping malformed value for font-family: ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(tmpVal);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" in \"");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(value);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\".");
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r5);
+        tmpVal = "";
+        goto label8;
+
+     label7:
+        $i3 = virtualinvoke tmpVal.<java.lang.String: int length()>();
+        $i3 = $i3 - 1;
+        tmpVal = virtualinvoke tmpVal.<java.lang.String: java.lang.String substring(int,int)>(1, $i3);
+
+     label8:
+        $r0 = "";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(tmpVal);
+        if $z0 != 0 goto label1;
+
+        dblSpaceIndex = virtualinvoke tmpVal.<java.lang.String: int indexOf(java.lang.String)>("  ");
+
+     label9:
+        if dblSpaceIndex == -1 goto label10;
+
+        $r6 = new java.lang.StringBuffer;
+        specialinvoke $r6.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke tmpVal.<java.lang.String: java.lang.String substring(int,int)>(0, dblSpaceIndex);
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $i3 = dblSpaceIndex + 1;
+        $r5 = virtualinvoke tmpVal.<java.lang.String: java.lang.String substring(int)>($i3);
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        tmpVal = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.String toString()>();
+        dblSpaceIndex = virtualinvoke tmpVal.<java.lang.String: int indexOf(java.lang.String)>("  ");
+        goto label9;
+
+     label10:
+        $r7 = staticinvoke <org.apache.fop.fo.properties.StringProperty: org.apache.fop.fo.properties.StringProperty getInstance(java.lang.String)>(tmpVal);
+        virtualinvoke prop.<org.apache.fop.fo.properties.FontFamilyProperty: void addProperty(org.apache.fop.fo.properties.Property)>($r7);
+        goto label1;
+
+     label11:
+        $r8 = staticinvoke <org.apache.fop.fo.properties.FontFamilyProperty: org.apache.fop.fo.properties.PropertyCache access$100()>();
+        $r1 = virtualinvoke $r8.<org.apache.fop.fo.properties.PropertyCache: org.apache.fop.fo.properties.Property fetch(org.apache.fop.fo.properties.Property)>(prop);
+        return $r1;
+    }
+
+    public org.apache.fop.fo.properties.Property convertProperty(org.apache.fop.fo.properties.Property, org.apache.fop.fo.PropertyList, org.apache.fop.fo.FObj)
+    {
+        org.apache.fop.fo.properties.FontFamilyProperty$Maker this;
+        org.apache.fop.fo.properties.Property p;
+        org.apache.fop.fo.PropertyList propertyList;
+        org.apache.fop.fo.FObj fo;
+        boolean $z0;
+        org.apache.fop.fo.properties.FontFamilyProperty $r0;
+
+        this := @this: org.apache.fop.fo.properties.FontFamilyProperty$Maker;
+        p := @parameter0: org.apache.fop.fo.properties.Property;
+        propertyList := @parameter1: org.apache.fop.fo.PropertyList;
+        fo := @parameter2: org.apache.fop.fo.FObj;
+        $z0 = p instanceof org.apache.fop.fo.properties.FontFamilyProperty;
+        if $z0 == 0 goto label0;
+
+        return p;
+
+     label0:
+        $r0 = new org.apache.fop.fo.properties.FontFamilyProperty;
+        specialinvoke $r0.<org.apache.fop.fo.properties.FontFamilyProperty: void <init>(org.apache.fop.fo.properties.Property,org.apache.fop.fo.properties.FontFamilyProperty$1)>(p, null);
+        return $r0;
+    }
+}

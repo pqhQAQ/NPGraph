@@ -1,0 +1,834 @@
+public class org.apache.fop.fo.FOText extends org.apache.fop.fo.FONode
+{
+    public char[] ca;
+    public int startIndex;
+    public int endIndex;
+    private org.apache.fop.fo.properties.CommonFont commonFont;
+    private org.apache.fop.fo.properties.CommonHyphenation commonHyphenation;
+    private java.awt.Color color;
+    private org.apache.fop.fo.properties.KeepProperty keepTogether;
+    private org.apache.fop.fo.properties.Property letterSpacing;
+    private org.apache.fop.fo.properties.SpaceProperty lineHeight;
+    private int whiteSpaceTreatment;
+    private int whiteSpaceCollapse;
+    private int textTransform;
+    private org.apache.fop.fo.properties.Property wordSpacing;
+    private int wrapOption;
+    private org.apache.fop.datatypes.Length baselineShift;
+    private org.apache.fop.fo.FOText prevFOTextThisBlock;
+    private org.apache.fop.fo.FOText nextFOTextThisBlock;
+    private org.apache.fop.fo.flow.Block ancestorBlock;
+    private org.apache.fop.fo.properties.CommonTextDecoration textDecoration;
+    private static final int IS_WORD_CHAR_FALSE;
+    private static final int IS_WORD_CHAR_TRUE;
+    private static final int IS_WORD_CHAR_MAYBE;
+
+    public void <init>(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.FOText this;
+        org.apache.fop.fo.FONode parent;
+
+        this := @this: org.apache.fop.fo.FOText;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        specialinvoke this.<org.apache.fop.fo.FONode: void <init>(org.apache.fop.fo.FONode)>(parent);
+        this.<org.apache.fop.fo.FOText: int startIndex> = 0;
+        this.<org.apache.fop.fo.FOText: int endIndex> = 0;
+        this.<org.apache.fop.fo.FOText: org.apache.fop.fo.FOText prevFOTextThisBlock> = null;
+        this.<org.apache.fop.fo.FOText: org.apache.fop.fo.FOText nextFOTextThisBlock> = null;
+        this.<org.apache.fop.fo.FOText: org.apache.fop.fo.flow.Block ancestorBlock> = null;
+        return;
+    }
+
+    protected void addCharacters(char[], int, int, org.apache.fop.fo.PropertyList, org.xml.sax.Locator) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.FOText this;
+        char[] data, $r0, nca;
+        int start, end, length, calength, $i0, $i1;
+        org.apache.fop.fo.PropertyList list;
+        org.xml.sax.Locator locator;
+        null_type nca;
+
+        this := @this: org.apache.fop.fo.FOText;
+        data := @parameter0: char[];
+        start := @parameter1: int;
+        end := @parameter2: int;
+        list := @parameter3: org.apache.fop.fo.PropertyList;
+        locator := @parameter4: org.xml.sax.Locator;
+        length = end - start;
+        calength = 0;
+        nca = null;
+        $r0 = this.<org.apache.fop.fo.FOText: char[] ca>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.fo.FOText: char[] ca>;
+        calength = lengthof $r0;
+        $i0 = calength + length;
+        nca = newarray (char)[$i0];
+        $r0 = this.<org.apache.fop.fo.FOText: char[] ca>;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r0, 0, nca, 0, calength);
+        goto label1;
+
+     label0:
+        nca = newarray (char)[length];
+
+     label1:
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(data, start, nca, calength, length);
+        $i1 = lengthof nca;
+        this.<org.apache.fop.fo.FOText: int endIndex> = $i1;
+        this.<org.apache.fop.fo.FOText: char[] ca> = nca;
+        return;
+    }
+
+    public org.apache.fop.fo.FONode clone(org.apache.fop.fo.FONode, boolean) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.FOText this, ft;
+        org.apache.fop.fo.FONode parent, $r0;
+        boolean removeChildren;
+        char[] $r1, $r2, $r3, $r4;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.fo.FOText;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        removeChildren := @parameter1: boolean;
+        $r0 = specialinvoke this.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode clone(org.apache.fop.fo.FONode,boolean)>(parent, removeChildren);
+        ft = (org.apache.fop.fo.FOText) $r0;
+        if removeChildren == 0 goto label0;
+
+        $r1 = this.<org.apache.fop.fo.FOText: char[] ca>;
+        if $r1 == null goto label0;
+
+        $r2 = this.<org.apache.fop.fo.FOText: char[] ca>;
+        $i0 = lengthof $r2;
+        $r2 = newarray (char)[$i0];
+        ft.<org.apache.fop.fo.FOText: char[] ca> = $r2;
+        $r1 = this.<org.apache.fop.fo.FOText: char[] ca>;
+        $r3 = ft.<org.apache.fop.fo.FOText: char[] ca>;
+        $r4 = this.<org.apache.fop.fo.FOText: char[] ca>;
+        $i1 = lengthof $r4;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r1, 0, $r3, 0, $i1);
+
+     label0:
+        ft.<org.apache.fop.fo.FOText: org.apache.fop.fo.FOText prevFOTextThisBlock> = null;
+        ft.<org.apache.fop.fo.FOText: org.apache.fop.fo.FOText nextFOTextThisBlock> = null;
+        ft.<org.apache.fop.fo.FOText: org.apache.fop.fo.flow.Block ancestorBlock> = null;
+        return ft;
+    }
+
+    public void bind(org.apache.fop.fo.PropertyList) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.FOText this;
+        org.apache.fop.fo.PropertyList pList;
+        org.apache.fop.fo.properties.CommonFont $r0;
+        org.apache.fop.fo.properties.CommonHyphenation $r1;
+        org.apache.fop.fo.properties.Property $r2;
+        org.apache.fop.apps.FOUserAgent $r3;
+        java.awt.Color $r4;
+        org.apache.fop.fo.properties.KeepProperty $r5;
+        org.apache.fop.fo.properties.SpaceProperty $r6;
+        int $i0;
+        org.apache.fop.fo.properties.CommonTextDecoration $r7;
+        org.apache.fop.datatypes.Length $r8;
+
+        this := @this: org.apache.fop.fo.FOText;
+        pList := @parameter0: org.apache.fop.fo.PropertyList;
+        $r0 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.CommonFont getFontProps()>();
+        this.<org.apache.fop.fo.FOText: org.apache.fop.fo.properties.CommonFont commonFont> = $r0;
+        $r1 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.CommonHyphenation getHyphenationProps()>();
+        this.<org.apache.fop.fo.FOText: org.apache.fop.fo.properties.CommonHyphenation commonHyphenation> = $r1;
+        $r2 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(66);
+        $r3 = virtualinvoke this.<org.apache.fop.fo.FOText: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        $r4 = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: java.awt.Color getColor(org.apache.fop.apps.FOUserAgent)>($r3);
+        this.<org.apache.fop.fo.FOText: java.awt.Color color> = $r4;
+        $r2 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(118);
+        $r5 = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: org.apache.fop.fo.properties.KeepProperty getKeep()>();
+        this.<org.apache.fop.fo.FOText: org.apache.fop.fo.properties.KeepProperty keepTogether> = $r5;
+        $r2 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(131);
+        $r6 = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: org.apache.fop.fo.properties.SpaceProperty getSpace()>();
+        this.<org.apache.fop.fo.FOText: org.apache.fop.fo.properties.SpaceProperty lineHeight> = $r6;
+        $r2 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(128);
+        this.<org.apache.fop.fo.FOText: org.apache.fop.fo.properties.Property letterSpacing> = $r2;
+        $r2 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(239);
+        $i0 = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: int getEnum()>();
+        this.<org.apache.fop.fo.FOText: int whiteSpaceCollapse> = $i0;
+        $r2 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(240);
+        $i0 = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: int getEnum()>();
+        this.<org.apache.fop.fo.FOText: int whiteSpaceTreatment> = $i0;
+        $r2 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(230);
+        $i0 = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: int getEnum()>();
+        this.<org.apache.fop.fo.FOText: int textTransform> = $i0;
+        $r2 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(243);
+        this.<org.apache.fop.fo.FOText: org.apache.fop.fo.properties.Property wordSpacing> = $r2;
+        $r2 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(244);
+        $i0 = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: int getEnum()>();
+        this.<org.apache.fop.fo.FOText: int wrapOption> = $i0;
+        $r7 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.CommonTextDecoration getTextDecorationProps()>();
+        this.<org.apache.fop.fo.FOText: org.apache.fop.fo.properties.CommonTextDecoration textDecoration> = $r7;
+        $r2 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(15);
+        $r8 = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        this.<org.apache.fop.fo.FOText: org.apache.fop.datatypes.Length baselineShift> = $r8;
+        return;
+    }
+
+    protected void endOfNode() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.FOText this;
+        org.apache.fop.fo.FOEventHandler $r0;
+        char[] $r1;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.fo.FOText;
+        specialinvoke this.<org.apache.fop.fo.FOText: void textTransform()>();
+        $r0 = virtualinvoke this.<org.apache.fop.fo.FOText: org.apache.fop.fo.FOEventHandler getFOEventHandler()>();
+        $r1 = this.<org.apache.fop.fo.FOText: char[] ca>;
+        $i0 = this.<org.apache.fop.fo.FOText: int startIndex>;
+        $i1 = this.<org.apache.fop.fo.FOText: int endIndex>;
+        virtualinvoke $r0.<org.apache.fop.fo.FOEventHandler: void characters(char[],int,int)>($r1, $i0, $i1);
+        return;
+    }
+
+    public boolean willCreateArea()
+    {
+        org.apache.fop.fo.FOText this;
+        int i, $i0, $i1;
+        char ch;
+        char[] $r0;
+
+        this := @this: org.apache.fop.fo.FOText;
+        $i0 = this.<org.apache.fop.fo.FOText: int whiteSpaceCollapse>;
+        if $i0 != 48 goto label0;
+
+        $i0 = this.<org.apache.fop.fo.FOText: int endIndex>;
+        $i1 = this.<org.apache.fop.fo.FOText: int startIndex>;
+        $i0 = $i0 - $i1;
+        if $i0 <= 0 goto label0;
+
+        return 1;
+
+     label0:
+        i = this.<org.apache.fop.fo.FOText: int startIndex>;
+
+     label1:
+        $i1 = this.<org.apache.fop.fo.FOText: int endIndex>;
+        if i >= $i1 goto label3;
+
+        $r0 = this.<org.apache.fop.fo.FOText: char[] ca>;
+        ch = $r0[i];
+        if ch == 32 goto label2;
+
+        if ch == 10 goto label2;
+
+        if ch == 13 goto label2;
+
+        if ch == 9 goto label2;
+
+        return 1;
+
+     label2:
+        i = i + 1;
+        goto label1;
+
+     label3:
+        return 0;
+    }
+
+    public org.apache.fop.fo.CharIterator charIterator()
+    {
+        org.apache.fop.fo.FOText this;
+        org.apache.fop.fo.FOText$TextCharIterator $r0;
+
+        this := @this: org.apache.fop.fo.FOText;
+        $r0 = new org.apache.fop.fo.FOText$TextCharIterator;
+        specialinvoke $r0.<org.apache.fop.fo.FOText$TextCharIterator: void <init>(org.apache.fop.fo.FOText,org.apache.fop.fo.FOText$1)>(this, null);
+        return $r0;
+    }
+
+    protected void createBlockPointers(org.apache.fop.fo.flow.Block)
+    {
+        org.apache.fop.fo.FOText this, $r0, $r3;
+        org.apache.fop.fo.flow.Block ancestorBlock, $r1, $r2;
+
+        this := @this: org.apache.fop.fo.FOText;
+        ancestorBlock := @parameter0: org.apache.fop.fo.flow.Block;
+        this.<org.apache.fop.fo.FOText: org.apache.fop.fo.flow.Block ancestorBlock> = ancestorBlock;
+        $r0 = ancestorBlock.<org.apache.fop.fo.flow.Block: org.apache.fop.fo.FOText lastFOTextProcessed>;
+        if $r0 == null goto label1;
+
+        $r0 = ancestorBlock.<org.apache.fop.fo.flow.Block: org.apache.fop.fo.FOText lastFOTextProcessed>;
+        $r1 = $r0.<org.apache.fop.fo.FOText: org.apache.fop.fo.flow.Block ancestorBlock>;
+        $r2 = this.<org.apache.fop.fo.FOText: org.apache.fop.fo.flow.Block ancestorBlock>;
+        if $r1 != $r2 goto label0;
+
+        $r3 = ancestorBlock.<org.apache.fop.fo.flow.Block: org.apache.fop.fo.FOText lastFOTextProcessed>;
+        this.<org.apache.fop.fo.FOText: org.apache.fop.fo.FOText prevFOTextThisBlock> = $r3;
+        $r0 = this.<org.apache.fop.fo.FOText: org.apache.fop.fo.FOText prevFOTextThisBlock>;
+        $r0.<org.apache.fop.fo.FOText: org.apache.fop.fo.FOText nextFOTextThisBlock> = this;
+        goto label1;
+
+     label0:
+        this.<org.apache.fop.fo.FOText: org.apache.fop.fo.FOText prevFOTextThisBlock> = null;
+
+     label1:
+        return;
+    }
+
+    private void textTransform()
+    {
+        org.apache.fop.fo.FOText this;
+        int i, $i0, $i1;
+        org.apache.fop.fo.FOEventHandler $r0;
+        boolean $z0;
+        char[] $r1;
+        char $c2;
+
+        this := @this: org.apache.fop.fo.FOText;
+        $r0 = virtualinvoke this.<org.apache.fop.fo.FOText: org.apache.fop.fo.FOEventHandler getFOEventHandler()>();
+        $z0 = virtualinvoke $r0.<org.apache.fop.fo.FOEventHandler: boolean inMarker()>();
+        if $z0 != 0 goto label0;
+
+        $i0 = this.<org.apache.fop.fo.FOText: int textTransform>;
+        if $i0 != 95 goto label1;
+
+     label0:
+        return;
+
+     label1:
+        i = 0;
+
+     label2:
+        $i1 = this.<org.apache.fop.fo.FOText: int endIndex>;
+        if i >= $i1 goto label3;
+
+        $r1 = this.<org.apache.fop.fo.FOText: char[] ca>;
+        $c2 = specialinvoke this.<org.apache.fop.fo.FOText: char charTransform(int)>(i);
+        $r1[i] = $c2;
+        i = i + 1;
+        goto label2;
+
+     label3:
+        return;
+    }
+
+    private boolean isStartOfWord(int)
+    {
+        org.apache.fop.fo.FOText this;
+        int i, $i0;
+        char prevChar, prevPrevChar;
+
+        this := @this: org.apache.fop.fo.FOText;
+        i := @parameter0: int;
+        prevChar = specialinvoke this.<org.apache.fop.fo.FOText: char getRelativeCharInBlock(int,int)>(i, -1);
+        $i0 = staticinvoke <org.apache.fop.fo.FOText: int isWordChar(char)>(prevChar);
+        tableswitch($i0)
+        {
+            case 0: goto label1;
+            case 1: goto label0;
+            case 2: goto label2;
+            default: goto label7;
+        };
+
+     label0:
+        return 0;
+
+     label1:
+        return 1;
+
+     label2:
+        prevPrevChar = specialinvoke this.<org.apache.fop.fo.FOText: char getRelativeCharInBlock(int,int)>(i, -2);
+        $i0 = staticinvoke <org.apache.fop.fo.FOText: int isWordChar(char)>(prevPrevChar);
+        tableswitch($i0)
+        {
+            case 0: goto label4;
+            case 1: goto label3;
+            case 2: goto label5;
+            default: goto label6;
+        };
+
+     label3:
+        return 0;
+
+     label4:
+        return 1;
+
+     label5:
+        return 1;
+
+     label6:
+        return 0;
+
+     label7:
+        return 0;
+    }
+
+    private char getRelativeCharInBlock(int, int)
+    {
+        org.apache.fop.fo.FOText this, nodeToTest, $r1;
+        int i, offset, remainingOffset, $i0, $i1;
+        boolean foundChar;
+        char charToReturn, $c2;
+        char[] $r0;
+
+        this := @this: org.apache.fop.fo.FOText;
+        i := @parameter0: int;
+        offset := @parameter1: int;
+        $i0 = i + offset;
+        if $i0 < 0 goto label0;
+
+        $i0 = i + offset;
+        $i1 = this.<org.apache.fop.fo.FOText: int endIndex>;
+        if $i0 > $i1 goto label0;
+
+        $r0 = this.<org.apache.fop.fo.FOText: char[] ca>;
+        $i1 = i + offset;
+        $c2 = $r0[$i1];
+        return $c2;
+
+     label0:
+        if offset <= 0 goto label1;
+
+        return 0;
+
+     label1:
+        foundChar = 0;
+        charToReturn = 0;
+        nodeToTest = this;
+        remainingOffset = offset + i;
+
+     label2:
+        if foundChar != 0 goto label5;
+
+        $r1 = nodeToTest.<org.apache.fop.fo.FOText: org.apache.fop.fo.FOText prevFOTextThisBlock>;
+        if $r1 != null goto label3;
+
+        foundChar = 1;
+        goto label5;
+
+     label3:
+        nodeToTest = nodeToTest.<org.apache.fop.fo.FOText: org.apache.fop.fo.FOText prevFOTextThisBlock>;
+        $i0 = nodeToTest.<org.apache.fop.fo.FOText: int endIndex>;
+        $i0 = $i0 + remainingOffset;
+        if $i0 < 0 goto label4;
+
+        $r0 = nodeToTest.<org.apache.fop.fo.FOText: char[] ca>;
+        $i1 = nodeToTest.<org.apache.fop.fo.FOText: int endIndex>;
+        $i1 = $i1 + remainingOffset;
+        charToReturn = $r0[$i1];
+        foundChar = 1;
+        goto label2;
+
+     label4:
+        $i1 = nodeToTest.<org.apache.fop.fo.FOText: int endIndex>;
+        remainingOffset = remainingOffset + $i1;
+        goto label2;
+
+     label5:
+        return charToReturn;
+    }
+
+    public org.apache.fop.fo.FOText getPrevFOTextThisBlock()
+    {
+        org.apache.fop.fo.FOText this, $r0;
+
+        this := @this: org.apache.fop.fo.FOText;
+        $r0 = this.<org.apache.fop.fo.FOText: org.apache.fop.fo.FOText prevFOTextThisBlock>;
+        return $r0;
+    }
+
+    public org.apache.fop.fo.FOText getNextFOTextThisBlock()
+    {
+        org.apache.fop.fo.FOText this, $r0;
+
+        this := @this: org.apache.fop.fo.FOText;
+        $r0 = this.<org.apache.fop.fo.FOText: org.apache.fop.fo.FOText nextFOTextThisBlock>;
+        return $r0;
+    }
+
+    public org.apache.fop.fo.flow.Block getAncestorBlock()
+    {
+        org.apache.fop.fo.FOText this;
+        org.apache.fop.fo.flow.Block $r0;
+
+        this := @this: org.apache.fop.fo.FOText;
+        $r0 = this.<org.apache.fop.fo.FOText: org.apache.fop.fo.flow.Block ancestorBlock>;
+        return $r0;
+    }
+
+    private char charTransform(int)
+    {
+        org.apache.fop.fo.FOText this;
+        int i, $i0, $i2;
+        char[] $r0;
+        char $c1;
+        boolean $z0;
+        org.apache.commons.logging.Log $r1;
+        java.lang.StringBuffer $r2;
+        java.lang.String $r3;
+
+        this := @this: org.apache.fop.fo.FOText;
+        i := @parameter0: int;
+        $i0 = this.<org.apache.fop.fo.FOText: int textTransform>;
+        lookupswitch($i0)
+        {
+            case 22: goto label3;
+            case 78: goto label2;
+            case 95: goto label0;
+            case 155: goto label1;
+            default: goto label5;
+        };
+
+     label0:
+        $r0 = this.<org.apache.fop.fo.FOText: char[] ca>;
+        $c1 = $r0[i];
+        return $c1;
+
+     label1:
+        $r0 = this.<org.apache.fop.fo.FOText: char[] ca>;
+        $c1 = $r0[i];
+        $c1 = staticinvoke <java.lang.Character: char toUpperCase(char)>($c1);
+        return $c1;
+
+     label2:
+        $r0 = this.<org.apache.fop.fo.FOText: char[] ca>;
+        $c1 = $r0[i];
+        $c1 = staticinvoke <java.lang.Character: char toLowerCase(char)>($c1);
+        return $c1;
+
+     label3:
+        $z0 = specialinvoke this.<org.apache.fop.fo.FOText: boolean isStartOfWord(int)>(i);
+        if $z0 == 0 goto label4;
+
+        $r0 = this.<org.apache.fop.fo.FOText: char[] ca>;
+        $c1 = $r0[i];
+        $c1 = staticinvoke <java.lang.Character: char toTitleCase(char)>($c1);
+        return $c1;
+
+     label4:
+        $r0 = this.<org.apache.fop.fo.FOText: char[] ca>;
+        $c1 = $r0[i];
+        return $c1;
+
+     label5:
+        $r1 = <org.apache.fop.fo.FOText: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Invalid text-tranform value: ");
+        $i2 = this.<org.apache.fop.fo.FOText: int textTransform>;
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i2);
+        $r3 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r3);
+        $r0 = this.<org.apache.fop.fo.FOText: char[] ca>;
+        $c1 = $r0[i];
+        return $c1;
+    }
+
+    public static int isWordChar(char)
+    {
+        char inputChar;
+        int $i0;
+
+        inputChar := @parameter0: char;
+        $i0 = staticinvoke <java.lang.Character: int getType(char)>(inputChar);
+        tableswitch($i0)
+        {
+            case 0: goto label29;
+            case 1: goto label30;
+            case 2: goto label13;
+            case 3: goto label28;
+            case 4: goto label15;
+            case 5: goto label18;
+            case 6: goto label17;
+            case 7: goto label7;
+            case 8: goto label0;
+            case 9: goto label6;
+            case 10: goto label11;
+            case 11: goto label19;
+            case 12: goto label25;
+            case 13: goto label12;
+            case 14: goto label23;
+            case 15: goto label2;
+            case 16: goto label10;
+            case 17: goto label31;
+            case 18: goto label24;
+            case 19: goto label27;
+            case 20: goto label4;
+            case 21: goto label26;
+            case 22: goto label8;
+            case 23: goto label1;
+            case 24: goto label20;
+            case 25: goto label14;
+            case 26: goto label3;
+            case 27: goto label16;
+            case 28: goto label22;
+            default: goto label31;
+        };
+
+     label0:
+        return 1;
+
+     label1:
+        return 1;
+
+     label2:
+        return 0;
+
+     label3:
+        return 1;
+
+     label4:
+        if inputChar != 45 goto label5;
+
+        return 1;
+
+     label5:
+        return 0;
+
+     label6:
+        return 1;
+
+     label7:
+        return 0;
+
+     label8:
+        if inputChar != 8217 goto label9;
+
+        return 2;
+
+     label9:
+        return 0;
+
+     label10:
+        return 0;
+
+     label11:
+        return 1;
+
+     label12:
+        return 0;
+
+     label13:
+        return 1;
+
+     label14:
+        return 0;
+
+     label15:
+        return 1;
+
+     label16:
+        return 1;
+
+     label17:
+        return 1;
+
+     label18:
+        return 1;
+
+     label19:
+        return 1;
+
+     label20:
+        if inputChar != 39 goto label21;
+
+        return 2;
+
+     label21:
+        return 0;
+
+     label22:
+        return 1;
+
+     label23:
+        return 0;
+
+     label24:
+        return 0;
+
+     label25:
+        return 0;
+
+     label26:
+        return 0;
+
+     label27:
+        return 0;
+
+     label28:
+        return 1;
+
+     label29:
+        return 0;
+
+     label30:
+        return 1;
+
+     label31:
+        return 0;
+    }
+
+    public org.apache.fop.fo.properties.CommonFont getCommonFont()
+    {
+        org.apache.fop.fo.FOText this;
+        org.apache.fop.fo.properties.CommonFont $r0;
+
+        this := @this: org.apache.fop.fo.FOText;
+        $r0 = this.<org.apache.fop.fo.FOText: org.apache.fop.fo.properties.CommonFont commonFont>;
+        return $r0;
+    }
+
+    public org.apache.fop.fo.properties.CommonHyphenation getCommonHyphenation()
+    {
+        org.apache.fop.fo.FOText this;
+        org.apache.fop.fo.properties.CommonHyphenation $r0;
+
+        this := @this: org.apache.fop.fo.FOText;
+        $r0 = this.<org.apache.fop.fo.FOText: org.apache.fop.fo.properties.CommonHyphenation commonHyphenation>;
+        return $r0;
+    }
+
+    public java.awt.Color getColor()
+    {
+        org.apache.fop.fo.FOText this;
+        java.awt.Color $r0;
+
+        this := @this: org.apache.fop.fo.FOText;
+        $r0 = this.<org.apache.fop.fo.FOText: java.awt.Color color>;
+        return $r0;
+    }
+
+    public org.apache.fop.fo.properties.KeepProperty getKeepTogether()
+    {
+        org.apache.fop.fo.FOText this;
+        org.apache.fop.fo.properties.KeepProperty $r0;
+
+        this := @this: org.apache.fop.fo.FOText;
+        $r0 = this.<org.apache.fop.fo.FOText: org.apache.fop.fo.properties.KeepProperty keepTogether>;
+        return $r0;
+    }
+
+    public org.apache.fop.fo.properties.Property getLetterSpacing()
+    {
+        org.apache.fop.fo.FOText this;
+        org.apache.fop.fo.properties.Property $r0;
+
+        this := @this: org.apache.fop.fo.FOText;
+        $r0 = this.<org.apache.fop.fo.FOText: org.apache.fop.fo.properties.Property letterSpacing>;
+        return $r0;
+    }
+
+    public org.apache.fop.fo.properties.SpaceProperty getLineHeight()
+    {
+        org.apache.fop.fo.FOText this;
+        org.apache.fop.fo.properties.SpaceProperty $r0;
+
+        this := @this: org.apache.fop.fo.FOText;
+        $r0 = this.<org.apache.fop.fo.FOText: org.apache.fop.fo.properties.SpaceProperty lineHeight>;
+        return $r0;
+    }
+
+    public int getWhitespaceTreatment()
+    {
+        org.apache.fop.fo.FOText this;
+        int $i0;
+
+        this := @this: org.apache.fop.fo.FOText;
+        $i0 = this.<org.apache.fop.fo.FOText: int whiteSpaceTreatment>;
+        return $i0;
+    }
+
+    public org.apache.fop.fo.properties.Property getWordSpacing()
+    {
+        org.apache.fop.fo.FOText this;
+        org.apache.fop.fo.properties.Property $r0;
+
+        this := @this: org.apache.fop.fo.FOText;
+        $r0 = this.<org.apache.fop.fo.FOText: org.apache.fop.fo.properties.Property wordSpacing>;
+        return $r0;
+    }
+
+    public int getWrapOption()
+    {
+        org.apache.fop.fo.FOText this;
+        int $i0;
+
+        this := @this: org.apache.fop.fo.FOText;
+        $i0 = this.<org.apache.fop.fo.FOText: int wrapOption>;
+        return $i0;
+    }
+
+    public org.apache.fop.fo.properties.CommonTextDecoration getTextDecoration()
+    {
+        org.apache.fop.fo.FOText this;
+        org.apache.fop.fo.properties.CommonTextDecoration $r0;
+
+        this := @this: org.apache.fop.fo.FOText;
+        $r0 = this.<org.apache.fop.fo.FOText: org.apache.fop.fo.properties.CommonTextDecoration textDecoration>;
+        return $r0;
+    }
+
+    public org.apache.fop.datatypes.Length getBaseLineShift()
+    {
+        org.apache.fop.fo.FOText this;
+        org.apache.fop.datatypes.Length $r0;
+
+        this := @this: org.apache.fop.fo.FOText;
+        $r0 = this.<org.apache.fop.fo.FOText: org.apache.fop.datatypes.Length baselineShift>;
+        return $r0;
+    }
+
+    public java.lang.String toString()
+    {
+        org.apache.fop.fo.FOText this;
+        java.lang.StringBuffer $r0, sb;
+        java.lang.String $r1, $r3;
+        char[] $r2;
+
+        this := @this: org.apache.fop.fo.FOText;
+        $r0 = new java.lang.StringBuffer;
+        $r1 = specialinvoke this.<java.lang.Object: java.lang.String toString()>();
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>(java.lang.String)>($r1);
+        sb = $r0;
+        $r0 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" (");
+        $r2 = this.<org.apache.fop.fo.FOText: char[] ca>;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(char[])>($r2);
+        virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(")");
+        $r3 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r3;
+    }
+
+    public java.lang.String getLocalName()
+    {
+        org.apache.fop.fo.FOText this;
+
+        this := @this: org.apache.fop.fo.FOText;
+        return null;
+    }
+
+    public java.lang.String getNormalNamespacePrefix()
+    {
+        org.apache.fop.fo.FOText this;
+
+        this := @this: org.apache.fop.fo.FOText;
+        return null;
+    }
+
+    protected java.lang.String gatherContextInfo()
+    {
+        org.apache.fop.fo.FOText this;
+        org.xml.sax.Locator $r0;
+        java.lang.String $r1;
+        char[] $r2;
+
+        this := @this: org.apache.fop.fo.FOText;
+        $r0 = virtualinvoke this.<org.apache.fop.fo.FOText: org.xml.sax.Locator getLocator()>();
+        if $r0 == null goto label0;
+
+        $r1 = specialinvoke this.<org.apache.fop.fo.FONode: java.lang.String gatherContextInfo()>();
+        return $r1;
+
+     label0:
+        $r1 = new java.lang.String;
+        $r2 = this.<org.apache.fop.fo.FOText: char[] ca>;
+        specialinvoke $r1.<java.lang.String: void <init>(char[])>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.String: java.lang.String trim()>();
+        return $r1;
+    }
+}

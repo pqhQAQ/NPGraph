@@ -1,0 +1,309 @@
+public class org.apache.fop.area.Span extends org.apache.fop.area.Area
+{
+    private java.util.List flowAreas;
+    private int colCount;
+    private int colGap;
+    private int colWidth;
+    private int curFlowIdx;
+
+    public void <init>(int, int, int)
+    {
+        org.apache.fop.area.Span this;
+        int colCount, colGap, ipd;
+        java.lang.Integer $r0;
+        java.lang.Boolean $r1;
+
+        this := @this: org.apache.fop.area.Span;
+        colCount := @parameter0: int;
+        colGap := @parameter1: int;
+        ipd := @parameter2: int;
+        specialinvoke this.<org.apache.fop.area.Area: void <init>()>();
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer IS_REFERENCE_AREA>;
+        $r1 = <java.lang.Boolean: java.lang.Boolean TRUE>;
+        virtualinvoke this.<org.apache.fop.area.Span: void addTrait(java.lang.Object,java.lang.Object)>($r0, $r1);
+        this.<org.apache.fop.area.Span: int colCount> = colCount;
+        this.<org.apache.fop.area.Span: int colGap> = colGap;
+        this.<org.apache.fop.area.Span: int ipd> = ipd;
+        this.<org.apache.fop.area.Span: int curFlowIdx> = 0;
+        specialinvoke this.<org.apache.fop.area.Span: void createNormalFlows()>();
+        return;
+    }
+
+    private void createNormalFlows()
+    {
+        org.apache.fop.area.Span this;
+        java.util.ArrayList $r0;
+        int i, $i0, $i1, $i2;
+        org.apache.fop.area.NormalFlow newFlow, $r1;
+        java.util.List $r2;
+
+        this := @this: org.apache.fop.area.Span;
+        $r0 = new java.util.ArrayList;
+        $i0 = this.<org.apache.fop.area.Span: int colCount>;
+        specialinvoke $r0.<java.util.ArrayList: void <init>(int)>($i0);
+        this.<org.apache.fop.area.Span: java.util.List flowAreas> = $r0;
+        $i1 = this.<org.apache.fop.area.Span: int ipd>;
+        $i2 = this.<org.apache.fop.area.Span: int colCount>;
+        $i2 = $i2 - 1;
+        $i0 = this.<org.apache.fop.area.Span: int colGap>;
+        $i2 = $i2 * $i0;
+        $i1 = $i1 - $i2;
+        $i2 = this.<org.apache.fop.area.Span: int colCount>;
+        $i1 = $i1 / $i2;
+        this.<org.apache.fop.area.Span: int colWidth> = $i1;
+        i = 0;
+
+     label0:
+        $i1 = this.<org.apache.fop.area.Span: int colCount>;
+        if i >= $i1 goto label1;
+
+        $r1 = new org.apache.fop.area.NormalFlow;
+        $i2 = this.<org.apache.fop.area.Span: int colWidth>;
+        specialinvoke $r1.<org.apache.fop.area.NormalFlow: void <init>(int)>($i2);
+        newFlow = $r1;
+        $r2 = this.<org.apache.fop.area.Span: java.util.List flowAreas>;
+        interfaceinvoke $r2.<java.util.List: boolean add(java.lang.Object)>(newFlow);
+        i = i + 1;
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    public int getColumnCount()
+    {
+        org.apache.fop.area.Span this;
+        int $i0;
+
+        this := @this: org.apache.fop.area.Span;
+        $i0 = this.<org.apache.fop.area.Span: int colCount>;
+        return $i0;
+    }
+
+    public int getColumnWidth()
+    {
+        org.apache.fop.area.Span this;
+        int $i0;
+
+        this := @this: org.apache.fop.area.Span;
+        $i0 = this.<org.apache.fop.area.Span: int colWidth>;
+        return $i0;
+    }
+
+    public int getHeight()
+    {
+        org.apache.fop.area.Span this;
+        int $i0;
+
+        this := @this: org.apache.fop.area.Span;
+        $i0 = virtualinvoke this.<org.apache.fop.area.Span: int getBPD()>();
+        return $i0;
+    }
+
+    public org.apache.fop.area.NormalFlow getNormalFlow(int)
+    {
+        org.apache.fop.area.Span this;
+        int colRequested, $i0, $i1;
+        java.lang.StringBuffer $r0;
+        java.util.List $r1;
+        java.lang.Object $r2;
+        org.apache.fop.area.NormalFlow $r3;
+        java.lang.IllegalArgumentException $r4;
+        java.lang.String $r5;
+
+        this := @this: org.apache.fop.area.Span;
+        colRequested := @parameter0: int;
+        if colRequested < 0 goto label0;
+
+        $i0 = this.<org.apache.fop.area.Span: int colCount>;
+        if colRequested >= $i0 goto label0;
+
+        $r1 = this.<org.apache.fop.area.Span: java.util.List flowAreas>;
+        $r2 = interfaceinvoke $r1.<java.util.List: java.lang.Object get(int)>(colRequested);
+        $r3 = (org.apache.fop.area.NormalFlow) $r2;
+        return $r3;
+
+     label0:
+        $r4 = new java.lang.IllegalArgumentException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Invalid column number ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(colRequested);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" requested; only 0-");
+        $i1 = this.<org.apache.fop.area.Span: int colCount>;
+        $i1 = $i1 - 1;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" available.");
+        $r5 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r4.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r5);
+        throw $r4;
+    }
+
+    public org.apache.fop.area.NormalFlow getCurrentFlow()
+    {
+        org.apache.fop.area.Span this;
+        int $i0;
+        org.apache.fop.area.NormalFlow $r0;
+
+        this := @this: org.apache.fop.area.Span;
+        $i0 = this.<org.apache.fop.area.Span: int curFlowIdx>;
+        $r0 = virtualinvoke this.<org.apache.fop.area.Span: org.apache.fop.area.NormalFlow getNormalFlow(int)>($i0);
+        return $r0;
+    }
+
+    public int getCurrentFlowIndex()
+    {
+        org.apache.fop.area.Span this;
+        int $i0;
+
+        this := @this: org.apache.fop.area.Span;
+        $i0 = this.<org.apache.fop.area.Span: int curFlowIdx>;
+        return $i0;
+    }
+
+    public org.apache.fop.area.NormalFlow moveToNextFlow()
+    {
+        org.apache.fop.area.Span this;
+        boolean $z0;
+        int $i0;
+        org.apache.fop.area.NormalFlow $r1;
+        java.lang.IllegalStateException $r2;
+
+        this := @this: org.apache.fop.area.Span;
+        $z0 = virtualinvoke this.<org.apache.fop.area.Span: boolean hasMoreFlows()>();
+        if $z0 == 0 goto label0;
+
+        $i0 = this.<org.apache.fop.area.Span: int curFlowIdx>;
+        $i0 = $i0 + 1;
+        this.<org.apache.fop.area.Span: int curFlowIdx> = $i0;
+        $i0 = this.<org.apache.fop.area.Span: int curFlowIdx>;
+        $r1 = virtualinvoke this.<org.apache.fop.area.Span: org.apache.fop.area.NormalFlow getNormalFlow(int)>($i0);
+        return $r1;
+
+     label0:
+        $r2 = new java.lang.IllegalStateException;
+        specialinvoke $r2.<java.lang.IllegalStateException: void <init>(java.lang.String)>("(Internal error.) No more flows left in span.");
+        throw $r2;
+    }
+
+    public boolean hasMoreFlows()
+    {
+        org.apache.fop.area.Span this;
+        int $i0, $i1;
+        boolean $z0;
+
+        this := @this: org.apache.fop.area.Span;
+        $i0 = this.<org.apache.fop.area.Span: int curFlowIdx>;
+        $i1 = this.<org.apache.fop.area.Span: int colCount>;
+        $i1 = $i1 - 1;
+        if $i0 >= $i1 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public void notifyFlowsFinished()
+    {
+        org.apache.fop.area.Span this;
+        int maxFlowBPD, i, $i0;
+        org.apache.fop.area.NormalFlow $r0;
+
+        this := @this: org.apache.fop.area.Span;
+        maxFlowBPD = -2147483648;
+        i = 0;
+
+     label0:
+        $i0 = this.<org.apache.fop.area.Span: int colCount>;
+        if i >= $i0 goto label1;
+
+        $r0 = virtualinvoke this.<org.apache.fop.area.Span: org.apache.fop.area.NormalFlow getNormalFlow(int)>(i);
+        $i0 = virtualinvoke $r0.<org.apache.fop.area.NormalFlow: int getAllocBPD()>();
+        maxFlowBPD = staticinvoke <java.lang.Math: int max(int,int)>(maxFlowBPD, $i0);
+        i = i + 1;
+        goto label0;
+
+     label1:
+        this.<org.apache.fop.area.Span: int bpd> = maxFlowBPD;
+        return;
+    }
+
+    public boolean isEmpty()
+    {
+        org.apache.fop.area.Span this;
+        int areaCount, i, $i0;
+        org.apache.fop.area.NormalFlow flow;
+        java.util.List $r0, $r1;
+        boolean $z0;
+
+        this := @this: org.apache.fop.area.Span;
+        areaCount = 0;
+        i = 0;
+
+     label0:
+        $i0 = virtualinvoke this.<org.apache.fop.area.Span: int getColumnCount()>();
+        if i >= $i0 goto label2;
+
+        flow = virtualinvoke this.<org.apache.fop.area.Span: org.apache.fop.area.NormalFlow getNormalFlow(int)>(i);
+        if flow == null goto label1;
+
+        $r0 = virtualinvoke flow.<org.apache.fop.area.NormalFlow: java.util.List getChildAreas()>();
+        if $r0 == null goto label1;
+
+        $r1 = virtualinvoke flow.<org.apache.fop.area.NormalFlow: java.util.List getChildAreas()>();
+        $i0 = interfaceinvoke $r1.<java.util.List: int size()>();
+        areaCount = areaCount + $i0;
+
+     label1:
+        i = i + 1;
+        goto label0;
+
+     label2:
+        if areaCount != 0 goto label3;
+
+        $z0 = 1;
+        goto label4;
+
+     label3:
+        $z0 = 0;
+
+     label4:
+        return $z0;
+    }
+
+    public java.lang.String toString()
+    {
+        org.apache.fop.area.Span this;
+        java.lang.StringBuffer $r0, sb;
+        java.lang.String $r1, $r2;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.area.Span;
+        $r0 = new java.lang.StringBuffer;
+        $r1 = specialinvoke this.<org.apache.fop.area.Area: java.lang.String toString()>();
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>(java.lang.String)>($r1);
+        sb = $r0;
+        $i0 = this.<org.apache.fop.area.Span: int colCount>;
+        if $i0 <= 1 goto label0;
+
+        $r0 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" {colCount=");
+        $i1 = this.<org.apache.fop.area.Span: int colCount>;
+        virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r0 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", colWidth=");
+        $i1 = this.<org.apache.fop.area.Span: int colWidth>;
+        virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r0 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", curFlowIdx=");
+        $i1 = this.<org.apache.fop.area.Span: int curFlowIdx>;
+        virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("}");
+
+     label0:
+        $r2 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r2;
+    }
+}

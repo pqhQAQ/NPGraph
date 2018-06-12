@@ -1,0 +1,109 @@
+public class org.apache.fop.render.ps.PSTextElementBridge extends org.apache.batik.bridge.SVGTextElementBridge
+{
+    private org.apache.fop.render.ps.PSTextPainter textPainter;
+
+    public void <init>(org.apache.fop.render.ps.PSTextPainter)
+    {
+        org.apache.fop.render.ps.PSTextElementBridge this;
+        org.apache.fop.render.ps.PSTextPainter textPainter;
+
+        this := @this: org.apache.fop.render.ps.PSTextElementBridge;
+        textPainter := @parameter0: org.apache.fop.render.ps.PSTextPainter;
+        specialinvoke this.<org.apache.batik.bridge.SVGTextElementBridge: void <init>()>();
+        this.<org.apache.fop.render.ps.PSTextElementBridge: org.apache.fop.render.ps.PSTextPainter textPainter> = textPainter;
+        return;
+    }
+
+    public org.apache.batik.gvt.GraphicsNode createGraphicsNode(org.apache.batik.bridge.BridgeContext, org.w3c.dom.Element)
+    {
+        org.apache.fop.render.ps.PSTextElementBridge this;
+        org.apache.batik.bridge.BridgeContext ctx;
+        org.w3c.dom.Element e;
+        org.apache.batik.gvt.GraphicsNode node;
+        org.apache.batik.gvt.TextNode $r0;
+        org.apache.fop.render.ps.PSTextPainter $r1;
+
+        this := @this: org.apache.fop.render.ps.PSTextElementBridge;
+        ctx := @parameter0: org.apache.batik.bridge.BridgeContext;
+        e := @parameter1: org.w3c.dom.Element;
+        node = specialinvoke this.<org.apache.batik.bridge.SVGTextElementBridge: org.apache.batik.gvt.GraphicsNode createGraphicsNode(org.apache.batik.bridge.BridgeContext,org.w3c.dom.Element)>(ctx, e);
+        $r0 = (org.apache.batik.gvt.TextNode) node;
+        $r1 = specialinvoke this.<org.apache.fop.render.ps.PSTextElementBridge: org.apache.fop.render.ps.PSTextPainter getTextPainter()>();
+        virtualinvoke $r0.<org.apache.batik.gvt.TextNode: void setTextPainter(org.apache.batik.gvt.TextPainter)>($r1);
+        return node;
+    }
+
+    private org.apache.fop.render.ps.PSTextPainter getTextPainter()
+    {
+        org.apache.fop.render.ps.PSTextElementBridge this;
+        org.apache.fop.render.ps.PSTextPainter $r0;
+
+        this := @this: org.apache.fop.render.ps.PSTextElementBridge;
+        $r0 = this.<org.apache.fop.render.ps.PSTextElementBridge: org.apache.fop.render.ps.PSTextPainter textPainter>;
+        return $r0;
+    }
+
+    private boolean isSimple(org.apache.batik.bridge.BridgeContext, org.w3c.dom.Element, org.apache.batik.gvt.GraphicsNode)
+    {
+        org.apache.fop.render.ps.PSTextElementBridge this;
+        org.apache.batik.bridge.BridgeContext ctx;
+        org.w3c.dom.Element element;
+        org.apache.batik.gvt.GraphicsNode node;
+        org.w3c.dom.Node n;
+        short $s0;
+        java.lang.String $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.ps.PSTextElementBridge;
+        ctx := @parameter0: org.apache.batik.bridge.BridgeContext;
+        element := @parameter1: org.w3c.dom.Element;
+        node := @parameter2: org.apache.batik.gvt.GraphicsNode;
+        n = interfaceinvoke element.<org.w3c.dom.Element: org.w3c.dom.Node getFirstChild()>();
+
+     label0:
+        if n == null goto label6;
+
+        $s0 = interfaceinvoke n.<org.w3c.dom.Node: short getNodeType()>();
+        tableswitch($s0)
+        {
+            case 1: goto label1;
+            case 2: goto label5;
+            case 3: goto label5;
+            case 4: goto label5;
+            default: goto label5;
+        };
+
+     label1:
+        $r0 = interfaceinvoke n.<org.w3c.dom.Node: java.lang.String getLocalName()>();
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("tspan");
+        if $z0 != 0 goto label2;
+
+        $r0 = interfaceinvoke n.<org.w3c.dom.Node: java.lang.String getLocalName()>();
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("altGlyph");
+        if $z0 == 0 goto label3;
+
+     label2:
+        return 0;
+
+     label3:
+        $r0 = interfaceinvoke n.<org.w3c.dom.Node: java.lang.String getLocalName()>();
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("textPath");
+        if $z0 == 0 goto label4;
+
+        return 0;
+
+     label4:
+        $r0 = interfaceinvoke n.<org.w3c.dom.Node: java.lang.String getLocalName()>();
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>("tref");
+        if $z0 == 0 goto label5;
+
+        return 0;
+
+     label5:
+        n = interfaceinvoke n.<org.w3c.dom.Node: org.w3c.dom.Node getNextSibling()>();
+        goto label0;
+
+     label6:
+        return 1;
+    }
+}

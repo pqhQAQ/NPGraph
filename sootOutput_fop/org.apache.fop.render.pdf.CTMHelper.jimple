@@ -1,0 +1,167 @@
+public final class org.apache.fop.render.pdf.CTMHelper extends java.lang.Object
+{
+
+    public void <init>()
+    {
+        org.apache.fop.render.pdf.CTMHelper this;
+
+        this := @this: org.apache.fop.render.pdf.CTMHelper;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public static java.lang.String toPDFString(org.apache.fop.area.CTM)
+    {
+        org.apache.fop.area.CTM sourceMatrix;
+        double[] matrix;
+        java.lang.NullPointerException $r0;
+        java.lang.String $r1;
+
+        sourceMatrix := @parameter0: org.apache.fop.area.CTM;
+        if null != sourceMatrix goto label0;
+
+        $r0 = new java.lang.NullPointerException;
+        specialinvoke $r0.<java.lang.NullPointerException: void <init>(java.lang.String)>("sourceMatrix must not be null");
+        throw $r0;
+
+     label0:
+        matrix = staticinvoke <org.apache.fop.render.pdf.CTMHelper: double[] toPDFArray(org.apache.fop.area.CTM)>(sourceMatrix);
+        $r1 = staticinvoke <org.apache.fop.render.pdf.CTMHelper: java.lang.String constructPDFArray(double[])>(matrix);
+        return $r1;
+    }
+
+    public static java.lang.String toPDFString(java.awt.geom.AffineTransform, boolean)
+    {
+        java.awt.geom.AffineTransform transform;
+        boolean convertMillipoints;
+        double[] matrix;
+        java.lang.NullPointerException $r0;
+        byte $b0;
+        double $d0;
+        java.lang.String $r2;
+
+        transform := @parameter0: java.awt.geom.AffineTransform;
+        convertMillipoints := @parameter1: boolean;
+        if null != transform goto label0;
+
+        $r0 = new java.lang.NullPointerException;
+        specialinvoke $r0.<java.lang.NullPointerException: void <init>(java.lang.String)>("transform must not be null");
+        throw $r0;
+
+     label0:
+        matrix = newarray (double)[6];
+        virtualinvoke transform.<java.awt.geom.AffineTransform: void getMatrix(double[])>(matrix);
+        if convertMillipoints == 0 goto label1;
+
+        $b0 = 4;
+        $d0 = matrix[$b0];
+        $d0 = $d0 / 1000.0;
+        matrix[$b0] = $d0;
+        $b0 = 5;
+        $d0 = matrix[$b0];
+        $d0 = $d0 / 1000.0;
+        matrix[$b0] = $d0;
+
+     label1:
+        $r2 = staticinvoke <org.apache.fop.render.pdf.CTMHelper: java.lang.String constructPDFArray(double[])>(matrix);
+        return $r2;
+    }
+
+    private static java.lang.String constructPDFArray(double[])
+    {
+        double[] matrix;
+        java.lang.StringBuffer $r0;
+        double $d0;
+        java.lang.String $r1, $r2;
+
+        matrix := @parameter0: double[];
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $d0 = matrix[0];
+        $r1 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double,int)>($d0, 8);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $d0 = matrix[1];
+        $r1 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double,int)>($d0, 8);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $d0 = matrix[2];
+        $r1 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double,int)>($d0, 8);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $d0 = matrix[3];
+        $r1 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double,int)>($d0, 8);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $d0 = matrix[4];
+        $r1 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double,int)>($d0, 8);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $d0 = matrix[5];
+        $r1 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double,int)>($d0, 8);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r2;
+    }
+
+    public static org.apache.fop.area.CTM toPDFCTM(org.apache.fop.area.CTM)
+    {
+        org.apache.fop.area.CTM sourceMatrix, $r1;
+        double[] matrix;
+        java.lang.NullPointerException $r0;
+        double $d0, $d1, $d2, $d3, $d4, $d5;
+
+        sourceMatrix := @parameter0: org.apache.fop.area.CTM;
+        if null != sourceMatrix goto label0;
+
+        $r0 = new java.lang.NullPointerException;
+        specialinvoke $r0.<java.lang.NullPointerException: void <init>(java.lang.String)>("sourceMatrix must not be null");
+        throw $r0;
+
+     label0:
+        matrix = staticinvoke <org.apache.fop.render.pdf.CTMHelper: double[] toPDFArray(org.apache.fop.area.CTM)>(sourceMatrix);
+        $r1 = new org.apache.fop.area.CTM;
+        $d0 = matrix[0];
+        $d1 = matrix[1];
+        $d2 = matrix[2];
+        $d3 = matrix[3];
+        $d4 = matrix[4];
+        $d5 = matrix[5];
+        specialinvoke $r1.<org.apache.fop.area.CTM: void <init>(double,double,double,double,double,double)>($d0, $d1, $d2, $d3, $d4, $d5);
+        return $r1;
+    }
+
+    public static double[] toPDFArray(org.apache.fop.area.CTM)
+    {
+        org.apache.fop.area.CTM sourceMatrix;
+        double[] matrix, $r1;
+        java.lang.NullPointerException $r0;
+        double $d0;
+
+        sourceMatrix := @parameter0: org.apache.fop.area.CTM;
+        if null != sourceMatrix goto label0;
+
+        $r0 = new java.lang.NullPointerException;
+        specialinvoke $r0.<java.lang.NullPointerException: void <init>(java.lang.String)>("sourceMatrix must not be null");
+        throw $r0;
+
+     label0:
+        matrix = virtualinvoke sourceMatrix.<org.apache.fop.area.CTM: double[] toArray()>();
+        $r1 = newarray (double)[6];
+        $d0 = matrix[0];
+        $r1[0] = $d0;
+        $d0 = matrix[1];
+        $r1[1] = $d0;
+        $d0 = matrix[2];
+        $r1[2] = $d0;
+        $d0 = matrix[3];
+        $r1[3] = $d0;
+        $d0 = matrix[4];
+        $d0 = $d0 / 1000.0;
+        $r1[4] = $d0;
+        $d0 = matrix[5];
+        $d0 = $d0 / 1000.0;
+        $r1[5] = $d0;
+        return $r1;
+    }
+}

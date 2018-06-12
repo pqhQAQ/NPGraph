@@ -1,0 +1,226 @@
+public class org.apache.fop.render.rtf.rtflib.tools.ImageUtil extends java.lang.Object
+{
+
+    private void <init>()
+    {
+        org.apache.fop.render.rtf.rtflib.tools.ImageUtil this;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.tools.ImageUtil;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public static int getInt(java.lang.String)
+    {
+        java.lang.String value, $r0, retString;
+        java.lang.StringBuffer s, $r1;
+        int len, i, $i2;
+        char $c0, $c1;
+        boolean $z0;
+
+        value := @parameter0: java.lang.String;
+        $r0 = new java.lang.String;
+        specialinvoke $r0.<java.lang.String: void <init>()>();
+        retString = $r0;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>(java.lang.String)>(value);
+        s = $r1;
+        len = virtualinvoke s.<java.lang.StringBuffer: int length()>();
+        i = 0;
+
+     label0:
+        if i >= len goto label1;
+
+        $c0 = virtualinvoke s.<java.lang.StringBuffer: char charAt(int)>(i);
+        $z0 = staticinvoke <java.lang.Character: boolean isDigit(char)>($c0);
+        if $z0 == 0 goto label1;
+
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(retString);
+        $c1 = virtualinvoke s.<java.lang.StringBuffer: char charAt(int)>(i);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c1);
+        retString = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        i = i + 1;
+        goto label0;
+
+     label1:
+        $i2 = virtualinvoke retString.<java.lang.String: int length()>();
+        if $i2 != 0 goto label2;
+
+        return -1;
+
+     label2:
+        $i2 = staticinvoke <java.lang.Integer: int parseInt(java.lang.String)>(retString);
+        return $i2;
+    }
+
+    public static boolean isPercent(java.lang.String)
+    {
+        java.lang.String value;
+        boolean $z0;
+
+        value := @parameter0: java.lang.String;
+        $z0 = virtualinvoke value.<java.lang.String: boolean endsWith(java.lang.String)>("%");
+        if $z0 == 0 goto label0;
+
+        return 1;
+
+     label0:
+        return 0;
+    }
+
+    public static boolean compareHexValues(byte[], byte[], int, boolean)
+    {
+        byte[] pattern, data;
+        int searchAt, pLen, i, $i0, $i2;
+        boolean searchForward;
+        byte $b1, $b3;
+
+        pattern := @parameter0: byte[];
+        data := @parameter1: byte[];
+        searchAt := @parameter2: int;
+        searchForward := @parameter3: boolean;
+        $i0 = lengthof data;
+        if searchAt < $i0 goto label0;
+
+        return 0;
+
+     label0:
+        pLen = lengthof pattern;
+        if searchForward == 0 goto label5;
+
+        $i0 = lengthof data;
+        $i0 = $i0 - searchAt;
+        if pLen < $i0 goto label1;
+
+        return 0;
+
+     label1:
+        i = 0;
+
+     label2:
+        if i >= pLen goto label4;
+
+        $b1 = pattern[i];
+        $i2 = searchAt + i;
+        $b3 = data[$i2];
+        if $b1 == $b3 goto label3;
+
+        return 0;
+
+     label3:
+        i = i + 1;
+        goto label2;
+
+     label4:
+        return 1;
+
+     label5:
+        $i0 = searchAt + 1;
+        if pLen <= $i0 goto label6;
+
+        return 0;
+
+     label6:
+        i = 0;
+
+     label7:
+        if i >= pLen goto label9;
+
+        $i0 = pLen - i;
+        $i0 = $i0 - 1;
+        $b1 = pattern[$i0];
+        $i2 = searchAt - i;
+        $b3 = data[$i2];
+        if $b1 == $b3 goto label8;
+
+        return 0;
+
+     label8:
+        i = i + 1;
+        goto label7;
+
+     label9:
+        return 1;
+    }
+
+    public static int getIntFromByteArray(byte[], int, int, boolean)
+    {
+        byte[] data;
+        int startAt, length, bitMoving, retVal, i, iData, $i0;
+        boolean searchForward;
+        byte bit;
+
+        data := @parameter0: byte[];
+        startAt := @parameter1: int;
+        length := @parameter2: int;
+        searchForward := @parameter3: boolean;
+        bit = 8;
+        bitMoving = length * bit;
+        retVal = 0;
+        $i0 = lengthof data;
+        if startAt < $i0 goto label0;
+
+        return retVal;
+
+     label0:
+        if searchForward == 0 goto label5;
+
+        $i0 = lengthof data;
+        $i0 = $i0 - startAt;
+        if length < $i0 goto label1;
+
+        return retVal;
+
+     label1:
+        i = 0;
+
+     label2:
+        if i >= length goto label4;
+
+        bitMoving = bitMoving - bit;
+        $i0 = startAt + i;
+        iData = data[$i0];
+        if iData >= 0 goto label3;
+
+        iData = iData + 256;
+
+     label3:
+        $i0 = iData << bitMoving;
+        retVal = retVal + $i0;
+        i = i + 1;
+        goto label2;
+
+     label4:
+        goto label9;
+
+     label5:
+        $i0 = startAt + 1;
+        if length <= $i0 goto label6;
+
+        return retVal;
+
+     label6:
+        i = 0;
+
+     label7:
+        if i >= length goto label9;
+
+        bitMoving = bitMoving - bit;
+        $i0 = startAt - i;
+        iData = data[$i0];
+        if iData >= 0 goto label8;
+
+        iData = iData + 256;
+
+     label8:
+        $i0 = iData << bitMoving;
+        retVal = retVal + $i0;
+        i = i + 1;
+        goto label7;
+
+     label9:
+        return retVal;
+    }
+}

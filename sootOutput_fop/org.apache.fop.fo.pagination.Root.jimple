@@ -1,0 +1,435 @@
+public class org.apache.fop.fo.pagination.Root extends org.apache.fop.fo.FObj
+{
+    private int mediaUsage;
+    private org.apache.fop.fo.pagination.LayoutMasterSet layoutMasterSet;
+    private org.apache.fop.fo.pagination.Declarations declarations;
+    private org.apache.fop.fo.pagination.bookmarks.BookmarkTree bookmarkTree;
+    private java.util.List destinationList;
+    private java.util.List pageSequences;
+    private boolean pageSequenceFound;
+    private int endingPageNumberOfPreviousSequence;
+    private int totalPagesGenerated;
+    private org.apache.fop.fo.FOEventHandler foEventHandler;
+
+    public void <init>(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.pagination.Root this;
+        org.apache.fop.fo.FONode parent;
+        java.util.ArrayList $r0;
+
+        this := @this: org.apache.fop.fo.pagination.Root;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        specialinvoke this.<org.apache.fop.fo.FObj: void <init>(org.apache.fop.fo.FONode)>(parent);
+        this.<org.apache.fop.fo.pagination.Root: org.apache.fop.fo.pagination.bookmarks.BookmarkTree bookmarkTree> = null;
+        this.<org.apache.fop.fo.pagination.Root: boolean pageSequenceFound> = 0;
+        this.<org.apache.fop.fo.pagination.Root: int endingPageNumberOfPreviousSequence> = 0;
+        this.<org.apache.fop.fo.pagination.Root: int totalPagesGenerated> = 0;
+        this.<org.apache.fop.fo.pagination.Root: org.apache.fop.fo.FOEventHandler foEventHandler> = null;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.fo.pagination.Root: java.util.List pageSequences> = $r0;
+        if parent == null goto label0;
+
+     label0:
+        return;
+    }
+
+    public void bind(org.apache.fop.fo.PropertyList) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.pagination.Root this;
+        org.apache.fop.fo.PropertyList pList;
+        org.apache.fop.fo.properties.Property $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.fo.pagination.Root;
+        pList := @parameter0: org.apache.fop.fo.PropertyList;
+        $r0 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(145);
+        $i0 = virtualinvoke $r0.<org.apache.fop.fo.properties.Property: int getEnum()>();
+        this.<org.apache.fop.fo.pagination.Root: int mediaUsage> = $i0;
+        return;
+    }
+
+    protected void endOfNode() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.pagination.Root this;
+        boolean $z0;
+        org.apache.fop.fo.pagination.LayoutMasterSet $r0;
+
+        this := @this: org.apache.fop.fo.pagination.Root;
+        $z0 = this.<org.apache.fop.fo.pagination.Root: boolean pageSequenceFound>;
+        if $z0 == 0 goto label0;
+
+        $r0 = this.<org.apache.fop.fo.pagination.Root: org.apache.fop.fo.pagination.LayoutMasterSet layoutMasterSet>;
+        if $r0 != null goto label1;
+
+     label0:
+        virtualinvoke this.<org.apache.fop.fo.pagination.Root: void missingChildElementError(java.lang.String)>("(layout-master-set, declarations?, bookmark-tree?, (page-sequence|fox:external-document)+)");
+
+     label1:
+        return;
+    }
+
+    protected void validateChildNode(org.xml.sax.Locator, java.lang.String, java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.pagination.Root this;
+        org.xml.sax.Locator loc;
+        java.lang.String nsURI, localName, $r0;
+        boolean $z0;
+        org.apache.fop.fo.pagination.LayoutMasterSet $r1;
+        org.apache.fop.fo.pagination.Declarations $r2;
+        org.apache.fop.fo.pagination.bookmarks.BookmarkTree $r3;
+
+        this := @this: org.apache.fop.fo.pagination.Root;
+        loc := @parameter0: org.xml.sax.Locator;
+        nsURI := @parameter1: java.lang.String;
+        localName := @parameter2: java.lang.String;
+        $r0 = "http://www.w3.org/1999/XSL/Format";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(nsURI);
+        if $z0 == 0 goto label10;
+
+        $z0 = virtualinvoke localName.<java.lang.String: boolean equals(java.lang.Object)>("layout-master-set");
+        if $z0 == 0 goto label0;
+
+        $r1 = this.<org.apache.fop.fo.pagination.Root: org.apache.fop.fo.pagination.LayoutMasterSet layoutMasterSet>;
+        if $r1 == null goto label11;
+
+        virtualinvoke this.<org.apache.fop.fo.pagination.Root: void tooManyNodesError(org.xml.sax.Locator,java.lang.String)>(loc, "fo:layout-master-set");
+        goto label11;
+
+     label0:
+        $z0 = virtualinvoke localName.<java.lang.String: boolean equals(java.lang.Object)>("declarations");
+        if $z0 == 0 goto label4;
+
+        $r1 = this.<org.apache.fop.fo.pagination.Root: org.apache.fop.fo.pagination.LayoutMasterSet layoutMasterSet>;
+        if $r1 != null goto label1;
+
+        virtualinvoke this.<org.apache.fop.fo.pagination.Root: void nodesOutOfOrderError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, "fo:layout-master-set", "fo:declarations");
+        goto label11;
+
+     label1:
+        $r2 = this.<org.apache.fop.fo.pagination.Root: org.apache.fop.fo.pagination.Declarations declarations>;
+        if $r2 == null goto label2;
+
+        virtualinvoke this.<org.apache.fop.fo.pagination.Root: void tooManyNodesError(org.xml.sax.Locator,java.lang.String)>(loc, "fo:declarations");
+        goto label11;
+
+     label2:
+        $r3 = this.<org.apache.fop.fo.pagination.Root: org.apache.fop.fo.pagination.bookmarks.BookmarkTree bookmarkTree>;
+        if $r3 == null goto label3;
+
+        virtualinvoke this.<org.apache.fop.fo.pagination.Root: void nodesOutOfOrderError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, "fo:declarations", "fo:bookmark-tree");
+        goto label11;
+
+     label3:
+        $z0 = this.<org.apache.fop.fo.pagination.Root: boolean pageSequenceFound>;
+        if $z0 == 0 goto label11;
+
+        virtualinvoke this.<org.apache.fop.fo.pagination.Root: void nodesOutOfOrderError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, "fo:declarations", "fo:page-sequence");
+        goto label11;
+
+     label4:
+        $z0 = virtualinvoke localName.<java.lang.String: boolean equals(java.lang.Object)>("bookmark-tree");
+        if $z0 == 0 goto label7;
+
+        $r1 = this.<org.apache.fop.fo.pagination.Root: org.apache.fop.fo.pagination.LayoutMasterSet layoutMasterSet>;
+        if $r1 != null goto label5;
+
+        virtualinvoke this.<org.apache.fop.fo.pagination.Root: void nodesOutOfOrderError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, "fo:layout-master-set", "fo:bookmark-tree");
+        goto label11;
+
+     label5:
+        $r3 = this.<org.apache.fop.fo.pagination.Root: org.apache.fop.fo.pagination.bookmarks.BookmarkTree bookmarkTree>;
+        if $r3 == null goto label6;
+
+        virtualinvoke this.<org.apache.fop.fo.pagination.Root: void tooManyNodesError(org.xml.sax.Locator,java.lang.String)>(loc, "fo:bookmark-tree");
+        goto label11;
+
+     label6:
+        $z0 = this.<org.apache.fop.fo.pagination.Root: boolean pageSequenceFound>;
+        if $z0 == 0 goto label11;
+
+        virtualinvoke this.<org.apache.fop.fo.pagination.Root: void nodesOutOfOrderError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, "fo:bookmark-tree", "fo:page-sequence");
+        goto label11;
+
+     label7:
+        $z0 = virtualinvoke localName.<java.lang.String: boolean equals(java.lang.Object)>("page-sequence");
+        if $z0 == 0 goto label9;
+
+        $r1 = this.<org.apache.fop.fo.pagination.Root: org.apache.fop.fo.pagination.LayoutMasterSet layoutMasterSet>;
+        if $r1 != null goto label8;
+
+        virtualinvoke this.<org.apache.fop.fo.pagination.Root: void nodesOutOfOrderError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, "fo:layout-master-set", "fo:page-sequence");
+        goto label11;
+
+     label8:
+        this.<org.apache.fop.fo.pagination.Root: boolean pageSequenceFound> = 1;
+        goto label11;
+
+     label9:
+        virtualinvoke this.<org.apache.fop.fo.pagination.Root: void invalidChildError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, nsURI, localName);
+        goto label11;
+
+     label10:
+        $r0 = "http://xmlgraphics.apache.org/fop/extensions";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(nsURI);
+        if $z0 == 0 goto label11;
+
+        $r0 = "external-document";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label11;
+
+        this.<org.apache.fop.fo.pagination.Root: boolean pageSequenceFound> = 1;
+
+     label11:
+        return;
+    }
+
+    protected void validateChildNode(org.xml.sax.Locator, org.apache.fop.fo.FONode) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.pagination.Root this;
+        org.xml.sax.Locator loc;
+        org.apache.fop.fo.FONode child;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.pagination.Root;
+        loc := @parameter0: org.xml.sax.Locator;
+        child := @parameter1: org.apache.fop.fo.FONode;
+        $z0 = child instanceof org.apache.fop.fo.pagination.AbstractPageSequence;
+        if $z0 == 0 goto label0;
+
+        this.<org.apache.fop.fo.pagination.Root: boolean pageSequenceFound> = 1;
+
+     label0:
+        return;
+    }
+
+    public void setFOEventHandler(org.apache.fop.fo.FOEventHandler)
+    {
+        org.apache.fop.fo.pagination.Root this;
+        org.apache.fop.fo.FOEventHandler foEventHandler;
+
+        this := @this: org.apache.fop.fo.pagination.Root;
+        foEventHandler := @parameter0: org.apache.fop.fo.FOEventHandler;
+        this.<org.apache.fop.fo.pagination.Root: org.apache.fop.fo.FOEventHandler foEventHandler> = foEventHandler;
+        return;
+    }
+
+    public org.apache.fop.fo.FOEventHandler getFOEventHandler()
+    {
+        org.apache.fop.fo.pagination.Root this;
+        org.apache.fop.fo.FOEventHandler $r0;
+
+        this := @this: org.apache.fop.fo.pagination.Root;
+        $r0 = this.<org.apache.fop.fo.pagination.Root: org.apache.fop.fo.FOEventHandler foEventHandler>;
+        return $r0;
+    }
+
+    public int getEndingPageNumberOfPreviousSequence()
+    {
+        org.apache.fop.fo.pagination.Root this;
+        int $i0;
+
+        this := @this: org.apache.fop.fo.pagination.Root;
+        $i0 = this.<org.apache.fop.fo.pagination.Root: int endingPageNumberOfPreviousSequence>;
+        return $i0;
+    }
+
+    public int getTotalPagesGenerated()
+    {
+        org.apache.fop.fo.pagination.Root this;
+        int $i0;
+
+        this := @this: org.apache.fop.fo.pagination.Root;
+        $i0 = this.<org.apache.fop.fo.pagination.Root: int totalPagesGenerated>;
+        return $i0;
+    }
+
+    public void notifyPageSequenceFinished(int, int)
+    {
+        org.apache.fop.fo.pagination.Root this;
+        int lastPageNumber, additionalPages, $i0;
+        java.lang.IllegalArgumentException $r1;
+
+        this := @this: org.apache.fop.fo.pagination.Root;
+        lastPageNumber := @parameter0: int;
+        additionalPages := @parameter1: int;
+        if additionalPages < 0 goto label0;
+
+        $i0 = this.<org.apache.fop.fo.pagination.Root: int totalPagesGenerated>;
+        $i0 = $i0 + additionalPages;
+        this.<org.apache.fop.fo.pagination.Root: int totalPagesGenerated> = $i0;
+        this.<org.apache.fop.fo.pagination.Root: int endingPageNumberOfPreviousSequence> = lastPageNumber;
+        goto label1;
+
+     label0:
+        $r1 = new java.lang.IllegalArgumentException;
+        specialinvoke $r1.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Number of additional pages must be zero or greater.");
+        throw $r1;
+
+     label1:
+        return;
+    }
+
+    public int getPageSequenceCount()
+    {
+        org.apache.fop.fo.pagination.Root this;
+        java.util.List $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.fo.pagination.Root;
+        $r0 = this.<org.apache.fop.fo.pagination.Root: java.util.List pageSequences>;
+        $i0 = interfaceinvoke $r0.<java.util.List: int size()>();
+        return $i0;
+    }
+
+    public org.apache.fop.fo.pagination.PageSequence getSucceedingPageSequence(org.apache.fop.fo.pagination.PageSequence)
+    {
+        org.apache.fop.fo.pagination.Root this;
+        org.apache.fop.fo.pagination.PageSequence current, $r3;
+        int currentIndex, $i0;
+        java.util.List $r0, $r1;
+        java.lang.Object $r2;
+
+        this := @this: org.apache.fop.fo.pagination.Root;
+        current := @parameter0: org.apache.fop.fo.pagination.PageSequence;
+        $r0 = this.<org.apache.fop.fo.pagination.Root: java.util.List pageSequences>;
+        currentIndex = interfaceinvoke $r0.<java.util.List: int indexOf(java.lang.Object)>(current);
+        if currentIndex != -1 goto label0;
+
+        return null;
+
+     label0:
+        $r1 = this.<org.apache.fop.fo.pagination.Root: java.util.List pageSequences>;
+        $i0 = interfaceinvoke $r1.<java.util.List: int size()>();
+        $i0 = $i0 - 1;
+        if currentIndex >= $i0 goto label1;
+
+        $r0 = this.<org.apache.fop.fo.pagination.Root: java.util.List pageSequences>;
+        $i0 = currentIndex + 1;
+        $r2 = interfaceinvoke $r0.<java.util.List: java.lang.Object get(int)>($i0);
+        $r3 = (org.apache.fop.fo.pagination.PageSequence) $r2;
+        return $r3;
+
+     label1:
+        return null;
+    }
+
+    public org.apache.fop.fo.pagination.LayoutMasterSet getLayoutMasterSet()
+    {
+        org.apache.fop.fo.pagination.Root this;
+        org.apache.fop.fo.pagination.LayoutMasterSet $r0;
+
+        this := @this: org.apache.fop.fo.pagination.Root;
+        $r0 = this.<org.apache.fop.fo.pagination.Root: org.apache.fop.fo.pagination.LayoutMasterSet layoutMasterSet>;
+        return $r0;
+    }
+
+    public void setLayoutMasterSet(org.apache.fop.fo.pagination.LayoutMasterSet)
+    {
+        org.apache.fop.fo.pagination.Root this;
+        org.apache.fop.fo.pagination.LayoutMasterSet layoutMasterSet;
+
+        this := @this: org.apache.fop.fo.pagination.Root;
+        layoutMasterSet := @parameter0: org.apache.fop.fo.pagination.LayoutMasterSet;
+        this.<org.apache.fop.fo.pagination.Root: org.apache.fop.fo.pagination.LayoutMasterSet layoutMasterSet> = layoutMasterSet;
+        return;
+    }
+
+    public org.apache.fop.fo.pagination.Declarations getDeclarations()
+    {
+        org.apache.fop.fo.pagination.Root this;
+        org.apache.fop.fo.pagination.Declarations $r0;
+
+        this := @this: org.apache.fop.fo.pagination.Root;
+        $r0 = this.<org.apache.fop.fo.pagination.Root: org.apache.fop.fo.pagination.Declarations declarations>;
+        return $r0;
+    }
+
+    public void setDeclarations(org.apache.fop.fo.pagination.Declarations)
+    {
+        org.apache.fop.fo.pagination.Root this;
+        org.apache.fop.fo.pagination.Declarations declarations;
+
+        this := @this: org.apache.fop.fo.pagination.Root;
+        declarations := @parameter0: org.apache.fop.fo.pagination.Declarations;
+        this.<org.apache.fop.fo.pagination.Root: org.apache.fop.fo.pagination.Declarations declarations> = declarations;
+        return;
+    }
+
+    public void setBookmarkTree(org.apache.fop.fo.pagination.bookmarks.BookmarkTree)
+    {
+        org.apache.fop.fo.pagination.Root this;
+        org.apache.fop.fo.pagination.bookmarks.BookmarkTree bookmarkTree;
+
+        this := @this: org.apache.fop.fo.pagination.Root;
+        bookmarkTree := @parameter0: org.apache.fop.fo.pagination.bookmarks.BookmarkTree;
+        this.<org.apache.fop.fo.pagination.Root: org.apache.fop.fo.pagination.bookmarks.BookmarkTree bookmarkTree> = bookmarkTree;
+        return;
+    }
+
+    public void addDestination(org.apache.fop.fo.extensions.destination.Destination)
+    {
+        org.apache.fop.fo.pagination.Root this;
+        org.apache.fop.fo.extensions.destination.Destination destination;
+        java.util.ArrayList $r0;
+        java.util.List $r1;
+
+        this := @this: org.apache.fop.fo.pagination.Root;
+        destination := @parameter0: org.apache.fop.fo.extensions.destination.Destination;
+        $r1 = this.<org.apache.fop.fo.pagination.Root: java.util.List destinationList>;
+        if $r1 != null goto label0;
+
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.fo.pagination.Root: java.util.List destinationList> = $r0;
+
+     label0:
+        $r1 = this.<org.apache.fop.fo.pagination.Root: java.util.List destinationList>;
+        interfaceinvoke $r1.<java.util.List: boolean add(java.lang.Object)>(destination);
+        return;
+    }
+
+    public java.util.List getDestinationList()
+    {
+        org.apache.fop.fo.pagination.Root this;
+        java.util.List $r0;
+
+        this := @this: org.apache.fop.fo.pagination.Root;
+        $r0 = this.<org.apache.fop.fo.pagination.Root: java.util.List destinationList>;
+        return $r0;
+    }
+
+    public org.apache.fop.fo.pagination.bookmarks.BookmarkTree getBookmarkTree()
+    {
+        org.apache.fop.fo.pagination.Root this;
+        org.apache.fop.fo.pagination.bookmarks.BookmarkTree $r0;
+
+        this := @this: org.apache.fop.fo.pagination.Root;
+        $r0 = this.<org.apache.fop.fo.pagination.Root: org.apache.fop.fo.pagination.bookmarks.BookmarkTree bookmarkTree>;
+        return $r0;
+    }
+
+    public org.apache.fop.fo.pagination.Root getRoot()
+    {
+        org.apache.fop.fo.pagination.Root this;
+
+        this := @this: org.apache.fop.fo.pagination.Root;
+        return this;
+    }
+
+    public java.lang.String getLocalName()
+    {
+        org.apache.fop.fo.pagination.Root this;
+
+        this := @this: org.apache.fop.fo.pagination.Root;
+        return "root";
+    }
+
+    public int getNameId()
+    {
+        org.apache.fop.fo.pagination.Root this;
+
+        this := @this: org.apache.fop.fo.pagination.Root;
+        return 42;
+    }
+}

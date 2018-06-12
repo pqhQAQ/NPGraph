@@ -1,0 +1,191 @@
+public class org.apache.fop.pdf.PDFName extends org.apache.fop.pdf.PDFObject
+{
+    private java.lang.String name;
+    private static final char[] DIGITS;
+
+    public void <init>(java.lang.String)
+    {
+        org.apache.fop.pdf.PDFName this;
+        java.lang.String name, $r0;
+
+        this := @this: org.apache.fop.pdf.PDFName;
+        name := @parameter0: java.lang.String;
+        specialinvoke this.<org.apache.fop.pdf.PDFObject: void <init>()>();
+        $r0 = staticinvoke <org.apache.fop.pdf.PDFName: java.lang.String escapeName(java.lang.String)>(name);
+        this.<org.apache.fop.pdf.PDFName: java.lang.String name> = $r0;
+        return;
+    }
+
+    private static java.lang.String escapeName(java.lang.String)
+    {
+        java.lang.String name, $r1;
+        java.lang.StringBuffer $r0, sb;
+        int i, c, $i0, $i1;
+        char ch;
+        boolean $z0;
+
+        name := @parameter0: java.lang.String;
+        $r0 = new java.lang.StringBuffer;
+        $i0 = virtualinvoke name.<java.lang.String: int length()>();
+        $i0 = $i0 + 4;
+        $i1 = staticinvoke <java.lang.Math: int min(int,int)>(16, $i0);
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>(int)>($i1);
+        sb = $r0;
+        $z0 = virtualinvoke name.<java.lang.String: boolean startsWith(java.lang.String)>("/");
+        if $z0 != 0 goto label0;
+
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(47);
+
+     label0:
+        i = 0;
+        c = virtualinvoke name.<java.lang.String: int length()>();
+
+     label1:
+        if i >= c goto label4;
+
+        ch = virtualinvoke name.<java.lang.String: char charAt(int)>(i);
+        if ch < 33 goto label2;
+
+        if ch > 126 goto label2;
+
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(ch);
+        goto label3;
+
+     label2:
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(35);
+        staticinvoke <org.apache.fop.pdf.PDFName: void toHex(char,java.lang.StringBuffer)>(ch, sb);
+
+     label3:
+        i = i + 1;
+        goto label1;
+
+     label4:
+        $r1 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r1;
+    }
+
+    private static void toHex(char, java.lang.StringBuffer)
+    {
+        char ch, $c0, $c1;
+        java.lang.StringBuffer sb;
+        java.lang.IllegalArgumentException $r0;
+        char[] $r1;
+
+        ch := @parameter0: char;
+        sb := @parameter1: java.lang.StringBuffer;
+        if ch < 256 goto label0;
+
+        $r0 = new java.lang.IllegalArgumentException;
+        specialinvoke $r0.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Only 8-bit characters allowed by this implementation");
+        throw $r0;
+
+     label0:
+        $r1 = <org.apache.fop.pdf.PDFName: char[] DIGITS>;
+        $c0 = ch >>> 4;
+        $c0 = $c0 & 15;
+        $c1 = $r1[$c0];
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c1);
+        $r1 = <org.apache.fop.pdf.PDFName: char[] DIGITS>;
+        $c0 = ch & 15;
+        $c1 = $r1[$c0];
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c1);
+        return;
+    }
+
+    public java.lang.String toString()
+    {
+        org.apache.fop.pdf.PDFName this;
+        java.lang.String $r0;
+
+        this := @this: org.apache.fop.pdf.PDFName;
+        $r0 = this.<org.apache.fop.pdf.PDFName: java.lang.String name>;
+        return $r0;
+    }
+
+    protected int output(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFName this;
+        java.io.OutputStream stream;
+        org.apache.commons.io.output.CountingOutputStream $r0, cout;
+        java.io.Writer writer;
+        boolean $z0;
+        java.lang.String $r1;
+        int $i0;
+
+        this := @this: org.apache.fop.pdf.PDFName;
+        stream := @parameter0: java.io.OutputStream;
+        $r0 = new org.apache.commons.io.output.CountingOutputStream;
+        specialinvoke $r0.<org.apache.commons.io.output.CountingOutputStream: void <init>(java.io.OutputStream)>(stream);
+        cout = $r0;
+        writer = staticinvoke <org.apache.fop.pdf.PDFDocument: java.io.Writer getWriterFor(java.io.OutputStream)>(cout);
+        $z0 = virtualinvoke this.<org.apache.fop.pdf.PDFName: boolean hasObjectNumber()>();
+        if $z0 == 0 goto label0;
+
+        $r1 = virtualinvoke this.<org.apache.fop.pdf.PDFName: java.lang.String getObjectID()>();
+        virtualinvoke writer.<java.io.Writer: void write(java.lang.String)>($r1);
+
+     label0:
+        $r1 = virtualinvoke this.<org.apache.fop.pdf.PDFName: java.lang.String toString()>();
+        virtualinvoke writer.<java.io.Writer: void write(java.lang.String)>($r1);
+        $z0 = virtualinvoke this.<org.apache.fop.pdf.PDFName: boolean hasObjectNumber()>();
+        if $z0 == 0 goto label1;
+
+        virtualinvoke writer.<java.io.Writer: void write(java.lang.String)>("\nendobj\n");
+
+     label1:
+        virtualinvoke writer.<java.io.Writer: void flush()>();
+        $i0 = virtualinvoke cout.<org.apache.commons.io.output.CountingOutputStream: int getCount()>();
+        return $i0;
+    }
+
+    public void outputInline(java.io.OutputStream, java.io.Writer) throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFName this;
+        java.io.OutputStream out;
+        java.io.Writer writer;
+        boolean $z0;
+        java.lang.String $r0;
+
+        this := @this: org.apache.fop.pdf.PDFName;
+        out := @parameter0: java.io.OutputStream;
+        writer := @parameter1: java.io.Writer;
+        $z0 = virtualinvoke this.<org.apache.fop.pdf.PDFName: boolean hasObjectNumber()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFName: java.lang.String referencePDF()>();
+        virtualinvoke writer.<java.io.Writer: void write(java.lang.String)>($r0);
+        goto label1;
+
+     label0:
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFName: java.lang.String toString()>();
+        virtualinvoke writer.<java.io.Writer: void write(java.lang.String)>($r0);
+
+     label1:
+        return;
+    }
+
+    static void <clinit>()
+    {
+        char[] $r0;
+
+        $r0 = newarray (char)[16];
+        $r0[0] = 48;
+        $r0[1] = 49;
+        $r0[2] = 50;
+        $r0[3] = 51;
+        $r0[4] = 52;
+        $r0[5] = 53;
+        $r0[6] = 54;
+        $r0[7] = 55;
+        $r0[8] = 56;
+        $r0[9] = 57;
+        $r0[10] = 65;
+        $r0[11] = 66;
+        $r0[12] = 67;
+        $r0[13] = 68;
+        $r0[14] = 69;
+        $r0[15] = 70;
+        <org.apache.fop.pdf.PDFName: char[] DIGITS> = $r0;
+        return;
+    }
+}

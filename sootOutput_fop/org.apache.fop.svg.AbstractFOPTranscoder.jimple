@@ -1,0 +1,154 @@
+public abstract class org.apache.fop.svg.AbstractFOPTranscoder extends org.apache.batik.transcoder.SVGAbstractTranscoder
+{
+    public static final org.apache.batik.transcoder.TranscodingHints$Key KEY_STROKE_TEXT;
+    public static final java.lang.Boolean VALUE_FORMAT_ON;
+    public static final java.lang.Boolean VALUE_FORMAT_OFF;
+    protected org.apache.batik.bridge.UserAgent userAgent;
+    private org.apache.commons.logging.Log logger;
+    private org.xml.sax.EntityResolver resolver;
+
+    public void <init>()
+    {
+        org.apache.fop.svg.AbstractFOPTranscoder this;
+        org.apache.batik.bridge.UserAgent $r0;
+        org.apache.batik.transcoder.TranscodingHints $r1;
+        org.apache.batik.transcoder.TranscodingHints$Key $r2;
+        org.w3c.dom.DOMImplementation $r4;
+
+        this := @this: org.apache.fop.svg.AbstractFOPTranscoder;
+        specialinvoke this.<org.apache.batik.transcoder.SVGAbstractTranscoder: void <init>()>();
+        $r0 = virtualinvoke this.<org.apache.fop.svg.AbstractFOPTranscoder: org.apache.batik.bridge.UserAgent createUserAgent()>();
+        this.<org.apache.fop.svg.AbstractFOPTranscoder: org.apache.batik.bridge.UserAgent userAgent> = $r0;
+        $r1 = this.<org.apache.fop.svg.AbstractFOPTranscoder: org.apache.batik.transcoder.TranscodingHints hints>;
+        $r2 = <org.apache.fop.svg.AbstractFOPTranscoder: org.apache.batik.transcoder.TranscodingHints$Key KEY_DOCUMENT_ELEMENT_NAMESPACE_URI>;
+        virtualinvoke $r1.<org.apache.batik.transcoder.TranscodingHints: java.lang.Object put(java.lang.Object,java.lang.Object)>($r2, "http://www.w3.org/2000/svg");
+        $r1 = this.<org.apache.fop.svg.AbstractFOPTranscoder: org.apache.batik.transcoder.TranscodingHints hints>;
+        $r2 = <org.apache.fop.svg.AbstractFOPTranscoder: org.apache.batik.transcoder.TranscodingHints$Key KEY_DOCUMENT_ELEMENT>;
+        virtualinvoke $r1.<org.apache.batik.transcoder.TranscodingHints: java.lang.Object put(java.lang.Object,java.lang.Object)>($r2, "svg");
+        $r1 = this.<org.apache.fop.svg.AbstractFOPTranscoder: org.apache.batik.transcoder.TranscodingHints hints>;
+        $r2 = <org.apache.fop.svg.AbstractFOPTranscoder: org.apache.batik.transcoder.TranscodingHints$Key KEY_DOM_IMPLEMENTATION>;
+        $r4 = staticinvoke <org.apache.batik.dom.svg.SVGDOMImplementation: org.w3c.dom.DOMImplementation getDOMImplementation()>();
+        virtualinvoke $r1.<org.apache.batik.transcoder.TranscodingHints: java.lang.Object put(java.lang.Object,java.lang.Object)>($r2, $r4);
+        return;
+    }
+
+    protected org.apache.batik.bridge.UserAgent createUserAgent()
+    {
+        org.apache.fop.svg.AbstractFOPTranscoder this;
+        org.apache.fop.svg.AbstractFOPTranscoder$FOPTranscoderUserAgent $r0;
+
+        this := @this: org.apache.fop.svg.AbstractFOPTranscoder;
+        $r0 = new org.apache.fop.svg.AbstractFOPTranscoder$FOPTranscoderUserAgent;
+        specialinvoke $r0.<org.apache.fop.svg.AbstractFOPTranscoder$FOPTranscoderUserAgent: void <init>(org.apache.fop.svg.AbstractFOPTranscoder)>(this);
+        return $r0;
+    }
+
+    public void setLogger(org.apache.commons.logging.Log)
+    {
+        org.apache.fop.svg.AbstractFOPTranscoder this;
+        org.apache.commons.logging.Log logger;
+
+        this := @this: org.apache.fop.svg.AbstractFOPTranscoder;
+        logger := @parameter0: org.apache.commons.logging.Log;
+        this.<org.apache.fop.svg.AbstractFOPTranscoder: org.apache.commons.logging.Log logger> = logger;
+        return;
+    }
+
+    public void setEntityResolver(org.xml.sax.EntityResolver)
+    {
+        org.apache.fop.svg.AbstractFOPTranscoder this;
+        org.xml.sax.EntityResolver resolver;
+
+        this := @this: org.apache.fop.svg.AbstractFOPTranscoder;
+        resolver := @parameter0: org.xml.sax.EntityResolver;
+        this.<org.apache.fop.svg.AbstractFOPTranscoder: org.xml.sax.EntityResolver resolver> = resolver;
+        return;
+    }
+
+    protected final org.apache.commons.logging.Log getLogger()
+    {
+        org.apache.fop.svg.AbstractFOPTranscoder this;
+        org.apache.commons.logging.impl.SimpleLog $r0, $r2;
+        org.apache.commons.logging.Log $r1;
+
+        this := @this: org.apache.fop.svg.AbstractFOPTranscoder;
+        $r1 = this.<org.apache.fop.svg.AbstractFOPTranscoder: org.apache.commons.logging.Log logger>;
+        if $r1 != null goto label0;
+
+        $r0 = new org.apache.commons.logging.impl.SimpleLog;
+        specialinvoke $r0.<org.apache.commons.logging.impl.SimpleLog: void <init>(java.lang.String)>("FOP/Transcoder");
+        this.<org.apache.fop.svg.AbstractFOPTranscoder: org.apache.commons.logging.Log logger> = $r0;
+        $r1 = this.<org.apache.fop.svg.AbstractFOPTranscoder: org.apache.commons.logging.Log logger>;
+        $r2 = (org.apache.commons.logging.impl.SimpleLog) $r1;
+        virtualinvoke $r2.<org.apache.commons.logging.impl.SimpleLog: void setLevel(int)>(3);
+
+     label0:
+        $r1 = this.<org.apache.fop.svg.AbstractFOPTranscoder: org.apache.commons.logging.Log logger>;
+        return $r1;
+    }
+
+    protected org.apache.batik.dom.util.DocumentFactory createDocumentFactory(org.w3c.dom.DOMImplementation, java.lang.String)
+    {
+        org.apache.fop.svg.AbstractFOPTranscoder this;
+        org.w3c.dom.DOMImplementation domImpl;
+        java.lang.String parserClassname;
+        org.apache.fop.svg.FOPSAXSVGDocumentFactory $r0, factory;
+        org.xml.sax.EntityResolver $r1, $r2;
+
+        this := @this: org.apache.fop.svg.AbstractFOPTranscoder;
+        domImpl := @parameter0: org.w3c.dom.DOMImplementation;
+        parserClassname := @parameter1: java.lang.String;
+        $r0 = new org.apache.fop.svg.FOPSAXSVGDocumentFactory;
+        specialinvoke $r0.<org.apache.fop.svg.FOPSAXSVGDocumentFactory: void <init>(java.lang.String)>(parserClassname);
+        factory = $r0;
+        $r1 = this.<org.apache.fop.svg.AbstractFOPTranscoder: org.xml.sax.EntityResolver resolver>;
+        if $r1 == null goto label0;
+
+        $r2 = this.<org.apache.fop.svg.AbstractFOPTranscoder: org.xml.sax.EntityResolver resolver>;
+        virtualinvoke factory.<org.apache.fop.svg.FOPSAXSVGDocumentFactory: void setAdditionalEntityResolver(org.xml.sax.EntityResolver)>($r2);
+
+     label0:
+        return factory;
+    }
+
+    protected boolean isTextStroked()
+    {
+        org.apache.fop.svg.AbstractFOPTranscoder this;
+        boolean stroke, $z0;
+        org.apache.batik.transcoder.TranscodingHints$Key $r0;
+        org.apache.batik.transcoder.TranscodingHints $r1;
+        java.lang.Object $r2;
+        java.lang.Boolean $r3;
+
+        this := @this: org.apache.fop.svg.AbstractFOPTranscoder;
+        stroke = 0;
+        $r1 = this.<org.apache.fop.svg.AbstractFOPTranscoder: org.apache.batik.transcoder.TranscodingHints hints>;
+        $r0 = <org.apache.fop.svg.AbstractFOPTranscoder: org.apache.batik.transcoder.TranscodingHints$Key KEY_STROKE_TEXT>;
+        $z0 = virtualinvoke $r1.<org.apache.batik.transcoder.TranscodingHints: boolean containsKey(java.lang.Object)>($r0);
+        if $z0 == 0 goto label0;
+
+        $r1 = this.<org.apache.fop.svg.AbstractFOPTranscoder: org.apache.batik.transcoder.TranscodingHints hints>;
+        $r0 = <org.apache.fop.svg.AbstractFOPTranscoder: org.apache.batik.transcoder.TranscodingHints$Key KEY_STROKE_TEXT>;
+        $r2 = virtualinvoke $r1.<org.apache.batik.transcoder.TranscodingHints: java.lang.Object get(java.lang.Object)>($r0);
+        $r3 = (java.lang.Boolean) $r2;
+        stroke = virtualinvoke $r3.<java.lang.Boolean: boolean booleanValue()>();
+
+     label0:
+        return stroke;
+    }
+
+    static void <clinit>()
+    {
+        org.apache.batik.transcoder.keys.BooleanKey $r0;
+        java.lang.Boolean $r1;
+
+        $r0 = new org.apache.batik.transcoder.keys.BooleanKey;
+        specialinvoke $r0.<org.apache.batik.transcoder.keys.BooleanKey: void <init>()>();
+        <org.apache.fop.svg.AbstractFOPTranscoder: org.apache.batik.transcoder.TranscodingHints$Key KEY_STROKE_TEXT> = $r0;
+        $r1 = <java.lang.Boolean: java.lang.Boolean TRUE>;
+        <org.apache.fop.svg.AbstractFOPTranscoder: java.lang.Boolean VALUE_FORMAT_ON> = $r1;
+        $r1 = <java.lang.Boolean: java.lang.Boolean FALSE>;
+        <org.apache.fop.svg.AbstractFOPTranscoder: java.lang.Boolean VALUE_FORMAT_OFF> = $r1;
+        return;
+    }
+}

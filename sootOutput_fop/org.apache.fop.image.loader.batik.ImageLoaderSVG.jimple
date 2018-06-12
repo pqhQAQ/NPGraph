@@ -1,0 +1,100 @@
+public class org.apache.fop.image.loader.batik.ImageLoaderSVG extends org.apache.xmlgraphics.image.loader.impl.AbstractImageLoader
+{
+    private org.apache.xmlgraphics.image.loader.ImageFlavor targetFlavor;
+
+    public void <init>(org.apache.xmlgraphics.image.loader.ImageFlavor)
+    {
+        org.apache.fop.image.loader.batik.ImageLoaderSVG this;
+        org.apache.xmlgraphics.image.loader.ImageFlavor targetFlavor, $r1;
+        java.lang.StringBuffer $r0;
+        boolean $z0;
+        java.lang.IllegalArgumentException $r2;
+        java.lang.String $r3;
+
+        this := @this: org.apache.fop.image.loader.batik.ImageLoaderSVG;
+        targetFlavor := @parameter0: org.apache.xmlgraphics.image.loader.ImageFlavor;
+        specialinvoke this.<org.apache.xmlgraphics.image.loader.impl.AbstractImageLoader: void <init>()>();
+        $r1 = <org.apache.xmlgraphics.image.loader.ImageFlavor: org.apache.xmlgraphics.image.loader.ImageFlavor XML_DOM>;
+        $z0 = virtualinvoke $r1.<org.apache.xmlgraphics.image.loader.ImageFlavor: boolean equals(java.lang.Object)>(targetFlavor);
+        if $z0 != 0 goto label0;
+
+        $r2 = new java.lang.IllegalArgumentException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unsupported target ImageFlavor: ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(targetFlavor);
+        $r3 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r3);
+        throw $r2;
+
+     label0:
+        this.<org.apache.fop.image.loader.batik.ImageLoaderSVG: org.apache.xmlgraphics.image.loader.ImageFlavor targetFlavor> = targetFlavor;
+        return;
+    }
+
+    public org.apache.xmlgraphics.image.loader.ImageFlavor getTargetFlavor()
+    {
+        org.apache.fop.image.loader.batik.ImageLoaderSVG this;
+        org.apache.xmlgraphics.image.loader.ImageFlavor $r0;
+
+        this := @this: org.apache.fop.image.loader.batik.ImageLoaderSVG;
+        $r0 = this.<org.apache.fop.image.loader.batik.ImageLoaderSVG: org.apache.xmlgraphics.image.loader.ImageFlavor targetFlavor>;
+        return $r0;
+    }
+
+    public org.apache.xmlgraphics.image.loader.Image loadImage(org.apache.xmlgraphics.image.loader.ImageInfo, java.util.Map, org.apache.xmlgraphics.image.loader.ImageSessionContext) throws org.apache.xmlgraphics.image.loader.ImageException, java.io.IOException
+    {
+        org.apache.fop.image.loader.batik.ImageLoaderSVG this;
+        org.apache.xmlgraphics.image.loader.ImageInfo info;
+        java.util.Map hints;
+        org.apache.xmlgraphics.image.loader.ImageSessionContext session;
+        java.lang.String $r0, $r1, $r4, $r5;
+        org.apache.xmlgraphics.image.loader.Image img;
+        org.apache.xmlgraphics.image.loader.impl.ImageXMLDOM svgImage;
+        boolean $z0;
+        java.lang.IllegalArgumentException $r2;
+        java.lang.StringBuffer $r3;
+
+        this := @this: org.apache.fop.image.loader.batik.ImageLoaderSVG;
+        info := @parameter0: org.apache.xmlgraphics.image.loader.ImageInfo;
+        hints := @parameter1: java.util.Map;
+        session := @parameter2: org.apache.xmlgraphics.image.loader.ImageSessionContext;
+        $r0 = "image/svg+xml";
+        $r1 = virtualinvoke info.<org.apache.xmlgraphics.image.loader.ImageInfo: java.lang.String getMimeType()>();
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>($r1);
+        if $z0 != 0 goto label0;
+
+        $r2 = new java.lang.IllegalArgumentException;
+        specialinvoke $r2.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("ImageInfo must be from an SVG image");
+        throw $r2;
+
+     label0:
+        img = virtualinvoke info.<org.apache.xmlgraphics.image.loader.ImageInfo: org.apache.xmlgraphics.image.loader.Image getOriginalImage()>();
+        $z0 = img instanceof org.apache.xmlgraphics.image.loader.impl.ImageXMLDOM;
+        if $z0 != 0 goto label1;
+
+        $r2 = new java.lang.IllegalArgumentException;
+        specialinvoke $r2.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("ImageInfo was expected to contain the SVG document as DOM");
+        throw $r2;
+
+     label1:
+        svgImage = (org.apache.xmlgraphics.image.loader.impl.ImageXMLDOM) img;
+        $r0 = "http://www.w3.org/2000/svg";
+        $r1 = virtualinvoke svgImage.<org.apache.xmlgraphics.image.loader.impl.ImageXMLDOM: java.lang.String getRootNamespace()>();
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>($r1);
+        if $z0 != 0 goto label2;
+
+        $r2 = new java.lang.IllegalArgumentException;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("The Image is not in the SVG namespace: ");
+        $r4 = virtualinvoke svgImage.<org.apache.xmlgraphics.image.loader.impl.ImageXMLDOM: java.lang.String getRootNamespace()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r5 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r5);
+        throw $r2;
+
+     label2:
+        return svgImage;
+    }
+}

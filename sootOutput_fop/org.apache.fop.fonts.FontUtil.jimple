@@ -1,0 +1,286 @@
+public class org.apache.fop.fonts.FontUtil extends java.lang.Object
+{
+    private static final java.lang.String[] ITALIC_WORDS;
+    private static final java.lang.String[] LIGHT_WORDS;
+    private static final java.lang.String[] MEDIUM_WORDS;
+    private static final java.lang.String[] DEMI_WORDS;
+    private static final java.lang.String[] BOLD_WORDS;
+    private static final java.lang.String[] EXTRA_BOLD_WORDS;
+
+    public void <init>()
+    {
+        org.apache.fop.fonts.FontUtil this;
+
+        this := @this: org.apache.fop.fonts.FontUtil;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public static int parseCSS2FontWeight(java.lang.String)
+    {
+        java.lang.String text, $r3;
+        short weight;
+        java.lang.NumberFormatException nfe, $r1;
+        java.lang.StringBuffer $r0;
+        int weight, $i0;
+        boolean $z0;
+        java.lang.IllegalArgumentException $r2;
+
+        text := @parameter0: java.lang.String;
+        weight = 400;
+
+     label0:
+        weight = staticinvoke <java.lang.Integer: int parseInt(java.lang.String)>(text);
+        $i0 = weight / 100;
+        weight = $i0 * 100;
+        weight = staticinvoke <java.lang.Math: int max(int,int)>(weight, 100);
+        weight = staticinvoke <java.lang.Math: int min(int,int)>(weight, 900);
+
+     label1:
+        goto label5;
+
+     label2:
+        $r1 := @caughtexception;
+        nfe = $r1;
+        $z0 = virtualinvoke text.<java.lang.String: boolean equals(java.lang.Object)>("normal");
+        if $z0 == 0 goto label3;
+
+        weight = 400;
+        goto label5;
+
+     label3:
+        $z0 = virtualinvoke text.<java.lang.String: boolean equals(java.lang.Object)>("bold");
+        if $z0 == 0 goto label4;
+
+        weight = 700;
+        goto label5;
+
+     label4:
+        $r2 = new java.lang.IllegalArgumentException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Illegal value for font weight: \'");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(text);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\'. Use one of: 100, 200, 300, 400, 500, 600, 700, 800, 900, normal (=400), bold (=700)");
+        $r3 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r3);
+        throw $r2;
+
+     label5:
+        return weight;
+
+        catch java.lang.NumberFormatException from label0 to label1 with label2;
+    }
+
+    public static java.lang.String stripWhiteSpace(java.lang.String)
+    {
+        java.lang.String s, $r1;
+        java.lang.StringBuffer $r0, sb;
+        int i, c, $i0;
+        char ch;
+
+        s := @parameter0: java.lang.String;
+        $r0 = new java.lang.StringBuffer;
+        $i0 = virtualinvoke s.<java.lang.String: int length()>();
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>(int)>($i0);
+        sb = $r0;
+        i = 0;
+        c = virtualinvoke s.<java.lang.String: int length()>();
+
+     label0:
+        if i >= c goto label2;
+
+        ch = virtualinvoke s.<java.lang.String: char charAt(int)>(i);
+        if ch == 32 goto label1;
+
+        if ch == 13 goto label1;
+
+        if ch == 10 goto label1;
+
+        if ch == 9 goto label1;
+
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(ch);
+
+     label1:
+        i = i + 1;
+        goto label0;
+
+     label2:
+        $r1 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r1;
+    }
+
+    public static java.lang.String guessStyle(java.lang.String)
+    {
+        java.lang.String fontName, $r1;
+        int i, $i0, $i1;
+        java.lang.String[] $r0;
+
+        fontName := @parameter0: java.lang.String;
+        i = 0;
+
+     label0:
+        $r0 = <org.apache.fop.fonts.FontUtil: java.lang.String[] ITALIC_WORDS>;
+        $i0 = lengthof $r0;
+        if i >= $i0 goto label2;
+
+        $r0 = <org.apache.fop.fonts.FontUtil: java.lang.String[] ITALIC_WORDS>;
+        $r1 = $r0[i];
+        $i1 = virtualinvoke fontName.<java.lang.String: int indexOf(java.lang.String)>($r1);
+        if $i1 == -1 goto label1;
+
+        return "italic";
+
+     label1:
+        i = i + 1;
+        goto label0;
+
+     label2:
+        return "normal";
+    }
+
+    public static int guessWeight(java.lang.String)
+    {
+        java.lang.String fontName, $r1;
+        short weight;
+        int i, $i0, $i1;
+        java.lang.String[] $r0;
+
+        fontName := @parameter0: java.lang.String;
+        weight = 400;
+        i = 0;
+
+     label0:
+        $r0 = <org.apache.fop.fonts.FontUtil: java.lang.String[] BOLD_WORDS>;
+        $i0 = lengthof $r0;
+        if i >= $i0 goto label2;
+
+        $r0 = <org.apache.fop.fonts.FontUtil: java.lang.String[] BOLD_WORDS>;
+        $r1 = $r0[i];
+        $i1 = virtualinvoke fontName.<java.lang.String: int indexOf(java.lang.String)>($r1);
+        if $i1 == -1 goto label1;
+
+        weight = 700;
+        goto label2;
+
+     label1:
+        i = i + 1;
+        goto label0;
+
+     label2:
+        i = 0;
+
+     label3:
+        $r0 = <org.apache.fop.fonts.FontUtil: java.lang.String[] MEDIUM_WORDS>;
+        $i0 = lengthof $r0;
+        if i >= $i0 goto label5;
+
+        $r0 = <org.apache.fop.fonts.FontUtil: java.lang.String[] MEDIUM_WORDS>;
+        $r1 = $r0[i];
+        $i1 = virtualinvoke fontName.<java.lang.String: int indexOf(java.lang.String)>($r1);
+        if $i1 == -1 goto label4;
+
+        weight = 500;
+        goto label5;
+
+     label4:
+        i = i + 1;
+        goto label3;
+
+     label5:
+        i = 0;
+
+     label6:
+        $r0 = <org.apache.fop.fonts.FontUtil: java.lang.String[] DEMI_WORDS>;
+        $i0 = lengthof $r0;
+        if i >= $i0 goto label8;
+
+        $r0 = <org.apache.fop.fonts.FontUtil: java.lang.String[] DEMI_WORDS>;
+        $r1 = $r0[i];
+        $i1 = virtualinvoke fontName.<java.lang.String: int indexOf(java.lang.String)>($r1);
+        if $i1 == -1 goto label7;
+
+        weight = 600;
+        goto label8;
+
+     label7:
+        i = i + 1;
+        goto label6;
+
+     label8:
+        i = 0;
+
+     label9:
+        $r0 = <org.apache.fop.fonts.FontUtil: java.lang.String[] EXTRA_BOLD_WORDS>;
+        $i0 = lengthof $r0;
+        if i >= $i0 goto label11;
+
+        $r0 = <org.apache.fop.fonts.FontUtil: java.lang.String[] EXTRA_BOLD_WORDS>;
+        $r1 = $r0[i];
+        $i1 = virtualinvoke fontName.<java.lang.String: int indexOf(java.lang.String)>($r1);
+        if $i1 == -1 goto label10;
+
+        weight = 800;
+        goto label11;
+
+     label10:
+        i = i + 1;
+        goto label9;
+
+     label11:
+        i = 0;
+
+     label12:
+        $r0 = <org.apache.fop.fonts.FontUtil: java.lang.String[] LIGHT_WORDS>;
+        $i0 = lengthof $r0;
+        if i >= $i0 goto label14;
+
+        $r0 = <org.apache.fop.fonts.FontUtil: java.lang.String[] LIGHT_WORDS>;
+        $r1 = $r0[i];
+        $i1 = virtualinvoke fontName.<java.lang.String: int indexOf(java.lang.String)>($r1);
+        if $i1 == -1 goto label13;
+
+        weight = 200;
+        goto label14;
+
+     label13:
+        i = i + 1;
+        goto label12;
+
+     label14:
+        return weight;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.String[] $r0;
+
+        $r0 = newarray (java.lang.String)[3];
+        $r0[0] = "italic";
+        $r0[1] = "oblique";
+        $r0[2] = "inclined";
+        <org.apache.fop.fonts.FontUtil: java.lang.String[] ITALIC_WORDS> = $r0;
+        $r0 = newarray (java.lang.String)[1];
+        $r0[0] = "light";
+        <org.apache.fop.fonts.FontUtil: java.lang.String[] LIGHT_WORDS> = $r0;
+        $r0 = newarray (java.lang.String)[1];
+        $r0[0] = "medium";
+        <org.apache.fop.fonts.FontUtil: java.lang.String[] MEDIUM_WORDS> = $r0;
+        $r0 = newarray (java.lang.String)[2];
+        $r0[0] = "demi";
+        $r0[1] = "semi";
+        <org.apache.fop.fonts.FontUtil: java.lang.String[] DEMI_WORDS> = $r0;
+        $r0 = newarray (java.lang.String)[1];
+        $r0[0] = "bold";
+        <org.apache.fop.fonts.FontUtil: java.lang.String[] BOLD_WORDS> = $r0;
+        $r0 = newarray (java.lang.String)[6];
+        $r0[0] = "extrabold";
+        $r0[1] = "extra bold";
+        $r0[2] = "black";
+        $r0[3] = "heavy";
+        $r0[4] = "ultra";
+        $r0[5] = "super";
+        <org.apache.fop.fonts.FontUtil: java.lang.String[] EXTRA_BOLD_WORDS> = $r0;
+        return;
+    }
+}

@@ -1,0 +1,868 @@
+public final class org.apache.fop.fo.expr.PropertyParser extends org.apache.fop.fo.expr.PropertyTokenizer
+{
+    private org.apache.fop.fo.expr.PropertyInfo propInfo;
+    private static final java.lang.String RELUNIT;
+    private static final java.util.HashMap FUNCTION_TABLE;
+
+    public static org.apache.fop.fo.properties.Property parse(java.lang.String, org.apache.fop.fo.expr.PropertyInfo) throws org.apache.fop.fo.expr.PropertyException
+    {
+        java.lang.String expr;
+        org.apache.fop.fo.expr.PropertyInfo propInfo;
+        org.apache.fop.fo.expr.PropertyParser $r0;
+        org.apache.fop.fo.expr.PropertyException exc, $r2;
+        org.apache.fop.fo.properties.Property $r1;
+
+        expr := @parameter0: java.lang.String;
+        propInfo := @parameter1: org.apache.fop.fo.expr.PropertyInfo;
+
+     label0:
+        $r0 = new org.apache.fop.fo.expr.PropertyParser;
+        specialinvoke $r0.<org.apache.fop.fo.expr.PropertyParser: void <init>(java.lang.String,org.apache.fop.fo.expr.PropertyInfo)>(expr, propInfo);
+        $r1 = specialinvoke $r0.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.properties.Property parseProperty()>();
+
+     label1:
+        return $r1;
+
+     label2:
+        $r2 := @caughtexception;
+        exc = $r2;
+        virtualinvoke exc.<org.apache.fop.fo.expr.PropertyException: void setPropertyInfo(org.apache.fop.fo.expr.PropertyInfo)>(propInfo);
+        throw exc;
+
+        catch org.apache.fop.fo.expr.PropertyException from label0 to label1 with label2;
+    }
+
+    private void <init>(java.lang.String, org.apache.fop.fo.expr.PropertyInfo)
+    {
+        org.apache.fop.fo.expr.PropertyParser this;
+        java.lang.String propExpr;
+        org.apache.fop.fo.expr.PropertyInfo pInfo;
+
+        this := @this: org.apache.fop.fo.expr.PropertyParser;
+        propExpr := @parameter0: java.lang.String;
+        pInfo := @parameter1: org.apache.fop.fo.expr.PropertyInfo;
+        specialinvoke this.<org.apache.fop.fo.expr.PropertyTokenizer: void <init>(java.lang.String)>(propExpr);
+        this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.expr.PropertyInfo propInfo> = pInfo;
+        return;
+    }
+
+    private org.apache.fop.fo.properties.Property parseProperty() throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.expr.PropertyParser this;
+        org.apache.fop.fo.properties.ListProperty propList, $r1;
+        org.apache.fop.fo.properties.Property prop;
+        int $i0;
+        org.apache.fop.fo.properties.StringProperty $r0;
+
+        this := @this: org.apache.fop.fo.expr.PropertyParser;
+        virtualinvoke this.<org.apache.fop.fo.expr.PropertyParser: void next()>();
+        $i0 = this.<org.apache.fop.fo.expr.PropertyParser: int currentToken>;
+        if $i0 != 0 goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.fo.properties.StringProperty: org.apache.fop.fo.properties.StringProperty getInstance(java.lang.String)>("");
+        return $r0;
+
+     label0:
+        propList = null;
+
+     label1:
+        prop = specialinvoke this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.properties.Property parseAdditiveExpr()>();
+        $i0 = this.<org.apache.fop.fo.expr.PropertyParser: int currentToken>;
+        if $i0 != 0 goto label3;
+
+        if propList == null goto label2;
+
+        virtualinvoke propList.<org.apache.fop.fo.properties.ListProperty: void addProperty(org.apache.fop.fo.properties.Property)>(prop);
+        return propList;
+
+     label2:
+        return prop;
+
+     label3:
+        if propList != null goto label4;
+
+        $r1 = new org.apache.fop.fo.properties.ListProperty;
+        specialinvoke $r1.<org.apache.fop.fo.properties.ListProperty: void <init>(org.apache.fop.fo.properties.Property)>(prop);
+        propList = $r1;
+        goto label5;
+
+     label4:
+        virtualinvoke propList.<org.apache.fop.fo.properties.ListProperty: void addProperty(org.apache.fop.fo.properties.Property)>(prop);
+
+     label5:
+        goto label1;
+    }
+
+    private org.apache.fop.fo.properties.Property parseAdditiveExpr() throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.expr.PropertyParser this;
+        org.apache.fop.fo.properties.Property prop, $r1;
+        int $i0;
+        org.apache.fop.datatypes.Numeric $r0, $r2;
+
+        this := @this: org.apache.fop.fo.expr.PropertyParser;
+        prop = specialinvoke this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.properties.Property parseMultiplicativeExpr()>();
+
+     label0:
+        $i0 = this.<org.apache.fop.fo.expr.PropertyParser: int currentToken>;
+        lookupswitch($i0)
+        {
+            case 8: goto label1;
+            case 9: goto label2;
+            default: goto label3;
+        };
+
+     label1:
+        virtualinvoke this.<org.apache.fop.fo.expr.PropertyParser: void next()>();
+        $r0 = virtualinvoke prop.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        $r1 = specialinvoke this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.properties.Property parseMultiplicativeExpr()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        prop = specialinvoke this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.properties.Property evalAddition(org.apache.fop.datatypes.Numeric,org.apache.fop.datatypes.Numeric)>($r0, $r2);
+        goto label0;
+
+     label2:
+        virtualinvoke this.<org.apache.fop.fo.expr.PropertyParser: void next()>();
+        $r0 = virtualinvoke prop.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        $r1 = specialinvoke this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.properties.Property parseMultiplicativeExpr()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        prop = specialinvoke this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.properties.Property evalSubtraction(org.apache.fop.datatypes.Numeric,org.apache.fop.datatypes.Numeric)>($r0, $r2);
+        goto label0;
+
+     label3:
+        goto label4;
+
+     label4:
+        return prop;
+    }
+
+    private org.apache.fop.fo.properties.Property parseMultiplicativeExpr() throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.expr.PropertyParser this;
+        org.apache.fop.fo.properties.Property prop, $r1;
+        int $i0;
+        org.apache.fop.datatypes.Numeric $r0, $r2;
+        java.lang.Number $r3, $r4;
+
+        this := @this: org.apache.fop.fo.expr.PropertyParser;
+        prop = specialinvoke this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.properties.Property parseUnaryExpr()>();
+
+     label0:
+        $i0 = this.<org.apache.fop.fo.expr.PropertyParser: int currentToken>;
+        lookupswitch($i0)
+        {
+            case 2: goto label3;
+            case 10: goto label2;
+            case 11: goto label1;
+            default: goto label4;
+        };
+
+     label1:
+        virtualinvoke this.<org.apache.fop.fo.expr.PropertyParser: void next()>();
+        $r0 = virtualinvoke prop.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        $r1 = specialinvoke this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.properties.Property parseUnaryExpr()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        prop = specialinvoke this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.properties.Property evalDivide(org.apache.fop.datatypes.Numeric,org.apache.fop.datatypes.Numeric)>($r0, $r2);
+        goto label0;
+
+     label2:
+        virtualinvoke this.<org.apache.fop.fo.expr.PropertyParser: void next()>();
+        $r3 = virtualinvoke prop.<org.apache.fop.fo.properties.Property: java.lang.Number getNumber()>();
+        $r1 = specialinvoke this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.properties.Property parseUnaryExpr()>();
+        $r4 = virtualinvoke $r1.<org.apache.fop.fo.properties.Property: java.lang.Number getNumber()>();
+        prop = specialinvoke this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.properties.Property evalModulo(java.lang.Number,java.lang.Number)>($r3, $r4);
+        goto label0;
+
+     label3:
+        virtualinvoke this.<org.apache.fop.fo.expr.PropertyParser: void next()>();
+        $r0 = virtualinvoke prop.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        $r1 = specialinvoke this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.properties.Property parseUnaryExpr()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        prop = specialinvoke this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.properties.Property evalMultiply(org.apache.fop.datatypes.Numeric,org.apache.fop.datatypes.Numeric)>($r0, $r2);
+        goto label0;
+
+     label4:
+        goto label5;
+
+     label5:
+        return prop;
+    }
+
+    private org.apache.fop.fo.properties.Property parseUnaryExpr() throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.expr.PropertyParser this;
+        int $i0;
+        org.apache.fop.fo.properties.Property $r0, $r2;
+        org.apache.fop.datatypes.Numeric $r1;
+
+        this := @this: org.apache.fop.fo.expr.PropertyParser;
+        $i0 = this.<org.apache.fop.fo.expr.PropertyParser: int currentToken>;
+        if $i0 != 9 goto label0;
+
+        virtualinvoke this.<org.apache.fop.fo.expr.PropertyParser: void next()>();
+        $r0 = specialinvoke this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.properties.Property parseUnaryExpr()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        $r2 = specialinvoke this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.properties.Property evalNegate(org.apache.fop.datatypes.Numeric)>($r1);
+        return $r2;
+
+     label0:
+        $r2 = specialinvoke this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.properties.Property parsePrimaryExpr()>();
+        return $r2;
+    }
+
+    private void expectRpar() throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.expr.PropertyParser this;
+        int $i0;
+        org.apache.fop.fo.expr.PropertyException $r0;
+
+        this := @this: org.apache.fop.fo.expr.PropertyParser;
+        $i0 = this.<org.apache.fop.fo.expr.PropertyParser: int currentToken>;
+        if $i0 == 4 goto label0;
+
+        $r0 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r0.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>("expected )");
+        throw $r0;
+
+     label0:
+        virtualinvoke this.<org.apache.fop.fo.expr.PropertyParser: void next()>();
+        return;
+    }
+
+    private org.apache.fop.fo.properties.Property parsePrimaryExpr() throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.expr.PropertyParser this;
+        org.apache.fop.fo.properties.Property prop;
+        double pcval, numPart, $d0, $d1;
+        org.apache.fop.datatypes.PercentBase pcBase;
+        org.apache.fop.datatypes.Length base, $r11;
+        int numLen, $i0, $i1, $i3;
+        java.lang.String unitPart, $r0, $r2, $r18, $r22;
+        org.apache.fop.fo.expr.Function function;
+        org.apache.fop.fo.expr.NCnameProperty $r1;
+        java.lang.Double $r3;
+        java.lang.Integer $r4;
+        org.apache.fop.fo.expr.PropertyInfo $r5, $r10, $r13, $r24;
+        boolean $z0;
+        byte $b2;
+        org.apache.fop.datatypes.LengthBase $r6;
+        org.apache.fop.fo.properties.PercentLength $r7;
+        org.apache.fop.fo.expr.PropertyException $r8;
+        org.apache.fop.fo.properties.NumberProperty $r9;
+        org.apache.fop.datatypes.Numeric $r12;
+        org.apache.fop.fo.PropertyList $r14;
+        org.apache.fop.fo.FObj $r15;
+        org.apache.fop.apps.FOUserAgent $r16, $r17;
+        float $f0;
+        java.util.HashMap $r19;
+        java.lang.Object $r20;
+        java.lang.StringBuffer $r21;
+        org.apache.fop.fo.properties.Property[] $r23;
+
+        this := @this: org.apache.fop.fo.expr.PropertyParser;
+        $i0 = this.<org.apache.fop.fo.expr.PropertyParser: int currentToken>;
+        if $i0 != 13 goto label0;
+
+        virtualinvoke this.<org.apache.fop.fo.expr.PropertyParser: void next()>();
+
+     label0:
+        $i0 = this.<org.apache.fop.fo.expr.PropertyParser: int currentToken>;
+        tableswitch($i0)
+        {
+            case 1: goto label3;
+            case 2: goto label20;
+            case 3: goto label1;
+            case 4: goto label20;
+            case 5: goto label2;
+            case 6: goto label20;
+            case 7: goto label16;
+            case 8: goto label20;
+            case 9: goto label20;
+            case 10: goto label20;
+            case 11: goto label20;
+            case 12: goto label12;
+            case 13: goto label20;
+            case 14: goto label6;
+            case 15: goto label15;
+            case 16: goto label4;
+            case 17: goto label5;
+            default: goto label20;
+        };
+
+     label1:
+        virtualinvoke this.<org.apache.fop.fo.expr.PropertyParser: void next()>();
+        prop = specialinvoke this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.properties.Property parseAdditiveExpr()>();
+        specialinvoke this.<org.apache.fop.fo.expr.PropertyParser: void expectRpar()>();
+        return prop;
+
+     label2:
+        $r0 = this.<org.apache.fop.fo.expr.PropertyParser: java.lang.String currentTokenValue>;
+        prop = staticinvoke <org.apache.fop.fo.properties.StringProperty: org.apache.fop.fo.properties.StringProperty getInstance(java.lang.String)>($r0);
+        goto label21;
+
+     label3:
+        $r1 = new org.apache.fop.fo.expr.NCnameProperty;
+        $r2 = this.<org.apache.fop.fo.expr.PropertyParser: java.lang.String currentTokenValue>;
+        specialinvoke $r1.<org.apache.fop.fo.expr.NCnameProperty: void <init>(java.lang.String)>($r2);
+        prop = $r1;
+        goto label21;
+
+     label4:
+        $r3 = new java.lang.Double;
+        $r2 = this.<org.apache.fop.fo.expr.PropertyParser: java.lang.String currentTokenValue>;
+        specialinvoke $r3.<java.lang.Double: void <init>(java.lang.String)>($r2);
+        prop = staticinvoke <org.apache.fop.fo.properties.NumberProperty: org.apache.fop.fo.properties.NumberProperty getInstance(java.lang.Double)>($r3);
+        goto label21;
+
+     label5:
+        $r4 = new java.lang.Integer;
+        $r2 = this.<org.apache.fop.fo.expr.PropertyParser: java.lang.String currentTokenValue>;
+        specialinvoke $r4.<java.lang.Integer: void <init>(java.lang.String)>($r2);
+        prop = staticinvoke <org.apache.fop.fo.properties.NumberProperty: org.apache.fop.fo.properties.NumberProperty getInstance(java.lang.Integer)>($r4);
+        goto label21;
+
+     label6:
+        $r0 = this.<org.apache.fop.fo.expr.PropertyParser: java.lang.String currentTokenValue>;
+        $r2 = this.<org.apache.fop.fo.expr.PropertyParser: java.lang.String currentTokenValue>;
+        $i1 = virtualinvoke $r2.<java.lang.String: int length()>();
+        $i1 = $i1 - 1;
+        $r0 = virtualinvoke $r0.<java.lang.String: java.lang.String substring(int,int)>(0, $i1);
+        $d0 = staticinvoke <java.lang.Double: double parseDouble(java.lang.String)>($r0);
+        pcval = $d0 / 100.0;
+        $r5 = this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.expr.PropertyInfo propInfo>;
+        pcBase = virtualinvoke $r5.<org.apache.fop.fo.expr.PropertyInfo: org.apache.fop.datatypes.PercentBase getPercentBase()>();
+        if pcBase == null goto label11;
+
+        $i0 = interfaceinvoke pcBase.<org.apache.fop.datatypes.PercentBase: int getDimension()>();
+        if $i0 != 0 goto label7;
+
+        $d1 = interfaceinvoke pcBase.<org.apache.fop.datatypes.PercentBase: double getBaseValue()>();
+        $d0 = pcval * $d1;
+        prop = staticinvoke <org.apache.fop.fo.properties.NumberProperty: org.apache.fop.fo.properties.NumberProperty getInstance(double)>($d0);
+        goto label21;
+
+     label7:
+        $i0 = interfaceinvoke pcBase.<org.apache.fop.datatypes.PercentBase: int getDimension()>();
+        if $i0 != 1 goto label10;
+
+        $z0 = pcBase instanceof org.apache.fop.datatypes.LengthBase;
+        if $z0 == 0 goto label9;
+
+        $b2 = pcval cmpl 0.0;
+        if $b2 != 0 goto label8;
+
+        prop = <org.apache.fop.fo.properties.FixedLength: org.apache.fop.fo.properties.FixedLength ZERO_FIXED_LENGTH>;
+        goto label21;
+
+     label8:
+        $r6 = (org.apache.fop.datatypes.LengthBase) pcBase;
+        base = virtualinvoke $r6.<org.apache.fop.datatypes.LengthBase: org.apache.fop.datatypes.Length getBaseLength()>();
+        if base == null goto label9;
+
+        $z0 = interfaceinvoke base.<org.apache.fop.datatypes.Length: boolean isAbsolute()>();
+        if $z0 == 0 goto label9;
+
+        $i1 = interfaceinvoke base.<org.apache.fop.datatypes.Length: int getValue()>();
+        $d1 = (double) $i1;
+        $d0 = pcval * $d1;
+        prop = staticinvoke <org.apache.fop.fo.properties.FixedLength: org.apache.fop.fo.properties.FixedLength getInstance(double)>($d0);
+        goto label21;
+
+     label9:
+        $r7 = new org.apache.fop.fo.properties.PercentLength;
+        specialinvoke $r7.<org.apache.fop.fo.properties.PercentLength: void <init>(double,org.apache.fop.datatypes.PercentBase)>(pcval, pcBase);
+        prop = $r7;
+        goto label21;
+
+     label10:
+        $r8 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r8.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>("Illegal percent dimension value");
+        throw $r8;
+
+     label11:
+        prop = staticinvoke <org.apache.fop.fo.properties.NumberProperty: org.apache.fop.fo.properties.NumberProperty getInstance(double)>(pcval);
+        goto label21;
+
+     label12:
+        $r0 = this.<org.apache.fop.fo.expr.PropertyParser: java.lang.String currentTokenValue>;
+        $i0 = virtualinvoke $r0.<java.lang.String: int length()>();
+        $i3 = this.<org.apache.fop.fo.expr.PropertyParser: int currentUnitLength>;
+        numLen = $i0 - $i3;
+        $r0 = this.<org.apache.fop.fo.expr.PropertyParser: java.lang.String currentTokenValue>;
+        unitPart = virtualinvoke $r0.<java.lang.String: java.lang.String substring(int)>(numLen);
+        $r0 = this.<org.apache.fop.fo.expr.PropertyParser: java.lang.String currentTokenValue>;
+        $r0 = virtualinvoke $r0.<java.lang.String: java.lang.String substring(int,int)>(0, numLen);
+        numPart = staticinvoke <java.lang.Double: double parseDouble(java.lang.String)>($r0);
+        $r0 = "em";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(unitPart);
+        if $z0 == 0 goto label13;
+
+        $r9 = staticinvoke <org.apache.fop.fo.properties.NumberProperty: org.apache.fop.fo.properties.NumberProperty getInstance(double)>(numPart);
+        $r10 = this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.expr.PropertyInfo propInfo>;
+        $r11 = virtualinvoke $r10.<org.apache.fop.fo.expr.PropertyInfo: org.apache.fop.datatypes.Length currentFontSize()>();
+        $r12 = staticinvoke <org.apache.fop.fo.expr.NumericOp: org.apache.fop.datatypes.Numeric multiply(org.apache.fop.datatypes.Numeric,org.apache.fop.datatypes.Numeric)>($r9, $r11);
+        prop = (org.apache.fop.fo.properties.Property) $r12;
+        goto label21;
+
+     label13:
+        $r0 = "px";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(unitPart);
+        if $z0 == 0 goto label14;
+
+        $r13 = this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.expr.PropertyInfo propInfo>;
+        $r14 = virtualinvoke $r13.<org.apache.fop.fo.expr.PropertyInfo: org.apache.fop.fo.PropertyList getPropertyList()>();
+        $r15 = virtualinvoke $r14.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.FObj getFObj()>();
+        $r16 = virtualinvoke $r15.<org.apache.fop.fo.FObj: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        $f0 = virtualinvoke $r16.<org.apache.fop.apps.FOUserAgent: float getSourceResolution()>();
+        $f0 = $f0 / 72.0F;
+        prop = staticinvoke <org.apache.fop.fo.properties.FixedLength: org.apache.fop.fo.properties.FixedLength getInstance(double,java.lang.String,float)>(numPart, unitPart, $f0);
+        goto label21;
+
+     label14:
+        prop = staticinvoke <org.apache.fop.fo.properties.FixedLength: org.apache.fop.fo.properties.FixedLength getInstance(double,java.lang.String)>(numPart, unitPart);
+        goto label21;
+
+     label15:
+        $r5 = this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.expr.PropertyInfo propInfo>;
+        $r17 = virtualinvoke $r5.<org.apache.fop.fo.expr.PropertyInfo: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        $r18 = this.<org.apache.fop.fo.expr.PropertyParser: java.lang.String currentTokenValue>;
+        prop = staticinvoke <org.apache.fop.fo.properties.ColorProperty: org.apache.fop.fo.properties.ColorProperty getInstance(org.apache.fop.apps.FOUserAgent,java.lang.String)>($r17, $r18);
+        goto label21;
+
+     label16:
+        $r19 = <org.apache.fop.fo.expr.PropertyParser: java.util.HashMap FUNCTION_TABLE>;
+        $r18 = this.<org.apache.fop.fo.expr.PropertyParser: java.lang.String currentTokenValue>;
+        $r20 = virtualinvoke $r19.<java.util.HashMap: java.lang.Object get(java.lang.Object)>($r18);
+        function = (org.apache.fop.fo.expr.Function) $r20;
+        if function != null goto label17;
+
+        $r8 = new org.apache.fop.fo.expr.PropertyException;
+        $r21 = new java.lang.StringBuffer;
+        specialinvoke $r21.<java.lang.StringBuffer: void <init>()>();
+        $r21 = virtualinvoke $r21.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("no such function: ");
+        $r22 = this.<org.apache.fop.fo.expr.PropertyParser: java.lang.String currentTokenValue>;
+        $r21 = virtualinvoke $r21.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r22);
+        $r2 = virtualinvoke $r21.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r8.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>($r2);
+        throw $r8;
+
+     label17:
+        virtualinvoke this.<org.apache.fop.fo.expr.PropertyParser: void next()>();
+        $r5 = this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.expr.PropertyInfo propInfo>;
+        virtualinvoke $r5.<org.apache.fop.fo.expr.PropertyInfo: void pushFunction(org.apache.fop.fo.expr.Function)>(function);
+        $i0 = interfaceinvoke function.<org.apache.fop.fo.expr.Function: int nbArgs()>();
+        if $i0 >= 0 goto label18;
+
+        $r23 = virtualinvoke this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.properties.Property[] parseVarArgs(org.apache.fop.fo.expr.Function)>(function);
+        $r24 = this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.expr.PropertyInfo propInfo>;
+        prop = interfaceinvoke function.<org.apache.fop.fo.expr.Function: org.apache.fop.fo.properties.Property eval(org.apache.fop.fo.properties.Property[],org.apache.fop.fo.expr.PropertyInfo)>($r23, $r24);
+        goto label19;
+
+     label18:
+        $r23 = virtualinvoke this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.properties.Property[] parseArgs(org.apache.fop.fo.expr.Function)>(function);
+        $r24 = this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.expr.PropertyInfo propInfo>;
+        prop = interfaceinvoke function.<org.apache.fop.fo.expr.Function: org.apache.fop.fo.properties.Property eval(org.apache.fop.fo.properties.Property[],org.apache.fop.fo.expr.PropertyInfo)>($r23, $r24);
+
+     label19:
+        $r5 = this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.expr.PropertyInfo propInfo>;
+        virtualinvoke $r5.<org.apache.fop.fo.expr.PropertyInfo: void popFunction()>();
+        return prop;
+
+     label20:
+        $r8 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r8.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>("syntax error");
+        throw $r8;
+
+     label21:
+        virtualinvoke this.<org.apache.fop.fo.expr.PropertyParser: void next()>();
+        return prop;
+    }
+
+    org.apache.fop.fo.properties.Property[] parseArgs(org.apache.fop.fo.expr.Function) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.expr.PropertyParser this;
+        org.apache.fop.fo.expr.Function function;
+        int nbArgs, i, $i0, $i1;
+        org.apache.fop.fo.properties.Property[] args;
+        org.apache.fop.fo.properties.Property prop;
+        boolean $z0;
+        org.apache.fop.fo.expr.PropertyInfo $r0;
+        org.apache.fop.fo.properties.PropertyMaker $r1;
+        java.lang.String $r2;
+        org.apache.fop.fo.properties.StringProperty $r3;
+        org.apache.fop.fo.expr.PropertyException $r4;
+        java.lang.StringBuffer $r5;
+
+        this := @this: org.apache.fop.fo.expr.PropertyParser;
+        function := @parameter0: org.apache.fop.fo.expr.Function;
+        nbArgs = interfaceinvoke function.<org.apache.fop.fo.expr.Function: int nbArgs()>();
+        args = newarray (org.apache.fop.fo.properties.Property)[nbArgs];
+        i = 0;
+        $i0 = this.<org.apache.fop.fo.expr.PropertyParser: int currentToken>;
+        if $i0 != 4 goto label0;
+
+        virtualinvoke this.<org.apache.fop.fo.expr.PropertyParser: void next()>();
+        goto label4;
+
+     label0:
+        prop = specialinvoke this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.properties.Property parseAdditiveExpr()>();
+        if i >= nbArgs goto label1;
+
+        $i1 = i;
+        i = i + 1;
+        args[$i1] = prop;
+
+     label1:
+        $i0 = this.<org.apache.fop.fo.expr.PropertyParser: int currentToken>;
+        if $i0 == 13 goto label2;
+
+        goto label3;
+
+     label2:
+        virtualinvoke this.<org.apache.fop.fo.expr.PropertyParser: void next()>();
+        goto label0;
+
+     label3:
+        specialinvoke this.<org.apache.fop.fo.expr.PropertyParser: void expectRpar()>();
+
+     label4:
+        $i1 = nbArgs - 1;
+        if i != $i1 goto label5;
+
+        $z0 = interfaceinvoke function.<org.apache.fop.fo.expr.Function: boolean padArgsWithPropertyName()>();
+        if $z0 == 0 goto label5;
+
+        $i1 = i;
+        i = i + 1;
+        $r0 = this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.expr.PropertyInfo propInfo>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.expr.PropertyInfo: org.apache.fop.fo.properties.PropertyMaker getPropertyMaker()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.properties.PropertyMaker: java.lang.String getName()>();
+        $r3 = staticinvoke <org.apache.fop.fo.properties.StringProperty: org.apache.fop.fo.properties.StringProperty getInstance(java.lang.String)>($r2);
+        args[$i1] = $r3;
+
+     label5:
+        if nbArgs == i goto label6;
+
+        $r4 = new org.apache.fop.fo.expr.PropertyException;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Expected ");
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(nbArgs);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", but got ");
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(i);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" args for function");
+        $r2 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r4.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>($r2);
+        throw $r4;
+
+     label6:
+        return args;
+    }
+
+    org.apache.fop.fo.properties.Property[] parseVarArgs(org.apache.fop.fo.expr.Function) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.expr.PropertyParser this;
+        org.apache.fop.fo.expr.Function function;
+        int nbArgs, $i0, $i1, $i2;
+        java.util.LinkedList args, $r1;
+        org.apache.fop.fo.properties.Property prop;
+        java.lang.StringBuffer $r0;
+        org.apache.fop.fo.properties.Property[] propArray;
+        org.apache.fop.fo.expr.PropertyException $r2;
+        java.lang.String $r3;
+
+        this := @this: org.apache.fop.fo.expr.PropertyParser;
+        function := @parameter0: org.apache.fop.fo.expr.Function;
+        $i0 = interfaceinvoke function.<org.apache.fop.fo.expr.Function: int nbArgs()>();
+        nbArgs = neg $i0;
+        $r1 = new java.util.LinkedList;
+        specialinvoke $r1.<java.util.LinkedList: void <init>()>();
+        args = $r1;
+        $i0 = this.<org.apache.fop.fo.expr.PropertyParser: int currentToken>;
+        if $i0 != 4 goto label0;
+
+        virtualinvoke this.<org.apache.fop.fo.expr.PropertyParser: void next()>();
+        goto label3;
+
+     label0:
+        prop = specialinvoke this.<org.apache.fop.fo.expr.PropertyParser: org.apache.fop.fo.properties.Property parseAdditiveExpr()>();
+        interfaceinvoke args.<java.util.List: boolean add(java.lang.Object)>(prop);
+        $i0 = this.<org.apache.fop.fo.expr.PropertyParser: int currentToken>;
+        if $i0 == 13 goto label1;
+
+        goto label2;
+
+     label1:
+        virtualinvoke this.<org.apache.fop.fo.expr.PropertyParser: void next()>();
+        goto label0;
+
+     label2:
+        specialinvoke this.<org.apache.fop.fo.expr.PropertyParser: void expectRpar()>();
+
+     label3:
+        $i1 = interfaceinvoke args.<java.util.List: int size()>();
+        if nbArgs <= $i1 goto label4;
+
+        $r2 = new org.apache.fop.fo.expr.PropertyException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Expected at least ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(nbArgs);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", but got ");
+        $i2 = interfaceinvoke args.<java.util.List: int size()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i2);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" args for function");
+        $r3 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>($r3);
+        throw $r2;
+
+     label4:
+        $i0 = interfaceinvoke args.<java.util.List: int size()>();
+        propArray = newarray (org.apache.fop.fo.properties.Property)[$i0];
+        interfaceinvoke args.<java.util.List: java.lang.Object[] toArray(java.lang.Object[])>(propArray);
+        return propArray;
+    }
+
+    private org.apache.fop.fo.properties.Property evalAddition(org.apache.fop.datatypes.Numeric, org.apache.fop.datatypes.Numeric) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.expr.PropertyParser this;
+        org.apache.fop.datatypes.Numeric op1, op2, $r1;
+        org.apache.fop.fo.expr.PropertyException $r0;
+        org.apache.fop.fo.properties.Property $r2;
+
+        this := @this: org.apache.fop.fo.expr.PropertyParser;
+        op1 := @parameter0: org.apache.fop.datatypes.Numeric;
+        op2 := @parameter1: org.apache.fop.datatypes.Numeric;
+        if op1 == null goto label0;
+
+        if op2 != null goto label1;
+
+     label0:
+        $r0 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r0.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>("Non numeric operand in addition");
+        throw $r0;
+
+     label1:
+        $r1 = staticinvoke <org.apache.fop.fo.expr.NumericOp: org.apache.fop.datatypes.Numeric addition(org.apache.fop.datatypes.Numeric,org.apache.fop.datatypes.Numeric)>(op1, op2);
+        $r2 = (org.apache.fop.fo.properties.Property) $r1;
+        return $r2;
+    }
+
+    private org.apache.fop.fo.properties.Property evalSubtraction(org.apache.fop.datatypes.Numeric, org.apache.fop.datatypes.Numeric) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.expr.PropertyParser this;
+        org.apache.fop.datatypes.Numeric op1, op2, $r1;
+        org.apache.fop.fo.expr.PropertyException $r0;
+        org.apache.fop.fo.properties.Property $r2;
+
+        this := @this: org.apache.fop.fo.expr.PropertyParser;
+        op1 := @parameter0: org.apache.fop.datatypes.Numeric;
+        op2 := @parameter1: org.apache.fop.datatypes.Numeric;
+        if op1 == null goto label0;
+
+        if op2 != null goto label1;
+
+     label0:
+        $r0 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r0.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>("Non numeric operand in subtraction");
+        throw $r0;
+
+     label1:
+        $r1 = staticinvoke <org.apache.fop.fo.expr.NumericOp: org.apache.fop.datatypes.Numeric subtraction(org.apache.fop.datatypes.Numeric,org.apache.fop.datatypes.Numeric)>(op1, op2);
+        $r2 = (org.apache.fop.fo.properties.Property) $r1;
+        return $r2;
+    }
+
+    private org.apache.fop.fo.properties.Property evalNegate(org.apache.fop.datatypes.Numeric) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.expr.PropertyParser this;
+        org.apache.fop.datatypes.Numeric op, $r1;
+        org.apache.fop.fo.expr.PropertyException $r0;
+        org.apache.fop.fo.properties.Property $r2;
+
+        this := @this: org.apache.fop.fo.expr.PropertyParser;
+        op := @parameter0: org.apache.fop.datatypes.Numeric;
+        if op != null goto label0;
+
+        $r0 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r0.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>("Non numeric operand to unary minus");
+        throw $r0;
+
+     label0:
+        $r1 = staticinvoke <org.apache.fop.fo.expr.NumericOp: org.apache.fop.datatypes.Numeric negate(org.apache.fop.datatypes.Numeric)>(op);
+        $r2 = (org.apache.fop.fo.properties.Property) $r1;
+        return $r2;
+    }
+
+    private org.apache.fop.fo.properties.Property evalMultiply(org.apache.fop.datatypes.Numeric, org.apache.fop.datatypes.Numeric) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.expr.PropertyParser this;
+        org.apache.fop.datatypes.Numeric op1, op2, $r1;
+        org.apache.fop.fo.expr.PropertyException $r0;
+        org.apache.fop.fo.properties.Property $r2;
+
+        this := @this: org.apache.fop.fo.expr.PropertyParser;
+        op1 := @parameter0: org.apache.fop.datatypes.Numeric;
+        op2 := @parameter1: org.apache.fop.datatypes.Numeric;
+        if op1 == null goto label0;
+
+        if op2 != null goto label1;
+
+     label0:
+        $r0 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r0.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>("Non numeric operand in multiplication");
+        throw $r0;
+
+     label1:
+        $r1 = staticinvoke <org.apache.fop.fo.expr.NumericOp: org.apache.fop.datatypes.Numeric multiply(org.apache.fop.datatypes.Numeric,org.apache.fop.datatypes.Numeric)>(op1, op2);
+        $r2 = (org.apache.fop.fo.properties.Property) $r1;
+        return $r2;
+    }
+
+    private org.apache.fop.fo.properties.Property evalDivide(org.apache.fop.datatypes.Numeric, org.apache.fop.datatypes.Numeric) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.expr.PropertyParser this;
+        org.apache.fop.datatypes.Numeric op1, op2, $r1;
+        org.apache.fop.fo.expr.PropertyException $r0;
+        org.apache.fop.fo.properties.Property $r2;
+
+        this := @this: org.apache.fop.fo.expr.PropertyParser;
+        op1 := @parameter0: org.apache.fop.datatypes.Numeric;
+        op2 := @parameter1: org.apache.fop.datatypes.Numeric;
+        if op1 == null goto label0;
+
+        if op2 != null goto label1;
+
+     label0:
+        $r0 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r0.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>("Non numeric operand in division");
+        throw $r0;
+
+     label1:
+        $r1 = staticinvoke <org.apache.fop.fo.expr.NumericOp: org.apache.fop.datatypes.Numeric divide(org.apache.fop.datatypes.Numeric,org.apache.fop.datatypes.Numeric)>(op1, op2);
+        $r2 = (org.apache.fop.fo.properties.Property) $r1;
+        return $r2;
+    }
+
+    private org.apache.fop.fo.properties.Property evalModulo(java.lang.Number, java.lang.Number) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.expr.PropertyParser this;
+        java.lang.Number op1, op2;
+        org.apache.fop.fo.expr.PropertyException $r0;
+        double $d0, $d1;
+        org.apache.fop.fo.properties.NumberProperty $r1;
+
+        this := @this: org.apache.fop.fo.expr.PropertyParser;
+        op1 := @parameter0: java.lang.Number;
+        op2 := @parameter1: java.lang.Number;
+        if op1 == null goto label0;
+
+        if op2 != null goto label1;
+
+     label0:
+        $r0 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r0.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>("Non number operand to modulo");
+        throw $r0;
+
+     label1:
+        $d0 = virtualinvoke op1.<java.lang.Number: double doubleValue()>();
+        $d1 = virtualinvoke op2.<java.lang.Number: double doubleValue()>();
+        $d0 = $d0 % $d1;
+        $r1 = staticinvoke <org.apache.fop.fo.properties.NumberProperty: org.apache.fop.fo.properties.NumberProperty getInstance(double)>($d0);
+        return $r1;
+    }
+
+    static void <clinit>()
+    {
+        java.util.HashMap $r0;
+        org.apache.fop.fo.expr.CeilingFunction $r1;
+        org.apache.fop.fo.expr.FloorFunction $r3;
+        org.apache.fop.fo.expr.RoundFunction $r4;
+        org.apache.fop.fo.expr.MinFunction $r5;
+        org.apache.fop.fo.expr.MaxFunction $r6;
+        org.apache.fop.fo.expr.AbsFunction $r7;
+        org.apache.fop.fo.expr.RGBColorFunction $r8;
+        org.apache.fop.fo.expr.SystemColorFunction $r9;
+        org.apache.fop.fo.expr.FromTableColumnFunction $r10;
+        org.apache.fop.fo.expr.InheritedPropFunction $r11;
+        org.apache.fop.fo.expr.FromParentFunction $r12;
+        org.apache.fop.fo.expr.NearestSpecPropFunction $r13;
+        org.apache.fop.fo.expr.PPColWidthFunction $r14;
+        org.apache.fop.fo.expr.LabelEndFunction $r15;
+        org.apache.fop.fo.expr.BodyStartFunction $r16;
+        org.apache.fop.fo.expr.ICCColorFunction $r17;
+        org.apache.fop.fo.expr.CMYKcolorFunction $r18;
+
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        <org.apache.fop.fo.expr.PropertyParser: java.util.HashMap FUNCTION_TABLE> = $r0;
+        $r0 = <org.apache.fop.fo.expr.PropertyParser: java.util.HashMap FUNCTION_TABLE>;
+        $r1 = new org.apache.fop.fo.expr.CeilingFunction;
+        specialinvoke $r1.<org.apache.fop.fo.expr.CeilingFunction: void <init>()>();
+        virtualinvoke $r0.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>("ceiling", $r1);
+        $r0 = <org.apache.fop.fo.expr.PropertyParser: java.util.HashMap FUNCTION_TABLE>;
+        $r3 = new org.apache.fop.fo.expr.FloorFunction;
+        specialinvoke $r3.<org.apache.fop.fo.expr.FloorFunction: void <init>()>();
+        virtualinvoke $r0.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>("floor", $r3);
+        $r0 = <org.apache.fop.fo.expr.PropertyParser: java.util.HashMap FUNCTION_TABLE>;
+        $r4 = new org.apache.fop.fo.expr.RoundFunction;
+        specialinvoke $r4.<org.apache.fop.fo.expr.RoundFunction: void <init>()>();
+        virtualinvoke $r0.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>("round", $r4);
+        $r0 = <org.apache.fop.fo.expr.PropertyParser: java.util.HashMap FUNCTION_TABLE>;
+        $r5 = new org.apache.fop.fo.expr.MinFunction;
+        specialinvoke $r5.<org.apache.fop.fo.expr.MinFunction: void <init>()>();
+        virtualinvoke $r0.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>("min", $r5);
+        $r0 = <org.apache.fop.fo.expr.PropertyParser: java.util.HashMap FUNCTION_TABLE>;
+        $r6 = new org.apache.fop.fo.expr.MaxFunction;
+        specialinvoke $r6.<org.apache.fop.fo.expr.MaxFunction: void <init>()>();
+        virtualinvoke $r0.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>("max", $r6);
+        $r0 = <org.apache.fop.fo.expr.PropertyParser: java.util.HashMap FUNCTION_TABLE>;
+        $r7 = new org.apache.fop.fo.expr.AbsFunction;
+        specialinvoke $r7.<org.apache.fop.fo.expr.AbsFunction: void <init>()>();
+        virtualinvoke $r0.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>("abs", $r7);
+        $r0 = <org.apache.fop.fo.expr.PropertyParser: java.util.HashMap FUNCTION_TABLE>;
+        $r8 = new org.apache.fop.fo.expr.RGBColorFunction;
+        specialinvoke $r8.<org.apache.fop.fo.expr.RGBColorFunction: void <init>()>();
+        virtualinvoke $r0.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>("rgb", $r8);
+        $r0 = <org.apache.fop.fo.expr.PropertyParser: java.util.HashMap FUNCTION_TABLE>;
+        $r9 = new org.apache.fop.fo.expr.SystemColorFunction;
+        specialinvoke $r9.<org.apache.fop.fo.expr.SystemColorFunction: void <init>()>();
+        virtualinvoke $r0.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>("system-color", $r9);
+        $r0 = <org.apache.fop.fo.expr.PropertyParser: java.util.HashMap FUNCTION_TABLE>;
+        $r10 = new org.apache.fop.fo.expr.FromTableColumnFunction;
+        specialinvoke $r10.<org.apache.fop.fo.expr.FromTableColumnFunction: void <init>()>();
+        virtualinvoke $r0.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>("from-table-column", $r10);
+        $r0 = <org.apache.fop.fo.expr.PropertyParser: java.util.HashMap FUNCTION_TABLE>;
+        $r11 = new org.apache.fop.fo.expr.InheritedPropFunction;
+        specialinvoke $r11.<org.apache.fop.fo.expr.InheritedPropFunction: void <init>()>();
+        virtualinvoke $r0.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>("inherited-property-value", $r11);
+        $r0 = <org.apache.fop.fo.expr.PropertyParser: java.util.HashMap FUNCTION_TABLE>;
+        $r12 = new org.apache.fop.fo.expr.FromParentFunction;
+        specialinvoke $r12.<org.apache.fop.fo.expr.FromParentFunction: void <init>()>();
+        virtualinvoke $r0.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>("from-parent", $r12);
+        $r0 = <org.apache.fop.fo.expr.PropertyParser: java.util.HashMap FUNCTION_TABLE>;
+        $r13 = new org.apache.fop.fo.expr.NearestSpecPropFunction;
+        specialinvoke $r13.<org.apache.fop.fo.expr.NearestSpecPropFunction: void <init>()>();
+        virtualinvoke $r0.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>("from-nearest-specified-value", $r13);
+        $r0 = <org.apache.fop.fo.expr.PropertyParser: java.util.HashMap FUNCTION_TABLE>;
+        $r14 = new org.apache.fop.fo.expr.PPColWidthFunction;
+        specialinvoke $r14.<org.apache.fop.fo.expr.PPColWidthFunction: void <init>()>();
+        virtualinvoke $r0.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>("proportional-column-width", $r14);
+        $r0 = <org.apache.fop.fo.expr.PropertyParser: java.util.HashMap FUNCTION_TABLE>;
+        $r15 = new org.apache.fop.fo.expr.LabelEndFunction;
+        specialinvoke $r15.<org.apache.fop.fo.expr.LabelEndFunction: void <init>()>();
+        virtualinvoke $r0.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>("label-end", $r15);
+        $r0 = <org.apache.fop.fo.expr.PropertyParser: java.util.HashMap FUNCTION_TABLE>;
+        $r16 = new org.apache.fop.fo.expr.BodyStartFunction;
+        specialinvoke $r16.<org.apache.fop.fo.expr.BodyStartFunction: void <init>()>();
+        virtualinvoke $r0.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>("body-start", $r16);
+        $r0 = <org.apache.fop.fo.expr.PropertyParser: java.util.HashMap FUNCTION_TABLE>;
+        $r17 = new org.apache.fop.fo.expr.ICCColorFunction;
+        specialinvoke $r17.<org.apache.fop.fo.expr.ICCColorFunction: void <init>()>();
+        virtualinvoke $r0.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>("rgb-icc", $r17);
+        $r0 = <org.apache.fop.fo.expr.PropertyParser: java.util.HashMap FUNCTION_TABLE>;
+        $r18 = new org.apache.fop.fo.expr.CMYKcolorFunction;
+        specialinvoke $r18.<org.apache.fop.fo.expr.CMYKcolorFunction: void <init>()>();
+        virtualinvoke $r0.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>("cmyk", $r18);
+        return;
+    }
+}

@@ -1,0 +1,194 @@
+class org.apache.fop.render.rtf.rtflib.rtfdoc.WhitespaceCollapser extends java.lang.Object
+{
+    private static final java.lang.String SPACE;
+    private boolean lastEndSpace;
+
+    void <init>(org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer)
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.WhitespaceCollapser this;
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer c;
+        java.util.Iterator it;
+        java.lang.Object kid;
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfText current;
+        java.util.List $r0;
+        boolean $z0;
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfString current;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.WhitespaceCollapser;
+        c := @parameter0: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.render.rtf.rtflib.rtfdoc.WhitespaceCollapser: boolean lastEndSpace> = 1;
+        $r0 = virtualinvoke c.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfContainer: java.util.List getChildren()>();
+        it = interfaceinvoke $r0.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke it.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label4;
+
+        kid = interfaceinvoke it.<java.util.Iterator: java.lang.Object next()>();
+        $z0 = kid instanceof org.apache.fop.render.rtf.rtflib.rtfdoc.RtfText;
+        if $z0 == 0 goto label1;
+
+        current = (org.apache.fop.render.rtf.rtflib.rtfdoc.RtfText) kid;
+        specialinvoke this.<org.apache.fop.render.rtf.rtflib.rtfdoc.WhitespaceCollapser: void processText(org.apache.fop.render.rtf.rtflib.rtfdoc.RtfText)>(current);
+        goto label3;
+
+     label1:
+        $z0 = kid instanceof org.apache.fop.render.rtf.rtflib.rtfdoc.RtfString;
+        if $z0 == 0 goto label2;
+
+        current = (org.apache.fop.render.rtf.rtflib.rtfdoc.RtfString) kid;
+        specialinvoke this.<org.apache.fop.render.rtf.rtflib.rtfdoc.WhitespaceCollapser: void processString(org.apache.fop.render.rtf.rtflib.rtfdoc.RtfString)>(current);
+        goto label3;
+
+     label2:
+        this.<org.apache.fop.render.rtf.rtflib.rtfdoc.WhitespaceCollapser: boolean lastEndSpace> = 1;
+
+     label3:
+        goto label0;
+
+     label4:
+        return;
+    }
+
+    private void processText(org.apache.fop.render.rtf.rtflib.rtfdoc.RtfText)
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.WhitespaceCollapser this;
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfText txt;
+        java.lang.String newString, $r0;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.WhitespaceCollapser;
+        txt := @parameter0: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfText;
+        $r0 = virtualinvoke txt.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfText: java.lang.String getText()>();
+        newString = specialinvoke this.<org.apache.fop.render.rtf.rtflib.rtfdoc.WhitespaceCollapser: java.lang.String processString(java.lang.String)>($r0);
+        if newString == null goto label0;
+
+        virtualinvoke txt.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfText: void setText(java.lang.String)>(newString);
+
+     label0:
+        return;
+    }
+
+    private void processString(org.apache.fop.render.rtf.rtflib.rtfdoc.RtfString)
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.WhitespaceCollapser this;
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfString txt;
+        java.lang.String newString, $r0;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.WhitespaceCollapser;
+        txt := @parameter0: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfString;
+        $r0 = virtualinvoke txt.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfString: java.lang.String getText()>();
+        newString = specialinvoke this.<org.apache.fop.render.rtf.rtflib.rtfdoc.WhitespaceCollapser: java.lang.String processString(java.lang.String)>($r0);
+        if newString == null goto label0;
+
+        virtualinvoke txt.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfString: void setText(java.lang.String)>(newString);
+
+     label0:
+        return;
+    }
+
+    private java.lang.String processString(java.lang.String)
+    {
+        org.apache.fop.render.rtf.rtflib.rtfdoc.WhitespaceCollapser this;
+        java.lang.String txt, orig, $r0, $r3;
+        boolean allSpaces, endSpace, beginSpace, first, $z0;
+        java.lang.StringBuffer sb, $r1;
+        java.util.StringTokenizer stk, $r2;
+        int $i0, $i1, $i3;
+        char $c2;
+
+        this := @this: org.apache.fop.render.rtf.rtflib.rtfdoc.WhitespaceCollapser;
+        txt := @parameter0: java.lang.String;
+        orig = txt;
+        if orig != null goto label0;
+
+        return null;
+
+     label0:
+        $i0 = virtualinvoke orig.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label11;
+
+        $r0 = virtualinvoke orig.<java.lang.String: java.lang.String trim()>();
+        $i0 = virtualinvoke $r0.<java.lang.String: int length()>();
+        if $i0 != 0 goto label1;
+
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        allSpaces = $z0;
+        if allSpaces != 0 goto label3;
+
+        $i1 = virtualinvoke orig.<java.lang.String: int length()>();
+        $i1 = $i1 - 1;
+        $c2 = virtualinvoke orig.<java.lang.String: char charAt(int)>($i1);
+        $z0 = staticinvoke <java.lang.Character: boolean isWhitespace(char)>($c2);
+        if $z0 == 0 goto label4;
+
+     label3:
+        $z0 = 1;
+        goto label5;
+
+     label4:
+        $z0 = 0;
+
+     label5:
+        endSpace = $z0;
+        $c2 = virtualinvoke orig.<java.lang.String: char charAt(int)>(0);
+        beginSpace = staticinvoke <java.lang.Character: boolean isWhitespace(char)>($c2);
+        $r1 = new java.lang.StringBuffer;
+        $i3 = virtualinvoke orig.<java.lang.String: int length()>();
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>(int)>($i3);
+        sb = $r1;
+        if allSpaces == 0 goto label6;
+
+        $z0 = this.<org.apache.fop.render.rtf.rtflib.rtfdoc.WhitespaceCollapser: boolean lastEndSpace>;
+        if $z0 != 0 goto label10;
+
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        goto label10;
+
+     label6:
+        first = 1;
+        $r2 = new java.util.StringTokenizer;
+        specialinvoke $r2.<java.util.StringTokenizer: void <init>(java.lang.String,java.lang.String)>(txt, " \t\n\r");
+        stk = $r2;
+
+     label7:
+        $z0 = virtualinvoke stk.<java.util.StringTokenizer: boolean hasMoreTokens()>();
+        if $z0 == 0 goto label10;
+
+        if first == 0 goto label8;
+
+        if beginSpace == 0 goto label8;
+
+        $z0 = this.<org.apache.fop.render.rtf.rtflib.rtfdoc.WhitespaceCollapser: boolean lastEndSpace>;
+        if $z0 != 0 goto label8;
+
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+
+     label8:
+        first = 0;
+        $r3 = virtualinvoke stk.<java.util.StringTokenizer: java.lang.String nextToken()>();
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $z0 = virtualinvoke stk.<java.util.StringTokenizer: boolean hasMoreTokens()>();
+        if $z0 != 0 goto label9;
+
+        if endSpace == 0 goto label7;
+
+     label9:
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        goto label7;
+
+     label10:
+        this.<org.apache.fop.render.rtf.rtflib.rtfdoc.WhitespaceCollapser: boolean lastEndSpace> = endSpace;
+        $r0 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r0;
+
+     label11:
+        return "";
+    }
+}

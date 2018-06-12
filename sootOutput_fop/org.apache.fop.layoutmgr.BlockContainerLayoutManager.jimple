@@ -1,0 +1,1880 @@
+public class org.apache.fop.layoutmgr.BlockContainerLayoutManager extends org.apache.fop.layoutmgr.BlockStackingLayoutManager implements org.apache.fop.layoutmgr.ConditionalElementListener
+{
+    private static org.apache.commons.logging.Log log;
+    private org.apache.fop.area.BlockViewport viewportBlockArea;
+    private org.apache.fop.area.Block referenceArea;
+    private org.apache.fop.fo.properties.CommonAbsolutePosition abProps;
+    private org.apache.fop.datatypes.FODimension relDims;
+    private org.apache.fop.area.CTM absoluteCTM;
+    private org.apache.fop.datatypes.Length width;
+    private org.apache.fop.datatypes.Length height;
+    private int vpContentBPD;
+    private boolean autoHeight;
+    private boolean inlineElementList;
+    private org.apache.fop.traits.MinOptMax foBlockSpaceBefore;
+    private org.apache.fop.traits.MinOptMax foBlockSpaceAfter;
+    private boolean discardBorderBefore;
+    private boolean discardBorderAfter;
+    private boolean discardPaddingBefore;
+    private boolean discardPaddingAfter;
+    private org.apache.fop.traits.MinOptMax effSpaceBefore;
+    private org.apache.fop.traits.MinOptMax effSpaceAfter;
+    static java.lang.Class class$org$apache$fop$layoutmgr$BlockContainerLayoutManager;
+
+    public void <init>(org.apache.fop.fo.flow.BlockContainer)
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+        org.apache.fop.fo.flow.BlockContainer node;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        node := @parameter0: org.apache.fop.fo.flow.BlockContainer;
+        specialinvoke this.<org.apache.fop.layoutmgr.BlockStackingLayoutManager: void <init>(org.apache.fop.fo.FObj)>(node);
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean autoHeight> = 1;
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean inlineElementList> = 0;
+        return;
+    }
+
+    public void initialize()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+        boolean rotated, $z0;
+        org.apache.fop.fo.flow.BlockContainer $r0, $r3, $r9;
+        org.apache.fop.fo.properties.CommonAbsolutePosition $r1;
+        org.apache.fop.traits.SpaceVal $r2;
+        org.apache.fop.fo.properties.CommonMarginBlock $r4, $r7;
+        org.apache.fop.fo.properties.SpaceProperty $r5, $r12;
+        org.apache.fop.traits.MinOptMax $r6;
+        org.apache.fop.datatypes.Length $r8;
+        int $i0, $i1;
+        org.apache.fop.fo.properties.LengthRangeProperty $r10;
+        org.apache.fop.fo.properties.Property $r11;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.CommonAbsolutePosition getCommonAbsolutePosition()>();
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.properties.CommonAbsolutePosition abProps> = $r1;
+        $r2 = new org.apache.fop.traits.SpaceVal;
+        $r3 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r4 = virtualinvoke $r3.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.CommonMarginBlock getCommonMarginBlock()>();
+        $r5 = $r4.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.fo.properties.SpaceProperty spaceBefore>;
+        specialinvoke $r2.<org.apache.fop.traits.SpaceVal: void <init>(org.apache.fop.fo.properties.SpaceProperty,org.apache.fop.datatypes.PercentBaseContext)>($r5, this);
+        $r6 = virtualinvoke $r2.<org.apache.fop.traits.SpaceVal: org.apache.fop.traits.MinOptMax getSpace()>();
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.traits.MinOptMax foBlockSpaceBefore> = $r6;
+        $r2 = new org.apache.fop.traits.SpaceVal;
+        $r3 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r4 = virtualinvoke $r3.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.CommonMarginBlock getCommonMarginBlock()>();
+        $r5 = $r4.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.fo.properties.SpaceProperty spaceAfter>;
+        specialinvoke $r2.<org.apache.fop.traits.SpaceVal: void <init>(org.apache.fop.fo.properties.SpaceProperty,org.apache.fop.datatypes.PercentBaseContext)>($r5, this);
+        $r6 = virtualinvoke $r2.<org.apache.fop.traits.SpaceVal: org.apache.fop.traits.MinOptMax getSpace()>();
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.traits.MinOptMax foBlockSpaceAfter> = $r6;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r7 = virtualinvoke $r0.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.CommonMarginBlock getCommonMarginBlock()>();
+        $r8 = $r7.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.datatypes.Length startIndent>;
+        $i0 = interfaceinvoke $r8.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int startIndent> = $i0;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r7 = virtualinvoke $r0.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.CommonMarginBlock getCommonMarginBlock()>();
+        $r8 = $r7.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.datatypes.Length endIndent>;
+        $i0 = interfaceinvoke $r8.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int endIndent> = $i0;
+        $r9 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $i1 = virtualinvoke $r9.<org.apache.fop.fo.flow.BlockContainer: int getReferenceOrientation()>();
+        $i1 = $i1 % 180;
+        if $i1 == 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        rotated = $z0;
+        if rotated == 0 goto label2;
+
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r10 = virtualinvoke $r0.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.LengthRangeProperty getInlineProgressionDimension()>();
+        $r11 = virtualinvoke $r10.<org.apache.fop.fo.properties.LengthRangeProperty: org.apache.fop.fo.properties.Property getOptimum(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $r8 = virtualinvoke $r11.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.datatypes.Length height> = $r8;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r10 = virtualinvoke $r0.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.LengthRangeProperty getBlockProgressionDimension()>();
+        $r11 = virtualinvoke $r10.<org.apache.fop.fo.properties.LengthRangeProperty: org.apache.fop.fo.properties.Property getOptimum(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $r8 = virtualinvoke $r11.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.datatypes.Length width> = $r8;
+        goto label3;
+
+     label2:
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r10 = virtualinvoke $r0.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.LengthRangeProperty getBlockProgressionDimension()>();
+        $r11 = virtualinvoke $r10.<org.apache.fop.fo.properties.LengthRangeProperty: org.apache.fop.fo.properties.Property getOptimum(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $r8 = virtualinvoke $r11.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.datatypes.Length height> = $r8;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r10 = virtualinvoke $r0.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.LengthRangeProperty getInlineProgressionDimension()>();
+        $r11 = virtualinvoke $r10.<org.apache.fop.fo.properties.LengthRangeProperty: org.apache.fop.fo.properties.Property getOptimum(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $r8 = virtualinvoke $r11.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.datatypes.Length width> = $r8;
+
+     label3:
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int bpUnit> = 0;
+        $i1 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int bpUnit>;
+        if $i1 != 0 goto label4;
+
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r7 = virtualinvoke $r0.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.CommonMarginBlock getCommonMarginBlock()>();
+        $r12 = $r7.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.fo.properties.SpaceProperty spaceBefore>;
+        $r12 = virtualinvoke $r12.<org.apache.fop.fo.properties.SpaceProperty: org.apache.fop.fo.properties.SpaceProperty getSpace()>();
+        $r11 = virtualinvoke $r12.<org.apache.fop.fo.properties.SpaceProperty: org.apache.fop.fo.properties.Property getOptimum(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $r8 = virtualinvoke $r11.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        $i0 = interfaceinvoke $r8.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int adjustedSpaceBefore> = $i0;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r7 = virtualinvoke $r0.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.CommonMarginBlock getCommonMarginBlock()>();
+        $r12 = $r7.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.fo.properties.SpaceProperty spaceAfter>;
+        $r12 = virtualinvoke $r12.<org.apache.fop.fo.properties.SpaceProperty: org.apache.fop.fo.properties.SpaceProperty getSpace()>();
+        $r11 = virtualinvoke $r12.<org.apache.fop.fo.properties.SpaceProperty: org.apache.fop.fo.properties.Property getOptimum(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $r8 = virtualinvoke $r11.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        $i0 = interfaceinvoke $r8.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int adjustedSpaceAfter> = $i0;
+        goto label5;
+
+     label4:
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r7 = virtualinvoke $r0.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.CommonMarginBlock getCommonMarginBlock()>();
+        $r12 = $r7.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.fo.properties.SpaceProperty spaceBefore>;
+        $r12 = virtualinvoke $r12.<org.apache.fop.fo.properties.SpaceProperty: org.apache.fop.fo.properties.SpaceProperty getSpace()>();
+        $r11 = virtualinvoke $r12.<org.apache.fop.fo.properties.SpaceProperty: org.apache.fop.fo.properties.Property getMinimum(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $r8 = virtualinvoke $r11.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        $i0 = interfaceinvoke $r8.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int adjustedSpaceBefore> = $i0;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r7 = virtualinvoke $r0.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.CommonMarginBlock getCommonMarginBlock()>();
+        $r12 = $r7.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.fo.properties.SpaceProperty spaceAfter>;
+        $r12 = virtualinvoke $r12.<org.apache.fop.fo.properties.SpaceProperty: org.apache.fop.fo.properties.SpaceProperty getSpace()>();
+        $r11 = virtualinvoke $r12.<org.apache.fop.fo.properties.SpaceProperty: org.apache.fop.fo.properties.Property getMinimum(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $r8 = virtualinvoke $r11.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        $i0 = interfaceinvoke $r8.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int adjustedSpaceAfter> = $i0;
+
+     label5:
+        return;
+    }
+
+    private void resetSpaces()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean discardBorderBefore> = 0;
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean discardBorderAfter> = 0;
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean discardPaddingBefore> = 0;
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean discardPaddingAfter> = 0;
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.traits.MinOptMax effSpaceBefore> = null;
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.traits.MinOptMax effSpaceAfter> = null;
+        return;
+    }
+
+    protected int getRotatedIPD()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+        org.apache.fop.fo.flow.BlockContainer $r0;
+        org.apache.fop.fo.properties.LengthRangeProperty $r1;
+        org.apache.fop.fo.properties.Property $r2;
+        org.apache.fop.datatypes.Length $r3;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.LengthRangeProperty getInlineProgressionDimension()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.properties.LengthRangeProperty: org.apache.fop.fo.properties.Property getOptimum(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $r3 = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        $i0 = interfaceinvoke $r3.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        return $i0;
+    }
+
+    private boolean needClip()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+        int overflow;
+        org.apache.fop.fo.flow.BlockContainer $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        overflow = virtualinvoke $r0.<org.apache.fop.fo.flow.BlockContainer: int getOverflow()>();
+        if overflow == 57 goto label0;
+
+        if overflow != 42 goto label1;
+
+     label0:
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    private int getSpaceBefore()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+        org.apache.fop.traits.MinOptMax $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.traits.MinOptMax foBlockSpaceBefore>;
+        $i0 = $r0.<org.apache.fop.traits.MinOptMax: int opt>;
+        return $i0;
+    }
+
+    private int getBPIndents()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+        byte indents;
+        org.apache.fop.fo.flow.BlockContainer $r0;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground $r1;
+        int $i0, indents;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        indents = 0;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        $i0 = virtualinvoke $r1.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getBPPaddingAndBorder(boolean,org.apache.fop.datatypes.PercentBaseContext)>(0, this);
+        indents = indents + $i0;
+        return indents;
+    }
+
+    private boolean isAbsoluteOrFixed()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+        org.apache.fop.fo.properties.CommonAbsolutePosition $r0;
+        int $i0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.properties.CommonAbsolutePosition abProps>;
+        $i0 = $r0.<org.apache.fop.fo.properties.CommonAbsolutePosition: int absolutePosition>;
+        if $i0 == 1 goto label0;
+
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.properties.CommonAbsolutePosition abProps>;
+        $i0 = $r0.<org.apache.fop.fo.properties.CommonAbsolutePosition: int absolutePosition>;
+        if $i0 != 51 goto label1;
+
+     label0:
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    private boolean isFixed()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+        org.apache.fop.fo.properties.CommonAbsolutePosition $r0;
+        int $i0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.properties.CommonAbsolutePosition abProps>;
+        $i0 = $r0.<org.apache.fop.fo.properties.CommonAbsolutePosition: int absolutePosition>;
+        if $i0 != 51 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public int getContentAreaBPD()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+        boolean $z0;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        $z0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean autoHeight>;
+        if $z0 == 0 goto label0;
+
+        return -1;
+
+     label0:
+        $i0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int vpContentBPD>;
+        return $i0;
+    }
+
+    public java.util.LinkedList getNextKnuthElements(org.apache.fop.layoutmgr.LayoutContext, int)
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+        org.apache.fop.layoutmgr.LayoutContext context, childLC, $r16;
+        int alignment, maxbpd, allocBPD, contentWidth, availableIPD, newHeight, $i0, $i1, $i2, $i3;
+        boolean switchedProgressionDirection, contentOverflows, $z0, $z1, $z2;
+        double contentRectOffsetX, contentRectOffsetY, $d0;
+        org.apache.fop.traits.MinOptMax stackLimit, range, $r2, $r17;
+        null_type returnedList;
+        java.util.LinkedList contentList, returnList, $r0, returnedList;
+        org.apache.fop.layoutmgr.BlockLevelLayoutManager prevLM, curLM, $r15;
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker breaker, $r26;
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerPosition bcPosition, $r28;
+        org.apache.fop.fo.flow.BlockContainer $r1, $r4, $r19;
+        org.apache.fop.datatypes.Length $r3, $r6;
+        org.apache.fop.fo.properties.CommonMarginBlock $r5;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground $r7;
+        org.apache.commons.logging.Log $r8;
+        java.lang.StringBuffer $r9;
+        java.lang.String $r10;
+        org.apache.fop.datatypes.FODimension $r11, $r18;
+        org.apache.fop.layoutmgr.LayoutManager $r14;
+        java.util.List $r20;
+        java.lang.Object $r21, $r22;
+        org.apache.fop.layoutmgr.ListElement $r23;
+        org.apache.fop.layoutmgr.BreakElement $r24;
+        org.apache.fop.layoutmgr.Position $r25, $r30;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm $r27;
+        org.apache.fop.layoutmgr.KnuthBox $r29;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        context := @parameter0: org.apache.fop.layoutmgr.LayoutContext;
+        alignment := @parameter1: int;
+        specialinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void resetSpaces()>();
+        $z0 = specialinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean isAbsoluteOrFixed()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = specialinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: java.util.LinkedList getNextKnuthElementsAbsolute(org.apache.fop.layoutmgr.LayoutContext,int)>(context, alignment);
+        return $r0;
+
+     label0:
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $i0 = virtualinvoke $r1.<org.apache.fop.fo.flow.BlockContainer: int getReferenceOrientation()>();
+        $i0 = $i0 % 180;
+        if $i0 == 0 goto label1;
+
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        switchedProgressionDirection = $z0;
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean autoHeight> = 0;
+        $r2 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: org.apache.fop.traits.MinOptMax getStackLimitBP()>();
+        maxbpd = $r2.<org.apache.fop.traits.MinOptMax: int opt>;
+        $r3 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.datatypes.Length height>;
+        $i0 = interfaceinvoke $r3.<org.apache.fop.datatypes.Length: int getEnum()>();
+        if $i0 == 9 goto label3;
+
+        $r3 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.datatypes.Length height>;
+        $z0 = interfaceinvoke $r3.<org.apache.fop.datatypes.Length: boolean isAbsolute()>();
+        if $z0 != 0 goto label4;
+
+        $i0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int getAncestorBlockAreaBPD()>();
+        if $i0 > 0 goto label4;
+
+     label3:
+        allocBPD = maxbpd;
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean autoHeight> = 1;
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $i0 = virtualinvoke $r1.<org.apache.fop.fo.flow.BlockContainer: int getReferenceOrientation()>();
+        if $i0 != 0 goto label5;
+
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean inlineElementList> = 1;
+        goto label5;
+
+     label4:
+        $r3 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.datatypes.Length height>;
+        allocBPD = interfaceinvoke $r3.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $i1 = specialinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int getBPIndents()>();
+        allocBPD = allocBPD + $i1;
+
+     label5:
+        $i2 = specialinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int getBPIndents()>();
+        $i1 = allocBPD - $i2;
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int vpContentBPD> = $i1;
+        $i1 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: int getRefIPD()>();
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int referenceIPD> = $i1;
+        $r3 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.datatypes.Length width>;
+        $i0 = interfaceinvoke $r3.<org.apache.fop.datatypes.Length: int getEnum()>();
+        if $i0 != 9 goto label6;
+
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int updateContentAreaIPDwithOverconstrainedAdjust()>();
+        goto label7;
+
+     label6:
+        $r3 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.datatypes.Length width>;
+        contentWidth = interfaceinvoke $r3.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int updateContentAreaIPDwithOverconstrainedAdjust(int)>(contentWidth);
+
+     label7:
+        contentRectOffsetX = 0.0;
+        $r4 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r5 = virtualinvoke $r4.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.CommonMarginBlock getCommonMarginBlock()>();
+        $r6 = $r5.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.datatypes.Length startIndent>;
+        $i2 = interfaceinvoke $r6.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $d0 = (double) $i2;
+        contentRectOffsetX = contentRectOffsetX + $d0;
+        contentRectOffsetY = 0.0;
+        $r4 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r7 = virtualinvoke $r4.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        $i2 = virtualinvoke $r7.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getBorderBeforeWidth(boolean)>(0);
+        $d0 = (double) $i2;
+        contentRectOffsetY = contentRectOffsetY + $d0;
+        $r4 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r7 = virtualinvoke $r4.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        $i2 = virtualinvoke $r7.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPaddingBefore(boolean,org.apache.fop.datatypes.PercentBaseContext)>(0, this);
+        $d0 = (double) $i2;
+        contentRectOffsetY = contentRectOffsetY + $d0;
+        $z1 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean autoHeight>;
+        specialinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void updateRelDims(double,double,boolean)>(contentRectOffsetX, contentRectOffsetY, $z1);
+        $i0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int referenceIPD>;
+        $i1 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int getIPIndents()>();
+        availableIPD = $i0 - $i1;
+        $i0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int getContentAreaIPD()>();
+        if $i0 <= availableIPD goto label8;
+
+        $r8 = <org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.commons.logging.Log log>;
+        $r9 = new java.lang.StringBuffer;
+        specialinvoke $r9.<java.lang.StringBuffer: void <init>()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("The extent in inline-progression-direction (width) of a block-container is bigger than the available space (");
+        $i2 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int getContentAreaIPD()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i2);
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("mpt > ");
+        $i2 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: int getRefIPD()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i2);
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("mpt)");
+        $r10 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r4 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r10 = staticinvoke <org.apache.fop.fo.FONode: java.lang.String decorateWithContextInfo(java.lang.String,org.apache.fop.fo.FONode)>($r10, $r4);
+        interfaceinvoke $r8.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r10);
+
+     label8:
+        $r2 = new org.apache.fop.traits.MinOptMax;
+        $r11 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.datatypes.FODimension relDims>;
+        $i2 = $r11.<org.apache.fop.datatypes.FODimension: int bpd>;
+        specialinvoke $r2.<org.apache.fop.traits.MinOptMax: void <init>(int)>($i2);
+        stackLimit = $r2;
+        returnedList = null;
+        $r0 = new java.util.LinkedList;
+        specialinvoke $r0.<java.util.LinkedList: void <init>()>();
+        contentList = $r0;
+        $r0 = new java.util.LinkedList;
+        specialinvoke $r0.<java.util.LinkedList: void <init>()>();
+        returnList = $r0;
+        $z0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean breakBeforeServed>;
+        if $z0 != 0 goto label9;
+
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean breakBeforeServed> = 1;
+        $z0 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: boolean suppressBreakBefore()>();
+        if $z0 != 0 goto label9;
+
+        $z0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean addKnuthElementsForBreakBefore(java.util.LinkedList,org.apache.fop.layoutmgr.LayoutContext)>(returnList, context);
+        if $z0 == 0 goto label9;
+
+        return returnList;
+
+     label9:
+        $z0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean firstVisibleMarkServed>;
+        if $z0 != 0 goto label10;
+
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void addKnuthElementsForSpaceBefore(java.util.LinkedList,int)>(returnList, alignment);
+
+     label10:
+        $z2 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean firstVisibleMarkServed>;
+        if $z2 != 0 goto label11;
+
+        $z2 = 1;
+        goto label12;
+
+     label11:
+        $z2 = 0;
+
+     label12:
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void addKnuthElementsForBorderPaddingBefore(java.util.LinkedList,boolean)>(returnList, $z2);
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean firstVisibleMarkServed> = 1;
+        $z0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean autoHeight>;
+        if $z0 == 0 goto label23;
+
+        $z0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean inlineElementList>;
+        if $z0 == 0 goto label23;
+
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void addPendingMarks(org.apache.fop.layoutmgr.LayoutContext)>(context);
+        prevLM = null;
+
+     label13:
+        $r14 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.layoutmgr.LayoutManager getChildLM()>();
+        $r15 = (org.apache.fop.layoutmgr.BlockLevelLayoutManager) $r14;
+        curLM = $r15;
+        if $r15 == null goto label22;
+
+        $r16 = new org.apache.fop.layoutmgr.LayoutContext;
+        specialinvoke $r16.<org.apache.fop.layoutmgr.LayoutContext: void <init>(int)>(0);
+        childLC = $r16;
+        virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: void copyPendingMarksFrom(org.apache.fop.layoutmgr.LayoutContext)>(context);
+        $r17 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: org.apache.fop.traits.MinOptMax getStackLimitBP()>();
+        $r17 = staticinvoke <org.apache.fop.traits.MinOptMax: org.apache.fop.traits.MinOptMax subtract(org.apache.fop.traits.MinOptMax,org.apache.fop.traits.MinOptMax)>($r17, stackLimit);
+        virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: void setStackLimitBP(org.apache.fop.traits.MinOptMax)>($r17);
+        $r18 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.datatypes.FODimension relDims>;
+        $i1 = $r18.<org.apache.fop.datatypes.FODimension: int ipd>;
+        virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: void setRefIPD(int)>($i1);
+        $r19 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $i1 = virtualinvoke $r19.<org.apache.fop.fo.flow.BlockContainer: int getWritingMode()>();
+        virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: void setWritingMode(int)>($i1);
+        $r20 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: java.util.List childLMs>;
+        $r21 = interfaceinvoke $r20.<java.util.List: java.lang.Object get(int)>(0);
+        if curLM != $r21 goto label14;
+
+        virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int)>(16);
+
+     label14:
+        returnedList = interfaceinvoke curLM.<org.apache.fop.layoutmgr.BlockLevelLayoutManager: java.util.LinkedList getNextKnuthElements(org.apache.fop.layoutmgr.LayoutContext,int)>(childLC, alignment);
+        $i0 = virtualinvoke returnedList.<java.util.LinkedList: int size()>();
+        if $i0 != 1 goto label15;
+
+        $r22 = virtualinvoke returnedList.<java.util.LinkedList: java.lang.Object getFirst()>();
+        $r23 = (org.apache.fop.layoutmgr.ListElement) $r22;
+        $z0 = virtualinvoke $r23.<org.apache.fop.layoutmgr.ListElement: boolean isForcedBreak()>();
+        if $z0 == 0 goto label15;
+
+        virtualinvoke contentList.<java.util.LinkedList: boolean addAll(java.util.Collection)>(returnedList);
+        $r0 = new java.util.LinkedList;
+        specialinvoke $r0.<java.util.LinkedList: void <init>()>();
+        returnedList = $r0;
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void wrapPositionElements(java.util.List,java.util.List)>(contentList, returnList);
+        return returnList;
+
+     label15:
+        if prevLM == null goto label18;
+
+        $z0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean mustKeepTogether()>();
+        if $z0 != 0 goto label16;
+
+        $z0 = interfaceinvoke prevLM.<org.apache.fop.layoutmgr.BlockLevelLayoutManager: boolean mustKeepWithNext()>();
+        if $z0 != 0 goto label16;
+
+        $z0 = interfaceinvoke curLM.<org.apache.fop.layoutmgr.BlockLevelLayoutManager: boolean mustKeepWithPrevious()>();
+        if $z0 == 0 goto label17;
+
+     label16:
+        $r24 = new org.apache.fop.layoutmgr.BreakElement;
+        $r25 = new org.apache.fop.layoutmgr.Position;
+        specialinvoke $r25.<org.apache.fop.layoutmgr.Position: void <init>(org.apache.fop.layoutmgr.LayoutManager)>(this);
+        specialinvoke $r24.<org.apache.fop.layoutmgr.BreakElement: void <init>(org.apache.fop.layoutmgr.Position,int,org.apache.fop.layoutmgr.LayoutContext)>($r25, 1000, context);
+        virtualinvoke contentList.<java.util.LinkedList: boolean add(java.lang.Object)>($r24);
+        goto label18;
+
+     label17:
+        $r22 = virtualinvoke contentList.<java.util.LinkedList: java.lang.Object getLast()>();
+        $r23 = (org.apache.fop.layoutmgr.ListElement) $r22;
+        $z0 = virtualinvoke $r23.<org.apache.fop.layoutmgr.ListElement: boolean isGlue()>();
+        if $z0 != 0 goto label18;
+
+        $r24 = new org.apache.fop.layoutmgr.BreakElement;
+        $r25 = new org.apache.fop.layoutmgr.Position;
+        specialinvoke $r25.<org.apache.fop.layoutmgr.Position: void <init>(org.apache.fop.layoutmgr.LayoutManager)>(this);
+        specialinvoke $r24.<org.apache.fop.layoutmgr.BreakElement: void <init>(org.apache.fop.layoutmgr.Position,int,org.apache.fop.layoutmgr.LayoutContext)>($r25, 0, context);
+        virtualinvoke contentList.<java.util.LinkedList: boolean add(java.lang.Object)>($r24);
+
+     label18:
+        virtualinvoke contentList.<java.util.LinkedList: boolean addAll(java.util.Collection)>(returnedList);
+        $i0 = virtualinvoke returnedList.<java.util.LinkedList: int size()>();
+        if $i0 != 0 goto label19;
+
+        goto label13;
+
+     label19:
+        $r22 = virtualinvoke returnedList.<java.util.LinkedList: java.lang.Object getLast()>();
+        $r23 = (org.apache.fop.layoutmgr.ListElement) $r22;
+        $z0 = virtualinvoke $r23.<org.apache.fop.layoutmgr.ListElement: boolean isForcedBreak()>();
+        if $z0 == 0 goto label21;
+
+        $z0 = interfaceinvoke curLM.<org.apache.fop.layoutmgr.BlockLevelLayoutManager: boolean isFinished()>();
+        if $z0 == 0 goto label20;
+
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void setFinished(boolean)>(1);
+
+     label20:
+        $r0 = new java.util.LinkedList;
+        specialinvoke $r0.<java.util.LinkedList: void <init>()>();
+        returnedList = $r0;
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void wrapPositionElements(java.util.List,java.util.List)>(contentList, returnList);
+        return returnList;
+
+     label21:
+        prevLM = curLM;
+        goto label13;
+
+     label22:
+        $r0 = new java.util.LinkedList;
+        specialinvoke $r0.<java.util.LinkedList: void <init>()>();
+        returnedList = $r0;
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void wrapPositionElements(java.util.List,java.util.List)>(contentList, returnList);
+        goto label27;
+
+     label23:
+        $r2 = new org.apache.fop.traits.MinOptMax;
+        $r11 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.datatypes.FODimension relDims>;
+        $i2 = $r11.<org.apache.fop.datatypes.FODimension: int ipd>;
+        specialinvoke $r2.<org.apache.fop.traits.MinOptMax: void <init>(int)>($i2);
+        range = $r2;
+        $r26 = new org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker;
+        specialinvoke $r26.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: void <init>(org.apache.fop.layoutmgr.BlockContainerLayoutManager,org.apache.fop.layoutmgr.BlockContainerLayoutManager,org.apache.fop.traits.MinOptMax)>(this, this, range);
+        breaker = $r26;
+        $r18 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.datatypes.FODimension relDims>;
+        $i1 = $r18.<org.apache.fop.datatypes.FODimension: int bpd>;
+        $z2 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean autoHeight>;
+        virtualinvoke breaker.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: void doLayout(int,boolean)>($i1, $z2);
+        contentOverflows = virtualinvoke breaker.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: boolean isOverflow()>();
+        $z0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean autoHeight>;
+        if $z0 == 0 goto label26;
+
+        $r27 = staticinvoke <org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.layoutmgr.PageBreakingAlgorithm access$000(org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker)>(breaker);
+        newHeight = $r27.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int totalWidth>;
+        if switchedProgressionDirection == 0 goto label24;
+
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void setContentAreaIPD(int)>(newHeight);
+        goto label25;
+
+     label24:
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int vpContentBPD> = newHeight;
+
+     label25:
+        specialinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void updateRelDims(double,double,boolean)>(contentRectOffsetX, contentRectOffsetY, 0);
+
+     label26:
+        $r28 = new org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerPosition;
+        specialinvoke $r28.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerPosition: void <init>(org.apache.fop.layoutmgr.BlockContainerLayoutManager,org.apache.fop.layoutmgr.LayoutManager,org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker)>(this, this, breaker);
+        bcPosition = $r28;
+        $r29 = new org.apache.fop.layoutmgr.KnuthBox;
+        $i3 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int vpContentBPD>;
+        $r30 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.layoutmgr.Position notifyPos(org.apache.fop.layoutmgr.Position)>(bcPosition);
+        specialinvoke $r29.<org.apache.fop.layoutmgr.KnuthBox: void <init>(int,org.apache.fop.layoutmgr.Position,boolean)>($i3, $r30, 0);
+        virtualinvoke returnList.<java.util.LinkedList: boolean add(java.lang.Object)>($r29);
+        if contentOverflows == 0 goto label27;
+
+        $r8 = <org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r8.<org.apache.commons.logging.Log: void warn(java.lang.Object)>("Contents overflow block-container viewport: clipping");
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $i0 = virtualinvoke $r1.<org.apache.fop.fo.flow.BlockContainer: int getOverflow()>();
+        if $i0 != 42 goto label27;
+
+     label27:
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void addKnuthElementsForBorderPaddingAfter(java.util.LinkedList,boolean)>(returnList, 1);
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void addKnuthElementsForSpaceAfter(java.util.LinkedList,int)>(returnList, alignment);
+        virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: void clearPendingMarks()>();
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean addKnuthElementsForBreakAfter(java.util.LinkedList,org.apache.fop.layoutmgr.LayoutContext)>(returnList, context);
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void setFinished(boolean)>(1);
+        return returnList;
+    }
+
+    private java.util.LinkedList getNextKnuthElementsAbsolute(org.apache.fop.layoutmgr.LayoutContext, int)
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+        org.apache.fop.layoutmgr.LayoutContext context;
+        int alignment, availHeight, maxbpd, availWidth, allocIPD, newHeight, $i0, allocBPD, $i1, $i2;
+        boolean switchedProgressionDirection, allocBPD, contentOverflows, $z0, $z1, $z2, $z3;
+        java.awt.Point offset;
+        org.apache.fop.traits.MinOptMax range, $r5;
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker breaker, $r9;
+        java.util.LinkedList returnList, $r12;
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerPosition bcPosition, $r13;
+        org.apache.fop.fo.flow.BlockContainer $r0;
+        org.apache.fop.datatypes.Length $r1, $r7;
+        org.apache.fop.fo.properties.CommonAbsolutePosition $r2, $r6;
+        org.apache.fop.area.PageViewport $r3;
+        java.awt.geom.Rectangle2D $r4;
+        double $d0;
+        org.apache.fop.datatypes.FODimension $r8, $r10;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm $r11;
+        org.apache.fop.layoutmgr.KnuthBox $r14;
+        org.apache.fop.layoutmgr.Position $r15;
+        org.apache.commons.logging.Log $r16;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        context := @parameter0: org.apache.fop.layoutmgr.LayoutContext;
+        alignment := @parameter1: int;
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean autoHeight> = 0;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $i0 = virtualinvoke $r0.<org.apache.fop.fo.flow.BlockContainer: int getReferenceOrientation()>();
+        $i0 = $i0 % 180;
+        if $i0 == 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        switchedProgressionDirection = $z0;
+        offset = specialinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: java.awt.Point getAbsOffset()>();
+        $r1 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.datatypes.Length height>;
+        $i0 = interfaceinvoke $r1.<org.apache.fop.datatypes.Length: int getEnum()>();
+        if $i0 == 9 goto label2;
+
+        $r1 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.datatypes.Length height>;
+        $z0 = interfaceinvoke $r1.<org.apache.fop.datatypes.Length: boolean isAbsolute()>();
+        if $z0 != 0 goto label9;
+
+        $i0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int getAncestorBlockAreaBPD()>();
+        if $i0 > 0 goto label9;
+
+     label2:
+        allocBPD = 0;
+        $r2 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.properties.CommonAbsolutePosition abProps>;
+        $r1 = $r2.<org.apache.fop.fo.properties.CommonAbsolutePosition: org.apache.fop.datatypes.Length bottom>;
+        $i0 = interfaceinvoke $r1.<org.apache.fop.datatypes.Length: int getEnum()>();
+        if $i0 == 9 goto label7;
+
+        $z0 = specialinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean isFixed()>();
+        if $z0 == 0 goto label3;
+
+        $r3 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.PageViewport getCurrentPV()>();
+        $r4 = virtualinvoke $r3.<org.apache.fop.area.PageViewport: java.awt.geom.Rectangle2D getViewArea()>();
+        $d0 = virtualinvoke $r4.<java.awt.geom.Rectangle2D: double getHeight()>();
+        availHeight = (int) $d0;
+        goto label4;
+
+     label3:
+        $r5 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: org.apache.fop.traits.MinOptMax getStackLimitBP()>();
+        availHeight = $r5.<org.apache.fop.traits.MinOptMax: int opt>;
+
+     label4:
+        allocBPD = availHeight;
+        $i1 = offset.<java.awt.Point: int y>;
+        allocBPD = allocBPD - $i1;
+        $r2 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.properties.CommonAbsolutePosition abProps>;
+        $r1 = $r2.<org.apache.fop.fo.properties.CommonAbsolutePosition: org.apache.fop.datatypes.Length bottom>;
+        $i0 = interfaceinvoke $r1.<org.apache.fop.datatypes.Length: int getEnum()>();
+        if $i0 == 9 goto label5;
+
+        $r6 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.properties.CommonAbsolutePosition abProps>;
+        $r7 = $r6.<org.apache.fop.fo.properties.CommonAbsolutePosition: org.apache.fop.datatypes.Length bottom>;
+        $i1 = interfaceinvoke $r7.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        allocBPD = allocBPD - $i1;
+        if allocBPD >= 0 goto label6;
+
+        allocBPD = 0;
+        goto label6;
+
+     label5:
+        if allocBPD >= 0 goto label6;
+
+        allocBPD = 0;
+
+     label6:
+        goto label10;
+
+     label7:
+        $r5 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: org.apache.fop.traits.MinOptMax getStackLimitBP()>();
+        maxbpd = $r5.<org.apache.fop.traits.MinOptMax: int opt>;
+        allocBPD = maxbpd;
+        if switchedProgressionDirection != 0 goto label8;
+
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean autoHeight> = 1;
+
+     label8:
+        goto label10;
+
+     label9:
+        $r1 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.datatypes.Length height>;
+        allocBPD = interfaceinvoke $r1.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $i1 = specialinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int getBPIndents()>();
+        allocBPD = allocBPD + $i1;
+
+     label10:
+        $r1 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.datatypes.Length width>;
+        $i0 = interfaceinvoke $r1.<org.apache.fop.datatypes.Length: int getEnum()>();
+        if $i0 != 9 goto label17;
+
+        $z0 = specialinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean isFixed()>();
+        if $z0 == 0 goto label11;
+
+        $r3 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.PageViewport getCurrentPV()>();
+        $r4 = virtualinvoke $r3.<org.apache.fop.area.PageViewport: java.awt.geom.Rectangle2D getViewArea()>();
+        $d0 = virtualinvoke $r4.<java.awt.geom.Rectangle2D: double getWidth()>();
+        availWidth = (int) $d0;
+        goto label12;
+
+     label11:
+        availWidth = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: int getRefIPD()>();
+
+     label12:
+        allocIPD = availWidth;
+        $r2 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.properties.CommonAbsolutePosition abProps>;
+        $r1 = $r2.<org.apache.fop.fo.properties.CommonAbsolutePosition: org.apache.fop.datatypes.Length left>;
+        $i0 = interfaceinvoke $r1.<org.apache.fop.datatypes.Length: int getEnum()>();
+        if $i0 == 9 goto label13;
+
+        $r6 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.properties.CommonAbsolutePosition abProps>;
+        $r7 = $r6.<org.apache.fop.fo.properties.CommonAbsolutePosition: org.apache.fop.datatypes.Length left>;
+        $i1 = interfaceinvoke $r7.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        allocIPD = allocIPD - $i1;
+
+     label13:
+        $r2 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.properties.CommonAbsolutePosition abProps>;
+        $r1 = $r2.<org.apache.fop.fo.properties.CommonAbsolutePosition: org.apache.fop.datatypes.Length right>;
+        $i0 = interfaceinvoke $r1.<org.apache.fop.datatypes.Length: int getEnum()>();
+        if $i0 == 9 goto label14;
+
+        $r6 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.properties.CommonAbsolutePosition abProps>;
+        $r7 = $r6.<org.apache.fop.fo.properties.CommonAbsolutePosition: org.apache.fop.datatypes.Length right>;
+        $i1 = interfaceinvoke $r7.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        allocIPD = allocIPD - $i1;
+        if allocIPD >= 0 goto label16;
+
+        allocIPD = 0;
+        goto label16;
+
+     label14:
+        if allocIPD >= 0 goto label15;
+
+        allocIPD = 0;
+
+     label15:
+        if switchedProgressionDirection == 0 goto label16;
+
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean autoHeight> = 1;
+
+     label16:
+        goto label18;
+
+     label17:
+        $r1 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.datatypes.Length width>;
+        allocIPD = interfaceinvoke $r1.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+        $i1 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int getIPIndents()>();
+        allocIPD = allocIPD + $i1;
+
+     label18:
+        $i2 = specialinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int getBPIndents()>();
+        $i1 = allocBPD - $i2;
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int vpContentBPD> = $i1;
+        $i2 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int getIPIndents()>();
+        $i1 = allocIPD - $i2;
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void setContentAreaIPD(int)>($i1);
+        $z1 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean autoHeight>;
+        specialinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void updateRelDims(double,double,boolean)>(0.0, 0.0, $z1);
+        $r5 = new org.apache.fop.traits.MinOptMax;
+        $r8 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.datatypes.FODimension relDims>;
+        $i2 = $r8.<org.apache.fop.datatypes.FODimension: int ipd>;
+        specialinvoke $r5.<org.apache.fop.traits.MinOptMax: void <init>(int)>($i2);
+        range = $r5;
+        $r9 = new org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker;
+        specialinvoke $r9.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: void <init>(org.apache.fop.layoutmgr.BlockContainerLayoutManager,org.apache.fop.layoutmgr.BlockContainerLayoutManager,org.apache.fop.traits.MinOptMax)>(this, this, range);
+        breaker = $r9;
+        $z2 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean autoHeight>;
+        if $z2 == 0 goto label19;
+
+        $i1 = 0;
+        goto label20;
+
+     label19:
+        $r10 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.datatypes.FODimension relDims>;
+        $i1 = $r10.<org.apache.fop.datatypes.FODimension: int bpd>;
+
+     label20:
+        $z3 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean autoHeight>;
+        virtualinvoke breaker.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: void doLayout(int,boolean)>($i1, $z3);
+        contentOverflows = virtualinvoke breaker.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: boolean isOverflow()>();
+        $z0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean autoHeight>;
+        if $z0 == 0 goto label23;
+
+        $r11 = staticinvoke <org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: org.apache.fop.layoutmgr.PageBreakingAlgorithm access$000(org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker)>(breaker);
+        newHeight = $r11.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int totalWidth>;
+        if switchedProgressionDirection == 0 goto label21;
+
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void setContentAreaIPD(int)>(newHeight);
+        goto label22;
+
+     label21:
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int vpContentBPD> = newHeight;
+
+     label22:
+        specialinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void updateRelDims(double,double,boolean)>(0.0, 0.0, 0);
+
+     label23:
+        $r12 = new java.util.LinkedList;
+        specialinvoke $r12.<java.util.LinkedList: void <init>()>();
+        returnList = $r12;
+        $z0 = virtualinvoke breaker.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: boolean isEmpty()>();
+        if $z0 != 0 goto label26;
+
+        $r13 = new org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerPosition;
+        specialinvoke $r13.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerPosition: void <init>(org.apache.fop.layoutmgr.BlockContainerLayoutManager,org.apache.fop.layoutmgr.LayoutManager,org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker)>(this, this, breaker);
+        bcPosition = $r13;
+        $r14 = new org.apache.fop.layoutmgr.KnuthBox;
+        $r15 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.layoutmgr.Position notifyPos(org.apache.fop.layoutmgr.Position)>(bcPosition);
+        specialinvoke $r14.<org.apache.fop.layoutmgr.KnuthBox: void <init>(int,org.apache.fop.layoutmgr.Position,boolean)>(0, $r15, 0);
+        virtualinvoke returnList.<java.util.LinkedList: boolean add(java.lang.Object)>($r14);
+        $z0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean autoHeight>;
+        if $z0 != 0 goto label24;
+
+        $z0 = 1;
+        goto label25;
+
+     label24:
+        $z0 = 0;
+
+     label25:
+        $z0 = $z0 & contentOverflows;
+        if $z0 == 0 goto label26;
+
+        $r16 = <org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r16.<org.apache.commons.logging.Log: void warn(java.lang.Object)>("Contents overflow block-container viewport: clipping");
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $i0 = virtualinvoke $r0.<org.apache.fop.fo.flow.BlockContainer: int getOverflow()>();
+        if $i0 != 42 goto label26;
+
+     label26:
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void setFinished(boolean)>(1);
+        return returnList;
+    }
+
+    private void updateRelDims(double, double, boolean)
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+        double xOffset, yOffset, $d0, $d1;
+        boolean skipAutoHeight;
+        java.awt.geom.Rectangle2D$Double $r0, rect;
+        int $i0, $i1, $i2, $i3;
+        org.apache.fop.datatypes.FODimension $r1, $r4;
+        org.apache.fop.fo.flow.BlockContainer $r2, $r3;
+        org.apache.fop.area.CTM $r5;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        xOffset := @parameter0: double;
+        yOffset := @parameter1: double;
+        skipAutoHeight := @parameter2: boolean;
+        $r0 = new java.awt.geom.Rectangle2D$Double;
+        $i0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int getContentAreaIPD()>();
+        $d0 = (double) $i0;
+        $i1 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int vpContentBPD>;
+        $d1 = (double) $i1;
+        specialinvoke $r0.<java.awt.geom.Rectangle2D$Double: void <init>(double,double,double,double)>(xOffset, yOffset, $d0, $d1);
+        rect = $r0;
+        $r1 = new org.apache.fop.datatypes.FODimension;
+        specialinvoke $r1.<org.apache.fop.datatypes.FODimension: void <init>(int,int)>(0, 0);
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.datatypes.FODimension relDims> = $r1;
+        $r2 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $i2 = virtualinvoke $r2.<org.apache.fop.fo.flow.BlockContainer: int getReferenceOrientation()>();
+        $r3 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $i3 = virtualinvoke $r3.<org.apache.fop.fo.flow.BlockContainer: int getWritingMode()>();
+        $r4 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.datatypes.FODimension relDims>;
+        $r5 = staticinvoke <org.apache.fop.area.CTM: org.apache.fop.area.CTM getCTMandRelDims(int,int,java.awt.geom.Rectangle2D,org.apache.fop.datatypes.FODimension)>($i2, $i3, rect, $r4);
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.CTM absoluteCTM> = $r5;
+        return;
+    }
+
+    private java.awt.Point getAbsOffset()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+        int x, y, $i0;
+        org.apache.fop.fo.properties.CommonAbsolutePosition $r0;
+        org.apache.fop.datatypes.Length $r1;
+        java.awt.Point $r2;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        x = 0;
+        y = 0;
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.properties.CommonAbsolutePosition abProps>;
+        $r1 = $r0.<org.apache.fop.fo.properties.CommonAbsolutePosition: org.apache.fop.datatypes.Length left>;
+        $i0 = interfaceinvoke $r1.<org.apache.fop.datatypes.Length: int getEnum()>();
+        if $i0 == 9 goto label0;
+
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.properties.CommonAbsolutePosition abProps>;
+        $r1 = $r0.<org.apache.fop.fo.properties.CommonAbsolutePosition: org.apache.fop.datatypes.Length left>;
+        x = interfaceinvoke $r1.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+
+     label0:
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.properties.CommonAbsolutePosition abProps>;
+        $r1 = $r0.<org.apache.fop.fo.properties.CommonAbsolutePosition: org.apache.fop.datatypes.Length top>;
+        $i0 = interfaceinvoke $r1.<org.apache.fop.datatypes.Length: int getEnum()>();
+        if $i0 == 9 goto label1;
+
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.properties.CommonAbsolutePosition abProps>;
+        $r1 = $r0.<org.apache.fop.fo.properties.CommonAbsolutePosition: org.apache.fop.datatypes.Length top>;
+        y = interfaceinvoke $r1.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(this);
+
+     label1:
+        $r2 = new java.awt.Point;
+        specialinvoke $r2.<java.awt.Point: void <init>(int,int)>(x, y);
+        return $r2;
+    }
+
+    public void addAreas(org.apache.fop.layoutmgr.PositionIterator, org.apache.fop.layoutmgr.LayoutContext)
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+        org.apache.fop.layoutmgr.PositionIterator parentIter, childPosIter;
+        org.apache.fop.layoutmgr.LayoutContext layoutContext, lc, $r2;
+        org.apache.fop.traits.MinOptMax $r0, $r18, $r22;
+        null_type childLM;
+        org.apache.fop.layoutmgr.LayoutManager lastLM, $r7, childLM;
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerPosition bcpos;
+        java.util.LinkedList positionList, splitList, $r3;
+        boolean bSpaceBefore, bSpaceAfter, $z0, $z1, $z2;
+        org.apache.fop.layoutmgr.Position firstPos, lastPos, pos, innerPosition;
+        int splitLength, iFirst, iLast, $i0, $i1, $i2, $i3, $i4, $i5;
+        java.util.ListIterator storedListIterator, $r12;
+        org.apache.fop.layoutmgr.KnuthElement element;
+        double $d0;
+        java.lang.Object $r4;
+        org.apache.fop.layoutmgr.NonLeafPosition $r5;
+        java.lang.IllegalStateException $r6;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager $r8;
+        org.apache.fop.fo.flow.BlockContainer $r9, $r15;
+        java.lang.String $r10;
+        org.apache.fop.layoutmgr.BlockStackingLayoutManager$StackingIter $r11;
+        org.apache.fop.layoutmgr.BlockStackingLayoutManager$MappingPosition $r13;
+        org.apache.fop.traits.SpaceVal $r14;
+        org.apache.fop.fo.properties.CommonMarginBlock $r16;
+        org.apache.fop.fo.properties.SpaceProperty $r17;
+        org.apache.fop.layoutmgr.KnuthPossPosIter $r19;
+        short $s6;
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker $r20;
+        org.apache.fop.area.BlockViewport $r21;
+        org.apache.fop.fo.FObj $r23;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        parentIter := @parameter0: org.apache.fop.layoutmgr.PositionIterator;
+        layoutContext := @parameter1: org.apache.fop.layoutmgr.LayoutContext;
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.Area getParentArea(org.apache.fop.area.Area)>(null);
+        $i0 = virtualinvoke layoutContext.<org.apache.fop.layoutmgr.LayoutContext: int getSpaceBefore()>();
+        if $i0 <= 0 goto label0;
+
+        $r0 = new org.apache.fop.traits.MinOptMax;
+        $i1 = virtualinvoke layoutContext.<org.apache.fop.layoutmgr.LayoutContext: int getSpaceBefore()>();
+        specialinvoke $r0.<org.apache.fop.traits.MinOptMax: void <init>(int)>($i1);
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void addBlockSpacing(double,org.apache.fop.traits.MinOptMax)>(0.0, $r0);
+
+     label0:
+        childLM = null;
+        lastLM = null;
+        $r2 = new org.apache.fop.layoutmgr.LayoutContext;
+        specialinvoke $r2.<org.apache.fop.layoutmgr.LayoutContext: void <init>(int)>(0);
+        lc = $r2;
+        $d0 = virtualinvoke layoutContext.<org.apache.fop.layoutmgr.LayoutContext: double getSpaceAdjust()>();
+        virtualinvoke lc.<org.apache.fop.layoutmgr.LayoutContext: void setSpaceAdjust(double)>($d0);
+        $i0 = virtualinvoke layoutContext.<org.apache.fop.layoutmgr.LayoutContext: int getSpaceAfter()>();
+        if $i0 <= 0 goto label1;
+
+        $i2 = virtualinvoke layoutContext.<org.apache.fop.layoutmgr.LayoutContext: int getSpaceAfter()>();
+        virtualinvoke lc.<org.apache.fop.layoutmgr.LayoutContext: void setSpaceAfter(int)>($i2);
+
+     label1:
+        bcpos = null;
+        $r3 = new java.util.LinkedList;
+        specialinvoke $r3.<java.util.LinkedList: void <init>()>();
+        positionList = $r3;
+        bSpaceBefore = 0;
+        bSpaceAfter = 0;
+        firstPos = null;
+        lastPos = null;
+
+     label2:
+        $z0 = virtualinvoke parentIter.<org.apache.fop.layoutmgr.PositionIterator: boolean hasNext()>();
+        if $z0 == 0 goto label12;
+
+        $r4 = virtualinvoke parentIter.<org.apache.fop.layoutmgr.PositionIterator: java.lang.Object next()>();
+        pos = (org.apache.fop.layoutmgr.Position) $r4;
+        $i0 = virtualinvoke pos.<org.apache.fop.layoutmgr.Position: int getIndex()>();
+        if $i0 < 0 goto label4;
+
+        if firstPos != null goto label3;
+
+        firstPos = pos;
+
+     label3:
+        lastPos = pos;
+
+     label4:
+        innerPosition = pos;
+        $z0 = pos instanceof org.apache.fop.layoutmgr.NonLeafPosition;
+        if $z0 == 0 goto label5;
+
+        $r5 = (org.apache.fop.layoutmgr.NonLeafPosition) pos;
+        innerPosition = virtualinvoke $r5.<org.apache.fop.layoutmgr.NonLeafPosition: org.apache.fop.layoutmgr.Position getPosition()>();
+
+     label5:
+        $z0 = pos instanceof org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerPosition;
+        if $z0 == 0 goto label7;
+
+        if bcpos == null goto label6;
+
+        $r6 = new java.lang.IllegalStateException;
+        specialinvoke $r6.<java.lang.IllegalStateException: void <init>(java.lang.String)>("Only one BlockContainerPosition allowed");
+        throw $r6;
+
+     label6:
+        bcpos = (org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerPosition) pos;
+        goto label11;
+
+     label7:
+        if innerPosition != null goto label9;
+
+        $z0 = pos instanceof org.apache.fop.layoutmgr.NonLeafPosition;
+        if $z0 == 0 goto label11;
+
+        $i0 = virtualinvoke positionList.<java.util.LinkedList: int size()>();
+        if $i0 != 0 goto label8;
+
+        if bcpos != null goto label8;
+
+        bSpaceBefore = 1;
+        goto label11;
+
+     label8:
+        bSpaceAfter = 1;
+        goto label11;
+
+     label9:
+        $r7 = virtualinvoke innerPosition.<org.apache.fop.layoutmgr.Position: org.apache.fop.layoutmgr.LayoutManager getLM()>();
+        if $r7 != this goto label10;
+
+        $z0 = innerPosition instanceof org.apache.fop.layoutmgr.BlockStackingLayoutManager$MappingPosition;
+        if $z0 != 0 goto label10;
+
+        goto label11;
+
+     label10:
+        virtualinvoke positionList.<java.util.LinkedList: boolean add(java.lang.Object)>(innerPosition);
+        lastLM = virtualinvoke innerPosition.<org.apache.fop.layoutmgr.Position: org.apache.fop.layoutmgr.LayoutManager getLM()>();
+
+     label11:
+        goto label2;
+
+     label12:
+        $r8 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.layoutmgr.PageSequenceLayoutManager getPSLM()>();
+        $r9 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r10 = virtualinvoke $r9.<org.apache.fop.fo.flow.BlockContainer: java.lang.String getId()>();
+        virtualinvoke $r8.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: void addIDToPage(java.lang.String)>($r10);
+        $z1 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean isFirst(org.apache.fop.layoutmgr.Position)>(firstPos);
+        $z2 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean isLast(org.apache.fop.layoutmgr.Position)>(lastPos);
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void addMarkersToPage(boolean,boolean,boolean)>(1, $z1, $z2);
+        if bcpos != null goto label23;
+
+        $i0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int bpUnit>;
+        if $i0 != 0 goto label13;
+
+        $r11 = new org.apache.fop.layoutmgr.BlockStackingLayoutManager$StackingIter;
+        $r12 = virtualinvoke positionList.<java.util.LinkedList: java.util.ListIterator listIterator()>();
+        specialinvoke $r11.<org.apache.fop.layoutmgr.BlockStackingLayoutManager$StackingIter: void <init>(java.util.Iterator)>($r12);
+        childPosIter = $r11;
+        goto label20;
+
+     label13:
+        $r3 = new java.util.LinkedList;
+        specialinvoke $r3.<java.util.LinkedList: void <init>()>();
+        splitList = $r3;
+        splitLength = 0;
+        $r4 = virtualinvoke positionList.<java.util.LinkedList: java.lang.Object getFirst()>();
+        $r13 = (org.apache.fop.layoutmgr.BlockStackingLayoutManager$MappingPosition) $r4;
+        iFirst = virtualinvoke $r13.<org.apache.fop.layoutmgr.BlockStackingLayoutManager$MappingPosition: int getFirstIndex()>();
+        $r4 = virtualinvoke positionList.<java.util.LinkedList: java.lang.Object getLast()>();
+        $r13 = (org.apache.fop.layoutmgr.BlockStackingLayoutManager$MappingPosition) $r4;
+        iLast = virtualinvoke $r13.<org.apache.fop.layoutmgr.BlockStackingLayoutManager$MappingPosition: int getLastIndex()>();
+        $r3 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: java.util.LinkedList storedList>;
+        storedListIterator = virtualinvoke $r3.<java.util.LinkedList: java.util.ListIterator listIterator(int)>(iFirst);
+
+     label14:
+        $i0 = interfaceinvoke storedListIterator.<java.util.ListIterator: int nextIndex()>();
+        if $i0 > iLast goto label16;
+
+        $r4 = interfaceinvoke storedListIterator.<java.util.ListIterator: java.lang.Object next()>();
+        element = (org.apache.fop.layoutmgr.KnuthElement) $r4;
+        $r7 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: org.apache.fop.layoutmgr.LayoutManager getLayoutManager()>();
+        if $r7 == this goto label15;
+
+        virtualinvoke splitList.<java.util.LinkedList: boolean add(java.lang.Object)>(element);
+        $i2 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: int getW()>();
+        splitLength = splitLength + $i2;
+        lastLM = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: org.apache.fop.layoutmgr.LayoutManager getLayoutManager()>();
+
+     label15:
+        goto label14;
+
+     label16:
+        if bSpaceBefore == 0 goto label17;
+
+        if bSpaceAfter == 0 goto label17;
+
+        $r14 = new org.apache.fop.traits.SpaceVal;
+        $r15 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r16 = virtualinvoke $r15.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.CommonMarginBlock getCommonMarginBlock()>();
+        $r17 = $r16.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.fo.properties.SpaceProperty spaceBefore>;
+        specialinvoke $r14.<org.apache.fop.traits.SpaceVal: void <init>(org.apache.fop.fo.properties.SpaceProperty,org.apache.fop.datatypes.PercentBaseContext)>($r17, this);
+        $r18 = virtualinvoke $r14.<org.apache.fop.traits.SpaceVal: org.apache.fop.traits.MinOptMax getSpace()>();
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.traits.MinOptMax foBlockSpaceBefore> = $r18;
+        $r14 = new org.apache.fop.traits.SpaceVal;
+        $r15 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r16 = virtualinvoke $r15.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.CommonMarginBlock getCommonMarginBlock()>();
+        $r17 = $r16.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.fo.properties.SpaceProperty spaceAfter>;
+        specialinvoke $r14.<org.apache.fop.traits.SpaceVal: void <init>(org.apache.fop.fo.properties.SpaceProperty,org.apache.fop.datatypes.PercentBaseContext)>($r17, this);
+        $r18 = virtualinvoke $r14.<org.apache.fop.traits.SpaceVal: org.apache.fop.traits.MinOptMax getSpace()>();
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.traits.MinOptMax foBlockSpaceAfter> = $r18;
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.traits.MinOptMax foBlockSpaceBefore>;
+        $i3 = $r0.<org.apache.fop.traits.MinOptMax: int min>;
+        $i4 = splitLength + $i3;
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.traits.MinOptMax foBlockSpaceAfter>;
+        $i3 = $r0.<org.apache.fop.traits.MinOptMax: int min>;
+        $i4 = $i4 + $i3;
+        $i2 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int neededUnits(int)>($i4);
+        $i4 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int bpUnit>;
+        $i2 = $i2 * $i4;
+        $i2 = $i2 - splitLength;
+        $i2 = $i2 / 2;
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int adjustedSpaceBefore> = $i2;
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.traits.MinOptMax foBlockSpaceBefore>;
+        $i3 = $r0.<org.apache.fop.traits.MinOptMax: int min>;
+        $i4 = splitLength + $i3;
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.traits.MinOptMax foBlockSpaceAfter>;
+        $i3 = $r0.<org.apache.fop.traits.MinOptMax: int min>;
+        $i4 = $i4 + $i3;
+        $i2 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int neededUnits(int)>($i4);
+        $i4 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int bpUnit>;
+        $i2 = $i2 * $i4;
+        $i2 = $i2 - splitLength;
+        $i4 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int adjustedSpaceBefore>;
+        $i2 = $i2 - $i4;
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int adjustedSpaceAfter> = $i2;
+        goto label19;
+
+     label17:
+        if bSpaceBefore == 0 goto label18;
+
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.traits.MinOptMax foBlockSpaceBefore>;
+        $i3 = $r0.<org.apache.fop.traits.MinOptMax: int min>;
+        $i4 = splitLength + $i3;
+        $i2 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int neededUnits(int)>($i4);
+        $i4 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int bpUnit>;
+        $i2 = $i2 * $i4;
+        $i2 = $i2 - splitLength;
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int adjustedSpaceBefore> = $i2;
+        goto label19;
+
+     label18:
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.traits.MinOptMax foBlockSpaceAfter>;
+        $i3 = $r0.<org.apache.fop.traits.MinOptMax: int min>;
+        $i4 = splitLength + $i3;
+        $i2 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int neededUnits(int)>($i4);
+        $i4 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int bpUnit>;
+        $i2 = $i2 * $i4;
+        $i2 = $i2 - splitLength;
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int adjustedSpaceAfter> = $i2;
+
+     label19:
+        $r19 = new org.apache.fop.layoutmgr.KnuthPossPosIter;
+        $i5 = virtualinvoke splitList.<java.util.LinkedList: int size()>();
+        specialinvoke $r19.<org.apache.fop.layoutmgr.KnuthPossPosIter: void <init>(java.util.List,int,int)>(splitList, 0, $i5);
+        childPosIter = $r19;
+
+     label20:
+        $r7 = virtualinvoke childPosIter.<org.apache.fop.layoutmgr.PositionIterator: org.apache.fop.layoutmgr.LayoutManager getNextChildLM()>();
+        childLM = $r7;
+        if $r7 == null goto label24;
+
+        $s6 = 128;
+        $z1 = virtualinvoke layoutContext.<org.apache.fop.layoutmgr.LayoutContext: boolean isLastArea()>();
+        if $z1 == 0 goto label21;
+
+        if childLM != lastLM goto label21;
+
+        $z1 = 1;
+        goto label22;
+
+     label21:
+        $z1 = 0;
+
+     label22:
+        virtualinvoke lc.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int,boolean)>($s6, $z1);
+        $r18 = virtualinvoke layoutContext.<org.apache.fop.layoutmgr.LayoutContext: org.apache.fop.traits.MinOptMax getStackLimitBP()>();
+        virtualinvoke lc.<org.apache.fop.layoutmgr.LayoutContext: void setStackLimitBP(org.apache.fop.traits.MinOptMax)>($r18);
+        interfaceinvoke childLM.<org.apache.fop.layoutmgr.LayoutManager: void addAreas(org.apache.fop.layoutmgr.PositionIterator,org.apache.fop.layoutmgr.LayoutContext)>(childPosIter, lc);
+        goto label20;
+
+     label23:
+        $r20 = virtualinvoke bcpos.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerPosition: org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker getBreaker()>();
+        virtualinvoke $r20.<org.apache.fop.layoutmgr.BlockContainerLayoutManager$BlockContainerBreaker: void addContainedAreas()>();
+
+     label24:
+        $z1 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean isFirst(org.apache.fop.layoutmgr.Position)>(firstPos);
+        $z2 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean isLast(org.apache.fop.layoutmgr.Position)>(lastPos);
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void addMarkersToPage(boolean,boolean,boolean)>(0, $z1, $z2);
+        $r21 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.BlockViewport viewportBlockArea>;
+        $d0 = virtualinvoke layoutContext.<org.apache.fop.layoutmgr.LayoutContext: double getSpaceAdjust()>();
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.traits.MinOptMax effSpaceBefore>;
+        $r22 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.traits.MinOptMax effSpaceAfter>;
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addSpaceBeforeAfter(org.apache.fop.area.Area,double,org.apache.fop.traits.MinOptMax,org.apache.fop.traits.MinOptMax)>($r21, $d0, $r0, $r22);
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void flush()>();
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.BlockViewport viewportBlockArea> = null;
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.Block referenceArea> = null;
+        specialinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void resetSpaces()>();
+        $r8 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.layoutmgr.PageSequenceLayoutManager getPSLM()>();
+        $r23 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.FObj getFObj()>();
+        $r9 = (org.apache.fop.fo.flow.BlockContainer) $r23;
+        $r10 = virtualinvoke $r9.<org.apache.fop.fo.flow.BlockContainer: java.lang.String getId()>();
+        virtualinvoke $r8.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: void notifyEndOfLayout(java.lang.String)>($r10);
+        return;
+    }
+
+    public org.apache.fop.area.Area getParentArea(org.apache.fop.area.Area)
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+        org.apache.fop.area.Area childArea;
+        boolean switchedProgressionDirection, allowBPDUpdate, $z0, $z1, $z2, $z3;
+        java.awt.Point offset;
+        org.apache.fop.area.Block $r0, $r11;
+        org.apache.fop.fo.flow.BlockContainer $r1, $r6;
+        int $i0, $i1, $i2, $i3;
+        org.apache.fop.area.BlockViewport $r2, $r3;
+        java.lang.Integer $r4;
+        java.lang.Boolean $r5;
+        java.lang.String $r7;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground $r8;
+        org.apache.fop.area.CTM $r9;
+        org.apache.fop.fo.properties.CommonAbsolutePosition $r10;
+        org.apache.fop.layoutmgr.LayoutManager $r12;
+        org.apache.fop.datatypes.FODimension $r14;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        childArea := @parameter0: org.apache.fop.area.Area;
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.Block referenceArea>;
+        if $r0 != null goto label10;
+
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $i0 = virtualinvoke $r1.<org.apache.fop.fo.flow.BlockContainer: int getReferenceOrientation()>();
+        $i0 = $i0 % 180;
+        if $i0 == 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        switchedProgressionDirection = $z0;
+        $z0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean autoHeight>;
+        if $z0 == 0 goto label2;
+
+        if switchedProgressionDirection != 0 goto label2;
+
+        $z0 = 1;
+        goto label3;
+
+     label2:
+        $z0 = 0;
+
+     label3:
+        allowBPDUpdate = $z0;
+        $r2 = new org.apache.fop.area.BlockViewport;
+        specialinvoke $r2.<org.apache.fop.area.BlockViewport: void <init>(boolean)>(allowBPDUpdate);
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.BlockViewport viewportBlockArea> = $r2;
+        $r3 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.BlockViewport viewportBlockArea>;
+        $r4 = <org.apache.fop.area.Trait: java.lang.Integer IS_VIEWPORT_AREA>;
+        $r5 = <java.lang.Boolean: java.lang.Boolean TRUE>;
+        virtualinvoke $r3.<org.apache.fop.area.BlockViewport: void addTrait(java.lang.Object,java.lang.Object)>($r4, $r5);
+        $r3 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.BlockViewport viewportBlockArea>;
+        $i1 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int getContentAreaIPD()>();
+        virtualinvoke $r3.<org.apache.fop.area.BlockViewport: void setIPD(int)>($i1);
+        if allowBPDUpdate == 0 goto label4;
+
+        $r3 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.BlockViewport viewportBlockArea>;
+        virtualinvoke $r3.<org.apache.fop.area.BlockViewport: void setBPD(int)>(0);
+        goto label5;
+
+     label4:
+        $r3 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.BlockViewport viewportBlockArea>;
+        $i1 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int vpContentBPD>;
+        virtualinvoke $r3.<org.apache.fop.area.BlockViewport: void setBPD(int)>($i1);
+
+     label5:
+        $r2 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.BlockViewport viewportBlockArea>;
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void transferForeignAttributes(org.apache.fop.area.Area)>($r2);
+        $r3 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.BlockViewport viewportBlockArea>;
+        $r6 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r7 = virtualinvoke $r6.<org.apache.fop.fo.flow.BlockContainer: java.lang.String getId()>();
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void setProducerID(org.apache.fop.area.Area,java.lang.String)>($r3, $r7);
+        $r3 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.BlockViewport viewportBlockArea>;
+        $r6 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r8 = virtualinvoke $r6.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        $z1 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean discardBorderBefore>;
+        $z2 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean discardBorderAfter>;
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addBorders(org.apache.fop.area.Area,org.apache.fop.fo.properties.CommonBorderPaddingBackground,boolean,boolean,boolean,boolean,org.apache.fop.datatypes.PercentBaseContext)>($r3, $r8, $z1, $z2, 0, 0, this);
+        $r3 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.BlockViewport viewportBlockArea>;
+        $r6 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r8 = virtualinvoke $r6.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        $z1 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean discardPaddingBefore>;
+        $z2 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean discardPaddingAfter>;
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addPadding(org.apache.fop.area.Area,org.apache.fop.fo.properties.CommonBorderPaddingBackground,boolean,boolean,boolean,boolean,org.apache.fop.datatypes.PercentBaseContext)>($r3, $r8, $z1, $z2, 0, 0, this);
+        $r3 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.BlockViewport viewportBlockArea>;
+        $r6 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r8 = virtualinvoke $r6.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        $i2 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int startIndent>;
+        $i3 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: int endIndent>;
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addMargins(org.apache.fop.area.Area,org.apache.fop.fo.properties.CommonBorderPaddingBackground,int,int,org.apache.fop.datatypes.PercentBaseContext)>($r3, $r8, $i2, $i3, this);
+        $r3 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.BlockViewport viewportBlockArea>;
+        $r9 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.CTM absoluteCTM>;
+        virtualinvoke $r3.<org.apache.fop.area.BlockViewport: void setCTM(org.apache.fop.area.CTM)>($r9);
+        $r3 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.BlockViewport viewportBlockArea>;
+        $z3 = specialinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean needClip()>();
+        virtualinvoke $r3.<org.apache.fop.area.BlockViewport: void setClip(boolean)>($z3);
+        $r10 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.properties.CommonAbsolutePosition abProps>;
+        $i0 = $r10.<org.apache.fop.fo.properties.CommonAbsolutePosition: int absolutePosition>;
+        if $i0 == 1 goto label6;
+
+        $r10 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.properties.CommonAbsolutePosition abProps>;
+        $i0 = $r10.<org.apache.fop.fo.properties.CommonAbsolutePosition: int absolutePosition>;
+        if $i0 != 51 goto label7;
+
+     label6:
+        offset = specialinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: java.awt.Point getAbsOffset()>();
+        $r3 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.BlockViewport viewportBlockArea>;
+        $i1 = offset.<java.awt.Point: int x>;
+        virtualinvoke $r3.<org.apache.fop.area.BlockViewport: void setXOffset(int)>($i1);
+        $r3 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.BlockViewport viewportBlockArea>;
+        $i1 = offset.<java.awt.Point: int y>;
+        virtualinvoke $r3.<org.apache.fop.area.BlockViewport: void setYOffset(int)>($i1);
+
+     label7:
+        $r11 = new org.apache.fop.area.Block;
+        specialinvoke $r11.<org.apache.fop.area.Block: void <init>()>();
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.Block referenceArea> = $r11;
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.Block referenceArea>;
+        $r4 = <org.apache.fop.area.Trait: java.lang.Integer IS_REFERENCE_AREA>;
+        $r5 = <java.lang.Boolean: java.lang.Boolean TRUE>;
+        virtualinvoke $r0.<org.apache.fop.area.Block: void addTrait(java.lang.Object,java.lang.Object)>($r4, $r5);
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.Block referenceArea>;
+        $r6 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r7 = virtualinvoke $r6.<org.apache.fop.fo.flow.BlockContainer: java.lang.String getId()>();
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void setProducerID(org.apache.fop.area.Area,java.lang.String)>($r0, $r7);
+        $r10 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.properties.CommonAbsolutePosition abProps>;
+        $i0 = $r10.<org.apache.fop.fo.properties.CommonAbsolutePosition: int absolutePosition>;
+        if $i0 != 1 goto label8;
+
+        $r3 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.BlockViewport viewportBlockArea>;
+        virtualinvoke $r3.<org.apache.fop.area.BlockViewport: void setPositioning(int)>(2);
+        goto label9;
+
+     label8:
+        $r10 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.properties.CommonAbsolutePosition abProps>;
+        $i0 = $r10.<org.apache.fop.fo.properties.CommonAbsolutePosition: int absolutePosition>;
+        if $i0 != 51 goto label9;
+
+        $r3 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.BlockViewport viewportBlockArea>;
+        virtualinvoke $r3.<org.apache.fop.area.BlockViewport: void setPositioning(int)>(3);
+
+     label9:
+        $r12 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.layoutmgr.LayoutManager parentLM>;
+        $r11 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.Block referenceArea>;
+        interfaceinvoke $r12.<org.apache.fop.layoutmgr.LayoutManager: org.apache.fop.area.Area getParentArea(org.apache.fop.area.Area)>($r11);
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.Block referenceArea>;
+        $r14 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.datatypes.FODimension relDims>;
+        $i1 = $r14.<org.apache.fop.datatypes.FODimension: int ipd>;
+        virtualinvoke $r0.<org.apache.fop.area.Block: void setIPD(int)>($i1);
+        $r2 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.BlockViewport viewportBlockArea>;
+        virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: void setCurrentArea(org.apache.fop.area.BlockParent)>($r2);
+
+     label10:
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.Block referenceArea>;
+        return $r0;
+    }
+
+    public void addChildArea(org.apache.fop.area.Area)
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+        org.apache.fop.area.Area childArea;
+        org.apache.fop.area.Block $r0, $r1;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        childArea := @parameter0: org.apache.fop.area.Area;
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.Block referenceArea>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.Block referenceArea>;
+        $r1 = (org.apache.fop.area.Block) childArea;
+        virtualinvoke $r0.<org.apache.fop.area.Block: void addBlock(org.apache.fop.area.Block)>($r1);
+
+     label0:
+        return;
+    }
+
+    protected void flush()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+        org.apache.fop.area.BlockViewport $r0;
+        org.apache.fop.area.Block $r1;
+        boolean $z0;
+        org.apache.fop.fo.flow.BlockContainer $r2;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground $r3;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.BlockViewport viewportBlockArea>;
+        $r1 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.Block referenceArea>;
+        $z0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean autoHeight>;
+        virtualinvoke $r0.<org.apache.fop.area.BlockViewport: void addBlock(org.apache.fop.area.Block,boolean)>($r1, $z0);
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.area.BlockViewport viewportBlockArea>;
+        $r2 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r3 = virtualinvoke $r2.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addBackground(org.apache.fop.area.Area,org.apache.fop.fo.properties.CommonBorderPaddingBackground,org.apache.fop.datatypes.PercentBaseContext)>($r0, $r3, this);
+        specialinvoke this.<org.apache.fop.layoutmgr.BlockStackingLayoutManager: void flush()>();
+        return;
+    }
+
+    public int negotiateBPDAdjustment(int, org.apache.fop.layoutmgr.KnuthElement)
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+        int adj;
+        org.apache.fop.layoutmgr.KnuthElement lastElement;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        adj := @parameter0: int;
+        lastElement := @parameter1: org.apache.fop.layoutmgr.KnuthElement;
+        return 0;
+    }
+
+    public void discardSpace(org.apache.fop.layoutmgr.KnuthGlue)
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+        org.apache.fop.layoutmgr.KnuthGlue spaceGlue;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        spaceGlue := @parameter0: org.apache.fop.layoutmgr.KnuthGlue;
+        return;
+    }
+
+    public boolean mustKeepTogether()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+        boolean $z0;
+        org.apache.fop.fo.flow.BlockContainer $r0;
+        org.apache.fop.fo.properties.KeepProperty $r1;
+        org.apache.fop.fo.properties.Property $r2;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        $z0 = specialinvoke this.<org.apache.fop.layoutmgr.BlockStackingLayoutManager: boolean mustKeepTogether()>();
+        if $z0 != 0 goto label0;
+
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.KeepProperty getKeepTogether()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.properties.KeepProperty: org.apache.fop.fo.properties.Property getWithinPage()>();
+        $z0 = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: boolean isAuto()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.KeepProperty getKeepTogether()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.properties.KeepProperty: org.apache.fop.fo.properties.Property getWithinColumn()>();
+        $z0 = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: boolean isAuto()>();
+        if $z0 != 0 goto label1;
+
+     label0:
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    public boolean mustKeepWithPrevious()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+        org.apache.fop.fo.flow.BlockContainer $r0;
+        org.apache.fop.fo.properties.KeepProperty $r1;
+        org.apache.fop.fo.properties.Property $r2;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.KeepProperty getKeepWithPrevious()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.properties.KeepProperty: org.apache.fop.fo.properties.Property getWithinPage()>();
+        $z0 = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: boolean isAuto()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.KeepProperty getKeepWithPrevious()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.properties.KeepProperty: org.apache.fop.fo.properties.Property getWithinColumn()>();
+        $z0 = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: boolean isAuto()>();
+        if $z0 != 0 goto label1;
+
+     label0:
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    public boolean mustKeepWithNext()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+        org.apache.fop.fo.flow.BlockContainer $r0;
+        org.apache.fop.fo.properties.KeepProperty $r1;
+        org.apache.fop.fo.properties.Property $r2;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.KeepProperty getKeepWithNext()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.properties.KeepProperty: org.apache.fop.fo.properties.Property getWithinPage()>();
+        $z0 = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: boolean isAuto()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.BlockContainer: org.apache.fop.fo.properties.KeepProperty getKeepWithNext()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.properties.KeepProperty: org.apache.fop.fo.properties.Property getWithinColumn()>();
+        $z0 = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: boolean isAuto()>();
+        if $z0 != 0 goto label1;
+
+     label0:
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    protected org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+        org.apache.fop.fo.FObj $r0;
+        org.apache.fop.fo.flow.BlockContainer $r1;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        $r0 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.FObj fobj>;
+        $r1 = (org.apache.fop.fo.flow.BlockContainer) $r0;
+        return $r1;
+    }
+
+    public boolean getGeneratesReferenceArea()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        return 1;
+    }
+
+    public boolean getGeneratesBlockArea()
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        return 1;
+    }
+
+    public void notifySpace(org.apache.fop.layoutmgr.RelSide, org.apache.fop.traits.MinOptMax)
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+        org.apache.fop.layoutmgr.RelSide side, $r0;
+        org.apache.fop.traits.MinOptMax effectiveLength, $r3;
+        org.apache.commons.logging.Log $r1;
+        boolean $z0;
+        java.lang.StringBuffer $r2;
+        java.lang.String $r4;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        side := @parameter0: org.apache.fop.layoutmgr.RelSide;
+        effectiveLength := @parameter1: org.apache.fop.traits.MinOptMax;
+        $r0 = <org.apache.fop.layoutmgr.RelSide: org.apache.fop.layoutmgr.RelSide BEFORE>;
+        if $r0 != side goto label1;
+
+        $r1 = <org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r1 = <org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(this);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": Space ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(side);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", ");
+        $r3 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.traits.MinOptMax effSpaceBefore>;
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r3);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("-> ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(effectiveLength);
+        $r4 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r4);
+
+     label0:
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.traits.MinOptMax effSpaceBefore> = effectiveLength;
+        goto label3;
+
+     label1:
+        $r1 = <org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label2;
+
+        $r1 = <org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(this);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": Space ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(side);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", ");
+        $r3 = this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.traits.MinOptMax effSpaceAfter>;
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r3);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("-> ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(effectiveLength);
+        $r4 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r4);
+
+     label2:
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.traits.MinOptMax effSpaceAfter> = effectiveLength;
+
+     label3:
+        return;
+    }
+
+    public void notifyBorder(org.apache.fop.layoutmgr.RelSide, org.apache.fop.traits.MinOptMax)
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+        org.apache.fop.layoutmgr.RelSide side, $r0;
+        org.apache.fop.traits.MinOptMax effectiveLength;
+        org.apache.commons.logging.Log $r1;
+        boolean $z0;
+        java.lang.StringBuffer $r2;
+        java.lang.String $r3;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        side := @parameter0: org.apache.fop.layoutmgr.RelSide;
+        effectiveLength := @parameter1: org.apache.fop.traits.MinOptMax;
+        if effectiveLength != null goto label1;
+
+        $r0 = <org.apache.fop.layoutmgr.RelSide: org.apache.fop.layoutmgr.RelSide BEFORE>;
+        if $r0 != side goto label0;
+
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean discardBorderBefore> = 1;
+        goto label1;
+
+     label0:
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean discardBorderAfter> = 1;
+
+     label1:
+        $r1 = <org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label2;
+
+        $r1 = <org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(this);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": Border ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(side);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" -> ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(effectiveLength);
+        $r3 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r3);
+
+     label2:
+        return;
+    }
+
+    public void notifyPadding(org.apache.fop.layoutmgr.RelSide, org.apache.fop.traits.MinOptMax)
+    {
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager this;
+        org.apache.fop.layoutmgr.RelSide side, $r0;
+        org.apache.fop.traits.MinOptMax effectiveLength;
+        org.apache.commons.logging.Log $r1;
+        boolean $z0;
+        java.lang.StringBuffer $r2;
+        java.lang.String $r3;
+
+        this := @this: org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        side := @parameter0: org.apache.fop.layoutmgr.RelSide;
+        effectiveLength := @parameter1: org.apache.fop.traits.MinOptMax;
+        if effectiveLength != null goto label1;
+
+        $r0 = <org.apache.fop.layoutmgr.RelSide: org.apache.fop.layoutmgr.RelSide BEFORE>;
+        if $r0 != side goto label0;
+
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean discardPaddingBefore> = 1;
+        goto label1;
+
+     label0:
+        this.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: boolean discardPaddingAfter> = 1;
+
+     label1:
+        $r1 = <org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label2;
+
+        $r1 = <org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(this);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": Padding ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(side);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" -> ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(effectiveLength);
+        $r3 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r3);
+
+     label2:
+        return;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.layoutmgr.BlockContainerLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$BlockContainerLayoutManager>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.layoutmgr.BlockContainerLayoutManager: java.lang.Class class$(java.lang.String)>("org.apache.fop.layoutmgr.BlockContainerLayoutManager");
+        <org.apache.fop.layoutmgr.BlockContainerLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$BlockContainerLayoutManager> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.layoutmgr.BlockContainerLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$BlockContainerLayoutManager>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

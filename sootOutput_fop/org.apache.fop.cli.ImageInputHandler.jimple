@@ -1,0 +1,68 @@
+public class org.apache.fop.cli.ImageInputHandler extends org.apache.fop.cli.InputHandler
+{
+
+    public void <init>(java.io.File, java.io.File, java.util.Vector)
+    {
+        org.apache.fop.cli.ImageInputHandler this;
+        java.io.File imagefile, xsltfile;
+        java.util.Vector params;
+
+        this := @this: org.apache.fop.cli.ImageInputHandler;
+        imagefile := @parameter0: java.io.File;
+        xsltfile := @parameter1: java.io.File;
+        params := @parameter2: java.util.Vector;
+        specialinvoke this.<org.apache.fop.cli.InputHandler: void <init>(java.io.File,java.io.File,java.util.Vector)>(imagefile, xsltfile, params);
+        return;
+    }
+
+    protected javax.xml.transform.Source createMainSource()
+    {
+        org.apache.fop.cli.ImageInputHandler this;
+        javax.xml.transform.stream.StreamSource $r0;
+        java.io.StringReader $r1;
+        java.lang.StringBuffer $r2;
+        java.io.File $r3;
+        java.net.URI $r4;
+        java.lang.String $r5, $r6;
+
+        this := @this: org.apache.fop.cli.ImageInputHandler;
+        $r0 = new javax.xml.transform.stream.StreamSource;
+        $r1 = new java.io.StringReader;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("<image>");
+        $r3 = this.<org.apache.fop.cli.ImageInputHandler: java.io.File sourcefile>;
+        $r4 = virtualinvoke $r3.<java.io.File: java.net.URI toURI()>();
+        $r5 = virtualinvoke $r4.<java.net.URI: java.lang.String toASCIIString()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("</image>");
+        $r6 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r1.<java.io.StringReader: void <init>(java.lang.String)>($r6);
+        specialinvoke $r0.<javax.xml.transform.stream.StreamSource: void <init>(java.io.Reader)>($r1);
+        return $r0;
+    }
+
+    protected javax.xml.transform.Source createXSLTSource()
+    {
+        org.apache.fop.cli.ImageInputHandler this;
+        javax.xml.transform.Source src;
+        javax.xml.transform.stream.StreamSource $r0;
+        java.lang.Class $r1;
+        java.net.URL $r2;
+        java.lang.String $r3;
+
+        this := @this: org.apache.fop.cli.ImageInputHandler;
+        src = specialinvoke this.<org.apache.fop.cli.InputHandler: javax.xml.transform.Source createXSLTSource()>();
+        if src != null goto label0;
+
+        $r0 = new javax.xml.transform.stream.StreamSource;
+        $r1 = virtualinvoke this.<java.lang.Object: java.lang.Class getClass()>();
+        $r2 = virtualinvoke $r1.<java.lang.Class: java.net.URL getResource(java.lang.String)>("image2fo.xsl");
+        $r3 = virtualinvoke $r2.<java.net.URL: java.lang.String toExternalForm()>();
+        specialinvoke $r0.<javax.xml.transform.stream.StreamSource: void <init>(java.lang.String)>($r3);
+        src = $r0;
+
+     label0:
+        return src;
+    }
+}

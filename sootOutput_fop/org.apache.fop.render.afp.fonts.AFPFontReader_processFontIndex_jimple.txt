@@ -1,0 +1,74 @@
+method: org.apache.fop.render.afp.fonts.AFPFontReader.processFontIndex:1485208978
+1992380236:sfr := @parameter0: org.apache.fop.render.afp.tools.StructuredFieldReader
+222118781:cso := @parameter1: org.apache.fop.render.afp.fonts.CharacterSetOrientation
+823773781:codepage := @parameter2: java.util.HashMap
+338865058:dpi := @parameter3: int
+447376122:$r0 = <org.apache.fop.render.afp.fonts.AFPFontReader: byte[] FONT_INDEX_SF>
+1193887723:data = virtualinvoke sfr.<org.apache.fop.render.afp.tools.StructuredFieldReader: byte[] getNext(byte[])>($r0)
+804664577:fopFactor = 0
+1408183367:lookupswitch(dpi) {     case 100: goto fopFactor = 1;     case 240: goto fopFactor = 300000;     case 300: goto fopFactor = 240000;     default: goto $r1 = new java.lang.StringBuffer; }
+848635108:fopFactor = 1
+1571360429:goto [?= position = 0]
+443147896:fopFactor = 300000
+513400276:goto [?= position = 0]
+1582976932:fopFactor = 240000
+2065877088:goto [?= position = 0]
+680613320:$r1 = new java.lang.StringBuffer
+1489445290:specialinvoke $r1.<java.lang.StringBuffer: void <init>()>()
+14724877:$r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unsupported font resolution of ")
+1613318954:$r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(dpi)
+1672044864:$r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" dpi.")
+186189435:msg = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>()
+402160366:$r2 = <org.apache.fop.render.afp.fonts.AFPFontReader: org.apache.commons.logging.Log log>
+48288739:interfaceinvoke $r2.<org.apache.commons.logging.Log: void error(java.lang.Object)>(msg)
+1987501454:$r3 = new java.io.IOException
+1101158770:specialinvoke $r3.<java.io.IOException: void <init>(java.lang.String)>(msg)
+161377544:throw $r3
+416045941:position = 0
+638319724:gcgid = newarray (byte)[8]
+1538596192:fiData = newarray (byte)[20]
+2021165075:lowest = 255
+939989474:highest = 0
+618085034:index = 3
+557267855:$i0 = lengthof data
+824654418:if index >= $i0 goto virtualinvoke cso.<org.apache.fop.render.afp.fonts.CharacterSetOrientation: void setFirstChar(int)>(lowest)
+456227765:if position >= 8 goto (branch)
+2125532815:$b1 = data[index]
+439553860:gcgid[position] = $b1
+237979340:position = position + 1
+1104216666:goto [?= index = index + 1]
+1473292735:if position >= 27 goto (branch)
+578981801:$i0 = position - 8
+622052163:$b1 = data[index]
+880309945:fiData[$i0] = $b1
+1354401432:position = position + 1
+98209424:goto [?= index = index + 1]
+996665691:if position != 27 goto index = index + 1
+1418897728:$i0 = position - 8
+1991234066:$b1 = data[index]
+285792414:fiData[$i0] = $b1
+12146292:position = 0
+131783179:$r4 = new java.lang.String
+931238098:specialinvoke $r4.<java.lang.String: void <init>(byte[],java.lang.String)>(gcgid, "Cp1146")
+457893750:gcgiString = $r4
+1073402512:$r5 = virtualinvoke codepage.<java.util.HashMap: java.lang.Object get(java.lang.Object)>(gcgiString)
+463423664:idx = (java.lang.String) $r5
+1580036555:if idx == null goto index = index + 1
+847445012:cidx = virtualinvoke idx.<java.lang.String: char charAt(int)>(0)
+719050109:$b2 = fiData[0]
+1936949921:$s3 = $b2 & 255
+756817453:$i4 = $s3 << 8
+895263204:$b5 = fiData[1]
+1417605969:$s6 = $b5 & 255
+1333179090:width = $i4 + $s6
+1810610465:if cidx >= lowest goto (branch)
+1621285120:lowest = cidx
+1004191505:if cidx <= highest goto a = width * fopFactor
+944586282:highest = cidx
+1830473122:a = width * fopFactor
+1906166790:virtualinvoke cso.<org.apache.fop.render.afp.fonts.CharacterSetOrientation: void setWidth(int,int)>(cidx, a)
+784193584:index = index + 1
+834424649:goto [?= $i0 = lengthof data]
+1621613242:virtualinvoke cso.<org.apache.fop.render.afp.fonts.CharacterSetOrientation: void setFirstChar(int)>(lowest)
+423360054:virtualinvoke cso.<org.apache.fop.render.afp.fonts.CharacterSetOrientation: void setLastChar(int)>(highest)
+799105067:return

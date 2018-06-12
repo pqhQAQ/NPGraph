@@ -1,0 +1,1737 @@
+class org.apache.fop.layoutmgr.PageBreakingAlgorithm extends org.apache.fop.layoutmgr.BreakingAlgorithm
+{
+    private static org.apache.commons.logging.Log log;
+    private org.apache.fop.layoutmgr.LayoutManager topLevelLM;
+    private org.apache.fop.layoutmgr.PageProvider pageProvider;
+    private org.apache.fop.layoutmgr.PageBreakingAlgorithm$PageBreakingLayoutListener layoutListener;
+    private java.util.LinkedList pageBreaks;
+    private java.util.ArrayList footnotesList;
+    private java.util.ArrayList lengthList;
+    private int totalFootnotesLength;
+    private int insertedFootnotesLength;
+    private boolean footnotesPending;
+    private boolean newFootnotes;
+    private int firstNewFootnoteIndex;
+    private int footnoteListIndex;
+    private int footnoteElementIndex;
+    private int splitFootnoteDemerits;
+    private int deferredFootnoteDemerits;
+    private org.apache.fop.traits.MinOptMax footnoteSeparatorLength;
+    private int storedPrevBreakIndex;
+    private int storedBreakIndex;
+    private boolean storedValue;
+    private boolean autoHeight;
+    private boolean favorSinglePart;
+    static java.lang.Class class$org$apache$fop$layoutmgr$PageBreakingAlgorithm;
+
+    public void <init>(org.apache.fop.layoutmgr.LayoutManager, org.apache.fop.layoutmgr.PageProvider, org.apache.fop.layoutmgr.PageBreakingAlgorithm$PageBreakingLayoutListener, int, int, org.apache.fop.traits.MinOptMax, boolean, boolean, boolean)
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        org.apache.fop.layoutmgr.LayoutManager topLevelLM;
+        org.apache.fop.layoutmgr.PageProvider pageProvider;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm$PageBreakingLayoutListener layoutListener;
+        int alignment, alignmentLast, $i0, $i1;
+        org.apache.fop.traits.MinOptMax footnoteSeparatorLength, $r2;
+        boolean partOverflowRecovery, autoHeight, favorSinglePart;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm$BestPageRecords $r0;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        topLevelLM := @parameter0: org.apache.fop.layoutmgr.LayoutManager;
+        pageProvider := @parameter1: org.apache.fop.layoutmgr.PageProvider;
+        layoutListener := @parameter2: org.apache.fop.layoutmgr.PageBreakingAlgorithm$PageBreakingLayoutListener;
+        alignment := @parameter3: int;
+        alignmentLast := @parameter4: int;
+        footnoteSeparatorLength := @parameter5: org.apache.fop.traits.MinOptMax;
+        partOverflowRecovery := @parameter6: boolean;
+        autoHeight := @parameter7: boolean;
+        favorSinglePart := @parameter8: boolean;
+        specialinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: void <init>(int,int,boolean,boolean,int)>(alignment, alignmentLast, 1, partOverflowRecovery, 0);
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.LinkedList pageBreaks> = null;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList footnotesList> = null;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList lengthList> = null;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int totalFootnotesLength> = 0;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int insertedFootnotesLength> = 0;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean footnotesPending> = 0;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean newFootnotes> = 0;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int firstNewFootnoteIndex> = 0;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteListIndex> = 0;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteElementIndex> = -1;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int splitFootnoteDemerits> = 5000;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int deferredFootnoteDemerits> = 10000;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.traits.MinOptMax footnoteSeparatorLength> = null;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int storedPrevBreakIndex> = -1;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int storedBreakIndex> = -1;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean storedValue> = 0;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean autoHeight> = 0;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean favorSinglePart> = 0;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.LayoutManager topLevelLM> = topLevelLM;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.PageProvider pageProvider> = pageProvider;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.PageBreakingAlgorithm$PageBreakingLayoutListener layoutListener> = layoutListener;
+        $r0 = new org.apache.fop.layoutmgr.PageBreakingAlgorithm$BestPageRecords;
+        specialinvoke $r0.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$BestPageRecords: void <init>(org.apache.fop.layoutmgr.PageBreakingAlgorithm)>(this);
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords best> = $r0;
+        $r1 = virtualinvoke footnoteSeparatorLength.<org.apache.fop.traits.MinOptMax: java.lang.Object clone()>();
+        $r2 = (org.apache.fop.traits.MinOptMax) $r1;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.traits.MinOptMax footnoteSeparatorLength> = $r2;
+        $i0 = footnoteSeparatorLength.<org.apache.fop.traits.MinOptMax: int min>;
+        $i1 = footnoteSeparatorLength.<org.apache.fop.traits.MinOptMax: int max>;
+        if $i0 != $i1 goto label0;
+
+        $i1 = footnoteSeparatorLength.<org.apache.fop.traits.MinOptMax: int max>;
+        $i1 = $i1 + 10000;
+        footnoteSeparatorLength.<org.apache.fop.traits.MinOptMax: int max> = $i1;
+
+     label0:
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean autoHeight> = autoHeight;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean favorSinglePart> = favorSinglePart;
+        return;
+    }
+
+    protected void initialize()
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        specialinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: void initialize()>();
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int insertedFootnotesLength> = 0;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteListIndex> = 0;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteElementIndex> = -1;
+        return;
+    }
+
+    protected org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode createNode(int, int, int, int, int, int, double, int, int, int, double, org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        int position, line, fitness, totalWidth, totalStretch, totalShrink, availableShrink, availableStretch, difference, $i0, $i1, $i2;
+        double adjustRatio, totalDemerits;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode previous;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode $r0;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        position := @parameter0: int;
+        line := @parameter1: int;
+        fitness := @parameter2: int;
+        totalWidth := @parameter3: int;
+        totalStretch := @parameter4: int;
+        totalShrink := @parameter5: int;
+        adjustRatio := @parameter6: double;
+        availableShrink := @parameter7: int;
+        availableStretch := @parameter8: int;
+        difference := @parameter9: int;
+        totalDemerits := @parameter10: double;
+        previous := @parameter11: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode;
+        $r0 = new org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode;
+        $i0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int insertedFootnotesLength>;
+        $i1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteListIndex>;
+        $i2 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteElementIndex>;
+        specialinvoke $r0.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: void <init>(org.apache.fop.layoutmgr.PageBreakingAlgorithm,int,int,int,int,int,int,int,int,int,double,int,int,int,double,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)>(this, position, line, fitness, totalWidth, totalStretch, totalShrink, $i0, $i1, $i2, adjustRatio, availableShrink, availableStretch, difference, totalDemerits, previous);
+        return $r0;
+    }
+
+    protected org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode createNode(int, int, int, int, int, int)
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        int position, line, fitness, totalWidth, totalStretch, totalShrink, $i0, $i1, $i2, $i3, $i4, $i5;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode $r0;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords $r1, $r3, $r5, $r7, $r8, $r9, $r10, $r11, $r12;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm$BestPageRecords $r2, $r4, $r6;
+        double $d0, $d1;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode $r13;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        position := @parameter0: int;
+        line := @parameter1: int;
+        fitness := @parameter2: int;
+        totalWidth := @parameter3: int;
+        totalStretch := @parameter4: int;
+        totalShrink := @parameter5: int;
+        $r0 = new org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode;
+        $r1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords best>;
+        $r2 = (org.apache.fop.layoutmgr.PageBreakingAlgorithm$BestPageRecords) $r1;
+        $i0 = virtualinvoke $r2.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$BestPageRecords: int getFootnotesLength(int)>(fitness);
+        $r3 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords best>;
+        $r4 = (org.apache.fop.layoutmgr.PageBreakingAlgorithm$BestPageRecords) $r3;
+        $i1 = virtualinvoke $r4.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$BestPageRecords: int getFootnoteListIndex(int)>(fitness);
+        $r5 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords best>;
+        $r6 = (org.apache.fop.layoutmgr.PageBreakingAlgorithm$BestPageRecords) $r5;
+        $i2 = virtualinvoke $r6.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$BestPageRecords: int getFootnoteElementIndex(int)>(fitness);
+        $r7 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords best>;
+        $d0 = virtualinvoke $r7.<org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords: double getAdjust(int)>(fitness);
+        $r8 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords best>;
+        $i3 = virtualinvoke $r8.<org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords: int getAvailableShrink(int)>(fitness);
+        $r9 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords best>;
+        $i4 = virtualinvoke $r9.<org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords: int getAvailableStretch(int)>(fitness);
+        $r10 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords best>;
+        $i5 = virtualinvoke $r10.<org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords: int getDifference(int)>(fitness);
+        $r11 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords best>;
+        $d1 = virtualinvoke $r11.<org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords: double getDemerits(int)>(fitness);
+        $r12 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords best>;
+        $r13 = virtualinvoke $r12.<org.apache.fop.layoutmgr.BreakingAlgorithm$BestRecords: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode getNode(int)>(fitness);
+        specialinvoke $r0.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: void <init>(org.apache.fop.layoutmgr.PageBreakingAlgorithm,int,int,int,int,int,int,int,int,int,double,int,int,int,double,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)>(this, position, line, fitness, totalWidth, totalStretch, totalShrink, $i0, $i1, $i2, $d0, $i3, $i4, $i5, $d1, $r13);
+        return $r0;
+    }
+
+    protected void handleBox(org.apache.fop.layoutmgr.KnuthBox)
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        org.apache.fop.layoutmgr.KnuthBox box;
+        boolean $z0;
+        org.apache.fop.layoutmgr.KnuthBlockBox $r0, $r1;
+        java.util.LinkedList $r2;
+        java.util.ArrayList $r3;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        box := @parameter0: org.apache.fop.layoutmgr.KnuthBox;
+        $z0 = box instanceof org.apache.fop.layoutmgr.KnuthBlockBox;
+        if $z0 == 0 goto label0;
+
+        $r0 = (org.apache.fop.layoutmgr.KnuthBlockBox) box;
+        $z0 = virtualinvoke $r0.<org.apache.fop.layoutmgr.KnuthBlockBox: boolean hasAnchors()>();
+        if $z0 == 0 goto label0;
+
+        $r1 = (org.apache.fop.layoutmgr.KnuthBlockBox) box;
+        $r2 = virtualinvoke $r1.<org.apache.fop.layoutmgr.KnuthBlockBox: java.util.LinkedList getElementLists()>();
+        specialinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: void handleFootnotes(java.util.LinkedList)>($r2);
+        $z0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean newFootnotes>;
+        if $z0 != 0 goto label0;
+
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean newFootnotes> = 1;
+        $r3 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList footnotesList>;
+        $i0 = virtualinvoke $r3.<java.util.ArrayList: int size()>();
+        $i0 = $i0 - 1;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int firstNewFootnoteIndex> = $i0;
+
+     label0:
+        return;
+    }
+
+    private void handleFootnotes(java.util.LinkedList)
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        java.util.LinkedList elementLists, noteList;
+        java.util.ListIterator elementListsIterator, noteListIterator;
+        int noteLength, prevLength, $i0, $i1, $i2;
+        org.apache.fop.layoutmgr.KnuthElement element;
+        boolean $z0;
+        java.util.ArrayList $r0, $r2;
+        java.lang.Object $r1;
+        java.lang.Integer $r3, $r4;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        elementLists := @parameter0: java.util.LinkedList;
+        $z0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean footnotesPending>;
+        if $z0 != 0 goto label0;
+
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean footnotesPending> = 1;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList footnotesList> = $r0;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList lengthList> = $r0;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int totalFootnotesLength> = 0;
+
+     label0:
+        $z0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean newFootnotes>;
+        if $z0 != 0 goto label1;
+
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean newFootnotes> = 1;
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList footnotesList>;
+        $i0 = virtualinvoke $r0.<java.util.ArrayList: int size()>();
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int firstNewFootnoteIndex> = $i0;
+
+     label1:
+        elementListsIterator = virtualinvoke elementLists.<java.util.LinkedList: java.util.ListIterator listIterator()>();
+
+     label2:
+        $z0 = interfaceinvoke elementListsIterator.<java.util.ListIterator: boolean hasNext()>();
+        if $z0 == 0 goto label9;
+
+        $r1 = interfaceinvoke elementListsIterator.<java.util.ListIterator: java.lang.Object next()>();
+        noteList = (java.util.LinkedList) $r1;
+        staticinvoke <org.apache.fop.layoutmgr.SpaceResolver: void resolveElementList(java.util.LinkedList)>(noteList);
+        noteLength = 0;
+        $r2 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList footnotesList>;
+        virtualinvoke $r2.<java.util.ArrayList: boolean add(java.lang.Object)>(noteList);
+        noteListIterator = virtualinvoke noteList.<java.util.LinkedList: java.util.ListIterator listIterator()>();
+
+     label3:
+        $z0 = interfaceinvoke noteListIterator.<java.util.ListIterator: boolean hasNext()>();
+        if $z0 == 0 goto label6;
+
+        $r1 = interfaceinvoke noteListIterator.<java.util.ListIterator: java.lang.Object next()>();
+        element = (org.apache.fop.layoutmgr.KnuthElement) $r1;
+        $z0 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: boolean isBox()>();
+        if $z0 != 0 goto label4;
+
+        $z0 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: boolean isGlue()>();
+        if $z0 == 0 goto label5;
+
+     label4:
+        $i0 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: int getW()>();
+        noteLength = noteLength + $i0;
+
+     label5:
+        goto label3;
+
+     label6:
+        $r2 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList lengthList>;
+        $i1 = virtualinvoke $r2.<java.util.ArrayList: int size()>();
+        if $i1 != 0 goto label7;
+
+        $i1 = 0;
+        goto label8;
+
+     label7:
+        $r2 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList lengthList>;
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList lengthList>;
+        $i0 = virtualinvoke $r0.<java.util.ArrayList: int size()>();
+        $i0 = $i0 - 1;
+        $r1 = virtualinvoke $r2.<java.util.ArrayList: java.lang.Object get(int)>($i0);
+        $r3 = (java.lang.Integer) $r1;
+        $i1 = virtualinvoke $r3.<java.lang.Integer: int intValue()>();
+
+     label8:
+        prevLength = $i1;
+        $r2 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList lengthList>;
+        $r4 = new java.lang.Integer;
+        $i2 = prevLength + noteLength;
+        specialinvoke $r4.<java.lang.Integer: void <init>(int)>($i2);
+        virtualinvoke $r2.<java.util.ArrayList: boolean add(java.lang.Object)>($r4);
+        $i0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int totalFootnotesLength>;
+        $i0 = $i0 + noteLength;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int totalFootnotesLength> = $i0;
+        goto label2;
+
+     label9:
+        return;
+    }
+
+    protected int restartFrom(org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode, int)
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode restartingNode;
+        int currentIndex, returnValue, j, $i0;
+        org.apache.fop.layoutmgr.KnuthElement resettedElement;
+        boolean $z0;
+        org.apache.fop.layoutmgr.KnuthBlockBox $r0, $r1;
+        java.util.LinkedList $r2;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        restartingNode := @parameter0: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode;
+        currentIndex := @parameter1: int;
+        returnValue = specialinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int restartFrom(org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode,int)>(restartingNode, currentIndex);
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean newFootnotes> = 0;
+        $z0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean footnotesPending>;
+        if $z0 == 0 goto label2;
+
+        j = currentIndex;
+
+     label0:
+        $i0 = restartingNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int position>;
+        if j < $i0 goto label2;
+
+        resettedElement = virtualinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.KnuthElement getElement(int)>(j);
+        $z0 = resettedElement instanceof org.apache.fop.layoutmgr.KnuthBlockBox;
+        if $z0 == 0 goto label1;
+
+        $r0 = (org.apache.fop.layoutmgr.KnuthBlockBox) resettedElement;
+        $z0 = virtualinvoke $r0.<org.apache.fop.layoutmgr.KnuthBlockBox: boolean hasAnchors()>();
+        if $z0 == 0 goto label1;
+
+        $r1 = (org.apache.fop.layoutmgr.KnuthBlockBox) resettedElement;
+        $r2 = virtualinvoke $r1.<org.apache.fop.layoutmgr.KnuthBlockBox: java.util.LinkedList getElementLists()>();
+        specialinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: void resetFootnotes(java.util.LinkedList)>($r2);
+
+     label1:
+        j = j + -1;
+        goto label0;
+
+     label2:
+        return returnValue;
+    }
+
+    private void resetFootnotes(java.util.LinkedList)
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        java.util.LinkedList elementLists, removedList;
+        int i, $i0, $i1, $i2;
+        java.util.ArrayList $r0, $r1, $r3;
+        java.lang.Object $r2, $r4;
+        java.lang.Integer $r5;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        elementLists := @parameter0: java.util.LinkedList;
+        i = 0;
+
+     label0:
+        $i0 = virtualinvoke elementLists.<java.util.LinkedList: int size()>();
+        if i >= $i0 goto label3;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList footnotesList>;
+        $r1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList footnotesList>;
+        $i0 = virtualinvoke $r1.<java.util.ArrayList: int size()>();
+        $i0 = $i0 - 1;
+        $r2 = virtualinvoke $r0.<java.util.ArrayList: java.lang.Object remove(int)>($i0);
+        removedList = (java.util.LinkedList) $r2;
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList lengthList>;
+        $r1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList lengthList>;
+        $i0 = virtualinvoke $r1.<java.util.ArrayList: int size()>();
+        $i0 = $i0 - 1;
+        virtualinvoke $r0.<java.util.ArrayList: java.lang.Object remove(int)>($i0);
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList lengthList>;
+        $i1 = virtualinvoke $r0.<java.util.ArrayList: int size()>();
+        if $i1 <= 0 goto label1;
+
+        $r1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList lengthList>;
+        $r3 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList lengthList>;
+        $i2 = virtualinvoke $r3.<java.util.ArrayList: int size()>();
+        $i2 = $i2 - 1;
+        $r4 = virtualinvoke $r1.<java.util.ArrayList: java.lang.Object get(int)>($i2);
+        $r5 = (java.lang.Integer) $r4;
+        $i0 = virtualinvoke $r5.<java.lang.Integer: int intValue()>();
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int totalFootnotesLength> = $i0;
+        goto label2;
+
+     label1:
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int totalFootnotesLength> = 0;
+
+     label2:
+        i = i + 1;
+        goto label0;
+
+     label3:
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList footnotesList>;
+        $i1 = virtualinvoke $r0.<java.util.ArrayList: int size()>();
+        if $i1 != 0 goto label4;
+
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean footnotesPending> = 0;
+
+     label4:
+        return;
+    }
+
+    protected void considerLegalBreak(org.apache.fop.layoutmgr.KnuthElement, int)
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        org.apache.fop.layoutmgr.KnuthElement element;
+        int elementIdx;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        element := @parameter0: org.apache.fop.layoutmgr.KnuthElement;
+        elementIdx := @parameter1: int;
+        specialinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: void considerLegalBreak(org.apache.fop.layoutmgr.KnuthElement,int)>(element, elementIdx);
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean newFootnotes> = 0;
+        return;
+    }
+
+    protected int computeDifference(org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode, org.apache.fop.layoutmgr.KnuthElement, int)
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode activeNode;
+        org.apache.fop.layoutmgr.KnuthElement element;
+        int elementIndex, actualWidth, allFootnotes, footnoteSplit, diff, $i0, $i1, $i2;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode pageNode;
+        boolean canDeferOldFootnotes, $z0;
+        org.apache.fop.traits.MinOptMax $r0;
+        java.util.ArrayList $r1;
+        java.lang.Object $r2;
+        java.util.LinkedList $r3;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        activeNode := @parameter0: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode;
+        element := @parameter1: org.apache.fop.layoutmgr.KnuthElement;
+        elementIndex := @parameter2: int;
+        pageNode = (org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode) activeNode;
+        $i0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int totalWidth>;
+        $i1 = pageNode.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int totalWidth>;
+        actualWidth = $i0 - $i1;
+        $z0 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: boolean isPenalty()>();
+        if $z0 == 0 goto label0;
+
+        $i1 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: int getW()>();
+        actualWidth = actualWidth + $i1;
+
+     label0:
+        $z0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean footnotesPending>;
+        if $z0 == 0 goto label4;
+
+        $i0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int totalFootnotesLength>;
+        $i1 = pageNode.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int totalFootnotes>;
+        allFootnotes = $i0 - $i1;
+        if allFootnotes <= 0 goto label4;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.traits.MinOptMax footnoteSeparatorLength>;
+        $i1 = $r0.<org.apache.fop.traits.MinOptMax: int opt>;
+        actualWidth = actualWidth + $i1;
+        $i0 = actualWidth + allFootnotes;
+        $i1 = virtualinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int getLineWidth()>();
+        if $i0 > $i1 goto label1;
+
+        actualWidth = actualWidth + allFootnotes;
+        $i1 = pageNode.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int totalFootnotes>;
+        $i1 = $i1 + allFootnotes;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int insertedFootnotesLength> = $i1;
+        $r1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList footnotesList>;
+        $i1 = virtualinvoke $r1.<java.util.ArrayList: int size()>();
+        $i1 = $i1 - 1;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteListIndex> = $i1;
+        $r1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList footnotesList>;
+        $i2 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteListIndex>;
+        $r2 = virtualinvoke $r1.<java.util.ArrayList: java.lang.Object get(int)>($i2);
+        $r3 = (java.util.LinkedList) $r2;
+        $i1 = virtualinvoke $r3.<java.util.LinkedList: int size()>();
+        $i1 = $i1 - 1;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteElementIndex> = $i1;
+        goto label4;
+
+     label1:
+        $z0 = specialinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean checkCanDeferOldFootnotes(org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode,int)>(pageNode, elementIndex);
+        canDeferOldFootnotes = $z0;
+        if $z0 != 0 goto label2;
+
+        $z0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean newFootnotes>;
+        if $z0 == 0 goto label3;
+
+     label2:
+        $i2 = virtualinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int getLineWidth()>();
+        $i2 = $i2 - actualWidth;
+        $i0 = specialinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int getFootnoteSplit(org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode,int,boolean)>(pageNode, $i2, canDeferOldFootnotes);
+        footnoteSplit = $i0;
+        if $i0 <= 0 goto label3;
+
+        actualWidth = actualWidth + footnoteSplit;
+        $i1 = pageNode.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int totalFootnotes>;
+        $i1 = $i1 + footnoteSplit;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int insertedFootnotesLength> = $i1;
+        goto label4;
+
+     label3:
+        actualWidth = actualWidth + allFootnotes;
+        $i1 = pageNode.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int totalFootnotes>;
+        $i1 = $i1 + allFootnotes;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int insertedFootnotesLength> = $i1;
+        $r1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList footnotesList>;
+        $i1 = virtualinvoke $r1.<java.util.ArrayList: int size()>();
+        $i1 = $i1 - 1;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteListIndex> = $i1;
+        $r1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList footnotesList>;
+        $i2 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteListIndex>;
+        $r2 = virtualinvoke $r1.<java.util.ArrayList: java.lang.Object get(int)>($i2);
+        $r3 = (java.util.LinkedList) $r2;
+        $i1 = virtualinvoke $r3.<java.util.LinkedList: int size()>();
+        $i1 = $i1 - 1;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteElementIndex> = $i1;
+
+     label4:
+        $i1 = activeNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int line>;
+        $i0 = virtualinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int getLineWidth(int)>($i1);
+        diff = $i0 - actualWidth;
+        $z0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean autoHeight>;
+        if $z0 == 0 goto label5;
+
+        if diff >= 0 goto label5;
+
+        return 0;
+
+     label5:
+        return diff;
+    }
+
+    private boolean checkCanDeferOldFootnotes(org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode, int)
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode node;
+        int contentElementIndex, $i0, $i1, $i2;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        node := @parameter0: org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode;
+        contentElementIndex := @parameter1: int;
+        $i0 = node.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int position>;
+        $z0 = specialinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean noBreakBetween(int,int)>($i0, contentElementIndex);
+        if $z0 == 0 goto label0;
+
+        $i0 = node.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int footnoteListIndex>;
+        $i1 = node.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int footnoteElementIndex>;
+        $i2 = node.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int totalFootnotes>;
+        $z0 = specialinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean deferredFootnotes(int,int,int)>($i0, $i1, $i2);
+        if $z0 == 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    private boolean noBreakBetween(int, int)
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        int prevBreakIndex, breakIndex, index, $i0, $i1;
+        boolean $z0, $z1;
+        org.apache.fop.layoutmgr.KnuthSequence $r0;
+        org.apache.fop.layoutmgr.ListElement $r1;
+        org.apache.fop.layoutmgr.KnuthElement $r2;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        prevBreakIndex := @parameter0: int;
+        breakIndex := @parameter1: int;
+        $i0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int storedPrevBreakIndex>;
+        if $i0 == -1 goto label1;
+
+        $i1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int storedPrevBreakIndex>;
+        if prevBreakIndex < $i1 goto label0;
+
+        $i1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int storedBreakIndex>;
+        if breakIndex != $i1 goto label0;
+
+        $z0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean storedValue>;
+        if $z0 != 0 goto label9;
+
+     label0:
+        $i1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int storedPrevBreakIndex>;
+        if prevBreakIndex > $i1 goto label1;
+
+        $i1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int storedBreakIndex>;
+        if breakIndex < $i1 goto label1;
+
+        $z0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean storedValue>;
+        if $z0 != 0 goto label1;
+
+        goto label9;
+
+     label1:
+        index = prevBreakIndex + 1;
+
+     label2:
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.KnuthSequence par>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.layoutmgr.KnuthSequence: org.apache.fop.layoutmgr.ListElement getElement(int)>(index);
+        $z0 = virtualinvoke $r1.<org.apache.fop.layoutmgr.ListElement: boolean isBox()>();
+        if $z0 != 0 goto label3;
+
+        index = index + 1;
+        goto label2;
+
+     label3:
+        if index >= breakIndex goto label6;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.KnuthSequence par>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.layoutmgr.KnuthSequence: org.apache.fop.layoutmgr.ListElement getElement(int)>(index);
+        $z0 = virtualinvoke $r1.<org.apache.fop.layoutmgr.ListElement: boolean isGlue()>();
+        if $z0 == 0 goto label4;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.KnuthSequence par>;
+        $i1 = index - 1;
+        $r1 = virtualinvoke $r0.<org.apache.fop.layoutmgr.KnuthSequence: org.apache.fop.layoutmgr.ListElement getElement(int)>($i1);
+        $z0 = virtualinvoke $r1.<org.apache.fop.layoutmgr.ListElement: boolean isBox()>();
+        if $z0 != 0 goto label6;
+
+     label4:
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.KnuthSequence par>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.layoutmgr.KnuthSequence: org.apache.fop.layoutmgr.ListElement getElement(int)>(index);
+        $z0 = virtualinvoke $r1.<org.apache.fop.layoutmgr.ListElement: boolean isPenalty()>();
+        if $z0 == 0 goto label5;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.KnuthSequence par>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.layoutmgr.KnuthSequence: org.apache.fop.layoutmgr.ListElement getElement(int)>(index);
+        $r2 = (org.apache.fop.layoutmgr.KnuthElement) $r1;
+        $i0 = virtualinvoke $r2.<org.apache.fop.layoutmgr.KnuthElement: int getP()>();
+        if $i0 >= 1000 goto label5;
+
+        goto label6;
+
+     label5:
+        index = index + 1;
+        goto label3;
+
+     label6:
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int storedPrevBreakIndex> = prevBreakIndex;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int storedBreakIndex> = breakIndex;
+        if index != breakIndex goto label7;
+
+        $z1 = 1;
+        goto label8;
+
+     label7:
+        $z1 = 0;
+
+     label8:
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean storedValue> = $z1;
+
+     label9:
+        $z0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean storedValue>;
+        return $z0;
+    }
+
+    private boolean deferredFootnotes(int, int, int)
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        int listIndex, elementIndex, length, $i0, $i1;
+        boolean $z0;
+        java.util.ArrayList $r0;
+        java.lang.Object $r1;
+        java.util.LinkedList $r2;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        listIndex := @parameter0: int;
+        elementIndex := @parameter1: int;
+        length := @parameter2: int;
+        $z0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean newFootnotes>;
+        if $z0 == 0 goto label0;
+
+        $i0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int firstNewFootnoteIndex>;
+        if $i0 == 0 goto label0;
+
+        $i1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int firstNewFootnoteIndex>;
+        $i1 = $i1 - 1;
+        if listIndex < $i1 goto label1;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList footnotesList>;
+        $r1 = virtualinvoke $r0.<java.util.ArrayList: java.lang.Object get(int)>(listIndex);
+        $r2 = (java.util.LinkedList) $r1;
+        $i1 = virtualinvoke $r2.<java.util.LinkedList: int size()>();
+        $i1 = $i1 - 1;
+        if elementIndex < $i1 goto label1;
+
+     label0:
+        $i1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int totalFootnotesLength>;
+        if length >= $i1 goto label2;
+
+     label1:
+        $z0 = 1;
+        goto label3;
+
+     label2:
+        $z0 = 0;
+
+     label3:
+        return $z0;
+    }
+
+    private int getFootnoteSplit(org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode, int, boolean)
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode activeNode;
+        int availableLength, $i0, $i1, $i2, $i3;
+        boolean canDeferOldFootnotes;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        activeNode := @parameter0: org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode;
+        availableLength := @parameter1: int;
+        canDeferOldFootnotes := @parameter2: boolean;
+        $i0 = activeNode.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int footnoteListIndex>;
+        $i1 = activeNode.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int footnoteElementIndex>;
+        $i2 = activeNode.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int totalFootnotes>;
+        $i3 = specialinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int getFootnoteSplit(int,int,int,int,boolean)>($i0, $i1, $i2, availableLength, canDeferOldFootnotes);
+        return $i3;
+    }
+
+    private int getFootnoteSplit(int, int, int, int, boolean)
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        int prevListIndex, prevElementIndex, prevLength, availableLength, splitLength, listIndex, elementIndex, prevSplitLength, prevIndex, index, $i0, $i1, $i2;
+        boolean canDeferOldFootnotes, somethingAdded, bPrevIsBox, $z0;
+        null_type noteListIterator, element;
+        java.util.ArrayList $r0, $r3;
+        java.lang.Object $r1, $r4;
+        java.util.LinkedList $r2, $r6;
+        java.lang.Integer $r5;
+        java.util.ListIterator noteListIterator;
+        org.apache.fop.layoutmgr.KnuthElement element;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        prevListIndex := @parameter0: int;
+        prevElementIndex := @parameter1: int;
+        prevLength := @parameter2: int;
+        availableLength := @parameter3: int;
+        canDeferOldFootnotes := @parameter4: boolean;
+        if availableLength > 0 goto label0;
+
+        return 0;
+
+     label0:
+        splitLength = 0;
+        noteListIterator = null;
+        element = null;
+        somethingAdded = 0;
+        listIndex = prevListIndex;
+        elementIndex = prevElementIndex;
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList footnotesList>;
+        $r1 = virtualinvoke $r0.<java.util.ArrayList: java.lang.Object get(int)>(listIndex);
+        $r2 = (java.util.LinkedList) $r1;
+        $i0 = virtualinvoke $r2.<java.util.LinkedList: int size()>();
+        $i0 = $i0 - 1;
+        if elementIndex != $i0 goto label1;
+
+        listIndex = listIndex + 1;
+        elementIndex = 0;
+        goto label2;
+
+     label1:
+        elementIndex = elementIndex + 1;
+
+     label2:
+        $r3 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList footnotesList>;
+        $i1 = virtualinvoke $r3.<java.util.ArrayList: int size()>();
+        $i1 = $i1 - 1;
+        if $i1 <= listIndex goto label4;
+
+        if canDeferOldFootnotes != 0 goto label3;
+
+        $z0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean newFootnotes>;
+        if $z0 == 0 goto label3;
+
+        $i1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int firstNewFootnoteIndex>;
+        if $i1 <= 0 goto label3;
+
+        $r3 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList lengthList>;
+        $i0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int firstNewFootnoteIndex>;
+        $i0 = $i0 - 1;
+        $r4 = virtualinvoke $r3.<java.util.ArrayList: java.lang.Object get(int)>($i0);
+        $r5 = (java.lang.Integer) $r4;
+        $i1 = virtualinvoke $r5.<java.lang.Integer: int intValue()>();
+        splitLength = $i1 - prevLength;
+        listIndex = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int firstNewFootnoteIndex>;
+        elementIndex = 0;
+
+     label3:
+        $r3 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList lengthList>;
+        $r4 = virtualinvoke $r3.<java.util.ArrayList: java.lang.Object get(int)>(listIndex);
+        $r5 = (java.lang.Integer) $r4;
+        $i1 = virtualinvoke $r5.<java.lang.Integer: int intValue()>();
+        $i1 = $i1 - prevLength;
+        if $i1 > availableLength goto label4;
+
+        $r3 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList lengthList>;
+        $r4 = virtualinvoke $r3.<java.util.ArrayList: java.lang.Object get(int)>(listIndex);
+        $r5 = (java.lang.Integer) $r4;
+        $i1 = virtualinvoke $r5.<java.lang.Integer: int intValue()>();
+        splitLength = $i1 - prevLength;
+        somethingAdded = 1;
+        listIndex = listIndex + 1;
+        elementIndex = 0;
+        goto label3;
+
+     label4:
+        $r3 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList footnotesList>;
+        $r4 = virtualinvoke $r3.<java.util.ArrayList: java.lang.Object get(int)>(listIndex);
+        $r6 = (java.util.LinkedList) $r4;
+        noteListIterator = virtualinvoke $r6.<java.util.LinkedList: java.util.ListIterator listIterator(int)>(elementIndex);
+        prevSplitLength = 0;
+        prevIndex = -1;
+        index = -1;
+
+     label5:
+        if somethingAdded == 0 goto label6;
+
+        if splitLength > availableLength goto label14;
+
+     label6:
+        if somethingAdded != 0 goto label7;
+
+        somethingAdded = 1;
+        goto label8;
+
+     label7:
+        prevSplitLength = splitLength;
+        prevIndex = index;
+
+     label8:
+        bPrevIsBox = 0;
+
+     label9:
+        $z0 = interfaceinvoke noteListIterator.<java.util.ListIterator: boolean hasNext()>();
+        if $z0 == 0 goto label13;
+
+        $r4 = interfaceinvoke noteListIterator.<java.util.ListIterator: java.lang.Object next()>();
+        element = (org.apache.fop.layoutmgr.KnuthElement) $r4;
+        $z0 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: boolean isBox()>();
+        if $z0 == 0 goto label10;
+
+        $i0 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: int getW()>();
+        splitLength = splitLength + $i0;
+        bPrevIsBox = 1;
+        goto label9;
+
+     label10:
+        $z0 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: boolean isGlue()>();
+        if $z0 == 0 goto label12;
+
+        if bPrevIsBox == 0 goto label11;
+
+        index = interfaceinvoke noteListIterator.<java.util.ListIterator: int previousIndex()>();
+        goto label13;
+
+     label11:
+        bPrevIsBox = 0;
+        $i0 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: int getW()>();
+        splitLength = splitLength + $i0;
+        goto label9;
+
+     label12:
+        $i1 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: int getP()>();
+        if $i1 >= 1000 goto label9;
+
+        index = interfaceinvoke noteListIterator.<java.util.ListIterator: int previousIndex()>();
+        goto label13;
+
+     label13:
+        goto label5;
+
+     label14:
+        if somethingAdded != 0 goto label15;
+
+        prevSplitLength = 0;
+        goto label20;
+
+     label15:
+        if prevSplitLength <= 0 goto label20;
+
+        if prevIndex == -1 goto label16;
+
+        $i0 = listIndex;
+        goto label17;
+
+     label16:
+        $i0 = listIndex - 1;
+
+     label17:
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteListIndex> = $i0;
+        if prevIndex == -1 goto label18;
+
+        $i0 = prevIndex;
+        goto label19;
+
+     label18:
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList footnotesList>;
+        $i2 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteListIndex>;
+        $r1 = virtualinvoke $r0.<java.util.ArrayList: java.lang.Object get(int)>($i2);
+        $r2 = (java.util.LinkedList) $r1;
+        $i0 = virtualinvoke $r2.<java.util.LinkedList: int size()>();
+        $i0 = $i0 - 1;
+
+     label19:
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteElementIndex> = $i0;
+
+     label20:
+        return prevSplitLength;
+    }
+
+    protected double computeAdjustmentRatio(org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode, int)
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode activeNode;
+        int difference, maxAdjustment, $i0, $i1, $i2;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode $r0;
+        org.apache.fop.traits.MinOptMax $r1, $r2;
+        double $d0, $d1;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        activeNode := @parameter0: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode;
+        difference := @parameter1: int;
+        if difference <= 0 goto label2;
+
+        $i0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int totalStretch>;
+        $i1 = activeNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int totalStretch>;
+        maxAdjustment = $i0 - $i1;
+        $r0 = (org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode) activeNode;
+        $i0 = $r0.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int totalFootnotes>;
+        $i1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int totalFootnotesLength>;
+        if $i0 >= $i1 goto label0;
+
+        $r1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.traits.MinOptMax footnoteSeparatorLength>;
+        $i1 = $r1.<org.apache.fop.traits.MinOptMax: int max>;
+        $r2 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.traits.MinOptMax footnoteSeparatorLength>;
+        $i2 = $r2.<org.apache.fop.traits.MinOptMax: int opt>;
+        $i1 = $i1 - $i2;
+        maxAdjustment = maxAdjustment + $i1;
+
+     label0:
+        if maxAdjustment <= 0 goto label1;
+
+        $d0 = (double) difference;
+        $d1 = (double) maxAdjustment;
+        $d0 = $d0 / $d1;
+        return $d0;
+
+     label1:
+        return 1000.0;
+
+     label2:
+        if difference >= 0 goto label5;
+
+        $i0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int totalShrink>;
+        $i1 = activeNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int totalShrink>;
+        maxAdjustment = $i0 - $i1;
+        $r0 = (org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode) activeNode;
+        $i0 = $r0.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int totalFootnotes>;
+        $i1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int totalFootnotesLength>;
+        if $i0 >= $i1 goto label3;
+
+        $r1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.traits.MinOptMax footnoteSeparatorLength>;
+        $i1 = $r1.<org.apache.fop.traits.MinOptMax: int opt>;
+        $r2 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.traits.MinOptMax footnoteSeparatorLength>;
+        $i2 = $r2.<org.apache.fop.traits.MinOptMax: int min>;
+        $i1 = $i1 - $i2;
+        maxAdjustment = maxAdjustment + $i1;
+
+     label3:
+        if maxAdjustment <= 0 goto label4;
+
+        $d0 = (double) difference;
+        $d1 = (double) maxAdjustment;
+        $d0 = $d0 / $d1;
+        return $d0;
+
+     label4:
+        return -1000.0;
+
+     label5:
+        return 0.0;
+    }
+
+    protected double computeDemerits(org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode, org.apache.fop.layoutmgr.KnuthElement, int, double)
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode activeNode;
+        org.apache.fop.layoutmgr.KnuthElement element, $r1;
+        int fitnessClass, $i0, $i1, $i2, $i3;
+        double r, demerits, f, penalty, $d0, $d1;
+        boolean $z0;
+        org.apache.fop.layoutmgr.KnuthPenalty $r0;
+        java.util.ArrayList $r2, $r3;
+        java.lang.Object $r4;
+        java.util.LinkedList $r5;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        activeNode := @parameter0: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode;
+        element := @parameter1: org.apache.fop.layoutmgr.KnuthElement;
+        fitnessClass := @parameter2: int;
+        r := @parameter3: double;
+        demerits = 0.0;
+        f = staticinvoke <java.lang.Math: double abs(double)>(r);
+        $d0 = 100.0 * f;
+        $d0 = $d0 * f;
+        $d0 = $d0 * f;
+        f = 1.0 + $d0;
+        $z0 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: boolean isPenalty()>();
+        if $z0 == 0 goto label0;
+
+        $i0 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: int getP()>();
+        if $i0 < 0 goto label0;
+
+        $i1 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: int getP()>();
+        $d0 = (double) $i1;
+        f = f + $d0;
+        demerits = f * f;
+        goto label2;
+
+     label0:
+        $z0 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: boolean isPenalty()>();
+        if $z0 == 0 goto label1;
+
+        $z0 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: boolean isForcedBreak()>();
+        if $z0 != 0 goto label1;
+
+        $i0 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: int getP()>();
+        penalty = (double) $i0;
+        $d1 = f * f;
+        $d0 = penalty * penalty;
+        demerits = $d1 - $d0;
+        goto label2;
+
+     label1:
+        demerits = f * f;
+
+     label2:
+        $z0 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: boolean isPenalty()>();
+        if $z0 == 0 goto label3;
+
+        $r0 = (org.apache.fop.layoutmgr.KnuthPenalty) element;
+        $z0 = virtualinvoke $r0.<org.apache.fop.layoutmgr.KnuthPenalty: boolean isFlagged()>();
+        if $z0 == 0 goto label3;
+
+        $i2 = activeNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int position>;
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.KnuthElement getElement(int)>($i2);
+        $z0 = virtualinvoke $r1.<org.apache.fop.layoutmgr.KnuthElement: boolean isPenalty()>();
+        if $z0 == 0 goto label3;
+
+        $i2 = activeNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int position>;
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.KnuthElement getElement(int)>($i2);
+        $r0 = (org.apache.fop.layoutmgr.KnuthPenalty) $r1;
+        $z0 = virtualinvoke $r0.<org.apache.fop.layoutmgr.KnuthPenalty: boolean isFlagged()>();
+        if $z0 == 0 goto label3;
+
+        $i1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int repeatedFlaggedDemerit>;
+        $d0 = (double) $i1;
+        demerits = demerits + $d0;
+
+     label3:
+        $i2 = activeNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int fitness>;
+        $i0 = fitnessClass - $i2;
+        $i0 = staticinvoke <java.lang.Math: int abs(int)>($i0);
+        if $i0 <= 1 goto label4;
+
+        $i1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int incompatibleFitnessDemerit>;
+        $d0 = (double) $i1;
+        demerits = demerits + $d0;
+
+     label4:
+        $z0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean footnotesPending>;
+        if $z0 == 0 goto label6;
+
+        $i0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteListIndex>;
+        $r2 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList footnotesList>;
+        $i2 = virtualinvoke $r2.<java.util.ArrayList: int size()>();
+        $i2 = $i2 - 1;
+        if $i0 >= $i2 goto label5;
+
+        $r3 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList footnotesList>;
+        $i1 = virtualinvoke $r3.<java.util.ArrayList: int size()>();
+        $i1 = $i1 - 1;
+        $i3 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteListIndex>;
+        $i1 = $i1 - $i3;
+        $i3 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int deferredFootnoteDemerits>;
+        $i1 = $i1 * $i3;
+        $d0 = (double) $i1;
+        demerits = demerits + $d0;
+
+     label5:
+        $i0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteListIndex>;
+        $r2 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList footnotesList>;
+        $i2 = virtualinvoke $r2.<java.util.ArrayList: int size()>();
+        if $i0 >= $i2 goto label6;
+
+        $i0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteElementIndex>;
+        $r2 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList footnotesList>;
+        $i1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteListIndex>;
+        $r4 = virtualinvoke $r2.<java.util.ArrayList: java.lang.Object get(int)>($i1);
+        $r5 = (java.util.LinkedList) $r4;
+        $i2 = virtualinvoke $r5.<java.util.LinkedList: int size()>();
+        $i2 = $i2 - 1;
+        if $i0 >= $i2 goto label6;
+
+        $i1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int splitFootnoteDemerits>;
+        $d0 = (double) $i1;
+        demerits = demerits + $d0;
+
+     label6:
+        $d0 = activeNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: double totalDemerits>;
+        demerits = demerits + $d0;
+        return demerits;
+    }
+
+    protected void finish()
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        int i, $i0, $i1;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode node;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode $r0;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        i = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int startLine>;
+
+     label0:
+        $i0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int endLine>;
+        if i >= $i0 goto label4;
+
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode getNode(int)>(i);
+        node = (org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode) $r0;
+
+     label1:
+        if node == null goto label3;
+
+        $i1 = node.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int totalFootnotes>;
+        $i0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int totalFootnotesLength>;
+        if $i1 >= $i0 goto label2;
+
+        specialinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: void createFootnotePages(org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode)>(node);
+
+     label2:
+        $r0 = node.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode next>;
+        node = (org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode) $r0;
+        goto label1;
+
+     label3:
+        i = i + 1;
+        goto label0;
+
+     label4:
+        return;
+    }
+
+    private void createFootnotePages(org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode)
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode lastNode, prevNode, node;
+        int availableBPD, $i0, $i1, $i2, $i3, split, $i4, $i5;
+        boolean split;
+        java.util.ArrayList $r0, $r3;
+        java.lang.Object $r1, $r4;
+        java.lang.Integer $r2, $r5;
+        java.util.LinkedList $r6;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode $r8;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        lastNode := @parameter0: org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode;
+        $i0 = lastNode.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int totalFootnotes>;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int insertedFootnotesLength> = $i0;
+        $i0 = lastNode.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int footnoteListIndex>;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteListIndex> = $i0;
+        $i0 = lastNode.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int footnoteElementIndex>;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteElementIndex> = $i0;
+        availableBPD = virtualinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int getLineWidth()>();
+        split = 0;
+        prevNode = lastNode;
+
+     label0:
+        $i1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int insertedFootnotesLength>;
+        $i0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int totalFootnotesLength>;
+        if $i1 >= $i0 goto label3;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList lengthList>;
+        $i0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteListIndex>;
+        $r1 = virtualinvoke $r0.<java.util.ArrayList: java.lang.Object get(int)>($i0);
+        $r2 = (java.lang.Integer) $r1;
+        $i1 = virtualinvoke $r2.<java.lang.Integer: int intValue()>();
+        $i0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int insertedFootnotesLength>;
+        $i1 = $i1 - $i0;
+        if $i1 > availableBPD goto label1;
+
+        $r3 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList lengthList>;
+        $i2 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteListIndex>;
+        $r4 = virtualinvoke $r3.<java.util.ArrayList: java.lang.Object get(int)>($i2);
+        $r5 = (java.lang.Integer) $r4;
+        $i0 = virtualinvoke $r5.<java.lang.Integer: int intValue()>();
+        $i2 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int insertedFootnotesLength>;
+        $i0 = $i0 - $i2;
+        availableBPD = availableBPD - $i0;
+        $r3 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList lengthList>;
+        $i2 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteListIndex>;
+        $r4 = virtualinvoke $r3.<java.util.ArrayList: java.lang.Object get(int)>($i2);
+        $r5 = (java.lang.Integer) $r4;
+        $i0 = virtualinvoke $r5.<java.lang.Integer: int intValue()>();
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int insertedFootnotesLength> = $i0;
+        $r3 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList footnotesList>;
+        $i2 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteListIndex>;
+        $r4 = virtualinvoke $r3.<java.util.ArrayList: java.lang.Object get(int)>($i2);
+        $r6 = (java.util.LinkedList) $r4;
+        $i0 = virtualinvoke $r6.<java.util.LinkedList: int size()>();
+        $i0 = $i0 - 1;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteElementIndex> = $i0;
+        goto label0;
+
+     label1:
+        $i0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteListIndex>;
+        $i2 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteElementIndex>;
+        $i3 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int insertedFootnotesLength>;
+        $i1 = specialinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int getFootnoteSplit(int,int,int,int,boolean)>($i0, $i2, $i3, availableBPD, 1);
+        split = $i1;
+        if $i1 <= 0 goto label2;
+
+        availableBPD = availableBPD - split;
+        $i0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int insertedFootnotesLength>;
+        $i0 = $i0 + split;
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int insertedFootnotesLength> = $i0;
+        goto label0;
+
+     label2:
+        $i0 = lastNode.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int position>;
+        $i2 = prevNode.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int line>;
+        $i2 = $i2 + 1;
+        $i4 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int insertedFootnotesLength>;
+        $i5 = prevNode.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int totalFootnotes>;
+        $i4 = $i4 - $i5;
+        $r8 = virtualinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode createNode(int,int,int,int,int,int,double,int,int,int,double,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)>($i0, $i2, 1, $i4, 0, 0, 0.0, 0, 0, 0, 0.0, prevNode);
+        node = (org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode) $r8;
+        $i0 = node.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int line>;
+        virtualinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: void addNode(int,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)>($i0, node);
+        $i0 = prevNode.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int line>;
+        virtualinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: void removeNode(int,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)>($i0, prevNode);
+        prevNode = node;
+        availableBPD = virtualinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int getLineWidth()>();
+        goto label0;
+
+     label3:
+        $i0 = lastNode.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int position>;
+        $i2 = prevNode.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int line>;
+        $i2 = $i2 + 1;
+        $i4 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int totalFootnotesLength>;
+        $i5 = prevNode.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int totalFootnotes>;
+        $i4 = $i4 - $i5;
+        $r8 = virtualinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode createNode(int,int,int,int,int,int,double,int,int,int,double,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)>($i0, $i2, 1, $i4, 0, 0, 0.0, 0, 0, 0, 0.0, prevNode);
+        node = (org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode) $r8;
+        $i0 = node.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int line>;
+        virtualinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: void addNode(int,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)>($i0, node);
+        $i0 = prevNode.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int line>;
+        virtualinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: void removeNode(int,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)>($i0, prevNode);
+        return;
+    }
+
+    public java.util.LinkedList getPageBreaks()
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        java.util.LinkedList $r0;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.LinkedList pageBreaks>;
+        return $r0;
+    }
+
+    public void insertPageBreakAsFirst(org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition)
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition pageBreak;
+        java.util.LinkedList $r0, $r1;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        pageBreak := @parameter0: org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition;
+        $r1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.LinkedList pageBreaks>;
+        if $r1 != null goto label0;
+
+        $r0 = new java.util.LinkedList;
+        specialinvoke $r0.<java.util.LinkedList: void <init>()>();
+        this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.LinkedList pageBreaks> = $r0;
+
+     label0:
+        $r1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.LinkedList pageBreaks>;
+        virtualinvoke $r1.<java.util.LinkedList: void addFirst(java.lang.Object)>(pageBreak);
+        return;
+    }
+
+    public void removeAllPageBreaks()
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        java.util.LinkedList $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.LinkedList pageBreaks>;
+        if $r0 != null goto label0;
+
+        return;
+
+     label0:
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.LinkedList pageBreaks>;
+        $i0 = virtualinvoke $r0.<java.util.LinkedList: int size()>();
+        if $i0 <= 1 goto label1;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.LinkedList pageBreaks>;
+        virtualinvoke $r0.<java.util.LinkedList: java.lang.Object removeFirst()>();
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    private int getPartCount()
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        java.util.LinkedList $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.LinkedList pageBreaks>;
+        if $r0 != null goto label0;
+
+        return 0;
+
+     label0:
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.LinkedList pageBreaks>;
+        $i0 = virtualinvoke $r0.<java.util.LinkedList: int size()>();
+        return $i0;
+    }
+
+    public void updateData1(int, double)
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        int total;
+        double demerits;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        total := @parameter0: int;
+        demerits := @parameter1: double;
+        return;
+    }
+
+    public void updateData2(org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode, org.apache.fop.layoutmgr.KnuthSequence, int)
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode bestActiveNode, $r5;
+        org.apache.fop.layoutmgr.KnuthSequence sequence;
+        int total, difference, blockAlignment, firstListIndex, firstElementIndex, $i0, $i1, $i2, $i4, $i5, $i6;
+        boolean isNonLastPage, $z0;
+        double ratio;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm$PageBreakingLayoutListener $r0;
+        org.apache.fop.fo.FObj $r1;
+        org.apache.commons.logging.Log $r2;
+        java.lang.StringBuffer $r3;
+        java.lang.String $r4;
+        byte $b3;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode $r6, $r13, $r14;
+        java.util.ArrayList $r7, $r8;
+        java.lang.Object $r9;
+        java.util.LinkedList $r10;
+        org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition $r11;
+        org.apache.fop.layoutmgr.LayoutManager $r12;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        bestActiveNode := @parameter0: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode;
+        sequence := @parameter1: org.apache.fop.layoutmgr.KnuthSequence;
+        total := @parameter2: int;
+        difference = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int difference>;
+        $i0 = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int availableShrink>;
+        $i1 = difference + $i0;
+        if $i1 >= 0 goto label1;
+
+        $z0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean autoHeight>;
+        if $z0 != 0 goto label1;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.PageBreakingAlgorithm$PageBreakingLayoutListener layoutListener>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.PageBreakingAlgorithm$PageBreakingLayoutListener layoutListener>;
+        $i0 = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int line>;
+        $i0 = $i0 - 1;
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.fo.FObj getFObj()>();
+        interfaceinvoke $r0.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$PageBreakingLayoutListener: void notifyOverflow(int,org.apache.fop.fo.FObj)>($i0, $r1);
+        goto label1;
+
+     label0:
+        $r2 = <org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r2.<org.apache.commons.logging.Log: boolean isWarnEnabled()>();
+        if $z0 == 0 goto label1;
+
+        $r2 = <org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Part/page ");
+        $i2 = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int line>;
+        $i2 = $i2 - 1;
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i2);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" overflows the available area in block-progression dimension.");
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.fo.FObj getFObj()>();
+        $r4 = staticinvoke <org.apache.fop.fo.FONode: java.lang.String decorateWithContextInfo(java.lang.String,org.apache.fop.fo.FONode)>($r4, $r1);
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r4);
+
+     label1:
+        $i1 = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int line>;
+        if $i1 >= total goto label2;
+
+        $z0 = 1;
+        goto label3;
+
+     label2:
+        $z0 = 0;
+
+     label3:
+        isNonLastPage = $z0;
+        if isNonLastPage == 0 goto label4;
+
+        $i1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int alignment>;
+        goto label5;
+
+     label4:
+        $i1 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int alignmentLast>;
+
+     label5:
+        blockAlignment = $i1;
+        ratio = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: double adjustRatio>;
+        $b3 = ratio cmpg 0.0;
+        if $b3 >= 0 goto label6;
+
+        difference = 0;
+        goto label10;
+
+     label6:
+        $b3 = ratio cmpg 1.0;
+        if $b3 > 0 goto label7;
+
+        if isNonLastPage == 0 goto label7;
+
+        difference = 0;
+        goto label10;
+
+     label7:
+        $b3 = ratio cmpl 1.0;
+        if $b3 <= 0 goto label8;
+
+        ratio = 1.0;
+        $i0 = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int availableStretch>;
+        difference = difference - $i0;
+        goto label10;
+
+     label8:
+        if blockAlignment == 70 goto label9;
+
+        ratio = 0.0;
+        goto label10;
+
+     label9:
+        difference = 0;
+
+     label10:
+        $r5 = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode previous>;
+        $r6 = (org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode) $r5;
+        firstListIndex = $r6.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int footnoteListIndex>;
+        $r5 = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode previous>;
+        $r6 = (org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode) $r5;
+        firstElementIndex = $r6.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int footnoteElementIndex>;
+        $r7 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList footnotesList>;
+        if $r7 == null goto label11;
+
+        $r8 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList footnotesList>;
+        $r9 = virtualinvoke $r8.<java.util.ArrayList: java.lang.Object get(int)>(firstListIndex);
+        $r10 = (java.util.LinkedList) $r9;
+        $i0 = virtualinvoke $r10.<java.util.LinkedList: int size()>();
+        $i0 = $i0 - 1;
+        if firstElementIndex != $i0 goto label11;
+
+        firstListIndex = firstListIndex + 1;
+        firstElementIndex = 0;
+        goto label12;
+
+     label11:
+        firstElementIndex = firstElementIndex + 1;
+
+     label12:
+        $r2 = <org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r2.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label13;
+
+        $r2 = <org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("BBA> difference=");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(difference);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ratio=");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(double)>(ratio);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" position=");
+        $i2 = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int position>;
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i2);
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r4);
+
+     label13:
+        $r11 = new org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition;
+        $r12 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.LayoutManager topLevelLM>;
+        $i4 = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int position>;
+        $r13 = (org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode) bestActiveNode;
+        $i5 = $r13.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int footnoteListIndex>;
+        $r14 = (org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode) bestActiveNode;
+        $i6 = $r14.<org.apache.fop.layoutmgr.PageBreakingAlgorithm$KnuthPageNode: int footnoteElementIndex>;
+        specialinvoke $r11.<org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition: void <init>(org.apache.fop.layoutmgr.LayoutManager,int,int,int,int,int,double,int)>($r12, $i4, firstListIndex, firstElementIndex, $i5, $i6, ratio, difference);
+        virtualinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: void insertPageBreakAsFirst(org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition)>($r11);
+        return;
+    }
+
+    protected int filterActiveNodes()
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode bestActiveNode, node;
+        int i, $i0, $i1;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        bestActiveNode = null;
+        i = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int startLine>;
+
+     label0:
+        $i0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int endLine>;
+        if i >= $i0 goto label6;
+
+        node = virtualinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode getNode(int)>(i);
+
+     label1:
+        if node == null goto label5;
+
+        $z0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: boolean favorSinglePart>;
+        if $z0 == 0 goto label2;
+
+        $i1 = node.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int line>;
+        if $i1 <= 1 goto label2;
+
+        if bestActiveNode == null goto label2;
+
+        $i1 = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int difference>;
+        $i1 = staticinvoke <java.lang.Math: int abs(int)>($i1);
+        $i0 = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int availableShrink>;
+        if $i1 >= $i0 goto label2;
+
+        goto label3;
+
+     label2:
+        bestActiveNode = virtualinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode compareNodes(org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)>(bestActiveNode, node);
+
+     label3:
+        if node == bestActiveNode goto label4;
+
+        virtualinvoke this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: void removeNode(int,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)>(i, node);
+
+     label4:
+        node = node.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode next>;
+        goto label1;
+
+     label5:
+        i = i + 1;
+        goto label0;
+
+     label6:
+        $i1 = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int line>;
+        return $i1;
+    }
+
+    public java.util.LinkedList getFootnoteList(int)
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        int index;
+        java.util.ArrayList $r0;
+        java.lang.Object $r1;
+        java.util.LinkedList $r2;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        index := @parameter0: int;
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.ArrayList footnotesList>;
+        $r1 = virtualinvoke $r0.<java.util.ArrayList: java.lang.Object get(int)>(index);
+        $r2 = (java.util.LinkedList) $r1;
+        return $r2;
+    }
+
+    public org.apache.fop.fo.FObj getFObj()
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        org.apache.fop.layoutmgr.LayoutManager $r0;
+        org.apache.fop.fo.FObj $r1;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.LayoutManager topLevelLM>;
+        $r1 = interfaceinvoke $r0.<org.apache.fop.layoutmgr.LayoutManager: org.apache.fop.fo.FObj getFObj()>();
+        return $r1;
+    }
+
+    protected int getLineWidth(int)
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm this;
+        int line, bpd;
+        org.apache.fop.layoutmgr.PageProvider $r0;
+        org.apache.commons.logging.Log $r1;
+        boolean $z0;
+        java.lang.StringBuffer $r2;
+        java.lang.String $r3;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        line := @parameter0: int;
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.PageProvider pageProvider>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.fop.layoutmgr.PageProvider pageProvider>;
+        bpd = virtualinvoke $r0.<org.apache.fop.layoutmgr.PageProvider: int getAvailableBPD(int)>(line);
+        goto label1;
+
+     label0:
+        bpd = specialinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int getLineWidth(int)>(line);
+
+     label1:
+        $r1 = <org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label2;
+
+        $r1 = <org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("getLineWidth(");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(line);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(") -> ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(bpd);
+        $r3 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r3);
+
+     label2:
+        return bpd;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static int access$000(org.apache.fop.layoutmgr.PageBreakingAlgorithm)
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm x0;
+        int $i0;
+
+        x0 := @parameter0: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        $i0 = x0.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int insertedFootnotesLength>;
+        return $i0;
+    }
+
+    static int access$100(org.apache.fop.layoutmgr.PageBreakingAlgorithm)
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm x0;
+        int $i0;
+
+        x0 := @parameter0: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        $i0 = x0.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteListIndex>;
+        return $i0;
+    }
+
+    static int access$200(org.apache.fop.layoutmgr.PageBreakingAlgorithm)
+    {
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm x0;
+        int $i0;
+
+        x0 := @parameter0: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        $i0 = x0.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int footnoteElementIndex>;
+        return $i0;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.lang.Class class$org$apache$fop$layoutmgr$PageBreakingAlgorithm>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.lang.Class class$(java.lang.String)>("org.apache.fop.layoutmgr.PageBreakingAlgorithm");
+        <org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.lang.Class class$org$apache$fop$layoutmgr$PageBreakingAlgorithm> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.lang.Class class$org$apache$fop$layoutmgr$PageBreakingAlgorithm>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.layoutmgr.PageBreakingAlgorithm: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

@@ -1,0 +1,72 @@
+public class org.apache.fop.util.DataURIResolver extends java.lang.Object implements javax.xml.transform.URIResolver
+{
+
+    public void <init>()
+    {
+        org.apache.fop.util.DataURIResolver this;
+
+        this := @this: org.apache.fop.util.DataURIResolver;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public javax.xml.transform.Source resolve(java.lang.String, java.lang.String) throws javax.xml.transform.TransformerException
+    {
+        org.apache.fop.util.DataURIResolver this;
+        java.lang.String href, base;
+        boolean $z0;
+        javax.xml.transform.Source $r0;
+
+        this := @this: org.apache.fop.util.DataURIResolver;
+        href := @parameter0: java.lang.String;
+        base := @parameter1: java.lang.String;
+        $z0 = virtualinvoke href.<java.lang.String: boolean startsWith(java.lang.String)>("data:");
+        if $z0 == 0 goto label0;
+
+        $r0 = specialinvoke this.<org.apache.fop.util.DataURIResolver: javax.xml.transform.Source parseDataURI(java.lang.String)>(href);
+        return $r0;
+
+     label0:
+        return null;
+    }
+
+    private javax.xml.transform.Source parseDataURI(java.lang.String)
+    {
+        org.apache.fop.util.DataURIResolver this;
+        java.lang.String href, header, data;
+        int commaPos, $i0;
+        byte[] bytes;
+        java.io.ByteArrayInputStream encodedStream, $r0;
+        org.apache.xmlgraphics.util.io.Base64DecodeStream decodedStream, $r1;
+        boolean $z0;
+        javax.xml.transform.stream.StreamSource $r2;
+        java.io.StringReader $r3;
+
+        this := @this: org.apache.fop.util.DataURIResolver;
+        href := @parameter0: java.lang.String;
+        commaPos = virtualinvoke href.<java.lang.String: int indexOf(int)>(44);
+        header = virtualinvoke href.<java.lang.String: java.lang.String substring(int,int)>(0, commaPos);
+        $i0 = commaPos + 1;
+        data = virtualinvoke href.<java.lang.String: java.lang.String substring(int)>($i0);
+        $z0 = virtualinvoke header.<java.lang.String: boolean endsWith(java.lang.String)>(";base64");
+        if $z0 == 0 goto label0;
+
+        bytes = virtualinvoke data.<java.lang.String: byte[] getBytes()>();
+        $r0 = new java.io.ByteArrayInputStream;
+        specialinvoke $r0.<java.io.ByteArrayInputStream: void <init>(byte[])>(bytes);
+        encodedStream = $r0;
+        $r1 = new org.apache.xmlgraphics.util.io.Base64DecodeStream;
+        specialinvoke $r1.<org.apache.xmlgraphics.util.io.Base64DecodeStream: void <init>(java.io.InputStream)>(encodedStream);
+        decodedStream = $r1;
+        $r2 = new javax.xml.transform.stream.StreamSource;
+        specialinvoke $r2.<javax.xml.transform.stream.StreamSource: void <init>(java.io.InputStream)>(decodedStream);
+        return $r2;
+
+     label0:
+        $r2 = new javax.xml.transform.stream.StreamSource;
+        $r3 = new java.io.StringReader;
+        specialinvoke $r3.<java.io.StringReader: void <init>(java.lang.String)>(data);
+        specialinvoke $r2.<javax.xml.transform.stream.StreamSource: void <init>(java.io.Reader)>($r3);
+        return $r2;
+    }
+}

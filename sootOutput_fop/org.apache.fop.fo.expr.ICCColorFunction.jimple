@@ -1,0 +1,168 @@
+class org.apache.fop.fo.expr.ICCColorFunction extends org.apache.fop.fo.expr.FunctionBase
+{
+
+    void <init>()
+    {
+        org.apache.fop.fo.expr.ICCColorFunction this;
+
+        this := @this: org.apache.fop.fo.expr.ICCColorFunction;
+        specialinvoke this.<org.apache.fop.fo.expr.FunctionBase: void <init>()>();
+        return;
+    }
+
+    public int nbArgs()
+    {
+        org.apache.fop.fo.expr.ICCColorFunction this;
+
+        this := @this: org.apache.fop.fo.expr.ICCColorFunction;
+        return -4;
+    }
+
+    public org.apache.fop.datatypes.PercentBase getPercentBase()
+    {
+        org.apache.fop.fo.expr.ICCColorFunction this;
+        org.apache.fop.fo.expr.ICCColorFunction$ICCPercentBase $r0;
+
+        this := @this: org.apache.fop.fo.expr.ICCColorFunction;
+        $r0 = new org.apache.fop.fo.expr.ICCColorFunction$ICCPercentBase;
+        specialinvoke $r0.<org.apache.fop.fo.expr.ICCColorFunction$ICCPercentBase: void <init>(org.apache.fop.fo.expr.ICCColorFunction$1)>(null);
+        return $r0;
+    }
+
+    public org.apache.fop.fo.properties.Property eval(org.apache.fop.fo.properties.Property[], org.apache.fop.fo.expr.PropertyInfo) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.expr.ICCColorFunction this;
+        org.apache.fop.fo.properties.Property[] args, rgbArgs;
+        org.apache.fop.fo.expr.PropertyInfo pInfo;
+        java.lang.String colorProfileName, src, $r6, $r11;
+        org.apache.fop.fo.pagination.Declarations decls;
+        null_type cp;
+        org.apache.fop.fo.expr.PropertyException pe, $r4;
+        float red, green, blue, $f0;
+        java.lang.StringBuffer sb, $r5, $r8;
+        int ix, $i1;
+        org.apache.fop.fo.properties.Property $r0, $r9;
+        org.apache.fop.fo.FObj $r1;
+        org.apache.fop.fo.pagination.Root $r2;
+        org.apache.fop.fo.expr.RGBColorFunction $r3;
+        org.apache.fop.fo.pagination.ColorProfile cp;
+        java.lang.Number $r7;
+        byte $b0;
+        org.apache.fop.apps.FOUserAgent $r10;
+        org.apache.fop.fo.properties.ColorProperty $r12;
+
+        this := @this: org.apache.fop.fo.expr.ICCColorFunction;
+        args := @parameter0: org.apache.fop.fo.properties.Property[];
+        pInfo := @parameter1: org.apache.fop.fo.expr.PropertyInfo;
+        $r0 = args[3];
+        colorProfileName = virtualinvoke $r0.<org.apache.fop.fo.properties.Property: java.lang.String getString()>();
+        $r1 = virtualinvoke pInfo.<org.apache.fop.fo.expr.PropertyInfo: org.apache.fop.fo.FObj getFO()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.FObj: org.apache.fop.fo.pagination.Root getRoot()>();
+        decls = virtualinvoke $r2.<org.apache.fop.fo.pagination.Root: org.apache.fop.fo.pagination.Declarations getDeclarations()>();
+        cp = null;
+        if decls != null goto label0;
+
+        rgbArgs = newarray (org.apache.fop.fo.properties.Property)[3];
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>(args, 0, rgbArgs, 0, 3);
+        $r3 = new org.apache.fop.fo.expr.RGBColorFunction;
+        specialinvoke $r3.<org.apache.fop.fo.expr.RGBColorFunction: void <init>()>();
+        $r0 = virtualinvoke $r3.<org.apache.fop.fo.expr.RGBColorFunction: org.apache.fop.fo.properties.Property eval(org.apache.fop.fo.properties.Property[],org.apache.fop.fo.expr.PropertyInfo)>(rgbArgs, pInfo);
+        return $r0;
+
+     label0:
+        cp = virtualinvoke decls.<org.apache.fop.fo.pagination.Declarations: org.apache.fop.fo.pagination.ColorProfile getColorProfile(java.lang.String)>(colorProfileName);
+        if cp != null goto label1;
+
+        $r4 = new org.apache.fop.fo.expr.PropertyException;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("The ");
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(colorProfileName);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" color profile was not declared");
+        $r6 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r4.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>($r6);
+        pe = $r4;
+        virtualinvoke pe.<org.apache.fop.fo.expr.PropertyException: void setPropertyInfo(org.apache.fop.fo.expr.PropertyInfo)>(pInfo);
+        throw pe;
+
+     label1:
+        src = virtualinvoke cp.<org.apache.fop.fo.pagination.ColorProfile: java.lang.String getSrc()>();
+        red = 0.0F;
+        green = 0.0F;
+        blue = 0.0F;
+        $r0 = args[0];
+        $r7 = virtualinvoke $r0.<org.apache.fop.fo.properties.Property: java.lang.Number getNumber()>();
+        red = virtualinvoke $r7.<java.lang.Number: float floatValue()>();
+        $r0 = args[1];
+        $r7 = virtualinvoke $r0.<org.apache.fop.fo.properties.Property: java.lang.Number getNumber()>();
+        green = virtualinvoke $r7.<java.lang.Number: float floatValue()>();
+        $r0 = args[2];
+        $r7 = virtualinvoke $r0.<org.apache.fop.fo.properties.Property: java.lang.Number getNumber()>();
+        blue = virtualinvoke $r7.<java.lang.Number: float floatValue()>();
+        $b0 = red cmpg 0.0F;
+        if $b0 < 0 goto label2;
+
+        $b0 = red cmpl 255.0F;
+        if $b0 > 0 goto label2;
+
+        $b0 = green cmpg 0.0F;
+        if $b0 < 0 goto label2;
+
+        $b0 = green cmpl 255.0F;
+        if $b0 > 0 goto label2;
+
+        $b0 = blue cmpg 0.0F;
+        if $b0 < 0 goto label2;
+
+        $b0 = blue cmpl 255.0F;
+        if $b0 <= 0 goto label3;
+
+     label2:
+        $r4 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r4.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>("Color values out of range. Arguments to rgb-icc() must be [0..255] or [0%..100%]");
+        throw $r4;
+
+     label3:
+        $r8 = new java.lang.StringBuffer;
+        specialinvoke $r8.<java.lang.StringBuffer: void <init>()>();
+        sb = $r8;
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("fop-rgb-icc(");
+        $f0 = red / 255.0F;
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(float)>($f0);
+        $r8 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(44);
+        $f0 = green / 255.0F;
+        virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(float)>($f0);
+        $r8 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(44);
+        $f0 = blue / 255.0F;
+        virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(float)>($f0);
+        ix = 3;
+
+     label4:
+        $i1 = lengthof args;
+        if ix >= $i1 goto label7;
+
+        if ix != 3 goto label5;
+
+        $r8 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(44);
+        virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(colorProfileName);
+        $r8 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(44);
+        virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(src);
+        goto label6;
+
+     label5:
+        $r8 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(44);
+        $r9 = args[ix];
+        virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r9);
+
+     label6:
+        ix = ix + 1;
+        goto label4;
+
+     label7:
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(")");
+        $r10 = virtualinvoke pInfo.<org.apache.fop.fo.expr.PropertyInfo: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        $r11 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r12 = staticinvoke <org.apache.fop.fo.properties.ColorProperty: org.apache.fop.fo.properties.ColorProperty getInstance(org.apache.fop.apps.FOUserAgent,java.lang.String)>($r10, $r11);
+        return $r12;
+    }
+}

@@ -1,0 +1,364 @@
+public class org.apache.fop.render.afp.fonts.CharacterSet extends java.lang.Object
+{
+    protected static final org.apache.commons.logging.Log log;
+    protected java.lang.String codePage;
+    protected java.lang.String encoding;
+    protected java.lang.String name;
+    private byte[] nameBytes;
+    protected java.lang.String path;
+    private boolean isMetricsLoaded;
+    private java.lang.String currentOrientation;
+    private java.util.Map characterSetOrientations;
+    static java.lang.Class class$org$apache$fop$render$afp$fonts$CharacterSet;
+
+    public void <init>(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+    {
+        org.apache.fop.render.afp.fonts.CharacterSet this;
+        java.lang.String codePage, encoding, name, path, msg, $r3;
+        java.io.UnsupportedEncodingException usee, $r6;
+        int $i0;
+        java.lang.StringBuffer $r0, $r2;
+        org.apache.commons.logging.Log $r1;
+        java.lang.IllegalArgumentException $r4;
+        byte[] $r5;
+        java.util.HashMap $r7;
+
+        this := @this: org.apache.fop.render.afp.fonts.CharacterSet;
+        codePage := @parameter0: java.lang.String;
+        encoding := @parameter1: java.lang.String;
+        name := @parameter2: java.lang.String;
+        path := @parameter3: java.lang.String;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.render.afp.fonts.CharacterSet: boolean isMetricsLoaded> = 0;
+        this.<org.apache.fop.render.afp.fonts.CharacterSet: java.lang.String currentOrientation> = "0";
+        this.<org.apache.fop.render.afp.fonts.CharacterSet: java.util.Map characterSetOrientations> = null;
+        $i0 = virtualinvoke name.<java.lang.String: int length()>();
+        if $i0 <= 8 goto label0;
+
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Character set name must be a maximum of 8 characters ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(name);
+        msg = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r1 = <org.apache.fop.render.afp.fonts.CharacterSet: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Constructor:: ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(msg);
+        $r3 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r3);
+        $r4 = new java.lang.IllegalArgumentException;
+        specialinvoke $r4.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>(msg);
+        throw $r4;
+
+     label0:
+        $i0 = virtualinvoke name.<java.lang.String: int length()>();
+        if $i0 >= 8 goto label1;
+
+        $r3 = staticinvoke <org.apache.fop.render.afp.tools.StringUtils: java.lang.String rpad(java.lang.String,char,int)>(name, 32, 8);
+        this.<org.apache.fop.render.afp.fonts.CharacterSet: java.lang.String name> = $r3;
+        goto label2;
+
+     label1:
+        this.<org.apache.fop.render.afp.fonts.CharacterSet: java.lang.String name> = name;
+
+     label2:
+        $r5 = virtualinvoke name.<java.lang.String: byte[] getBytes(java.lang.String)>("Cp1146");
+        this.<org.apache.fop.render.afp.fonts.CharacterSet: byte[] nameBytes> = $r5;
+
+     label3:
+        goto label5;
+
+     label4:
+        $r6 := @caughtexception;
+        usee = $r6;
+        $r5 = virtualinvoke name.<java.lang.String: byte[] getBytes()>();
+        this.<org.apache.fop.render.afp.fonts.CharacterSet: byte[] nameBytes> = $r5;
+        $r1 = <org.apache.fop.render.afp.fonts.CharacterSet: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Constructor:: UnsupportedEncodingException translating the name ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(name);
+        $r3 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r3);
+
+     label5:
+        this.<org.apache.fop.render.afp.fonts.CharacterSet: java.lang.String codePage> = codePage;
+        this.<org.apache.fop.render.afp.fonts.CharacterSet: java.lang.String encoding> = encoding;
+        this.<org.apache.fop.render.afp.fonts.CharacterSet: java.lang.String path> = path;
+        $r7 = new java.util.HashMap;
+        specialinvoke $r7.<java.util.HashMap: void <init>(int)>(4);
+        this.<org.apache.fop.render.afp.fonts.CharacterSet: java.util.Map characterSetOrientations> = $r7;
+        return;
+
+        catch java.io.UnsupportedEncodingException from label2 to label3 with label4;
+    }
+
+    public void addCharacterSetOrientation(org.apache.fop.render.afp.fonts.CharacterSetOrientation)
+    {
+        org.apache.fop.render.afp.fonts.CharacterSet this;
+        org.apache.fop.render.afp.fonts.CharacterSetOrientation cso;
+        java.util.Map $r0;
+        int $i0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.render.afp.fonts.CharacterSet;
+        cso := @parameter0: org.apache.fop.render.afp.fonts.CharacterSetOrientation;
+        $r0 = this.<org.apache.fop.render.afp.fonts.CharacterSet: java.util.Map characterSetOrientations>;
+        $i0 = virtualinvoke cso.<org.apache.fop.render.afp.fonts.CharacterSetOrientation: int getOrientation()>();
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>($i0);
+        interfaceinvoke $r0.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r1, cso);
+        return;
+    }
+
+    public int getAscender()
+    {
+        org.apache.fop.render.afp.fonts.CharacterSet this;
+        org.apache.fop.render.afp.fonts.CharacterSetOrientation $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.render.afp.fonts.CharacterSet;
+        specialinvoke this.<org.apache.fop.render.afp.fonts.CharacterSet: void load()>();
+        $r0 = specialinvoke this.<org.apache.fop.render.afp.fonts.CharacterSet: org.apache.fop.render.afp.fonts.CharacterSetOrientation getCharacterSetOrientation()>();
+        $i0 = virtualinvoke $r0.<org.apache.fop.render.afp.fonts.CharacterSetOrientation: int getAscender()>();
+        return $i0;
+    }
+
+    public int getCapHeight()
+    {
+        org.apache.fop.render.afp.fonts.CharacterSet this;
+        org.apache.fop.render.afp.fonts.CharacterSetOrientation $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.render.afp.fonts.CharacterSet;
+        specialinvoke this.<org.apache.fop.render.afp.fonts.CharacterSet: void load()>();
+        $r0 = specialinvoke this.<org.apache.fop.render.afp.fonts.CharacterSet: org.apache.fop.render.afp.fonts.CharacterSetOrientation getCharacterSetOrientation()>();
+        $i0 = virtualinvoke $r0.<org.apache.fop.render.afp.fonts.CharacterSetOrientation: int getCapHeight()>();
+        return $i0;
+    }
+
+    public int getDescender()
+    {
+        org.apache.fop.render.afp.fonts.CharacterSet this;
+        org.apache.fop.render.afp.fonts.CharacterSetOrientation $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.render.afp.fonts.CharacterSet;
+        specialinvoke this.<org.apache.fop.render.afp.fonts.CharacterSet: void load()>();
+        $r0 = specialinvoke this.<org.apache.fop.render.afp.fonts.CharacterSet: org.apache.fop.render.afp.fonts.CharacterSetOrientation getCharacterSetOrientation()>();
+        $i0 = virtualinvoke $r0.<org.apache.fop.render.afp.fonts.CharacterSetOrientation: int getDescender()>();
+        return $i0;
+    }
+
+    public int getFirstChar()
+    {
+        org.apache.fop.render.afp.fonts.CharacterSet this;
+        org.apache.fop.render.afp.fonts.CharacterSetOrientation $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.render.afp.fonts.CharacterSet;
+        specialinvoke this.<org.apache.fop.render.afp.fonts.CharacterSet: void load()>();
+        $r0 = specialinvoke this.<org.apache.fop.render.afp.fonts.CharacterSet: org.apache.fop.render.afp.fonts.CharacterSetOrientation getCharacterSetOrientation()>();
+        $i0 = virtualinvoke $r0.<org.apache.fop.render.afp.fonts.CharacterSetOrientation: int getFirstChar()>();
+        return $i0;
+    }
+
+    public int getLastChar()
+    {
+        org.apache.fop.render.afp.fonts.CharacterSet this;
+        org.apache.fop.render.afp.fonts.CharacterSetOrientation $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.render.afp.fonts.CharacterSet;
+        specialinvoke this.<org.apache.fop.render.afp.fonts.CharacterSet: void load()>();
+        $r0 = specialinvoke this.<org.apache.fop.render.afp.fonts.CharacterSet: org.apache.fop.render.afp.fonts.CharacterSetOrientation getCharacterSetOrientation()>();
+        $i0 = virtualinvoke $r0.<org.apache.fop.render.afp.fonts.CharacterSetOrientation: int getLastChar()>();
+        return $i0;
+    }
+
+    public java.lang.String getPath()
+    {
+        org.apache.fop.render.afp.fonts.CharacterSet this;
+        java.lang.String $r0;
+
+        this := @this: org.apache.fop.render.afp.fonts.CharacterSet;
+        $r0 = this.<org.apache.fop.render.afp.fonts.CharacterSet: java.lang.String path>;
+        return $r0;
+    }
+
+    public int[] getWidths()
+    {
+        org.apache.fop.render.afp.fonts.CharacterSet this;
+        org.apache.fop.render.afp.fonts.CharacterSetOrientation $r0;
+        int[] $r1;
+
+        this := @this: org.apache.fop.render.afp.fonts.CharacterSet;
+        specialinvoke this.<org.apache.fop.render.afp.fonts.CharacterSet: void load()>();
+        $r0 = specialinvoke this.<org.apache.fop.render.afp.fonts.CharacterSet: org.apache.fop.render.afp.fonts.CharacterSetOrientation getCharacterSetOrientation()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.render.afp.fonts.CharacterSetOrientation: int[] getWidths()>();
+        return $r1;
+    }
+
+    public int getXHeight()
+    {
+        org.apache.fop.render.afp.fonts.CharacterSet this;
+        org.apache.fop.render.afp.fonts.CharacterSetOrientation $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.render.afp.fonts.CharacterSet;
+        specialinvoke this.<org.apache.fop.render.afp.fonts.CharacterSet: void load()>();
+        $r0 = specialinvoke this.<org.apache.fop.render.afp.fonts.CharacterSet: org.apache.fop.render.afp.fonts.CharacterSetOrientation getCharacterSetOrientation()>();
+        $i0 = virtualinvoke $r0.<org.apache.fop.render.afp.fonts.CharacterSetOrientation: int getXHeight()>();
+        return $i0;
+    }
+
+    public int width(int)
+    {
+        org.apache.fop.render.afp.fonts.CharacterSet this;
+        int character, $i0;
+        org.apache.fop.render.afp.fonts.CharacterSetOrientation $r0;
+
+        this := @this: org.apache.fop.render.afp.fonts.CharacterSet;
+        character := @parameter0: int;
+        specialinvoke this.<org.apache.fop.render.afp.fonts.CharacterSet: void load()>();
+        $r0 = specialinvoke this.<org.apache.fop.render.afp.fonts.CharacterSet: org.apache.fop.render.afp.fonts.CharacterSetOrientation getCharacterSetOrientation()>();
+        $i0 = virtualinvoke $r0.<org.apache.fop.render.afp.fonts.CharacterSetOrientation: int width(int)>(character);
+        return $i0;
+    }
+
+    private void load()
+    {
+        org.apache.fop.render.afp.fonts.CharacterSet this;
+        org.apache.fop.render.afp.fonts.AFPFontReader afpFontReader, $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.afp.fonts.CharacterSet;
+        $z0 = this.<org.apache.fop.render.afp.fonts.CharacterSet: boolean isMetricsLoaded>;
+        if $z0 != 0 goto label0;
+
+        $r0 = new org.apache.fop.render.afp.fonts.AFPFontReader;
+        specialinvoke $r0.<org.apache.fop.render.afp.fonts.AFPFontReader: void <init>()>();
+        afpFontReader = $r0;
+        virtualinvoke afpFontReader.<org.apache.fop.render.afp.fonts.AFPFontReader: void loadCharacterSetMetric(org.apache.fop.render.afp.fonts.CharacterSet)>(this);
+        this.<org.apache.fop.render.afp.fonts.CharacterSet: boolean isMetricsLoaded> = 1;
+
+     label0:
+        return;
+    }
+
+    public java.lang.String getName()
+    {
+        org.apache.fop.render.afp.fonts.CharacterSet this;
+        java.lang.String $r0;
+
+        this := @this: org.apache.fop.render.afp.fonts.CharacterSet;
+        $r0 = this.<org.apache.fop.render.afp.fonts.CharacterSet: java.lang.String name>;
+        return $r0;
+    }
+
+    public byte[] getNameBytes()
+    {
+        org.apache.fop.render.afp.fonts.CharacterSet this;
+        byte[] $r0;
+
+        this := @this: org.apache.fop.render.afp.fonts.CharacterSet;
+        $r0 = this.<org.apache.fop.render.afp.fonts.CharacterSet: byte[] nameBytes>;
+        return $r0;
+    }
+
+    public java.lang.String getCodePage()
+    {
+        org.apache.fop.render.afp.fonts.CharacterSet this;
+        java.lang.String $r0;
+
+        this := @this: org.apache.fop.render.afp.fonts.CharacterSet;
+        $r0 = this.<org.apache.fop.render.afp.fonts.CharacterSet: java.lang.String codePage>;
+        return $r0;
+    }
+
+    public java.lang.String getEncoding()
+    {
+        org.apache.fop.render.afp.fonts.CharacterSet this;
+        java.lang.String $r0;
+
+        this := @this: org.apache.fop.render.afp.fonts.CharacterSet;
+        $r0 = this.<org.apache.fop.render.afp.fonts.CharacterSet: java.lang.String encoding>;
+        return $r0;
+    }
+
+    private org.apache.fop.render.afp.fonts.CharacterSetOrientation getCharacterSetOrientation()
+    {
+        org.apache.fop.render.afp.fonts.CharacterSet this;
+        org.apache.fop.render.afp.fonts.CharacterSetOrientation c;
+        java.util.Map $r0;
+        java.lang.String $r1;
+        java.lang.Object $r2;
+
+        this := @this: org.apache.fop.render.afp.fonts.CharacterSet;
+        $r0 = this.<org.apache.fop.render.afp.fonts.CharacterSet: java.util.Map characterSetOrientations>;
+        $r1 = this.<org.apache.fop.render.afp.fonts.CharacterSet: java.lang.String currentOrientation>;
+        $r2 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>($r1);
+        c = (org.apache.fop.render.afp.fonts.CharacterSetOrientation) $r2;
+        return c;
+    }
+
+    public char mapChar(char)
+    {
+        org.apache.fop.render.afp.fonts.CharacterSet this;
+        char c;
+
+        this := @this: org.apache.fop.render.afp.fonts.CharacterSet;
+        c := @parameter0: char;
+        return c;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        java.lang.String $r1;
+        org.apache.commons.logging.Log $r2;
+
+        $r0 = <org.apache.fop.render.afp.fonts.CharacterSet: java.lang.Class class$org$apache$fop$render$afp$fonts$CharacterSet>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.render.afp.fonts.CharacterSet: java.lang.Class class$(java.lang.String)>("org.apache.fop.render.afp.fonts.CharacterSet");
+        <org.apache.fop.render.afp.fonts.CharacterSet: java.lang.Class class$org$apache$fop$render$afp$fonts$CharacterSet> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.render.afp.fonts.CharacterSet: java.lang.Class class$org$apache$fop$render$afp$fonts$CharacterSet>;
+
+     label1:
+        $r1 = virtualinvoke $r0.<java.lang.Class: java.lang.String getName()>();
+        $r2 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.String)>($r1);
+        <org.apache.fop.render.afp.fonts.CharacterSet: org.apache.commons.logging.Log log> = $r2;
+        return;
+    }
+}

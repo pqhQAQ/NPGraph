@@ -1,0 +1,271 @@
+public class org.apache.fop.render.ps.extensions.PSExtensionHandler extends org.xml.sax.helpers.DefaultHandler implements org.apache.fop.util.ContentHandlerFactory$ObjectSource
+{
+    protected static org.apache.commons.logging.Log log;
+    private java.lang.StringBuffer content;
+    private org.xml.sax.Attributes lastAttributes;
+    private org.apache.fop.render.ps.extensions.PSExtensionAttachment returnedObject;
+    private org.apache.fop.util.ContentHandlerFactory$ObjectBuiltListener listener;
+    static java.lang.Class class$org$apache$fop$render$ps$extensions$PSExtensionHandler;
+
+    public void <init>()
+    {
+        org.apache.fop.render.ps.extensions.PSExtensionHandler this;
+        java.lang.StringBuffer $r0;
+
+        this := @this: org.apache.fop.render.ps.extensions.PSExtensionHandler;
+        specialinvoke this.<org.xml.sax.helpers.DefaultHandler: void <init>()>();
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        this.<org.apache.fop.render.ps.extensions.PSExtensionHandler: java.lang.StringBuffer content> = $r0;
+        return;
+    }
+
+    public void startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes) throws org.xml.sax.SAXException
+    {
+        org.apache.fop.render.ps.extensions.PSExtensionHandler this;
+        java.lang.String uri, localName, qName, $r1, $r3, $r6;
+        org.xml.sax.Attributes attributes;
+        boolean handled, $z0;
+        java.lang.StringBuffer $r0, $r5;
+        org.xml.sax.SAXException $r2;
+        org.apache.commons.logging.Log $r4;
+
+        this := @this: org.apache.fop.render.ps.extensions.PSExtensionHandler;
+        uri := @parameter0: java.lang.String;
+        localName := @parameter1: java.lang.String;
+        qName := @parameter2: java.lang.String;
+        attributes := @parameter3: org.xml.sax.Attributes;
+        handled = 0;
+        $r1 = "apache:fop:extensions:postscript";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(uri);
+        if $z0 == 0 goto label1;
+
+        this.<org.apache.fop.render.ps.extensions.PSExtensionHandler: org.xml.sax.Attributes lastAttributes> = attributes;
+        handled = 0;
+        $z0 = virtualinvoke localName.<java.lang.String: boolean equals(java.lang.Object)>("ps-setup-code");
+        if $z0 != 0 goto label0;
+
+        $z0 = virtualinvoke localName.<java.lang.String: boolean equals(java.lang.Object)>("ps-setpagedevice");
+        if $z0 != 0 goto label0;
+
+        $z0 = virtualinvoke localName.<java.lang.String: boolean equals(java.lang.Object)>("ps-comment-before");
+        if $z0 != 0 goto label0;
+
+        $z0 = virtualinvoke localName.<java.lang.String: boolean equals(java.lang.Object)>("ps-comment-after");
+        if $z0 == 0 goto label1;
+
+     label0:
+        handled = 1;
+
+     label1:
+        if handled != 0 goto label3;
+
+        $r1 = "apache:fop:extensions:postscript";
+        $z0 = virtualinvoke $r1.<java.lang.String: boolean equals(java.lang.Object)>(uri);
+        if $z0 == 0 goto label2;
+
+        $r2 = new org.xml.sax.SAXException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unhandled element ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(localName);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" in namespace: ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(uri);
+        $r3 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<org.xml.sax.SAXException: void <init>(java.lang.String)>($r3);
+        throw $r2;
+
+     label2:
+        $r4 = <org.apache.fop.render.ps.extensions.PSExtensionHandler: org.apache.commons.logging.Log log>;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unhandled element ");
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(localName);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" in namespace: ");
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(uri);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r4.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r6);
+
+     label3:
+        return;
+    }
+
+    public void endElement(java.lang.String, java.lang.String, java.lang.String) throws org.xml.sax.SAXException
+    {
+        org.apache.fop.render.ps.extensions.PSExtensionHandler this;
+        java.lang.String uri, localName, qName, $r0, name, $r4, $r8;
+        boolean $z0;
+        org.xml.sax.Attributes $r1;
+        org.apache.fop.render.ps.extensions.PSSetupCode $r2;
+        java.lang.StringBuffer $r3, $r7, $r10;
+        org.apache.fop.render.ps.extensions.PSSetPageDevice $r5;
+        org.apache.fop.render.ps.extensions.PSCommentBefore $r6;
+        org.apache.fop.render.ps.extensions.PSCommentAfter $r9;
+
+        this := @this: org.apache.fop.render.ps.extensions.PSExtensionHandler;
+        uri := @parameter0: java.lang.String;
+        localName := @parameter1: java.lang.String;
+        qName := @parameter2: java.lang.String;
+        $r0 = "apache:fop:extensions:postscript";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(uri);
+        if $z0 == 0 goto label3;
+
+        $r0 = "ps-setup-code";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label0;
+
+        $r1 = this.<org.apache.fop.render.ps.extensions.PSExtensionHandler: org.xml.sax.Attributes lastAttributes>;
+        name = interfaceinvoke $r1.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("name");
+        $r2 = new org.apache.fop.render.ps.extensions.PSSetupCode;
+        $r3 = this.<org.apache.fop.render.ps.extensions.PSExtensionHandler: java.lang.StringBuffer content>;
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<org.apache.fop.render.ps.extensions.PSSetupCode: void <init>(java.lang.String,java.lang.String)>(name, $r4);
+        this.<org.apache.fop.render.ps.extensions.PSExtensionHandler: org.apache.fop.render.ps.extensions.PSExtensionAttachment returnedObject> = $r2;
+        goto label3;
+
+     label0:
+        $r0 = "ps-setpagedevice";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label1;
+
+        $r1 = this.<org.apache.fop.render.ps.extensions.PSExtensionHandler: org.xml.sax.Attributes lastAttributes>;
+        name = interfaceinvoke $r1.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("name");
+        $r5 = new org.apache.fop.render.ps.extensions.PSSetPageDevice;
+        $r3 = this.<org.apache.fop.render.ps.extensions.PSExtensionHandler: java.lang.StringBuffer content>;
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r5.<org.apache.fop.render.ps.extensions.PSSetPageDevice: void <init>(java.lang.String,java.lang.String)>(name, $r4);
+        this.<org.apache.fop.render.ps.extensions.PSExtensionHandler: org.apache.fop.render.ps.extensions.PSExtensionAttachment returnedObject> = $r5;
+        goto label3;
+
+     label1:
+        $r0 = "ps-comment-before";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label2;
+
+        $r6 = new org.apache.fop.render.ps.extensions.PSCommentBefore;
+        $r7 = this.<org.apache.fop.render.ps.extensions.PSExtensionHandler: java.lang.StringBuffer content>;
+        $r8 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r6.<org.apache.fop.render.ps.extensions.PSCommentBefore: void <init>(java.lang.String)>($r8);
+        this.<org.apache.fop.render.ps.extensions.PSExtensionHandler: org.apache.fop.render.ps.extensions.PSExtensionAttachment returnedObject> = $r6;
+        goto label3;
+
+     label2:
+        $r0 = "ps-comment-after";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(localName);
+        if $z0 == 0 goto label3;
+
+        $r9 = new org.apache.fop.render.ps.extensions.PSCommentAfter;
+        $r7 = this.<org.apache.fop.render.ps.extensions.PSExtensionHandler: java.lang.StringBuffer content>;
+        $r8 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r9.<org.apache.fop.render.ps.extensions.PSCommentAfter: void <init>(java.lang.String)>($r8);
+        this.<org.apache.fop.render.ps.extensions.PSExtensionHandler: org.apache.fop.render.ps.extensions.PSExtensionAttachment returnedObject> = $r9;
+
+     label3:
+        $r10 = this.<org.apache.fop.render.ps.extensions.PSExtensionHandler: java.lang.StringBuffer content>;
+        virtualinvoke $r10.<java.lang.StringBuffer: void setLength(int)>(0);
+        return;
+    }
+
+    public void characters(char[], int, int) throws org.xml.sax.SAXException
+    {
+        org.apache.fop.render.ps.extensions.PSExtensionHandler this;
+        char[] ch;
+        int start, length;
+        java.lang.StringBuffer $r0;
+
+        this := @this: org.apache.fop.render.ps.extensions.PSExtensionHandler;
+        ch := @parameter0: char[];
+        start := @parameter1: int;
+        length := @parameter2: int;
+        $r0 = this.<org.apache.fop.render.ps.extensions.PSExtensionHandler: java.lang.StringBuffer content>;
+        virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(char[],int,int)>(ch, start, length);
+        return;
+    }
+
+    public void endDocument() throws org.xml.sax.SAXException
+    {
+        org.apache.fop.render.ps.extensions.PSExtensionHandler this;
+        org.apache.fop.util.ContentHandlerFactory$ObjectBuiltListener $r0;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.render.ps.extensions.PSExtensionHandler;
+        $r0 = this.<org.apache.fop.render.ps.extensions.PSExtensionHandler: org.apache.fop.util.ContentHandlerFactory$ObjectBuiltListener listener>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.render.ps.extensions.PSExtensionHandler: org.apache.fop.util.ContentHandlerFactory$ObjectBuiltListener listener>;
+        $r1 = virtualinvoke this.<org.apache.fop.render.ps.extensions.PSExtensionHandler: java.lang.Object getObject()>();
+        interfaceinvoke $r0.<org.apache.fop.util.ContentHandlerFactory$ObjectBuiltListener: void notifyObjectBuilt(java.lang.Object)>($r1);
+
+     label0:
+        return;
+    }
+
+    public java.lang.Object getObject()
+    {
+        org.apache.fop.render.ps.extensions.PSExtensionHandler this;
+        org.apache.fop.render.ps.extensions.PSExtensionAttachment $r0;
+
+        this := @this: org.apache.fop.render.ps.extensions.PSExtensionHandler;
+        $r0 = this.<org.apache.fop.render.ps.extensions.PSExtensionHandler: org.apache.fop.render.ps.extensions.PSExtensionAttachment returnedObject>;
+        return $r0;
+    }
+
+    public void setObjectBuiltListener(org.apache.fop.util.ContentHandlerFactory$ObjectBuiltListener)
+    {
+        org.apache.fop.render.ps.extensions.PSExtensionHandler this;
+        org.apache.fop.util.ContentHandlerFactory$ObjectBuiltListener listener;
+
+        this := @this: org.apache.fop.render.ps.extensions.PSExtensionHandler;
+        listener := @parameter0: org.apache.fop.util.ContentHandlerFactory$ObjectBuiltListener;
+        this.<org.apache.fop.render.ps.extensions.PSExtensionHandler: org.apache.fop.util.ContentHandlerFactory$ObjectBuiltListener listener> = listener;
+        return;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.render.ps.extensions.PSExtensionHandler: java.lang.Class class$org$apache$fop$render$ps$extensions$PSExtensionHandler>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.render.ps.extensions.PSExtensionHandler: java.lang.Class class$(java.lang.String)>("org.apache.fop.render.ps.extensions.PSExtensionHandler");
+        <org.apache.fop.render.ps.extensions.PSExtensionHandler: java.lang.Class class$org$apache$fop$render$ps$extensions$PSExtensionHandler> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.render.ps.extensions.PSExtensionHandler: java.lang.Class class$org$apache$fop$render$ps$extensions$PSExtensionHandler>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.render.ps.extensions.PSExtensionHandler: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

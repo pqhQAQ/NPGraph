@@ -1,0 +1,236 @@
+public abstract class org.apache.fop.fonts.FontLoader extends java.lang.Object
+{
+    protected static org.apache.commons.logging.Log log;
+    protected java.lang.String fontFileURI;
+    protected org.apache.fop.fonts.FontResolver resolver;
+    protected org.apache.fop.fonts.CustomFont returnFont;
+    protected boolean loaded;
+    static java.lang.Class class$org$apache$fop$fonts$FontLoader;
+
+    public void <init>(java.lang.String, org.apache.fop.fonts.FontResolver)
+    {
+        org.apache.fop.fonts.FontLoader this;
+        java.lang.String fontFileURI;
+        org.apache.fop.fonts.FontResolver resolver;
+
+        this := @this: org.apache.fop.fonts.FontLoader;
+        fontFileURI := @parameter0: java.lang.String;
+        resolver := @parameter1: org.apache.fop.fonts.FontResolver;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.fonts.FontLoader: java.lang.String fontFileURI> = null;
+        this.<org.apache.fop.fonts.FontLoader: org.apache.fop.fonts.FontResolver resolver> = null;
+        this.<org.apache.fop.fonts.FontLoader: org.apache.fop.fonts.CustomFont returnFont> = null;
+        this.<org.apache.fop.fonts.FontLoader: boolean loaded> = 0;
+        this.<org.apache.fop.fonts.FontLoader: java.lang.String fontFileURI> = fontFileURI;
+        this.<org.apache.fop.fonts.FontLoader: org.apache.fop.fonts.FontResolver resolver> = resolver;
+        return;
+    }
+
+    private static boolean isType1(java.lang.String)
+    {
+        java.lang.String fontURI, $r0;
+        boolean $z0;
+
+        fontURI := @parameter0: java.lang.String;
+        $r0 = virtualinvoke fontURI.<java.lang.String: java.lang.String toLowerCase()>();
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean endsWith(java.lang.String)>(".pfb");
+        return $z0;
+    }
+
+    public static org.apache.fop.fonts.CustomFont loadFont(java.io.File, org.apache.fop.fonts.FontResolver) throws java.io.IOException
+    {
+        java.io.File fontFile;
+        org.apache.fop.fonts.FontResolver resolver;
+        java.lang.String $r0;
+        org.apache.fop.fonts.CustomFont $r1;
+
+        fontFile := @parameter0: java.io.File;
+        resolver := @parameter1: org.apache.fop.fonts.FontResolver;
+        $r0 = virtualinvoke fontFile.<java.io.File: java.lang.String getAbsolutePath()>();
+        $r1 = staticinvoke <org.apache.fop.fonts.FontLoader: org.apache.fop.fonts.CustomFont loadFont(java.lang.String,org.apache.fop.fonts.FontResolver)>($r0, resolver);
+        return $r1;
+    }
+
+    public static org.apache.fop.fonts.CustomFont loadFont(java.net.URL, org.apache.fop.fonts.FontResolver) throws java.io.IOException
+    {
+        java.net.URL fontUrl;
+        org.apache.fop.fonts.FontResolver resolver;
+        java.lang.String $r0;
+        org.apache.fop.fonts.CustomFont $r1;
+
+        fontUrl := @parameter0: java.net.URL;
+        resolver := @parameter1: org.apache.fop.fonts.FontResolver;
+        $r0 = virtualinvoke fontUrl.<java.net.URL: java.lang.String toExternalForm()>();
+        $r1 = staticinvoke <org.apache.fop.fonts.FontLoader: org.apache.fop.fonts.CustomFont loadFont(java.lang.String,org.apache.fop.fonts.FontResolver)>($r0, resolver);
+        return $r1;
+    }
+
+    public static org.apache.fop.fonts.CustomFont loadFont(java.lang.String, org.apache.fop.fonts.FontResolver) throws java.io.IOException
+    {
+        java.lang.String fontFileURI, fontFileURI;
+        org.apache.fop.fonts.FontResolver resolver;
+        boolean type1;
+        org.apache.fop.fonts.FontLoader loader;
+        org.apache.fop.fonts.type1.Type1FontLoader $r0;
+        org.apache.fop.fonts.truetype.TTFFontLoader $r1;
+        org.apache.fop.fonts.CustomFont $r2;
+
+        fontFileURI := @parameter0: java.lang.String;
+        resolver := @parameter1: org.apache.fop.fonts.FontResolver;
+        fontFileURI = virtualinvoke fontFileURI.<java.lang.String: java.lang.String trim()>();
+        type1 = staticinvoke <org.apache.fop.fonts.FontLoader: boolean isType1(java.lang.String)>(fontFileURI);
+        if type1 == 0 goto label0;
+
+        $r0 = new org.apache.fop.fonts.type1.Type1FontLoader;
+        specialinvoke $r0.<org.apache.fop.fonts.type1.Type1FontLoader: void <init>(java.lang.String,org.apache.fop.fonts.FontResolver)>(fontFileURI, resolver);
+        loader = $r0;
+        goto label1;
+
+     label0:
+        $r1 = new org.apache.fop.fonts.truetype.TTFFontLoader;
+        specialinvoke $r1.<org.apache.fop.fonts.truetype.TTFFontLoader: void <init>(java.lang.String,org.apache.fop.fonts.FontResolver)>(fontFileURI, resolver);
+        loader = $r1;
+
+     label1:
+        $r2 = virtualinvoke loader.<org.apache.fop.fonts.FontLoader: org.apache.fop.fonts.CustomFont getFont()>();
+        return $r2;
+    }
+
+    protected static java.io.InputStream openFontUri(org.apache.fop.fonts.FontResolver, java.lang.String) throws java.io.IOException, java.net.MalformedURLException
+    {
+        org.apache.fop.fonts.FontResolver resolver;
+        java.lang.String uri, err, $r3, $r5;
+        java.io.InputStream in;
+        javax.xml.transform.Source source;
+        java.lang.StringBuffer $r0;
+        java.io.IOException $r1;
+        boolean $z0;
+        javax.xml.transform.stream.StreamSource $r2;
+        java.net.URL $r4;
+
+        resolver := @parameter0: org.apache.fop.fonts.FontResolver;
+        uri := @parameter1: java.lang.String;
+        in = null;
+        if resolver == null goto label4;
+
+        source = interfaceinvoke resolver.<org.apache.fop.fonts.FontResolver: javax.xml.transform.Source resolve(java.lang.String)>(uri);
+        if source != null goto label0;
+
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Cannot load font: failed to create Source for font file ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(uri);
+        err = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r1 = new java.io.IOException;
+        specialinvoke $r1.<java.io.IOException: void <init>(java.lang.String)>(err);
+        throw $r1;
+
+     label0:
+        $z0 = source instanceof javax.xml.transform.stream.StreamSource;
+        if $z0 == 0 goto label1;
+
+        $r2 = (javax.xml.transform.stream.StreamSource) source;
+        in = virtualinvoke $r2.<javax.xml.transform.stream.StreamSource: java.io.InputStream getInputStream()>();
+
+     label1:
+        if in != null goto label2;
+
+        $r3 = interfaceinvoke source.<javax.xml.transform.Source: java.lang.String getSystemId()>();
+        if $r3 == null goto label2;
+
+        $r4 = new java.net.URL;
+        $r5 = interfaceinvoke source.<javax.xml.transform.Source: java.lang.String getSystemId()>();
+        specialinvoke $r4.<java.net.URL: void <init>(java.lang.String)>($r5);
+        in = virtualinvoke $r4.<java.net.URL: java.io.InputStream openStream()>();
+
+     label2:
+        if in != null goto label3;
+
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Cannot load font: failed to create InputStream from Source for font file ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(uri);
+        err = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r1 = new java.io.IOException;
+        specialinvoke $r1.<java.io.IOException: void <init>(java.lang.String)>(err);
+        throw $r1;
+
+     label3:
+        goto label5;
+
+     label4:
+        $r4 = new java.net.URL;
+        specialinvoke $r4.<java.net.URL: void <init>(java.lang.String)>(uri);
+        in = virtualinvoke $r4.<java.net.URL: java.io.InputStream openStream()>();
+
+     label5:
+        return in;
+    }
+
+    protected abstract void read() throws java.io.IOException;
+
+    public org.apache.fop.fonts.CustomFont getFont() throws java.io.IOException
+    {
+        org.apache.fop.fonts.FontLoader this;
+        boolean $z0;
+        org.apache.fop.fonts.CustomFont $r0;
+
+        this := @this: org.apache.fop.fonts.FontLoader;
+        $z0 = this.<org.apache.fop.fonts.FontLoader: boolean loaded>;
+        if $z0 != 0 goto label0;
+
+        virtualinvoke this.<org.apache.fop.fonts.FontLoader: void read()>();
+
+     label0:
+        $r0 = this.<org.apache.fop.fonts.FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        return $r0;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.fonts.FontLoader: java.lang.Class class$org$apache$fop$fonts$FontLoader>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.fonts.FontLoader: java.lang.Class class$(java.lang.String)>("org.apache.fop.fonts.FontLoader");
+        <org.apache.fop.fonts.FontLoader: java.lang.Class class$org$apache$fop$fonts$FontLoader> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.fonts.FontLoader: java.lang.Class class$org$apache$fop$fonts$FontLoader>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.fonts.FontLoader: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

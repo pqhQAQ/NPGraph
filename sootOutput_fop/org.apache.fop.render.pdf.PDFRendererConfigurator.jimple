@@ -1,0 +1,199 @@
+public class org.apache.fop.render.pdf.PDFRendererConfigurator extends org.apache.fop.render.PrintRendererConfigurator
+{
+
+    public void <init>(org.apache.fop.apps.FOUserAgent)
+    {
+        org.apache.fop.render.pdf.PDFRendererConfigurator this;
+        org.apache.fop.apps.FOUserAgent userAgent;
+
+        this := @this: org.apache.fop.render.pdf.PDFRendererConfigurator;
+        userAgent := @parameter0: org.apache.fop.apps.FOUserAgent;
+        specialinvoke this.<org.apache.fop.render.PrintRendererConfigurator: void <init>(org.apache.fop.apps.FOUserAgent)>(userAgent);
+        return;
+    }
+
+    public void configure(org.apache.fop.render.Renderer) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.render.pdf.PDFRendererConfigurator this;
+        org.apache.fop.render.Renderer renderer;
+        org.apache.avalon.framework.configuration.Configuration cfg, child, $r2;
+        org.apache.fop.render.pdf.PDFRenderer pdfRenderer;
+        java.util.Map filterMap;
+        org.apache.avalon.framework.configuration.ConfigurationException e, $r0;
+        java.lang.String s;
+        org.apache.commons.logging.Log $r1;
+        org.apache.fop.pdf.PDFAMode $r3;
+        org.apache.fop.pdf.PDFXMode $r4;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.pdf.PDFRendererConfigurator;
+        renderer := @parameter0: org.apache.fop.render.Renderer;
+        cfg = specialinvoke this.<org.apache.fop.render.PrintRendererConfigurator: org.apache.avalon.framework.configuration.Configuration getRendererConfig(org.apache.fop.render.Renderer)>(renderer);
+        if cfg == null goto label7;
+
+        pdfRenderer = (org.apache.fop.render.pdf.PDFRenderer) renderer;
+
+     label0:
+        filterMap = staticinvoke <org.apache.fop.render.pdf.PDFRendererConfigurator: java.util.Map buildFilterMapFromConfiguration(org.apache.avalon.framework.configuration.Configuration)>(cfg);
+        if filterMap == null goto label1;
+
+        virtualinvoke pdfRenderer.<org.apache.fop.render.pdf.PDFRenderer: void setFilterMap(java.util.Map)>(filterMap);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r0 := @caughtexception;
+        e = $r0;
+        $r1 = <org.apache.fop.render.pdf.PDFRendererConfigurator: org.apache.commons.logging.Log log>;
+        staticinvoke <org.apache.fop.util.LogUtil: void handleException(org.apache.commons.logging.Log,java.lang.Exception,boolean)>($r1, e, 0);
+
+     label3:
+        specialinvoke this.<org.apache.fop.render.PrintRendererConfigurator: void configure(org.apache.fop.render.Renderer)>(renderer);
+        $r2 = interfaceinvoke cfg.<org.apache.avalon.framework.configuration.Configuration: org.apache.avalon.framework.configuration.Configuration getChild(java.lang.String,boolean)>("pdf-a-mode", 1);
+        s = interfaceinvoke $r2.<org.apache.avalon.framework.configuration.Configuration: java.lang.String getValue(java.lang.String)>(null);
+        if s == null goto label4;
+
+        $r3 = staticinvoke <org.apache.fop.pdf.PDFAMode: org.apache.fop.pdf.PDFAMode valueOf(java.lang.String)>(s);
+        virtualinvoke pdfRenderer.<org.apache.fop.render.pdf.PDFRenderer: void setAMode(org.apache.fop.pdf.PDFAMode)>($r3);
+
+     label4:
+        $r2 = interfaceinvoke cfg.<org.apache.avalon.framework.configuration.Configuration: org.apache.avalon.framework.configuration.Configuration getChild(java.lang.String,boolean)>("pdf-x-mode", 1);
+        s = interfaceinvoke $r2.<org.apache.avalon.framework.configuration.Configuration: java.lang.String getValue(java.lang.String)>(null);
+        if s == null goto label5;
+
+        $r4 = staticinvoke <org.apache.fop.pdf.PDFXMode: org.apache.fop.pdf.PDFXMode valueOf(java.lang.String)>(s);
+        virtualinvoke pdfRenderer.<org.apache.fop.render.pdf.PDFRenderer: void setXMode(org.apache.fop.pdf.PDFXMode)>($r4);
+
+     label5:
+        $r2 = interfaceinvoke cfg.<org.apache.avalon.framework.configuration.Configuration: org.apache.avalon.framework.configuration.Configuration getChild(java.lang.String,boolean)>("output-profile", 1);
+        s = interfaceinvoke $r2.<org.apache.avalon.framework.configuration.Configuration: java.lang.String getValue(java.lang.String)>(null);
+        if s == null goto label6;
+
+        virtualinvoke pdfRenderer.<org.apache.fop.render.pdf.PDFRenderer: void setOutputProfileURI(java.lang.String)>(s);
+
+     label6:
+        child = interfaceinvoke cfg.<org.apache.avalon.framework.configuration.Configuration: org.apache.avalon.framework.configuration.Configuration getChild(java.lang.String,boolean)>("disable-srgb-colorspace", 0);
+        if child == null goto label7;
+
+        $z0 = interfaceinvoke child.<org.apache.avalon.framework.configuration.Configuration: boolean getValueAsBoolean(boolean)>(0);
+        pdfRenderer.<org.apache.fop.render.pdf.PDFRenderer: boolean disableSRGBColorSpace> = $z0;
+
+     label7:
+        return;
+
+        catch org.apache.avalon.framework.configuration.ConfigurationException from label0 to label1 with label2;
+    }
+
+    public static java.util.Map buildFilterMapFromConfiguration(org.apache.avalon.framework.configuration.Configuration) throws org.apache.avalon.framework.configuration.ConfigurationException
+    {
+        org.apache.avalon.framework.configuration.Configuration cfg, filters, $r2;
+        java.util.HashMap $r0, filterMap;
+        org.apache.avalon.framework.configuration.Configuration[] filterLists, filt;
+        int i, j, $i0, $i1;
+        java.lang.String type, name, $r6, $r10;
+        java.util.ArrayList filterList, $r1;
+        java.lang.StringBuffer debug, $r4, $r9;
+        boolean $z0;
+        org.apache.commons.logging.Log $r3;
+        java.lang.Object $r5, $r7;
+        org.apache.avalon.framework.configuration.ConfigurationException $r8;
+
+        cfg := @parameter0: org.apache.avalon.framework.configuration.Configuration;
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        filterMap = $r0;
+        filterLists = interfaceinvoke cfg.<org.apache.avalon.framework.configuration.Configuration: org.apache.avalon.framework.configuration.Configuration[] getChildren(java.lang.String)>("filterList");
+        i = 0;
+
+     label0:
+        $i0 = lengthof filterLists;
+        if i >= $i0 goto label10;
+
+        filters = filterLists[i];
+        type = interfaceinvoke filters.<org.apache.avalon.framework.configuration.Configuration: java.lang.String getAttribute(java.lang.String,java.lang.String)>("type", null);
+        filt = interfaceinvoke filters.<org.apache.avalon.framework.configuration.Configuration: org.apache.avalon.framework.configuration.Configuration[] getChildren(java.lang.String)>("value");
+        $r1 = new java.util.ArrayList;
+        specialinvoke $r1.<java.util.ArrayList: void <init>()>();
+        filterList = $r1;
+        j = 0;
+
+     label1:
+        $i0 = lengthof filt;
+        if j >= $i0 goto label2;
+
+        $r2 = filt[j];
+        name = interfaceinvoke $r2.<org.apache.avalon.framework.configuration.Configuration: java.lang.String getValue()>();
+        interfaceinvoke filterList.<java.util.List: boolean add(java.lang.Object)>(name);
+        j = j + 1;
+        goto label1;
+
+     label2:
+        if type != null goto label3;
+
+        type = "default";
+
+     label3:
+        $z0 = interfaceinvoke filterList.<java.util.List: boolean isEmpty()>();
+        if $z0 != 0 goto label8;
+
+        $r3 = <org.apache.fop.render.pdf.PDFRendererConfigurator: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r3.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label8;
+
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>(java.lang.String)>("Adding PDF filter");
+        debug = $r4;
+        $i1 = interfaceinvoke filterList.<java.util.List: int size()>();
+        if $i1 == 1 goto label4;
+
+        virtualinvoke debug.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("s");
+
+     label4:
+        $r4 = virtualinvoke debug.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" for type ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(type);
+        virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": ");
+        j = 0;
+
+     label5:
+        $i0 = interfaceinvoke filterList.<java.util.List: int size()>();
+        if j >= $i0 goto label7;
+
+        if j == 0 goto label6;
+
+        virtualinvoke debug.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", ");
+
+     label6:
+        $r5 = interfaceinvoke filterList.<java.util.List: java.lang.Object get(int)>(j);
+        virtualinvoke debug.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r5);
+        j = j + 1;
+        goto label5;
+
+     label7:
+        $r3 = <org.apache.fop.render.pdf.PDFRendererConfigurator: org.apache.commons.logging.Log log>;
+        $r6 = virtualinvoke debug.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r6);
+
+     label8:
+        $r7 = interfaceinvoke filterMap.<java.util.Map: java.lang.Object get(java.lang.Object)>(type);
+        if $r7 == null goto label9;
+
+        $r8 = new org.apache.avalon.framework.configuration.ConfigurationException;
+        $r9 = new java.lang.StringBuffer;
+        specialinvoke $r9.<java.lang.StringBuffer: void <init>()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("A filterList of type \'");
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(type);
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\' has already been defined");
+        $r10 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r8.<org.apache.avalon.framework.configuration.ConfigurationException: void <init>(java.lang.String)>($r10);
+        throw $r8;
+
+     label9:
+        interfaceinvoke filterMap.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(type, filterList);
+        i = i + 1;
+        goto label0;
+
+     label10:
+        return filterMap;
+    }
+}

@@ -1,0 +1,141 @@
+public abstract class org.apache.fop.render.ps.extensions.AbstractPSExtensionElement extends org.apache.fop.fo.FONode
+{
+    protected org.apache.fop.render.ps.extensions.PSExtensionAttachment attachment;
+
+    public void <init>(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.render.ps.extensions.AbstractPSExtensionElement this;
+        org.apache.fop.fo.FONode parent;
+
+        this := @this: org.apache.fop.render.ps.extensions.AbstractPSExtensionElement;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        specialinvoke this.<org.apache.fop.fo.FONode: void <init>(org.apache.fop.fo.FONode)>(parent);
+        return;
+    }
+
+    protected void validateChildNode(org.xml.sax.Locator, java.lang.String, java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.render.ps.extensions.AbstractPSExtensionElement this;
+        org.xml.sax.Locator loc;
+        java.lang.String nsURI, localName, $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.ps.extensions.AbstractPSExtensionElement;
+        loc := @parameter0: org.xml.sax.Locator;
+        nsURI := @parameter1: java.lang.String;
+        localName := @parameter2: java.lang.String;
+        $r0 = "http://www.w3.org/1999/XSL/Format";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(nsURI);
+        if $z0 == 0 goto label0;
+
+        virtualinvoke this.<org.apache.fop.render.ps.extensions.AbstractPSExtensionElement: void invalidChildError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, nsURI, localName);
+
+     label0:
+        return;
+    }
+
+    protected void addCharacters(char[], int, int, org.apache.fop.fo.PropertyList, org.xml.sax.Locator)
+    {
+        org.apache.fop.render.ps.extensions.AbstractPSExtensionElement this;
+        char[] data;
+        int start, length, $i0, $i1;
+        org.apache.fop.fo.PropertyList pList;
+        org.xml.sax.Locator locator;
+        org.apache.fop.render.ps.extensions.PSExtensionAttachment a;
+        java.lang.StringBuffer sb, $r2;
+        org.apache.fop.fo.extensions.ExtensionAttachment $r0;
+        java.lang.String $r1, $r3, $r4;
+
+        this := @this: org.apache.fop.render.ps.extensions.AbstractPSExtensionElement;
+        data := @parameter0: char[];
+        start := @parameter1: int;
+        length := @parameter2: int;
+        pList := @parameter3: org.apache.fop.fo.PropertyList;
+        locator := @parameter4: org.xml.sax.Locator;
+        $r0 = virtualinvoke this.<org.apache.fop.render.ps.extensions.AbstractPSExtensionElement: org.apache.fop.fo.extensions.ExtensionAttachment getExtensionAttachment()>();
+        a = (org.apache.fop.render.ps.extensions.PSExtensionAttachment) $r0;
+        $r1 = virtualinvoke a.<org.apache.fop.render.ps.extensions.PSExtensionAttachment: java.lang.String getContent()>();
+        if $r1 == null goto label0;
+
+        $r2 = new java.lang.StringBuffer;
+        $r3 = virtualinvoke a.<org.apache.fop.render.ps.extensions.PSExtensionAttachment: java.lang.String getContent()>();
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>(java.lang.String)>($r3);
+        sb = $r2;
+        $i0 = length - start;
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(char[],int,int)>(data, start, $i0);
+        $r4 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke a.<org.apache.fop.render.ps.extensions.PSExtensionAttachment: void setContent(java.lang.String)>($r4);
+        goto label1;
+
+     label0:
+        $r4 = new java.lang.String;
+        $i1 = length - start;
+        specialinvoke $r4.<java.lang.String: void <init>(char[],int,int)>(data, start, $i1);
+        virtualinvoke a.<org.apache.fop.render.ps.extensions.PSExtensionAttachment: void setContent(java.lang.String)>($r4);
+
+     label1:
+        return;
+    }
+
+    public java.lang.String getNamespaceURI()
+    {
+        org.apache.fop.render.ps.extensions.AbstractPSExtensionElement this;
+
+        this := @this: org.apache.fop.render.ps.extensions.AbstractPSExtensionElement;
+        return "http://xmlgraphics.apache.org/fop/postscript";
+    }
+
+    public java.lang.String getNormalNamespacePrefix()
+    {
+        org.apache.fop.render.ps.extensions.AbstractPSExtensionElement this;
+
+        this := @this: org.apache.fop.render.ps.extensions.AbstractPSExtensionElement;
+        return "fox";
+    }
+
+    protected void endOfNode() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.render.ps.extensions.AbstractPSExtensionElement this;
+        java.lang.String s;
+        org.apache.fop.fo.extensions.ExtensionAttachment $r0;
+        org.apache.fop.render.ps.extensions.PSExtensionAttachment $r1;
+        int $i0;
+
+        this := @this: org.apache.fop.render.ps.extensions.AbstractPSExtensionElement;
+        specialinvoke this.<org.apache.fop.fo.FONode: void endOfNode()>();
+        $r0 = virtualinvoke this.<org.apache.fop.render.ps.extensions.AbstractPSExtensionElement: org.apache.fop.fo.extensions.ExtensionAttachment getExtensionAttachment()>();
+        $r1 = (org.apache.fop.render.ps.extensions.PSExtensionAttachment) $r0;
+        s = virtualinvoke $r1.<org.apache.fop.render.ps.extensions.PSExtensionAttachment: java.lang.String getContent()>();
+        if s == null goto label0;
+
+        $i0 = virtualinvoke s.<java.lang.String: int length()>();
+        if $i0 != 0 goto label1;
+
+     label0:
+        virtualinvoke this.<org.apache.fop.render.ps.extensions.AbstractPSExtensionElement: void missingChildElementError(java.lang.String)>("#PCDATA");
+
+     label1:
+        return;
+    }
+
+    public org.apache.fop.fo.extensions.ExtensionAttachment getExtensionAttachment()
+    {
+        org.apache.fop.render.ps.extensions.AbstractPSExtensionElement this;
+        org.apache.fop.render.ps.extensions.PSExtensionAttachment $r0, $r2;
+        org.apache.fop.fo.extensions.ExtensionAttachment $r1;
+
+        this := @this: org.apache.fop.render.ps.extensions.AbstractPSExtensionElement;
+        $r0 = this.<org.apache.fop.render.ps.extensions.AbstractPSExtensionElement: org.apache.fop.render.ps.extensions.PSExtensionAttachment attachment>;
+        if $r0 != null goto label0;
+
+        $r1 = virtualinvoke this.<org.apache.fop.render.ps.extensions.AbstractPSExtensionElement: org.apache.fop.fo.extensions.ExtensionAttachment instantiateExtensionAttachment()>();
+        $r2 = (org.apache.fop.render.ps.extensions.PSExtensionAttachment) $r1;
+        this.<org.apache.fop.render.ps.extensions.AbstractPSExtensionElement: org.apache.fop.render.ps.extensions.PSExtensionAttachment attachment> = $r2;
+
+     label0:
+        $r0 = this.<org.apache.fop.render.ps.extensions.AbstractPSExtensionElement: org.apache.fop.render.ps.extensions.PSExtensionAttachment attachment>;
+        return $r0;
+    }
+
+    protected abstract org.apache.fop.fo.extensions.ExtensionAttachment instantiateExtensionAttachment();
+}

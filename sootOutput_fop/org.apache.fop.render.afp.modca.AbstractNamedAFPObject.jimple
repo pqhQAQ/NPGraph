@@ -1,0 +1,70 @@
+public abstract class org.apache.fop.render.afp.modca.AbstractNamedAFPObject extends org.apache.fop.render.afp.modca.AbstractAFPObject
+{
+    protected java.lang.String name;
+    protected byte[] nameBytes;
+
+    public void <init>(java.lang.String)
+    {
+        org.apache.fop.render.afp.modca.AbstractNamedAFPObject this;
+        java.lang.String name, $r1, $r4;
+        java.io.UnsupportedEncodingException usee, $r6;
+        int $i0;
+        java.lang.StringBuffer $r0, $r3;
+        org.apache.commons.logging.Log $r2;
+        byte[] $r5;
+
+        this := @this: org.apache.fop.render.afp.modca.AbstractNamedAFPObject;
+        name := @parameter0: java.lang.String;
+        specialinvoke this.<org.apache.fop.render.afp.modca.AbstractAFPObject: void <init>()>();
+        this.<org.apache.fop.render.afp.modca.AbstractNamedAFPObject: java.lang.String name> = null;
+        this.<org.apache.fop.render.afp.modca.AbstractNamedAFPObject: java.lang.String name> = name;
+        $i0 = virtualinvoke name.<java.lang.String: int length()>();
+        if $i0 >= 8 goto label0;
+
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(name);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("       ");
+        $r1 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        name = virtualinvoke $r1.<java.lang.String: java.lang.String substring(int,int)>(0, 8);
+        goto label1;
+
+     label0:
+        $i0 = virtualinvoke name.<java.lang.String: int length()>();
+        if $i0 <= 8 goto label1;
+
+        $r2 = <org.apache.fop.render.afp.modca.AbstractNamedAFPObject: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Constructor:: name truncated to 8 chars");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(name);
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r4);
+        name = virtualinvoke name.<java.lang.String: java.lang.String substring(int,int)>(0, 8);
+
+     label1:
+        $r5 = virtualinvoke name.<java.lang.String: byte[] getBytes(java.lang.String)>("Cp1146");
+        this.<org.apache.fop.render.afp.modca.AbstractNamedAFPObject: byte[] nameBytes> = $r5;
+
+     label2:
+        goto label4;
+
+     label3:
+        $r6 := @caughtexception;
+        usee = $r6;
+        $r5 = virtualinvoke name.<java.lang.String: byte[] getBytes()>();
+        this.<org.apache.fop.render.afp.modca.AbstractNamedAFPObject: byte[] nameBytes> = $r5;
+        $r2 = <org.apache.fop.render.afp.modca.AbstractNamedAFPObject: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Constructor:: UnsupportedEncodingException translating the name ");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(name);
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r4);
+
+     label4:
+        return;
+
+        catch java.io.UnsupportedEncodingException from label1 to label2 with label3;
+    }
+}

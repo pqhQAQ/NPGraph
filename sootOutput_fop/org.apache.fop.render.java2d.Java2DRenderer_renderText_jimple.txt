@@ -1,0 +1,88 @@
+method: org.apache.fop.render.java2d.Java2DRenderer.renderText:230092787
+1814780451:text := @parameter0: org.apache.fop.area.inline.TextArea
+304801616:g2d := @parameter1: java.awt.Graphics2D
+1052262017:font := @parameter2: org.apache.fop.fonts.Font
+565318187:$r0 = <org.apache.fop.area.Trait: java.lang.Integer COLOR>
+835114581:$r1 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: java.lang.Object getTrait(java.lang.Object)>($r0)
+1784230441:col = (java.awt.Color) $r1
+519672194:virtualinvoke g2d.<java.awt.Graphics2D: void setColor(java.awt.Color)>(col)
+2057861396:textCursor = 0.0F
+719510812:$r2 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: java.util.List getChildAreas()>()
+1622581768:iter = interfaceinvoke $r2.<java.util.List: java.util.Iterator iterator()>()
+1812794280:$z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>()
+1282963971:if $z0 == 0 goto return
+27301558:$r1 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>()
+1185802600:child = (org.apache.fop.area.inline.InlineArea) $r1
+383144803:$z0 = child instanceof org.apache.fop.area.inline.WordArea
+1358730315:if $z0 == 0 goto $z0 = child instanceof org.apache.fop.area.inline.SpaceArea
+948616516:word = (org.apache.fop.area.inline.WordArea) child
+454643532:s = virtualinvoke word.<org.apache.fop.area.inline.WordArea: java.lang.String getWord()>()
+1032398252:letterAdjust = virtualinvoke word.<org.apache.fop.area.inline.WordArea: int[] getLetterAdjustArray()>()
+1183158594:$r3 = virtualinvoke g2d.<java.awt.Graphics2D: java.awt.Font getFont()>()
+1025076498:$r4 = virtualinvoke g2d.<java.awt.Graphics2D: java.awt.font.FontRenderContext getFontRenderContext()>()
+1172196075:gv = virtualinvoke $r3.<java.awt.Font: java.awt.font.GlyphVector createGlyphVector(java.awt.font.FontRenderContext,java.lang.String)>($r4, s)
+2095087209:additionalWidth = 0.0
+942529402:if letterAdjust != null goto offsets = staticinvoke <org.apache.fop.render.java2d.Java2DRenderer: int[] getGlyphOffsets(java.lang.String,org.apache.fop.fonts.Font,org.apache.fop.area.inline.TextArea,int[])>(s, font, text, letterAdjust)
+1715798994:$i0 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getTextLetterSpaceAdjust()>()
+1023280242:if $i0 != 0 goto offsets = staticinvoke <org.apache.fop.render.java2d.Java2DRenderer: int[] getGlyphOffsets(java.lang.String,org.apache.fop.fonts.Font,org.apache.fop.area.inline.TextArea,int[])>(s, font, text, letterAdjust)
+1467340965:$i0 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getTextWordSpaceAdjust()>()
+2044880254:if $i0 != 0 goto offsets = staticinvoke <org.apache.fop.render.java2d.Java2DRenderer: int[] getGlyphOffsets(java.lang.String,org.apache.fop.fonts.Font,org.apache.fop.area.inline.TextArea,int[])>(s, font, text, letterAdjust)
+2121626037:goto [?= virtualinvoke g2d.<java.awt.Graphics2D: void drawGlyphVector(java.awt.font.GlyphVector,float,float)>(gv, textCursor, 0.0F)]
+1619226094:offsets = staticinvoke <org.apache.fop.render.java2d.Java2DRenderer: int[] getGlyphOffsets(java.lang.String,org.apache.fop.fonts.Font,org.apache.fop.area.inline.TextArea,int[])>(s, font, text, letterAdjust)
+1950899960:cursor = 0.0F
+1346453985:i = 0
+336535246:$i1 = lengthof offsets
+1823436971:if i >= $i1 goto $d2 = (double) cursor
+651213189:pt = virtualinvoke gv.<java.awt.font.GlyphVector: java.awt.geom.Point2D getGlyphPosition(int)>(i)
+1056562100:$d0 = (double) cursor
+1438596773:$d1 = virtualinvoke pt.<java.awt.geom.Point2D: double getY()>()
+2125065885:virtualinvoke pt.<java.awt.geom.Point2D: void setLocation(double,double)>($d0, $d1)
+1076472374:virtualinvoke gv.<java.awt.font.GlyphVector: void setGlyphPosition(int,java.awt.geom.Point2D)>(i, pt)
+745281280:$i1 = offsets[i]
+1817843656:$f0 = (float) $i1
+1503940293:$f0 = $f0 / 1000.0F
+1375689544:cursor = cursor + $f0
+1405222406:i = i + 1
+1695311583:goto [?= $i1 = lengthof offsets]
+1806699022:$d2 = (double) cursor
+417259607:$r5 = virtualinvoke gv.<java.awt.font.GlyphVector: java.awt.geom.Rectangle2D getLogicalBounds()>()
+1348107394:$d3 = virtualinvoke $r5.<java.awt.geom.Rectangle2D: double getWidth()>()
+1688368698:additionalWidth = $d2 - $d3
+2075845818:virtualinvoke g2d.<java.awt.Graphics2D: void drawGlyphVector(java.awt.font.GlyphVector,float,float)>(gv, textCursor, 0.0F)
+914745633:$d2 = (double) textCursor
+597946418:$r5 = virtualinvoke gv.<java.awt.font.GlyphVector: java.awt.geom.Rectangle2D getLogicalBounds()>()
+1609463013:$d3 = virtualinvoke $r5.<java.awt.geom.Rectangle2D: double getWidth()>()
+1778666249:$d3 = $d3 + additionalWidth
+1071280703:$d2 = $d2 + $d3
+328728629:textCursor = (float) $d2
+1614127519:goto [?= (branch)]
+1353508570:$z0 = child instanceof org.apache.fop.area.inline.SpaceArea
+124263319:if $z0 == 0 goto $r6 = new java.lang.IllegalStateException
+408063112:space = (org.apache.fop.area.inline.SpaceArea) child
+469585803:s = virtualinvoke space.<org.apache.fop.area.inline.SpaceArea: java.lang.String getSpace()>()
+1063710644:sp = virtualinvoke s.<java.lang.String: char charAt(int)>(0)
+721775541:$z0 = virtualinvoke space.<org.apache.fop.area.inline.SpaceArea: boolean isAdjustable()>()
+1893879331:if $z0 == 0 goto $i0 = 0
+450540813:$i0 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getTextWordSpaceAdjust()>()
+362661057:$i2 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getTextLetterSpaceAdjust()>()
+685794813:$i1 = 2 * $i2
+608688642:$i0 = $i0 + $i1
+1765395433:goto [?= tws = $i0]
+1366975479:$i0 = 0
+976819947:tws = $i0
+1196162867:$i1 = virtualinvoke font.<org.apache.fop.fonts.Font: int getCharWidth(char)>(sp)
+1683988684:$i1 = $i1 + tws
+1110828175:$f0 = (float) $i1
+314842568:$f0 = $f0 / 1000.0F
+17253767:textCursor = textCursor + $f0
+73769624:goto [?= (branch)]
+748006249:$r6 = new java.lang.IllegalStateException
+1096776712:$r7 = new java.lang.StringBuffer
+1682369734:specialinvoke $r7.<java.lang.StringBuffer: void <init>()>()
+1394504895:$r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unsupported child element: ")
+951589272:$r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(child)
+1050175295:$r8 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.String toString()>()
+128088372:specialinvoke $r6.<java.lang.IllegalStateException: void <init>(java.lang.String)>($r8)
+1002653910:throw $r6
+300087361:goto [?= $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>()]
+1276673171:return

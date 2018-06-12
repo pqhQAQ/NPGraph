@@ -1,0 +1,107 @@
+public class org.apache.fop.fo.properties.GenericShorthandParser extends java.lang.Object implements org.apache.fop.fo.properties.ShorthandParser
+{
+
+    public void <init>()
+    {
+        org.apache.fop.fo.properties.GenericShorthandParser this;
+
+        this := @this: org.apache.fop.fo.properties.GenericShorthandParser;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    protected org.apache.fop.fo.properties.Property getElement(org.apache.fop.fo.properties.Property, int)
+    {
+        org.apache.fop.fo.properties.GenericShorthandParser this;
+        org.apache.fop.fo.properties.Property list, $r2;
+        int index, $i0;
+        java.util.List $r0;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.fo.properties.GenericShorthandParser;
+        list := @parameter0: org.apache.fop.fo.properties.Property;
+        index := @parameter1: int;
+        $r0 = virtualinvoke list.<org.apache.fop.fo.properties.Property: java.util.List getList()>();
+        $i0 = interfaceinvoke $r0.<java.util.List: int size()>();
+        if $i0 <= index goto label0;
+
+        $r0 = virtualinvoke list.<org.apache.fop.fo.properties.Property: java.util.List getList()>();
+        $r1 = interfaceinvoke $r0.<java.util.List: java.lang.Object get(int)>(index);
+        $r2 = (org.apache.fop.fo.properties.Property) $r1;
+        return $r2;
+
+     label0:
+        return null;
+    }
+
+    public org.apache.fop.fo.properties.Property getValueForProperty(int, org.apache.fop.fo.properties.Property, org.apache.fop.fo.properties.PropertyMaker, org.apache.fop.fo.PropertyList) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.properties.GenericShorthandParser this;
+        int propId, $i0;
+        org.apache.fop.fo.properties.Property property, $r1;
+        org.apache.fop.fo.properties.PropertyMaker maker;
+        org.apache.fop.fo.PropertyList propertyList;
+        java.lang.String sval;
+        java.util.List $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.properties.GenericShorthandParser;
+        propId := @parameter0: int;
+        property := @parameter1: org.apache.fop.fo.properties.Property;
+        maker := @parameter2: org.apache.fop.fo.properties.PropertyMaker;
+        propertyList := @parameter3: org.apache.fop.fo.PropertyList;
+        $r0 = virtualinvoke property.<org.apache.fop.fo.properties.Property: java.util.List getList()>();
+        $i0 = interfaceinvoke $r0.<java.util.List: int size()>();
+        if $i0 != 1 goto label0;
+
+        $r1 = virtualinvoke this.<org.apache.fop.fo.properties.GenericShorthandParser: org.apache.fop.fo.properties.Property getElement(org.apache.fop.fo.properties.Property,int)>(property, 0);
+        sval = virtualinvoke $r1.<org.apache.fop.fo.properties.Property: java.lang.String getString()>();
+        if sval == null goto label0;
+
+        $z0 = virtualinvoke sval.<java.lang.String: boolean equals(java.lang.Object)>("inherit");
+        if $z0 == 0 goto label0;
+
+        $r1 = virtualinvoke propertyList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property getFromParent(int)>(propId);
+        return $r1;
+
+     label0:
+        $r1 = virtualinvoke this.<org.apache.fop.fo.properties.GenericShorthandParser: org.apache.fop.fo.properties.Property convertValueForProperty(int,org.apache.fop.fo.properties.Property,org.apache.fop.fo.properties.PropertyMaker,org.apache.fop.fo.PropertyList)>(propId, property, maker, propertyList);
+        return $r1;
+    }
+
+    protected org.apache.fop.fo.properties.Property convertValueForProperty(int, org.apache.fop.fo.properties.Property, org.apache.fop.fo.properties.PropertyMaker, org.apache.fop.fo.PropertyList) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.properties.GenericShorthandParser this;
+        int propId;
+        org.apache.fop.fo.properties.Property property, prop, p;
+        org.apache.fop.fo.properties.PropertyMaker maker;
+        org.apache.fop.fo.PropertyList propertyList;
+        java.util.Iterator iprop;
+        java.util.List $r0;
+        boolean $z0;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.fo.properties.GenericShorthandParser;
+        propId := @parameter0: int;
+        property := @parameter1: org.apache.fop.fo.properties.Property;
+        maker := @parameter2: org.apache.fop.fo.properties.PropertyMaker;
+        propertyList := @parameter3: org.apache.fop.fo.PropertyList;
+        prop = null;
+        $r0 = virtualinvoke property.<org.apache.fop.fo.properties.Property: java.util.List getList()>();
+        iprop = interfaceinvoke $r0.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iprop.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        if prop != null goto label1;
+
+        $r1 = interfaceinvoke iprop.<java.util.Iterator: java.lang.Object next()>();
+        p = (org.apache.fop.fo.properties.Property) $r1;
+        prop = virtualinvoke maker.<org.apache.fop.fo.properties.PropertyMaker: org.apache.fop.fo.properties.Property convertShorthandProperty(org.apache.fop.fo.PropertyList,org.apache.fop.fo.properties.Property,org.apache.fop.fo.FObj)>(propertyList, p, null);
+        goto label0;
+
+     label1:
+        return prop;
+    }
+}

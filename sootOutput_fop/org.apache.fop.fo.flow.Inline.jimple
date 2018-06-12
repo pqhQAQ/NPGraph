@@ -1,0 +1,204 @@
+public class org.apache.fop.fo.flow.Inline extends org.apache.fop.fo.flow.InlineLevel
+{
+    private org.apache.fop.datatypes.Length alignmentAdjust;
+    private int alignmentBaseline;
+    private org.apache.fop.datatypes.Length baselineShift;
+    private int dominantBaseline;
+    private boolean blockOrInlineItemFound;
+    private boolean canHaveBlockLevelChildren;
+
+    public void <init>(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.flow.Inline this;
+        org.apache.fop.fo.FONode parent;
+
+        this := @this: org.apache.fop.fo.flow.Inline;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        specialinvoke this.<org.apache.fop.fo.flow.InlineLevel: void <init>(org.apache.fop.fo.FONode)>(parent);
+        this.<org.apache.fop.fo.flow.Inline: boolean blockOrInlineItemFound> = 0;
+        this.<org.apache.fop.fo.flow.Inline: boolean canHaveBlockLevelChildren> = 1;
+        return;
+    }
+
+    public void bind(org.apache.fop.fo.PropertyList) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.Inline this;
+        org.apache.fop.fo.PropertyList pList;
+        org.apache.fop.fo.properties.Property $r0;
+        org.apache.fop.datatypes.Length $r1;
+        int $i0;
+
+        this := @this: org.apache.fop.fo.flow.Inline;
+        pList := @parameter0: org.apache.fop.fo.PropertyList;
+        specialinvoke this.<org.apache.fop.fo.flow.InlineLevel: void bind(org.apache.fop.fo.PropertyList)>(pList);
+        $r0 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(3);
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        this.<org.apache.fop.fo.flow.Inline: org.apache.fop.datatypes.Length alignmentAdjust> = $r1;
+        $r0 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(4);
+        $i0 = virtualinvoke $r0.<org.apache.fop.fo.properties.Property: int getEnum()>();
+        this.<org.apache.fop.fo.flow.Inline: int alignmentBaseline> = $i0;
+        $r0 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(15);
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        this.<org.apache.fop.fo.flow.Inline: org.apache.fop.datatypes.Length baselineShift> = $r1;
+        $r0 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(82);
+        $i0 = virtualinvoke $r0.<org.apache.fop.fo.properties.Property: int getEnum()>();
+        this.<org.apache.fop.fo.flow.Inline: int dominantBaseline> = $i0;
+        return;
+    }
+
+    protected void startOfNode() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.Inline this;
+        int lvlLeader, lvlFootnote, lvlInCntr;
+        org.apache.fop.fo.FOEventHandler $r0;
+
+        this := @this: org.apache.fop.fo.flow.Inline;
+        specialinvoke this.<org.apache.fop.fo.flow.InlineLevel: void startOfNode()>();
+        lvlLeader = virtualinvoke this.<org.apache.fop.fo.flow.Inline: int findAncestor(int)>(19);
+        lvlFootnote = virtualinvoke this.<org.apache.fop.fo.flow.Inline: int findAncestor(int)>(12);
+        lvlInCntr = virtualinvoke this.<org.apache.fop.fo.flow.Inline: int findAncestor(int)>(16);
+        if lvlLeader <= 0 goto label1;
+
+        if lvlInCntr < 0 goto label0;
+
+        if lvlInCntr <= 0 goto label3;
+
+        if lvlInCntr <= lvlLeader goto label3;
+
+     label0:
+        this.<org.apache.fop.fo.flow.Inline: boolean canHaveBlockLevelChildren> = 0;
+        goto label3;
+
+     label1:
+        if lvlFootnote <= 0 goto label3;
+
+        if lvlInCntr < 0 goto label2;
+
+        if lvlInCntr <= lvlFootnote goto label3;
+
+     label2:
+        this.<org.apache.fop.fo.flow.Inline: boolean canHaveBlockLevelChildren> = 0;
+
+     label3:
+        $r0 = virtualinvoke this.<org.apache.fop.fo.flow.Inline: org.apache.fop.fo.FOEventHandler getFOEventHandler()>();
+        virtualinvoke $r0.<org.apache.fop.fo.FOEventHandler: void startInline(org.apache.fop.fo.flow.Inline)>(this);
+        return;
+    }
+
+    protected void endOfNode() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.Inline this;
+        org.apache.fop.fo.FOEventHandler $r0;
+
+        this := @this: org.apache.fop.fo.flow.Inline;
+        specialinvoke this.<org.apache.fop.fo.flow.InlineLevel: void endOfNode()>();
+        $r0 = virtualinvoke this.<org.apache.fop.fo.flow.Inline: org.apache.fop.fo.FOEventHandler getFOEventHandler()>();
+        virtualinvoke $r0.<org.apache.fop.fo.FOEventHandler: void endInline(org.apache.fop.fo.flow.Inline)>(this);
+        return;
+    }
+
+    protected void validateChildNode(org.xml.sax.Locator, java.lang.String, java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.flow.Inline this;
+        org.xml.sax.Locator loc;
+        java.lang.String nsURI, localName, $r0, ruleViolated;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.flow.Inline;
+        loc := @parameter0: org.xml.sax.Locator;
+        nsURI := @parameter1: java.lang.String;
+        localName := @parameter2: java.lang.String;
+        $r0 = "http://www.w3.org/1999/XSL/Format";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(nsURI);
+        if $z0 == 0 goto label0;
+
+        $z0 = virtualinvoke localName.<java.lang.String: boolean equals(java.lang.Object)>("marker");
+        if $z0 == 0 goto label0;
+
+        $z0 = this.<org.apache.fop.fo.flow.Inline: boolean blockOrInlineItemFound>;
+        if $z0 == 0 goto label3;
+
+        virtualinvoke this.<org.apache.fop.fo.flow.Inline: void nodesOutOfOrderError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, "fo:marker", "(#PCDATA|%inline;|%block;)");
+        goto label3;
+
+     label0:
+        $z0 = virtualinvoke this.<org.apache.fop.fo.flow.Inline: boolean isBlockOrInlineItem(java.lang.String,java.lang.String)>(nsURI, localName);
+        if $z0 != 0 goto label1;
+
+        virtualinvoke this.<org.apache.fop.fo.flow.Inline: void invalidChildError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, nsURI, localName);
+        goto label3;
+
+     label1:
+        $z0 = this.<org.apache.fop.fo.flow.Inline: boolean canHaveBlockLevelChildren>;
+        if $z0 != 0 goto label2;
+
+        $z0 = virtualinvoke this.<org.apache.fop.fo.flow.Inline: boolean isBlockItem(java.lang.String,java.lang.String)>(nsURI, localName);
+        if $z0 == 0 goto label2;
+
+        ruleViolated = " An fo:inline that is a descendant of an fo:leader or fo:footnote may not have block-level children, unless it has a nearer ancestor that is an fo:inline-container.";
+        virtualinvoke this.<org.apache.fop.fo.flow.Inline: void invalidChildError(org.xml.sax.Locator,java.lang.String,java.lang.String,java.lang.String)>(loc, nsURI, localName, ruleViolated);
+        goto label3;
+
+     label2:
+        this.<org.apache.fop.fo.flow.Inline: boolean blockOrInlineItemFound> = 1;
+
+     label3:
+        return;
+    }
+
+    public org.apache.fop.datatypes.Length getAlignmentAdjust()
+    {
+        org.apache.fop.fo.flow.Inline this;
+        org.apache.fop.datatypes.Length $r0;
+
+        this := @this: org.apache.fop.fo.flow.Inline;
+        $r0 = this.<org.apache.fop.fo.flow.Inline: org.apache.fop.datatypes.Length alignmentAdjust>;
+        return $r0;
+    }
+
+    public int getAlignmentBaseline()
+    {
+        org.apache.fop.fo.flow.Inline this;
+        int $i0;
+
+        this := @this: org.apache.fop.fo.flow.Inline;
+        $i0 = this.<org.apache.fop.fo.flow.Inline: int alignmentBaseline>;
+        return $i0;
+    }
+
+    public org.apache.fop.datatypes.Length getBaselineShift()
+    {
+        org.apache.fop.fo.flow.Inline this;
+        org.apache.fop.datatypes.Length $r0;
+
+        this := @this: org.apache.fop.fo.flow.Inline;
+        $r0 = this.<org.apache.fop.fo.flow.Inline: org.apache.fop.datatypes.Length baselineShift>;
+        return $r0;
+    }
+
+    public int getDominantBaseline()
+    {
+        org.apache.fop.fo.flow.Inline this;
+        int $i0;
+
+        this := @this: org.apache.fop.fo.flow.Inline;
+        $i0 = this.<org.apache.fop.fo.flow.Inline: int dominantBaseline>;
+        return $i0;
+    }
+
+    public java.lang.String getLocalName()
+    {
+        org.apache.fop.fo.flow.Inline this;
+
+        this := @this: org.apache.fop.fo.flow.Inline;
+        return "inline";
+    }
+
+    public int getNameId()
+    {
+        org.apache.fop.fo.flow.Inline this;
+
+        this := @this: org.apache.fop.fo.flow.Inline;
+        return 15;
+    }
+}

@@ -1,0 +1,944 @@
+public class org.apache.fop.layoutmgr.TraitSetter extends java.lang.Object
+{
+    protected static org.apache.commons.logging.Log log;
+    static java.lang.Class class$org$apache$fop$layoutmgr$TraitSetter;
+    static final boolean $assertionsDisabled;
+
+    public void <init>()
+    {
+        org.apache.fop.layoutmgr.TraitSetter this;
+
+        this := @this: org.apache.fop.layoutmgr.TraitSetter;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public static void setBorderPaddingTraits(org.apache.fop.area.Area, org.apache.fop.fo.properties.CommonBorderPaddingBackground, boolean, boolean, org.apache.fop.datatypes.PercentBaseContext)
+    {
+        org.apache.fop.area.Area area;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground bpProps;
+        boolean bNotFirst, bNotLast;
+        org.apache.fop.datatypes.PercentBaseContext context;
+        int iBP;
+        java.lang.Integer $r0, $r1, $r2;
+
+        area := @parameter0: org.apache.fop.area.Area;
+        bpProps := @parameter1: org.apache.fop.fo.properties.CommonBorderPaddingBackground;
+        bNotFirst := @parameter2: boolean;
+        bNotLast := @parameter3: boolean;
+        context := @parameter4: org.apache.fop.datatypes.PercentBaseContext;
+        iBP = virtualinvoke bpProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPadding(int,boolean,org.apache.fop.datatypes.PercentBaseContext)>(2, bNotFirst, context);
+        if iBP <= 0 goto label0;
+
+        $r1 = <org.apache.fop.area.Trait: java.lang.Integer PADDING_START>;
+        $r2 = new java.lang.Integer;
+        specialinvoke $r2.<java.lang.Integer: void <init>(int)>(iBP);
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r1, $r2);
+
+     label0:
+        iBP = virtualinvoke bpProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPadding(int,boolean,org.apache.fop.datatypes.PercentBaseContext)>(3, bNotLast, context);
+        if iBP <= 0 goto label1;
+
+        $r1 = <org.apache.fop.area.Trait: java.lang.Integer PADDING_END>;
+        $r2 = new java.lang.Integer;
+        specialinvoke $r2.<java.lang.Integer: void <init>(int)>(iBP);
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r1, $r2);
+
+     label1:
+        iBP = virtualinvoke bpProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPadding(int,boolean,org.apache.fop.datatypes.PercentBaseContext)>(0, 0, context);
+        if iBP <= 0 goto label2;
+
+        $r1 = <org.apache.fop.area.Trait: java.lang.Integer PADDING_BEFORE>;
+        $r2 = new java.lang.Integer;
+        specialinvoke $r2.<java.lang.Integer: void <init>(int)>(iBP);
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r1, $r2);
+
+     label2:
+        iBP = virtualinvoke bpProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPadding(int,boolean,org.apache.fop.datatypes.PercentBaseContext)>(1, 0, context);
+        if iBP <= 0 goto label3;
+
+        $r1 = <org.apache.fop.area.Trait: java.lang.Integer PADDING_AFTER>;
+        $r2 = new java.lang.Integer;
+        specialinvoke $r2.<java.lang.Integer: void <init>(int)>(iBP);
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r1, $r2);
+
+     label3:
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_START>;
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addBorderTrait(org.apache.fop.area.Area,org.apache.fop.fo.properties.CommonBorderPaddingBackground,boolean,int,int,java.lang.Object)>(area, bpProps, bNotFirst, 2, 0, $r0);
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_END>;
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addBorderTrait(org.apache.fop.area.Area,org.apache.fop.fo.properties.CommonBorderPaddingBackground,boolean,int,int,java.lang.Object)>(area, bpProps, bNotLast, 3, 0, $r0);
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_BEFORE>;
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addBorderTrait(org.apache.fop.area.Area,org.apache.fop.fo.properties.CommonBorderPaddingBackground,boolean,int,int,java.lang.Object)>(area, bpProps, 0, 0, 0, $r0);
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_AFTER>;
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addBorderTrait(org.apache.fop.area.Area,org.apache.fop.fo.properties.CommonBorderPaddingBackground,boolean,int,int,java.lang.Object)>(area, bpProps, 0, 1, 0, $r0);
+        return;
+    }
+
+    private static void addBorderTrait(org.apache.fop.area.Area, org.apache.fop.fo.properties.CommonBorderPaddingBackground, boolean, int, int, java.lang.Object)
+    {
+        org.apache.fop.area.Area area;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground bpProps;
+        boolean bDiscard;
+        int iSide, mode, iBP, $i0;
+        java.lang.Object oTrait;
+        org.apache.fop.traits.BorderProps $r0;
+        java.awt.Color $r1;
+
+        area := @parameter0: org.apache.fop.area.Area;
+        bpProps := @parameter1: org.apache.fop.fo.properties.CommonBorderPaddingBackground;
+        bDiscard := @parameter2: boolean;
+        iSide := @parameter3: int;
+        mode := @parameter4: int;
+        oTrait := @parameter5: java.lang.Object;
+        iBP = virtualinvoke bpProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getBorderWidth(int,boolean)>(iSide, bDiscard);
+        if iBP <= 0 goto label0;
+
+        $r0 = new org.apache.fop.traits.BorderProps;
+        $i0 = virtualinvoke bpProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getBorderStyle(int)>(iSide);
+        $r1 = virtualinvoke bpProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: java.awt.Color getBorderColor(int)>(iSide);
+        specialinvoke $r0.<org.apache.fop.traits.BorderProps: void <init>(int,int,java.awt.Color,int)>($i0, iBP, $r1, mode);
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>(oTrait, $r0);
+
+     label0:
+        return;
+    }
+
+    public static void addBorders(org.apache.fop.area.Area, org.apache.fop.fo.properties.CommonBorderPaddingBackground, org.apache.fop.datatypes.PercentBaseContext)
+    {
+        org.apache.fop.area.Area area;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground bordProps;
+        org.apache.fop.datatypes.PercentBaseContext context;
+        org.apache.fop.traits.BorderProps bps;
+        java.lang.Integer $r0;
+
+        area := @parameter0: org.apache.fop.area.Area;
+        bordProps := @parameter1: org.apache.fop.fo.properties.CommonBorderPaddingBackground;
+        context := @parameter2: org.apache.fop.datatypes.PercentBaseContext;
+        bps = staticinvoke <org.apache.fop.layoutmgr.TraitSetter: org.apache.fop.traits.BorderProps getBorderProps(org.apache.fop.fo.properties.CommonBorderPaddingBackground,int)>(bordProps, 0);
+        if bps == null goto label0;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_BEFORE>;
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, bps);
+
+     label0:
+        bps = staticinvoke <org.apache.fop.layoutmgr.TraitSetter: org.apache.fop.traits.BorderProps getBorderProps(org.apache.fop.fo.properties.CommonBorderPaddingBackground,int)>(bordProps, 1);
+        if bps == null goto label1;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_AFTER>;
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, bps);
+
+     label1:
+        bps = staticinvoke <org.apache.fop.layoutmgr.TraitSetter: org.apache.fop.traits.BorderProps getBorderProps(org.apache.fop.fo.properties.CommonBorderPaddingBackground,int)>(bordProps, 2);
+        if bps == null goto label2;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_START>;
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, bps);
+
+     label2:
+        bps = staticinvoke <org.apache.fop.layoutmgr.TraitSetter: org.apache.fop.traits.BorderProps getBorderProps(org.apache.fop.fo.properties.CommonBorderPaddingBackground,int)>(bordProps, 3);
+        if bps == null goto label3;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_END>;
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, bps);
+
+     label3:
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addPadding(org.apache.fop.area.Area,org.apache.fop.fo.properties.CommonBorderPaddingBackground,org.apache.fop.datatypes.PercentBaseContext)>(area, bordProps, context);
+        return;
+    }
+
+    public static void addBorders(org.apache.fop.area.Area, org.apache.fop.fo.properties.CommonBorderPaddingBackground, boolean, boolean, boolean, boolean, org.apache.fop.datatypes.PercentBaseContext)
+    {
+        org.apache.fop.area.Area area;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground bordProps;
+        boolean discardBefore, discardAfter, discardStart, discardEnd;
+        org.apache.fop.datatypes.PercentBaseContext context;
+        org.apache.fop.traits.BorderProps bps;
+        java.lang.Integer $r0;
+
+        area := @parameter0: org.apache.fop.area.Area;
+        bordProps := @parameter1: org.apache.fop.fo.properties.CommonBorderPaddingBackground;
+        discardBefore := @parameter2: boolean;
+        discardAfter := @parameter3: boolean;
+        discardStart := @parameter4: boolean;
+        discardEnd := @parameter5: boolean;
+        context := @parameter6: org.apache.fop.datatypes.PercentBaseContext;
+        bps = staticinvoke <org.apache.fop.layoutmgr.TraitSetter: org.apache.fop.traits.BorderProps getBorderProps(org.apache.fop.fo.properties.CommonBorderPaddingBackground,int)>(bordProps, 0);
+        if bps == null goto label0;
+
+        if discardBefore != 0 goto label0;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_BEFORE>;
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, bps);
+
+     label0:
+        bps = staticinvoke <org.apache.fop.layoutmgr.TraitSetter: org.apache.fop.traits.BorderProps getBorderProps(org.apache.fop.fo.properties.CommonBorderPaddingBackground,int)>(bordProps, 1);
+        if bps == null goto label1;
+
+        if discardAfter != 0 goto label1;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_AFTER>;
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, bps);
+
+     label1:
+        bps = staticinvoke <org.apache.fop.layoutmgr.TraitSetter: org.apache.fop.traits.BorderProps getBorderProps(org.apache.fop.fo.properties.CommonBorderPaddingBackground,int)>(bordProps, 2);
+        if bps == null goto label2;
+
+        if discardStart != 0 goto label2;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_START>;
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, bps);
+
+     label2:
+        bps = staticinvoke <org.apache.fop.layoutmgr.TraitSetter: org.apache.fop.traits.BorderProps getBorderProps(org.apache.fop.fo.properties.CommonBorderPaddingBackground,int)>(bordProps, 3);
+        if bps == null goto label3;
+
+        if discardEnd != 0 goto label3;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_END>;
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, bps);
+
+     label3:
+        return;
+    }
+
+    public static void addCollapsingBorders(org.apache.fop.area.Area, org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo, org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo, org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo, org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo, boolean[])
+    {
+        org.apache.fop.area.Area area;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo borderBefore, borderAfter, borderStart, borderEnd;
+        boolean[] outer;
+        org.apache.fop.traits.BorderProps bps;
+        boolean $z0;
+        java.lang.Integer $r0;
+
+        area := @parameter0: org.apache.fop.area.Area;
+        borderBefore := @parameter1: org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo;
+        borderAfter := @parameter2: org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo;
+        borderStart := @parameter3: org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo;
+        borderEnd := @parameter4: org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo;
+        outer := @parameter5: boolean[];
+        $z0 = outer[0];
+        bps = staticinvoke <org.apache.fop.layoutmgr.TraitSetter: org.apache.fop.traits.BorderProps getCollapsingBorderProps(org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo,boolean)>(borderBefore, $z0);
+        if bps == null goto label0;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_BEFORE>;
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, bps);
+
+     label0:
+        $z0 = outer[1];
+        bps = staticinvoke <org.apache.fop.layoutmgr.TraitSetter: org.apache.fop.traits.BorderProps getCollapsingBorderProps(org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo,boolean)>(borderAfter, $z0);
+        if bps == null goto label1;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_AFTER>;
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, bps);
+
+     label1:
+        $z0 = outer[2];
+        bps = staticinvoke <org.apache.fop.layoutmgr.TraitSetter: org.apache.fop.traits.BorderProps getCollapsingBorderProps(org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo,boolean)>(borderStart, $z0);
+        if bps == null goto label2;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_START>;
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, bps);
+
+     label2:
+        $z0 = outer[3];
+        bps = staticinvoke <org.apache.fop.layoutmgr.TraitSetter: org.apache.fop.traits.BorderProps getCollapsingBorderProps(org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo,boolean)>(borderEnd, $z0);
+        if bps == null goto label3;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BORDER_END>;
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, bps);
+
+     label3:
+        return;
+    }
+
+    private static void addPadding(org.apache.fop.area.Area, org.apache.fop.fo.properties.CommonBorderPaddingBackground, org.apache.fop.datatypes.PercentBaseContext)
+    {
+        org.apache.fop.area.Area area;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground bordProps;
+        org.apache.fop.datatypes.PercentBaseContext context;
+
+        area := @parameter0: org.apache.fop.area.Area;
+        bordProps := @parameter1: org.apache.fop.fo.properties.CommonBorderPaddingBackground;
+        context := @parameter2: org.apache.fop.datatypes.PercentBaseContext;
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addPadding(org.apache.fop.area.Area,org.apache.fop.fo.properties.CommonBorderPaddingBackground,boolean,boolean,boolean,boolean,org.apache.fop.datatypes.PercentBaseContext)>(area, bordProps, 0, 0, 0, 0, context);
+        return;
+    }
+
+    public static void addPadding(org.apache.fop.area.Area, org.apache.fop.fo.properties.CommonBorderPaddingBackground, boolean, boolean, boolean, boolean, org.apache.fop.datatypes.PercentBaseContext)
+    {
+        org.apache.fop.area.Area area;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground bordProps;
+        boolean discardBefore, discardAfter, discardStart, discardEnd;
+        org.apache.fop.datatypes.PercentBaseContext context;
+        int padding;
+        java.lang.Integer $r0, $r1;
+
+        area := @parameter0: org.apache.fop.area.Area;
+        bordProps := @parameter1: org.apache.fop.fo.properties.CommonBorderPaddingBackground;
+        discardBefore := @parameter2: boolean;
+        discardAfter := @parameter3: boolean;
+        discardStart := @parameter4: boolean;
+        discardEnd := @parameter5: boolean;
+        context := @parameter6: org.apache.fop.datatypes.PercentBaseContext;
+        padding = virtualinvoke bordProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPadding(int,boolean,org.apache.fop.datatypes.PercentBaseContext)>(0, discardBefore, context);
+        if padding == 0 goto label0;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer PADDING_BEFORE>;
+        $r1 = new java.lang.Integer;
+        specialinvoke $r1.<java.lang.Integer: void <init>(int)>(padding);
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, $r1);
+
+     label0:
+        padding = virtualinvoke bordProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPadding(int,boolean,org.apache.fop.datatypes.PercentBaseContext)>(1, discardAfter, context);
+        if padding == 0 goto label1;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer PADDING_AFTER>;
+        $r1 = new java.lang.Integer;
+        specialinvoke $r1.<java.lang.Integer: void <init>(int)>(padding);
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, $r1);
+
+     label1:
+        padding = virtualinvoke bordProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPadding(int,boolean,org.apache.fop.datatypes.PercentBaseContext)>(2, discardStart, context);
+        if padding == 0 goto label2;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer PADDING_START>;
+        $r1 = new java.lang.Integer;
+        specialinvoke $r1.<java.lang.Integer: void <init>(int)>(padding);
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, $r1);
+
+     label2:
+        padding = virtualinvoke bordProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPadding(int,boolean,org.apache.fop.datatypes.PercentBaseContext)>(3, discardEnd, context);
+        if padding == 0 goto label3;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer PADDING_END>;
+        $r1 = new java.lang.Integer;
+        specialinvoke $r1.<java.lang.Integer: void <init>(int)>(padding);
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, $r1);
+
+     label3:
+        return;
+    }
+
+    private static org.apache.fop.traits.BorderProps getBorderProps(org.apache.fop.fo.properties.CommonBorderPaddingBackground, int)
+    {
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground bordProps;
+        int side, width, $i0;
+        org.apache.fop.traits.BorderProps bps, $r0;
+        java.awt.Color $r1;
+
+        bordProps := @parameter0: org.apache.fop.fo.properties.CommonBorderPaddingBackground;
+        side := @parameter1: int;
+        width = virtualinvoke bordProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getBorderWidth(int,boolean)>(side, 0);
+        if width == 0 goto label0;
+
+        $r0 = new org.apache.fop.traits.BorderProps;
+        $i0 = virtualinvoke bordProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getBorderStyle(int)>(side);
+        $r1 = virtualinvoke bordProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: java.awt.Color getBorderColor(int)>(side);
+        specialinvoke $r0.<org.apache.fop.traits.BorderProps: void <init>(int,int,java.awt.Color,int)>($i0, width, $r1, 0);
+        bps = $r0;
+        return bps;
+
+     label0:
+        return null;
+    }
+
+    private static org.apache.fop.traits.BorderProps getCollapsingBorderProps(org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo, boolean)
+    {
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo borderInfo;
+        boolean outer, $z0;
+        int width, $i1;
+        org.apache.fop.traits.BorderProps bps, $r1;
+        java.lang.AssertionError $r0;
+        java.awt.Color $r3;
+        byte $b2;
+
+        borderInfo := @parameter0: org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo;
+        outer := @parameter1: boolean;
+        $z0 = <org.apache.fop.layoutmgr.TraitSetter: boolean $assertionsDisabled>;
+        if $z0 != 0 goto label0;
+
+        if borderInfo != null goto label0;
+
+        $r0 = new java.lang.AssertionError;
+        specialinvoke $r0.<java.lang.AssertionError: void <init>()>();
+        throw $r0;
+
+     label0:
+        width = virtualinvoke borderInfo.<org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo: int getRetainedWidth()>();
+        if width == 0 goto label3;
+
+        $r1 = new org.apache.fop.traits.BorderProps;
+        $i1 = virtualinvoke borderInfo.<org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo: int getStyle()>();
+        $r3 = virtualinvoke borderInfo.<org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo: java.awt.Color getColor()>();
+        if outer == 0 goto label1;
+
+        $b2 = 2;
+        goto label2;
+
+     label1:
+        $b2 = 1;
+
+     label2:
+        specialinvoke $r1.<org.apache.fop.traits.BorderProps: void <init>(int,int,java.awt.Color,int)>($i1, width, $r3, $b2);
+        bps = $r1;
+        return bps;
+
+     label3:
+        return null;
+    }
+
+    public static void addBackground(org.apache.fop.area.Area, org.apache.fop.fo.properties.CommonBorderPaddingBackground, org.apache.fop.datatypes.PercentBaseContext, int, int, int, int)
+    {
+        org.apache.fop.area.Area area;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground backProps;
+        org.apache.fop.datatypes.PercentBaseContext context;
+        int ipdShift, bpdShift, referenceIPD, referenceBPD, $i0, $i1, $i2, $i3, $i4;
+        org.apache.fop.area.Trait$Background back, $r0;
+        org.apache.fop.datatypes.SimplePercentBaseContext refContext, $r6;
+        boolean $z0;
+        java.awt.Color $r1;
+        org.apache.xmlgraphics.image.loader.ImageInfo $r2, $r4, $r7;
+        java.lang.String $r3;
+        org.apache.fop.datatypes.Length $r5, $r9;
+        org.apache.xmlgraphics.image.loader.ImageSize $r8;
+        org.apache.commons.logging.Log $r10;
+        java.lang.Integer $r11;
+
+        area := @parameter0: org.apache.fop.area.Area;
+        backProps := @parameter1: org.apache.fop.fo.properties.CommonBorderPaddingBackground;
+        context := @parameter2: org.apache.fop.datatypes.PercentBaseContext;
+        ipdShift := @parameter3: int;
+        bpdShift := @parameter4: int;
+        referenceIPD := @parameter5: int;
+        referenceBPD := @parameter6: int;
+        $z0 = virtualinvoke backProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: boolean hasBackground()>();
+        if $z0 != 0 goto label0;
+
+        return;
+
+     label0:
+        $r0 = new org.apache.fop.area.Trait$Background;
+        specialinvoke $r0.<org.apache.fop.area.Trait$Background: void <init>()>();
+        back = $r0;
+        $r1 = backProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: java.awt.Color backgroundColor>;
+        virtualinvoke back.<org.apache.fop.area.Trait$Background: void setColor(java.awt.Color)>($r1);
+        $r2 = virtualinvoke backProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: org.apache.xmlgraphics.image.loader.ImageInfo getImageInfo()>();
+        if $r2 == null goto label6;
+
+        $r3 = backProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: java.lang.String backgroundImage>;
+        virtualinvoke back.<org.apache.fop.area.Trait$Background: void setURL(java.lang.String)>($r3);
+        $r4 = virtualinvoke backProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: org.apache.xmlgraphics.image.loader.ImageInfo getImageInfo()>();
+        virtualinvoke back.<org.apache.fop.area.Trait$Background: void setImageInfo(org.apache.xmlgraphics.image.loader.ImageInfo)>($r4);
+        $i0 = backProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int backgroundRepeat>;
+        virtualinvoke back.<org.apache.fop.area.Trait$Background: void setRepeat(int)>($i0);
+        $r5 = backProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: org.apache.fop.datatypes.Length backgroundPositionHorizontal>;
+        if $r5 == null goto label3;
+
+        $i1 = virtualinvoke back.<org.apache.fop.area.Trait$Background: int getRepeat()>();
+        if $i1 == 96 goto label1;
+
+        $i1 = virtualinvoke back.<org.apache.fop.area.Trait$Background: int getRepeat()>();
+        if $i1 != 114 goto label3;
+
+     label1:
+        $i1 = virtualinvoke area.<org.apache.fop.area.Area: int getIPD()>();
+        if $i1 <= 0 goto label2;
+
+        $r6 = new org.apache.fop.datatypes.SimplePercentBaseContext;
+        $r7 = virtualinvoke back.<org.apache.fop.area.Trait$Background: org.apache.xmlgraphics.image.loader.ImageInfo getImageInfo()>();
+        $r8 = virtualinvoke $r7.<org.apache.xmlgraphics.image.loader.ImageInfo: org.apache.xmlgraphics.image.loader.ImageSize getSize()>();
+        $i2 = virtualinvoke $r8.<org.apache.xmlgraphics.image.loader.ImageSize: int getWidthMpt()>();
+        $i3 = referenceIPD - $i2;
+        specialinvoke $r6.<org.apache.fop.datatypes.SimplePercentBaseContext: void <init>(org.apache.fop.datatypes.PercentBaseContext,int,int)>(context, 9, $i3);
+        refContext = $r6;
+        $r9 = backProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: org.apache.fop.datatypes.Length backgroundPositionHorizontal>;
+        $i4 = interfaceinvoke $r9.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(refContext);
+        $i0 = ipdShift + $i4;
+        virtualinvoke back.<org.apache.fop.area.Trait$Background: void setHoriz(int)>($i0);
+        goto label3;
+
+     label2:
+        $r10 = <org.apache.fop.layoutmgr.TraitSetter: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r10.<org.apache.commons.logging.Log: void warn(java.lang.Object)>("Horizontal background image positioning ignored because the IPD was not set on the area. (Yes, it\'s a bug in FOP)");
+
+     label3:
+        $r5 = backProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: org.apache.fop.datatypes.Length backgroundPositionVertical>;
+        if $r5 == null goto label6;
+
+        $i1 = virtualinvoke back.<org.apache.fop.area.Trait$Background: int getRepeat()>();
+        if $i1 == 96 goto label4;
+
+        $i1 = virtualinvoke back.<org.apache.fop.area.Trait$Background: int getRepeat()>();
+        if $i1 != 113 goto label6;
+
+     label4:
+        $i1 = virtualinvoke area.<org.apache.fop.area.Area: int getBPD()>();
+        if $i1 <= 0 goto label5;
+
+        $r6 = new org.apache.fop.datatypes.SimplePercentBaseContext;
+        $r7 = virtualinvoke back.<org.apache.fop.area.Trait$Background: org.apache.xmlgraphics.image.loader.ImageInfo getImageInfo()>();
+        $r8 = virtualinvoke $r7.<org.apache.xmlgraphics.image.loader.ImageInfo: org.apache.xmlgraphics.image.loader.ImageSize getSize()>();
+        $i2 = virtualinvoke $r8.<org.apache.xmlgraphics.image.loader.ImageSize: int getHeightMpt()>();
+        $i3 = referenceBPD - $i2;
+        specialinvoke $r6.<org.apache.fop.datatypes.SimplePercentBaseContext: void <init>(org.apache.fop.datatypes.PercentBaseContext,int,int)>(context, 10, $i3);
+        refContext = $r6;
+        $r9 = backProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: org.apache.fop.datatypes.Length backgroundPositionVertical>;
+        $i4 = interfaceinvoke $r9.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(refContext);
+        $i0 = bpdShift + $i4;
+        virtualinvoke back.<org.apache.fop.area.Trait$Background: void setVertical(int)>($i0);
+        goto label6;
+
+     label5:
+        $r10 = <org.apache.fop.layoutmgr.TraitSetter: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r10.<org.apache.commons.logging.Log: void warn(java.lang.Object)>("Vertical background image positioning ignored because the BPD was not set on the area. (Yes, it\'s a bug in FOP)");
+
+     label6:
+        $r11 = <org.apache.fop.area.Trait: java.lang.Integer BACKGROUND>;
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r11, back);
+        return;
+    }
+
+    public static void addBackground(org.apache.fop.area.Area, org.apache.fop.fo.properties.CommonBorderPaddingBackground, org.apache.fop.datatypes.PercentBaseContext)
+    {
+        org.apache.fop.area.Area area;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground backProps;
+        org.apache.fop.datatypes.PercentBaseContext context;
+        org.apache.fop.area.Trait$Background back, $r0;
+        int width, height, $i0, $i1, $i2, $i3;
+        boolean $z0;
+        java.awt.Color $r1;
+        org.apache.xmlgraphics.image.loader.ImageInfo $r2, $r4, $r8;
+        java.lang.String $r3;
+        org.apache.fop.datatypes.Length $r5, $r6;
+        org.apache.fop.datatypes.SimplePercentBaseContext $r7;
+        org.apache.xmlgraphics.image.loader.ImageSize $r9;
+        org.apache.commons.logging.Log $r10;
+        java.lang.Integer $r11;
+
+        area := @parameter0: org.apache.fop.area.Area;
+        backProps := @parameter1: org.apache.fop.fo.properties.CommonBorderPaddingBackground;
+        context := @parameter2: org.apache.fop.datatypes.PercentBaseContext;
+        $z0 = virtualinvoke backProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: boolean hasBackground()>();
+        if $z0 != 0 goto label0;
+
+        return;
+
+     label0:
+        $r0 = new org.apache.fop.area.Trait$Background;
+        specialinvoke $r0.<org.apache.fop.area.Trait$Background: void <init>()>();
+        back = $r0;
+        $r1 = backProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: java.awt.Color backgroundColor>;
+        virtualinvoke back.<org.apache.fop.area.Trait$Background: void setColor(java.awt.Color)>($r1);
+        $r2 = virtualinvoke backProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: org.apache.xmlgraphics.image.loader.ImageInfo getImageInfo()>();
+        if $r2 == null goto label6;
+
+        $r3 = backProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: java.lang.String backgroundImage>;
+        virtualinvoke back.<org.apache.fop.area.Trait$Background: void setURL(java.lang.String)>($r3);
+        $r4 = virtualinvoke backProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: org.apache.xmlgraphics.image.loader.ImageInfo getImageInfo()>();
+        virtualinvoke back.<org.apache.fop.area.Trait$Background: void setImageInfo(org.apache.xmlgraphics.image.loader.ImageInfo)>($r4);
+        $i0 = backProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int backgroundRepeat>;
+        virtualinvoke back.<org.apache.fop.area.Trait$Background: void setRepeat(int)>($i0);
+        $r5 = backProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: org.apache.fop.datatypes.Length backgroundPositionHorizontal>;
+        if $r5 == null goto label3;
+
+        $i1 = virtualinvoke back.<org.apache.fop.area.Trait$Background: int getRepeat()>();
+        if $i1 == 96 goto label1;
+
+        $i1 = virtualinvoke back.<org.apache.fop.area.Trait$Background: int getRepeat()>();
+        if $i1 != 114 goto label3;
+
+     label1:
+        $i1 = virtualinvoke area.<org.apache.fop.area.Area: int getIPD()>();
+        if $i1 <= 0 goto label2;
+
+        width = virtualinvoke area.<org.apache.fop.area.Area: int getIPD()>();
+        $i0 = virtualinvoke backProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPaddingStart(boolean,org.apache.fop.datatypes.PercentBaseContext)>(0, context);
+        width = width + $i0;
+        $i0 = virtualinvoke backProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPaddingEnd(boolean,org.apache.fop.datatypes.PercentBaseContext)>(0, context);
+        width = width + $i0;
+        $r6 = backProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: org.apache.fop.datatypes.Length backgroundPositionHorizontal>;
+        $r7 = new org.apache.fop.datatypes.SimplePercentBaseContext;
+        $r8 = virtualinvoke back.<org.apache.fop.area.Trait$Background: org.apache.xmlgraphics.image.loader.ImageInfo getImageInfo()>();
+        $r9 = virtualinvoke $r8.<org.apache.xmlgraphics.image.loader.ImageInfo: org.apache.xmlgraphics.image.loader.ImageSize getSize()>();
+        $i2 = virtualinvoke $r9.<org.apache.xmlgraphics.image.loader.ImageSize: int getWidthMpt()>();
+        $i3 = width - $i2;
+        specialinvoke $r7.<org.apache.fop.datatypes.SimplePercentBaseContext: void <init>(org.apache.fop.datatypes.PercentBaseContext,int,int)>(context, 9, $i3);
+        $i0 = interfaceinvoke $r6.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>($r7);
+        virtualinvoke back.<org.apache.fop.area.Trait$Background: void setHoriz(int)>($i0);
+        goto label3;
+
+     label2:
+        $r10 = <org.apache.fop.layoutmgr.TraitSetter: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r10.<org.apache.commons.logging.Log: void warn(java.lang.Object)>("Horizontal background image positioning ignored because the IPD was not set on the area. (Yes, it\'s a bug in FOP)");
+
+     label3:
+        $r5 = backProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: org.apache.fop.datatypes.Length backgroundPositionVertical>;
+        if $r5 == null goto label6;
+
+        $i1 = virtualinvoke back.<org.apache.fop.area.Trait$Background: int getRepeat()>();
+        if $i1 == 96 goto label4;
+
+        $i1 = virtualinvoke back.<org.apache.fop.area.Trait$Background: int getRepeat()>();
+        if $i1 != 113 goto label6;
+
+     label4:
+        $i1 = virtualinvoke area.<org.apache.fop.area.Area: int getBPD()>();
+        if $i1 <= 0 goto label5;
+
+        height = virtualinvoke area.<org.apache.fop.area.Area: int getBPD()>();
+        $i0 = virtualinvoke backProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPaddingBefore(boolean,org.apache.fop.datatypes.PercentBaseContext)>(0, context);
+        height = height + $i0;
+        $i0 = virtualinvoke backProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPaddingAfter(boolean,org.apache.fop.datatypes.PercentBaseContext)>(0, context);
+        height = height + $i0;
+        $r6 = backProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: org.apache.fop.datatypes.Length backgroundPositionVertical>;
+        $r7 = new org.apache.fop.datatypes.SimplePercentBaseContext;
+        $r8 = virtualinvoke back.<org.apache.fop.area.Trait$Background: org.apache.xmlgraphics.image.loader.ImageInfo getImageInfo()>();
+        $r9 = virtualinvoke $r8.<org.apache.xmlgraphics.image.loader.ImageInfo: org.apache.xmlgraphics.image.loader.ImageSize getSize()>();
+        $i2 = virtualinvoke $r9.<org.apache.xmlgraphics.image.loader.ImageSize: int getHeightMpt()>();
+        $i3 = height - $i2;
+        specialinvoke $r7.<org.apache.fop.datatypes.SimplePercentBaseContext: void <init>(org.apache.fop.datatypes.PercentBaseContext,int,int)>(context, 10, $i3);
+        $i0 = interfaceinvoke $r6.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>($r7);
+        virtualinvoke back.<org.apache.fop.area.Trait$Background: void setVertical(int)>($i0);
+        goto label6;
+
+     label5:
+        $r10 = <org.apache.fop.layoutmgr.TraitSetter: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r10.<org.apache.commons.logging.Log: void warn(java.lang.Object)>("Vertical background image positioning ignored because the BPD was not set on the area. (Yes, it\'s a bug in FOP)");
+
+     label6:
+        $r11 = <org.apache.fop.area.Trait: java.lang.Integer BACKGROUND>;
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r11, back);
+        return;
+    }
+
+    public static void addMargins(org.apache.fop.area.Area, org.apache.fop.fo.properties.CommonBorderPaddingBackground, int, int, org.apache.fop.datatypes.PercentBaseContext)
+    {
+        org.apache.fop.area.Area area;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground bpProps;
+        int startIndent, endIndent, spaceStart, spaceEnd, $i0, $i1;
+        org.apache.fop.datatypes.PercentBaseContext context;
+        java.lang.Integer $r0, $r1;
+
+        area := @parameter0: org.apache.fop.area.Area;
+        bpProps := @parameter1: org.apache.fop.fo.properties.CommonBorderPaddingBackground;
+        startIndent := @parameter2: int;
+        endIndent := @parameter3: int;
+        context := @parameter4: org.apache.fop.datatypes.PercentBaseContext;
+        if startIndent == 0 goto label0;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer START_INDENT>;
+        $r1 = new java.lang.Integer;
+        specialinvoke $r1.<java.lang.Integer: void <init>(int)>(startIndent);
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, $r1);
+
+     label0:
+        $i0 = virtualinvoke bpProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getBorderStartWidth(boolean)>(0);
+        $i1 = startIndent - $i0;
+        $i0 = virtualinvoke bpProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPaddingStart(boolean,org.apache.fop.datatypes.PercentBaseContext)>(0, context);
+        spaceStart = $i1 - $i0;
+        if spaceStart == 0 goto label1;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer SPACE_START>;
+        $r1 = new java.lang.Integer;
+        specialinvoke $r1.<java.lang.Integer: void <init>(int)>(spaceStart);
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, $r1);
+
+     label1:
+        if endIndent == 0 goto label2;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer END_INDENT>;
+        $r1 = new java.lang.Integer;
+        specialinvoke $r1.<java.lang.Integer: void <init>(int)>(endIndent);
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, $r1);
+
+     label2:
+        $i0 = virtualinvoke bpProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getBorderEndWidth(boolean)>(0);
+        $i1 = endIndent - $i0;
+        $i0 = virtualinvoke bpProps.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPaddingEnd(boolean,org.apache.fop.datatypes.PercentBaseContext)>(0, context);
+        spaceEnd = $i1 - $i0;
+        if spaceEnd == 0 goto label3;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer SPACE_END>;
+        $r1 = new java.lang.Integer;
+        specialinvoke $r1.<java.lang.Integer: void <init>(int)>(spaceEnd);
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, $r1);
+
+     label3:
+        return;
+    }
+
+    public static void addMargins(org.apache.fop.area.Area, org.apache.fop.fo.properties.CommonBorderPaddingBackground, org.apache.fop.fo.properties.CommonMarginBlock, org.apache.fop.datatypes.PercentBaseContext)
+    {
+        org.apache.fop.area.Area area;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground bpProps;
+        org.apache.fop.fo.properties.CommonMarginBlock marginProps;
+        org.apache.fop.datatypes.PercentBaseContext context;
+        int startIndent, endIndent;
+        org.apache.fop.datatypes.Length $r0;
+
+        area := @parameter0: org.apache.fop.area.Area;
+        bpProps := @parameter1: org.apache.fop.fo.properties.CommonBorderPaddingBackground;
+        marginProps := @parameter2: org.apache.fop.fo.properties.CommonMarginBlock;
+        context := @parameter3: org.apache.fop.datatypes.PercentBaseContext;
+        $r0 = marginProps.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.datatypes.Length startIndent>;
+        startIndent = interfaceinvoke $r0.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(context);
+        $r0 = marginProps.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.datatypes.Length endIndent>;
+        endIndent = interfaceinvoke $r0.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>(context);
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addMargins(org.apache.fop.area.Area,org.apache.fop.fo.properties.CommonBorderPaddingBackground,int,int,org.apache.fop.datatypes.PercentBaseContext)>(area, bpProps, startIndent, endIndent, context);
+        return;
+    }
+
+    public static int getEffectiveSpace(double, org.apache.fop.traits.MinOptMax)
+    {
+        double adjust, $d0, $d1;
+        org.apache.fop.traits.MinOptMax space;
+        int sp, $i1, $i2, $i3;
+        byte $b0;
+
+        adjust := @parameter0: double;
+        space := @parameter1: org.apache.fop.traits.MinOptMax;
+        if space != null goto label0;
+
+        return 0;
+
+     label0:
+        sp = space.<org.apache.fop.traits.MinOptMax: int opt>;
+        $b0 = adjust cmpl 0.0;
+        if $b0 <= 0 goto label1;
+
+        $i1 = space.<org.apache.fop.traits.MinOptMax: int max>;
+        $i2 = space.<org.apache.fop.traits.MinOptMax: int opt>;
+        $i1 = $i1 - $i2;
+        $d0 = (double) $i1;
+        $d1 = adjust * $d0;
+        $i3 = (int) $d1;
+        sp = sp + $i3;
+        goto label2;
+
+     label1:
+        $i1 = space.<org.apache.fop.traits.MinOptMax: int opt>;
+        $i2 = space.<org.apache.fop.traits.MinOptMax: int min>;
+        $i1 = $i1 - $i2;
+        $d0 = (double) $i1;
+        $d1 = adjust * $d0;
+        $i3 = (int) $d1;
+        sp = sp + $i3;
+
+     label2:
+        return sp;
+    }
+
+    public static void addSpaceBeforeAfter(org.apache.fop.area.Area, double, org.apache.fop.traits.MinOptMax, org.apache.fop.traits.MinOptMax)
+    {
+        org.apache.fop.area.Area area;
+        double adjust;
+        org.apache.fop.traits.MinOptMax spaceBefore, spaceAfter;
+        int space;
+        java.lang.Integer $r0, $r1;
+
+        area := @parameter0: org.apache.fop.area.Area;
+        adjust := @parameter1: double;
+        spaceBefore := @parameter2: org.apache.fop.traits.MinOptMax;
+        spaceAfter := @parameter3: org.apache.fop.traits.MinOptMax;
+        space = staticinvoke <org.apache.fop.layoutmgr.TraitSetter: int getEffectiveSpace(double,org.apache.fop.traits.MinOptMax)>(adjust, spaceBefore);
+        if space == 0 goto label0;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer SPACE_BEFORE>;
+        $r1 = new java.lang.Integer;
+        specialinvoke $r1.<java.lang.Integer: void <init>(int)>(space);
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, $r1);
+
+     label0:
+        space = staticinvoke <org.apache.fop.layoutmgr.TraitSetter: int getEffectiveSpace(double,org.apache.fop.traits.MinOptMax)>(adjust, spaceAfter);
+        if space == 0 goto label1;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer SPACE_AFTER>;
+        $r1 = new java.lang.Integer;
+        specialinvoke $r1.<java.lang.Integer: void <init>(int)>(space);
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, $r1);
+
+     label1:
+        return;
+    }
+
+    public static void addBreaks(org.apache.fop.area.Area, int, int)
+    {
+        org.apache.fop.area.Area area;
+        int breakBefore, breakAfter;
+
+        area := @parameter0: org.apache.fop.area.Area;
+        breakBefore := @parameter1: int;
+        breakAfter := @parameter2: int;
+        return;
+    }
+
+    public static void addFontTraits(org.apache.fop.area.Area, org.apache.fop.fonts.Font)
+    {
+        org.apache.fop.area.Area area;
+        org.apache.fop.fonts.Font font;
+        java.lang.Integer $r0, $r2;
+        org.apache.fop.fonts.FontTriplet $r1;
+        int $i0;
+
+        area := @parameter0: org.apache.fop.area.Area;
+        font := @parameter1: org.apache.fop.fonts.Font;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer FONT>;
+        $r1 = virtualinvoke font.<org.apache.fop.fonts.Font: org.apache.fop.fonts.FontTriplet getFontTriplet()>();
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, $r1);
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer FONT_SIZE>;
+        $r2 = new java.lang.Integer;
+        $i0 = virtualinvoke font.<org.apache.fop.fonts.Font: int getFontSize()>();
+        specialinvoke $r2.<java.lang.Integer: void <init>(int)>($i0);
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, $r2);
+        return;
+    }
+
+    public static void addTextDecoration(org.apache.fop.area.Area, org.apache.fop.fo.properties.CommonTextDecoration)
+    {
+        org.apache.fop.area.Area area;
+        org.apache.fop.fo.properties.CommonTextDecoration deco;
+        java.lang.Integer $r0;
+        java.lang.Boolean $r1;
+        boolean $z0;
+        java.awt.Color $r2;
+
+        area := @parameter0: org.apache.fop.area.Area;
+        deco := @parameter1: org.apache.fop.fo.properties.CommonTextDecoration;
+        if deco == null goto label3;
+
+        $z0 = virtualinvoke deco.<org.apache.fop.fo.properties.CommonTextDecoration: boolean hasUnderline()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer UNDERLINE>;
+        $r1 = <java.lang.Boolean: java.lang.Boolean TRUE>;
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, $r1);
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer UNDERLINE_COLOR>;
+        $r2 = virtualinvoke deco.<org.apache.fop.fo.properties.CommonTextDecoration: java.awt.Color getUnderlineColor()>();
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, $r2);
+
+     label0:
+        $z0 = virtualinvoke deco.<org.apache.fop.fo.properties.CommonTextDecoration: boolean hasOverline()>();
+        if $z0 == 0 goto label1;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer OVERLINE>;
+        $r1 = <java.lang.Boolean: java.lang.Boolean TRUE>;
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, $r1);
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer OVERLINE_COLOR>;
+        $r2 = virtualinvoke deco.<org.apache.fop.fo.properties.CommonTextDecoration: java.awt.Color getOverlineColor()>();
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, $r2);
+
+     label1:
+        $z0 = virtualinvoke deco.<org.apache.fop.fo.properties.CommonTextDecoration: boolean hasLineThrough()>();
+        if $z0 == 0 goto label2;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer LINETHROUGH>;
+        $r1 = <java.lang.Boolean: java.lang.Boolean TRUE>;
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, $r1);
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer LINETHROUGH_COLOR>;
+        $r2 = virtualinvoke deco.<org.apache.fop.fo.properties.CommonTextDecoration: java.awt.Color getLineThroughColor()>();
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, $r2);
+
+     label2:
+        $z0 = virtualinvoke deco.<org.apache.fop.fo.properties.CommonTextDecoration: boolean isBlinking()>();
+        if $z0 == 0 goto label3;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer BLINK>;
+        $r1 = <java.lang.Boolean: java.lang.Boolean TRUE>;
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, $r1);
+
+     label3:
+        return;
+    }
+
+    public static void setProducerID(org.apache.fop.area.Area, java.lang.String)
+    {
+        org.apache.fop.area.Area area;
+        java.lang.String id;
+        java.lang.Integer $r0;
+        int $i0;
+
+        area := @parameter0: org.apache.fop.area.Area;
+        id := @parameter1: java.lang.String;
+        if id == null goto label0;
+
+        $i0 = virtualinvoke id.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label0;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer PROD_ID>;
+        virtualinvoke area.<org.apache.fop.area.Area: void addTrait(java.lang.Object,java.lang.Object)>($r0, id);
+
+     label0:
+        return;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        boolean $z0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.layoutmgr.TraitSetter: java.lang.Class class$org$apache$fop$layoutmgr$TraitSetter>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.layoutmgr.TraitSetter: java.lang.Class class$(java.lang.String)>("org.apache.fop.layoutmgr.TraitSetter");
+        <org.apache.fop.layoutmgr.TraitSetter: java.lang.Class class$org$apache$fop$layoutmgr$TraitSetter> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.layoutmgr.TraitSetter: java.lang.Class class$org$apache$fop$layoutmgr$TraitSetter>;
+
+     label1:
+        $z0 = virtualinvoke $r0.<java.lang.Class: boolean desiredAssertionStatus()>();
+        if $z0 != 0 goto label2;
+
+        $z0 = 1;
+        goto label3;
+
+     label2:
+        $z0 = 0;
+
+     label3:
+        <org.apache.fop.layoutmgr.TraitSetter: boolean $assertionsDisabled> = $z0;
+        $r0 = <org.apache.fop.layoutmgr.TraitSetter: java.lang.Class class$org$apache$fop$layoutmgr$TraitSetter>;
+        if $r0 != null goto label4;
+
+        $r0 = staticinvoke <org.apache.fop.layoutmgr.TraitSetter: java.lang.Class class$(java.lang.String)>("org.apache.fop.layoutmgr.TraitSetter");
+        <org.apache.fop.layoutmgr.TraitSetter: java.lang.Class class$org$apache$fop$layoutmgr$TraitSetter> = $r0;
+        goto label5;
+
+     label4:
+        $r0 = <org.apache.fop.layoutmgr.TraitSetter: java.lang.Class class$org$apache$fop$layoutmgr$TraitSetter>;
+
+     label5:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.layoutmgr.TraitSetter: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

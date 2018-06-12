@@ -1,0 +1,476 @@
+public class org.apache.fop.render.awt.viewer.PreviewPanel extends javax.swing.JPanel
+{
+    public static final int SINGLE;
+    public static final int CONTINUOUS;
+    public static final int CONT_FACING;
+    private static final int BORDER_SPACING;
+    private javax.swing.JScrollPane previewArea;
+    private org.apache.fop.render.awt.AWTRenderer renderer;
+    protected org.apache.fop.apps.FOUserAgent foUserAgent;
+    protected org.apache.fop.render.awt.viewer.Renderable renderable;
+    private int currentPage;
+    private int firstPage;
+    private int pageRange;
+    private int displayMode;
+    private org.apache.fop.render.awt.viewer.ImageProxyPanel[] pagePanels;
+    private javax.swing.JPanel gridPanel;
+    private org.apache.fop.render.awt.viewer.PreviewPanel$Reloader reloader;
+    private org.apache.fop.render.awt.viewer.PreviewPanel$ViewportScroller scroller;
+
+    public void <init>(org.apache.fop.apps.FOUserAgent, org.apache.fop.render.awt.viewer.Renderable, org.apache.fop.render.awt.AWTRenderer)
+    {
+        org.apache.fop.render.awt.viewer.PreviewPanel this;
+        org.apache.fop.apps.FOUserAgent foUserAgent, $r1;
+        org.apache.fop.render.awt.viewer.Renderable renderable;
+        org.apache.fop.render.awt.AWTRenderer renderer;
+        java.awt.GridLayout $r0;
+        java.awt.Toolkit $r2;
+        int $i0;
+        javax.swing.JPanel $r3, $r4, $r6;
+        javax.swing.JScrollPane $r5, $r7, $r11;
+        javax.swing.JViewport $r8, $r12;
+        java.awt.Color $r9;
+        org.apache.fop.render.awt.viewer.PreviewPanel$ViewportScroller $r10;
+        java.awt.Dimension $r13;
+
+        this := @this: org.apache.fop.render.awt.viewer.PreviewPanel;
+        foUserAgent := @parameter0: org.apache.fop.apps.FOUserAgent;
+        renderable := @parameter1: org.apache.fop.render.awt.viewer.Renderable;
+        renderer := @parameter2: org.apache.fop.render.awt.AWTRenderer;
+        $r0 = new java.awt.GridLayout;
+        specialinvoke $r0.<java.awt.GridLayout: void <init>(int,int)>(1, 1);
+        specialinvoke this.<javax.swing.JPanel: void <init>(java.awt.LayoutManager)>($r0);
+        this.<org.apache.fop.render.awt.viewer.PreviewPanel: int currentPage> = 0;
+        this.<org.apache.fop.render.awt.viewer.PreviewPanel: int firstPage> = 0;
+        this.<org.apache.fop.render.awt.viewer.PreviewPanel: int pageRange> = 1;
+        this.<org.apache.fop.render.awt.viewer.PreviewPanel: int displayMode> = 1;
+        this.<org.apache.fop.render.awt.viewer.PreviewPanel: org.apache.fop.render.awt.viewer.ImageProxyPanel[] pagePanels> = null;
+        this.<org.apache.fop.render.awt.viewer.PreviewPanel: javax.swing.JPanel gridPanel> = null;
+        this.<org.apache.fop.render.awt.viewer.PreviewPanel: org.apache.fop.render.awt.viewer.Renderable renderable> = renderable;
+        this.<org.apache.fop.render.awt.viewer.PreviewPanel: org.apache.fop.render.awt.AWTRenderer renderer> = renderer;
+        this.<org.apache.fop.render.awt.viewer.PreviewPanel: org.apache.fop.apps.FOUserAgent foUserAgent> = foUserAgent;
+        $r1 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: org.apache.fop.apps.FOUserAgent foUserAgent>;
+        $r2 = staticinvoke <java.awt.Toolkit: java.awt.Toolkit getDefaultToolkit()>();
+        $i0 = virtualinvoke $r2.<java.awt.Toolkit: int getScreenResolution()>();
+        virtualinvoke $r1.<org.apache.fop.apps.FOUserAgent: void setTargetResolution(int)>($i0);
+        $r3 = new javax.swing.JPanel;
+        specialinvoke $r3.<javax.swing.JPanel: void <init>()>();
+        this.<org.apache.fop.render.awt.viewer.PreviewPanel: javax.swing.JPanel gridPanel> = $r3;
+        $r4 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: javax.swing.JPanel gridPanel>;
+        $r0 = new java.awt.GridLayout;
+        specialinvoke $r0.<java.awt.GridLayout: void <init>(int,int)>(0, 1);
+        virtualinvoke $r4.<javax.swing.JPanel: void setLayout(java.awt.LayoutManager)>($r0);
+        $r5 = new javax.swing.JScrollPane;
+        $r6 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: javax.swing.JPanel gridPanel>;
+        specialinvoke $r5.<javax.swing.JScrollPane: void <init>(java.awt.Component)>($r6);
+        this.<org.apache.fop.render.awt.viewer.PreviewPanel: javax.swing.JScrollPane previewArea> = $r5;
+        $r7 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: javax.swing.JScrollPane previewArea>;
+        $r8 = virtualinvoke $r7.<javax.swing.JScrollPane: javax.swing.JViewport getViewport()>();
+        $r9 = <java.awt.Color: java.awt.Color gray>;
+        virtualinvoke $r8.<javax.swing.JViewport: void setBackground(java.awt.Color)>($r9);
+        $r10 = new org.apache.fop.render.awt.viewer.PreviewPanel$ViewportScroller;
+        $r11 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: javax.swing.JScrollPane previewArea>;
+        $r12 = virtualinvoke $r11.<javax.swing.JScrollPane: javax.swing.JViewport getViewport()>();
+        specialinvoke $r10.<org.apache.fop.render.awt.viewer.PreviewPanel$ViewportScroller: void <init>(org.apache.fop.render.awt.viewer.PreviewPanel,javax.swing.JViewport)>(this, $r12);
+        this.<org.apache.fop.render.awt.viewer.PreviewPanel: org.apache.fop.render.awt.viewer.PreviewPanel$ViewportScroller scroller> = $r10;
+        $r7 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: javax.swing.JScrollPane previewArea>;
+        $r10 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: org.apache.fop.render.awt.viewer.PreviewPanel$ViewportScroller scroller>;
+        virtualinvoke $r7.<javax.swing.JScrollPane: void addMouseListener(java.awt.event.MouseListener)>($r10);
+        $r7 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: javax.swing.JScrollPane previewArea>;
+        $r10 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: org.apache.fop.render.awt.viewer.PreviewPanel$ViewportScroller scroller>;
+        virtualinvoke $r7.<javax.swing.JScrollPane: void addMouseMotionListener(java.awt.event.MouseMotionListener)>($r10);
+        $r7 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: javax.swing.JScrollPane previewArea>;
+        $r13 = new java.awt.Dimension;
+        specialinvoke $r13.<java.awt.Dimension: void <init>(int,int)>(50, 50);
+        virtualinvoke $r7.<javax.swing.JScrollPane: void setMinimumSize(java.awt.Dimension)>($r13);
+        $r5 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: javax.swing.JScrollPane previewArea>;
+        virtualinvoke this.<org.apache.fop.render.awt.viewer.PreviewPanel: java.awt.Component add(java.awt.Component)>($r5);
+        return;
+    }
+
+    public int getPage()
+    {
+        org.apache.fop.render.awt.viewer.PreviewPanel this;
+        int $i0;
+
+        this := @this: org.apache.fop.render.awt.viewer.PreviewPanel;
+        $i0 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: int currentPage>;
+        return $i0;
+    }
+
+    public void setPage(int)
+    {
+        org.apache.fop.render.awt.viewer.PreviewPanel this;
+        int number, $i0, $i1, $i2;
+        javax.swing.JPanel $r0;
+        org.apache.fop.render.awt.viewer.ImageProxyPanel[] $r1;
+        org.apache.fop.render.awt.viewer.ImageProxyPanel $r2;
+        java.awt.Rectangle $r3;
+
+        this := @this: org.apache.fop.render.awt.viewer.PreviewPanel;
+        number := @parameter0: int;
+        $i0 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: int displayMode>;
+        if $i0 == 2 goto label0;
+
+        $i0 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: int displayMode>;
+        if $i0 != 3 goto label1;
+
+     label0:
+        this.<org.apache.fop.render.awt.viewer.PreviewPanel: int currentPage> = number;
+        $r0 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: javax.swing.JPanel gridPanel>;
+        $r1 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: org.apache.fop.render.awt.viewer.ImageProxyPanel[] pagePanels>;
+        $i1 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: int currentPage>;
+        $r2 = $r1[$i1];
+        $r3 = virtualinvoke $r2.<org.apache.fop.render.awt.viewer.ImageProxyPanel: java.awt.Rectangle getBounds()>();
+        virtualinvoke $r0.<javax.swing.JPanel: void scrollRectToVisible(java.awt.Rectangle)>($r3);
+        goto label2;
+
+     label1:
+        this.<org.apache.fop.render.awt.viewer.PreviewPanel: int currentPage> = number;
+        $i2 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: int currentPage>;
+        this.<org.apache.fop.render.awt.viewer.PreviewPanel: int firstPage> = $i2;
+
+     label2:
+        virtualinvoke this.<org.apache.fop.render.awt.viewer.PreviewPanel: void showPage()>();
+        return;
+    }
+
+    public void setDisplayMode(int)
+    {
+        org.apache.fop.render.awt.viewer.PreviewPanel this;
+        int mode, $i1, $i2;
+        byte $b0, $b3;
+        javax.swing.JPanel $r1;
+        java.awt.GridLayout $r2;
+
+        this := @this: org.apache.fop.render.awt.viewer.PreviewPanel;
+        mode := @parameter0: int;
+        $i1 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: int displayMode>;
+        if mode == $i1 goto label2;
+
+        this.<org.apache.fop.render.awt.viewer.PreviewPanel: int displayMode> = mode;
+        $r1 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: javax.swing.JPanel gridPanel>;
+        $r2 = new java.awt.GridLayout;
+        $b0 = 0;
+        $i2 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: int displayMode>;
+        if $i2 != 3 goto label0;
+
+        $b3 = 2;
+        goto label1;
+
+     label0:
+        $b3 = 1;
+
+     label1:
+        specialinvoke $r2.<java.awt.GridLayout: void <init>(int,int)>($b0, $b3);
+        virtualinvoke $r1.<javax.swing.JPanel: void setLayout(java.awt.LayoutManager)>($r2);
+        virtualinvoke this.<org.apache.fop.render.awt.viewer.PreviewPanel: void reload()>();
+
+     label2:
+        return;
+    }
+
+    public int getDisplayMode()
+    {
+        org.apache.fop.render.awt.viewer.PreviewPanel this;
+        int $i0;
+
+        this := @this: org.apache.fop.render.awt.viewer.PreviewPanel;
+        $i0 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: int displayMode>;
+        return $i0;
+    }
+
+    public synchronized void reload()
+    {
+        org.apache.fop.render.awt.viewer.PreviewPanel this;
+        org.apache.fop.render.awt.viewer.PreviewPanel$Reloader $r0, $r1;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.awt.viewer.PreviewPanel;
+        $r1 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: org.apache.fop.render.awt.viewer.PreviewPanel$Reloader reloader>;
+        if $r1 == null goto label0;
+
+        $r1 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: org.apache.fop.render.awt.viewer.PreviewPanel$Reloader reloader>;
+        $z0 = virtualinvoke $r1.<org.apache.fop.render.awt.viewer.PreviewPanel$Reloader: boolean isAlive()>();
+        if $z0 != 0 goto label1;
+
+     label0:
+        $r0 = new org.apache.fop.render.awt.viewer.PreviewPanel$Reloader;
+        specialinvoke $r0.<org.apache.fop.render.awt.viewer.PreviewPanel$Reloader: void <init>(org.apache.fop.render.awt.viewer.PreviewPanel,org.apache.fop.render.awt.viewer.PreviewPanel$1)>(this, null);
+        this.<org.apache.fop.render.awt.viewer.PreviewPanel: org.apache.fop.render.awt.viewer.PreviewPanel$Reloader reloader> = $r0;
+        $r1 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: org.apache.fop.render.awt.viewer.PreviewPanel$Reloader reloader>;
+        virtualinvoke $r1.<org.apache.fop.render.awt.viewer.PreviewPanel$Reloader: void start()>();
+
+     label1:
+        return;
+    }
+
+    void debug()
+    {
+        org.apache.fop.render.awt.viewer.PreviewPanel this;
+        org.apache.fop.render.awt.AWTRenderer $r0, $r1;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.awt.viewer.PreviewPanel;
+        $r0 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: org.apache.fop.render.awt.AWTRenderer renderer>;
+        $r1 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: org.apache.fop.render.awt.AWTRenderer renderer>;
+        $z0 = $r1.<org.apache.fop.render.awt.AWTRenderer: boolean debug>;
+        if $z0 != 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        $r0.<org.apache.fop.render.awt.AWTRenderer: boolean debug> = $z0;
+        virtualinvoke this.<org.apache.fop.render.awt.viewer.PreviewPanel: void reload()>();
+        return;
+    }
+
+    public void setScaleFactor(double)
+    {
+        org.apache.fop.render.awt.viewer.PreviewPanel this;
+        double scale;
+        org.apache.fop.render.awt.AWTRenderer $r0;
+
+        this := @this: org.apache.fop.render.awt.viewer.PreviewPanel;
+        scale := @parameter0: double;
+        $r0 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: org.apache.fop.render.awt.AWTRenderer renderer>;
+        virtualinvoke $r0.<org.apache.fop.render.awt.AWTRenderer: void setScaleFactor(double)>(scale);
+        virtualinvoke this.<org.apache.fop.render.awt.viewer.PreviewPanel: void reload()>();
+        return;
+    }
+
+    public double getScaleToFitWindow() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.render.awt.viewer.PreviewPanel this;
+        java.awt.Dimension extents;
+        javax.swing.JScrollPane $r0;
+        javax.swing.JViewport $r1;
+        double $d0, $d1, $d2;
+
+        this := @this: org.apache.fop.render.awt.viewer.PreviewPanel;
+        $r0 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: javax.swing.JScrollPane previewArea>;
+        $r1 = virtualinvoke $r0.<javax.swing.JScrollPane: javax.swing.JViewport getViewport()>();
+        extents = virtualinvoke $r1.<javax.swing.JViewport: java.awt.Dimension getExtentSize()>();
+        $d0 = virtualinvoke extents.<java.awt.Dimension: double getWidth()>();
+        $d0 = $d0 - 20.0;
+        $d1 = virtualinvoke extents.<java.awt.Dimension: double getHeight()>();
+        $d1 = $d1 - 20.0;
+        $d2 = virtualinvoke this.<org.apache.fop.render.awt.viewer.PreviewPanel: double getScaleToFit(double,double)>($d0, $d1);
+        return $d2;
+    }
+
+    public double getScaleToFitWidth() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.render.awt.viewer.PreviewPanel this;
+        java.awt.Dimension extents;
+        javax.swing.JScrollPane $r0;
+        javax.swing.JViewport $r1;
+        double $d0, $d1;
+
+        this := @this: org.apache.fop.render.awt.viewer.PreviewPanel;
+        $r0 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: javax.swing.JScrollPane previewArea>;
+        $r1 = virtualinvoke $r0.<javax.swing.JScrollPane: javax.swing.JViewport getViewport()>();
+        extents = virtualinvoke $r1.<javax.swing.JViewport: java.awt.Dimension getExtentSize()>();
+        $d0 = virtualinvoke extents.<java.awt.Dimension: double getWidth()>();
+        $d0 = $d0 - 20.0;
+        $d1 = virtualinvoke this.<org.apache.fop.render.awt.viewer.PreviewPanel: double getScaleToFit(double,double)>($d0, 1.7976931348623157E308);
+        return $d1;
+    }
+
+    public double getScaleToFit(double, double) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.render.awt.viewer.PreviewPanel this;
+        double viewWidth, viewHeight, widthScale, heightScale, $d0, $d1;
+        org.apache.fop.area.PageViewport pageViewport;
+        java.awt.geom.Rectangle2D pageSize;
+        float screenResolution, screenFactor;
+        org.apache.fop.render.awt.AWTRenderer $r0;
+        int $i0, $i1;
+        java.awt.Toolkit $r1;
+
+        this := @this: org.apache.fop.render.awt.viewer.PreviewPanel;
+        viewWidth := @parameter0: double;
+        viewHeight := @parameter1: double;
+        $r0 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: org.apache.fop.render.awt.AWTRenderer renderer>;
+        $i0 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: int currentPage>;
+        pageViewport = virtualinvoke $r0.<org.apache.fop.render.awt.AWTRenderer: org.apache.fop.area.PageViewport getPageViewport(int)>($i0);
+        pageSize = virtualinvoke pageViewport.<org.apache.fop.area.PageViewport: java.awt.geom.Rectangle2D getViewArea()>();
+        $r1 = staticinvoke <java.awt.Toolkit: java.awt.Toolkit getDefaultToolkit()>();
+        $i1 = virtualinvoke $r1.<java.awt.Toolkit: int getScreenResolution()>();
+        screenResolution = (float) $i1;
+        screenFactor = screenResolution / 72.0F;
+        $d0 = virtualinvoke pageSize.<java.awt.geom.Rectangle2D: double getWidth()>();
+        $d0 = $d0 / 1000.0;
+        $d1 = viewWidth / $d0;
+        $d0 = (double) screenFactor;
+        widthScale = $d1 / $d0;
+        $d0 = virtualinvoke pageSize.<java.awt.geom.Rectangle2D: double getHeight()>();
+        $d0 = $d0 / 1000.0;
+        $d1 = viewHeight / $d0;
+        $d0 = (double) screenFactor;
+        heightScale = $d1 / $d0;
+        $i1 = this.<org.apache.fop.render.awt.viewer.PreviewPanel: int displayMode>;
+        if $i1 != 3 goto label0;
+
+        $d1 = widthScale / 2.0;
+        goto label1;
+
+     label0:
+        $d1 = widthScale;
+
+     label1:
+        $d1 = staticinvoke <java.lang.Math: double min(double,double)>($d1, heightScale);
+        return $d1;
+    }
+
+    public synchronized void showPage()
+    {
+        org.apache.fop.render.awt.viewer.PreviewPanel this;
+        org.apache.fop.render.awt.viewer.PreviewPanel$ShowPageImage $r0, viewer;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.awt.viewer.PreviewPanel;
+        $r0 = new org.apache.fop.render.awt.viewer.PreviewPanel$ShowPageImage;
+        specialinvoke $r0.<org.apache.fop.render.awt.viewer.PreviewPanel$ShowPageImage: void <init>(org.apache.fop.render.awt.viewer.PreviewPanel,org.apache.fop.render.awt.viewer.PreviewPanel$1)>(this, null);
+        viewer = $r0;
+        $z0 = staticinvoke <javax.swing.SwingUtilities: boolean isEventDispatchThread()>();
+        if $z0 == 0 goto label0;
+
+        virtualinvoke viewer.<org.apache.fop.render.awt.viewer.PreviewPanel$ShowPageImage: void run()>();
+        goto label1;
+
+     label0:
+        staticinvoke <javax.swing.SwingUtilities: void invokeLater(java.lang.Runnable)>(viewer);
+
+     label1:
+        return;
+    }
+
+    static org.apache.fop.render.awt.AWTRenderer access$100(org.apache.fop.render.awt.viewer.PreviewPanel)
+    {
+        org.apache.fop.render.awt.viewer.PreviewPanel x0;
+        org.apache.fop.render.awt.AWTRenderer $r0;
+
+        x0 := @parameter0: org.apache.fop.render.awt.viewer.PreviewPanel;
+        $r0 = x0.<org.apache.fop.render.awt.viewer.PreviewPanel: org.apache.fop.render.awt.AWTRenderer renderer>;
+        return $r0;
+    }
+
+    static javax.swing.JScrollPane access$200(org.apache.fop.render.awt.viewer.PreviewPanel)
+    {
+        org.apache.fop.render.awt.viewer.PreviewPanel x0;
+        javax.swing.JScrollPane $r0;
+
+        x0 := @parameter0: org.apache.fop.render.awt.viewer.PreviewPanel;
+        $r0 = x0.<org.apache.fop.render.awt.viewer.PreviewPanel: javax.swing.JScrollPane previewArea>;
+        return $r0;
+    }
+
+    static org.apache.fop.render.awt.viewer.ImageProxyPanel[] access$302(org.apache.fop.render.awt.viewer.PreviewPanel, org.apache.fop.render.awt.viewer.ImageProxyPanel[])
+    {
+        org.apache.fop.render.awt.viewer.PreviewPanel x0;
+        org.apache.fop.render.awt.viewer.ImageProxyPanel[] x1;
+
+        x0 := @parameter0: org.apache.fop.render.awt.viewer.PreviewPanel;
+        x1 := @parameter1: org.apache.fop.render.awt.viewer.ImageProxyPanel[];
+        x0.<org.apache.fop.render.awt.viewer.PreviewPanel: org.apache.fop.render.awt.viewer.ImageProxyPanel[] pagePanels> = x1;
+        return x1;
+    }
+
+    static int access$400(org.apache.fop.render.awt.viewer.PreviewPanel)
+    {
+        org.apache.fop.render.awt.viewer.PreviewPanel x0;
+        int $i0;
+
+        x0 := @parameter0: org.apache.fop.render.awt.viewer.PreviewPanel;
+        $i0 = x0.<org.apache.fop.render.awt.viewer.PreviewPanel: int currentPage>;
+        return $i0;
+    }
+
+    static int access$402(org.apache.fop.render.awt.viewer.PreviewPanel, int)
+    {
+        org.apache.fop.render.awt.viewer.PreviewPanel x0;
+        int x1;
+
+        x0 := @parameter0: org.apache.fop.render.awt.viewer.PreviewPanel;
+        x1 := @parameter1: int;
+        x0.<org.apache.fop.render.awt.viewer.PreviewPanel: int currentPage> = x1;
+        return x1;
+    }
+
+    static javax.swing.JPanel access$500(org.apache.fop.render.awt.viewer.PreviewPanel)
+    {
+        org.apache.fop.render.awt.viewer.PreviewPanel x0;
+        javax.swing.JPanel $r0;
+
+        x0 := @parameter0: org.apache.fop.render.awt.viewer.PreviewPanel;
+        $r0 = x0.<org.apache.fop.render.awt.viewer.PreviewPanel: javax.swing.JPanel gridPanel>;
+        return $r0;
+    }
+
+    static int access$600(org.apache.fop.render.awt.viewer.PreviewPanel)
+    {
+        org.apache.fop.render.awt.viewer.PreviewPanel x0;
+        int $i0;
+
+        x0 := @parameter0: org.apache.fop.render.awt.viewer.PreviewPanel;
+        $i0 = x0.<org.apache.fop.render.awt.viewer.PreviewPanel: int displayMode>;
+        return $i0;
+    }
+
+    static int access$702(org.apache.fop.render.awt.viewer.PreviewPanel, int)
+    {
+        org.apache.fop.render.awt.viewer.PreviewPanel x0;
+        int x1;
+
+        x0 := @parameter0: org.apache.fop.render.awt.viewer.PreviewPanel;
+        x1 := @parameter1: int;
+        x0.<org.apache.fop.render.awt.viewer.PreviewPanel: int firstPage> = x1;
+        return x1;
+    }
+
+    static int access$802(org.apache.fop.render.awt.viewer.PreviewPanel, int)
+    {
+        org.apache.fop.render.awt.viewer.PreviewPanel x0;
+        int x1;
+
+        x0 := @parameter0: org.apache.fop.render.awt.viewer.PreviewPanel;
+        x1 := @parameter1: int;
+        x0.<org.apache.fop.render.awt.viewer.PreviewPanel: int pageRange> = x1;
+        return x1;
+    }
+
+    static int access$800(org.apache.fop.render.awt.viewer.PreviewPanel)
+    {
+        org.apache.fop.render.awt.viewer.PreviewPanel x0;
+        int $i0;
+
+        x0 := @parameter0: org.apache.fop.render.awt.viewer.PreviewPanel;
+        $i0 = x0.<org.apache.fop.render.awt.viewer.PreviewPanel: int pageRange>;
+        return $i0;
+    }
+
+    static org.apache.fop.render.awt.viewer.ImageProxyPanel[] access$300(org.apache.fop.render.awt.viewer.PreviewPanel)
+    {
+        org.apache.fop.render.awt.viewer.PreviewPanel x0;
+        org.apache.fop.render.awt.viewer.ImageProxyPanel[] $r0;
+
+        x0 := @parameter0: org.apache.fop.render.awt.viewer.PreviewPanel;
+        $r0 = x0.<org.apache.fop.render.awt.viewer.PreviewPanel: org.apache.fop.render.awt.viewer.ImageProxyPanel[] pagePanels>;
+        return $r0;
+    }
+
+    static int access$700(org.apache.fop.render.awt.viewer.PreviewPanel)
+    {
+        org.apache.fop.render.awt.viewer.PreviewPanel x0;
+        int $i0;
+
+        x0 := @parameter0: org.apache.fop.render.awt.viewer.PreviewPanel;
+        $i0 = x0.<org.apache.fop.render.awt.viewer.PreviewPanel: int firstPage>;
+        return $i0;
+    }
+}

@@ -1,0 +1,126 @@
+public class org.apache.fop.render.bitmap.MultiFileRenderingUtil extends java.lang.Object
+{
+    private java.lang.String filePrefix;
+    private java.lang.String fileExtension;
+    private java.io.File outputDir;
+
+    public void <init>(java.lang.String, java.io.File)
+    {
+        org.apache.fop.render.bitmap.MultiFileRenderingUtil this;
+        java.lang.String ext, s, extension, $r1, $r4, $r5;
+        java.io.File outputFile, $r0;
+        int i, $i0;
+        boolean $z0;
+        java.lang.IllegalArgumentException $r2;
+        java.lang.StringBuffer $r3;
+        char $c1;
+
+        this := @this: org.apache.fop.render.bitmap.MultiFileRenderingUtil;
+        ext := @parameter0: java.lang.String;
+        outputFile := @parameter1: java.io.File;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.render.bitmap.MultiFileRenderingUtil: java.lang.String fileExtension> = ext;
+        if outputFile != null goto label0;
+
+        this.<org.apache.fop.render.bitmap.MultiFileRenderingUtil: java.io.File outputDir> = null;
+        this.<org.apache.fop.render.bitmap.MultiFileRenderingUtil: java.lang.String filePrefix> = null;
+        goto label6;
+
+     label0:
+        $r0 = virtualinvoke outputFile.<java.io.File: java.io.File getParentFile()>();
+        this.<org.apache.fop.render.bitmap.MultiFileRenderingUtil: java.io.File outputDir> = $r0;
+        s = virtualinvoke outputFile.<java.io.File: java.lang.String getName()>();
+        i = virtualinvoke s.<java.lang.String: int lastIndexOf(java.lang.String)>(".");
+        if i <= 0 goto label2;
+
+        $i0 = i + 1;
+        $r1 = virtualinvoke s.<java.lang.String: java.lang.String substring(int)>($i0);
+        extension = virtualinvoke $r1.<java.lang.String: java.lang.String toLowerCase()>();
+        $z0 = virtualinvoke ext.<java.lang.String: boolean equals(java.lang.Object)>(extension);
+        if $z0 != 0 goto label1;
+
+        $r2 = new java.lang.IllegalArgumentException;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Invalid file extension (\'");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(extension);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\') specified");
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r4);
+        throw $r2;
+
+     label1:
+        goto label4;
+
+     label2:
+        if i != -1 goto label3;
+
+        i = virtualinvoke s.<java.lang.String: int length()>();
+        goto label4;
+
+     label3:
+        $r2 = new java.lang.IllegalArgumentException;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Invalid file name (\'");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(s);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\') specified");
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r4);
+        throw $r2;
+
+     label4:
+        $i0 = i - 1;
+        $c1 = virtualinvoke s.<java.lang.String: char charAt(int)>($i0);
+        if $c1 != 49 goto label5;
+
+        i = i + -1;
+
+     label5:
+        $r5 = virtualinvoke s.<java.lang.String: java.lang.String substring(int,int)>(0, i);
+        this.<org.apache.fop.render.bitmap.MultiFileRenderingUtil: java.lang.String filePrefix> = $r5;
+
+     label6:
+        return;
+    }
+
+    public java.io.OutputStream createOutputStream(int) throws java.io.IOException
+    {
+        org.apache.fop.render.bitmap.MultiFileRenderingUtil this;
+        int pageNumber, $i0;
+        java.lang.StringBuffer $r0;
+        java.io.File f, $r2, $r3;
+        java.io.BufferedOutputStream os, $r6;
+        java.lang.String $r1, $r4, $r5;
+        java.io.FileOutputStream $r7;
+
+        this := @this: org.apache.fop.render.bitmap.MultiFileRenderingUtil;
+        pageNumber := @parameter0: int;
+        $r1 = this.<org.apache.fop.render.bitmap.MultiFileRenderingUtil: java.lang.String filePrefix>;
+        if $r1 != null goto label0;
+
+        return null;
+
+     label0:
+        $r2 = new java.io.File;
+        $r3 = this.<org.apache.fop.render.bitmap.MultiFileRenderingUtil: java.io.File outputDir>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r4 = this.<org.apache.fop.render.bitmap.MultiFileRenderingUtil: java.lang.String filePrefix>;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $i0 = pageNumber + 1;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(".");
+        $r4 = this.<org.apache.fop.render.bitmap.MultiFileRenderingUtil: java.lang.String fileExtension>;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r5 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<java.io.File: void <init>(java.io.File,java.lang.String)>($r3, $r5);
+        f = $r2;
+        $r6 = new java.io.BufferedOutputStream;
+        $r7 = new java.io.FileOutputStream;
+        specialinvoke $r7.<java.io.FileOutputStream: void <init>(java.io.File)>(f);
+        specialinvoke $r6.<java.io.BufferedOutputStream: void <init>(java.io.OutputStream)>($r7);
+        os = $r6;
+        return os;
+    }
+}

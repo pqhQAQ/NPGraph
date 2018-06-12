@@ -1,0 +1,200 @@
+public abstract class org.apache.fop.render.ps.AbstractPSTranscoder extends org.apache.fop.svg.AbstractFOPTranscoder
+{
+    private org.apache.avalon.framework.configuration.Configuration cfg;
+    protected org.apache.xmlgraphics.java2d.ps.AbstractPSDocumentGraphics2D graphics;
+
+    public void <init>()
+    {
+        org.apache.fop.render.ps.AbstractPSTranscoder this;
+
+        this := @this: org.apache.fop.render.ps.AbstractPSTranscoder;
+        specialinvoke this.<org.apache.fop.svg.AbstractFOPTranscoder: void <init>()>();
+        this.<org.apache.fop.render.ps.AbstractPSTranscoder: org.apache.avalon.framework.configuration.Configuration cfg> = null;
+        this.<org.apache.fop.render.ps.AbstractPSTranscoder: org.apache.xmlgraphics.java2d.ps.AbstractPSDocumentGraphics2D graphics> = null;
+        return;
+    }
+
+    protected abstract org.apache.xmlgraphics.java2d.ps.AbstractPSDocumentGraphics2D createDocumentGraphics2D();
+
+    protected void transcode(org.w3c.dom.Document, java.lang.String, org.apache.batik.transcoder.TranscoderOutput) throws org.apache.batik.transcoder.TranscoderException
+    {
+        org.apache.fop.render.ps.AbstractPSTranscoder this;
+        org.w3c.dom.Document document;
+        java.lang.String uri, $r7;
+        org.apache.batik.transcoder.TranscoderOutput output;
+        org.apache.fop.fonts.FontInfo fontInfo, $r1;
+        org.apache.batik.parser.UnitProcessor$Context uctx;
+        float widthInPt, heightInPt, $f0, $f1, $f2;
+        int w, h;
+        java.io.OutputStream out;
+        java.io.IOException ex, $r20;
+        org.apache.xmlgraphics.java2d.ps.AbstractPSDocumentGraphics2D $r0, $r2, $r4;
+        boolean $z0;
+        org.apache.fop.render.ps.NativeTextHandler $r3;
+        org.apache.commons.logging.Log $r5;
+        java.lang.StringBuffer $r6;
+        org.apache.batik.bridge.BridgeContext $r8;
+        org.w3c.dom.Element $r9;
+        double $d0;
+        java.io.BufferedOutputStream $r10;
+        org.apache.batik.transcoder.TranscodingHints $r11, $r13;
+        org.apache.batik.transcoder.TranscodingHints$Key $r12, $r14;
+        java.lang.Object $r15;
+        java.awt.Color $r16;
+        org.apache.xmlgraphics.java2d.GraphicContext $r17;
+        java.awt.geom.AffineTransform $r18;
+        org.apache.batik.gvt.GraphicsNode $r19;
+        org.apache.batik.transcoder.TranscoderException $r21;
+
+        this := @this: org.apache.fop.render.ps.AbstractPSTranscoder;
+        document := @parameter0: org.w3c.dom.Document;
+        uri := @parameter1: java.lang.String;
+        output := @parameter2: org.apache.batik.transcoder.TranscoderOutput;
+        $r0 = virtualinvoke this.<org.apache.fop.render.ps.AbstractPSTranscoder: org.apache.xmlgraphics.java2d.ps.AbstractPSDocumentGraphics2D createDocumentGraphics2D()>();
+        this.<org.apache.fop.render.ps.AbstractPSTranscoder: org.apache.xmlgraphics.java2d.ps.AbstractPSDocumentGraphics2D graphics> = $r0;
+        $z0 = virtualinvoke this.<org.apache.fop.render.ps.AbstractPSTranscoder: boolean isTextStroked()>();
+        if $z0 != 0 goto label0;
+
+        $r1 = new org.apache.fop.fonts.FontInfo;
+        specialinvoke $r1.<org.apache.fop.fonts.FontInfo: void <init>()>();
+        fontInfo = $r1;
+        staticinvoke <org.apache.fop.fonts.FontSetup: void setup(org.apache.fop.fonts.FontInfo,java.util.List,org.apache.fop.fonts.FontResolver)>(fontInfo, null, null);
+        $r2 = this.<org.apache.fop.render.ps.AbstractPSTranscoder: org.apache.xmlgraphics.java2d.ps.AbstractPSDocumentGraphics2D graphics>;
+        $r3 = new org.apache.fop.render.ps.NativeTextHandler;
+        $r4 = this.<org.apache.fop.render.ps.AbstractPSTranscoder: org.apache.xmlgraphics.java2d.ps.AbstractPSDocumentGraphics2D graphics>;
+        specialinvoke $r3.<org.apache.fop.render.ps.NativeTextHandler: void <init>(org.apache.xmlgraphics.java2d.ps.PSGraphics2D,org.apache.fop.fonts.FontInfo)>($r4, fontInfo);
+        virtualinvoke $r2.<org.apache.xmlgraphics.java2d.ps.AbstractPSDocumentGraphics2D: void setCustomTextHandler(org.apache.xmlgraphics.java2d.TextHandler)>($r3);
+
+     label0:
+        specialinvoke this.<org.apache.fop.svg.AbstractFOPTranscoder: void transcode(org.w3c.dom.Document,java.lang.String,org.apache.batik.transcoder.TranscoderOutput)>(document, uri, output);
+        $r5 = virtualinvoke this.<org.apache.fop.render.ps.AbstractPSTranscoder: org.apache.commons.logging.Log getLogger()>();
+        $r6 = new java.lang.StringBuffer;
+        specialinvoke $r6.<java.lang.StringBuffer: void <init>()>();
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("document size: ");
+        $f0 = this.<org.apache.fop.render.ps.AbstractPSTranscoder: float width>;
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(float)>($f0);
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" x ");
+        $f0 = this.<org.apache.fop.render.ps.AbstractPSTranscoder: float height>;
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(float)>($f0);
+        $r7 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r7);
+        $r8 = this.<org.apache.fop.render.ps.AbstractPSTranscoder: org.apache.batik.bridge.BridgeContext ctx>;
+        $r9 = interfaceinvoke document.<org.w3c.dom.Document: org.w3c.dom.Element getDocumentElement()>();
+        uctx = staticinvoke <org.apache.batik.bridge.UnitProcessor: org.apache.batik.parser.UnitProcessor$Context createContext(org.apache.batik.bridge.BridgeContext,org.w3c.dom.Element)>($r8, $r9);
+        $f1 = this.<org.apache.fop.render.ps.AbstractPSTranscoder: float width>;
+        widthInPt = staticinvoke <org.apache.batik.bridge.UnitProcessor: float userSpaceToSVG(float,short,short,org.apache.batik.parser.UnitProcessor$Context)>($f1, 9, 2, uctx);
+        $d0 = (double) widthInPt;
+        $d0 = $d0 + 0.5;
+        w = (int) $d0;
+        $f1 = this.<org.apache.fop.render.ps.AbstractPSTranscoder: float height>;
+        heightInPt = staticinvoke <org.apache.batik.bridge.UnitProcessor: float userSpaceToSVG(float,short,short,org.apache.batik.parser.UnitProcessor$Context)>($f1, 9, 2, uctx);
+        $d0 = (double) heightInPt;
+        $d0 = $d0 + 0.5;
+        h = (int) $d0;
+        $r5 = virtualinvoke this.<org.apache.fop.render.ps.AbstractPSTranscoder: org.apache.commons.logging.Log getLogger()>();
+        $r6 = new java.lang.StringBuffer;
+        specialinvoke $r6.<java.lang.StringBuffer: void <init>()>();
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("document size: ");
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(w);
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("pt x ");
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(h);
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("pt");
+        $r7 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r7);
+
+     label1:
+        out = virtualinvoke output.<org.apache.batik.transcoder.TranscoderOutput: java.io.OutputStream getOutputStream()>();
+        $z0 = out instanceof java.io.BufferedOutputStream;
+        if $z0 != 0 goto label2;
+
+        $r10 = new java.io.BufferedOutputStream;
+        specialinvoke $r10.<java.io.BufferedOutputStream: void <init>(java.io.OutputStream)>(out);
+        out = $r10;
+
+     label2:
+        $r2 = this.<org.apache.fop.render.ps.AbstractPSTranscoder: org.apache.xmlgraphics.java2d.ps.AbstractPSDocumentGraphics2D graphics>;
+        virtualinvoke $r2.<org.apache.xmlgraphics.java2d.ps.AbstractPSDocumentGraphics2D: void setupDocument(java.io.OutputStream,int,int)>(out, w, h);
+        $r2 = this.<org.apache.fop.render.ps.AbstractPSTranscoder: org.apache.xmlgraphics.java2d.ps.AbstractPSDocumentGraphics2D graphics>;
+        $f2 = this.<org.apache.fop.render.ps.AbstractPSTranscoder: float width>;
+        $f0 = this.<org.apache.fop.render.ps.AbstractPSTranscoder: float height>;
+        virtualinvoke $r2.<org.apache.xmlgraphics.java2d.ps.AbstractPSDocumentGraphics2D: void setViewportDimension(float,float)>($f2, $f0);
+        $r11 = this.<org.apache.fop.render.ps.AbstractPSTranscoder: org.apache.batik.transcoder.TranscodingHints hints>;
+        $r12 = <org.apache.batik.transcoder.image.ImageTranscoder: org.apache.batik.transcoder.TranscodingHints$Key KEY_BACKGROUND_COLOR>;
+        $z0 = virtualinvoke $r11.<org.apache.batik.transcoder.TranscodingHints: boolean containsKey(java.lang.Object)>($r12);
+        if $z0 == 0 goto label3;
+
+        $r2 = this.<org.apache.fop.render.ps.AbstractPSTranscoder: org.apache.xmlgraphics.java2d.ps.AbstractPSDocumentGraphics2D graphics>;
+        $r13 = this.<org.apache.fop.render.ps.AbstractPSTranscoder: org.apache.batik.transcoder.TranscodingHints hints>;
+        $r14 = <org.apache.batik.transcoder.image.ImageTranscoder: org.apache.batik.transcoder.TranscodingHints$Key KEY_BACKGROUND_COLOR>;
+        $r15 = virtualinvoke $r13.<org.apache.batik.transcoder.TranscodingHints: java.lang.Object get(java.lang.Object)>($r14);
+        $r16 = (java.awt.Color) $r15;
+        virtualinvoke $r2.<org.apache.xmlgraphics.java2d.ps.AbstractPSDocumentGraphics2D: void setBackgroundColor(java.awt.Color)>($r16);
+
+     label3:
+        $r2 = this.<org.apache.fop.render.ps.AbstractPSTranscoder: org.apache.xmlgraphics.java2d.ps.AbstractPSDocumentGraphics2D graphics>;
+        $r17 = new org.apache.xmlgraphics.java2d.GraphicContext;
+        specialinvoke $r17.<org.apache.xmlgraphics.java2d.GraphicContext: void <init>()>();
+        virtualinvoke $r2.<org.apache.xmlgraphics.java2d.ps.AbstractPSDocumentGraphics2D: void setGraphicContext(org.apache.xmlgraphics.java2d.GraphicContext)>($r17);
+        $r2 = this.<org.apache.fop.render.ps.AbstractPSTranscoder: org.apache.xmlgraphics.java2d.ps.AbstractPSDocumentGraphics2D graphics>;
+        $r18 = this.<org.apache.fop.render.ps.AbstractPSTranscoder: java.awt.geom.AffineTransform curTxf>;
+        virtualinvoke $r2.<org.apache.xmlgraphics.java2d.ps.AbstractPSDocumentGraphics2D: void setTransform(java.awt.geom.AffineTransform)>($r18);
+        $r19 = this.<org.apache.fop.render.ps.AbstractPSTranscoder: org.apache.batik.gvt.GraphicsNode root>;
+        $r0 = this.<org.apache.fop.render.ps.AbstractPSTranscoder: org.apache.xmlgraphics.java2d.ps.AbstractPSDocumentGraphics2D graphics>;
+        interfaceinvoke $r19.<org.apache.batik.gvt.GraphicsNode: void paint(java.awt.Graphics2D)>($r0);
+        $r2 = this.<org.apache.fop.render.ps.AbstractPSTranscoder: org.apache.xmlgraphics.java2d.ps.AbstractPSDocumentGraphics2D graphics>;
+        virtualinvoke $r2.<org.apache.xmlgraphics.java2d.ps.AbstractPSDocumentGraphics2D: void finish()>();
+
+     label4:
+        goto label6;
+
+     label5:
+        $r20 := @caughtexception;
+        ex = $r20;
+        $r21 = new org.apache.batik.transcoder.TranscoderException;
+        specialinvoke $r21.<org.apache.batik.transcoder.TranscoderException: void <init>(java.lang.Exception)>(ex);
+        throw $r21;
+
+     label6:
+        return;
+
+        catch java.io.IOException from label1 to label4 with label5;
+    }
+
+    protected org.apache.batik.bridge.BridgeContext createBridgeContext()
+    {
+        org.apache.fop.render.ps.AbstractPSTranscoder this;
+        org.apache.batik.bridge.BridgeContext $r0, ctx;
+        org.apache.xmlgraphics.java2d.TextHandler handler;
+        org.apache.fop.render.ps.NativeTextHandler nativeTextHandler;
+        org.apache.fop.render.ps.PSTextPainter textPainter, $r3;
+        org.apache.batik.bridge.UserAgent $r1;
+        boolean $z0;
+        org.apache.xmlgraphics.java2d.ps.AbstractPSDocumentGraphics2D $r2;
+        org.apache.fop.render.ps.PSTextElementBridge $r4;
+
+        this := @this: org.apache.fop.render.ps.AbstractPSTranscoder;
+        $r0 = new org.apache.batik.bridge.BridgeContext;
+        $r1 = this.<org.apache.fop.render.ps.AbstractPSTranscoder: org.apache.batik.bridge.UserAgent userAgent>;
+        specialinvoke $r0.<org.apache.batik.bridge.BridgeContext: void <init>(org.apache.batik.bridge.UserAgent)>($r1);
+        ctx = $r0;
+        $z0 = virtualinvoke this.<org.apache.fop.render.ps.AbstractPSTranscoder: boolean isTextStroked()>();
+        if $z0 != 0 goto label0;
+
+        $r2 = this.<org.apache.fop.render.ps.AbstractPSTranscoder: org.apache.xmlgraphics.java2d.ps.AbstractPSDocumentGraphics2D graphics>;
+        handler = virtualinvoke $r2.<org.apache.xmlgraphics.java2d.ps.AbstractPSDocumentGraphics2D: org.apache.xmlgraphics.java2d.TextHandler getCustomTextHandler()>();
+        $z0 = handler instanceof org.apache.fop.render.ps.NativeTextHandler;
+        if $z0 == 0 goto label0;
+
+        nativeTextHandler = (org.apache.fop.render.ps.NativeTextHandler) handler;
+        $r3 = new org.apache.fop.render.ps.PSTextPainter;
+        specialinvoke $r3.<org.apache.fop.render.ps.PSTextPainter: void <init>(org.apache.fop.render.ps.NativeTextHandler)>(nativeTextHandler);
+        textPainter = $r3;
+        virtualinvoke ctx.<org.apache.batik.bridge.BridgeContext: void setTextPainter(org.apache.batik.gvt.TextPainter)>(textPainter);
+        $r4 = new org.apache.fop.render.ps.PSTextElementBridge;
+        specialinvoke $r4.<org.apache.fop.render.ps.PSTextElementBridge: void <init>(org.apache.fop.render.ps.PSTextPainter)>(textPainter);
+        virtualinvoke ctx.<org.apache.batik.bridge.BridgeContext: void putBridge(org.apache.batik.bridge.Bridge)>($r4);
+
+     label0:
+        return ctx;
+    }
+}

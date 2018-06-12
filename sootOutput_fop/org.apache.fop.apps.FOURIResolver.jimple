@@ -1,0 +1,436 @@
+public class org.apache.fop.apps.FOURIResolver extends java.lang.Object implements javax.xml.transform.URIResolver
+{
+    private org.apache.commons.logging.Log log;
+    private javax.xml.transform.URIResolver dataURIResolver;
+    private javax.xml.transform.URIResolver uriResolver;
+    private boolean throwExceptions;
+
+    public void <init>()
+    {
+        org.apache.fop.apps.FOURIResolver this;
+
+        this := @this: org.apache.fop.apps.FOURIResolver;
+        specialinvoke this.<org.apache.fop.apps.FOURIResolver: void <init>(boolean)>(0);
+        return;
+    }
+
+    public void <init>(boolean)
+    {
+        org.apache.fop.apps.FOURIResolver this;
+        boolean throwExceptions;
+        org.apache.commons.logging.Log $r0;
+        org.apache.fop.util.DataURIResolver $r1;
+
+        this := @this: org.apache.fop.apps.FOURIResolver;
+        throwExceptions := @parameter0: boolean;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $r0 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.String)>("FOP");
+        this.<org.apache.fop.apps.FOURIResolver: org.apache.commons.logging.Log log> = $r0;
+        $r1 = new org.apache.fop.util.DataURIResolver;
+        specialinvoke $r1.<org.apache.fop.util.DataURIResolver: void <init>()>();
+        this.<org.apache.fop.apps.FOURIResolver: javax.xml.transform.URIResolver dataURIResolver> = $r1;
+        this.<org.apache.fop.apps.FOURIResolver: javax.xml.transform.URIResolver uriResolver> = null;
+        this.<org.apache.fop.apps.FOURIResolver: boolean throwExceptions> = 0;
+        this.<org.apache.fop.apps.FOURIResolver: boolean throwExceptions> = throwExceptions;
+        return;
+    }
+
+    private void handleException(java.lang.Exception, java.lang.String, boolean) throws javax.xml.transform.TransformerException
+    {
+        org.apache.fop.apps.FOURIResolver this;
+        java.lang.Exception e;
+        java.lang.String errorStr, $r2;
+        boolean strict;
+        javax.xml.transform.TransformerException $r0;
+        org.apache.commons.logging.Log $r1;
+
+        this := @this: org.apache.fop.apps.FOURIResolver;
+        e := @parameter0: java.lang.Exception;
+        errorStr := @parameter1: java.lang.String;
+        strict := @parameter2: boolean;
+        if strict == 0 goto label0;
+
+        $r0 = new javax.xml.transform.TransformerException;
+        specialinvoke $r0.<javax.xml.transform.TransformerException: void <init>(java.lang.String,java.lang.Throwable)>(errorStr, e);
+        throw $r0;
+
+     label0:
+        $r1 = this.<org.apache.fop.apps.FOURIResolver: org.apache.commons.logging.Log log>;
+        $r2 = virtualinvoke e.<java.lang.Exception: java.lang.String getMessage()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r2);
+        return;
+    }
+
+    public javax.xml.transform.Source resolve(java.lang.String, java.lang.String) throws javax.xml.transform.TransformerException
+    {
+        org.apache.fop.apps.FOURIResolver this;
+        java.lang.String href, base, fileURL, fragment, scheme, effURL, $r5, $r6, $r12, $r13;
+        null_type source;
+        java.net.URL absoluteURL, baseURL, $r2, $r4;
+        int hashPos, colonPos, slashPos, $i0;
+        java.io.File file, $r1;
+        java.net.MalformedURLException mfue, mue, $r7, $r8, $r9, $r10, $r14;
+        java.net.URLConnection connection;
+        java.io.FileNotFoundException fnfe, $r17;
+        java.io.IOException ioe, $r20;
+        javax.xml.transform.URIResolver $r0;
+        javax.xml.transform.Source source;
+        boolean $z0, $z1;
+        java.lang.StringBuffer $r3, $r11, $r19;
+        javax.xml.transform.stream.StreamSource $r15;
+        java.io.InputStream $r16;
+        org.apache.commons.logging.Log $r18;
+
+        this := @this: org.apache.fop.apps.FOURIResolver;
+        href := @parameter0: java.lang.String;
+        base := @parameter1: java.lang.String;
+        source = null;
+        $r0 = this.<org.apache.fop.apps.FOURIResolver: javax.xml.transform.URIResolver dataURIResolver>;
+        source = interfaceinvoke $r0.<javax.xml.transform.URIResolver: javax.xml.transform.Source resolve(java.lang.String,java.lang.String)>(href, base);
+        if source != null goto label0;
+
+        $r0 = this.<org.apache.fop.apps.FOURIResolver: javax.xml.transform.URIResolver uriResolver>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.apps.FOURIResolver: javax.xml.transform.URIResolver uriResolver>;
+        source = interfaceinvoke $r0.<javax.xml.transform.URIResolver: javax.xml.transform.Source resolve(java.lang.String,java.lang.String)>(href, base);
+
+     label0:
+        if source != null goto label28;
+
+        absoluteURL = null;
+        hashPos = virtualinvoke href.<java.lang.String: int indexOf(int)>(35);
+        if hashPos < 0 goto label1;
+
+        fileURL = virtualinvoke href.<java.lang.String: java.lang.String substring(int,int)>(0, hashPos);
+        fragment = virtualinvoke href.<java.lang.String: java.lang.String substring(int)>(hashPos);
+        goto label2;
+
+     label1:
+        fileURL = href;
+        fragment = null;
+
+     label2:
+        $r1 = new java.io.File;
+        specialinvoke $r1.<java.io.File: void <init>(java.lang.String)>(fileURL);
+        file = $r1;
+        $z0 = virtualinvoke file.<java.io.File: boolean canRead()>();
+        if $z0 == 0 goto label7;
+
+        $z0 = virtualinvoke file.<java.io.File: boolean isFile()>();
+        if $z0 == 0 goto label7;
+
+     label3:
+        if fragment == null goto label4;
+
+        $r2 = new java.net.URL;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke file.<java.io.File: java.net.URL toURL()>();
+        $r5 = virtualinvoke $r4.<java.net.URL: java.lang.String toExternalForm()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(fragment);
+        $r6 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<java.net.URL: void <init>(java.lang.String)>($r6);
+        absoluteURL = $r2;
+        goto label5;
+
+     label4:
+        absoluteURL = virtualinvoke file.<java.io.File: java.net.URL toURL()>();
+
+     label5:
+        goto label23;
+
+     label6:
+        $r7 := @caughtexception;
+        mfue = $r7;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Could not convert filename \'");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(href);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\' to URL");
+        $r6 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        $z1 = this.<org.apache.fop.apps.FOURIResolver: boolean throwExceptions>;
+        specialinvoke this.<org.apache.fop.apps.FOURIResolver: void handleException(java.lang.Exception,java.lang.String,boolean)>(mfue, $r6, $z1);
+        goto label23;
+
+     label7:
+        if base != null goto label15;
+
+     label8:
+        $r2 = new java.net.URL;
+        specialinvoke $r2.<java.net.URL: void <init>(java.lang.String)>(href);
+        absoluteURL = $r2;
+
+     label9:
+        goto label23;
+
+     label10:
+        $r8 := @caughtexception;
+        mue = $r8;
+
+     label11:
+        $r2 = new java.net.URL;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("file:");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(href);
+        $r6 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<java.net.URL: void <init>(java.lang.String)>($r6);
+        absoluteURL = $r2;
+
+     label12:
+        goto label14;
+
+     label13:
+        $r9 := @caughtexception;
+        mfue = $r9;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Error with URL \'");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(href);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\'");
+        $r6 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        $z1 = this.<org.apache.fop.apps.FOURIResolver: boolean throwExceptions>;
+        specialinvoke this.<org.apache.fop.apps.FOURIResolver: void handleException(java.lang.Exception,java.lang.String,boolean)>(mfue, $r6, $z1);
+
+     label14:
+        goto label23;
+
+     label15:
+        baseURL = null;
+
+     label16:
+        $r2 = new java.net.URL;
+        specialinvoke $r2.<java.net.URL: void <init>(java.lang.String)>(base);
+        baseURL = $r2;
+
+     label17:
+        goto label19;
+
+     label18:
+        $r10 := @caughtexception;
+        mfue = $r10;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Error with base URL \'");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(base);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\'");
+        $r6 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        $z1 = this.<org.apache.fop.apps.FOURIResolver: boolean throwExceptions>;
+        specialinvoke this.<org.apache.fop.apps.FOURIResolver: void handleException(java.lang.Exception,java.lang.String,boolean)>(mfue, $r6, $z1);
+
+     label19:
+        $r11 = new java.lang.StringBuffer;
+        specialinvoke $r11.<java.lang.StringBuffer: void <init>()>();
+        $r12 = virtualinvoke baseURL.<java.net.URL: java.lang.String getProtocol()>();
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r12);
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(":");
+        scheme = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.String toString()>();
+        $z0 = virtualinvoke href.<java.lang.String: boolean startsWith(java.lang.String)>(scheme);
+        if $z0 == 0 goto label20;
+
+        $i0 = virtualinvoke scheme.<java.lang.String: int length()>();
+        href = virtualinvoke href.<java.lang.String: java.lang.String substring(int)>($i0);
+        $r13 = "file:";
+        $z0 = virtualinvoke $r13.<java.lang.String: boolean equals(java.lang.Object)>(scheme);
+        if $z0 == 0 goto label20;
+
+        colonPos = virtualinvoke href.<java.lang.String: int indexOf(int)>(58);
+        slashPos = virtualinvoke href.<java.lang.String: int indexOf(int)>(47);
+        if slashPos < 0 goto label20;
+
+        if colonPos < 0 goto label20;
+
+        if colonPos >= slashPos goto label20;
+
+        $r11 = new java.lang.StringBuffer;
+        specialinvoke $r11.<java.lang.StringBuffer: void <init>()>();
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("/");
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(href);
+        href = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.String toString()>();
+
+     label20:
+        $r2 = new java.net.URL;
+        specialinvoke $r2.<java.net.URL: void <init>(java.net.URL,java.lang.String)>(baseURL, href);
+        absoluteURL = $r2;
+
+     label21:
+        goto label23;
+
+     label22:
+        $r14 := @caughtexception;
+        mfue = $r14;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Error with URL; base \'");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(base);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\' href \'");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(href);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\'");
+        $r6 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        $z1 = this.<org.apache.fop.apps.FOURIResolver: boolean throwExceptions>;
+        specialinvoke this.<org.apache.fop.apps.FOURIResolver: void handleException(java.lang.Exception,java.lang.String,boolean)>(mfue, $r6, $z1);
+
+     label23:
+        if absoluteURL == null goto label28;
+
+        effURL = virtualinvoke absoluteURL.<java.net.URL: java.lang.String toExternalForm()>();
+
+     label24:
+        connection = virtualinvoke absoluteURL.<java.net.URL: java.net.URLConnection openConnection()>();
+        virtualinvoke connection.<java.net.URLConnection: void setAllowUserInteraction(boolean)>(0);
+        virtualinvoke connection.<java.net.URLConnection: void setDoInput(boolean)>(1);
+        virtualinvoke this.<org.apache.fop.apps.FOURIResolver: void updateURLConnection(java.net.URLConnection,java.lang.String)>(connection, href);
+        virtualinvoke connection.<java.net.URLConnection: void connect()>();
+        $r15 = new javax.xml.transform.stream.StreamSource;
+        $r16 = virtualinvoke connection.<java.net.URLConnection: java.io.InputStream getInputStream()>();
+        specialinvoke $r15.<javax.xml.transform.stream.StreamSource: void <init>(java.io.InputStream,java.lang.String)>($r16, effURL);
+
+     label25:
+        return $r15;
+
+     label26:
+        $r17 := @caughtexception;
+        fnfe = $r17;
+        $r18 = this.<org.apache.fop.apps.FOURIResolver: org.apache.commons.logging.Log log>;
+        $r19 = new java.lang.StringBuffer;
+        specialinvoke $r19.<java.lang.StringBuffer: void <init>()>();
+        $r19 = virtualinvoke $r19.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("File not found: ");
+        $r19 = virtualinvoke $r19.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(effURL);
+        $r12 = virtualinvoke $r19.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r18.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r12);
+        goto label28;
+
+     label27:
+        $r20 := @caughtexception;
+        ioe = $r20;
+        $r18 = this.<org.apache.fop.apps.FOURIResolver: org.apache.commons.logging.Log log>;
+        $r19 = new java.lang.StringBuffer;
+        specialinvoke $r19.<java.lang.StringBuffer: void <init>()>();
+        $r19 = virtualinvoke $r19.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Error with opening URL \'");
+        $r19 = virtualinvoke $r19.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(effURL);
+        $r19 = virtualinvoke $r19.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\': ");
+        $r6 = virtualinvoke ioe.<java.io.IOException: java.lang.String getMessage()>();
+        $r19 = virtualinvoke $r19.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r12 = virtualinvoke $r19.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r18.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r12);
+
+     label28:
+        return source;
+
+        catch java.net.MalformedURLException from label3 to label5 with label6;
+        catch java.net.MalformedURLException from label8 to label9 with label10;
+        catch java.net.MalformedURLException from label11 to label12 with label13;
+        catch java.net.MalformedURLException from label16 to label17 with label18;
+        catch java.net.MalformedURLException from label20 to label21 with label22;
+        catch java.io.FileNotFoundException from label24 to label25 with label26;
+        catch java.io.IOException from label24 to label25 with label27;
+    }
+
+    protected void updateURLConnection(java.net.URLConnection, java.lang.String)
+    {
+        org.apache.fop.apps.FOURIResolver this;
+        java.net.URLConnection connection;
+        java.lang.String href;
+
+        this := @this: org.apache.fop.apps.FOURIResolver;
+        connection := @parameter0: java.net.URLConnection;
+        href := @parameter1: java.lang.String;
+        return;
+    }
+
+    protected void applyHttpBasicAuthentication(java.net.URLConnection, java.lang.String, java.lang.String)
+    {
+        org.apache.fop.apps.FOURIResolver this;
+        java.net.URLConnection connection;
+        java.lang.String username, password, combined, $r5, $r7;
+        java.lang.StringBuffer $r0, $r4;
+        java.io.ByteArrayOutputStream baout, $r1;
+        org.apache.xmlgraphics.util.io.Base64EncodeStream base64, $r2;
+        java.io.IOException e, $r8;
+        int $i0;
+        byte[] $r3, $r6;
+        java.lang.RuntimeException $r9;
+
+        this := @this: org.apache.fop.apps.FOURIResolver;
+        connection := @parameter0: java.net.URLConnection;
+        username := @parameter1: java.lang.String;
+        password := @parameter2: java.lang.String;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(username);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(":");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(password);
+        combined = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+
+     label0:
+        $r1 = new java.io.ByteArrayOutputStream;
+        $i0 = virtualinvoke combined.<java.lang.String: int length()>();
+        $i0 = $i0 * 2;
+        specialinvoke $r1.<java.io.ByteArrayOutputStream: void <init>(int)>($i0);
+        baout = $r1;
+        $r2 = new org.apache.xmlgraphics.util.io.Base64EncodeStream;
+        specialinvoke $r2.<org.apache.xmlgraphics.util.io.Base64EncodeStream: void <init>(java.io.OutputStream)>(baout);
+        base64 = $r2;
+        $r3 = virtualinvoke combined.<java.lang.String: byte[] getBytes(java.lang.String)>("UTF-8");
+        virtualinvoke base64.<org.apache.xmlgraphics.util.io.Base64EncodeStream: void write(byte[])>($r3);
+        virtualinvoke base64.<org.apache.xmlgraphics.util.io.Base64EncodeStream: void close()>();
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Basic ");
+        $r5 = new java.lang.String;
+        $r6 = virtualinvoke baout.<java.io.ByteArrayOutputStream: byte[] toByteArray()>();
+        specialinvoke $r5.<java.lang.String: void <init>(byte[],java.lang.String)>($r6, "UTF-8");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r7 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke connection.<java.net.URLConnection: void setRequestProperty(java.lang.String,java.lang.String)>("Authorization", $r7);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r8 := @caughtexception;
+        e = $r8;
+        $r9 = new java.lang.RuntimeException;
+        specialinvoke $r9.<java.lang.RuntimeException: void <init>(java.lang.String)>("Error during base64 encodation of username/password");
+        throw $r9;
+
+     label3:
+        return;
+
+        catch java.io.IOException from label0 to label1 with label2;
+    }
+
+    public void setCustomURIResolver(javax.xml.transform.URIResolver)
+    {
+        org.apache.fop.apps.FOURIResolver this;
+        javax.xml.transform.URIResolver resolver;
+
+        this := @this: org.apache.fop.apps.FOURIResolver;
+        resolver := @parameter0: javax.xml.transform.URIResolver;
+        this.<org.apache.fop.apps.FOURIResolver: javax.xml.transform.URIResolver uriResolver> = resolver;
+        return;
+    }
+
+    public javax.xml.transform.URIResolver getCustomURIResolver()
+    {
+        org.apache.fop.apps.FOURIResolver this;
+        javax.xml.transform.URIResolver $r0;
+
+        this := @this: org.apache.fop.apps.FOURIResolver;
+        $r0 = this.<org.apache.fop.apps.FOURIResolver: javax.xml.transform.URIResolver uriResolver>;
+        return $r0;
+    }
+
+    public void setThrowExceptions(boolean)
+    {
+        org.apache.fop.apps.FOURIResolver this;
+        boolean throwExceptions;
+
+        this := @this: org.apache.fop.apps.FOURIResolver;
+        throwExceptions := @parameter0: boolean;
+        this.<org.apache.fop.apps.FOURIResolver: boolean throwExceptions> = throwExceptions;
+        return;
+    }
+}

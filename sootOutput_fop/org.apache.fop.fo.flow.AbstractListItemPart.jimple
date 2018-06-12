@@ -1,0 +1,122 @@
+public abstract class org.apache.fop.fo.flow.AbstractListItemPart extends org.apache.fop.fo.FObj
+{
+    private org.apache.fop.fo.properties.KeepProperty keepTogether;
+    private boolean blockItemFound;
+
+    public void <init>(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.flow.AbstractListItemPart this;
+        org.apache.fop.fo.FONode parent;
+
+        this := @this: org.apache.fop.fo.flow.AbstractListItemPart;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        specialinvoke this.<org.apache.fop.fo.FObj: void <init>(org.apache.fop.fo.FONode)>(parent);
+        this.<org.apache.fop.fo.flow.AbstractListItemPart: boolean blockItemFound> = 0;
+        return;
+    }
+
+    public void bind(org.apache.fop.fo.PropertyList) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.AbstractListItemPart this;
+        org.apache.fop.fo.PropertyList pList;
+        org.apache.fop.fo.properties.Property $r0;
+        org.apache.fop.fo.properties.KeepProperty $r1;
+
+        this := @this: org.apache.fop.fo.flow.AbstractListItemPart;
+        pList := @parameter0: org.apache.fop.fo.PropertyList;
+        specialinvoke this.<org.apache.fop.fo.FObj: void bind(org.apache.fop.fo.PropertyList)>(pList);
+        $r0 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(118);
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.properties.Property: org.apache.fop.fo.properties.KeepProperty getKeep()>();
+        this.<org.apache.fop.fo.flow.AbstractListItemPart: org.apache.fop.fo.properties.KeepProperty keepTogether> = $r1;
+        return;
+    }
+
+    protected void validateChildNode(org.xml.sax.Locator, java.lang.String, java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.flow.AbstractListItemPart this;
+        org.xml.sax.Locator loc;
+        java.lang.String nsURI, localName, $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.flow.AbstractListItemPart;
+        loc := @parameter0: org.xml.sax.Locator;
+        nsURI := @parameter1: java.lang.String;
+        localName := @parameter2: java.lang.String;
+        $r0 = "http://www.w3.org/1999/XSL/Format";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(nsURI);
+        if $z0 == 0 goto label0;
+
+        $z0 = virtualinvoke localName.<java.lang.String: boolean equals(java.lang.Object)>("marker");
+        if $z0 == 0 goto label0;
+
+        $z0 = this.<org.apache.fop.fo.flow.AbstractListItemPart: boolean blockItemFound>;
+        if $z0 == 0 goto label2;
+
+        virtualinvoke this.<org.apache.fop.fo.flow.AbstractListItemPart: void nodesOutOfOrderError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, "fo:marker", "(%block;)");
+        goto label2;
+
+     label0:
+        $z0 = virtualinvoke this.<org.apache.fop.fo.flow.AbstractListItemPart: boolean isBlockItem(java.lang.String,java.lang.String)>(nsURI, localName);
+        if $z0 != 0 goto label1;
+
+        virtualinvoke this.<org.apache.fop.fo.flow.AbstractListItemPart: void invalidChildError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, nsURI, localName);
+        goto label2;
+
+     label1:
+        this.<org.apache.fop.fo.flow.AbstractListItemPart: boolean blockItemFound> = 1;
+
+     label2:
+        return;
+    }
+
+    protected void endOfNode() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.AbstractListItemPart this;
+        java.lang.String contentModel, $r3, $r4;
+        java.lang.StringBuffer message, $r1;
+        boolean $z0;
+        org.apache.fop.apps.FOUserAgent $r0;
+        org.xml.sax.Locator $r2;
+        org.apache.commons.logging.Log $r5;
+
+        this := @this: org.apache.fop.fo.flow.AbstractListItemPart;
+        $z0 = this.<org.apache.fop.fo.flow.AbstractListItemPart: boolean blockItemFound>;
+        if $z0 != 0 goto label1;
+
+        contentModel = "marker* (%block;)+";
+        $r0 = virtualinvoke this.<org.apache.fop.fo.flow.AbstractListItemPart: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        $z0 = virtualinvoke $r0.<org.apache.fop.apps.FOUserAgent: boolean validateStrictly()>();
+        if $z0 == 0 goto label0;
+
+        virtualinvoke this.<org.apache.fop.fo.flow.AbstractListItemPart: void missingChildElementError(java.lang.String)>(contentModel);
+        goto label1;
+
+     label0:
+        $r1 = new java.lang.StringBuffer;
+        $r2 = virtualinvoke this.<org.apache.fop.fo.flow.AbstractListItemPart: org.xml.sax.Locator getLocator()>();
+        $r3 = staticinvoke <org.apache.fop.fo.flow.AbstractListItemPart: java.lang.String errorText(org.xml.sax.Locator)>($r2);
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>(java.lang.String)>($r3);
+        message = $r1;
+        $r4 = virtualinvoke this.<org.apache.fop.fo.flow.AbstractListItemPart: java.lang.String getName()>();
+        $r1 = virtualinvoke message.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" is missing child elements. ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Required Content Model: ");
+        virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(contentModel);
+        $r5 = <org.apache.fop.fo.flow.AbstractListItemPart: org.apache.commons.logging.Log log>;
+        $r4 = virtualinvoke message.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r4);
+
+     label1:
+        return;
+    }
+
+    public org.apache.fop.fo.properties.KeepProperty getKeepTogether()
+    {
+        org.apache.fop.fo.flow.AbstractListItemPart this;
+        org.apache.fop.fo.properties.KeepProperty $r0;
+
+        this := @this: org.apache.fop.fo.flow.AbstractListItemPart;
+        $r0 = this.<org.apache.fop.fo.flow.AbstractListItemPart: org.apache.fop.fo.properties.KeepProperty keepTogether>;
+        return $r0;
+    }
+}

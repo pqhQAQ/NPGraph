@@ -1,0 +1,618 @@
+public class org.apache.fop.fonts.type1.AFMParser extends java.lang.Object
+{
+    private static final java.lang.String START_FONT_METRICS;
+    private static final java.lang.String FONT_NAME;
+    private static final java.lang.String FULL_NAME;
+    private static final java.lang.String FAMILY_NAME;
+    private static final java.lang.String WEIGHT;
+    private static final java.lang.String FONT_BBOX;
+    private static final java.lang.String ENCODING_SCHEME;
+    private static final java.lang.String CHARACTER_SET;
+    private static final java.lang.String IS_BASE_FONT;
+    private static final java.lang.String IS_CID_FONT;
+    private static final java.lang.String CAP_HEIGHT;
+    private static final java.lang.String X_HEIGHT;
+    private static final java.lang.String ASCENDER;
+    private static final java.lang.String DESCENDER;
+    private static final java.lang.String STDHW;
+    private static final java.lang.String STDVW;
+    private static final java.lang.String UNDERLINE_POSITION;
+    private static final java.lang.String UNDERLINE_THICKNESS;
+    private static final java.lang.String ITALIC_ANGLE;
+    private static final java.lang.String IS_FIXED_PITCH;
+    private static final java.lang.String START_DIRECTION;
+    private static final java.lang.String END_DIRECTION;
+    private static final java.lang.String START_CHAR_METRICS;
+    private static final java.lang.String END_CHAR_METRICS;
+    private static final java.lang.String C;
+    private static final java.lang.String CH;
+    private static final java.lang.String WX;
+    private static final java.lang.String W0X;
+    private static final java.lang.String W1X;
+    private static final java.lang.String WY;
+    private static final java.lang.String W0Y;
+    private static final java.lang.String W1Y;
+    private static final java.lang.String W;
+    private static final java.lang.String W0;
+    private static final java.lang.String W1;
+    private static final java.lang.String N;
+    private static final java.lang.String B;
+    private static final java.lang.String START_TRACK_KERN;
+    private static final java.lang.String END_TRACK_KERN;
+    private static final java.lang.String START_KERN_PAIRS1;
+    private static final java.lang.String KP;
+    private static final java.lang.String KPH;
+    private static final java.lang.String KPX;
+    private static final java.lang.String KPY;
+    private static final int PARSE_NORMAL;
+    private static final int PARSE_CHAR_METRICS;
+    private static final java.util.Map VALUE_PARSERS;
+    private static final java.util.Map PARSE_MODE_CHANGES;
+
+    public void <init>()
+    {
+        org.apache.fop.fonts.type1.AFMParser this;
+
+        this := @this: org.apache.fop.fonts.type1.AFMParser;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public org.apache.fop.fonts.type1.AFMFile parse(java.io.File) throws java.io.IOException
+    {
+        org.apache.fop.fonts.type1.AFMParser this;
+        java.io.File afmFile;
+        java.io.FileInputStream $r0, in;
+        org.apache.fop.fonts.type1.AFMFile l3;
+        java.lang.Throwable l4, $r1;
+
+        this := @this: org.apache.fop.fonts.type1.AFMParser;
+        afmFile := @parameter0: java.io.File;
+        $r0 = new java.io.FileInputStream;
+        specialinvoke $r0.<java.io.FileInputStream: void <init>(java.io.File)>(afmFile);
+        in = $r0;
+
+     label0:
+        l3 = virtualinvoke this.<org.apache.fop.fonts.type1.AFMParser: org.apache.fop.fonts.type1.AFMFile parse(java.io.InputStream)>(in);
+
+     label1:
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.InputStream)>(in);
+        return l3;
+
+     label2:
+        $r1 := @caughtexception;
+
+     label3:
+        l4 = $r1;
+
+     label4:
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.InputStream)>(in);
+        throw l4;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    public org.apache.fop.fonts.type1.AFMFile parse(java.io.InputStream) throws java.io.IOException
+    {
+        org.apache.fop.fonts.type1.AFMParser this;
+        java.io.InputStream in;
+        java.io.InputStreamReader $r0, reader;
+        org.apache.fop.fonts.type1.AFMFile l3;
+        java.lang.Throwable l4, $r2;
+        java.io.BufferedReader $r1;
+
+        this := @this: org.apache.fop.fonts.type1.AFMParser;
+        in := @parameter0: java.io.InputStream;
+        $r0 = new java.io.InputStreamReader;
+        specialinvoke $r0.<java.io.InputStreamReader: void <init>(java.io.InputStream,java.lang.String)>(in, "US-ASCII");
+        reader = $r0;
+
+     label0:
+        $r1 = new java.io.BufferedReader;
+        specialinvoke $r1.<java.io.BufferedReader: void <init>(java.io.Reader)>(reader);
+        l3 = virtualinvoke this.<org.apache.fop.fonts.type1.AFMParser: org.apache.fop.fonts.type1.AFMFile parse(java.io.BufferedReader)>($r1);
+
+     label1:
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.Reader)>(reader);
+        return l3;
+
+     label2:
+        $r2 := @caughtexception;
+
+     label3:
+        l4 = $r2;
+
+     label4:
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.Reader)>(reader);
+        throw l4;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    public org.apache.fop.fonts.type1.AFMFile parse(java.io.BufferedReader) throws java.io.IOException
+    {
+        org.apache.fop.fonts.type1.AFMParser this;
+        java.io.BufferedReader reader;
+        java.util.Stack $r0, stack;
+        int parseMode;
+        java.lang.String line, key;
+        null_type key;
+        java.lang.Integer newParseMode;
+        java.lang.IllegalStateException $r1;
+        java.util.Map $r2;
+        java.lang.Object $r3;
+        org.apache.fop.fonts.type1.AFMFile $r4;
+
+        this := @this: org.apache.fop.fonts.type1.AFMParser;
+        reader := @parameter0: java.io.BufferedReader;
+        $r0 = new java.util.Stack;
+        specialinvoke $r0.<java.util.Stack: void <init>()>();
+        stack = $r0;
+        parseMode = 0;
+
+     label0:
+        line = virtualinvoke reader.<java.io.BufferedReader: java.lang.String readLine()>();
+        if line != null goto label1;
+
+        goto label7;
+
+     label1:
+        key = null;
+        lookupswitch(parseMode)
+        {
+            case 0: goto label2;
+            case 1: goto label3;
+            default: goto label4;
+        };
+
+     label2:
+        key = specialinvoke this.<org.apache.fop.fonts.type1.AFMParser: java.lang.String parseLine(java.lang.String,java.util.Stack)>(line, stack);
+        goto label5;
+
+     label3:
+        key = specialinvoke this.<org.apache.fop.fonts.type1.AFMParser: java.lang.String parseCharMetrics(java.lang.String,java.util.Stack)>(line, stack);
+        goto label5;
+
+     label4:
+        $r1 = new java.lang.IllegalStateException;
+        specialinvoke $r1.<java.lang.IllegalStateException: void <init>(java.lang.String)>("Invalid parse mode");
+        throw $r1;
+
+     label5:
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map PARSE_MODE_CHANGES>;
+        $r3 = interfaceinvoke $r2.<java.util.Map: java.lang.Object get(java.lang.Object)>(key);
+        newParseMode = (java.lang.Integer) $r3;
+        if newParseMode == null goto label6;
+
+        parseMode = virtualinvoke newParseMode.<java.lang.Integer: int intValue()>();
+
+     label6:
+        goto label0;
+
+     label7:
+        $r3 = virtualinvoke stack.<java.util.Stack: java.lang.Object pop()>();
+        $r4 = (org.apache.fop.fonts.type1.AFMFile) $r3;
+        return $r4;
+    }
+
+    private java.lang.String parseLine(java.lang.String, java.util.Stack) throws java.io.IOException
+    {
+        org.apache.fop.fonts.type1.AFMParser this;
+        java.lang.String line, key;
+        java.util.Stack stack;
+        byte startpos;
+        int endpos, startpos;
+        org.apache.fop.fonts.type1.AFMParser$ValueHandler vp;
+        java.util.Map $r0;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.fonts.type1.AFMParser;
+        line := @parameter0: java.lang.String;
+        stack := @parameter1: java.util.Stack;
+        startpos = 0;
+        startpos = staticinvoke <org.apache.fop.fonts.type1.AFMParser: int skipToNonWhiteSpace(java.lang.String,int)>(line, startpos);
+        endpos = staticinvoke <org.apache.fop.fonts.type1.AFMParser: int skipToWhiteSpace(java.lang.String,int)>(line, startpos);
+        key = virtualinvoke line.<java.lang.String: java.lang.String substring(int,int)>(startpos, endpos);
+        startpos = staticinvoke <org.apache.fop.fonts.type1.AFMParser: int skipToNonWhiteSpace(java.lang.String,int)>(line, endpos);
+        $r0 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>(key);
+        vp = (org.apache.fop.fonts.type1.AFMParser$ValueHandler) $r1;
+        if vp == null goto label0;
+
+        interfaceinvoke vp.<org.apache.fop.fonts.type1.AFMParser$ValueHandler: void parse(java.lang.String,int,java.util.Stack)>(line, startpos, stack);
+
+     label0:
+        return key;
+    }
+
+    private java.lang.String parseCharMetrics(java.lang.String, java.util.Stack) throws java.io.IOException
+    {
+        org.apache.fop.fonts.type1.AFMParser this;
+        java.lang.String line, key, value, $r2;
+        java.util.Stack stack;
+        int startpos, endpos, $i0;
+        org.apache.fop.fonts.type1.AFMCharMetrics chm, $r0;
+        org.apache.fop.fonts.type1.AFMParser$ValueHandler vp;
+        org.apache.fop.fonts.type1.AFMFile afm;
+        java.lang.Object $r1;
+        boolean $z0;
+        java.util.Map $r3;
+
+        this := @this: org.apache.fop.fonts.type1.AFMParser;
+        line := @parameter0: java.lang.String;
+        stack := @parameter1: java.util.Stack;
+        startpos = 0;
+        $r0 = new org.apache.fop.fonts.type1.AFMCharMetrics;
+        specialinvoke $r0.<org.apache.fop.fonts.type1.AFMCharMetrics: void <init>()>();
+        chm = $r0;
+        virtualinvoke stack.<java.util.Stack: java.lang.Object push(java.lang.Object)>(chm);
+
+     label0:
+        startpos = staticinvoke <org.apache.fop.fonts.type1.AFMParser: int skipToNonWhiteSpace(java.lang.String,int)>(line, startpos);
+        endpos = staticinvoke <org.apache.fop.fonts.type1.AFMParser: int skipToWhiteSpace(java.lang.String,int)>(line, startpos);
+        key = virtualinvoke line.<java.lang.String: java.lang.String substring(int,int)>(startpos, endpos);
+        $r2 = "EndCharMetrics";
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>(key);
+        if $z0 == 0 goto label1;
+
+        virtualinvoke stack.<java.util.Stack: java.lang.Object pop()>();
+        return key;
+
+     label1:
+        $i0 = virtualinvoke key.<java.lang.String: int length()>();
+        if $i0 != 0 goto label2;
+
+        goto label4;
+
+     label2:
+        startpos = staticinvoke <org.apache.fop.fonts.type1.AFMParser: int skipToNonWhiteSpace(java.lang.String,int)>(line, endpos);
+        endpos = staticinvoke <org.apache.fop.fonts.type1.AFMParser: int skipToSemicolon(java.lang.String,int)>(line, startpos);
+        $r2 = virtualinvoke line.<java.lang.String: java.lang.String substring(int,int)>(startpos, endpos);
+        value = virtualinvoke $r2.<java.lang.String: java.lang.String trim()>();
+        startpos = endpos + 1;
+        $r3 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r1 = interfaceinvoke $r3.<java.util.Map: java.lang.Object get(java.lang.Object)>(key);
+        vp = (org.apache.fop.fonts.type1.AFMParser$ValueHandler) $r1;
+        if vp == null goto label3;
+
+        interfaceinvoke vp.<org.apache.fop.fonts.type1.AFMParser$ValueHandler: void parse(java.lang.String,int,java.util.Stack)>(value, 0, stack);
+
+     label3:
+        goto label0;
+
+     label4:
+        virtualinvoke stack.<java.util.Stack: java.lang.Object pop()>();
+        $r1 = virtualinvoke stack.<java.util.Stack: java.lang.Object peek()>();
+        afm = (org.apache.fop.fonts.type1.AFMFile) $r1;
+        virtualinvoke afm.<org.apache.fop.fonts.type1.AFMFile: void addCharMetrics(org.apache.fop.fonts.type1.AFMCharMetrics)>(chm);
+        return null;
+    }
+
+    private static int skipToNonWhiteSpace(java.lang.String, int)
+    {
+        java.lang.String line;
+        int startpos, pos, $i0;
+        char $c1;
+        boolean $z0;
+
+        line := @parameter0: java.lang.String;
+        startpos := @parameter1: int;
+        pos = startpos;
+
+     label0:
+        $i0 = virtualinvoke line.<java.lang.String: int length()>();
+        if pos >= $i0 goto label1;
+
+        $c1 = virtualinvoke line.<java.lang.String: char charAt(int)>(pos);
+        $z0 = staticinvoke <org.apache.fop.fonts.type1.AFMParser: boolean isWhitespace(char)>($c1);
+        if $z0 == 0 goto label1;
+
+        pos = pos + 1;
+        goto label0;
+
+     label1:
+        return pos;
+    }
+
+    private static int skipToWhiteSpace(java.lang.String, int)
+    {
+        java.lang.String line;
+        int startpos, pos, $i0;
+        char $c1;
+        boolean $z0;
+
+        line := @parameter0: java.lang.String;
+        startpos := @parameter1: int;
+        pos = startpos;
+
+     label0:
+        $i0 = virtualinvoke line.<java.lang.String: int length()>();
+        if pos >= $i0 goto label1;
+
+        $c1 = virtualinvoke line.<java.lang.String: char charAt(int)>(pos);
+        $z0 = staticinvoke <org.apache.fop.fonts.type1.AFMParser: boolean isWhitespace(char)>($c1);
+        if $z0 != 0 goto label1;
+
+        pos = pos + 1;
+        goto label0;
+
+     label1:
+        return pos;
+    }
+
+    private static int skipToSemicolon(java.lang.String, int)
+    {
+        java.lang.String line;
+        int startpos, pos, $i0;
+        char $c1;
+
+        line := @parameter0: java.lang.String;
+        startpos := @parameter1: int;
+        pos = startpos;
+
+     label0:
+        $i0 = virtualinvoke line.<java.lang.String: int length()>();
+        if pos >= $i0 goto label1;
+
+        $c1 = virtualinvoke line.<java.lang.String: char charAt(int)>(pos);
+        if 59 == $c1 goto label1;
+
+        pos = pos + 1;
+        goto label0;
+
+     label1:
+        return pos;
+    }
+
+    private static boolean isWhitespace(char)
+    {
+        char ch;
+        boolean $z0;
+
+        ch := @parameter0: char;
+        if ch == 32 goto label0;
+
+        if ch != 9 goto label1;
+
+     label0:
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    static int access$800(java.lang.String, int)
+    {
+        java.lang.String x0;
+        int x1, $i0;
+
+        x0 := @parameter0: java.lang.String;
+        x1 := @parameter1: int;
+        $i0 = staticinvoke <org.apache.fop.fonts.type1.AFMParser: int skipToWhiteSpace(java.lang.String,int)>(x0, x1);
+        return $i0;
+    }
+
+    static int access$1000(java.lang.String, int)
+    {
+        java.lang.String x0;
+        int x1, $i0;
+
+        x0 := @parameter0: java.lang.String;
+        x1 := @parameter1: int;
+        $i0 = staticinvoke <org.apache.fop.fonts.type1.AFMParser: int skipToNonWhiteSpace(java.lang.String,int)>(x0, x1);
+        return $i0;
+    }
+
+    static void <clinit>()
+    {
+        java.util.HashMap $r0;
+        org.apache.fop.fonts.type1.AFMParser$StartFontMetrics $r1;
+        java.util.Map $r2;
+        org.apache.fop.fonts.type1.AFMParser$StringSetter $r4;
+        org.apache.fop.fonts.type1.AFMParser$FontBBox $r5;
+        org.apache.fop.fonts.type1.AFMParser$IsBaseFont $r6;
+        org.apache.fop.fonts.type1.AFMParser$IsCIDFont $r7;
+        org.apache.fop.fonts.type1.AFMParser$NumberSetter $r8;
+        org.apache.fop.fonts.type1.AFMParser$StartDirection $r9;
+        org.apache.fop.fonts.type1.AFMParser$EndDirection $r10;
+        org.apache.fop.fonts.type1.AFMParser$WritingDirNumberSetter $r11;
+        org.apache.fop.fonts.type1.AFMParser$WritingDirDoubleSetter $r12;
+        org.apache.fop.fonts.type1.AFMParser$WritingDirBooleanSetter $r13;
+        org.apache.fop.fonts.type1.AFMParser$IntegerSetter $r14;
+        org.apache.fop.fonts.type1.AFMParser$NotImplementedYet $r15;
+        org.apache.fop.fonts.type1.AFMParser$DoubleSetter $r16;
+        org.apache.fop.fonts.type1.AFMParser$CharBBox $r17;
+        org.apache.fop.fonts.type1.AFMParser$KPXHandler $r18;
+        java.lang.Integer $r19;
+
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS> = $r0;
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r1 = new org.apache.fop.fonts.type1.AFMParser$StartFontMetrics;
+        specialinvoke $r1.<org.apache.fop.fonts.type1.AFMParser$StartFontMetrics: void <init>(org.apache.fop.fonts.type1.AFMParser$1)>(null);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("StartFontMetrics", $r1);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r4 = new org.apache.fop.fonts.type1.AFMParser$StringSetter;
+        specialinvoke $r4.<org.apache.fop.fonts.type1.AFMParser$StringSetter: void <init>(java.lang.String)>("FontName");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("FontName", $r4);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r4 = new org.apache.fop.fonts.type1.AFMParser$StringSetter;
+        specialinvoke $r4.<org.apache.fop.fonts.type1.AFMParser$StringSetter: void <init>(java.lang.String)>("FullName");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("FullName", $r4);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r4 = new org.apache.fop.fonts.type1.AFMParser$StringSetter;
+        specialinvoke $r4.<org.apache.fop.fonts.type1.AFMParser$StringSetter: void <init>(java.lang.String)>("FamilyName");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("FamilyName", $r4);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r4 = new org.apache.fop.fonts.type1.AFMParser$StringSetter;
+        specialinvoke $r4.<org.apache.fop.fonts.type1.AFMParser$StringSetter: void <init>(java.lang.String)>("Weight");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("Weight", $r4);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r4 = new org.apache.fop.fonts.type1.AFMParser$StringSetter;
+        specialinvoke $r4.<org.apache.fop.fonts.type1.AFMParser$StringSetter: void <init>(java.lang.String)>("EncodingScheme");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("EncodingScheme", $r4);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r5 = new org.apache.fop.fonts.type1.AFMParser$FontBBox;
+        specialinvoke $r5.<org.apache.fop.fonts.type1.AFMParser$FontBBox: void <init>(org.apache.fop.fonts.type1.AFMParser$1)>(null);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("FontBBox", $r5);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r4 = new org.apache.fop.fonts.type1.AFMParser$StringSetter;
+        specialinvoke $r4.<org.apache.fop.fonts.type1.AFMParser$StringSetter: void <init>(java.lang.String)>("CharacterSet");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("CharacterSet", $r4);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r6 = new org.apache.fop.fonts.type1.AFMParser$IsBaseFont;
+        specialinvoke $r6.<org.apache.fop.fonts.type1.AFMParser$IsBaseFont: void <init>(org.apache.fop.fonts.type1.AFMParser$1)>(null);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("IsBaseFont", $r6);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r7 = new org.apache.fop.fonts.type1.AFMParser$IsCIDFont;
+        specialinvoke $r7.<org.apache.fop.fonts.type1.AFMParser$IsCIDFont: void <init>(org.apache.fop.fonts.type1.AFMParser$1)>(null);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("IsCIDFont", $r7);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r8 = new org.apache.fop.fonts.type1.AFMParser$NumberSetter;
+        specialinvoke $r8.<org.apache.fop.fonts.type1.AFMParser$NumberSetter: void <init>(java.lang.String)>("CapHeight");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("CapHeight", $r8);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r8 = new org.apache.fop.fonts.type1.AFMParser$NumberSetter;
+        specialinvoke $r8.<org.apache.fop.fonts.type1.AFMParser$NumberSetter: void <init>(java.lang.String)>("XHeight");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("XHeight", $r8);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r8 = new org.apache.fop.fonts.type1.AFMParser$NumberSetter;
+        specialinvoke $r8.<org.apache.fop.fonts.type1.AFMParser$NumberSetter: void <init>(java.lang.String)>("Ascender");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("Ascender", $r8);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r8 = new org.apache.fop.fonts.type1.AFMParser$NumberSetter;
+        specialinvoke $r8.<org.apache.fop.fonts.type1.AFMParser$NumberSetter: void <init>(java.lang.String)>("Descender");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("Descender", $r8);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r8 = new org.apache.fop.fonts.type1.AFMParser$NumberSetter;
+        specialinvoke $r8.<org.apache.fop.fonts.type1.AFMParser$NumberSetter: void <init>(java.lang.String)>("StdHW");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("StdHW", $r8);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r8 = new org.apache.fop.fonts.type1.AFMParser$NumberSetter;
+        specialinvoke $r8.<org.apache.fop.fonts.type1.AFMParser$NumberSetter: void <init>(java.lang.String)>("StdVW");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("StdVW", $r8);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r9 = new org.apache.fop.fonts.type1.AFMParser$StartDirection;
+        specialinvoke $r9.<org.apache.fop.fonts.type1.AFMParser$StartDirection: void <init>(org.apache.fop.fonts.type1.AFMParser$1)>(null);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("StartDirection", $r9);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r10 = new org.apache.fop.fonts.type1.AFMParser$EndDirection;
+        specialinvoke $r10.<org.apache.fop.fonts.type1.AFMParser$EndDirection: void <init>(org.apache.fop.fonts.type1.AFMParser$1)>(null);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("EndDirection", $r10);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r11 = new org.apache.fop.fonts.type1.AFMParser$WritingDirNumberSetter;
+        specialinvoke $r11.<org.apache.fop.fonts.type1.AFMParser$WritingDirNumberSetter: void <init>(java.lang.String)>("UnderlinePosition");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("UnderlinePosition", $r11);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r11 = new org.apache.fop.fonts.type1.AFMParser$WritingDirNumberSetter;
+        specialinvoke $r11.<org.apache.fop.fonts.type1.AFMParser$WritingDirNumberSetter: void <init>(java.lang.String)>("UnderlineThickness");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("UnderlineThickness", $r11);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r12 = new org.apache.fop.fonts.type1.AFMParser$WritingDirDoubleSetter;
+        specialinvoke $r12.<org.apache.fop.fonts.type1.AFMParser$WritingDirDoubleSetter: void <init>(java.lang.String)>("ItalicAngle");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("ItalicAngle", $r12);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r13 = new org.apache.fop.fonts.type1.AFMParser$WritingDirBooleanSetter;
+        specialinvoke $r13.<org.apache.fop.fonts.type1.AFMParser$WritingDirBooleanSetter: void <init>(java.lang.String)>("IsFixedPitch");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("IsFixedPitch", $r13);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r14 = new org.apache.fop.fonts.type1.AFMParser$IntegerSetter;
+        specialinvoke $r14.<org.apache.fop.fonts.type1.AFMParser$IntegerSetter: void <init>(java.lang.String)>("CharCode");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("C", $r14);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r15 = new org.apache.fop.fonts.type1.AFMParser$NotImplementedYet;
+        specialinvoke $r15.<org.apache.fop.fonts.type1.AFMParser$NotImplementedYet: void <init>(java.lang.String)>("CH");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("CH", $r15);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r16 = new org.apache.fop.fonts.type1.AFMParser$DoubleSetter;
+        specialinvoke $r16.<org.apache.fop.fonts.type1.AFMParser$DoubleSetter: void <init>(java.lang.String)>("WidthX");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("WX", $r16);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r16 = new org.apache.fop.fonts.type1.AFMParser$DoubleSetter;
+        specialinvoke $r16.<org.apache.fop.fonts.type1.AFMParser$DoubleSetter: void <init>(java.lang.String)>("WidthX");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("W0X", $r16);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r15 = new org.apache.fop.fonts.type1.AFMParser$NotImplementedYet;
+        specialinvoke $r15.<org.apache.fop.fonts.type1.AFMParser$NotImplementedYet: void <init>(java.lang.String)>("W1X");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("W1X", $r15);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r16 = new org.apache.fop.fonts.type1.AFMParser$DoubleSetter;
+        specialinvoke $r16.<org.apache.fop.fonts.type1.AFMParser$DoubleSetter: void <init>(java.lang.String)>("WidthY");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("WY", $r16);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r16 = new org.apache.fop.fonts.type1.AFMParser$DoubleSetter;
+        specialinvoke $r16.<org.apache.fop.fonts.type1.AFMParser$DoubleSetter: void <init>(java.lang.String)>("WidthY");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("W0Y", $r16);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r15 = new org.apache.fop.fonts.type1.AFMParser$NotImplementedYet;
+        specialinvoke $r15.<org.apache.fop.fonts.type1.AFMParser$NotImplementedYet: void <init>(java.lang.String)>("W1Y");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("W1Y", $r15);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r15 = new org.apache.fop.fonts.type1.AFMParser$NotImplementedYet;
+        specialinvoke $r15.<org.apache.fop.fonts.type1.AFMParser$NotImplementedYet: void <init>(java.lang.String)>("W");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("W", $r15);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r15 = new org.apache.fop.fonts.type1.AFMParser$NotImplementedYet;
+        specialinvoke $r15.<org.apache.fop.fonts.type1.AFMParser$NotImplementedYet: void <init>(java.lang.String)>("W0");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("W0", $r15);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r15 = new org.apache.fop.fonts.type1.AFMParser$NotImplementedYet;
+        specialinvoke $r15.<org.apache.fop.fonts.type1.AFMParser$NotImplementedYet: void <init>(java.lang.String)>("W1");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("W1", $r15);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r4 = new org.apache.fop.fonts.type1.AFMParser$StringSetter;
+        specialinvoke $r4.<org.apache.fop.fonts.type1.AFMParser$StringSetter: void <init>(java.lang.String)>("CharName");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("N", $r4);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r17 = new org.apache.fop.fonts.type1.AFMParser$CharBBox;
+        specialinvoke $r17.<org.apache.fop.fonts.type1.AFMParser$CharBBox: void <init>(org.apache.fop.fonts.type1.AFMParser$1)>(null);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("B", $r17);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r15 = new org.apache.fop.fonts.type1.AFMParser$NotImplementedYet;
+        specialinvoke $r15.<org.apache.fop.fonts.type1.AFMParser$NotImplementedYet: void <init>(java.lang.String)>("StartTrackKern");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("StartTrackKern", $r15);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r15 = new org.apache.fop.fonts.type1.AFMParser$NotImplementedYet;
+        specialinvoke $r15.<org.apache.fop.fonts.type1.AFMParser$NotImplementedYet: void <init>(java.lang.String)>("EndTrackKern");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("EndTrackKern", $r15);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r15 = new org.apache.fop.fonts.type1.AFMParser$NotImplementedYet;
+        specialinvoke $r15.<org.apache.fop.fonts.type1.AFMParser$NotImplementedYet: void <init>(java.lang.String)>("StartKernPairs1");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("StartKernPairs1", $r15);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r15 = new org.apache.fop.fonts.type1.AFMParser$NotImplementedYet;
+        specialinvoke $r15.<org.apache.fop.fonts.type1.AFMParser$NotImplementedYet: void <init>(java.lang.String)>("KP");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("KP", $r15);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r15 = new org.apache.fop.fonts.type1.AFMParser$NotImplementedYet;
+        specialinvoke $r15.<org.apache.fop.fonts.type1.AFMParser$NotImplementedYet: void <init>(java.lang.String)>("KPH");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("KPH", $r15);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r18 = new org.apache.fop.fonts.type1.AFMParser$KPXHandler;
+        specialinvoke $r18.<org.apache.fop.fonts.type1.AFMParser$KPXHandler: void <init>(org.apache.fop.fonts.type1.AFMParser$1)>(null);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("KPX", $r18);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map VALUE_PARSERS>;
+        $r15 = new org.apache.fop.fonts.type1.AFMParser$NotImplementedYet;
+        specialinvoke $r15.<org.apache.fop.fonts.type1.AFMParser$NotImplementedYet: void <init>(java.lang.String)>("KPY");
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("KPY", $r15);
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        <org.apache.fop.fonts.type1.AFMParser: java.util.Map PARSE_MODE_CHANGES> = $r0;
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map PARSE_MODE_CHANGES>;
+        $r19 = new java.lang.Integer;
+        specialinvoke $r19.<java.lang.Integer: void <init>(int)>(1);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("StartCharMetrics", $r19);
+        $r2 = <org.apache.fop.fonts.type1.AFMParser: java.util.Map PARSE_MODE_CHANGES>;
+        $r19 = new java.lang.Integer;
+        specialinvoke $r19.<java.lang.Integer: void <init>(int)>(0);
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>("EndCharMetrics", $r19);
+        return;
+    }
+}

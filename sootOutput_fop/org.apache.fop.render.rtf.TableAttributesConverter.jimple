@@ -1,0 +1,274 @@
+public final class org.apache.fop.render.rtf.TableAttributesConverter extends java.lang.Object
+{
+
+    private void <init>()
+    {
+        org.apache.fop.render.rtf.TableAttributesConverter this;
+
+        this := @this: org.apache.fop.render.rtf.TableAttributesConverter;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    static org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes convertTableAttributes(org.apache.fop.fo.flow.table.Table) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.table.Table fobj;
+        org.apache.fop.render.rtf.FOPRtfAttributes $r0, attrib;
+        org.apache.fop.fo.properties.CommonMarginBlock $r1;
+        org.apache.fop.datatypes.Length $r2;
+
+        fobj := @parameter0: org.apache.fop.fo.flow.table.Table;
+        $r0 = new org.apache.fop.render.rtf.FOPRtfAttributes;
+        specialinvoke $r0.<org.apache.fop.render.rtf.FOPRtfAttributes: void <init>()>();
+        attrib = $r0;
+        $r1 = virtualinvoke fobj.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.properties.CommonMarginBlock getCommonMarginBlock()>();
+        $r2 = $r1.<org.apache.fop.fo.properties.CommonMarginBlock: org.apache.fop.datatypes.Length marginLeft>;
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes setTwips(java.lang.String,org.apache.fop.datatypes.Length)>("trleft", $r2);
+        return attrib;
+    }
+
+    static org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes convertTableBodyAttributes(org.apache.fop.fo.flow.table.TableBody) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.table.TableBody fobj;
+        org.apache.fop.render.rtf.FOPRtfAttributes $r0, attrib;
+
+        fobj := @parameter0: org.apache.fop.fo.flow.table.TableBody;
+        $r0 = new org.apache.fop.render.rtf.FOPRtfAttributes;
+        specialinvoke $r0.<org.apache.fop.render.rtf.FOPRtfAttributes: void <init>()>();
+        attrib = $r0;
+        return attrib;
+    }
+
+    static org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes convertCellAttributes(org.apache.fop.fo.flow.table.TableCell) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.table.TableCell fobj;
+        org.apache.fop.render.rtf.FOPRtfAttributes $r0, attrib;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground border, brd;
+        java.awt.Color color;
+        null_type brd;
+        org.apache.fop.fo.flow.table.TableRow parentRow;
+        org.apache.fop.fo.flow.table.TableHeader parentHeader;
+        org.apache.fop.fo.flow.table.Table table;
+        boolean reproduceMSWordBug, $z0;
+        int padding, n, $i0;
+        org.apache.fop.fo.FONode $r1;
+
+        fobj := @parameter0: org.apache.fop.fo.flow.table.TableCell;
+        $r0 = new org.apache.fop.render.rtf.FOPRtfAttributes;
+        specialinvoke $r0.<org.apache.fop.render.rtf.FOPRtfAttributes: void <init>()>();
+        attrib = $r0;
+        border = virtualinvoke fobj.<org.apache.fop.fo.flow.table.TableCell: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        color = border.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: java.awt.Color backgroundColor>;
+        if color != null goto label2;
+
+        brd = null;
+        $r1 = virtualinvoke fobj.<org.apache.fop.fo.flow.table.TableCell: org.apache.fop.fo.FONode getParent()>();
+        $z0 = $r1 instanceof org.apache.fop.fo.flow.table.TableRow;
+        if $z0 == 0 goto label0;
+
+        $r1 = virtualinvoke fobj.<org.apache.fop.fo.flow.table.TableCell: org.apache.fop.fo.FONode getParent()>();
+        parentRow = (org.apache.fop.fo.flow.table.TableRow) $r1;
+        brd = virtualinvoke parentRow.<org.apache.fop.fo.flow.table.TableRow: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        color = brd.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: java.awt.Color backgroundColor>;
+        goto label1;
+
+     label0:
+        $r1 = virtualinvoke fobj.<org.apache.fop.fo.flow.table.TableCell: org.apache.fop.fo.FONode getParent()>();
+        $z0 = $r1 instanceof org.apache.fop.fo.flow.table.TableHeader;
+        if $z0 == 0 goto label1;
+
+        $r1 = virtualinvoke fobj.<org.apache.fop.fo.flow.table.TableCell: org.apache.fop.fo.FONode getParent()>();
+        parentHeader = (org.apache.fop.fo.flow.table.TableHeader) $r1;
+        brd = virtualinvoke parentHeader.<org.apache.fop.fo.flow.table.TableHeader: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        color = brd.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: java.awt.Color backgroundColor>;
+
+     label1:
+        if color != null goto label2;
+
+        $r1 = virtualinvoke fobj.<org.apache.fop.fo.flow.table.TableCell: org.apache.fop.fo.FONode getParent()>();
+        if $r1 == null goto label2;
+
+        $r1 = virtualinvoke fobj.<org.apache.fop.fo.flow.table.TableCell: org.apache.fop.fo.FONode getParent()>();
+        $r1 = virtualinvoke $r1.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode getParent()>();
+        if $r1 == null goto label2;
+
+        $r1 = virtualinvoke fobj.<org.apache.fop.fo.flow.table.TableCell: org.apache.fop.fo.FONode getParent()>();
+        $r1 = virtualinvoke $r1.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode getParent()>();
+        $r1 = virtualinvoke $r1.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode getParent()>();
+        $z0 = $r1 instanceof org.apache.fop.fo.flow.table.Table;
+        if $z0 == 0 goto label2;
+
+        $r1 = virtualinvoke fobj.<org.apache.fop.fo.flow.table.TableCell: org.apache.fop.fo.FONode getParent()>();
+        $r1 = virtualinvoke $r1.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode getParent()>();
+        $r1 = virtualinvoke $r1.<org.apache.fop.fo.FONode: org.apache.fop.fo.FONode getParent()>();
+        table = (org.apache.fop.fo.flow.table.Table) $r1;
+        brd = virtualinvoke table.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        color = brd.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: java.awt.Color backgroundColor>;
+
+     label2:
+        if color == null goto label4;
+
+        $i0 = virtualinvoke color.<java.awt.Color: int getAlpha()>();
+        if $i0 != 0 goto label3;
+
+        $i0 = virtualinvoke color.<java.awt.Color: int getRed()>();
+        if $i0 != 0 goto label3;
+
+        $i0 = virtualinvoke color.<java.awt.Color: int getGreen()>();
+        if $i0 != 0 goto label3;
+
+        $i0 = virtualinvoke color.<java.awt.Color: int getBlue()>();
+        if $i0 == 0 goto label4;
+
+     label3:
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes set(java.lang.String,java.awt.Color)>("clcbpat", color);
+
+     label4:
+        staticinvoke <org.apache.fop.render.rtf.BorderAttributesConverter: void makeBorder(org.apache.fop.fo.properties.CommonBorderPaddingBackground,int,org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes,java.lang.String)>(border, 0, attrib, "clbrdrt");
+        staticinvoke <org.apache.fop.render.rtf.BorderAttributesConverter: void makeBorder(org.apache.fop.fo.properties.CommonBorderPaddingBackground,int,org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes,java.lang.String)>(border, 1, attrib, "clbrdrb");
+        staticinvoke <org.apache.fop.render.rtf.BorderAttributesConverter: void makeBorder(org.apache.fop.fo.properties.CommonBorderPaddingBackground,int,org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes,java.lang.String)>(border, 2, attrib, "clbrdrl");
+        staticinvoke <org.apache.fop.render.rtf.BorderAttributesConverter: void makeBorder(org.apache.fop.fo.properties.CommonBorderPaddingBackground,int,org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes,java.lang.String)>(border, 3, attrib, "clbrdrr");
+        reproduceMSWordBug = 1;
+        if reproduceMSWordBug == 0 goto label6;
+
+        padding = virtualinvoke border.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPaddingStart(boolean,org.apache.fop.datatypes.PercentBaseContext)>(0, null);
+        if padding == 0 goto label5;
+
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes setTwips(java.lang.String,int)>("clpadt", padding);
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes set(java.lang.String,int)>("clpadft", 3);
+
+     label5:
+        padding = virtualinvoke border.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPaddingBefore(boolean,org.apache.fop.datatypes.PercentBaseContext)>(0, null);
+        if padding == 0 goto label8;
+
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes setTwips(java.lang.String,int)>("clpadl", padding);
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes set(java.lang.String,int)>("clpadfl", 3);
+        goto label8;
+
+     label6:
+        padding = virtualinvoke border.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPaddingStart(boolean,org.apache.fop.datatypes.PercentBaseContext)>(0, null);
+        if padding == 0 goto label7;
+
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes setTwips(java.lang.String,int)>("clpadl", padding);
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes set(java.lang.String,int)>("clpadfl", 3);
+
+     label7:
+        padding = virtualinvoke border.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPaddingBefore(boolean,org.apache.fop.datatypes.PercentBaseContext)>(0, null);
+        if padding == 0 goto label8;
+
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes setTwips(java.lang.String,int)>("clpadt", padding);
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes set(java.lang.String,int)>("clpadft", 3);
+
+     label8:
+        padding = virtualinvoke border.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPaddingEnd(boolean,org.apache.fop.datatypes.PercentBaseContext)>(0, null);
+        if padding == 0 goto label9;
+
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes setTwips(java.lang.String,int)>("clpadr", padding);
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes set(java.lang.String,int)>("clpadfr", 3);
+
+     label9:
+        padding = virtualinvoke border.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: int getPaddingAfter(boolean,org.apache.fop.datatypes.PercentBaseContext)>(0, null);
+        if padding == 0 goto label10;
+
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes setTwips(java.lang.String,int)>("clpadb", padding);
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes set(java.lang.String,int)>("clpadfb", 3);
+
+     label10:
+        n = virtualinvoke fobj.<org.apache.fop.fo.flow.table.TableCell: int getNumberColumnsSpanned()>();
+        if n <= 1 goto label11;
+
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes set(java.lang.String,int)>("number-columns-spanned", n);
+
+     label11:
+        $i0 = virtualinvoke fobj.<org.apache.fop.fo.flow.table.TableCell: int getDisplayAlign()>();
+        lookupswitch($i0)
+        {
+            case 3: goto label14;
+            case 13: goto label12;
+            case 23: goto label13;
+            default: goto label15;
+        };
+
+     label12:
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes set(java.lang.String)>("clvertalt");
+        goto label15;
+
+     label13:
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes set(java.lang.String)>("clvertalc");
+        goto label15;
+
+     label14:
+        virtualinvoke attrib.<org.apache.fop.render.rtf.FOPRtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes set(java.lang.String)>("clvertalb");
+        goto label15;
+
+     label15:
+        return attrib;
+    }
+
+    static org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes convertRowAttributes(org.apache.fop.fo.flow.table.TableRow, org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.table.TableRow fobj;
+        org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes rtfatts, $r0, attrib;
+        null_type attrib;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground border;
+        org.apache.fop.fo.properties.KeepProperty $r1;
+        org.apache.fop.fo.properties.Property $r2;
+        int $i0, $i1;
+        org.apache.fop.datatypes.Length $r3, $r4;
+
+        fobj := @parameter0: org.apache.fop.fo.flow.table.TableRow;
+        rtfatts := @parameter1: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes;
+        attrib = null;
+        if rtfatts != null goto label0;
+
+        $r0 = new org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes;
+        specialinvoke $r0.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes: void <init>()>();
+        attrib = $r0;
+        goto label1;
+
+     label0:
+        attrib = rtfatts;
+
+     label1:
+        $r1 = virtualinvoke fobj.<org.apache.fop.fo.flow.table.TableRow: org.apache.fop.fo.properties.KeepProperty getKeepTogether()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.properties.KeepProperty: org.apache.fop.fo.properties.Property getWithinPage()>();
+        $i0 = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: int getEnum()>();
+        if $i0 != 7 goto label2;
+
+        virtualinvoke attrib.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes set(java.lang.String)>("trkeep");
+
+     label2:
+        $r1 = virtualinvoke fobj.<org.apache.fop.fo.flow.table.TableRow: org.apache.fop.fo.properties.KeepProperty getKeepWithNext()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.properties.KeepProperty: org.apache.fop.fo.properties.Property getWithinPage()>();
+        $i0 = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: int getEnum()>();
+        if $i0 != 7 goto label3;
+
+        virtualinvoke attrib.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes set(java.lang.String)>("knext");
+
+     label3:
+        $r1 = virtualinvoke fobj.<org.apache.fop.fo.flow.table.TableRow: org.apache.fop.fo.properties.KeepProperty getKeepWithPrevious()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.properties.KeepProperty: org.apache.fop.fo.properties.Property getWithinPage()>();
+        $i0 = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: int getEnum()>();
+        if $i0 != 7 goto label4;
+
+        virtualinvoke attrib.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes set(java.lang.String)>("kprevious");
+
+     label4:
+        $r3 = virtualinvoke fobj.<org.apache.fop.fo.flow.table.TableRow: org.apache.fop.datatypes.Length getHeight()>();
+        $i0 = interfaceinvoke $r3.<org.apache.fop.datatypes.Length: int getEnum()>();
+        if $i0 == 9 goto label5;
+
+        $r4 = virtualinvoke fobj.<org.apache.fop.fo.flow.table.TableRow: org.apache.fop.datatypes.Length getHeight()>();
+        $i1 = interfaceinvoke $r4.<org.apache.fop.datatypes.Length: int getValue()>();
+        $i1 = $i1 / 50;
+        virtualinvoke attrib.<org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes: org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes set(java.lang.String,int)>("trrh", $i1);
+
+     label5:
+        border = virtualinvoke fobj.<org.apache.fop.fo.flow.table.TableRow: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        staticinvoke <org.apache.fop.render.rtf.BorderAttributesConverter: void makeBorder(org.apache.fop.fo.properties.CommonBorderPaddingBackground,int,org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes,java.lang.String)>(border, 0, attrib, "clbrdrt");
+        staticinvoke <org.apache.fop.render.rtf.BorderAttributesConverter: void makeBorder(org.apache.fop.fo.properties.CommonBorderPaddingBackground,int,org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes,java.lang.String)>(border, 1, attrib, "clbrdrb");
+        staticinvoke <org.apache.fop.render.rtf.BorderAttributesConverter: void makeBorder(org.apache.fop.fo.properties.CommonBorderPaddingBackground,int,org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes,java.lang.String)>(border, 2, attrib, "clbrdrl");
+        staticinvoke <org.apache.fop.render.rtf.BorderAttributesConverter: void makeBorder(org.apache.fop.fo.properties.CommonBorderPaddingBackground,int,org.apache.fop.render.rtf.rtflib.rtfdoc.RtfAttributes,java.lang.String)>(border, 3, attrib, "clbrdrr");
+        return attrib;
+    }
+}

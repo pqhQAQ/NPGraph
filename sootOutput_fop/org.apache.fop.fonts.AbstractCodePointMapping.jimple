@@ -1,0 +1,500 @@
+public class org.apache.fop.fonts.AbstractCodePointMapping extends java.lang.Object
+{
+    private java.lang.String name;
+    private char[] latin1Map;
+    private char[] characters;
+    private char[] codepoints;
+    private char[] unicodeMap;
+    private java.lang.String[] charNameMap;
+    private java.util.Map fallbackMap;
+
+    public void <init>(java.lang.String, int[])
+    {
+        org.apache.fop.fonts.AbstractCodePointMapping this;
+        java.lang.String name;
+        int[] table;
+
+        this := @this: org.apache.fop.fonts.AbstractCodePointMapping;
+        name := @parameter0: java.lang.String;
+        table := @parameter1: int[];
+        specialinvoke this.<org.apache.fop.fonts.AbstractCodePointMapping: void <init>(java.lang.String,int[],java.lang.String[])>(name, table, null);
+        return;
+    }
+
+    public void <init>(java.lang.String, int[], java.lang.String[])
+    {
+        org.apache.fop.fonts.AbstractCodePointMapping this;
+        java.lang.String name, charName;
+        int[] table;
+        java.lang.String[] charNameMap, $r0, $r1;
+        int i;
+
+        this := @this: org.apache.fop.fonts.AbstractCodePointMapping;
+        name := @parameter0: java.lang.String;
+        table := @parameter1: int[];
+        charNameMap := @parameter2: java.lang.String[];
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.fonts.AbstractCodePointMapping: java.lang.String name> = name;
+        virtualinvoke this.<org.apache.fop.fonts.AbstractCodePointMapping: void buildFromTable(int[])>(table);
+        if charNameMap == null goto label3;
+
+        $r0 = newarray (java.lang.String)[256];
+        this.<org.apache.fop.fonts.AbstractCodePointMapping: java.lang.String[] charNameMap> = $r0;
+        i = 0;
+
+     label0:
+        if i >= 256 goto label3;
+
+        charName = charNameMap[i];
+        if charName != null goto label1;
+
+        $r1 = this.<org.apache.fop.fonts.AbstractCodePointMapping: java.lang.String[] charNameMap>;
+        $r1[i] = ".notdef";
+        goto label2;
+
+     label1:
+        $r1 = this.<org.apache.fop.fonts.AbstractCodePointMapping: java.lang.String[] charNameMap>;
+        $r1[i] = charName;
+
+     label2:
+        i = i + 1;
+        goto label0;
+
+     label3:
+        return;
+    }
+
+    protected void buildFromTable(int[])
+    {
+        org.apache.fop.fonts.AbstractCodePointMapping this;
+        int[] table;
+        int nonLatin1, i, top, j, $i0, $i1, $i3, $i5;
+        char unicode, c, $c2, $c4;
+        char[] $r0, $r1, $r2;
+
+        this := @this: org.apache.fop.fonts.AbstractCodePointMapping;
+        table := @parameter0: int[];
+        nonLatin1 = 0;
+        $r0 = newarray (char)[256];
+        this.<org.apache.fop.fonts.AbstractCodePointMapping: char[] latin1Map> = $r0;
+        $r0 = newarray (char)[256];
+        this.<org.apache.fop.fonts.AbstractCodePointMapping: char[] unicodeMap> = $r0;
+        $r1 = this.<org.apache.fop.fonts.AbstractCodePointMapping: char[] unicodeMap>;
+        staticinvoke <java.util.Arrays: void fill(char[],char)>($r1, 65535);
+        i = 0;
+
+     label0:
+        $i0 = lengthof table;
+        if i >= $i0 goto label4;
+
+        $i0 = i + 1;
+        $i1 = table[$i0];
+        unicode = (char) $i1;
+        if unicode >= 256 goto label1;
+
+        $r1 = this.<org.apache.fop.fonts.AbstractCodePointMapping: char[] latin1Map>;
+        $c2 = $r1[unicode];
+        if $c2 != 0 goto label2;
+
+        $r1 = this.<org.apache.fop.fonts.AbstractCodePointMapping: char[] latin1Map>;
+        $i3 = table[i];
+        $c4 = (char) $i3;
+        $r1[unicode] = $c4;
+        goto label2;
+
+     label1:
+        nonLatin1 = nonLatin1 + 1;
+
+     label2:
+        $r1 = this.<org.apache.fop.fonts.AbstractCodePointMapping: char[] unicodeMap>;
+        $i0 = table[i];
+        $c2 = $r1[$i0];
+        if $c2 != 65535 goto label3;
+
+        $r1 = this.<org.apache.fop.fonts.AbstractCodePointMapping: char[] unicodeMap>;
+        $i0 = table[i];
+        $r1[$i0] = unicode;
+
+     label3:
+        i = i + 2;
+        goto label0;
+
+     label4:
+        $r0 = newarray (char)[nonLatin1];
+        this.<org.apache.fop.fonts.AbstractCodePointMapping: char[] characters> = $r0;
+        $r0 = newarray (char)[nonLatin1];
+        this.<org.apache.fop.fonts.AbstractCodePointMapping: char[] codepoints> = $r0;
+        top = 0;
+        i = 0;
+
+     label5:
+        $i0 = lengthof table;
+        if i >= $i0 goto label10;
+
+        $i0 = i + 1;
+        $i1 = table[$i0];
+        c = (char) $i1;
+        if c < 256 goto label9;
+
+        top = top + 1;
+        j = top - 1;
+
+     label6:
+        if j < 0 goto label9;
+
+        if j <= 0 goto label7;
+
+        $r1 = this.<org.apache.fop.fonts.AbstractCodePointMapping: char[] characters>;
+        $i0 = j - 1;
+        $c2 = $r1[$i0];
+        if $c2 < c goto label7;
+
+        $r1 = this.<org.apache.fop.fonts.AbstractCodePointMapping: char[] characters>;
+        $r2 = this.<org.apache.fop.fonts.AbstractCodePointMapping: char[] characters>;
+        $i5 = j - 1;
+        $c4 = $r2[$i5];
+        $r1[j] = $c4;
+        $r1 = this.<org.apache.fop.fonts.AbstractCodePointMapping: char[] codepoints>;
+        $r2 = this.<org.apache.fop.fonts.AbstractCodePointMapping: char[] codepoints>;
+        $i5 = j - 1;
+        $c4 = $r2[$i5];
+        $r1[j] = $c4;
+        goto label8;
+
+     label7:
+        $r1 = this.<org.apache.fop.fonts.AbstractCodePointMapping: char[] characters>;
+        $r1[j] = c;
+        $r1 = this.<org.apache.fop.fonts.AbstractCodePointMapping: char[] codepoints>;
+        $i3 = table[i];
+        $c4 = (char) $i3;
+        $r1[j] = $c4;
+        goto label9;
+
+     label8:
+        j = j + -1;
+        goto label6;
+
+     label9:
+        i = i + 2;
+        goto label5;
+
+     label10:
+        return;
+    }
+
+    public java.lang.String getName()
+    {
+        org.apache.fop.fonts.AbstractCodePointMapping this;
+        java.lang.String $r0;
+
+        this := @this: org.apache.fop.fonts.AbstractCodePointMapping;
+        $r0 = this.<org.apache.fop.fonts.AbstractCodePointMapping: java.lang.String name>;
+        return $r0;
+    }
+
+    public final char mapChar(char)
+    {
+        org.apache.fop.fonts.AbstractCodePointMapping this, l4;
+        char c, latin1, mc, $c1, $c2;
+        int bot, top, mid, i, ic, $i0;
+        java.lang.Character fallback, $r3;
+        java.lang.Throwable l6, $r5;
+        java.lang.String glyphName, $r6;
+        java.lang.String[] alternatives;
+        short idx;
+        char[] $r0;
+        java.util.Map $r2;
+        java.lang.Object $r4;
+
+        this := @this: org.apache.fop.fonts.AbstractCodePointMapping;
+        c := @parameter0: char;
+        if c >= 256 goto label0;
+
+        $r0 = this.<org.apache.fop.fonts.AbstractCodePointMapping: char[] latin1Map>;
+        latin1 = $r0[c];
+        if latin1 <= 0 goto label0;
+
+        return latin1;
+
+     label0:
+        bot = 0;
+        $r0 = this.<org.apache.fop.fonts.AbstractCodePointMapping: char[] characters>;
+        $i0 = lengthof $r0;
+        top = $i0 - 1;
+
+     label1:
+        if top < bot goto label5;
+
+        $i0 = bot + top;
+        mid = $i0 / 2;
+        $r0 = this.<org.apache.fop.fonts.AbstractCodePointMapping: char[] characters>;
+        mc = $r0[mid];
+        if c != mc goto label2;
+
+        $r0 = this.<org.apache.fop.fonts.AbstractCodePointMapping: char[] codepoints>;
+        $c1 = $r0[mid];
+        return $c1;
+
+     label2:
+        if c >= mc goto label3;
+
+        top = mid - 1;
+        goto label4;
+
+     label3:
+        bot = mid + 1;
+
+     label4:
+        goto label1;
+
+     label5:
+        l4 = this;
+        entermonitor this;
+
+     label6:
+        $r2 = this.<org.apache.fop.fonts.AbstractCodePointMapping: java.util.Map fallbackMap>;
+        if $r2 == null goto label8;
+
+        $r2 = this.<org.apache.fop.fonts.AbstractCodePointMapping: java.util.Map fallbackMap>;
+        $r3 = new java.lang.Character;
+        specialinvoke $r3.<java.lang.Character: void <init>(char)>(c);
+        $r4 = interfaceinvoke $r2.<java.util.Map: java.lang.Object get(java.lang.Object)>($r3);
+        fallback = (java.lang.Character) $r4;
+        if fallback == null goto label8;
+
+        $c1 = virtualinvoke fallback.<java.lang.Character: char charValue()>();
+        exitmonitor l4;
+
+     label7:
+        return $c1;
+
+     label8:
+        exitmonitor l4;
+
+     label9:
+        goto label13;
+
+     label10:
+        $r5 := @caughtexception;
+
+     label11:
+        l6 = $r5;
+        exitmonitor l4;
+
+     label12:
+        throw l6;
+
+     label13:
+        glyphName = staticinvoke <org.apache.xmlgraphics.fonts.Glyphs: java.lang.String charToGlyphName(char)>(c);
+        $i0 = virtualinvoke glyphName.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label16;
+
+        alternatives = staticinvoke <org.apache.xmlgraphics.fonts.Glyphs: java.lang.String[] getCharNameAlternativesFor(java.lang.String)>(glyphName);
+        if alternatives == null goto label16;
+
+        i = 0;
+        ic = lengthof alternatives;
+
+     label14:
+        if i >= ic goto label16;
+
+        $r6 = alternatives[i];
+        idx = virtualinvoke this.<org.apache.fop.fonts.AbstractCodePointMapping: short getCodePointForGlyph(java.lang.String)>($r6);
+        if idx < 0 goto label15;
+
+        $c2 = (char) idx;
+        specialinvoke this.<org.apache.fop.fonts.AbstractCodePointMapping: void putFallbackCharacter(char,char)>(c, $c2);
+        $c1 = (char) idx;
+        return $c1;
+
+     label15:
+        i = i + 1;
+        goto label14;
+
+     label16:
+        specialinvoke this.<org.apache.fop.fonts.AbstractCodePointMapping: void putFallbackCharacter(char,char)>(c, 0);
+        return 0;
+
+        catch java.lang.Throwable from label6 to label7 with label10;
+        catch java.lang.Throwable from label8 to label9 with label10;
+        catch java.lang.Throwable from label11 to label12 with label10;
+    }
+
+    private void putFallbackCharacter(char, char)
+    {
+        org.apache.fop.fonts.AbstractCodePointMapping this, l3;
+        char c, mapTo;
+        java.lang.Throwable l4, $r6;
+        java.util.Map $r1;
+        java.util.HashMap $r2;
+        java.lang.Character $r3, $r4;
+
+        this := @this: org.apache.fop.fonts.AbstractCodePointMapping;
+        c := @parameter0: char;
+        mapTo := @parameter1: char;
+        l3 = this;
+        entermonitor this;
+
+     label0:
+        $r1 = this.<org.apache.fop.fonts.AbstractCodePointMapping: java.util.Map fallbackMap>;
+        if $r1 != null goto label1;
+
+        $r2 = new java.util.HashMap;
+        specialinvoke $r2.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.fonts.AbstractCodePointMapping: java.util.Map fallbackMap> = $r2;
+
+     label1:
+        $r1 = this.<org.apache.fop.fonts.AbstractCodePointMapping: java.util.Map fallbackMap>;
+        $r3 = new java.lang.Character;
+        specialinvoke $r3.<java.lang.Character: void <init>(char)>(c);
+        $r4 = new java.lang.Character;
+        specialinvoke $r4.<java.lang.Character: void <init>(char)>(mapTo);
+        interfaceinvoke $r1.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r3, $r4);
+        exitmonitor l3;
+
+     label2:
+        goto label6;
+
+     label3:
+        $r6 := @caughtexception;
+
+     label4:
+        l4 = $r6;
+        exitmonitor l3;
+
+     label5:
+        throw l4;
+
+     label6:
+        return;
+
+        catch java.lang.Throwable from label0 to label2 with label3;
+        catch java.lang.Throwable from label4 to label5 with label3;
+    }
+
+    public final char getUnicodeForIndex(int)
+    {
+        org.apache.fop.fonts.AbstractCodePointMapping this;
+        int idx;
+        char[] $r0;
+        char $c0;
+
+        this := @this: org.apache.fop.fonts.AbstractCodePointMapping;
+        idx := @parameter0: int;
+        $r0 = this.<org.apache.fop.fonts.AbstractCodePointMapping: char[] unicodeMap>;
+        $c0 = $r0[idx];
+        return $c0;
+    }
+
+    public final char[] getUnicodeCharMap()
+    {
+        org.apache.fop.fonts.AbstractCodePointMapping this;
+        char[] copy, $r0, $r1;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.fonts.AbstractCodePointMapping;
+        $r0 = this.<org.apache.fop.fonts.AbstractCodePointMapping: char[] unicodeMap>;
+        $i0 = lengthof $r0;
+        copy = newarray (char)[$i0];
+        $r0 = this.<org.apache.fop.fonts.AbstractCodePointMapping: char[] unicodeMap>;
+        $r1 = this.<org.apache.fop.fonts.AbstractCodePointMapping: char[] unicodeMap>;
+        $i1 = lengthof $r1;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r0, 0, copy, 0, $i1);
+        return copy;
+    }
+
+    public short getCodePointForGlyph(java.lang.String)
+    {
+        org.apache.fop.fonts.AbstractCodePointMapping this;
+        java.lang.String charName, $r0;
+        java.lang.String[] names;
+        short i, c;
+        int $i0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.AbstractCodePointMapping;
+        charName := @parameter0: java.lang.String;
+        names = this.<org.apache.fop.fonts.AbstractCodePointMapping: java.lang.String[] charNameMap>;
+        if names != null goto label0;
+
+        names = virtualinvoke this.<org.apache.fop.fonts.AbstractCodePointMapping: java.lang.String[] getCharNameMap()>();
+
+     label0:
+        i = 0;
+        $i0 = lengthof names;
+        c = (short) $i0;
+
+     label1:
+        if i >= c goto label3;
+
+        $r0 = names[i];
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(charName);
+        if $z0 == 0 goto label2;
+
+        return i;
+
+     label2:
+        $i0 = i + 1;
+        i = (short) $i0;
+        goto label1;
+
+     label3:
+        return -1;
+    }
+
+    public java.lang.String[] getCharNameMap()
+    {
+        org.apache.fop.fonts.AbstractCodePointMapping this;
+        java.lang.String[] copy, derived, $r0, $r1;
+        int i, $i0, $i1;
+        char c;
+        java.lang.String charName;
+
+        this := @this: org.apache.fop.fonts.AbstractCodePointMapping;
+        $r0 = this.<org.apache.fop.fonts.AbstractCodePointMapping: java.lang.String[] charNameMap>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.fonts.AbstractCodePointMapping: java.lang.String[] charNameMap>;
+        $i0 = lengthof $r0;
+        copy = newarray (java.lang.String)[$i0];
+        $r0 = this.<org.apache.fop.fonts.AbstractCodePointMapping: java.lang.String[] charNameMap>;
+        $r1 = this.<org.apache.fop.fonts.AbstractCodePointMapping: java.lang.String[] charNameMap>;
+        $i1 = lengthof $r1;
+        staticinvoke <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>($r0, 0, copy, 0, $i1);
+        return copy;
+
+     label0:
+        derived = newarray (java.lang.String)[256];
+        staticinvoke <java.util.Arrays: void fill(java.lang.Object[],java.lang.Object)>(derived, ".notdef");
+        i = 0;
+
+     label1:
+        if i >= 256 goto label3;
+
+        c = virtualinvoke this.<org.apache.fop.fonts.AbstractCodePointMapping: char getUnicodeForIndex(int)>(i);
+        if c == 65535 goto label2;
+
+        charName = staticinvoke <org.apache.xmlgraphics.fonts.Glyphs: java.lang.String charToGlyphName(char)>(c);
+        $i0 = virtualinvoke charName.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label2;
+
+        derived[i] = charName;
+
+     label2:
+        i = i + 1;
+        goto label1;
+
+     label3:
+        return derived;
+    }
+
+    public java.lang.String toString()
+    {
+        org.apache.fop.fonts.AbstractCodePointMapping this;
+        java.lang.String $r0;
+
+        this := @this: org.apache.fop.fonts.AbstractCodePointMapping;
+        $r0 = virtualinvoke this.<org.apache.fop.fonts.AbstractCodePointMapping: java.lang.String getName()>();
+        return $r0;
+    }
+}

@@ -1,0 +1,2566 @@
+public class org.apache.fop.render.afp.AFPRenderer extends org.apache.fop.render.AbstractPathOrientedRenderer
+{
+    private static final int DEFAULT_DPI_RESOLUTION;
+    private static final int DPI_CONVERSION_FACTOR;
+    private org.apache.fop.render.afp.modca.AFPDataStream afpDataStream;
+    private java.util.HashMap pageSegmentsMap;
+    private java.util.HashMap currentPageFonts;
+    private java.awt.Color currentColor;
+    private int pageFontCounter;
+    private int currentFontSize;
+    private int pageWidth;
+    private int pageHeight;
+    private int portraitRotation;
+    private int landscapeRotation;
+    private java.util.Map pages;
+    private boolean colorImages;
+    private int bitsPerPixel;
+    private int resolution;
+    private static final org.apache.xmlgraphics.image.loader.ImageFlavor[] FLAVORS;
+    private java.util.List viewPortPositions;
+
+    public void <init>()
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        java.util.ArrayList $r0;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        specialinvoke this.<org.apache.fop.render.AbstractPathOrientedRenderer: void <init>()>();
+        this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream> = null;
+        this.<org.apache.fop.render.afp.AFPRenderer: java.util.HashMap pageSegmentsMap> = null;
+        this.<org.apache.fop.render.afp.AFPRenderer: java.util.HashMap currentPageFonts> = null;
+        this.<org.apache.fop.render.afp.AFPRenderer: java.awt.Color currentColor> = null;
+        this.<org.apache.fop.render.afp.AFPRenderer: int pageFontCounter> = 0;
+        this.<org.apache.fop.render.afp.AFPRenderer: int currentFontSize> = 0;
+        this.<org.apache.fop.render.afp.AFPRenderer: int pageWidth> = 0;
+        this.<org.apache.fop.render.afp.AFPRenderer: int pageHeight> = 0;
+        this.<org.apache.fop.render.afp.AFPRenderer: int portraitRotation> = 0;
+        this.<org.apache.fop.render.afp.AFPRenderer: int landscapeRotation> = 270;
+        this.<org.apache.fop.render.afp.AFPRenderer: java.util.Map pages> = null;
+        this.<org.apache.fop.render.afp.AFPRenderer: boolean colorImages> = 0;
+        this.<org.apache.fop.render.afp.AFPRenderer: int bitsPerPixel> = 8;
+        this.<org.apache.fop.render.afp.AFPRenderer: int resolution> = 240;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.render.afp.AFPRenderer: java.util.List viewPortPositions> = $r0;
+        return;
+    }
+
+    public void setupFontInfo(org.apache.fop.fonts.FontInfo)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        org.apache.fop.fonts.FontInfo inFontInfo, $r3, $r14;
+        int num, $i0, $i1;
+        java.util.Iterator it, it2;
+        org.apache.fop.render.afp.fonts.AFPFontInfo afi;
+        org.apache.fop.render.afp.fonts.AFPFont bf;
+        org.apache.fop.fonts.FontTriplet ft, $r9;
+        org.apache.fop.fonts.base14.Helvetica $r0;
+        org.apache.fop.render.afp.fonts.FopCharacterSet cs, $r10;
+        java.util.List $r1;
+        boolean $z0;
+        java.lang.Object $r2;
+        java.lang.StringBuffer $r4;
+        java.lang.String $r5, $r6, $r7;
+        org.apache.commons.logging.Log $r8;
+        org.apache.fop.render.afp.fonts.OutlineFont $r11, bf;
+        org.apache.fop.fonts.base14.TimesRoman $r12;
+        org.apache.fop.fonts.base14.Courier $r13;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        inFontInfo := @parameter0: org.apache.fop.fonts.FontInfo;
+        this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.fonts.FontInfo fontInfo> = inFontInfo;
+        num = 1;
+        $r1 = this.<org.apache.fop.render.afp.AFPRenderer: java.util.List fontList>;
+        if $r1 == null goto label4;
+
+        $r1 = this.<org.apache.fop.render.afp.AFPRenderer: java.util.List fontList>;
+        $i0 = interfaceinvoke $r1.<java.util.List: int size()>();
+        if $i0 <= 0 goto label4;
+
+        $r1 = this.<org.apache.fop.render.afp.AFPRenderer: java.util.List fontList>;
+        it = interfaceinvoke $r1.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke it.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label3;
+
+        $r2 = interfaceinvoke it.<java.util.Iterator: java.lang.Object next()>();
+        afi = (org.apache.fop.render.afp.fonts.AFPFontInfo) $r2;
+        bf = virtualinvoke afi.<org.apache.fop.render.afp.fonts.AFPFontInfo: org.apache.fop.render.afp.fonts.AFPFont getAFPFont()>();
+        $r1 = virtualinvoke afi.<org.apache.fop.render.afp.fonts.AFPFontInfo: java.util.List getFontTriplets()>();
+        it2 = interfaceinvoke $r1.<java.util.List: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke it2.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label2;
+
+        $r2 = interfaceinvoke it2.<java.util.Iterator: java.lang.Object next()>();
+        ft = (org.apache.fop.fonts.FontTriplet) $r2;
+        $r3 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("F");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(num);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r6 = virtualinvoke ft.<org.apache.fop.fonts.FontTriplet: java.lang.String getName()>();
+        $r7 = virtualinvoke ft.<org.apache.fop.fonts.FontTriplet: java.lang.String getStyle()>();
+        $i1 = virtualinvoke ft.<org.apache.fop.fonts.FontTriplet: int getWeight()>();
+        virtualinvoke $r3.<org.apache.fop.fonts.FontInfo: void addFontProperties(java.lang.String,java.lang.String,java.lang.String,int)>($r5, $r6, $r7, $i1);
+        $r3 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("F");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(num);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<org.apache.fop.fonts.FontInfo: void addMetrics(java.lang.String,org.apache.fop.fonts.FontMetrics)>($r5, bf);
+        num = num + 1;
+        goto label1;
+
+     label2:
+        goto label0;
+
+     label3:
+        goto label5;
+
+     label4:
+        $r8 = <org.apache.fop.render.afp.AFPRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r8.<org.apache.commons.logging.Log: void warn(java.lang.Object)>("No AFP fonts configured - using default setup");
+
+     label5:
+        $r3 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r9 = virtualinvoke $r3.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet fontLookup(java.lang.String,java.lang.String,int)>("sans-serif", "normal", 400);
+        if $r9 != null goto label6;
+
+        $r10 = new org.apache.fop.render.afp.fonts.FopCharacterSet;
+        $r0 = new org.apache.fop.fonts.base14.Helvetica;
+        specialinvoke $r0.<org.apache.fop.fonts.base14.Helvetica: void <init>()>();
+        specialinvoke $r10.<org.apache.fop.render.afp.fonts.FopCharacterSet: void <init>(java.lang.String,java.lang.String,java.lang.String,int,org.apache.fop.fonts.Typeface)>("T1V10500", "Cp500", "CZH200  ", 1, $r0);
+        cs = $r10;
+        $r11 = new org.apache.fop.render.afp.fonts.OutlineFont;
+        specialinvoke $r11.<org.apache.fop.render.afp.fonts.OutlineFont: void <init>(java.lang.String,org.apache.fop.render.afp.fonts.CharacterSet)>("Helvetica", cs);
+        bf = $r11;
+        $r3 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("F");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(num);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<org.apache.fop.fonts.FontInfo: void addFontProperties(java.lang.String,java.lang.String,java.lang.String,int)>($r5, "sans-serif", "normal", 400);
+        $r3 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("F");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(num);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<org.apache.fop.fonts.FontInfo: void addMetrics(java.lang.String,org.apache.fop.fonts.FontMetrics)>($r5, bf);
+        num = num + 1;
+
+     label6:
+        $r3 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r9 = virtualinvoke $r3.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet fontLookup(java.lang.String,java.lang.String,int)>("serif", "normal", 400);
+        if $r9 != null goto label7;
+
+        $r10 = new org.apache.fop.render.afp.fonts.FopCharacterSet;
+        $r12 = new org.apache.fop.fonts.base14.TimesRoman;
+        specialinvoke $r12.<org.apache.fop.fonts.base14.TimesRoman: void <init>()>();
+        specialinvoke $r10.<org.apache.fop.render.afp.fonts.FopCharacterSet: void <init>(java.lang.String,java.lang.String,java.lang.String,int,org.apache.fop.fonts.Typeface)>("T1V10500", "Cp500", "CZN200  ", 1, $r12);
+        cs = $r10;
+        $r11 = new org.apache.fop.render.afp.fonts.OutlineFont;
+        specialinvoke $r11.<org.apache.fop.render.afp.fonts.OutlineFont: void <init>(java.lang.String,org.apache.fop.render.afp.fonts.CharacterSet)>("Helvetica", cs);
+        bf = $r11;
+        $r3 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("F");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(num);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<org.apache.fop.fonts.FontInfo: void addFontProperties(java.lang.String,java.lang.String,java.lang.String,int)>($r5, "serif", "normal", 400);
+        $r3 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("F");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(num);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<org.apache.fop.fonts.FontInfo: void addMetrics(java.lang.String,org.apache.fop.fonts.FontMetrics)>($r5, bf);
+        num = num + 1;
+
+     label7:
+        $r3 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r9 = virtualinvoke $r3.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet fontLookup(java.lang.String,java.lang.String,int)>("monospace", "normal", 400);
+        if $r9 != null goto label8;
+
+        $r10 = new org.apache.fop.render.afp.fonts.FopCharacterSet;
+        $r13 = new org.apache.fop.fonts.base14.Courier;
+        specialinvoke $r13.<org.apache.fop.fonts.base14.Courier: void <init>()>();
+        specialinvoke $r10.<org.apache.fop.render.afp.fonts.FopCharacterSet: void <init>(java.lang.String,java.lang.String,java.lang.String,int,org.apache.fop.fonts.Typeface)>("T1V10500", "Cp500", "CZ4200  ", 1, $r13);
+        cs = $r10;
+        $r11 = new org.apache.fop.render.afp.fonts.OutlineFont;
+        specialinvoke $r11.<org.apache.fop.render.afp.fonts.OutlineFont: void <init>(java.lang.String,org.apache.fop.render.afp.fonts.CharacterSet)>("Helvetica", cs);
+        bf = $r11;
+        $r3 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("F");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(num);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<org.apache.fop.fonts.FontInfo: void addFontProperties(java.lang.String,java.lang.String,java.lang.String,int)>($r5, "monospace", "normal", 400);
+        $r3 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("F");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(num);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r3.<org.apache.fop.fonts.FontInfo: void addMetrics(java.lang.String,org.apache.fop.fonts.FontMetrics)>($r5, bf);
+        num = num + 1;
+
+     label8:
+        $r3 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r9 = virtualinvoke $r3.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet fontLookup(java.lang.String,java.lang.String,int)>("any", "normal", 400);
+        if $r9 != null goto label9;
+
+        $r3 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.fonts.FontInfo fontInfo>;
+        ft = virtualinvoke $r3.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet fontLookup(java.lang.String,java.lang.String,int)>("sans-serif", "normal", 400);
+        $r3 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r14 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r5 = virtualinvoke $r14.<org.apache.fop.fonts.FontInfo: java.lang.String getInternalFontKey(org.apache.fop.fonts.FontTriplet)>(ft);
+        virtualinvoke $r3.<org.apache.fop.fonts.FontInfo: void addFontProperties(java.lang.String,java.lang.String,java.lang.String,int)>($r5, "any", "normal", 400);
+
+     label9:
+        return;
+    }
+
+    public void setUserAgent(org.apache.fop.apps.FOUserAgent)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        org.apache.fop.apps.FOUserAgent agent;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        agent := @parameter0: org.apache.fop.apps.FOUserAgent;
+        specialinvoke this.<org.apache.fop.render.AbstractPathOrientedRenderer: void setUserAgent(org.apache.fop.apps.FOUserAgent)>(agent);
+        return;
+    }
+
+    public void startRenderer(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        java.io.OutputStream outputStream;
+        java.util.HashMap $r0;
+        java.awt.Color $r1;
+        org.apache.fop.render.afp.modca.AFPDataStream $r2, $r3;
+        int $i0;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        outputStream := @parameter0: java.io.OutputStream;
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.render.afp.AFPRenderer: java.util.HashMap currentPageFonts> = $r0;
+        $r1 = new java.awt.Color;
+        specialinvoke $r1.<java.awt.Color: void <init>(int,int,int)>(255, 255, 255);
+        this.<org.apache.fop.render.afp.AFPRenderer: java.awt.Color currentColor> = $r1;
+        $r2 = new org.apache.fop.render.afp.modca.AFPDataStream;
+        specialinvoke $r2.<org.apache.fop.render.afp.modca.AFPDataStream: void <init>()>();
+        this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream> = $r2;
+        $r3 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $i0 = this.<org.apache.fop.render.afp.AFPRenderer: int portraitRotation>;
+        virtualinvoke $r3.<org.apache.fop.render.afp.modca.AFPDataStream: void setPortraitRotation(int)>($i0);
+        $r3 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $i0 = this.<org.apache.fop.render.afp.AFPRenderer: int landscapeRotation>;
+        virtualinvoke $r3.<org.apache.fop.render.afp.modca.AFPDataStream: void setLandscapeRotation(int)>($i0);
+        $r3 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        virtualinvoke $r3.<org.apache.fop.render.afp.modca.AFPDataStream: void startDocument(java.io.OutputStream)>(outputStream);
+        return;
+    }
+
+    public void stopRenderer() throws java.io.IOException
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        org.apache.fop.render.afp.modca.AFPDataStream $r0;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        $r0 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        virtualinvoke $r0.<org.apache.fop.render.afp.modca.AFPDataStream: void endDocument()>();
+        return;
+    }
+
+    public boolean supportsOutOfOrder()
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        return 1;
+    }
+
+    public void preparePage(org.apache.fop.area.PageViewport)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        org.apache.fop.area.PageViewport page;
+        java.awt.geom.Rectangle2D bounds;
+        boolean pageRotation;
+        java.util.HashMap $r0, $r3;
+        double $d0;
+        int $i0, $i1, $i2, $i3;
+        org.apache.fop.render.afp.modca.AFPDataStream $r1, $r4;
+        java.util.Map $r2;
+        org.apache.fop.render.afp.modca.PageObject $r5;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        page := @parameter0: org.apache.fop.area.PageViewport;
+        this.<org.apache.fop.render.afp.AFPRenderer: int currentFontSize> = 0;
+        this.<org.apache.fop.render.afp.AFPRenderer: int pageFontCounter> = 0;
+        $r0 = this.<org.apache.fop.render.afp.AFPRenderer: java.util.HashMap currentPageFonts>;
+        virtualinvoke $r0.<java.util.HashMap: void clear()>();
+        bounds = virtualinvoke page.<org.apache.fop.area.PageViewport: java.awt.geom.Rectangle2D getViewArea()>();
+        $d0 = virtualinvoke bounds.<java.awt.geom.Rectangle2D: double getWidth()>();
+        $i0 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int mpts2units(double)>($d0);
+        this.<org.apache.fop.render.afp.AFPRenderer: int pageWidth> = $i0;
+        $d0 = virtualinvoke bounds.<java.awt.geom.Rectangle2D: double getHeight()>();
+        $i0 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int mpts2units(double)>($d0);
+        this.<org.apache.fop.render.afp.AFPRenderer: int pageHeight> = $i0;
+        pageRotation = 0;
+        $r1 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $i0 = this.<org.apache.fop.render.afp.AFPRenderer: int pageWidth>;
+        $i1 = this.<org.apache.fop.render.afp.AFPRenderer: int pageHeight>;
+        $i2 = virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: int getResolution()>();
+        $i3 = virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: int getResolution()>();
+        virtualinvoke $r1.<org.apache.fop.render.afp.modca.AFPDataStream: void startPage(int,int,int,int,int)>($i0, $i1, 0, $i2, $i3);
+        specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: void renderPageObjectExtensions(org.apache.fop.area.PageViewport)>(page);
+        $r2 = this.<org.apache.fop.render.afp.AFPRenderer: java.util.Map pages>;
+        if $r2 != null goto label0;
+
+        $r3 = new java.util.HashMap;
+        specialinvoke $r3.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.render.afp.AFPRenderer: java.util.Map pages> = $r3;
+
+     label0:
+        $r2 = this.<org.apache.fop.render.afp.AFPRenderer: java.util.Map pages>;
+        $r4 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $r5 = virtualinvoke $r4.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageObject savePage()>();
+        interfaceinvoke $r2.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(page, $r5);
+        return;
+    }
+
+    public void processOffDocumentItem(org.apache.fop.area.OffDocumentItem)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        org.apache.fop.area.OffDocumentItem odi;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        odi := @parameter0: org.apache.fop.area.OffDocumentItem;
+        return;
+    }
+
+    public org.apache.fop.render.Graphics2DAdapter getGraphics2DAdapter()
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        org.apache.fop.render.afp.AFPGraphics2DAdapter $r0;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        $r0 = new org.apache.fop.render.afp.AFPGraphics2DAdapter;
+        specialinvoke $r0.<org.apache.fop.render.afp.AFPGraphics2DAdapter: void <init>()>();
+        return $r0;
+    }
+
+    public void startVParea(org.apache.fop.area.CTM, java.awt.geom.Rectangle2D)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        org.apache.fop.area.CTM ctm;
+        java.awt.geom.Rectangle2D clippingRect;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        ctm := @parameter0: org.apache.fop.area.CTM;
+        clippingRect := @parameter1: java.awt.geom.Rectangle2D;
+        return;
+    }
+
+    public void endVParea()
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        return;
+    }
+
+    public void renderRegionViewport(org.apache.fop.area.RegionViewport)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        org.apache.fop.area.RegionViewport port;
+        java.awt.geom.Rectangle2D view;
+        org.apache.fop.area.RegionReference regionReference;
+        org.apache.fop.render.afp.AFPRenderer$ViewPortPos $r0;
+        org.apache.fop.area.CTM $r1;
+        int $i0;
+        org.apache.fop.area.BodyRegion $r2;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        port := @parameter0: org.apache.fop.area.RegionViewport;
+        if port == null goto label2;
+
+        view = virtualinvoke port.<org.apache.fop.area.RegionViewport: java.awt.geom.Rectangle2D getViewArea()>();
+        this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition> = 0;
+        this.<org.apache.fop.render.afp.AFPRenderer: int currentIPPosition> = 0;
+        regionReference = virtualinvoke port.<org.apache.fop.area.RegionViewport: org.apache.fop.area.RegionReference getRegionReference()>();
+        virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: void handleRegionTraits(org.apache.fop.area.RegionViewport)>(port);
+        $r0 = new org.apache.fop.render.afp.AFPRenderer$ViewPortPos;
+        $r1 = virtualinvoke regionReference.<org.apache.fop.area.RegionReference: org.apache.fop.area.CTM getCTM()>();
+        specialinvoke $r0.<org.apache.fop.render.afp.AFPRenderer$ViewPortPos: void <init>(org.apache.fop.render.afp.AFPRenderer,java.awt.geom.Rectangle2D,org.apache.fop.area.CTM,org.apache.fop.render.afp.AFPRenderer$1)>(this, view, $r1, null);
+        specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: void pushViewPortPos(org.apache.fop.render.afp.AFPRenderer$ViewPortPos)>($r0);
+        $i0 = virtualinvoke regionReference.<org.apache.fop.area.RegionReference: int getRegionClass()>();
+        if $i0 != 36 goto label0;
+
+        $r2 = (org.apache.fop.area.BodyRegion) regionReference;
+        virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: void renderBodyRegion(org.apache.fop.area.BodyRegion)>($r2);
+        goto label1;
+
+     label0:
+        virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: void renderRegion(org.apache.fop.area.RegionReference)>(regionReference);
+
+     label1:
+        specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.AFPRenderer$ViewPortPos popViewPortPos()>();
+
+     label2:
+        return;
+    }
+
+    protected void renderBlockViewport(org.apache.fop.area.BlockViewport, java.util.List)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        org.apache.fop.area.BlockViewport bv;
+        java.util.List children, breakOutList;
+        int saveIP, saveBP, borderPaddingStart, borderPaddingBefore, $i0, $i1, $i2, $i3, $i4, $i5;
+        org.apache.fop.area.CTM ctm, $r0, tempctm, $r7;
+        float width, height, bpwidth, bpheight, $f0, $f1, $f2, $f3, $f4, $f5, $f6;
+        java.awt.geom.AffineTransform positionTransform, contentRectTransform, contentTransform, $r1;
+        java.awt.Point ptSrc, $r2;
+        java.awt.geom.Point2D ptDst;
+        java.awt.geom.Rectangle2D$Double borderRect, contentRect, $r3;
+        null_type clippingRect;
+        double $d0, $d1, $d2, $d3, $d4, $d5;
+        org.apache.fop.render.afp.AFPRenderer$ViewPortPos $r4;
+        java.awt.Rectangle $r8, clippingRect;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        bv := @parameter0: org.apache.fop.area.BlockViewport;
+        children := @parameter1: java.util.List;
+        saveIP = this.<org.apache.fop.render.afp.AFPRenderer: int currentIPPosition>;
+        saveBP = this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition>;
+        ctm = virtualinvoke bv.<org.apache.fop.area.BlockViewport: org.apache.fop.area.CTM getCTM()>();
+        borderPaddingStart = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getBorderAndPaddingWidthStart()>();
+        borderPaddingBefore = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getBorderAndPaddingWidthBefore()>();
+        $i0 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getIPD()>();
+        $f0 = (float) $i0;
+        width = $f0 / 1000.0F;
+        $i0 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getBPD()>();
+        $f0 = (float) $i0;
+        height = $f0 / 1000.0F;
+        $i0 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getPositioning()>();
+        if $i0 == 2 goto label0;
+
+        $i0 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getPositioning()>();
+        if $i0 != 3 goto label3;
+
+     label0:
+        breakOutList = null;
+        $i0 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getPositioning()>();
+        if $i0 != 3 goto label1;
+
+        breakOutList = virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: java.util.List breakOutOfStateStack()>();
+
+     label1:
+        $r1 = new java.awt.geom.AffineTransform;
+        specialinvoke $r1.<java.awt.geom.AffineTransform: void <init>()>();
+        positionTransform = $r1;
+        $i1 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getXOffset()>();
+        $d0 = (double) $i1;
+        $i2 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getYOffset()>();
+        $d1 = (double) $i2;
+        virtualinvoke positionTransform.<java.awt.geom.AffineTransform: void translate(double,double)>($d0, $d1);
+        $i1 = neg borderPaddingStart;
+        $d0 = (double) $i1;
+        $i2 = neg borderPaddingBefore;
+        $d1 = (double) $i2;
+        virtualinvoke positionTransform.<java.awt.geom.AffineTransform: void translate(double,double)>($d0, $d1);
+        $i1 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getBorderAndPaddingWidthEnd()>();
+        $i0 = borderPaddingStart + $i1;
+        $f0 = (float) $i0;
+        bpwidth = $f0 / 1000.0F;
+        $i1 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getBorderAndPaddingWidthAfter()>();
+        $i0 = borderPaddingBefore + $i1;
+        $f0 = (float) $i0;
+        bpheight = $f0 / 1000.0F;
+        $r2 = new java.awt.Point;
+        specialinvoke $r2.<java.awt.Point: void <init>(int,int)>(0, 0);
+        ptSrc = $r2;
+        ptDst = virtualinvoke positionTransform.<java.awt.geom.AffineTransform: java.awt.geom.Point2D transform(java.awt.geom.Point2D,java.awt.geom.Point2D)>(ptSrc, null);
+        $r3 = new java.awt.geom.Rectangle2D$Double;
+        $d2 = virtualinvoke ptDst.<java.awt.geom.Point2D: double getX()>();
+        $d3 = virtualinvoke ptDst.<java.awt.geom.Point2D: double getY()>();
+        $f1 = width + bpwidth;
+        $f2 = 1000.0F * $f1;
+        $d4 = (double) $f2;
+        $f3 = height + bpheight;
+        $f4 = 1000.0F * $f3;
+        $d5 = (double) $f4;
+        specialinvoke $r3.<java.awt.geom.Rectangle2D$Double: void <init>(double,double,double,double)>($d2, $d3, $d4, $d5);
+        borderRect = $r3;
+        $r4 = new org.apache.fop.render.afp.AFPRenderer$ViewPortPos;
+        $r0 = new org.apache.fop.area.CTM;
+        specialinvoke $r0.<org.apache.fop.area.CTM: void <init>(java.awt.geom.AffineTransform)>(positionTransform);
+        specialinvoke $r4.<org.apache.fop.render.afp.AFPRenderer$ViewPortPos: void <init>(org.apache.fop.render.afp.AFPRenderer,java.awt.geom.Rectangle2D,org.apache.fop.area.CTM,org.apache.fop.render.afp.AFPRenderer$1)>(this, borderRect, $r0, null);
+        specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: void pushViewPortPos(org.apache.fop.render.afp.AFPRenderer$ViewPortPos)>($r4);
+        $f5 = width + bpwidth;
+        $f6 = height + bpheight;
+        virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: void drawBackAndBorders(org.apache.fop.area.Area,float,float,float,float)>(bv, 0.0F, 0.0F, $f5, $f6);
+        $r1 = new java.awt.geom.AffineTransform;
+        specialinvoke $r1.<java.awt.geom.AffineTransform: void <init>()>();
+        contentRectTransform = $r1;
+        $d0 = (double) borderPaddingStart;
+        $d1 = (double) borderPaddingBefore;
+        virtualinvoke contentRectTransform.<java.awt.geom.AffineTransform: void translate(double,double)>($d0, $d1);
+        $r2 = new java.awt.Point;
+        specialinvoke $r2.<java.awt.Point: void <init>(int,int)>(0, 0);
+        ptSrc = $r2;
+        ptDst = virtualinvoke contentRectTransform.<java.awt.geom.AffineTransform: java.awt.geom.Point2D transform(java.awt.geom.Point2D,java.awt.geom.Point2D)>(ptSrc, null);
+        $r3 = new java.awt.geom.Rectangle2D$Double;
+        $d2 = virtualinvoke ptDst.<java.awt.geom.Point2D: double getX()>();
+        $d3 = virtualinvoke ptDst.<java.awt.geom.Point2D: double getY()>();
+        $f2 = 1000.0F * width;
+        $d4 = (double) $f2;
+        $f4 = 1000.0F * height;
+        $d5 = (double) $f4;
+        specialinvoke $r3.<java.awt.geom.Rectangle2D$Double: void <init>(double,double,double,double)>($d2, $d3, $d4, $d5);
+        contentRect = $r3;
+        $r4 = new org.apache.fop.render.afp.AFPRenderer$ViewPortPos;
+        $r0 = new org.apache.fop.area.CTM;
+        specialinvoke $r0.<org.apache.fop.area.CTM: void <init>(java.awt.geom.AffineTransform)>(contentRectTransform);
+        specialinvoke $r4.<org.apache.fop.render.afp.AFPRenderer$ViewPortPos: void <init>(org.apache.fop.render.afp.AFPRenderer,java.awt.geom.Rectangle2D,org.apache.fop.area.CTM,org.apache.fop.render.afp.AFPRenderer$1)>(this, contentRect, $r0, null);
+        specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: void pushViewPortPos(org.apache.fop.render.afp.AFPRenderer$ViewPortPos)>($r4);
+        contentTransform = virtualinvoke ctm.<org.apache.fop.area.CTM: java.awt.geom.AffineTransform toAffineTransform()>();
+        $r3 = new java.awt.geom.Rectangle2D$Double;
+        $f2 = 1000.0F * width;
+        $d4 = (double) $f2;
+        $f4 = 1000.0F * height;
+        $d5 = (double) $f4;
+        specialinvoke $r3.<java.awt.geom.Rectangle2D$Double: void <init>(double,double,double,double)>(0.0, 0.0, $d4, $d5);
+        contentRect = $r3;
+        $r4 = new org.apache.fop.render.afp.AFPRenderer$ViewPortPos;
+        $r0 = new org.apache.fop.area.CTM;
+        specialinvoke $r0.<org.apache.fop.area.CTM: void <init>(java.awt.geom.AffineTransform)>(contentTransform);
+        specialinvoke $r4.<org.apache.fop.render.afp.AFPRenderer$ViewPortPos: void <init>(org.apache.fop.render.afp.AFPRenderer,java.awt.geom.Rectangle2D,org.apache.fop.area.CTM,org.apache.fop.render.afp.AFPRenderer$1)>(this, contentRect, $r0, null);
+        specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: void pushViewPortPos(org.apache.fop.render.afp.AFPRenderer$ViewPortPos)>($r4);
+        this.<org.apache.fop.render.afp.AFPRenderer: int currentIPPosition> = 0;
+        this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition> = 0;
+        virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: void renderBlocks(org.apache.fop.area.Block,java.util.List)>(bv, children);
+        specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.AFPRenderer$ViewPortPos popViewPortPos()>();
+        specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.AFPRenderer$ViewPortPos popViewPortPos()>();
+        specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.AFPRenderer$ViewPortPos popViewPortPos()>();
+        if breakOutList == null goto label2;
+
+        virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: void restoreStateStackAfterBreakOut(java.util.List)>(breakOutList);
+
+     label2:
+        this.<org.apache.fop.render.afp.AFPRenderer: int currentIPPosition> = saveIP;
+        this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition> = saveBP;
+        goto label4;
+
+     label3:
+        $i1 = this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition>;
+        $i3 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getSpaceBefore()>();
+        $i1 = $i1 + $i3;
+        this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition> = $i1;
+        virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: void handleBlockTraits(org.apache.fop.area.Block)>(bv);
+        $i1 = this.<org.apache.fop.render.afp.AFPRenderer: int currentIPPosition>;
+        $i3 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getStartIndent()>();
+        $i1 = $i1 + $i3;
+        this.<org.apache.fop.render.afp.AFPRenderer: int currentIPPosition> = $i1;
+        $r7 = new org.apache.fop.area.CTM;
+        $i3 = this.<org.apache.fop.render.afp.AFPRenderer: int containingIPPosition>;
+        $d2 = (double) $i3;
+        $i4 = this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition>;
+        $d3 = (double) $i4;
+        specialinvoke $r7.<org.apache.fop.area.CTM: void <init>(double,double)>($d2, $d3);
+        tempctm = $r7;
+        ctm = virtualinvoke tempctm.<org.apache.fop.area.CTM: org.apache.fop.area.CTM multiply(org.apache.fop.area.CTM)>(ctm);
+        $i1 = this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition>;
+        $i1 = $i1 + borderPaddingBefore;
+        this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition> = $i1;
+        clippingRect = null;
+        $r8 = new java.awt.Rectangle;
+        $i3 = this.<org.apache.fop.render.afp.AFPRenderer: int currentIPPosition>;
+        $i2 = this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition>;
+        $i4 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getIPD()>();
+        $i5 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getBPD()>();
+        specialinvoke $r8.<java.awt.Rectangle: void <init>(int,int,int,int)>($i3, $i2, $i4, $i5);
+        clippingRect = $r8;
+        $r4 = new org.apache.fop.render.afp.AFPRenderer$ViewPortPos;
+        specialinvoke $r4.<org.apache.fop.render.afp.AFPRenderer$ViewPortPos: void <init>(org.apache.fop.render.afp.AFPRenderer,java.awt.geom.Rectangle2D,org.apache.fop.area.CTM,org.apache.fop.render.afp.AFPRenderer$1)>(this, clippingRect, ctm, null);
+        specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: void pushViewPortPos(org.apache.fop.render.afp.AFPRenderer$ViewPortPos)>($r4);
+        this.<org.apache.fop.render.afp.AFPRenderer: int currentIPPosition> = 0;
+        this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition> = 0;
+        virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: void renderBlocks(org.apache.fop.area.Block,java.util.List)>(bv, children);
+        specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.AFPRenderer$ViewPortPos popViewPortPos()>();
+        this.<org.apache.fop.render.afp.AFPRenderer: int currentIPPosition> = saveIP;
+        this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition> = saveBP;
+        $i1 = this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition>;
+        $i3 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getAllocBPD()>();
+        $i1 = $i1 + $i3;
+        this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition> = $i1;
+
+     label4:
+        return;
+    }
+
+    protected void renderReferenceArea(org.apache.fop.area.Block)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        org.apache.fop.area.Block block;
+        int saveIP, saveBP, $i0, $i1, $i2, $i3;
+        java.awt.geom.AffineTransform at, $r1;
+        java.awt.geom.Rectangle2D$Double contentRect, $r2;
+        org.apache.fop.area.CTM $r0;
+        java.util.List children;
+        double $d0, $d1, $d2, $d3, $d4, $d5;
+        boolean $z0;
+        org.apache.fop.render.afp.AFPRenderer$ViewPortPos $r3;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        block := @parameter0: org.apache.fop.area.Block;
+        saveIP = this.<org.apache.fop.render.afp.AFPRenderer: int currentIPPosition>;
+        saveBP = this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition>;
+        $r1 = new java.awt.geom.AffineTransform;
+        specialinvoke $r1.<java.awt.geom.AffineTransform: void <init>()>();
+        at = $r1;
+        $i0 = this.<org.apache.fop.render.afp.AFPRenderer: int currentIPPosition>;
+        $d0 = (double) $i0;
+        $i1 = this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition>;
+        $d1 = (double) $i1;
+        virtualinvoke at.<java.awt.geom.AffineTransform: void translate(double,double)>($d0, $d1);
+        $i0 = virtualinvoke block.<org.apache.fop.area.Block: int getXOffset()>();
+        $d0 = (double) $i0;
+        $i1 = virtualinvoke block.<org.apache.fop.area.Block: int getYOffset()>();
+        $d1 = (double) $i1;
+        virtualinvoke at.<java.awt.geom.AffineTransform: void translate(double,double)>($d0, $d1);
+        $i1 = virtualinvoke block.<org.apache.fop.area.Block: int getSpaceBefore()>();
+        $d1 = (double) $i1;
+        virtualinvoke at.<java.awt.geom.AffineTransform: void translate(double,double)>(0.0, $d1);
+        $z0 = virtualinvoke at.<java.awt.geom.AffineTransform: boolean isIdentity()>();
+        if $z0 != 0 goto label0;
+
+        $r2 = new java.awt.geom.Rectangle2D$Double;
+        $d2 = virtualinvoke at.<java.awt.geom.AffineTransform: double getTranslateX()>();
+        $d3 = virtualinvoke at.<java.awt.geom.AffineTransform: double getTranslateY()>();
+        $i2 = virtualinvoke block.<org.apache.fop.area.Block: int getAllocIPD()>();
+        $d4 = (double) $i2;
+        $i3 = virtualinvoke block.<org.apache.fop.area.Block: int getAllocBPD()>();
+        $d5 = (double) $i3;
+        specialinvoke $r2.<java.awt.geom.Rectangle2D$Double: void <init>(double,double,double,double)>($d2, $d3, $d4, $d5);
+        contentRect = $r2;
+        $r3 = new org.apache.fop.render.afp.AFPRenderer$ViewPortPos;
+        $r0 = new org.apache.fop.area.CTM;
+        specialinvoke $r0.<org.apache.fop.area.CTM: void <init>(java.awt.geom.AffineTransform)>(at);
+        specialinvoke $r3.<org.apache.fop.render.afp.AFPRenderer$ViewPortPos: void <init>(org.apache.fop.render.afp.AFPRenderer,java.awt.geom.Rectangle2D,org.apache.fop.area.CTM,org.apache.fop.render.afp.AFPRenderer$1)>(this, contentRect, $r0, null);
+        specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: void pushViewPortPos(org.apache.fop.render.afp.AFPRenderer$ViewPortPos)>($r3);
+
+     label0:
+        this.<org.apache.fop.render.afp.AFPRenderer: int currentIPPosition> = 0;
+        this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition> = 0;
+        virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: void handleBlockTraits(org.apache.fop.area.Block)>(block);
+        children = virtualinvoke block.<org.apache.fop.area.Block: java.util.List getChildAreas()>();
+        if children == null goto label1;
+
+        virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: void renderBlocks(org.apache.fop.area.Block,java.util.List)>(block, children);
+
+     label1:
+        $z0 = virtualinvoke at.<java.awt.geom.AffineTransform: boolean isIdentity()>();
+        if $z0 != 0 goto label2;
+
+        specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.AFPRenderer$ViewPortPos popViewPortPos()>();
+
+     label2:
+        this.<org.apache.fop.render.afp.AFPRenderer: int currentIPPosition> = saveIP;
+        this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition> = saveBP;
+        return;
+    }
+
+    protected void renderFlow(org.apache.fop.area.NormalFlow)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        org.apache.fop.area.NormalFlow flow;
+        int saveIP, saveBP, $i0, $i1, $i2, $i3;
+        java.awt.geom.AffineTransform at, $r1;
+        java.awt.geom.Rectangle2D$Double contentRect, $r2;
+        org.apache.fop.area.CTM $r0;
+        double $d0, $d1, $d2, $d3, $d4, $d5;
+        boolean $z0;
+        org.apache.fop.render.afp.AFPRenderer$ViewPortPos $r3;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        flow := @parameter0: org.apache.fop.area.NormalFlow;
+        saveIP = this.<org.apache.fop.render.afp.AFPRenderer: int currentIPPosition>;
+        saveBP = this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition>;
+        $r1 = new java.awt.geom.AffineTransform;
+        specialinvoke $r1.<java.awt.geom.AffineTransform: void <init>()>();
+        at = $r1;
+        $i0 = this.<org.apache.fop.render.afp.AFPRenderer: int currentIPPosition>;
+        $d0 = (double) $i0;
+        $i1 = this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition>;
+        $d1 = (double) $i1;
+        virtualinvoke at.<java.awt.geom.AffineTransform: void translate(double,double)>($d0, $d1);
+        $z0 = virtualinvoke at.<java.awt.geom.AffineTransform: boolean isIdentity()>();
+        if $z0 != 0 goto label0;
+
+        $r2 = new java.awt.geom.Rectangle2D$Double;
+        $d2 = virtualinvoke at.<java.awt.geom.AffineTransform: double getTranslateX()>();
+        $d3 = virtualinvoke at.<java.awt.geom.AffineTransform: double getTranslateY()>();
+        $i2 = virtualinvoke flow.<org.apache.fop.area.NormalFlow: int getAllocIPD()>();
+        $d4 = (double) $i2;
+        $i3 = virtualinvoke flow.<org.apache.fop.area.NormalFlow: int getAllocBPD()>();
+        $d5 = (double) $i3;
+        specialinvoke $r2.<java.awt.geom.Rectangle2D$Double: void <init>(double,double,double,double)>($d2, $d3, $d4, $d5);
+        contentRect = $r2;
+        $r3 = new org.apache.fop.render.afp.AFPRenderer$ViewPortPos;
+        $r0 = new org.apache.fop.area.CTM;
+        specialinvoke $r0.<org.apache.fop.area.CTM: void <init>(java.awt.geom.AffineTransform)>(at);
+        specialinvoke $r3.<org.apache.fop.render.afp.AFPRenderer$ViewPortPos: void <init>(org.apache.fop.render.afp.AFPRenderer,java.awt.geom.Rectangle2D,org.apache.fop.area.CTM,org.apache.fop.render.afp.AFPRenderer$1)>(this, contentRect, $r0, null);
+        specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: void pushViewPortPos(org.apache.fop.render.afp.AFPRenderer$ViewPortPos)>($r3);
+
+     label0:
+        this.<org.apache.fop.render.afp.AFPRenderer: int currentIPPosition> = 0;
+        this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition> = 0;
+        specialinvoke this.<org.apache.fop.render.AbstractPathOrientedRenderer: void renderFlow(org.apache.fop.area.NormalFlow)>(flow);
+        $z0 = virtualinvoke at.<java.awt.geom.AffineTransform: boolean isIdentity()>();
+        if $z0 != 0 goto label1;
+
+        specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.AFPRenderer$ViewPortPos popViewPortPos()>();
+
+     label1:
+        this.<org.apache.fop.render.afp.AFPRenderer: int currentIPPosition> = saveIP;
+        this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition> = saveBP;
+        return;
+    }
+
+    protected void concatenateTransformationMatrix(java.awt.geom.AffineTransform)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        java.awt.geom.AffineTransform at;
+        java.lang.UnsupportedOperationException $r0;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        at := @parameter0: java.awt.geom.AffineTransform;
+        $r0 = new java.lang.UnsupportedOperationException;
+        specialinvoke $r0.<java.lang.UnsupportedOperationException: void <init>(java.lang.String)>("NYI");
+        throw $r0;
+    }
+
+    public void renderPage(org.apache.fop.area.PageViewport)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        org.apache.fop.area.PageViewport pageViewport;
+        java.awt.geom.Rectangle2D bounds;
+        boolean pageRotation, $z0;
+        java.util.Iterator i;
+        org.apache.fop.render.afp.AFPFontAttributes afpFontAttributes;
+        java.io.IOException l4, $r11;
+        java.util.HashMap $r0;
+        double $d0;
+        int $i0, $i1, $i2, $i3, $i5;
+        java.util.Map $r1, $r3;
+        org.apache.fop.render.afp.modca.AFPDataStream $r2;
+        java.lang.Object $r4, $r9;
+        org.apache.fop.render.afp.modca.PageObject $r5;
+        org.apache.fop.render.afp.AFPRenderer$ViewPortPos $r6;
+        org.apache.fop.area.Page $r7;
+        java.util.Collection $r8;
+        byte $b4;
+        org.apache.fop.render.afp.fonts.AFPFont $r10;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        pageViewport := @parameter0: org.apache.fop.area.PageViewport;
+        this.<org.apache.fop.render.afp.AFPRenderer: int currentFontSize> = 0;
+        this.<org.apache.fop.render.afp.AFPRenderer: int pageFontCounter> = 0;
+        $r0 = this.<org.apache.fop.render.afp.AFPRenderer: java.util.HashMap currentPageFonts>;
+        virtualinvoke $r0.<java.util.HashMap: void clear()>();
+        bounds = virtualinvoke pageViewport.<org.apache.fop.area.PageViewport: java.awt.geom.Rectangle2D getViewArea()>();
+        $d0 = virtualinvoke bounds.<java.awt.geom.Rectangle2D: double getWidth()>();
+        $i0 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int mpts2units(double)>($d0);
+        this.<org.apache.fop.render.afp.AFPRenderer: int pageWidth> = $i0;
+        $d0 = virtualinvoke bounds.<java.awt.geom.Rectangle2D: double getHeight()>();
+        $i0 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int mpts2units(double)>($d0);
+        this.<org.apache.fop.render.afp.AFPRenderer: int pageHeight> = $i0;
+        $r1 = this.<org.apache.fop.render.afp.AFPRenderer: java.util.Map pages>;
+        if $r1 == null goto label0;
+
+        $r1 = this.<org.apache.fop.render.afp.AFPRenderer: java.util.Map pages>;
+        $z0 = interfaceinvoke $r1.<java.util.Map: boolean containsKey(java.lang.Object)>(pageViewport);
+        if $z0 == 0 goto label0;
+
+        $r2 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $r3 = this.<org.apache.fop.render.afp.AFPRenderer: java.util.Map pages>;
+        $r4 = interfaceinvoke $r3.<java.util.Map: java.lang.Object remove(java.lang.Object)>(pageViewport);
+        $r5 = (org.apache.fop.render.afp.modca.PageObject) $r4;
+        virtualinvoke $r2.<org.apache.fop.render.afp.modca.AFPDataStream: void restorePage(org.apache.fop.render.afp.modca.PageObject)>($r5);
+        goto label1;
+
+     label0:
+        pageRotation = 0;
+        $r2 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $i0 = this.<org.apache.fop.render.afp.AFPRenderer: int pageWidth>;
+        $i1 = this.<org.apache.fop.render.afp.AFPRenderer: int pageHeight>;
+        $i2 = virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: int getResolution()>();
+        $i3 = virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: int getResolution()>();
+        virtualinvoke $r2.<org.apache.fop.render.afp.modca.AFPDataStream: void startPage(int,int,int,int,int)>($i0, $i1, 0, $i2, $i3);
+        specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: void renderPageObjectExtensions(org.apache.fop.area.PageViewport)>(pageViewport);
+
+     label1:
+        $r6 = new org.apache.fop.render.afp.AFPRenderer$ViewPortPos;
+        specialinvoke $r6.<org.apache.fop.render.afp.AFPRenderer$ViewPortPos: void <init>(org.apache.fop.render.afp.AFPRenderer,org.apache.fop.render.afp.AFPRenderer$1)>(this, null);
+        specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: void pushViewPortPos(org.apache.fop.render.afp.AFPRenderer$ViewPortPos)>($r6);
+        $r7 = virtualinvoke pageViewport.<org.apache.fop.area.PageViewport: org.apache.fop.area.Page getPage()>();
+        virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: void renderPageAreas(org.apache.fop.area.Page)>($r7);
+        $r0 = this.<org.apache.fop.render.afp.AFPRenderer: java.util.HashMap currentPageFonts>;
+        $r8 = virtualinvoke $r0.<java.util.HashMap: java.util.Collection values()>();
+        i = interfaceinvoke $r8.<java.util.Collection: java.util.Iterator iterator()>();
+
+     label2:
+        $z0 = interfaceinvoke i.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label3;
+
+        $r9 = interfaceinvoke i.<java.util.Iterator: java.lang.Object next()>();
+        afpFontAttributes = (org.apache.fop.render.afp.AFPFontAttributes) $r9;
+        $r2 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $i0 = virtualinvoke afpFontAttributes.<org.apache.fop.render.afp.AFPFontAttributes: int getFontReference()>();
+        $b4 = (byte) $i0;
+        $r10 = virtualinvoke afpFontAttributes.<org.apache.fop.render.afp.AFPFontAttributes: org.apache.fop.render.afp.fonts.AFPFont getFont()>();
+        $i5 = virtualinvoke afpFontAttributes.<org.apache.fop.render.afp.AFPFontAttributes: int getPointSize()>();
+        virtualinvoke $r2.<org.apache.fop.render.afp.modca.AFPDataStream: void createFont(byte,org.apache.fop.render.afp.fonts.AFPFont,int)>($b4, $r10, $i5);
+        goto label2;
+
+     label3:
+        $r2 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        virtualinvoke $r2.<org.apache.fop.render.afp.modca.AFPDataStream: void endPage()>();
+
+     label4:
+        goto label6;
+
+     label5:
+        $r11 := @caughtexception;
+        l4 = $r11;
+
+     label6:
+        specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.AFPRenderer$ViewPortPos popViewPortPos()>();
+        return;
+
+        catch java.io.IOException from label3 to label4 with label5;
+    }
+
+    public void clip()
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        return;
+    }
+
+    public void clipRect(float, float, float, float)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        float x, y, width, height;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        x := @parameter0: float;
+        y := @parameter1: float;
+        width := @parameter2: float;
+        height := @parameter3: float;
+        return;
+    }
+
+    public void moveTo(float, float)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        float x, y;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        x := @parameter0: float;
+        y := @parameter1: float;
+        return;
+    }
+
+    public void lineTo(float, float)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        float x, y;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        x := @parameter0: float;
+        y := @parameter1: float;
+        return;
+    }
+
+    public void closePath()
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        return;
+    }
+
+    public void fillRect(float, float, float, float)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        float x, y, width, height, $f0;
+        org.apache.fop.render.afp.modca.AFPDataStream $r0;
+        int $i0, $i1, $i2, $i3, $i4;
+        java.awt.Color $r1;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        x := @parameter0: float;
+        y := @parameter1: float;
+        width := @parameter2: float;
+        height := @parameter3: float;
+        $r0 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $i0 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(x);
+        $i1 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(y);
+        $f0 = x + width;
+        $i2 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>($f0);
+        $i3 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(y);
+        $i4 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(height);
+        $r1 = this.<org.apache.fop.render.afp.AFPRenderer: java.awt.Color currentColor>;
+        virtualinvoke $r0.<org.apache.fop.render.afp.modca.AFPDataStream: void createLine(int,int,int,int,int,java.awt.Color)>($i0, $i1, $i2, $i3, $i4, $r1);
+        return;
+    }
+
+    public void drawBorderLine(float, float, float, float, boolean, boolean, int, java.awt.Color)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        float x1, y1, x2, y2, w, h, h3, ym1, ym2, w3, xm1, xm2, w2, h2, colFactor, $f0, $f1, $f2, $f3, $f4, $f5, $f6;
+        boolean horz, startOrBefore;
+        int style, $i1, $i2, $i3, $i4, $i5;
+        java.awt.Color col, uppercol, lowercol, leftcol, rightcol;
+        byte $b0;
+        org.apache.commons.logging.Log $r0;
+        org.apache.fop.render.afp.modca.AFPDataStream $r1;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        x1 := @parameter0: float;
+        y1 := @parameter1: float;
+        x2 := @parameter2: float;
+        y2 := @parameter3: float;
+        horz := @parameter4: boolean;
+        startOrBefore := @parameter5: boolean;
+        style := @parameter6: int;
+        col := @parameter7: java.awt.Color;
+        w = x2 - x1;
+        h = y2 - y1;
+        $b0 = w cmpg 0.0F;
+        if $b0 < 0 goto label0;
+
+        $b0 = h cmpg 0.0F;
+        if $b0 >= 0 goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.render.afp.AFPRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void error(java.lang.Object)>("Negative extent received. Border won\'t be painted.");
+        return;
+
+     label1:
+        lookupswitch(style)
+        {
+            case 31: goto label4;
+            case 36: goto label10;
+            case 37: goto label2;
+            case 55: goto label13;
+            case 57: goto label17;
+            case 67: goto label18;
+            case 101: goto label18;
+            case 119: goto label13;
+            default: goto label18;
+        };
+
+     label2:
+        if horz == 0 goto label3;
+
+        h3 = h / 3.0F;
+        ym1 = y1;
+        $f0 = ym1 + h3;
+        ym2 = $f0 + h3;
+        $r1 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $i1 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(x1);
+        $i2 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(ym1);
+        $i3 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(x2);
+        $i4 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(ym1);
+        $i5 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(h3);
+        virtualinvoke $r1.<org.apache.fop.render.afp.modca.AFPDataStream: void createLine(int,int,int,int,int,java.awt.Color)>($i1, $i2, $i3, $i4, $i5, col);
+        $r1 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $i1 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(x1);
+        $i2 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(ym2);
+        $i3 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(x2);
+        $i4 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(ym2);
+        $i5 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(h3);
+        virtualinvoke $r1.<org.apache.fop.render.afp.modca.AFPDataStream: void createLine(int,int,int,int,int,java.awt.Color)>($i1, $i2, $i3, $i4, $i5, col);
+        goto label25;
+
+     label3:
+        w3 = w / 3.0F;
+        xm1 = x1;
+        $f0 = xm1 + w3;
+        xm2 = $f0 + w3;
+        $r1 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $i1 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(xm1);
+        $i2 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(y1);
+        $i3 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(xm1);
+        $i4 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(y2);
+        $i5 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(w3);
+        virtualinvoke $r1.<org.apache.fop.render.afp.modca.AFPDataStream: void createLine(int,int,int,int,int,java.awt.Color)>($i1, $i2, $i3, $i4, $i5, col);
+        $r1 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $i1 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(xm2);
+        $i2 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(y1);
+        $i3 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(xm2);
+        $i4 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(y2);
+        $i5 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(w3);
+        virtualinvoke $r1.<org.apache.fop.render.afp.modca.AFPDataStream: void createLine(int,int,int,int,int,java.awt.Color)>($i1, $i2, $i3, $i4, $i5, col);
+        goto label25;
+
+     label4:
+        if horz == 0 goto label7;
+
+        w2 = 2.0F * h;
+
+     label5:
+        $f0 = x1 + w2;
+        $b0 = $f0 cmpg x2;
+        if $b0 >= 0 goto label6;
+
+        $r1 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $i1 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(x1);
+        $i2 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(y1);
+        $f1 = x1 + w2;
+        $i3 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>($f1);
+        $i4 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(y1);
+        $i5 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(h);
+        virtualinvoke $r1.<org.apache.fop.render.afp.modca.AFPDataStream: void createLine(int,int,int,int,int,java.awt.Color)>($i1, $i2, $i3, $i4, $i5, col);
+        $f2 = 2.0F * w2;
+        x1 = x1 + $f2;
+        goto label5;
+
+     label6:
+        goto label25;
+
+     label7:
+        h2 = 2.0F * w;
+
+     label8:
+        $f0 = y1 + h2;
+        $b0 = $f0 cmpg y2;
+        if $b0 >= 0 goto label9;
+
+        $r1 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $i1 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(x1);
+        $i2 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(y1);
+        $i3 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(x1);
+        $f3 = y1 + h2;
+        $i4 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>($f3);
+        $i5 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(w);
+        virtualinvoke $r1.<org.apache.fop.render.afp.modca.AFPDataStream: void createLine(int,int,int,int,int,java.awt.Color)>($i1, $i2, $i3, $i4, $i5, col);
+        $f2 = 2.0F * h2;
+        y1 = y1 + $f2;
+        goto label8;
+
+     label9:
+        goto label25;
+
+     label10:
+        if horz == 0 goto label12;
+
+     label11:
+        $f0 = x1 + h;
+        $b0 = $f0 cmpg x2;
+        if $b0 >= 0 goto label25;
+
+        $r1 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $i1 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(x1);
+        $i2 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(y1);
+        $f1 = x1 + h;
+        $i3 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>($f1);
+        $i4 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(y1);
+        $i5 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(h);
+        virtualinvoke $r1.<org.apache.fop.render.afp.modca.AFPDataStream: void createLine(int,int,int,int,int,java.awt.Color)>($i1, $i2, $i3, $i4, $i5, col);
+        $f2 = 2.0F * h;
+        x1 = x1 + $f2;
+        goto label11;
+
+     label12:
+        $f0 = y1 + w;
+        $b0 = $f0 cmpg y2;
+        if $b0 >= 0 goto label25;
+
+        $r1 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $i1 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(x1);
+        $i2 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(y1);
+        $i3 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(x1);
+        $f3 = y1 + w;
+        $i4 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>($f3);
+        $i5 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(w);
+        virtualinvoke $r1.<org.apache.fop.render.afp.modca.AFPDataStream: void createLine(int,int,int,int,int,java.awt.Color)>($i1, $i2, $i3, $i4, $i5, col);
+        $f2 = 2.0F * w;
+        y1 = y1 + $f2;
+        goto label12;
+
+     label13:
+        if style != 55 goto label14;
+
+        $f0 = 0.4F;
+        goto label15;
+
+     label14:
+        $f0 = -0.4F;
+
+     label15:
+        colFactor = $f0;
+        if horz == 0 goto label16;
+
+        $f2 = neg colFactor;
+        uppercol = staticinvoke <org.apache.fop.render.afp.AFPRenderer: java.awt.Color lightenColor(java.awt.Color,float)>(col, $f2);
+        lowercol = staticinvoke <org.apache.fop.render.afp.AFPRenderer: java.awt.Color lightenColor(java.awt.Color,float)>(col, colFactor);
+        h3 = h / 3.0F;
+        ym1 = y1;
+        $r1 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $i1 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(x1);
+        $i2 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(ym1);
+        $i3 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(x2);
+        $i4 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(ym1);
+        $i5 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(h3);
+        virtualinvoke $r1.<org.apache.fop.render.afp.modca.AFPDataStream: void createLine(int,int,int,int,int,java.awt.Color)>($i1, $i2, $i3, $i4, $i5, uppercol);
+        $r1 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $i1 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(x1);
+        $f4 = ym1 + h3;
+        $i2 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>($f4);
+        $i3 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(x2);
+        $f3 = ym1 + h3;
+        $i4 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>($f3);
+        $i5 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(h3);
+        virtualinvoke $r1.<org.apache.fop.render.afp.modca.AFPDataStream: void createLine(int,int,int,int,int,java.awt.Color)>($i1, $i2, $i3, $i4, $i5, col);
+        $r1 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $i1 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(x1);
+        $f4 = ym1 + h3;
+        $f4 = $f4 + h3;
+        $i2 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>($f4);
+        $i3 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(x2);
+        $f3 = ym1 + h3;
+        $f3 = $f3 + h3;
+        $i4 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>($f3);
+        $i5 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(h3);
+        virtualinvoke $r1.<org.apache.fop.render.afp.modca.AFPDataStream: void createLine(int,int,int,int,int,java.awt.Color)>($i1, $i2, $i3, $i4, $i5, lowercol);
+        goto label25;
+
+     label16:
+        $f2 = neg colFactor;
+        leftcol = staticinvoke <org.apache.fop.render.afp.AFPRenderer: java.awt.Color lightenColor(java.awt.Color,float)>(col, $f2);
+        rightcol = staticinvoke <org.apache.fop.render.afp.AFPRenderer: java.awt.Color lightenColor(java.awt.Color,float)>(col, colFactor);
+        w3 = w / 3.0F;
+        $f2 = w3 / 2.0F;
+        xm1 = x1 + $f2;
+        $r1 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $i1 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(xm1);
+        $i2 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(y1);
+        $i3 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(xm1);
+        $i4 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(y2);
+        $i5 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(w3);
+        virtualinvoke $r1.<org.apache.fop.render.afp.modca.AFPDataStream: void createLine(int,int,int,int,int,java.awt.Color)>($i1, $i2, $i3, $i4, $i5, leftcol);
+        $r1 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $f5 = xm1 + w3;
+        $i1 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>($f5);
+        $i2 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(y1);
+        $f1 = xm1 + w3;
+        $i3 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>($f1);
+        $i4 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(y2);
+        $i5 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(w3);
+        virtualinvoke $r1.<org.apache.fop.render.afp.modca.AFPDataStream: void createLine(int,int,int,int,int,java.awt.Color)>($i1, $i2, $i3, $i4, $i5, col);
+        $r1 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $f5 = xm1 + w3;
+        $f5 = $f5 + w3;
+        $i1 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>($f5);
+        $i2 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(y1);
+        $f1 = xm1 + w3;
+        $f1 = $f1 + w3;
+        $i3 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>($f1);
+        $i4 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(y2);
+        $i5 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(w3);
+        virtualinvoke $r1.<org.apache.fop.render.afp.modca.AFPDataStream: void createLine(int,int,int,int,int,java.awt.Color)>($i1, $i2, $i3, $i4, $i5, rightcol);
+        goto label25;
+
+     label17:
+        goto label25;
+
+     label18:
+        $r1 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $i1 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(x1);
+        $i2 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>(y1);
+        if horz == 0 goto label19;
+
+        $f1 = x2;
+        goto label20;
+
+     label19:
+        $f1 = x1;
+
+     label20:
+        $i3 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>($f1);
+        if horz == 0 goto label21;
+
+        $f3 = y1;
+        goto label22;
+
+     label21:
+        $f3 = y2;
+
+     label22:
+        $i4 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>($f3);
+        if horz == 0 goto label23;
+
+        $f6 = y2 - y1;
+        goto label24;
+
+     label23:
+        $f6 = x2 - x1;
+
+     label24:
+        $f6 = staticinvoke <java.lang.Math: float abs(float)>($f6);
+        $i5 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int pts2units(float)>($f6);
+        virtualinvoke $r1.<org.apache.fop.render.afp.modca.AFPDataStream: void createLine(int,int,int,int,int,java.awt.Color)>($i1, $i2, $i3, $i4, $i5, col);
+
+     label25:
+        return;
+    }
+
+    protected org.apache.fop.render.RendererContext createRendererContext(int, int, int, int, java.util.Map)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        int x, y, width, height;
+        java.util.Map foreignAttributes;
+        org.apache.fop.render.RendererContext context;
+        java.lang.String $r1;
+        java.lang.Boolean $r2;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        x := @parameter0: int;
+        y := @parameter1: int;
+        width := @parameter2: int;
+        height := @parameter3: int;
+        foreignAttributes := @parameter4: java.util.Map;
+        context = specialinvoke this.<org.apache.fop.render.AbstractPathOrientedRenderer: org.apache.fop.render.RendererContext createRendererContext(int,int,int,int,java.util.Map)>(x, y, width, height, foreignAttributes);
+        $r1 = "afpGrayscale";
+        $r2 = new java.lang.Boolean;
+        $z0 = this.<org.apache.fop.render.afp.AFPRenderer: boolean colorImages>;
+        if $z0 != 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        specialinvoke $r2.<java.lang.Boolean: void <init>(boolean)>($z0);
+        virtualinvoke context.<org.apache.fop.render.RendererContext: void setProperty(java.lang.String,java.lang.Object)>($r1, $r2);
+        return context;
+    }
+
+    public void drawImage(java.lang.String, java.awt.geom.Rectangle2D, java.util.Map)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        java.lang.String uri, name, uri, $r16, $r23;
+        java.awt.geom.Rectangle2D pos;
+        java.util.Map foreignAttributes, hints;
+        java.awt.Rectangle posInt, $r0;
+        java.awt.Point origin, $r1;
+        int x, y, afpx, afpy, afpw, afph, afpres, compression, $i0, $i1, $i2, $i3, $i4, $i5, $i6;
+        org.apache.xmlgraphics.image.loader.ImageManager manager;
+        org.apache.xmlgraphics.image.loader.ImageInfo info;
+        org.apache.xmlgraphics.image.loader.ImageSessionContext sessionContext;
+        org.apache.xmlgraphics.image.loader.Image img;
+        org.apache.xmlgraphics.image.loader.impl.ImageGraphics2D imageG2D;
+        org.apache.fop.render.RendererContext context;
+        org.apache.xmlgraphics.image.loader.impl.ImageRendered imgRend;
+        java.awt.image.RenderedImage ri;
+        org.apache.xmlgraphics.image.loader.impl.ImageRawCCITTFax ccitt;
+        org.apache.fop.render.afp.modca.ImageObject io;
+        java.io.InputStream in;
+        byte[] buf;
+        java.lang.Throwable l24, $r17;
+        org.apache.xmlgraphics.image.loader.impl.ImageXMLDOM imgXML;
+        org.apache.xmlgraphics.image.loader.ImageException ie, $r20;
+        java.io.FileNotFoundException fe, $r24;
+        java.io.IOException ioe, $r25;
+        double $d0, $d1, $d2, $d3, $d4;
+        java.util.HashMap $r2;
+        java.lang.Object $r3;
+        org.apache.fop.render.afp.modca.AFPDataStream $r4;
+        org.apache.fop.apps.FOUserAgent $r5;
+        org.apache.fop.apps.FopFactory $r6;
+        org.apache.xmlgraphics.image.loader.ImageFlavor[] $r7;
+        boolean $z0;
+        org.apache.fop.render.Graphics2DAdapter $r8;
+        org.apache.xmlgraphics.java2d.Graphics2DImagePainter $r9;
+        org.apache.xmlgraphics.image.loader.ImageSize $r10, $r11, $r12, $r13;
+        java.lang.IllegalStateException $r14;
+        java.lang.StringBuffer $r15, $r22;
+        org.w3c.dom.Document $r18;
+        java.lang.UnsupportedOperationException $r19;
+        org.apache.commons.logging.Log $r21;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        uri := @parameter0: java.lang.String;
+        pos := @parameter1: java.awt.geom.Rectangle2D;
+        foreignAttributes := @parameter2: java.util.Map;
+        uri = staticinvoke <org.apache.fop.datatypes.URISpecification: java.lang.String getURL(java.lang.String)>(uri);
+        $r0 = new java.awt.Rectangle;
+        $d0 = virtualinvoke pos.<java.awt.geom.Rectangle2D: double getX()>();
+        $i0 = (int) $d0;
+        $d1 = virtualinvoke pos.<java.awt.geom.Rectangle2D: double getY()>();
+        $i1 = (int) $d1;
+        $d2 = virtualinvoke pos.<java.awt.geom.Rectangle2D: double getWidth()>();
+        $i2 = (int) $d2;
+        $d3 = virtualinvoke pos.<java.awt.geom.Rectangle2D: double getHeight()>();
+        $i3 = (int) $d3;
+        specialinvoke $r0.<java.awt.Rectangle: void <init>(int,int,int,int)>($i0, $i1, $i2, $i3);
+        posInt = $r0;
+        $r1 = new java.awt.Point;
+        $i0 = this.<org.apache.fop.render.afp.AFPRenderer: int currentIPPosition>;
+        $i1 = this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition>;
+        specialinvoke $r1.<java.awt.Point: void <init>(int,int)>($i0, $i1);
+        origin = $r1;
+        $i4 = origin.<java.awt.Point: int x>;
+        $i5 = posInt.<java.awt.Rectangle: int x>;
+        x = $i4 + $i5;
+        $i4 = origin.<java.awt.Point: int y>;
+        $i5 = posInt.<java.awt.Rectangle: int y>;
+        y = $i4 + $i5;
+        name = null;
+        $r2 = this.<org.apache.fop.render.afp.AFPRenderer: java.util.HashMap pageSegmentsMap>;
+        if $r2 == null goto label0;
+
+        $r2 = this.<org.apache.fop.render.afp.AFPRenderer: java.util.HashMap pageSegmentsMap>;
+        $r3 = virtualinvoke $r2.<java.util.HashMap: java.lang.Object get(java.lang.Object)>(uri);
+        name = (java.lang.String) $r3;
+
+     label0:
+        if name == null goto label1;
+
+        $r4 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $i0 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int mpts2units(int)>(x);
+        $i1 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int mpts2units(int)>(y);
+        virtualinvoke $r4.<org.apache.fop.render.afp.modca.AFPDataStream: void createIncludePageSegment(java.lang.String,int,int)>(name, $i0, $i1);
+        goto label26;
+
+     label1:
+        $r5 = virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        $r6 = virtualinvoke $r5.<org.apache.fop.apps.FOUserAgent: org.apache.fop.apps.FopFactory getFactory()>();
+        manager = virtualinvoke $r6.<org.apache.fop.apps.FopFactory: org.apache.xmlgraphics.image.loader.ImageManager getImageManager()>();
+        info = null;
+
+     label2:
+        $r5 = virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        sessionContext = virtualinvoke $r5.<org.apache.fop.apps.FOUserAgent: org.apache.xmlgraphics.image.loader.ImageSessionContext getImageSessionContext()>();
+        info = virtualinvoke manager.<org.apache.xmlgraphics.image.loader.ImageManager: org.apache.xmlgraphics.image.loader.ImageInfo getImageInfo(java.lang.String,org.apache.xmlgraphics.image.loader.ImageSessionContext)>(uri, sessionContext);
+        hints = staticinvoke <org.apache.xmlgraphics.image.loader.util.ImageUtil: java.util.Map getDefaultHints(org.apache.xmlgraphics.image.loader.ImageSessionContext)>(sessionContext);
+        $r7 = <org.apache.fop.render.afp.AFPRenderer: org.apache.xmlgraphics.image.loader.ImageFlavor[] FLAVORS>;
+        img = virtualinvoke manager.<org.apache.xmlgraphics.image.loader.ImageManager: org.apache.xmlgraphics.image.loader.Image getImage(org.apache.xmlgraphics.image.loader.ImageInfo,org.apache.xmlgraphics.image.loader.ImageFlavor[],java.util.Map,org.apache.xmlgraphics.image.loader.ImageSessionContext)>(info, $r7, hints, sessionContext);
+        $z0 = img instanceof org.apache.xmlgraphics.image.loader.impl.ImageGraphics2D;
+        if $z0 == 0 goto label3;
+
+        imageG2D = (org.apache.xmlgraphics.image.loader.impl.ImageGraphics2D) img;
+        $i5 = posInt.<java.awt.Rectangle: int x>;
+        $i0 = posInt.<java.awt.Rectangle: int y>;
+        $i1 = posInt.<java.awt.Rectangle: int width>;
+        $i2 = posInt.<java.awt.Rectangle: int height>;
+        context = virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.RendererContext createRendererContext(int,int,int,int,java.util.Map)>($i5, $i0, $i1, $i2, foreignAttributes);
+        $r8 = virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.Graphics2DAdapter getGraphics2DAdapter()>();
+        $r9 = virtualinvoke imageG2D.<org.apache.xmlgraphics.image.loader.impl.ImageGraphics2D: org.apache.xmlgraphics.java2d.Graphics2DImagePainter getGraphics2DImagePainter()>();
+        $i1 = origin.<java.awt.Point: int x>;
+        $i2 = posInt.<java.awt.Rectangle: int x>;
+        $i1 = $i1 + $i2;
+        $i2 = origin.<java.awt.Point: int y>;
+        $i3 = posInt.<java.awt.Rectangle: int y>;
+        $i2 = $i2 + $i3;
+        $i3 = posInt.<java.awt.Rectangle: int width>;
+        $i6 = posInt.<java.awt.Rectangle: int height>;
+        interfaceinvoke $r8.<org.apache.fop.render.Graphics2DAdapter: void paintImage(org.apache.xmlgraphics.java2d.Graphics2DImagePainter,org.apache.fop.render.RendererContext,int,int,int,int)>($r9, context, $i1, $i2, $i3, $i6);
+        goto label18;
+
+     label3:
+        $z0 = img instanceof org.apache.xmlgraphics.image.loader.impl.ImageRendered;
+        if $z0 == 0 goto label4;
+
+        imgRend = (org.apache.xmlgraphics.image.loader.impl.ImageRendered) img;
+        ri = virtualinvoke imgRend.<org.apache.xmlgraphics.image.loader.impl.ImageRendered: java.awt.image.RenderedImage getRenderedImage()>();
+        $i0 = virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: int getResolution()>();
+        $i1 = posInt.<java.awt.Rectangle: int x>;
+        $i2 = this.<org.apache.fop.render.afp.AFPRenderer: int currentIPPosition>;
+        $i1 = $i1 + $i2;
+        $i2 = posInt.<java.awt.Rectangle: int y>;
+        $i3 = this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition>;
+        $i2 = $i2 + $i3;
+        $i3 = posInt.<java.awt.Rectangle: int width>;
+        $i6 = posInt.<java.awt.Rectangle: int height>;
+        virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: void drawBufferedImage(java.awt.image.RenderedImage,int,int,int,int,int)>(ri, $i0, $i1, $i2, $i3, $i6);
+        goto label18;
+
+     label4:
+        $z0 = img instanceof org.apache.xmlgraphics.image.loader.impl.ImageRawCCITTFax;
+        if $z0 == 0 goto label16;
+
+        ccitt = (org.apache.xmlgraphics.image.loader.impl.ImageRawCCITTFax) img;
+        $i5 = posInt.<java.awt.Rectangle: int x>;
+        $i0 = this.<org.apache.fop.render.afp.AFPRenderer: int currentIPPosition>;
+        $i5 = $i5 + $i0;
+        afpx = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int mpts2units(int)>($i5);
+        $i5 = posInt.<java.awt.Rectangle: int y>;
+        $i0 = this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition>;
+        $i5 = $i5 + $i0;
+        afpy = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int mpts2units(int)>($i5);
+        $d4 = virtualinvoke posInt.<java.awt.Rectangle: double getWidth()>();
+        afpw = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int mpts2units(double)>($d4);
+        $d4 = virtualinvoke posInt.<java.awt.Rectangle: double getHeight()>();
+        afph = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int mpts2units(double)>($d4);
+        afpres = virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: int getResolution()>();
+        $r4 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        io = virtualinvoke $r4.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.ImageObject getImageObject(int,int,int,int,int,int)>(afpx, afpy, afpw, afph, afpres, afpres);
+        $r10 = virtualinvoke ccitt.<org.apache.xmlgraphics.image.loader.impl.ImageRawCCITTFax: org.apache.xmlgraphics.image.loader.ImageSize getSize()>();
+        $d4 = virtualinvoke $r10.<org.apache.xmlgraphics.image.loader.ImageSize: double getDpiHorizontal()>();
+        $d4 = $d4 * 10.0;
+        $i5 = (int) $d4;
+        $r11 = virtualinvoke ccitt.<org.apache.xmlgraphics.image.loader.impl.ImageRawCCITTFax: org.apache.xmlgraphics.image.loader.ImageSize getSize()>();
+        $d0 = virtualinvoke $r11.<org.apache.xmlgraphics.image.loader.ImageSize: double getDpiVertical()>();
+        $d0 = $d0 * 10.0;
+        $i0 = (int) $d0;
+        $r12 = virtualinvoke ccitt.<org.apache.xmlgraphics.image.loader.impl.ImageRawCCITTFax: org.apache.xmlgraphics.image.loader.ImageSize getSize()>();
+        $i1 = virtualinvoke $r12.<org.apache.xmlgraphics.image.loader.ImageSize: int getWidthPx()>();
+        $r13 = virtualinvoke ccitt.<org.apache.xmlgraphics.image.loader.impl.ImageRawCCITTFax: org.apache.xmlgraphics.image.loader.ImageSize getSize()>();
+        $i2 = virtualinvoke $r13.<org.apache.xmlgraphics.image.loader.ImageSize: int getHeightPx()>();
+        virtualinvoke io.<org.apache.fop.render.afp.modca.ImageObject: void setImageParameters(int,int,int,int)>($i5, $i0, $i1, $i2);
+        compression = virtualinvoke ccitt.<org.apache.xmlgraphics.image.loader.impl.ImageRawCCITTFax: int getCompression()>();
+        tableswitch(compression)
+        {
+            case 2: goto label5;
+            case 3: goto label6;
+            case 4: goto label7;
+            default: goto label8;
+        };
+
+     label5:
+        virtualinvoke io.<org.apache.fop.render.afp.modca.ImageObject: void setImageEncoding(byte)>(-128);
+        goto label9;
+
+     label6:
+        virtualinvoke io.<org.apache.fop.render.afp.modca.ImageObject: void setImageEncoding(byte)>(-127);
+        goto label9;
+
+     label7:
+        virtualinvoke io.<org.apache.fop.render.afp.modca.ImageObject: void setImageEncoding(byte)>(-126);
+        goto label9;
+
+     label8:
+        $r14 = new java.lang.IllegalStateException;
+        $r15 = new java.lang.StringBuffer;
+        specialinvoke $r15.<java.lang.StringBuffer: void <init>()>();
+        $r15 = virtualinvoke $r15.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Invalid compression scheme: ");
+        $r15 = virtualinvoke $r15.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(compression);
+        $r16 = virtualinvoke $r15.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r14.<java.lang.IllegalStateException: void <init>(java.lang.String)>($r16);
+        throw $r14;
+
+     label9:
+        in = virtualinvoke ccitt.<org.apache.xmlgraphics.image.loader.impl.ImageRawCCITTFax: java.io.InputStream createInputStream()>();
+
+     label10:
+        buf = staticinvoke <org.apache.commons.io.IOUtils: byte[] toByteArray(java.io.InputStream)>(in);
+        virtualinvoke io.<org.apache.fop.render.afp.modca.ImageObject: void setImageData(byte[])>(buf);
+
+     label11:
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.InputStream)>(in);
+        goto label15;
+
+     label12:
+        $r17 := @caughtexception;
+
+     label13:
+        l24 = $r17;
+
+     label14:
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.InputStream)>(in);
+        throw l24;
+
+     label15:
+        goto label18;
+
+     label16:
+        $z0 = img instanceof org.apache.xmlgraphics.image.loader.impl.ImageXMLDOM;
+        if $z0 == 0 goto label17;
+
+        imgXML = (org.apache.xmlgraphics.image.loader.impl.ImageXMLDOM) img;
+        $r18 = virtualinvoke imgXML.<org.apache.xmlgraphics.image.loader.impl.ImageXMLDOM: org.w3c.dom.Document getDocument()>();
+        $r16 = virtualinvoke imgXML.<org.apache.xmlgraphics.image.loader.impl.ImageXMLDOM: java.lang.String getRootNamespace()>();
+        virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: void renderDocument(org.w3c.dom.Document,java.lang.String,java.awt.geom.Rectangle2D,java.util.Map)>($r18, $r16, pos, foreignAttributes);
+        goto label18;
+
+     label17:
+        $r19 = new java.lang.UnsupportedOperationException;
+        $r15 = new java.lang.StringBuffer;
+        specialinvoke $r15.<java.lang.StringBuffer: void <init>()>();
+        $r15 = virtualinvoke $r15.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unsupported image type: ");
+        $r15 = virtualinvoke $r15.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(img);
+        $r16 = virtualinvoke $r15.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r19.<java.lang.UnsupportedOperationException: void <init>(java.lang.String)>($r16);
+        throw $r19;
+
+     label18:
+        goto label26;
+
+     label19:
+        $r20 := @caughtexception;
+        ie = $r20;
+        $r21 = <org.apache.fop.render.afp.AFPRenderer: org.apache.commons.logging.Log log>;
+        $r22 = new java.lang.StringBuffer;
+        specialinvoke $r22.<java.lang.StringBuffer: void <init>()>();
+        $r22 = virtualinvoke $r22.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Error while processing image: ");
+        if info == null goto label20;
+
+        $r16 = virtualinvoke info.<org.apache.xmlgraphics.image.loader.ImageInfo: java.lang.String toString()>();
+        goto label21;
+
+     label20:
+        $r16 = uri;
+
+     label21:
+        $r22 = virtualinvoke $r22.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r16);
+        $r23 = virtualinvoke $r22.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r21.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r23, ie);
+        goto label26;
+
+     label22:
+        $r24 := @caughtexception;
+        fe = $r24;
+        $r21 = <org.apache.fop.render.afp.AFPRenderer: org.apache.commons.logging.Log log>;
+        $r23 = virtualinvoke fe.<java.io.FileNotFoundException: java.lang.String getMessage()>();
+        interfaceinvoke $r21.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r23);
+        goto label26;
+
+     label23:
+        $r25 := @caughtexception;
+        ioe = $r25;
+        $r21 = <org.apache.fop.render.afp.AFPRenderer: org.apache.commons.logging.Log log>;
+        $r22 = new java.lang.StringBuffer;
+        specialinvoke $r22.<java.lang.StringBuffer: void <init>()>();
+        $r22 = virtualinvoke $r22.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("I/O error while processing image: ");
+        if info == null goto label24;
+
+        $r16 = virtualinvoke info.<org.apache.xmlgraphics.image.loader.ImageInfo: java.lang.String toString()>();
+        goto label25;
+
+     label24:
+        $r16 = uri;
+
+     label25:
+        $r22 = virtualinvoke $r22.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r16);
+        $r23 = virtualinvoke $r22.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r21.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r23, ioe);
+
+     label26:
+        return;
+
+        catch java.lang.Throwable from label10 to label11 with label12;
+        catch java.lang.Throwable from label13 to label14 with label12;
+        catch org.apache.xmlgraphics.image.loader.ImageException from label2 to label18 with label19;
+        catch java.io.FileNotFoundException from label2 to label18 with label22;
+        catch java.io.IOException from label2 to label18 with label23;
+    }
+
+    public static void writeImage(java.awt.image.RenderedImage, java.io.OutputStream) throws java.io.IOException
+    {
+        java.awt.image.RenderedImage image;
+        java.io.OutputStream out;
+
+        image := @parameter0: java.awt.image.RenderedImage;
+        out := @parameter1: java.io.OutputStream;
+        staticinvoke <org.apache.xmlgraphics.ps.ImageEncodingHelper: void encodeRenderedImageAsRGB(java.awt.image.RenderedImage,java.io.OutputStream)>(image, out);
+        return;
+    }
+
+    public void drawBufferedImage(java.awt.image.RenderedImage, int, int, int, int, int)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        java.awt.image.RenderedImage image;
+        int imageResolution, x, y, w, h, afpx, afpy, afpw, afph, afpres, $i0, $i1, $i2;
+        org.apache.commons.io.output.ByteArrayOutputStream baout, $r0;
+        byte[] buf;
+        org.apache.fop.render.afp.modca.ImageObject io;
+        java.io.IOException ioe, $r2;
+        org.apache.fop.render.afp.modca.AFPDataStream $r1;
+        boolean $z0;
+        org.apache.commons.logging.Log $r3;
+        java.lang.StringBuffer $r4;
+        java.lang.String $r5, $r6;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        image := @parameter0: java.awt.image.RenderedImage;
+        imageResolution := @parameter1: int;
+        x := @parameter2: int;
+        y := @parameter3: int;
+        w := @parameter4: int;
+        h := @parameter5: int;
+        afpx = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int mpts2units(int)>(x);
+        afpy = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int mpts2units(int)>(y);
+        afpw = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int mpts2units(int)>(w);
+        afph = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int mpts2units(int)>(h);
+        afpres = virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: int getResolution()>();
+        $r0 = new org.apache.commons.io.output.ByteArrayOutputStream;
+        specialinvoke $r0.<org.apache.commons.io.output.ByteArrayOutputStream: void <init>()>();
+        baout = $r0;
+
+     label0:
+        staticinvoke <org.apache.fop.render.afp.AFPRenderer: void writeImage(java.awt.image.RenderedImage,java.io.OutputStream)>(image, baout);
+        buf = virtualinvoke baout.<org.apache.commons.io.output.ByteArrayOutputStream: byte[] toByteArray()>();
+        $r1 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        io = virtualinvoke $r1.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.ImageObject getImageObject(int,int,int,int,int,int)>(afpx, afpy, afpw, afph, afpres, afpres);
+        $i0 = interfaceinvoke image.<java.awt.image.RenderedImage: int getWidth()>();
+        $i1 = interfaceinvoke image.<java.awt.image.RenderedImage: int getHeight()>();
+        virtualinvoke io.<org.apache.fop.render.afp.modca.ImageObject: void setImageParameters(int,int,int,int)>(imageResolution, imageResolution, $i0, $i1);
+        $z0 = this.<org.apache.fop.render.afp.AFPRenderer: boolean colorImages>;
+        if $z0 == 0 goto label1;
+
+        virtualinvoke io.<org.apache.fop.render.afp.modca.ImageObject: void setImageIDESize(byte)>(24);
+        virtualinvoke io.<org.apache.fop.render.afp.modca.ImageObject: void setImageData(byte[])>(buf);
+        goto label2;
+
+     label1:
+        $i2 = interfaceinvoke image.<java.awt.image.RenderedImage: int getWidth()>();
+        $i0 = interfaceinvoke image.<java.awt.image.RenderedImage: int getHeight()>();
+        $i1 = this.<org.apache.fop.render.afp.AFPRenderer: int bitsPerPixel>;
+        staticinvoke <org.apache.fop.render.afp.AFPRenderer: void convertToGrayScaleImage(org.apache.fop.render.afp.modca.ImageObject,byte[],int,int,int)>(io, buf, $i2, $i0, $i1);
+
+     label2:
+        goto label4;
+
+     label3:
+        $r2 := @caughtexception;
+        ioe = $r2;
+        $r3 = <org.apache.fop.render.afp.AFPRenderer: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Error while serializing bitmap: ");
+        $r5 = virtualinvoke ioe.<java.io.IOException: java.lang.String getMessage()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r6 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r6, ioe);
+
+     label4:
+        return;
+
+        catch java.io.IOException from label0 to label2 with label3;
+    }
+
+    public void updateColor(java.awt.Color, boolean)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        java.awt.Color col;
+        boolean fill;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        col := @parameter0: java.awt.Color;
+        fill := @parameter1: boolean;
+        if fill == 0 goto label0;
+
+        this.<org.apache.fop.render.afp.AFPRenderer: java.awt.Color currentColor> = col;
+
+     label0:
+        return;
+    }
+
+    public java.util.List breakOutOfStateStack()
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        org.apache.commons.logging.Log $r0;
+        java.util.ArrayList breakOutList, $r1;
+        java.util.List $r2;
+        int $i0;
+        org.apache.fop.render.afp.AFPRenderer$ViewPortPos $r3;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        $r0 = <org.apache.fop.render.afp.AFPRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("Block.FIXED --> break out");
+        $r1 = new java.util.ArrayList;
+        specialinvoke $r1.<java.util.ArrayList: void <init>()>();
+        breakOutList = $r1;
+
+     label0:
+        $r2 = this.<org.apache.fop.render.afp.AFPRenderer: java.util.List viewPortPositions>;
+        $i0 = interfaceinvoke $r2.<java.util.List: int size()>();
+        if $i0 <= 1 goto label1;
+
+        $r3 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.AFPRenderer$ViewPortPos popViewPortPos()>();
+        interfaceinvoke breakOutList.<java.util.List: void add(int,java.lang.Object)>(0, $r3);
+        goto label0;
+
+     label1:
+        return breakOutList;
+    }
+
+    public void restoreStateStackAfterBreakOut(java.util.List)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        java.util.List breakOutList;
+        org.apache.commons.logging.Log $r0;
+        int i, c;
+        org.apache.fop.render.afp.AFPRenderer$ViewPortPos vps;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        breakOutList := @parameter0: java.util.List;
+        $r0 = <org.apache.fop.render.afp.AFPRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("Block.FIXED --> restoring context after break-out");
+        i = 0;
+        c = interfaceinvoke breakOutList.<java.util.List: int size()>();
+
+     label0:
+        if i >= c goto label1;
+
+        $r1 = interfaceinvoke breakOutList.<java.util.List: java.lang.Object get(int)>(i);
+        vps = (org.apache.fop.render.afp.AFPRenderer$ViewPortPos) $r1;
+        specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: void pushViewPortPos(org.apache.fop.render.afp.AFPRenderer$ViewPortPos)>(vps);
+        i = i + 1;
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    public void saveGraphicsState()
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        return;
+    }
+
+    public void restoreGraphicsState()
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        return;
+    }
+
+    public void beginTextObject()
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        return;
+    }
+
+    public void endTextObject()
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        return;
+    }
+
+    public void renderImage(org.apache.fop.area.inline.Image, java.awt.geom.Rectangle2D)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        org.apache.fop.area.inline.Image image;
+        java.awt.geom.Rectangle2D pos;
+        java.lang.String url;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        image := @parameter0: org.apache.fop.area.inline.Image;
+        pos := @parameter1: java.awt.geom.Rectangle2D;
+        url = virtualinvoke image.<org.apache.fop.area.inline.Image: java.lang.String getURL()>();
+        virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: void drawImage(java.lang.String,java.awt.geom.Rectangle2D)>(url, pos);
+        return;
+    }
+
+    public void renderText(org.apache.fop.area.inline.TextArea)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        org.apache.fop.area.inline.TextArea text;
+        java.lang.String name, worddata, $r8, encoding, $r17;
+        java.lang.Integer $r0, $r2;
+        org.apache.fop.render.afp.fonts.AFPFont tf;
+        java.awt.Color col;
+        int vsci, rx, bl, $i0, $i1, $i2, $i3, $i4, $i5, $i6;
+        org.apache.fop.render.afp.AFPFontAttributes afpFontAttributes, $r6;
+        null_type encoding;
+        java.lang.Throwable ex, $r11;
+        java.io.UnsupportedEncodingException usee, $r16;
+        java.lang.Object $r1, $r5;
+        org.apache.fop.fonts.FontInfo $r3;
+        java.util.Map $r4;
+        java.util.HashMap $r7;
+        boolean $z0;
+        org.apache.fop.render.afp.fonts.CharacterSet $r10;
+        org.apache.commons.logging.Log $r12;
+        java.lang.StringBuffer $r13;
+        org.apache.fop.render.afp.modca.AFPDataStream $r14;
+        byte[] $r15;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        text := @parameter0: org.apache.fop.area.inline.TextArea;
+        virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: void renderInlineAreaBackAndBorders(org.apache.fop.area.inline.InlineArea)>(text);
+        name = virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: java.lang.String getInternalFontNameForArea(org.apache.fop.area.Area)>(text);
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer FONT_SIZE>;
+        $r1 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: java.lang.Object getTrait(java.lang.Object)>($r0);
+        $r2 = (java.lang.Integer) $r1;
+        $i0 = virtualinvoke $r2.<java.lang.Integer: int intValue()>();
+        this.<org.apache.fop.render.afp.AFPRenderer: int currentFontSize> = $i0;
+        $r3 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r4 = virtualinvoke $r3.<org.apache.fop.fonts.FontInfo: java.util.Map getFonts()>();
+        $r5 = interfaceinvoke $r4.<java.util.Map: java.lang.Object get(java.lang.Object)>(name);
+        tf = (org.apache.fop.render.afp.fonts.AFPFont) $r5;
+        $r2 = <org.apache.fop.area.Trait: java.lang.Integer COLOR>;
+        $r5 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: java.lang.Object getTrait(java.lang.Object)>($r2);
+        col = (java.awt.Color) $r5;
+        $i1 = this.<org.apache.fop.render.afp.AFPRenderer: int currentFontSize>;
+        $i0 = virtualinvoke tf.<org.apache.fop.render.afp.fonts.AFPFont: int getWidth(int,int)>(32, $i1);
+        $i0 = $i0 / 1000;
+        $i2 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getTextWordSpaceAdjust()>();
+        $i0 = $i0 + $i2;
+        $i2 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getTextLetterSpaceAdjust()>();
+        $i0 = $i0 + $i2;
+        vsci = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int mpts2units(int)>($i0);
+        $i3 = this.<org.apache.fop.render.afp.AFPRenderer: int currentIPPosition>;
+        $i0 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getBorderAndPaddingWidthStart()>();
+        rx = $i3 + $i0;
+        $i3 = this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition>;
+        $i0 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getOffset()>();
+        $i3 = $i3 + $i0;
+        $i0 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getBaselineOffset()>();
+        bl = $i3 + $i0;
+        worddata = virtualinvoke text.<org.apache.fop.area.inline.TextArea: java.lang.String getText()>();
+        $r6 = new org.apache.fop.render.afp.AFPFontAttributes;
+        $i4 = this.<org.apache.fop.render.afp.AFPRenderer: int currentFontSize>;
+        specialinvoke $r6.<org.apache.fop.render.afp.AFPFontAttributes: void <init>(java.lang.String,org.apache.fop.render.afp.fonts.AFPFont,int)>(name, tf, $i4);
+        afpFontAttributes = $r6;
+        $r7 = this.<org.apache.fop.render.afp.AFPRenderer: java.util.HashMap currentPageFonts>;
+        $r8 = virtualinvoke afpFontAttributes.<org.apache.fop.render.afp.AFPFontAttributes: java.lang.String getFontKey()>();
+        $z0 = virtualinvoke $r7.<java.util.HashMap: boolean containsKey(java.lang.Object)>($r8);
+        if $z0 != 0 goto label0;
+
+        $i0 = this.<org.apache.fop.render.afp.AFPRenderer: int pageFontCounter>;
+        $i0 = $i0 + 1;
+        this.<org.apache.fop.render.afp.AFPRenderer: int pageFontCounter> = $i0;
+        $i0 = this.<org.apache.fop.render.afp.AFPRenderer: int pageFontCounter>;
+        virtualinvoke afpFontAttributes.<org.apache.fop.render.afp.AFPFontAttributes: void setFontReference(int)>($i0);
+        $r7 = this.<org.apache.fop.render.afp.AFPRenderer: java.util.HashMap currentPageFonts>;
+        $r8 = virtualinvoke afpFontAttributes.<org.apache.fop.render.afp.AFPFontAttributes: java.lang.String getFontKey()>();
+        virtualinvoke $r7.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>($r8, afpFontAttributes);
+        goto label1;
+
+     label0:
+        $r7 = this.<org.apache.fop.render.afp.AFPRenderer: java.util.HashMap currentPageFonts>;
+        $r8 = virtualinvoke afpFontAttributes.<org.apache.fop.render.afp.AFPFontAttributes: java.lang.String getFontKey()>();
+        $r5 = virtualinvoke $r7.<java.util.HashMap: java.lang.Object get(java.lang.Object)>($r8);
+        afpFontAttributes = (org.apache.fop.render.afp.AFPFontAttributes) $r5;
+
+     label1:
+        encoding = null;
+
+     label2:
+        $i0 = this.<org.apache.fop.render.afp.AFPRenderer: int currentFontSize>;
+        $r10 = virtualinvoke tf.<org.apache.fop.render.afp.fonts.AFPFont: org.apache.fop.render.afp.fonts.CharacterSet getCharacterSet(int)>($i0);
+        encoding = virtualinvoke $r10.<org.apache.fop.render.afp.fonts.CharacterSet: java.lang.String getEncoding()>();
+
+     label3:
+        goto label5;
+
+     label4:
+        $r11 := @caughtexception;
+        ex = $r11;
+        encoding = "Cp1146";
+        $r12 = <org.apache.fop.render.afp.AFPRenderer: org.apache.commons.logging.Log log>;
+        $r13 = new java.lang.StringBuffer;
+        specialinvoke $r13.<java.lang.StringBuffer: void <init>()>();
+        $r13 = virtualinvoke $r13.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("renderText():: Error getting encoding for font  - using default encoding ");
+        $r13 = virtualinvoke $r13.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(encoding);
+        $r8 = virtualinvoke $r13.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r12.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r8);
+
+     label5:
+        $r14 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $i0 = virtualinvoke afpFontAttributes.<org.apache.fop.render.afp.AFPFontAttributes: int getFontReference()>();
+        $i2 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int mpts2units(int)>(rx);
+        $i1 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int mpts2units(int)>(bl);
+        $i5 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getTextLetterSpaceAdjust()>();
+        $i6 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int mpts2units(int)>($i5);
+        $r15 = virtualinvoke worddata.<java.lang.String: byte[] getBytes(java.lang.String)>(encoding);
+        virtualinvoke $r14.<org.apache.fop.render.afp.modca.AFPDataStream: void createText(int,int,int,java.awt.Color,int,int,byte[])>($i0, $i2, $i1, col, vsci, $i6, $r15);
+
+     label6:
+        goto label8;
+
+     label7:
+        $r16 := @caughtexception;
+        usee = $r16;
+        $r12 = <org.apache.fop.render.afp.AFPRenderer: org.apache.commons.logging.Log log>;
+        $r13 = new java.lang.StringBuffer;
+        specialinvoke $r13.<java.lang.StringBuffer: void <init>()>();
+        $r13 = virtualinvoke $r13.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("renderText:: Font ");
+        $r17 = virtualinvoke afpFontAttributes.<org.apache.fop.render.afp.AFPFontAttributes: java.lang.String getFontKey()>();
+        $r13 = virtualinvoke $r13.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r17);
+        $r13 = virtualinvoke $r13.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" caused UnsupportedEncodingException");
+        $r8 = virtualinvoke $r13.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r12.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r8);
+
+     label8:
+        specialinvoke this.<org.apache.fop.render.AbstractPathOrientedRenderer: void renderText(org.apache.fop.area.inline.TextArea)>(text);
+        $i2 = this.<org.apache.fop.render.afp.AFPRenderer: int currentFontSize>;
+        virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: void renderTextDecoration(org.apache.fop.fonts.FontMetrics,int,org.apache.fop.area.inline.InlineArea,int,int)>(tf, $i2, text, bl, rx);
+        return;
+
+        catch java.lang.Throwable from label2 to label3 with label4;
+        catch java.io.UnsupportedEncodingException from label5 to label6 with label7;
+    }
+
+    public void renderWord(org.apache.fop.area.inline.WordArea)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        org.apache.fop.area.inline.WordArea word;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        word := @parameter0: org.apache.fop.area.inline.WordArea;
+        specialinvoke this.<org.apache.fop.render.AbstractPathOrientedRenderer: void renderWord(org.apache.fop.area.inline.WordArea)>(word);
+        return;
+    }
+
+    public void renderSpace(org.apache.fop.area.inline.SpaceArea)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        org.apache.fop.area.inline.SpaceArea space;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        space := @parameter0: org.apache.fop.area.inline.SpaceArea;
+        specialinvoke this.<org.apache.fop.render.AbstractPathOrientedRenderer: void renderSpace(org.apache.fop.area.inline.SpaceArea)>(space);
+        return;
+    }
+
+    public void renderLeader(org.apache.fop.area.inline.Leader)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        org.apache.fop.area.inline.Leader area;
+        int style, $i0, $i1;
+        float startx, starty, endx, ruleThickness, $f0, $f1;
+        java.awt.Color col;
+        java.lang.Integer $r0;
+        java.lang.Object $r1;
+        java.lang.UnsupportedOperationException $r2;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        area := @parameter0: org.apache.fop.area.inline.Leader;
+        virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: void renderInlineAreaBackAndBorders(org.apache.fop.area.inline.InlineArea)>(area);
+        style = virtualinvoke area.<org.apache.fop.area.inline.Leader: int getRuleStyle()>();
+        $i0 = this.<org.apache.fop.render.afp.AFPRenderer: int currentIPPosition>;
+        $i1 = virtualinvoke area.<org.apache.fop.area.inline.Leader: int getBorderAndPaddingWidthStart()>();
+        $i0 = $i0 + $i1;
+        $f0 = (float) $i0;
+        startx = $f0 / 1000.0F;
+        $i0 = this.<org.apache.fop.render.afp.AFPRenderer: int currentBPPosition>;
+        $i1 = virtualinvoke area.<org.apache.fop.area.inline.Leader: int getOffset()>();
+        $i0 = $i0 + $i1;
+        $f0 = (float) $i0;
+        starty = $f0 / 1000.0F;
+        $i0 = this.<org.apache.fop.render.afp.AFPRenderer: int currentIPPosition>;
+        $i1 = virtualinvoke area.<org.apache.fop.area.inline.Leader: int getBorderAndPaddingWidthStart()>();
+        $i0 = $i0 + $i1;
+        $i1 = virtualinvoke area.<org.apache.fop.area.inline.Leader: int getIPD()>();
+        $i0 = $i0 + $i1;
+        $f0 = (float) $i0;
+        endx = $f0 / 1000.0F;
+        $i0 = virtualinvoke area.<org.apache.fop.area.inline.Leader: int getRuleThickness()>();
+        $f0 = (float) $i0;
+        ruleThickness = $f0 / 1000.0F;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer COLOR>;
+        $r1 = virtualinvoke area.<org.apache.fop.area.inline.Leader: java.lang.Object getTrait(java.lang.Object)>($r0);
+        col = (java.awt.Color) $r1;
+        lookupswitch(style)
+        {
+            case 31: goto label0;
+            case 36: goto label0;
+            case 37: goto label0;
+            case 55: goto label0;
+            case 119: goto label0;
+            case 133: goto label0;
+            default: goto label1;
+        };
+
+     label0:
+        $f1 = starty + ruleThickness;
+        virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: void drawBorderLine(float,float,float,float,boolean,boolean,int,java.awt.Color)>(startx, starty, endx, $f1, 1, 1, style, col);
+        goto label2;
+
+     label1:
+        $r2 = new java.lang.UnsupportedOperationException;
+        specialinvoke $r2.<java.lang.UnsupportedOperationException: void <init>(java.lang.String)>("rule style not supported");
+        throw $r2;
+
+     label2:
+        specialinvoke this.<org.apache.fop.render.AbstractPathOrientedRenderer: void renderLeader(org.apache.fop.area.inline.Leader)>(area);
+        return;
+    }
+
+    public void setPortraitRotation(int)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        int rotation;
+        java.lang.IllegalArgumentException $r0;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        rotation := @parameter0: int;
+        if rotation == 0 goto label0;
+
+        if rotation == 90 goto label0;
+
+        if rotation == 180 goto label0;
+
+        if rotation != 270 goto label1;
+
+     label0:
+        this.<org.apache.fop.render.afp.AFPRenderer: int portraitRotation> = rotation;
+        goto label2;
+
+     label1:
+        $r0 = new java.lang.IllegalArgumentException;
+        specialinvoke $r0.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("The portrait rotation must be one of the values 0, 90, 180, 270");
+        throw $r0;
+
+     label2:
+        return;
+    }
+
+    public void setLandscapeRotation(int)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        int rotation;
+        java.lang.IllegalArgumentException $r0;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        rotation := @parameter0: int;
+        if rotation == 0 goto label0;
+
+        if rotation == 90 goto label0;
+
+        if rotation == 180 goto label0;
+
+        if rotation != 270 goto label1;
+
+     label0:
+        this.<org.apache.fop.render.afp.AFPRenderer: int landscapeRotation> = rotation;
+        goto label2;
+
+     label1:
+        $r0 = new java.lang.IllegalArgumentException;
+        specialinvoke $r0.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("The landscape rotation must be one of the values 0, 90, 180, 270");
+        throw $r0;
+
+     label2:
+        return;
+    }
+
+    public java.lang.String getMimeType()
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        return "application/x-afp";
+    }
+
+    private void renderPageObjectExtensions(org.apache.fop.area.PageViewport)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        org.apache.fop.area.PageViewport pageViewport;
+        java.util.Iterator i;
+        org.apache.fop.fo.extensions.ExtensionAttachment attachment;
+        org.apache.fop.render.afp.extensions.AFPPageSetup aps;
+        java.lang.String element, overlay, name, source, value, content, $r2, $r3;
+        java.util.List $r0;
+        int $i0;
+        boolean $z0;
+        java.lang.Object $r1;
+        org.apache.fop.render.afp.modca.AFPDataStream $r4;
+        java.util.HashMap $r5, $r6;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        pageViewport := @parameter0: org.apache.fop.area.PageViewport;
+        this.<org.apache.fop.render.afp.AFPRenderer: java.util.HashMap pageSegmentsMap> = null;
+        $r0 = virtualinvoke pageViewport.<org.apache.fop.area.PageViewport: java.util.List getExtensionAttachments()>();
+        if $r0 == null goto label8;
+
+        $r0 = virtualinvoke pageViewport.<org.apache.fop.area.PageViewport: java.util.List getExtensionAttachments()>();
+        $i0 = interfaceinvoke $r0.<java.util.List: int size()>();
+        if $i0 <= 0 goto label8;
+
+        $r0 = virtualinvoke pageViewport.<org.apache.fop.area.PageViewport: java.util.List getExtensionAttachments()>();
+        i = interfaceinvoke $r0.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke i.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label8;
+
+        $r1 = interfaceinvoke i.<java.util.Iterator: java.lang.Object next()>();
+        attachment = (org.apache.fop.fo.extensions.ExtensionAttachment) $r1;
+        $r2 = "apache:fop:extensions:afp";
+        $r3 = interfaceinvoke attachment.<org.apache.fop.fo.extensions.ExtensionAttachment: java.lang.String getCategory()>();
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>($r3);
+        if $z0 == 0 goto label7;
+
+        aps = (org.apache.fop.render.afp.extensions.AFPPageSetup) attachment;
+        element = virtualinvoke aps.<org.apache.fop.render.afp.extensions.AFPPageSetup: java.lang.String getElementName()>();
+        $r2 = "include-page-overlay";
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>(element);
+        if $z0 == 0 goto label2;
+
+        overlay = virtualinvoke aps.<org.apache.fop.render.afp.extensions.AFPPageSetup: java.lang.String getName()>();
+        if overlay == null goto label1;
+
+        $r4 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        virtualinvoke $r4.<org.apache.fop.render.afp.modca.AFPDataStream: void createIncludePageOverlay(java.lang.String)>(overlay);
+
+     label1:
+        goto label7;
+
+     label2:
+        $r2 = "include-page-segment";
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>(element);
+        if $z0 == 0 goto label4;
+
+        name = virtualinvoke aps.<org.apache.fop.render.afp.extensions.AFPPageSetup: java.lang.String getName()>();
+        source = virtualinvoke aps.<org.apache.fop.render.afp.extensions.AFPPageSetup: java.lang.String getValue()>();
+        $r5 = this.<org.apache.fop.render.afp.AFPRenderer: java.util.HashMap pageSegmentsMap>;
+        if $r5 != null goto label3;
+
+        $r6 = new java.util.HashMap;
+        specialinvoke $r6.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.render.afp.AFPRenderer: java.util.HashMap pageSegmentsMap> = $r6;
+
+     label3:
+        $r5 = this.<org.apache.fop.render.afp.AFPRenderer: java.util.HashMap pageSegmentsMap>;
+        virtualinvoke $r5.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>(source, name);
+        goto label7;
+
+     label4:
+        $r2 = "tag-logical-element";
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>(element);
+        if $z0 == 0 goto label6;
+
+        name = virtualinvoke aps.<org.apache.fop.render.afp.extensions.AFPPageSetup: java.lang.String getName()>();
+        value = virtualinvoke aps.<org.apache.fop.render.afp.extensions.AFPPageSetup: java.lang.String getValue()>();
+        $r5 = this.<org.apache.fop.render.afp.AFPRenderer: java.util.HashMap pageSegmentsMap>;
+        if $r5 != null goto label5;
+
+        $r6 = new java.util.HashMap;
+        specialinvoke $r6.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.render.afp.AFPRenderer: java.util.HashMap pageSegmentsMap> = $r6;
+
+     label5:
+        $r4 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        virtualinvoke $r4.<org.apache.fop.render.afp.modca.AFPDataStream: void createTagLogicalElement(java.lang.String,java.lang.String)>(name, value);
+        goto label7;
+
+     label6:
+        $r2 = "no-operation";
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>(element);
+        if $z0 == 0 goto label7;
+
+        content = virtualinvoke aps.<org.apache.fop.render.afp.extensions.AFPPageSetup: java.lang.String getContent()>();
+        if content == null goto label7;
+
+        $r4 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        virtualinvoke $r4.<org.apache.fop.render.afp.modca.AFPDataStream: void createNoOperation(java.lang.String)>(content);
+
+     label7:
+        goto label0;
+
+     label8:
+        return;
+    }
+
+    private int mpts2units(int)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        int mpt, $i0;
+        double $d0;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        mpt := @parameter0: int;
+        $d0 = (double) mpt;
+        $i0 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int mpts2units(double)>($d0);
+        return $i0;
+    }
+
+    private int pts2units(float)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        float mpt;
+        double $d0;
+        int $i0;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        mpt := @parameter0: float;
+        $d0 = (double) mpt;
+        $d0 = $d0 * 1000.0;
+        $i0 = specialinvoke this.<org.apache.fop.render.afp.AFPRenderer: int mpts2units(double)>($d0);
+        return $i0;
+    }
+
+    private int mpts2units(double)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        double mpt, $d0, $d1;
+        int $i0, $i1, $i3;
+        long $l2;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        mpt := @parameter0: double;
+        $i0 = virtualinvoke this.<org.apache.fop.render.afp.AFPRenderer: int getResolution()>();
+        $i1 = 72000 / $i0;
+        $d0 = (double) $i1;
+        $d1 = mpt / $d0;
+        $l2 = staticinvoke <java.lang.Math: long round(double)>($d1);
+        $i3 = (int) $l2;
+        return $i3;
+    }
+
+    protected static void convertToGrayScaleImage(org.apache.fop.render.afp.modca.ImageObject, byte[], int, int, int)
+    {
+        org.apache.fop.render.afp.modca.ImageObject io;
+        byte[] raw, bw;
+        int width, height, bitsPerPixel, pixelsPerByte, bytewidth, y, i, x, $i0, $i3, $i7, $i8, $i9;
+        byte ib, $b1, $b4, $b6, $b10;
+        double greyVal, $d0, $d1, $d2;
+        short $s2, $s5;
+        java.lang.UnsupportedOperationException $r0;
+        java.lang.StringBuffer $r1;
+        java.lang.String $r2;
+
+        io := @parameter0: org.apache.fop.render.afp.modca.ImageObject;
+        raw := @parameter1: byte[];
+        width := @parameter2: int;
+        height := @parameter3: int;
+        bitsPerPixel := @parameter4: int;
+        pixelsPerByte = 8 / bitsPerPixel;
+        bytewidth = width / pixelsPerByte;
+        $i0 = width % pixelsPerByte;
+        if $i0 == 0 goto label0;
+
+        bytewidth = bytewidth + 1;
+
+     label0:
+        $i0 = height * bytewidth;
+        bw = newarray (byte)[$i0];
+        y = 0;
+
+     label1:
+        if y >= height goto label11;
+
+        ib = 0;
+        $i0 = 3 * y;
+        i = $i0 * width;
+        x = 0;
+
+     label2:
+        if x >= width goto label10;
+
+        $b1 = raw[i];
+        $s2 = $b1 & 255;
+        $d0 = (double) $s2;
+        $d1 = 0.212671 * $d0;
+        $i3 = i + 1;
+        $b4 = raw[$i3];
+        $s5 = $b4 & 255;
+        $d2 = (double) $s5;
+        $d0 = 0.71516 * $d2;
+        $d1 = $d1 + $d0;
+        $i3 = i + 2;
+        $b4 = raw[$i3];
+        $s5 = $b4 & 255;
+        $d2 = (double) $s5;
+        $d0 = 0.072169 * $d2;
+        greyVal = $d1 + $d0;
+        lookupswitch(bitsPerPixel)
+        {
+            case 1: goto label3;
+            case 4: goto label4;
+            case 8: goto label5;
+            default: goto label6;
+        };
+
+     label3:
+        $b6 = greyVal cmpg 128.0;
+        if $b6 >= 0 goto label7;
+
+        $i7 = x % 8;
+        $i8 = 7 - $i7;
+        $i9 = 1 << $i8;
+        $b10 = (byte) $i9;
+        $b6 = ib | $b10;
+        ib = (byte) $b6;
+        goto label7;
+
+     label4:
+        greyVal = greyVal / 16.0;
+        $i9 = (int) greyVal;
+        $b10 = (byte) $i9;
+        $i7 = x % 2;
+        $i8 = 1 - $i7;
+        $i8 = $i8 * 4;
+        $i9 = $b10 << $i8;
+        $b10 = (byte) $i9;
+        $b6 = ib | $b10;
+        ib = (byte) $b6;
+        goto label7;
+
+     label5:
+        $i0 = (int) greyVal;
+        ib = (byte) $i0;
+        goto label7;
+
+     label6:
+        $r0 = new java.lang.UnsupportedOperationException;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unsupported bits per pixel: ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(bitsPerPixel);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r0.<java.lang.UnsupportedOperationException: void <init>(java.lang.String)>($r2);
+        throw $r0;
+
+     label7:
+        $i0 = x % pixelsPerByte;
+        $i9 = pixelsPerByte - 1;
+        if $i0 == $i9 goto label8;
+
+        $i0 = x + 1;
+        if $i0 != width goto label9;
+
+     label8:
+        $i9 = y * bytewidth;
+        $i8 = x / pixelsPerByte;
+        $i9 = $i9 + $i8;
+        bw[$i9] = ib;
+        ib = 0;
+
+     label9:
+        x = x + 1;
+        i = i + 3;
+        goto label2;
+
+     label10:
+        y = y + 1;
+        goto label1;
+
+     label11:
+        $b10 = (byte) bitsPerPixel;
+        virtualinvoke io.<org.apache.fop.render.afp.modca.ImageObject: void setImageIDESize(byte)>($b10);
+        virtualinvoke io.<org.apache.fop.render.afp.modca.ImageObject: void setImageData(byte[])>(bw);
+        return;
+    }
+
+    private void pushViewPortPos(org.apache.fop.render.afp.AFPRenderer$ViewPortPos)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        org.apache.fop.render.afp.AFPRenderer$ViewPortPos vpp;
+        java.util.List $r0;
+        org.apache.fop.render.afp.modca.AFPDataStream $r1;
+        int $i0, $i1, $i2;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        vpp := @parameter0: org.apache.fop.render.afp.AFPRenderer$ViewPortPos;
+        $r0 = this.<org.apache.fop.render.afp.AFPRenderer: java.util.List viewPortPositions>;
+        interfaceinvoke $r0.<java.util.List: boolean add(java.lang.Object)>(vpp);
+        $r1 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $i0 = staticinvoke <org.apache.fop.render.afp.AFPRenderer$ViewPortPos: int access$600(org.apache.fop.render.afp.AFPRenderer$ViewPortPos)>(vpp);
+        $i1 = staticinvoke <org.apache.fop.render.afp.AFPRenderer$ViewPortPos: int access$700(org.apache.fop.render.afp.AFPRenderer$ViewPortPos)>(vpp);
+        $i2 = staticinvoke <org.apache.fop.render.afp.AFPRenderer$ViewPortPos: int access$800(org.apache.fop.render.afp.AFPRenderer$ViewPortPos)>(vpp);
+        virtualinvoke $r1.<org.apache.fop.render.afp.modca.AFPDataStream: void setOffsets(int,int,int)>($i0, $i1, $i2);
+        return;
+    }
+
+    private org.apache.fop.render.afp.AFPRenderer$ViewPortPos popViewPortPos()
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        org.apache.fop.render.afp.AFPRenderer$ViewPortPos current, vpp;
+        java.util.List $r0, $r1;
+        int $i0, $i1, $i2, $i3;
+        java.lang.Object $r2;
+        org.apache.fop.render.afp.modca.AFPDataStream $r3;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        $r0 = this.<org.apache.fop.render.afp.AFPRenderer: java.util.List viewPortPositions>;
+        $r1 = this.<org.apache.fop.render.afp.AFPRenderer: java.util.List viewPortPositions>;
+        $i0 = interfaceinvoke $r1.<java.util.List: int size()>();
+        $i0 = $i0 - 1;
+        $r2 = interfaceinvoke $r0.<java.util.List: java.lang.Object remove(int)>($i0);
+        current = (org.apache.fop.render.afp.AFPRenderer$ViewPortPos) $r2;
+        $r0 = this.<org.apache.fop.render.afp.AFPRenderer: java.util.List viewPortPositions>;
+        $i1 = interfaceinvoke $r0.<java.util.List: int size()>();
+        if $i1 <= 0 goto label0;
+
+        $r0 = this.<org.apache.fop.render.afp.AFPRenderer: java.util.List viewPortPositions>;
+        $r1 = this.<org.apache.fop.render.afp.AFPRenderer: java.util.List viewPortPositions>;
+        $i0 = interfaceinvoke $r1.<java.util.List: int size()>();
+        $i0 = $i0 - 1;
+        $r2 = interfaceinvoke $r0.<java.util.List: java.lang.Object get(int)>($i0);
+        vpp = (org.apache.fop.render.afp.AFPRenderer$ViewPortPos) $r2;
+        $r3 = this.<org.apache.fop.render.afp.AFPRenderer: org.apache.fop.render.afp.modca.AFPDataStream afpDataStream>;
+        $i0 = staticinvoke <org.apache.fop.render.afp.AFPRenderer$ViewPortPos: int access$600(org.apache.fop.render.afp.AFPRenderer$ViewPortPos)>(vpp);
+        $i2 = staticinvoke <org.apache.fop.render.afp.AFPRenderer$ViewPortPos: int access$700(org.apache.fop.render.afp.AFPRenderer$ViewPortPos)>(vpp);
+        $i3 = staticinvoke <org.apache.fop.render.afp.AFPRenderer$ViewPortPos: int access$800(org.apache.fop.render.afp.AFPRenderer$ViewPortPos)>(vpp);
+        virtualinvoke $r3.<org.apache.fop.render.afp.modca.AFPDataStream: void setOffsets(int,int,int)>($i0, $i2, $i3);
+
+     label0:
+        return current;
+    }
+
+    public void setBitsPerPixel(int)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        int bitsPerPixel;
+        org.apache.commons.logging.Log $r0;
+        byte bitsPerPixel;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        bitsPerPixel := @parameter0: int;
+        this.<org.apache.fop.render.afp.AFPRenderer: int bitsPerPixel> = bitsPerPixel;
+        lookupswitch(bitsPerPixel)
+        {
+            case 1: goto label0;
+            case 4: goto label0;
+            case 8: goto label0;
+            default: goto label1;
+        };
+
+     label0:
+        goto label2;
+
+     label1:
+        $r0 = <org.apache.fop.render.afp.AFPRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void warn(java.lang.Object)>("Invalid bits_per_pixel value, must be 1, 4 or 8.");
+        bitsPerPixel = 8;
+
+     label2:
+        return;
+    }
+
+    public void setColorImages(boolean)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        boolean colorImages;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        colorImages := @parameter0: boolean;
+        this.<org.apache.fop.render.afp.AFPRenderer: boolean colorImages> = colorImages;
+        return;
+    }
+
+    public void setResolution(int)
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        int resolution;
+        org.apache.commons.logging.Log $r0;
+        java.lang.StringBuffer $r1;
+        boolean $z0;
+        java.lang.String $r2;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        resolution := @parameter0: int;
+        $r0 = <org.apache.fop.render.afp.AFPRenderer: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = <org.apache.fop.render.afp.AFPRenderer: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("renderer-resolution set to: ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(resolution);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("dpi");
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r2);
+
+     label0:
+        this.<org.apache.fop.render.afp.AFPRenderer: int resolution> = resolution;
+        return;
+    }
+
+    public int getResolution()
+    {
+        org.apache.fop.render.afp.AFPRenderer this;
+        int $i0;
+
+        this := @this: org.apache.fop.render.afp.AFPRenderer;
+        $i0 = this.<org.apache.fop.render.afp.AFPRenderer: int resolution>;
+        return $i0;
+    }
+
+    static java.util.List access$200(org.apache.fop.render.afp.AFPRenderer)
+    {
+        org.apache.fop.render.afp.AFPRenderer x0;
+        java.util.List $r0;
+
+        x0 := @parameter0: org.apache.fop.render.afp.AFPRenderer;
+        $r0 = x0.<org.apache.fop.render.afp.AFPRenderer: java.util.List viewPortPositions>;
+        return $r0;
+    }
+
+    static int access$300(org.apache.fop.render.afp.AFPRenderer, double)
+    {
+        org.apache.fop.render.afp.AFPRenderer x0;
+        double x1;
+        int $i0;
+
+        x0 := @parameter0: org.apache.fop.render.afp.AFPRenderer;
+        x1 := @parameter1: double;
+        $i0 = specialinvoke x0.<org.apache.fop.render.afp.AFPRenderer: int mpts2units(double)>(x1);
+        return $i0;
+    }
+
+    static int access$400(org.apache.fop.render.afp.AFPRenderer)
+    {
+        org.apache.fop.render.afp.AFPRenderer x0;
+        int $i0;
+
+        x0 := @parameter0: org.apache.fop.render.afp.AFPRenderer;
+        $i0 = x0.<org.apache.fop.render.afp.AFPRenderer: int pageWidth>;
+        return $i0;
+    }
+
+    static int access$500(org.apache.fop.render.afp.AFPRenderer)
+    {
+        org.apache.fop.render.afp.AFPRenderer x0;
+        int $i0;
+
+        x0 := @parameter0: org.apache.fop.render.afp.AFPRenderer;
+        $i0 = x0.<org.apache.fop.render.afp.AFPRenderer: int pageHeight>;
+        return $i0;
+    }
+
+    static void <clinit>()
+    {
+        org.apache.xmlgraphics.image.loader.ImageFlavor $r0;
+        org.apache.xmlgraphics.image.loader.ImageFlavor[] $r1;
+
+        $r1 = newarray (org.apache.xmlgraphics.image.loader.ImageFlavor)[5];
+        $r0 = <org.apache.xmlgraphics.image.loader.ImageFlavor: org.apache.xmlgraphics.image.loader.ImageFlavor RAW_CCITTFAX>;
+        $r1[0] = $r0;
+        $r0 = <org.apache.xmlgraphics.image.loader.ImageFlavor: org.apache.xmlgraphics.image.loader.ImageFlavor GRAPHICS2D>;
+        $r1[1] = $r0;
+        $r0 = <org.apache.xmlgraphics.image.loader.ImageFlavor: org.apache.xmlgraphics.image.loader.ImageFlavor BUFFERED_IMAGE>;
+        $r1[2] = $r0;
+        $r0 = <org.apache.xmlgraphics.image.loader.ImageFlavor: org.apache.xmlgraphics.image.loader.ImageFlavor RENDERED_IMAGE>;
+        $r1[3] = $r0;
+        $r0 = <org.apache.xmlgraphics.image.loader.ImageFlavor: org.apache.xmlgraphics.image.loader.ImageFlavor XML_DOM>;
+        $r1[4] = $r0;
+        <org.apache.fop.render.afp.AFPRenderer: org.apache.xmlgraphics.image.loader.ImageFlavor[] FLAVORS> = $r1;
+        return;
+    }
+}

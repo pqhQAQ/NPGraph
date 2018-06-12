@@ -1,0 +1,164 @@
+public abstract class org.apache.fop.layoutmgr.KnuthSequence extends java.util.ArrayList
+{
+
+    public void <init>()
+    {
+        org.apache.fop.layoutmgr.KnuthSequence this;
+
+        this := @this: org.apache.fop.layoutmgr.KnuthSequence;
+        specialinvoke this.<java.util.ArrayList: void <init>()>();
+        return;
+    }
+
+    public void <init>(java.util.List)
+    {
+        org.apache.fop.layoutmgr.KnuthSequence this;
+        java.util.List list;
+
+        this := @this: org.apache.fop.layoutmgr.KnuthSequence;
+        list := @parameter0: java.util.List;
+        specialinvoke this.<java.util.ArrayList: void <init>(java.util.Collection)>(list);
+        return;
+    }
+
+    public void startSequence()
+    {
+        org.apache.fop.layoutmgr.KnuthSequence this;
+
+        this := @this: org.apache.fop.layoutmgr.KnuthSequence;
+        return;
+    }
+
+    public abstract org.apache.fop.layoutmgr.KnuthSequence endSequence();
+
+    public abstract boolean canAppendSequence(org.apache.fop.layoutmgr.KnuthSequence);
+
+    public abstract boolean appendSequence(org.apache.fop.layoutmgr.KnuthSequence, boolean, org.apache.fop.layoutmgr.BreakElement);
+
+    public abstract boolean appendSequence(org.apache.fop.layoutmgr.KnuthSequence);
+
+    public boolean appendSequenceOrClose(org.apache.fop.layoutmgr.KnuthSequence)
+    {
+        org.apache.fop.layoutmgr.KnuthSequence this, sequence;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.KnuthSequence;
+        sequence := @parameter0: org.apache.fop.layoutmgr.KnuthSequence;
+        $z0 = virtualinvoke this.<org.apache.fop.layoutmgr.KnuthSequence: boolean appendSequence(org.apache.fop.layoutmgr.KnuthSequence)>(sequence);
+        if $z0 != 0 goto label0;
+
+        virtualinvoke this.<org.apache.fop.layoutmgr.KnuthSequence: org.apache.fop.layoutmgr.KnuthSequence endSequence()>();
+        return 0;
+
+     label0:
+        return 1;
+    }
+
+    public boolean appendSequenceOrClose(org.apache.fop.layoutmgr.KnuthSequence, boolean, org.apache.fop.layoutmgr.BreakElement)
+    {
+        org.apache.fop.layoutmgr.KnuthSequence this, sequence;
+        boolean keepTogether, $z0;
+        org.apache.fop.layoutmgr.BreakElement breakElement;
+
+        this := @this: org.apache.fop.layoutmgr.KnuthSequence;
+        sequence := @parameter0: org.apache.fop.layoutmgr.KnuthSequence;
+        keepTogether := @parameter1: boolean;
+        breakElement := @parameter2: org.apache.fop.layoutmgr.BreakElement;
+        $z0 = virtualinvoke this.<org.apache.fop.layoutmgr.KnuthSequence: boolean appendSequence(org.apache.fop.layoutmgr.KnuthSequence,boolean,org.apache.fop.layoutmgr.BreakElement)>(sequence, keepTogether, breakElement);
+        if $z0 != 0 goto label0;
+
+        virtualinvoke this.<org.apache.fop.layoutmgr.KnuthSequence: org.apache.fop.layoutmgr.KnuthSequence endSequence()>();
+        return 0;
+
+     label0:
+        return 1;
+    }
+
+    public void wrapPositions(org.apache.fop.layoutmgr.LayoutManager)
+    {
+        org.apache.fop.layoutmgr.KnuthSequence this;
+        org.apache.fop.layoutmgr.LayoutManager lm;
+        java.util.ListIterator listIter;
+        org.apache.fop.layoutmgr.ListElement element;
+        org.apache.fop.layoutmgr.NonLeafPosition $r0;
+        boolean $z0;
+        java.lang.Object $r1;
+        org.apache.fop.layoutmgr.Position $r2, $r3;
+
+        this := @this: org.apache.fop.layoutmgr.KnuthSequence;
+        lm := @parameter0: org.apache.fop.layoutmgr.LayoutManager;
+        listIter = virtualinvoke this.<org.apache.fop.layoutmgr.KnuthSequence: java.util.ListIterator listIterator()>();
+
+     label0:
+        $z0 = interfaceinvoke listIter.<java.util.ListIterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r1 = interfaceinvoke listIter.<java.util.ListIterator: java.lang.Object next()>();
+        element = (org.apache.fop.layoutmgr.ListElement) $r1;
+        $r0 = new org.apache.fop.layoutmgr.NonLeafPosition;
+        $r2 = virtualinvoke element.<org.apache.fop.layoutmgr.ListElement: org.apache.fop.layoutmgr.Position getPosition()>();
+        specialinvoke $r0.<org.apache.fop.layoutmgr.NonLeafPosition: void <init>(org.apache.fop.layoutmgr.LayoutManager,org.apache.fop.layoutmgr.Position)>(lm, $r2);
+        $r3 = interfaceinvoke lm.<org.apache.fop.layoutmgr.LayoutManager: org.apache.fop.layoutmgr.Position notifyPos(org.apache.fop.layoutmgr.Position)>($r0);
+        virtualinvoke element.<org.apache.fop.layoutmgr.ListElement: void setPosition(org.apache.fop.layoutmgr.Position)>($r3);
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    public org.apache.fop.layoutmgr.ListElement getLast()
+    {
+        org.apache.fop.layoutmgr.KnuthSequence this;
+        int idx, $i0;
+        java.lang.Object $r0;
+        org.apache.fop.layoutmgr.ListElement $r1;
+
+        this := @this: org.apache.fop.layoutmgr.KnuthSequence;
+        idx = virtualinvoke this.<org.apache.fop.layoutmgr.KnuthSequence: int size()>();
+        if idx != 0 goto label0;
+
+        return null;
+
+     label0:
+        $i0 = idx - 1;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.KnuthSequence: java.lang.Object get(int)>($i0);
+        $r1 = (org.apache.fop.layoutmgr.ListElement) $r0;
+        return $r1;
+    }
+
+    public org.apache.fop.layoutmgr.ListElement removeLast()
+    {
+        org.apache.fop.layoutmgr.KnuthSequence this;
+        int idx, $i0;
+        java.lang.Object $r0;
+        org.apache.fop.layoutmgr.ListElement $r1;
+
+        this := @this: org.apache.fop.layoutmgr.KnuthSequence;
+        idx = virtualinvoke this.<org.apache.fop.layoutmgr.KnuthSequence: int size()>();
+        if idx != 0 goto label0;
+
+        return null;
+
+     label0:
+        $i0 = idx - 1;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.KnuthSequence: java.lang.Object remove(int)>($i0);
+        $r1 = (org.apache.fop.layoutmgr.ListElement) $r0;
+        return $r1;
+    }
+
+    public org.apache.fop.layoutmgr.ListElement getElement(int)
+    {
+        org.apache.fop.layoutmgr.KnuthSequence this;
+        int index;
+        java.lang.Object $r0;
+        org.apache.fop.layoutmgr.ListElement $r1;
+
+        this := @this: org.apache.fop.layoutmgr.KnuthSequence;
+        index := @parameter0: int;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.KnuthSequence: java.lang.Object get(int)>(index);
+        $r1 = (org.apache.fop.layoutmgr.ListElement) $r0;
+        return $r1;
+    }
+
+    public abstract boolean isInlineSequence();
+}

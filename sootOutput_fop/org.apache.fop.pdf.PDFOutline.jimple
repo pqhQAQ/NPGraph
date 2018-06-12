@@ -1,0 +1,295 @@
+public class org.apache.fop.pdf.PDFOutline extends org.apache.fop.pdf.PDFObject
+{
+    private java.util.List subentries;
+    private org.apache.fop.pdf.PDFOutline parent;
+    private org.apache.fop.pdf.PDFOutline prev;
+    private org.apache.fop.pdf.PDFOutline next;
+    private org.apache.fop.pdf.PDFOutline first;
+    private org.apache.fop.pdf.PDFOutline last;
+    private int count;
+    private boolean openItem;
+    private java.lang.String title;
+    private java.lang.String actionRef;
+
+    public void <init>(java.lang.String, java.lang.String, boolean)
+    {
+        org.apache.fop.pdf.PDFOutline this;
+        java.lang.String title, action;
+        boolean openItem;
+        java.util.ArrayList $r0;
+
+        this := @this: org.apache.fop.pdf.PDFOutline;
+        title := @parameter0: java.lang.String;
+        action := @parameter1: java.lang.String;
+        openItem := @parameter2: boolean;
+        specialinvoke this.<org.apache.fop.pdf.PDFObject: void <init>()>();
+        this.<org.apache.fop.pdf.PDFOutline: boolean openItem> = 0;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.pdf.PDFOutline: java.util.List subentries> = $r0;
+        this.<org.apache.fop.pdf.PDFOutline: int count> = 0;
+        this.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline parent> = null;
+        this.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline prev> = null;
+        this.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline next> = null;
+        this.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline first> = null;
+        this.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline last> = null;
+        this.<org.apache.fop.pdf.PDFOutline: java.lang.String title> = title;
+        this.<org.apache.fop.pdf.PDFOutline: java.lang.String actionRef> = action;
+        this.<org.apache.fop.pdf.PDFOutline: boolean openItem> = openItem;
+        return;
+    }
+
+    public void setTitle(java.lang.String)
+    {
+        org.apache.fop.pdf.PDFOutline this;
+        java.lang.String t;
+
+        this := @this: org.apache.fop.pdf.PDFOutline;
+        t := @parameter0: java.lang.String;
+        this.<org.apache.fop.pdf.PDFOutline: java.lang.String title> = t;
+        return;
+    }
+
+    public void addOutline(org.apache.fop.pdf.PDFOutline)
+    {
+        org.apache.fop.pdf.PDFOutline this, outline, $r4, $r5;
+        java.util.List $r0, $r1, $r2;
+        int $i0, $i1;
+        java.lang.Object $r3;
+
+        this := @this: org.apache.fop.pdf.PDFOutline;
+        outline := @parameter0: org.apache.fop.pdf.PDFOutline;
+        $r0 = this.<org.apache.fop.pdf.PDFOutline: java.util.List subentries>;
+        $i0 = interfaceinvoke $r0.<java.util.List: int size()>();
+        if $i0 <= 0 goto label0;
+
+        $r1 = this.<org.apache.fop.pdf.PDFOutline: java.util.List subentries>;
+        $r2 = this.<org.apache.fop.pdf.PDFOutline: java.util.List subentries>;
+        $i1 = interfaceinvoke $r2.<java.util.List: int size()>();
+        $i1 = $i1 - 1;
+        $r3 = interfaceinvoke $r1.<java.util.List: java.lang.Object get(int)>($i1);
+        $r4 = (org.apache.fop.pdf.PDFOutline) $r3;
+        outline.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline prev> = $r4;
+        $r5 = outline.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline prev>;
+        $r5.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline next> = outline;
+        goto label1;
+
+     label0:
+        this.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline first> = outline;
+
+     label1:
+        $r0 = this.<org.apache.fop.pdf.PDFOutline: java.util.List subentries>;
+        interfaceinvoke $r0.<java.util.List: boolean add(java.lang.Object)>(outline);
+        outline.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline parent> = this;
+        specialinvoke this.<org.apache.fop.pdf.PDFOutline: void incrementCount()>();
+        this.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline last> = outline;
+        return;
+    }
+
+    private void incrementCount()
+    {
+        org.apache.fop.pdf.PDFOutline this, $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.pdf.PDFOutline;
+        $i0 = this.<org.apache.fop.pdf.PDFOutline: int count>;
+        $i0 = $i0 + 1;
+        this.<org.apache.fop.pdf.PDFOutline: int count> = $i0;
+        $r0 = this.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline parent>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline parent>;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFOutline: void incrementCount()>();
+
+     label0:
+        return;
+    }
+
+    protected byte[] toPDF()
+    {
+        org.apache.fop.pdf.PDFOutline this, $r3, $r5;
+        java.io.ByteArrayOutputStream $r0, bout;
+        java.io.IOException ioe, $r8;
+        java.lang.String $r1, $r6, $r7;
+        byte[] $r2, $r10;
+        java.lang.StringBuffer $r4;
+        int $i0, $i1;
+        boolean $z0;
+        org.apache.commons.logging.Log $r9;
+
+        this := @this: org.apache.fop.pdf.PDFOutline;
+        $r0 = new java.io.ByteArrayOutputStream;
+        specialinvoke $r0.<java.io.ByteArrayOutputStream: void <init>(int)>(128);
+        bout = $r0;
+
+     label0:
+        $r1 = virtualinvoke this.<org.apache.fop.pdf.PDFOutline: java.lang.String getObjectID()>();
+        $r2 = staticinvoke <org.apache.fop.pdf.PDFOutline: byte[] encode(java.lang.String)>($r1);
+        virtualinvoke bout.<java.io.ByteArrayOutputStream: void write(byte[])>($r2);
+        $r2 = staticinvoke <org.apache.fop.pdf.PDFOutline: byte[] encode(java.lang.String)>("<<");
+        virtualinvoke bout.<java.io.ByteArrayOutputStream: void write(byte[])>($r2);
+        $r3 = this.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline parent>;
+        if $r3 != null goto label1;
+
+        $r3 = this.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline first>;
+        if $r3 == null goto label8;
+
+        $r3 = this.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline last>;
+        if $r3 == null goto label8;
+
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" /First ");
+        $r5 = this.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline first>;
+        $r6 = virtualinvoke $r5.<org.apache.fop.pdf.PDFOutline: java.lang.String referencePDF()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\n");
+        $r1 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r2 = staticinvoke <org.apache.fop.pdf.PDFOutline: byte[] encode(java.lang.String)>($r1);
+        virtualinvoke bout.<java.io.ByteArrayOutputStream: void write(byte[])>($r2);
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" /Last ");
+        $r5 = this.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline last>;
+        $r6 = virtualinvoke $r5.<org.apache.fop.pdf.PDFOutline: java.lang.String referencePDF()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\n");
+        $r1 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r2 = staticinvoke <org.apache.fop.pdf.PDFOutline: byte[] encode(java.lang.String)>($r1);
+        virtualinvoke bout.<java.io.ByteArrayOutputStream: void write(byte[])>($r2);
+        goto label8;
+
+     label1:
+        $r2 = staticinvoke <org.apache.fop.pdf.PDFOutline: byte[] encode(java.lang.String)>(" /Title ");
+        virtualinvoke bout.<java.io.ByteArrayOutputStream: void write(byte[])>($r2);
+        $r6 = this.<org.apache.fop.pdf.PDFOutline: java.lang.String title>;
+        $r2 = virtualinvoke this.<org.apache.fop.pdf.PDFOutline: byte[] encodeText(java.lang.String)>($r6);
+        virtualinvoke bout.<java.io.ByteArrayOutputStream: void write(byte[])>($r2);
+        $r2 = staticinvoke <org.apache.fop.pdf.PDFOutline: byte[] encode(java.lang.String)>("\n");
+        virtualinvoke bout.<java.io.ByteArrayOutputStream: void write(byte[])>($r2);
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" /Parent ");
+        $r5 = this.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline parent>;
+        $r6 = virtualinvoke $r5.<org.apache.fop.pdf.PDFOutline: java.lang.String referencePDF()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\n");
+        $r1 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r2 = staticinvoke <org.apache.fop.pdf.PDFOutline: byte[] encode(java.lang.String)>($r1);
+        virtualinvoke bout.<java.io.ByteArrayOutputStream: void write(byte[])>($r2);
+        $r3 = this.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline prev>;
+        if $r3 == null goto label2;
+
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" /Prev ");
+        $r5 = this.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline prev>;
+        $r6 = virtualinvoke $r5.<org.apache.fop.pdf.PDFOutline: java.lang.String referencePDF()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\n");
+        $r1 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r2 = staticinvoke <org.apache.fop.pdf.PDFOutline: byte[] encode(java.lang.String)>($r1);
+        virtualinvoke bout.<java.io.ByteArrayOutputStream: void write(byte[])>($r2);
+
+     label2:
+        $r3 = this.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline next>;
+        if $r3 == null goto label3;
+
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" /Next ");
+        $r5 = this.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline next>;
+        $r6 = virtualinvoke $r5.<org.apache.fop.pdf.PDFOutline: java.lang.String referencePDF()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\n");
+        $r1 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r2 = staticinvoke <org.apache.fop.pdf.PDFOutline: byte[] encode(java.lang.String)>($r1);
+        virtualinvoke bout.<java.io.ByteArrayOutputStream: void write(byte[])>($r2);
+
+     label3:
+        $r3 = this.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline first>;
+        if $r3 == null goto label4;
+
+        $r3 = this.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline last>;
+        if $r3 == null goto label4;
+
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" /First ");
+        $r5 = this.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline first>;
+        $r6 = virtualinvoke $r5.<org.apache.fop.pdf.PDFOutline: java.lang.String referencePDF()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\n");
+        $r1 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r2 = staticinvoke <org.apache.fop.pdf.PDFOutline: byte[] encode(java.lang.String)>($r1);
+        virtualinvoke bout.<java.io.ByteArrayOutputStream: void write(byte[])>($r2);
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" /Last ");
+        $r5 = this.<org.apache.fop.pdf.PDFOutline: org.apache.fop.pdf.PDFOutline last>;
+        $r6 = virtualinvoke $r5.<org.apache.fop.pdf.PDFOutline: java.lang.String referencePDF()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\n");
+        $r1 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r2 = staticinvoke <org.apache.fop.pdf.PDFOutline: byte[] encode(java.lang.String)>($r1);
+        virtualinvoke bout.<java.io.ByteArrayOutputStream: void write(byte[])>($r2);
+
+     label4:
+        $i0 = this.<org.apache.fop.pdf.PDFOutline: int count>;
+        if $i0 <= 0 goto label7;
+
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" /Count ");
+        $z0 = this.<org.apache.fop.pdf.PDFOutline: boolean openItem>;
+        if $z0 == 0 goto label5;
+
+        $r6 = "";
+        goto label6;
+
+     label5:
+        $r6 = "-";
+
+     label6:
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $i1 = this.<org.apache.fop.pdf.PDFOutline: int count>;
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\n");
+        $r1 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r2 = staticinvoke <org.apache.fop.pdf.PDFOutline: byte[] encode(java.lang.String)>($r1);
+        virtualinvoke bout.<java.io.ByteArrayOutputStream: void write(byte[])>($r2);
+
+     label7:
+        $r7 = this.<org.apache.fop.pdf.PDFOutline: java.lang.String actionRef>;
+        if $r7 == null goto label8;
+
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" /A ");
+        $r6 = this.<org.apache.fop.pdf.PDFOutline: java.lang.String actionRef>;
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\n");
+        $r1 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r2 = staticinvoke <org.apache.fop.pdf.PDFOutline: byte[] encode(java.lang.String)>($r1);
+        virtualinvoke bout.<java.io.ByteArrayOutputStream: void write(byte[])>($r2);
+
+     label8:
+        $r2 = staticinvoke <org.apache.fop.pdf.PDFOutline: byte[] encode(java.lang.String)>(">> endobj\n");
+        virtualinvoke bout.<java.io.ByteArrayOutputStream: void write(byte[])>($r2);
+
+     label9:
+        goto label11;
+
+     label10:
+        $r8 := @caughtexception;
+        ioe = $r8;
+        $r9 = <org.apache.fop.pdf.PDFOutline: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r9.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>("Ignored I/O exception", ioe);
+
+     label11:
+        $r10 = virtualinvoke bout.<java.io.ByteArrayOutputStream: byte[] toByteArray()>();
+        return $r10;
+
+        catch java.io.IOException from label0 to label9 with label10;
+    }
+}

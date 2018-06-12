@@ -1,0 +1,142 @@
+public class org.apache.fop.fo.flow.BidiOverride extends org.apache.fop.fo.FObjMixed
+{
+    private boolean blockOrInlineItemFound;
+    private boolean canHaveBlockLevelChildren;
+    private org.apache.fop.fo.properties.SpaceProperty lineHeight;
+
+    public void <init>(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.flow.BidiOverride this;
+        org.apache.fop.fo.FONode parent;
+        int lvlLeader, lvlInCntr, lvlInline, lvlFootnote, $i0;
+
+        this := @this: org.apache.fop.fo.flow.BidiOverride;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        specialinvoke this.<org.apache.fop.fo.FObjMixed: void <init>(org.apache.fop.fo.FONode)>(parent);
+        this.<org.apache.fop.fo.flow.BidiOverride: boolean blockOrInlineItemFound> = 0;
+        this.<org.apache.fop.fo.flow.BidiOverride: boolean canHaveBlockLevelChildren> = 1;
+        lvlLeader = virtualinvoke this.<org.apache.fop.fo.flow.BidiOverride: int findAncestor(int)>(19);
+        lvlInCntr = virtualinvoke this.<org.apache.fop.fo.flow.BidiOverride: int findAncestor(int)>(16);
+        lvlInline = virtualinvoke this.<org.apache.fop.fo.flow.BidiOverride: int findAncestor(int)>(15);
+        lvlFootnote = virtualinvoke this.<org.apache.fop.fo.flow.BidiOverride: int findAncestor(int)>(12);
+        if lvlLeader <= 0 goto label1;
+
+        if lvlInCntr < 0 goto label0;
+
+        if lvlInCntr <= 0 goto label3;
+
+        if lvlInCntr <= lvlLeader goto label3;
+
+     label0:
+        this.<org.apache.fop.fo.flow.BidiOverride: boolean canHaveBlockLevelChildren> = 0;
+        goto label3;
+
+     label1:
+        if lvlInline <= 0 goto label3;
+
+        $i0 = lvlInline + 1;
+        if lvlFootnote != $i0 goto label3;
+
+        if lvlInCntr < 0 goto label2;
+
+        if lvlInCntr <= 0 goto label3;
+
+        if lvlInCntr <= lvlInline goto label3;
+
+     label2:
+        this.<org.apache.fop.fo.flow.BidiOverride: boolean canHaveBlockLevelChildren> = 0;
+
+     label3:
+        return;
+    }
+
+    public void bind(org.apache.fop.fo.PropertyList) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.BidiOverride this;
+        org.apache.fop.fo.PropertyList pList;
+        org.apache.fop.fo.properties.Property $r0;
+        org.apache.fop.fo.properties.SpaceProperty $r1;
+
+        this := @this: org.apache.fop.fo.flow.BidiOverride;
+        pList := @parameter0: org.apache.fop.fo.PropertyList;
+        $r0 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(131);
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.properties.Property: org.apache.fop.fo.properties.SpaceProperty getSpace()>();
+        this.<org.apache.fop.fo.flow.BidiOverride: org.apache.fop.fo.properties.SpaceProperty lineHeight> = $r1;
+        return;
+    }
+
+    protected void validateChildNode(org.xml.sax.Locator, java.lang.String, java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.flow.BidiOverride this;
+        org.xml.sax.Locator loc;
+        java.lang.String nsURI, localName, $r0, ruleViolated;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.flow.BidiOverride;
+        loc := @parameter0: org.xml.sax.Locator;
+        nsURI := @parameter1: java.lang.String;
+        localName := @parameter2: java.lang.String;
+        $r0 = "http://www.w3.org/1999/XSL/Format";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(nsURI);
+        if $z0 == 0 goto label0;
+
+        $z0 = virtualinvoke localName.<java.lang.String: boolean equals(java.lang.Object)>("marker");
+        if $z0 == 0 goto label0;
+
+        $z0 = this.<org.apache.fop.fo.flow.BidiOverride: boolean blockOrInlineItemFound>;
+        if $z0 == 0 goto label3;
+
+        virtualinvoke this.<org.apache.fop.fo.flow.BidiOverride: void nodesOutOfOrderError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, "fo:marker", "(#PCDATA|%inline;|%block;)");
+        goto label3;
+
+     label0:
+        $z0 = virtualinvoke this.<org.apache.fop.fo.flow.BidiOverride: boolean isBlockOrInlineItem(java.lang.String,java.lang.String)>(nsURI, localName);
+        if $z0 != 0 goto label1;
+
+        virtualinvoke this.<org.apache.fop.fo.flow.BidiOverride: void invalidChildError(org.xml.sax.Locator,java.lang.String,java.lang.String)>(loc, nsURI, localName);
+        goto label3;
+
+     label1:
+        $z0 = this.<org.apache.fop.fo.flow.BidiOverride: boolean canHaveBlockLevelChildren>;
+        if $z0 != 0 goto label2;
+
+        $z0 = virtualinvoke this.<org.apache.fop.fo.flow.BidiOverride: boolean isBlockItem(java.lang.String,java.lang.String)>(nsURI, localName);
+        if $z0 == 0 goto label2;
+
+        ruleViolated = "An fo:bidi-override that is a descendant of an fo:leader or of the fo:inline child of an fo:footnote may not have block-level children, unless it has a nearer ancestor that is an fo:inline-container.";
+        virtualinvoke this.<org.apache.fop.fo.flow.BidiOverride: void invalidChildError(org.xml.sax.Locator,java.lang.String,java.lang.String,java.lang.String)>(loc, nsURI, localName, ruleViolated);
+        goto label3;
+
+     label2:
+        this.<org.apache.fop.fo.flow.BidiOverride: boolean blockOrInlineItemFound> = 1;
+
+     label3:
+        return;
+    }
+
+    public org.apache.fop.fo.properties.SpaceProperty getLineHeight()
+    {
+        org.apache.fop.fo.flow.BidiOverride this;
+        org.apache.fop.fo.properties.SpaceProperty $r0;
+
+        this := @this: org.apache.fop.fo.flow.BidiOverride;
+        $r0 = this.<org.apache.fop.fo.flow.BidiOverride: org.apache.fop.fo.properties.SpaceProperty lineHeight>;
+        return $r0;
+    }
+
+    public java.lang.String getLocalName()
+    {
+        org.apache.fop.fo.flow.BidiOverride this;
+
+        this := @this: org.apache.fop.fo.flow.BidiOverride;
+        return "bidi-override";
+    }
+
+    public int getNameId()
+    {
+        org.apache.fop.fo.flow.BidiOverride this;
+
+        this := @this: org.apache.fop.fo.flow.BidiOverride;
+        return 2;
+    }
+}

@@ -1,0 +1,400 @@
+public class org.apache.fop.cli.InputHandler extends java.lang.Object implements javax.xml.transform.ErrorListener, org.apache.fop.render.awt.viewer.Renderable
+{
+    protected java.io.File sourcefile;
+    private java.io.File stylesheet;
+    private java.util.Vector xsltParams;
+    protected org.apache.commons.logging.Log log;
+    static java.lang.Class class$org$apache$fop$cli$InputHandler;
+
+    public void <init>(java.io.File, java.io.File, java.util.Vector)
+    {
+        org.apache.fop.cli.InputHandler this;
+        java.io.File xmlfile, xsltfile;
+        java.util.Vector params;
+        java.lang.Class $r1;
+        org.apache.commons.logging.Log $r2;
+
+        this := @this: org.apache.fop.cli.InputHandler;
+        xmlfile := @parameter0: java.io.File;
+        xsltfile := @parameter1: java.io.File;
+        params := @parameter2: java.util.Vector;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.cli.InputHandler: java.io.File sourcefile> = null;
+        this.<org.apache.fop.cli.InputHandler: java.io.File stylesheet> = null;
+        this.<org.apache.fop.cli.InputHandler: java.util.Vector xsltParams> = null;
+        $r1 = <org.apache.fop.cli.InputHandler: java.lang.Class class$org$apache$fop$cli$InputHandler>;
+        if $r1 != null goto label0;
+
+        $r1 = staticinvoke <org.apache.fop.cli.InputHandler: java.lang.Class class$(java.lang.String)>("org.apache.fop.cli.InputHandler");
+        <org.apache.fop.cli.InputHandler: java.lang.Class class$org$apache$fop$cli$InputHandler> = $r1;
+        goto label1;
+
+     label0:
+        $r1 = <org.apache.fop.cli.InputHandler: java.lang.Class class$org$apache$fop$cli$InputHandler>;
+
+     label1:
+        $r2 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r1);
+        this.<org.apache.fop.cli.InputHandler: org.apache.commons.logging.Log log> = $r2;
+        this.<org.apache.fop.cli.InputHandler: java.io.File sourcefile> = xmlfile;
+        this.<org.apache.fop.cli.InputHandler: java.io.File stylesheet> = xsltfile;
+        this.<org.apache.fop.cli.InputHandler: java.util.Vector xsltParams> = params;
+        return;
+    }
+
+    public void <init>(java.io.File)
+    {
+        org.apache.fop.cli.InputHandler this;
+        java.io.File fofile;
+        java.lang.Class $r1;
+        org.apache.commons.logging.Log $r2;
+
+        this := @this: org.apache.fop.cli.InputHandler;
+        fofile := @parameter0: java.io.File;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.cli.InputHandler: java.io.File sourcefile> = null;
+        this.<org.apache.fop.cli.InputHandler: java.io.File stylesheet> = null;
+        this.<org.apache.fop.cli.InputHandler: java.util.Vector xsltParams> = null;
+        $r1 = <org.apache.fop.cli.InputHandler: java.lang.Class class$org$apache$fop$cli$InputHandler>;
+        if $r1 != null goto label0;
+
+        $r1 = staticinvoke <org.apache.fop.cli.InputHandler: java.lang.Class class$(java.lang.String)>("org.apache.fop.cli.InputHandler");
+        <org.apache.fop.cli.InputHandler: java.lang.Class class$org$apache$fop$cli$InputHandler> = $r1;
+        goto label1;
+
+     label0:
+        $r1 = <org.apache.fop.cli.InputHandler: java.lang.Class class$org$apache$fop$cli$InputHandler>;
+
+     label1:
+        $r2 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r1);
+        this.<org.apache.fop.cli.InputHandler: org.apache.commons.logging.Log log> = $r2;
+        this.<org.apache.fop.cli.InputHandler: java.io.File sourcefile> = fofile;
+        return;
+    }
+
+    public void renderTo(org.apache.fop.apps.FOUserAgent, java.lang.String, java.io.OutputStream) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.InputHandler this;
+        org.apache.fop.apps.FOUserAgent userAgent, $r0;
+        java.lang.String outputFormat, $r1, $r4, baseURL;
+        java.io.OutputStream out;
+        org.apache.fop.apps.FopFactory factory;
+        org.apache.fop.apps.Fop fop;
+        null_type baseURL;
+        java.lang.Exception e, $r6;
+        javax.xml.transform.sax.SAXResult res, $r7;
+        java.io.File $r2, $r3;
+        java.net.URL $r5;
+        org.xml.sax.helpers.DefaultHandler $r8;
+
+        this := @this: org.apache.fop.cli.InputHandler;
+        userAgent := @parameter0: org.apache.fop.apps.FOUserAgent;
+        outputFormat := @parameter1: java.lang.String;
+        out := @parameter2: java.io.OutputStream;
+        factory = virtualinvoke userAgent.<org.apache.fop.apps.FOUserAgent: org.apache.fop.apps.FopFactory getFactory()>();
+        if out == null goto label0;
+
+        fop = virtualinvoke factory.<org.apache.fop.apps.FopFactory: org.apache.fop.apps.Fop newFop(java.lang.String,org.apache.fop.apps.FOUserAgent,java.io.OutputStream)>(outputFormat, userAgent, out);
+        goto label1;
+
+     label0:
+        fop = virtualinvoke factory.<org.apache.fop.apps.FopFactory: org.apache.fop.apps.Fop newFop(java.lang.String,org.apache.fop.apps.FOUserAgent)>(outputFormat, userAgent);
+
+     label1:
+        $r0 = virtualinvoke fop.<org.apache.fop.apps.Fop: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.apps.FOUserAgent: java.lang.String getBaseURL()>();
+        if $r1 != null goto label6;
+
+        baseURL = null;
+
+     label2:
+        $r2 = new java.io.File;
+        $r3 = this.<org.apache.fop.cli.InputHandler: java.io.File sourcefile>;
+        $r4 = virtualinvoke $r3.<java.io.File: java.lang.String getAbsolutePath()>();
+        specialinvoke $r2.<java.io.File: void <init>(java.lang.String)>($r4);
+        $r2 = virtualinvoke $r2.<java.io.File: java.io.File getParentFile()>();
+        $r5 = virtualinvoke $r2.<java.io.File: java.net.URL toURL()>();
+        baseURL = virtualinvoke $r5.<java.net.URL: java.lang.String toExternalForm()>();
+
+     label3:
+        goto label5;
+
+     label4:
+        $r6 := @caughtexception;
+        e = $r6;
+        baseURL = "";
+
+     label5:
+        $r0 = virtualinvoke fop.<org.apache.fop.apps.Fop: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        virtualinvoke $r0.<org.apache.fop.apps.FOUserAgent: void setBaseURL(java.lang.String)>(baseURL);
+
+     label6:
+        $r7 = new javax.xml.transform.sax.SAXResult;
+        $r8 = virtualinvoke fop.<org.apache.fop.apps.Fop: org.xml.sax.helpers.DefaultHandler getDefaultHandler()>();
+        specialinvoke $r7.<javax.xml.transform.sax.SAXResult: void <init>(org.xml.sax.ContentHandler)>($r8);
+        res = $r7;
+        virtualinvoke this.<org.apache.fop.cli.InputHandler: void transformTo(javax.xml.transform.Result)>(res);
+        return;
+
+        catch java.lang.Exception from label2 to label3 with label4;
+    }
+
+    public void renderTo(org.apache.fop.apps.FOUserAgent, java.lang.String) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.InputHandler this;
+        org.apache.fop.apps.FOUserAgent userAgent;
+        java.lang.String outputFormat;
+
+        this := @this: org.apache.fop.cli.InputHandler;
+        userAgent := @parameter0: org.apache.fop.apps.FOUserAgent;
+        outputFormat := @parameter1: java.lang.String;
+        virtualinvoke this.<org.apache.fop.cli.InputHandler: void renderTo(org.apache.fop.apps.FOUserAgent,java.lang.String,java.io.OutputStream)>(userAgent, outputFormat, null);
+        return;
+    }
+
+    public void transformTo(java.io.OutputStream) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.InputHandler this;
+        java.io.OutputStream out;
+        javax.xml.transform.stream.StreamResult $r0, res;
+
+        this := @this: org.apache.fop.cli.InputHandler;
+        out := @parameter0: java.io.OutputStream;
+        $r0 = new javax.xml.transform.stream.StreamResult;
+        specialinvoke $r0.<javax.xml.transform.stream.StreamResult: void <init>(java.io.OutputStream)>(out);
+        res = $r0;
+        virtualinvoke this.<org.apache.fop.cli.InputHandler: void transformTo(javax.xml.transform.Result)>(res);
+        return;
+    }
+
+    protected javax.xml.transform.Source createMainSource()
+    {
+        org.apache.fop.cli.InputHandler this;
+        org.xml.sax.InputSource $r0, is;
+        java.io.FileInputStream $r1;
+        javax.xml.parsers.SAXParserFactory spf;
+        org.xml.sax.XMLReader xr;
+        javax.xml.transform.Source result;
+        org.xml.sax.SAXException e, $r8;
+        java.io.File $r2, $r3, $r10;
+        java.net.URI $r4;
+        java.lang.String $r5;
+        javax.xml.parsers.SAXParser $r6;
+        javax.xml.transform.sax.SAXSource $r7;
+        javax.xml.transform.stream.StreamSource $r9;
+        java.io.IOException $r11, e;
+        javax.xml.parsers.ParserConfigurationException $r12, e;
+
+        this := @this: org.apache.fop.cli.InputHandler;
+
+     label0:
+        $r0 = new org.xml.sax.InputSource;
+        $r1 = new java.io.FileInputStream;
+        $r2 = this.<org.apache.fop.cli.InputHandler: java.io.File sourcefile>;
+        specialinvoke $r1.<java.io.FileInputStream: void <init>(java.io.File)>($r2);
+        specialinvoke $r0.<org.xml.sax.InputSource: void <init>(java.io.InputStream)>($r1);
+        is = $r0;
+        $r3 = this.<org.apache.fop.cli.InputHandler: java.io.File sourcefile>;
+        $r4 = virtualinvoke $r3.<java.io.File: java.net.URI toURI()>();
+        $r5 = virtualinvoke $r4.<java.net.URI: java.lang.String toASCIIString()>();
+        virtualinvoke is.<org.xml.sax.InputSource: void setSystemId(java.lang.String)>($r5);
+        spf = staticinvoke <javax.xml.parsers.SAXParserFactory: javax.xml.parsers.SAXParserFactory newInstance()>();
+        virtualinvoke spf.<javax.xml.parsers.SAXParserFactory: void setFeature(java.lang.String,boolean)>("http://xml.org/sax/features/namespaces", 1);
+        virtualinvoke spf.<javax.xml.parsers.SAXParserFactory: void setFeature(java.lang.String,boolean)>("http://apache.org/xml/features/xinclude", 1);
+        $r6 = virtualinvoke spf.<javax.xml.parsers.SAXParserFactory: javax.xml.parsers.SAXParser newSAXParser()>();
+        xr = virtualinvoke $r6.<javax.xml.parsers.SAXParser: org.xml.sax.XMLReader getXMLReader()>();
+        $r7 = new javax.xml.transform.sax.SAXSource;
+        specialinvoke $r7.<javax.xml.transform.sax.SAXSource: void <init>(org.xml.sax.XMLReader,org.xml.sax.InputSource)>(xr, is);
+        result = $r7;
+
+     label1:
+        goto label5;
+
+     label2:
+        $r8 := @caughtexception;
+        e = $r8;
+        $r9 = new javax.xml.transform.stream.StreamSource;
+        $r10 = this.<org.apache.fop.cli.InputHandler: java.io.File sourcefile>;
+        specialinvoke $r9.<javax.xml.transform.stream.StreamSource: void <init>(java.io.File)>($r10);
+        result = $r9;
+        goto label5;
+
+     label3:
+        $r11 := @caughtexception;
+        e = $r11;
+        $r9 = new javax.xml.transform.stream.StreamSource;
+        $r10 = this.<org.apache.fop.cli.InputHandler: java.io.File sourcefile>;
+        specialinvoke $r9.<javax.xml.transform.stream.StreamSource: void <init>(java.io.File)>($r10);
+        result = $r9;
+        goto label5;
+
+     label4:
+        $r12 := @caughtexception;
+        e = $r12;
+        $r9 = new javax.xml.transform.stream.StreamSource;
+        $r10 = this.<org.apache.fop.cli.InputHandler: java.io.File sourcefile>;
+        specialinvoke $r9.<javax.xml.transform.stream.StreamSource: void <init>(java.io.File)>($r10);
+        result = $r9;
+
+     label5:
+        return result;
+
+        catch org.xml.sax.SAXException from label0 to label1 with label2;
+        catch java.io.IOException from label0 to label1 with label3;
+        catch javax.xml.parsers.ParserConfigurationException from label0 to label1 with label4;
+    }
+
+    protected javax.xml.transform.Source createXSLTSource()
+    {
+        org.apache.fop.cli.InputHandler this;
+        java.io.File $r0, $r2;
+        javax.xml.transform.stream.StreamSource $r1;
+
+        this := @this: org.apache.fop.cli.InputHandler;
+        $r0 = this.<org.apache.fop.cli.InputHandler: java.io.File stylesheet>;
+        if $r0 == null goto label0;
+
+        $r1 = new javax.xml.transform.stream.StreamSource;
+        $r2 = this.<org.apache.fop.cli.InputHandler: java.io.File stylesheet>;
+        specialinvoke $r1.<javax.xml.transform.stream.StreamSource: void <init>(java.io.File)>($r2);
+        return $r1;
+
+     label0:
+        return null;
+    }
+
+    protected void transformTo(javax.xml.transform.Result) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.InputHandler this;
+        javax.xml.transform.Result result;
+        javax.xml.transform.TransformerFactory factory;
+        javax.xml.transform.Source xsltSource, src;
+        javax.xml.transform.Transformer transformer;
+        int i, $i0, $i1;
+        java.lang.Exception e, $r7;
+        java.util.Vector $r0, $r1, $r4;
+        java.lang.Object $r2, $r5;
+        java.lang.String $r3, $r6;
+        org.apache.fop.apps.FOPException $r8;
+
+        this := @this: org.apache.fop.cli.InputHandler;
+        result := @parameter0: javax.xml.transform.Result;
+
+     label0:
+        factory = staticinvoke <javax.xml.transform.TransformerFactory: javax.xml.transform.TransformerFactory newInstance()>();
+        xsltSource = virtualinvoke this.<org.apache.fop.cli.InputHandler: javax.xml.transform.Source createXSLTSource()>();
+        if xsltSource != null goto label1;
+
+        transformer = virtualinvoke factory.<javax.xml.transform.TransformerFactory: javax.xml.transform.Transformer newTransformer()>();
+        goto label3;
+
+     label1:
+        transformer = virtualinvoke factory.<javax.xml.transform.TransformerFactory: javax.xml.transform.Transformer newTransformer(javax.xml.transform.Source)>(xsltSource);
+        $r0 = this.<org.apache.fop.cli.InputHandler: java.util.Vector xsltParams>;
+        if $r0 == null goto label3;
+
+        i = 0;
+
+     label2:
+        $r1 = this.<org.apache.fop.cli.InputHandler: java.util.Vector xsltParams>;
+        $i0 = virtualinvoke $r1.<java.util.Vector: int size()>();
+        if i >= $i0 goto label3;
+
+        $r1 = this.<org.apache.fop.cli.InputHandler: java.util.Vector xsltParams>;
+        $r2 = virtualinvoke $r1.<java.util.Vector: java.lang.Object elementAt(int)>(i);
+        $r3 = (java.lang.String) $r2;
+        $r4 = this.<org.apache.fop.cli.InputHandler: java.util.Vector xsltParams>;
+        $i1 = i + 1;
+        $r5 = virtualinvoke $r4.<java.util.Vector: java.lang.Object elementAt(int)>($i1);
+        $r6 = (java.lang.String) $r5;
+        virtualinvoke transformer.<javax.xml.transform.Transformer: void setParameter(java.lang.String,java.lang.Object)>($r3, $r6);
+        i = i + 2;
+        goto label2;
+
+     label3:
+        virtualinvoke transformer.<javax.xml.transform.Transformer: void setErrorListener(javax.xml.transform.ErrorListener)>(this);
+        src = virtualinvoke this.<org.apache.fop.cli.InputHandler: javax.xml.transform.Source createMainSource()>();
+        virtualinvoke transformer.<javax.xml.transform.Transformer: void transform(javax.xml.transform.Source,javax.xml.transform.Result)>(src, result);
+
+     label4:
+        goto label6;
+
+     label5:
+        $r7 := @caughtexception;
+        e = $r7;
+        $r8 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r8.<org.apache.fop.apps.FOPException: void <init>(java.lang.Exception)>(e);
+        throw $r8;
+
+     label6:
+        return;
+
+        catch java.lang.Exception from label0 to label4 with label5;
+    }
+
+    public void warning(javax.xml.transform.TransformerException)
+    {
+        org.apache.fop.cli.InputHandler this;
+        javax.xml.transform.TransformerException exc;
+        org.apache.commons.logging.Log $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.cli.InputHandler;
+        exc := @parameter0: javax.xml.transform.TransformerException;
+        $r0 = this.<org.apache.fop.cli.InputHandler: org.apache.commons.logging.Log log>;
+        $r1 = virtualinvoke exc.<javax.xml.transform.TransformerException: java.lang.String getLocalizedMessage()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r1);
+        return;
+    }
+
+    public void error(javax.xml.transform.TransformerException)
+    {
+        org.apache.fop.cli.InputHandler this;
+        javax.xml.transform.TransformerException exc;
+        org.apache.commons.logging.Log $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.cli.InputHandler;
+        exc := @parameter0: javax.xml.transform.TransformerException;
+        $r0 = this.<org.apache.fop.cli.InputHandler: org.apache.commons.logging.Log log>;
+        $r1 = virtualinvoke exc.<javax.xml.transform.TransformerException: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r1);
+        return;
+    }
+
+    public void fatalError(javax.xml.transform.TransformerException) throws javax.xml.transform.TransformerException
+    {
+        org.apache.fop.cli.InputHandler this;
+        javax.xml.transform.TransformerException exc;
+
+        this := @this: org.apache.fop.cli.InputHandler;
+        exc := @parameter0: javax.xml.transform.TransformerException;
+        throw exc;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+}

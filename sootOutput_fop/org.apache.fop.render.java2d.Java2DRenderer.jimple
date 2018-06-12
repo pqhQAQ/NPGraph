@@ -1,0 +1,1993 @@
+public abstract class org.apache.fop.render.java2d.Java2DRenderer extends org.apache.fop.render.AbstractPathOrientedRenderer implements java.awt.print.Printable
+{
+    public static final java.lang.String JAVA2D_TRANSPARENT_PAGE_BACKGROUND;
+    protected double scaleFactor;
+    protected int pageWidth;
+    protected int pageHeight;
+    protected java.util.List pageViewportList;
+    private int currentPageNumber;
+    private int numberOfPages;
+    protected boolean antialiasing;
+    protected boolean qualityRendering;
+    protected boolean transparentPageBackground;
+    protected org.apache.fop.render.java2d.Java2DGraphicsState state;
+    private java.util.Stack stateStack;
+    private boolean renderingDone;
+    private java.awt.geom.GeneralPath currentPath;
+
+    public void <init>()
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        java.util.ArrayList $r0;
+        java.util.Stack $r1;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        specialinvoke this.<org.apache.fop.render.AbstractPathOrientedRenderer: void <init>()>();
+        this.<org.apache.fop.render.java2d.Java2DRenderer: double scaleFactor> = 1.0;
+        this.<org.apache.fop.render.java2d.Java2DRenderer: int pageWidth> = 0;
+        this.<org.apache.fop.render.java2d.Java2DRenderer: int pageHeight> = 0;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.render.java2d.Java2DRenderer: java.util.List pageViewportList> = $r0;
+        this.<org.apache.fop.render.java2d.Java2DRenderer: int currentPageNumber> = 0;
+        this.<org.apache.fop.render.java2d.Java2DRenderer: boolean antialiasing> = 1;
+        this.<org.apache.fop.render.java2d.Java2DRenderer: boolean qualityRendering> = 1;
+        this.<org.apache.fop.render.java2d.Java2DRenderer: boolean transparentPageBackground> = 0;
+        $r1 = new java.util.Stack;
+        specialinvoke $r1.<java.util.Stack: void <init>()>();
+        this.<org.apache.fop.render.java2d.Java2DRenderer: java.util.Stack stateStack> = $r1;
+        this.<org.apache.fop.render.java2d.Java2DRenderer: java.awt.geom.GeneralPath currentPath> = null;
+        return;
+    }
+
+    public void setUserAgent(org.apache.fop.apps.FOUserAgent)
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        org.apache.fop.apps.FOUserAgent foUserAgent, $r0;
+        java.lang.String s, $r3;
+        java.util.Map $r1;
+        java.lang.Object $r2;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        foUserAgent := @parameter0: org.apache.fop.apps.FOUserAgent;
+        specialinvoke this.<org.apache.fop.render.AbstractPathOrientedRenderer: void setUserAgent(org.apache.fop.apps.FOUserAgent)>(foUserAgent);
+        $r0 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        virtualinvoke $r0.<org.apache.fop.apps.FOUserAgent: void setRendererOverride(org.apache.fop.render.Renderer)>(this);
+        $r0 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.apps.FOUserAgent: java.util.Map getRendererOptions()>();
+        $r2 = interfaceinvoke $r1.<java.util.Map: java.lang.Object get(java.lang.Object)>("transparent-page-background");
+        s = (java.lang.String) $r2;
+        if s == null goto label0;
+
+        $r3 = "true";
+        $z0 = virtualinvoke $r3.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>(s);
+        this.<org.apache.fop.render.java2d.Java2DRenderer: boolean transparentPageBackground> = $z0;
+
+     label0:
+        return;
+    }
+
+    public org.apache.fop.apps.FOUserAgent getUserAgent()
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        org.apache.fop.apps.FOUserAgent $r0;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        $r0 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        return $r0;
+    }
+
+    public void setupFontInfo(org.apache.fop.fonts.FontInfo)
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        org.apache.fop.fonts.FontInfo inFontInfo, $r3;
+        java.awt.image.BufferedImage fontImage, $r0;
+        java.awt.Graphics2D g;
+        java.awt.RenderingHints$Key $r1;
+        java.lang.Object $r2;
+        java.util.List $r4;
+        org.apache.fop.fonts.FontResolver $r5;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        inFontInfo := @parameter0: org.apache.fop.fonts.FontInfo;
+        this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.fonts.FontInfo fontInfo> = inFontInfo;
+        $r0 = new java.awt.image.BufferedImage;
+        specialinvoke $r0.<java.awt.image.BufferedImage: void <init>(int,int,int)>(100, 100, 1);
+        fontImage = $r0;
+        g = virtualinvoke fontImage.<java.awt.image.BufferedImage: java.awt.Graphics2D createGraphics()>();
+        $r1 = <java.awt.RenderingHints: java.awt.RenderingHints$Key KEY_FRACTIONALMETRICS>;
+        $r2 = <java.awt.RenderingHints: java.lang.Object VALUE_FRACTIONALMETRICS_ON>;
+        virtualinvoke g.<java.awt.Graphics2D: void setRenderingHint(java.awt.RenderingHints$Key,java.lang.Object)>($r1, $r2);
+        $r3 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r4 = this.<org.apache.fop.render.java2d.Java2DRenderer: java.util.List fontList>;
+        $r5 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.fonts.FontResolver fontResolver>;
+        staticinvoke <org.apache.fop.render.java2d.FontSetup: void setup(org.apache.fop.fonts.FontInfo,java.util.List,org.apache.fop.fonts.FontResolver,java.awt.Graphics2D)>($r3, $r4, $r5, g);
+        return;
+    }
+
+    public org.apache.fop.render.Graphics2DAdapter getGraphics2DAdapter()
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        org.apache.fop.render.java2d.Java2DGraphics2DAdapter $r0;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        $r0 = new org.apache.fop.render.java2d.Java2DGraphics2DAdapter;
+        specialinvoke $r0.<org.apache.fop.render.java2d.Java2DGraphics2DAdapter: void <init>()>();
+        return $r0;
+    }
+
+    public void setScaleFactor(double)
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        double newScaleFactor;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        newScaleFactor := @parameter0: double;
+        this.<org.apache.fop.render.java2d.Java2DRenderer: double scaleFactor> = newScaleFactor;
+        return;
+    }
+
+    public double getScaleFactor()
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        double $d0;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        $d0 = this.<org.apache.fop.render.java2d.Java2DRenderer: double scaleFactor>;
+        return $d0;
+    }
+
+    public void startRenderer(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        java.io.OutputStream out;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        out := @parameter0: java.io.OutputStream;
+        return;
+    }
+
+    public void stopRenderer() throws java.io.IOException
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        org.apache.commons.logging.Log $r0;
+        int $i0, $i1;
+        org.apache.fop.apps.FOPException $r1;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        $r0 = <org.apache.fop.render.java2d.Java2DRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("Java2DRenderer stopped");
+        this.<org.apache.fop.render.java2d.Java2DRenderer: boolean renderingDone> = 1;
+        $i0 = this.<org.apache.fop.render.java2d.Java2DRenderer: int currentPageNumber>;
+        this.<org.apache.fop.render.java2d.Java2DRenderer: int numberOfPages> = $i0;
+        $i1 = this.<org.apache.fop.render.java2d.Java2DRenderer: int numberOfPages>;
+        if $i1 != 0 goto label0;
+
+        $r1 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r1.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>("No page could be rendered");
+
+     label0:
+        return;
+    }
+
+    public boolean isRenderingDone()
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        $z0 = this.<org.apache.fop.render.java2d.Java2DRenderer: boolean renderingDone>;
+        return $z0;
+    }
+
+    public int getCurrentPageNumber()
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        int $i0;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        $i0 = this.<org.apache.fop.render.java2d.Java2DRenderer: int currentPageNumber>;
+        return $i0;
+    }
+
+    public void setCurrentPageNumber(int)
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        int c;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        c := @parameter0: int;
+        this.<org.apache.fop.render.java2d.Java2DRenderer: int currentPageNumber> = c;
+        return;
+    }
+
+    public int getNumberOfPages()
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        int $i0;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        $i0 = this.<org.apache.fop.render.java2d.Java2DRenderer: int numberOfPages>;
+        return $i0;
+    }
+
+    public void clearViewportList()
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        java.util.List $r0;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        $r0 = this.<org.apache.fop.render.java2d.Java2DRenderer: java.util.List pageViewportList>;
+        interfaceinvoke $r0.<java.util.List: void clear()>();
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void setCurrentPageNumber(int)>(0);
+        return;
+    }
+
+    public void renderPage(org.apache.fop.area.PageViewport) throws java.io.IOException
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        org.apache.fop.area.PageViewport pageViewport;
+        java.util.List $r0;
+        java.lang.Object $r1;
+        int $i0;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        pageViewport := @parameter0: org.apache.fop.area.PageViewport;
+        $r0 = this.<org.apache.fop.render.java2d.Java2DRenderer: java.util.List pageViewportList>;
+        $r1 = virtualinvoke pageViewport.<org.apache.fop.area.PageViewport: java.lang.Object clone()>();
+        interfaceinvoke $r0.<java.util.List: boolean add(java.lang.Object)>($r1);
+        $i0 = this.<org.apache.fop.render.java2d.Java2DRenderer: int currentPageNumber>;
+        $i0 = $i0 + 1;
+        this.<org.apache.fop.render.java2d.Java2DRenderer: int currentPageNumber> = $i0;
+        return;
+    }
+
+    public java.awt.image.BufferedImage getPageImage(org.apache.fop.area.PageViewport)
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        org.apache.fop.area.PageViewport pageViewport;
+        java.awt.geom.Rectangle2D bounds;
+        double scaleX, scaleY, $d0, $d1, $d2;
+        int bitmapWidth, bitmapHeight, $i1, $i2, $i3, $i4, $i5;
+        java.awt.image.BufferedImage currentPageImage, l12;
+        java.awt.Graphics2D graphics;
+        java.awt.geom.AffineTransform at;
+        java.lang.Throwable l12, l13, $r11, $r12;
+        long $l0;
+        org.apache.commons.logging.Log $r0;
+        java.lang.StringBuffer $r1;
+        java.lang.String $r2, $r3;
+        org.apache.fop.apps.FOUserAgent $r4;
+        float $f0;
+        java.awt.RenderingHints$Key $r5;
+        java.lang.Object $r6;
+        boolean $z0;
+        java.awt.Color $r7;
+        org.apache.fop.render.java2d.Java2DGraphicsState $r8;
+        org.apache.fop.fonts.FontInfo $r9;
+        org.apache.fop.area.Page $r10;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        pageViewport := @parameter0: org.apache.fop.area.PageViewport;
+        this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.area.PageViewport currentPageViewport> = pageViewport;
+
+     label0:
+        bounds = virtualinvoke pageViewport.<org.apache.fop.area.PageViewport: java.awt.geom.Rectangle2D getViewArea()>();
+        $d0 = virtualinvoke bounds.<java.awt.geom.Rectangle2D: double getWidth()>();
+        $d0 = $d0 / 1000.0;
+        $l0 = staticinvoke <java.lang.Math: long round(double)>($d0);
+        $i1 = (int) $l0;
+        this.<org.apache.fop.render.java2d.Java2DRenderer: int pageWidth> = $i1;
+        $d0 = virtualinvoke bounds.<java.awt.geom.Rectangle2D: double getHeight()>();
+        $d0 = $d0 / 1000.0;
+        $l0 = staticinvoke <java.lang.Math: long round(double)>($d0);
+        $i1 = (int) $l0;
+        this.<org.apache.fop.render.java2d.Java2DRenderer: int pageHeight> = $i1;
+        $r0 = <org.apache.fop.render.java2d.Java2DRenderer: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Rendering Page ");
+        $r2 = virtualinvoke pageViewport.<org.apache.fop.area.PageViewport: java.lang.String getPageNumberString()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" (pageWidth ");
+        $i2 = this.<org.apache.fop.render.java2d.Java2DRenderer: int pageWidth>;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", pageHeight ");
+        $i2 = this.<org.apache.fop.render.java2d.Java2DRenderer: int pageHeight>;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(")");
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>($r3);
+        $d1 = this.<org.apache.fop.render.java2d.Java2DRenderer: double scaleFactor>;
+        $d1 = $d1 * 0.35277777777777775;
+        $r4 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        $f0 = virtualinvoke $r4.<org.apache.fop.apps.FOUserAgent: float getTargetPixelUnitToMillimeter()>();
+        $d2 = (double) $f0;
+        scaleX = $d1 / $d2;
+        $d1 = this.<org.apache.fop.render.java2d.Java2DRenderer: double scaleFactor>;
+        $d1 = $d1 * 0.35277777777777775;
+        $r4 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        $f0 = virtualinvoke $r4.<org.apache.fop.apps.FOUserAgent: float getTargetPixelUnitToMillimeter()>();
+        $d2 = (double) $f0;
+        scaleY = $d1 / $d2;
+        $i3 = this.<org.apache.fop.render.java2d.Java2DRenderer: int pageWidth>;
+        $d1 = (double) $i3;
+        $d1 = $d1 * scaleX;
+        $d1 = $d1 + 0.5;
+        bitmapWidth = (int) $d1;
+        $i3 = this.<org.apache.fop.render.java2d.Java2DRenderer: int pageHeight>;
+        $d1 = (double) $i3;
+        $d1 = $d1 * scaleY;
+        $d1 = $d1 + 0.5;
+        bitmapHeight = (int) $d1;
+        currentPageImage = virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: java.awt.image.BufferedImage getBufferedImage(int,int)>(bitmapWidth, bitmapHeight);
+        graphics = virtualinvoke currentPageImage.<java.awt.image.BufferedImage: java.awt.Graphics2D createGraphics()>();
+        $r5 = <java.awt.RenderingHints: java.awt.RenderingHints$Key KEY_FRACTIONALMETRICS>;
+        $r6 = <java.awt.RenderingHints: java.lang.Object VALUE_FRACTIONALMETRICS_ON>;
+        virtualinvoke graphics.<java.awt.Graphics2D: void setRenderingHint(java.awt.RenderingHints$Key,java.lang.Object)>($r5, $r6);
+        $z0 = this.<org.apache.fop.render.java2d.Java2DRenderer: boolean antialiasing>;
+        if $z0 == 0 goto label1;
+
+        $r5 = <java.awt.RenderingHints: java.awt.RenderingHints$Key KEY_ANTIALIASING>;
+        $r6 = <java.awt.RenderingHints: java.lang.Object VALUE_ANTIALIAS_ON>;
+        virtualinvoke graphics.<java.awt.Graphics2D: void setRenderingHint(java.awt.RenderingHints$Key,java.lang.Object)>($r5, $r6);
+        $r5 = <java.awt.RenderingHints: java.awt.RenderingHints$Key KEY_TEXT_ANTIALIASING>;
+        $r6 = <java.awt.RenderingHints: java.lang.Object VALUE_TEXT_ANTIALIAS_ON>;
+        virtualinvoke graphics.<java.awt.Graphics2D: void setRenderingHint(java.awt.RenderingHints$Key,java.lang.Object)>($r5, $r6);
+
+     label1:
+        $z0 = this.<org.apache.fop.render.java2d.Java2DRenderer: boolean qualityRendering>;
+        if $z0 == 0 goto label2;
+
+        $r5 = <java.awt.RenderingHints: java.awt.RenderingHints$Key KEY_RENDERING>;
+        $r6 = <java.awt.RenderingHints: java.lang.Object VALUE_RENDER_QUALITY>;
+        virtualinvoke graphics.<java.awt.Graphics2D: void setRenderingHint(java.awt.RenderingHints$Key,java.lang.Object)>($r5, $r6);
+
+     label2:
+        $r5 = <java.awt.RenderingHints: java.awt.RenderingHints$Key KEY_STROKE_CONTROL>;
+        $r6 = <java.awt.RenderingHints: java.lang.Object VALUE_STROKE_PURE>;
+        virtualinvoke graphics.<java.awt.Graphics2D: void setRenderingHint(java.awt.RenderingHints$Key,java.lang.Object)>($r5, $r6);
+        at = virtualinvoke graphics.<java.awt.Graphics2D: java.awt.geom.AffineTransform getTransform()>();
+        virtualinvoke at.<java.awt.geom.AffineTransform: void scale(double,double)>(scaleX, scaleY);
+        virtualinvoke graphics.<java.awt.Graphics2D: void setTransform(java.awt.geom.AffineTransform)>(at);
+        $z0 = this.<org.apache.fop.render.java2d.Java2DRenderer: boolean transparentPageBackground>;
+        if $z0 != 0 goto label3;
+
+        $r7 = <java.awt.Color: java.awt.Color white>;
+        virtualinvoke graphics.<java.awt.Graphics2D: void setColor(java.awt.Color)>($r7);
+        $i4 = this.<org.apache.fop.render.java2d.Java2DRenderer: int pageWidth>;
+        $i5 = this.<org.apache.fop.render.java2d.Java2DRenderer: int pageHeight>;
+        virtualinvoke graphics.<java.awt.Graphics2D: void fillRect(int,int,int,int)>(0, 0, $i4, $i5);
+
+     label3:
+        $r7 = <java.awt.Color: java.awt.Color black>;
+        virtualinvoke graphics.<java.awt.Graphics2D: void setColor(java.awt.Color)>($r7);
+        $i4 = this.<org.apache.fop.render.java2d.Java2DRenderer: int pageWidth>;
+        $i4 = $i4 + 2;
+        $i5 = this.<org.apache.fop.render.java2d.Java2DRenderer: int pageHeight>;
+        $i5 = $i5 + 2;
+        virtualinvoke graphics.<java.awt.Graphics2D: void drawRect(int,int,int,int)>(-1, -1, $i4, $i5);
+        $i1 = this.<org.apache.fop.render.java2d.Java2DRenderer: int pageWidth>;
+        $i1 = $i1 + 2;
+        $i4 = this.<org.apache.fop.render.java2d.Java2DRenderer: int pageWidth>;
+        $i4 = $i4 + 2;
+        $i5 = this.<org.apache.fop.render.java2d.Java2DRenderer: int pageHeight>;
+        $i5 = $i5 + 2;
+        virtualinvoke graphics.<java.awt.Graphics2D: void drawLine(int,int,int,int)>($i1, 0, $i4, $i5);
+        $i1 = this.<org.apache.fop.render.java2d.Java2DRenderer: int pageWidth>;
+        $i1 = $i1 + 3;
+        $i4 = this.<org.apache.fop.render.java2d.Java2DRenderer: int pageWidth>;
+        $i4 = $i4 + 3;
+        $i5 = this.<org.apache.fop.render.java2d.Java2DRenderer: int pageHeight>;
+        $i5 = $i5 + 3;
+        virtualinvoke graphics.<java.awt.Graphics2D: void drawLine(int,int,int,int)>($i1, 1, $i4, $i5);
+        $i2 = this.<org.apache.fop.render.java2d.Java2DRenderer: int pageHeight>;
+        $i2 = $i2 + 2;
+        $i4 = this.<org.apache.fop.render.java2d.Java2DRenderer: int pageWidth>;
+        $i4 = $i4 + 2;
+        $i5 = this.<org.apache.fop.render.java2d.Java2DRenderer: int pageHeight>;
+        $i5 = $i5 + 2;
+        virtualinvoke graphics.<java.awt.Graphics2D: void drawLine(int,int,int,int)>(0, $i2, $i4, $i5);
+        $i2 = this.<org.apache.fop.render.java2d.Java2DRenderer: int pageHeight>;
+        $i2 = $i2 + 3;
+        $i4 = this.<org.apache.fop.render.java2d.Java2DRenderer: int pageWidth>;
+        $i4 = $i4 + 3;
+        $i5 = this.<org.apache.fop.render.java2d.Java2DRenderer: int pageHeight>;
+        $i5 = $i5 + 3;
+        virtualinvoke graphics.<java.awt.Graphics2D: void drawLine(int,int,int,int)>(1, $i2, $i4, $i5);
+        $r8 = new org.apache.fop.render.java2d.Java2DGraphicsState;
+        $r9 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.fonts.FontInfo fontInfo>;
+        specialinvoke $r8.<org.apache.fop.render.java2d.Java2DGraphicsState: void <init>(java.awt.Graphics2D,org.apache.fop.fonts.FontInfo,java.awt.geom.AffineTransform)>(graphics, $r9, at);
+        this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state> = $r8;
+
+     label4:
+        this.<org.apache.fop.render.java2d.Java2DRenderer: int currentBPPosition> = 0;
+        this.<org.apache.fop.render.java2d.Java2DRenderer: int currentIPPosition> = 0;
+        $r10 = virtualinvoke pageViewport.<org.apache.fop.area.PageViewport: org.apache.fop.area.Page getPage()>();
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void renderPageAreas(org.apache.fop.area.Page)>($r10);
+
+     label5:
+        this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state> = null;
+        goto label9;
+
+     label6:
+        $r11 := @caughtexception;
+
+     label7:
+        l12 = $r11;
+
+     label8:
+        this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state> = null;
+        throw l12;
+
+     label9:
+        l12 = currentPageImage;
+
+     label10:
+        this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.area.PageViewport currentPageViewport> = null;
+        return l12;
+
+     label11:
+        $r12 := @caughtexception;
+
+     label12:
+        l13 = $r12;
+
+     label13:
+        this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.area.PageViewport currentPageViewport> = null;
+        throw l13;
+
+        catch java.lang.Throwable from label4 to label5 with label6;
+        catch java.lang.Throwable from label7 to label8 with label6;
+        catch java.lang.Throwable from label0 to label10 with label11;
+        catch java.lang.Throwable from label12 to label13 with label11;
+    }
+
+    protected java.awt.image.BufferedImage getBufferedImage(int, int)
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        int bitmapWidth, bitmapHeight;
+        java.awt.image.BufferedImage $r0;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        bitmapWidth := @parameter0: int;
+        bitmapHeight := @parameter1: int;
+        $r0 = new java.awt.image.BufferedImage;
+        specialinvoke $r0.<java.awt.image.BufferedImage: void <init>(int,int,int)>(bitmapWidth, bitmapHeight, 2);
+        return $r0;
+    }
+
+    public org.apache.fop.area.PageViewport getPageViewport(int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        int pageNum, $i0, $i1;
+        java.lang.StringBuffer $r0;
+        java.util.List $r1, $r3, $r5;
+        org.apache.fop.apps.FOPException $r2;
+        java.lang.String $r4;
+        java.lang.Object $r6;
+        org.apache.fop.area.PageViewport $r7;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        pageNum := @parameter0: int;
+        if pageNum < 0 goto label0;
+
+        $r1 = this.<org.apache.fop.render.java2d.Java2DRenderer: java.util.List pageViewportList>;
+        $i0 = interfaceinvoke $r1.<java.util.List: int size()>();
+        if pageNum < $i0 goto label1;
+
+     label0:
+        $r2 = new org.apache.fop.apps.FOPException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Requested page number is out of range: ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(pageNum);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("; only ");
+        $r3 = this.<org.apache.fop.render.java2d.Java2DRenderer: java.util.List pageViewportList>;
+        $i1 = interfaceinvoke $r3.<java.util.List: int size()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" page(s) available.");
+        $r4 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>($r4);
+        throw $r2;
+
+     label1:
+        $r5 = this.<org.apache.fop.render.java2d.Java2DRenderer: java.util.List pageViewportList>;
+        $r6 = interfaceinvoke $r5.<java.util.List: java.lang.Object get(int)>(pageNum);
+        $r7 = (org.apache.fop.area.PageViewport) $r6;
+        return $r7;
+    }
+
+    public java.awt.image.BufferedImage getPageImage(int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        int pageNum;
+        org.apache.fop.area.PageViewport $r0;
+        java.awt.image.BufferedImage $r1;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        pageNum := @parameter0: int;
+        $r0 = virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.area.PageViewport getPageViewport(int)>(pageNum);
+        $r1 = virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: java.awt.image.BufferedImage getPageImage(org.apache.fop.area.PageViewport)>($r0);
+        return $r1;
+    }
+
+    protected void saveGraphicsState()
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        java.util.Stack $r0;
+        org.apache.fop.render.java2d.Java2DGraphicsState $r1, $r3;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        $r0 = this.<org.apache.fop.render.java2d.Java2DRenderer: java.util.Stack stateStack>;
+        $r1 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        virtualinvoke $r0.<java.util.Stack: java.lang.Object push(java.lang.Object)>($r1);
+        $r1 = new org.apache.fop.render.java2d.Java2DGraphicsState;
+        $r3 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        specialinvoke $r1.<org.apache.fop.render.java2d.Java2DGraphicsState: void <init>(org.apache.fop.render.java2d.Java2DGraphicsState)>($r3);
+        this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state> = $r1;
+        return;
+    }
+
+    protected void restoreGraphicsState()
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        org.apache.fop.render.java2d.Java2DGraphicsState $r0, $r3;
+        java.util.Stack $r1;
+        java.lang.Object $r2;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        $r0 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        virtualinvoke $r0.<org.apache.fop.render.java2d.Java2DGraphicsState: void dispose()>();
+        $r1 = this.<org.apache.fop.render.java2d.Java2DRenderer: java.util.Stack stateStack>;
+        $r2 = virtualinvoke $r1.<java.util.Stack: java.lang.Object pop()>();
+        $r3 = (org.apache.fop.render.java2d.Java2DGraphicsState) $r2;
+        this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state> = $r3;
+        return;
+    }
+
+    protected void concatenateTransformationMatrix(java.awt.geom.AffineTransform)
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        java.awt.geom.AffineTransform at;
+        org.apache.fop.render.java2d.Java2DGraphicsState $r0;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        at := @parameter0: java.awt.geom.AffineTransform;
+        $r0 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        virtualinvoke $r0.<org.apache.fop.render.java2d.Java2DGraphicsState: void transform(java.awt.geom.AffineTransform)>(at);
+        return;
+    }
+
+    protected void startVParea(org.apache.fop.area.CTM, java.awt.geom.Rectangle2D)
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        org.apache.fop.area.CTM ctm;
+        java.awt.geom.Rectangle2D clippingRect;
+        double $d0, $d1, $d2, $d3;
+        float $f0, $f1, $f2, $f3;
+        org.apache.fop.render.java2d.Java2DGraphicsState $r0;
+        java.awt.geom.AffineTransform $r1;
+        double[] $r2;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        ctm := @parameter0: org.apache.fop.area.CTM;
+        clippingRect := @parameter1: java.awt.geom.Rectangle2D;
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void saveGraphicsState()>();
+        if clippingRect == null goto label0;
+
+        $d0 = virtualinvoke clippingRect.<java.awt.geom.Rectangle2D: double getX()>();
+        $f0 = (float) $d0;
+        $f0 = $f0 / 1000.0F;
+        $d1 = virtualinvoke clippingRect.<java.awt.geom.Rectangle2D: double getY()>();
+        $f1 = (float) $d1;
+        $f1 = $f1 / 1000.0F;
+        $d2 = virtualinvoke clippingRect.<java.awt.geom.Rectangle2D: double getWidth()>();
+        $f2 = (float) $d2;
+        $f2 = $f2 / 1000.0F;
+        $d3 = virtualinvoke clippingRect.<java.awt.geom.Rectangle2D: double getHeight()>();
+        $f3 = (float) $d3;
+        $f3 = $f3 / 1000.0F;
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void clipRect(float,float,float,float)>($f0, $f1, $f2, $f3);
+
+     label0:
+        $r0 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        $r1 = new java.awt.geom.AffineTransform;
+        $r2 = staticinvoke <org.apache.fop.render.pdf.CTMHelper: double[] toPDFArray(org.apache.fop.area.CTM)>(ctm);
+        specialinvoke $r1.<java.awt.geom.AffineTransform: void <init>(double[])>($r2);
+        virtualinvoke $r0.<org.apache.fop.render.java2d.Java2DGraphicsState: void transform(java.awt.geom.AffineTransform)>($r1);
+        return;
+    }
+
+    protected void endVParea()
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void restoreGraphicsState()>();
+        return;
+    }
+
+    protected java.util.List breakOutOfStateStack()
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        org.apache.commons.logging.Log $r0;
+        java.util.ArrayList breakOutList, $r1;
+        java.util.Stack $r2, $r4;
+        boolean $z0;
+        org.apache.fop.render.java2d.Java2DGraphicsState $r3, $r6;
+        java.lang.Object $r5;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        $r0 = <org.apache.fop.render.java2d.Java2DRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("Block.FIXED --> break out");
+        $r1 = new java.util.ArrayList;
+        specialinvoke $r1.<java.util.ArrayList: void <init>()>();
+        breakOutList = $r1;
+
+     label0:
+        $r2 = this.<org.apache.fop.render.java2d.Java2DRenderer: java.util.Stack stateStack>;
+        $z0 = virtualinvoke $r2.<java.util.Stack: boolean isEmpty()>();
+        if $z0 != 0 goto label1;
+
+        $r3 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        interfaceinvoke breakOutList.<java.util.List: void add(int,java.lang.Object)>(0, $r3);
+        $r4 = this.<org.apache.fop.render.java2d.Java2DRenderer: java.util.Stack stateStack>;
+        $r5 = virtualinvoke $r4.<java.util.Stack: java.lang.Object pop()>();
+        $r6 = (org.apache.fop.render.java2d.Java2DGraphicsState) $r5;
+        this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state> = $r6;
+        goto label0;
+
+     label1:
+        return breakOutList;
+    }
+
+    protected void restoreStateStackAfterBreakOut(java.util.List)
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        java.util.List breakOutList;
+        org.apache.commons.logging.Log $r0;
+        java.util.Iterator i;
+        org.apache.fop.render.java2d.Java2DGraphicsState s, $r3;
+        boolean $z0;
+        java.lang.Object $r1;
+        java.util.Stack $r2;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        breakOutList := @parameter0: java.util.List;
+        $r0 = <org.apache.fop.render.java2d.Java2DRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("Block.FIXED --> restoring context after break-out");
+        i = interfaceinvoke breakOutList.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke i.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r1 = interfaceinvoke i.<java.util.Iterator: java.lang.Object next()>();
+        s = (org.apache.fop.render.java2d.Java2DGraphicsState) $r1;
+        $r2 = this.<org.apache.fop.render.java2d.Java2DRenderer: java.util.Stack stateStack>;
+        $r3 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        virtualinvoke $r2.<java.util.Stack: java.lang.Object push(java.lang.Object)>($r3);
+        this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state> = s;
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    protected void updateColor(java.awt.Color, boolean)
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        java.awt.Color col;
+        boolean fill;
+        org.apache.fop.render.java2d.Java2DGraphicsState $r0;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        col := @parameter0: java.awt.Color;
+        fill := @parameter1: boolean;
+        $r0 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        virtualinvoke $r0.<org.apache.fop.render.java2d.Java2DGraphicsState: boolean updateColor(java.awt.Color)>(col);
+        return;
+    }
+
+    protected void clip()
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        java.awt.geom.GeneralPath $r0, $r3;
+        java.lang.IllegalStateException $r1;
+        org.apache.fop.render.java2d.Java2DGraphicsState $r2;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        $r0 = this.<org.apache.fop.render.java2d.Java2DRenderer: java.awt.geom.GeneralPath currentPath>;
+        if $r0 != null goto label0;
+
+        $r1 = new java.lang.IllegalStateException;
+        specialinvoke $r1.<java.lang.IllegalStateException: void <init>(java.lang.String)>("No current path available!");
+        throw $r1;
+
+     label0:
+        $r2 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        $r3 = this.<org.apache.fop.render.java2d.Java2DRenderer: java.awt.geom.GeneralPath currentPath>;
+        virtualinvoke $r2.<org.apache.fop.render.java2d.Java2DGraphicsState: boolean updateClip(java.awt.Shape)>($r3);
+        this.<org.apache.fop.render.java2d.Java2DRenderer: java.awt.geom.GeneralPath currentPath> = null;
+        return;
+    }
+
+    protected void closePath()
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        java.awt.geom.GeneralPath $r0;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        $r0 = this.<org.apache.fop.render.java2d.Java2DRenderer: java.awt.geom.GeneralPath currentPath>;
+        virtualinvoke $r0.<java.awt.geom.GeneralPath: void closePath()>();
+        return;
+    }
+
+    protected void lineTo(float, float)
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        float x, y;
+        java.awt.geom.GeneralPath $r0, $r1;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        x := @parameter0: float;
+        y := @parameter1: float;
+        $r1 = this.<org.apache.fop.render.java2d.Java2DRenderer: java.awt.geom.GeneralPath currentPath>;
+        if $r1 != null goto label0;
+
+        $r0 = new java.awt.geom.GeneralPath;
+        specialinvoke $r0.<java.awt.geom.GeneralPath: void <init>()>();
+        this.<org.apache.fop.render.java2d.Java2DRenderer: java.awt.geom.GeneralPath currentPath> = $r0;
+
+     label0:
+        $r1 = this.<org.apache.fop.render.java2d.Java2DRenderer: java.awt.geom.GeneralPath currentPath>;
+        virtualinvoke $r1.<java.awt.geom.GeneralPath: void lineTo(float,float)>(x, y);
+        return;
+    }
+
+    protected void moveTo(float, float)
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        float x, y;
+        java.awt.geom.GeneralPath $r0, $r1;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        x := @parameter0: float;
+        y := @parameter1: float;
+        $r1 = this.<org.apache.fop.render.java2d.Java2DRenderer: java.awt.geom.GeneralPath currentPath>;
+        if $r1 != null goto label0;
+
+        $r0 = new java.awt.geom.GeneralPath;
+        specialinvoke $r0.<java.awt.geom.GeneralPath: void <init>()>();
+        this.<org.apache.fop.render.java2d.Java2DRenderer: java.awt.geom.GeneralPath currentPath> = $r0;
+
+     label0:
+        $r1 = this.<org.apache.fop.render.java2d.Java2DRenderer: java.awt.geom.GeneralPath currentPath>;
+        virtualinvoke $r1.<java.awt.geom.GeneralPath: void moveTo(float,float)>(x, y);
+        return;
+    }
+
+    protected void clipRect(float, float, float, float)
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        float x, y, width, height;
+        java.awt.geom.Rectangle2D$Float $r0;
+        org.apache.fop.render.java2d.Java2DGraphicsState $r1;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        x := @parameter0: float;
+        y := @parameter1: float;
+        width := @parameter2: float;
+        height := @parameter3: float;
+        $r1 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        $r0 = new java.awt.geom.Rectangle2D$Float;
+        specialinvoke $r0.<java.awt.geom.Rectangle2D$Float: void <init>(float,float,float,float)>(x, y, width, height);
+        virtualinvoke $r1.<org.apache.fop.render.java2d.Java2DGraphicsState: boolean updateClip(java.awt.Shape)>($r0);
+        return;
+    }
+
+    protected void fillRect(float, float, float, float)
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        float x, y, width, height;
+        java.awt.geom.Rectangle2D$Float $r0;
+        org.apache.fop.render.java2d.Java2DGraphicsState $r1;
+        java.awt.Graphics2D $r2;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        x := @parameter0: float;
+        y := @parameter1: float;
+        width := @parameter2: float;
+        height := @parameter3: float;
+        $r1 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.render.java2d.Java2DGraphicsState: java.awt.Graphics2D getGraph()>();
+        $r0 = new java.awt.geom.Rectangle2D$Float;
+        specialinvoke $r0.<java.awt.geom.Rectangle2D$Float: void <init>(float,float,float,float)>(x, y, width, height);
+        virtualinvoke $r2.<java.awt.Graphics2D: void fill(java.awt.Shape)>($r0);
+        return;
+    }
+
+    protected void drawBorderLine(float, float, float, float, boolean, boolean, int, java.awt.Color)
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        float x1, y1, x2, y2, $f0, $f1;
+        boolean horz, startOrBefore;
+        int style;
+        java.awt.Color col;
+        java.awt.Graphics2D g2d;
+        org.apache.fop.render.java2d.Java2DGraphicsState $r0;
+        java.awt.geom.Rectangle2D$Float $r1;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        x1 := @parameter0: float;
+        y1 := @parameter1: float;
+        x2 := @parameter2: float;
+        y2 := @parameter3: float;
+        horz := @parameter4: boolean;
+        startOrBefore := @parameter5: boolean;
+        style := @parameter6: int;
+        col := @parameter7: java.awt.Color;
+        $r0 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        g2d = virtualinvoke $r0.<org.apache.fop.render.java2d.Java2DGraphicsState: java.awt.Graphics2D getGraph()>();
+        $r1 = new java.awt.geom.Rectangle2D$Float;
+        $f0 = x2 - x1;
+        $f1 = y2 - y1;
+        specialinvoke $r1.<java.awt.geom.Rectangle2D$Float: void <init>(float,float,float,float)>(x1, y1, $f0, $f1);
+        staticinvoke <org.apache.fop.render.java2d.Java2DRenderer: void drawBorderLine(java.awt.geom.Rectangle2D$Float,boolean,boolean,int,java.awt.Color,java.awt.Graphics2D)>($r1, horz, startOrBefore, style, col, g2d);
+        return;
+    }
+
+    public static void drawBorderLine(java.awt.geom.Rectangle2D$Float, boolean, boolean, int, java.awt.Color, java.awt.Graphics2D)
+    {
+        java.awt.geom.Rectangle2D$Float lineRect;
+        boolean horz, startOrBefore;
+        int style, rep, $i1;
+        java.awt.Color col, uppercol, lowercol, leftcol, rightcol, col;
+        java.awt.Graphics2D g2d;
+        float x1, y1, x2, y2, w, h, unit, ym, xm, h3, ym1, ym2, w3, xm1, xm2, colFactor, $f0, $f1, $f2, $f3, $f4, $f5;
+        java.awt.BasicStroke s, $r1, $r4;
+        byte $b0, $b2;
+        org.apache.commons.logging.Log $r0;
+        float[] $r2;
+        java.awt.geom.Line2D$Float $r3;
+
+        lineRect := @parameter0: java.awt.geom.Rectangle2D$Float;
+        horz := @parameter1: boolean;
+        startOrBefore := @parameter2: boolean;
+        style := @parameter3: int;
+        col := @parameter4: java.awt.Color;
+        g2d := @parameter5: java.awt.Graphics2D;
+        x1 = lineRect.<java.awt.geom.Rectangle2D$Float: float x>;
+        y1 = lineRect.<java.awt.geom.Rectangle2D$Float: float y>;
+        $f0 = lineRect.<java.awt.geom.Rectangle2D$Float: float width>;
+        x2 = x1 + $f0;
+        $f0 = lineRect.<java.awt.geom.Rectangle2D$Float: float height>;
+        y2 = y1 + $f0;
+        w = lineRect.<java.awt.geom.Rectangle2D$Float: float width>;
+        h = lineRect.<java.awt.geom.Rectangle2D$Float: float height>;
+        $b0 = w cmpg 0.0F;
+        if $b0 < 0 goto label0;
+
+        $b0 = h cmpg 0.0F;
+        if $b0 >= 0 goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.render.java2d.Java2DRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void error(java.lang.Object)>("Negative extent received. Border won\'t be painted.");
+        return;
+
+     label1:
+        lookupswitch(style)
+        {
+            case 31: goto label2;
+            case 36: goto label6;
+            case 37: goto label10;
+            case 55: goto label12;
+            case 57: goto label24;
+            case 67: goto label16;
+            case 101: goto label16;
+            case 119: goto label12;
+            default: goto label25;
+        };
+
+     label2:
+        virtualinvoke g2d.<java.awt.Graphics2D: void setColor(java.awt.Color)>(col);
+        if horz == 0 goto label4;
+
+        $f1 = 2.0F * h;
+        unit = staticinvoke <java.lang.Math: float abs(float)>($f1);
+        $f1 = w / unit;
+        rep = (int) $f1;
+        $i1 = rep % 2;
+        if $i1 != 0 goto label3;
+
+        rep = rep + 1;
+
+     label3:
+        $f0 = (float) rep;
+        unit = w / $f0;
+        $f0 = h / 2.0F;
+        ym = y1 + $f0;
+        $r1 = new java.awt.BasicStroke;
+        $r2 = newarray (float)[1];
+        $r2[0] = unit;
+        specialinvoke $r1.<java.awt.BasicStroke: void <init>(float,int,int,float,float[],float)>(h, 0, 0, 10.0F, $r2, 0.0F);
+        s = $r1;
+        virtualinvoke g2d.<java.awt.Graphics2D: void setStroke(java.awt.Stroke)>(s);
+        $r3 = new java.awt.geom.Line2D$Float;
+        specialinvoke $r3.<java.awt.geom.Line2D$Float: void <init>(float,float,float,float)>(x1, ym, x2, ym);
+        virtualinvoke g2d.<java.awt.Graphics2D: void draw(java.awt.Shape)>($r3);
+        goto label27;
+
+     label4:
+        $f1 = 2.0F * w;
+        unit = staticinvoke <java.lang.Math: float abs(float)>($f1);
+        $f1 = h / unit;
+        rep = (int) $f1;
+        $i1 = rep % 2;
+        if $i1 != 0 goto label5;
+
+        rep = rep + 1;
+
+     label5:
+        $f0 = (float) rep;
+        unit = h / $f0;
+        $f0 = w / 2.0F;
+        xm = x1 + $f0;
+        $r1 = new java.awt.BasicStroke;
+        $r2 = newarray (float)[1];
+        $r2[0] = unit;
+        specialinvoke $r1.<java.awt.BasicStroke: void <init>(float,int,int,float,float[],float)>(w, 0, 0, 10.0F, $r2, 0.0F);
+        s = $r1;
+        virtualinvoke g2d.<java.awt.Graphics2D: void setStroke(java.awt.Stroke)>(s);
+        $r3 = new java.awt.geom.Line2D$Float;
+        specialinvoke $r3.<java.awt.geom.Line2D$Float: void <init>(float,float,float,float)>(xm, y1, xm, y2);
+        virtualinvoke g2d.<java.awt.Graphics2D: void draw(java.awt.Shape)>($r3);
+        goto label27;
+
+     label6:
+        virtualinvoke g2d.<java.awt.Graphics2D: void setColor(java.awt.Color)>(col);
+        if horz == 0 goto label8;
+
+        $f1 = 2.0F * h;
+        unit = staticinvoke <java.lang.Math: float abs(float)>($f1);
+        $f1 = w / unit;
+        rep = (int) $f1;
+        $i1 = rep % 2;
+        if $i1 != 0 goto label7;
+
+        rep = rep + 1;
+
+     label7:
+        $f0 = (float) rep;
+        unit = w / $f0;
+        $f0 = h / 2.0F;
+        ym = y1 + $f0;
+        $r1 = new java.awt.BasicStroke;
+        $r2 = newarray (float)[2];
+        $r2[0] = 0.0F;
+        $r2[1] = unit;
+        specialinvoke $r1.<java.awt.BasicStroke: void <init>(float,int,int,float,float[],float)>(h, 1, 0, 10.0F, $r2, 0.0F);
+        s = $r1;
+        virtualinvoke g2d.<java.awt.Graphics2D: void setStroke(java.awt.Stroke)>(s);
+        $r3 = new java.awt.geom.Line2D$Float;
+        specialinvoke $r3.<java.awt.geom.Line2D$Float: void <init>(float,float,float,float)>(x1, ym, x2, ym);
+        virtualinvoke g2d.<java.awt.Graphics2D: void draw(java.awt.Shape)>($r3);
+        goto label27;
+
+     label8:
+        $f1 = 2.0F * w;
+        unit = staticinvoke <java.lang.Math: float abs(float)>($f1);
+        $f1 = h / unit;
+        rep = (int) $f1;
+        $i1 = rep % 2;
+        if $i1 != 0 goto label9;
+
+        rep = rep + 1;
+
+     label9:
+        $f0 = (float) rep;
+        unit = h / $f0;
+        $f0 = w / 2.0F;
+        xm = x1 + $f0;
+        $r1 = new java.awt.BasicStroke;
+        $r2 = newarray (float)[2];
+        $r2[0] = 0.0F;
+        $r2[1] = unit;
+        specialinvoke $r1.<java.awt.BasicStroke: void <init>(float,int,int,float,float[],float)>(w, 1, 0, 10.0F, $r2, 0.0F);
+        s = $r1;
+        virtualinvoke g2d.<java.awt.Graphics2D: void setStroke(java.awt.Stroke)>(s);
+        $r3 = new java.awt.geom.Line2D$Float;
+        specialinvoke $r3.<java.awt.geom.Line2D$Float: void <init>(float,float,float,float)>(xm, y1, xm, y2);
+        virtualinvoke g2d.<java.awt.Graphics2D: void draw(java.awt.Shape)>($r3);
+        goto label27;
+
+     label10:
+        virtualinvoke g2d.<java.awt.Graphics2D: void setColor(java.awt.Color)>(col);
+        if horz == 0 goto label11;
+
+        h3 = h / 3.0F;
+        $f0 = h3 / 2.0F;
+        ym1 = y1 + $f0;
+        $f1 = ym1 + h3;
+        ym2 = $f1 + h3;
+        $r1 = new java.awt.BasicStroke;
+        specialinvoke $r1.<java.awt.BasicStroke: void <init>(float)>(h3);
+        s = $r1;
+        virtualinvoke g2d.<java.awt.Graphics2D: void setStroke(java.awt.Stroke)>(s);
+        $r3 = new java.awt.geom.Line2D$Float;
+        specialinvoke $r3.<java.awt.geom.Line2D$Float: void <init>(float,float,float,float)>(x1, ym1, x2, ym1);
+        virtualinvoke g2d.<java.awt.Graphics2D: void draw(java.awt.Shape)>($r3);
+        $r3 = new java.awt.geom.Line2D$Float;
+        specialinvoke $r3.<java.awt.geom.Line2D$Float: void <init>(float,float,float,float)>(x1, ym2, x2, ym2);
+        virtualinvoke g2d.<java.awt.Graphics2D: void draw(java.awt.Shape)>($r3);
+        goto label27;
+
+     label11:
+        w3 = w / 3.0F;
+        $f0 = w3 / 2.0F;
+        xm1 = x1 + $f0;
+        $f1 = xm1 + w3;
+        xm2 = $f1 + w3;
+        $r1 = new java.awt.BasicStroke;
+        specialinvoke $r1.<java.awt.BasicStroke: void <init>(float)>(w3);
+        s = $r1;
+        virtualinvoke g2d.<java.awt.Graphics2D: void setStroke(java.awt.Stroke)>(s);
+        $r3 = new java.awt.geom.Line2D$Float;
+        specialinvoke $r3.<java.awt.geom.Line2D$Float: void <init>(float,float,float,float)>(xm1, y1, xm1, y2);
+        virtualinvoke g2d.<java.awt.Graphics2D: void draw(java.awt.Shape)>($r3);
+        $r3 = new java.awt.geom.Line2D$Float;
+        specialinvoke $r3.<java.awt.geom.Line2D$Float: void <init>(float,float,float,float)>(xm2, y1, xm2, y2);
+        virtualinvoke g2d.<java.awt.Graphics2D: void draw(java.awt.Shape)>($r3);
+        goto label27;
+
+     label12:
+        if style != 55 goto label13;
+
+        $f1 = 0.4F;
+        goto label14;
+
+     label13:
+        $f1 = -0.4F;
+
+     label14:
+        colFactor = $f1;
+        if horz == 0 goto label15;
+
+        $f0 = neg colFactor;
+        uppercol = staticinvoke <org.apache.fop.render.java2d.Java2DRenderer: java.awt.Color lightenColor(java.awt.Color,float)>(col, $f0);
+        lowercol = staticinvoke <org.apache.fop.render.java2d.Java2DRenderer: java.awt.Color lightenColor(java.awt.Color,float)>(col, colFactor);
+        h3 = h / 3.0F;
+        $f0 = h3 / 2.0F;
+        ym1 = y1 + $f0;
+        $r4 = new java.awt.BasicStroke;
+        specialinvoke $r4.<java.awt.BasicStroke: void <init>(float)>(h3);
+        virtualinvoke g2d.<java.awt.Graphics2D: void setStroke(java.awt.Stroke)>($r4);
+        virtualinvoke g2d.<java.awt.Graphics2D: void setColor(java.awt.Color)>(uppercol);
+        $r3 = new java.awt.geom.Line2D$Float;
+        specialinvoke $r3.<java.awt.geom.Line2D$Float: void <init>(float,float,float,float)>(x1, ym1, x2, ym1);
+        virtualinvoke g2d.<java.awt.Graphics2D: void draw(java.awt.Shape)>($r3);
+        virtualinvoke g2d.<java.awt.Graphics2D: void setColor(java.awt.Color)>(col);
+        $r3 = new java.awt.geom.Line2D$Float;
+        $f2 = ym1 + h3;
+        $f3 = ym1 + h3;
+        specialinvoke $r3.<java.awt.geom.Line2D$Float: void <init>(float,float,float,float)>(x1, $f2, x2, $f3);
+        virtualinvoke g2d.<java.awt.Graphics2D: void draw(java.awt.Shape)>($r3);
+        virtualinvoke g2d.<java.awt.Graphics2D: void setColor(java.awt.Color)>(lowercol);
+        $r3 = new java.awt.geom.Line2D$Float;
+        $f2 = ym1 + h3;
+        $f2 = $f2 + h3;
+        $f3 = ym1 + h3;
+        $f3 = $f3 + h3;
+        specialinvoke $r3.<java.awt.geom.Line2D$Float: void <init>(float,float,float,float)>(x1, $f2, x2, $f3);
+        virtualinvoke g2d.<java.awt.Graphics2D: void draw(java.awt.Shape)>($r3);
+        goto label27;
+
+     label15:
+        $f0 = neg colFactor;
+        leftcol = staticinvoke <org.apache.fop.render.java2d.Java2DRenderer: java.awt.Color lightenColor(java.awt.Color,float)>(col, $f0);
+        rightcol = staticinvoke <org.apache.fop.render.java2d.Java2DRenderer: java.awt.Color lightenColor(java.awt.Color,float)>(col, colFactor);
+        w3 = w / 3.0F;
+        $f0 = w3 / 2.0F;
+        xm1 = x1 + $f0;
+        $r4 = new java.awt.BasicStroke;
+        specialinvoke $r4.<java.awt.BasicStroke: void <init>(float)>(w3);
+        virtualinvoke g2d.<java.awt.Graphics2D: void setStroke(java.awt.Stroke)>($r4);
+        virtualinvoke g2d.<java.awt.Graphics2D: void setColor(java.awt.Color)>(leftcol);
+        $r3 = new java.awt.geom.Line2D$Float;
+        specialinvoke $r3.<java.awt.geom.Line2D$Float: void <init>(float,float,float,float)>(xm1, y1, xm1, y2);
+        virtualinvoke g2d.<java.awt.Graphics2D: void draw(java.awt.Shape)>($r3);
+        virtualinvoke g2d.<java.awt.Graphics2D: void setColor(java.awt.Color)>(col);
+        $r3 = new java.awt.geom.Line2D$Float;
+        $f4 = xm1 + w3;
+        $f5 = xm1 + w3;
+        specialinvoke $r3.<java.awt.geom.Line2D$Float: void <init>(float,float,float,float)>($f4, y1, $f5, y2);
+        virtualinvoke g2d.<java.awt.Graphics2D: void draw(java.awt.Shape)>($r3);
+        virtualinvoke g2d.<java.awt.Graphics2D: void setColor(java.awt.Color)>(rightcol);
+        $r3 = new java.awt.geom.Line2D$Float;
+        $f4 = xm1 + w3;
+        $f4 = $f4 + w3;
+        $f5 = xm1 + w3;
+        $f5 = $f5 + w3;
+        specialinvoke $r3.<java.awt.geom.Line2D$Float: void <init>(float,float,float,float)>($f4, y1, $f5, y2);
+        virtualinvoke g2d.<java.awt.Graphics2D: void draw(java.awt.Shape)>($r3);
+        goto label27;
+
+     label16:
+        if style != 101 goto label17;
+
+        $f1 = 0.4F;
+        goto label18;
+
+     label17:
+        $f1 = -0.4F;
+
+     label18:
+        colFactor = $f1;
+        if horz == 0 goto label21;
+
+        if startOrBefore == 0 goto label19;
+
+        $b2 = 1;
+        goto label20;
+
+     label19:
+        $b2 = -1;
+
+     label20:
+        $f0 = (float) $b2;
+        $f0 = $f0 * colFactor;
+        col = staticinvoke <org.apache.fop.render.java2d.Java2DRenderer: java.awt.Color lightenColor(java.awt.Color,float)>(col, $f0);
+        $r4 = new java.awt.BasicStroke;
+        specialinvoke $r4.<java.awt.BasicStroke: void <init>(float)>(h);
+        virtualinvoke g2d.<java.awt.Graphics2D: void setStroke(java.awt.Stroke)>($r4);
+        $f0 = h / 2.0F;
+        ym1 = y1 + $f0;
+        virtualinvoke g2d.<java.awt.Graphics2D: void setColor(java.awt.Color)>(col);
+        $r3 = new java.awt.geom.Line2D$Float;
+        specialinvoke $r3.<java.awt.geom.Line2D$Float: void <init>(float,float,float,float)>(x1, ym1, x2, ym1);
+        virtualinvoke g2d.<java.awt.Graphics2D: void draw(java.awt.Shape)>($r3);
+        goto label27;
+
+     label21:
+        if startOrBefore == 0 goto label22;
+
+        $b2 = 1;
+        goto label23;
+
+     label22:
+        $b2 = -1;
+
+     label23:
+        $f0 = (float) $b2;
+        $f0 = $f0 * colFactor;
+        col = staticinvoke <org.apache.fop.render.java2d.Java2DRenderer: java.awt.Color lightenColor(java.awt.Color,float)>(col, $f0);
+        $f0 = w / 2.0F;
+        xm1 = x1 + $f0;
+        $r4 = new java.awt.BasicStroke;
+        specialinvoke $r4.<java.awt.BasicStroke: void <init>(float)>(w);
+        virtualinvoke g2d.<java.awt.Graphics2D: void setStroke(java.awt.Stroke)>($r4);
+        virtualinvoke g2d.<java.awt.Graphics2D: void setColor(java.awt.Color)>(col);
+        $r3 = new java.awt.geom.Line2D$Float;
+        specialinvoke $r3.<java.awt.geom.Line2D$Float: void <init>(float,float,float,float)>(xm1, y1, xm1, y2);
+        virtualinvoke g2d.<java.awt.Graphics2D: void draw(java.awt.Shape)>($r3);
+        goto label27;
+
+     label24:
+        goto label27;
+
+     label25:
+        virtualinvoke g2d.<java.awt.Graphics2D: void setColor(java.awt.Color)>(col);
+        if horz == 0 goto label26;
+
+        $f0 = h / 2.0F;
+        ym = y1 + $f0;
+        $r4 = new java.awt.BasicStroke;
+        specialinvoke $r4.<java.awt.BasicStroke: void <init>(float)>(h);
+        virtualinvoke g2d.<java.awt.Graphics2D: void setStroke(java.awt.Stroke)>($r4);
+        $r3 = new java.awt.geom.Line2D$Float;
+        specialinvoke $r3.<java.awt.geom.Line2D$Float: void <init>(float,float,float,float)>(x1, ym, x2, ym);
+        virtualinvoke g2d.<java.awt.Graphics2D: void draw(java.awt.Shape)>($r3);
+        goto label27;
+
+     label26:
+        $f0 = w / 2.0F;
+        xm = x1 + $f0;
+        $r4 = new java.awt.BasicStroke;
+        specialinvoke $r4.<java.awt.BasicStroke: void <init>(float)>(w);
+        virtualinvoke g2d.<java.awt.Graphics2D: void setStroke(java.awt.Stroke)>($r4);
+        $r3 = new java.awt.geom.Line2D$Float;
+        specialinvoke $r3.<java.awt.geom.Line2D$Float: void <init>(float,float,float,float)>(xm, y1, xm, y2);
+        virtualinvoke g2d.<java.awt.Graphics2D: void draw(java.awt.Shape)>($r3);
+
+     label27:
+        return;
+    }
+
+    public void renderText(org.apache.fop.area.inline.TextArea)
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        org.apache.fop.area.inline.TextArea text;
+        int rx, bl, saveIP, fontsize, $i0, $i1, $i2;
+        org.apache.fop.fonts.Font font;
+        java.awt.geom.AffineTransform at, $r2;
+        org.apache.fop.fonts.Typeface tf;
+        org.apache.fop.render.java2d.Java2DGraphicsState $r0, $r3;
+        java.lang.String $r1;
+        float $f0, $f1;
+        double $d0, $d1;
+        java.awt.Graphics2D $r4;
+        org.apache.fop.fonts.FontInfo $r5;
+        java.util.Map $r6;
+        java.lang.Object $r7;
+        java.lang.Integer $r8;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        text := @parameter0: org.apache.fop.area.inline.TextArea;
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void renderInlineAreaBackAndBorders(org.apache.fop.area.inline.InlineArea)>(text);
+        $i0 = this.<org.apache.fop.render.java2d.Java2DRenderer: int currentIPPosition>;
+        $i1 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getBorderAndPaddingWidthStart()>();
+        rx = $i0 + $i1;
+        $i0 = this.<org.apache.fop.render.java2d.Java2DRenderer: int currentBPPosition>;
+        $i1 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getOffset()>();
+        $i0 = $i0 + $i1;
+        $i1 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getBaselineOffset()>();
+        bl = $i0 + $i1;
+        saveIP = this.<org.apache.fop.render.java2d.Java2DRenderer: int currentIPPosition>;
+        font = virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.fonts.Font getFontFromArea(org.apache.fop.area.Area)>(text);
+        $r0 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        $r1 = virtualinvoke font.<org.apache.fop.fonts.Font: java.lang.String getFontName()>();
+        $i2 = virtualinvoke font.<org.apache.fop.fonts.Font: int getFontSize()>();
+        virtualinvoke $r0.<org.apache.fop.render.java2d.Java2DGraphicsState: boolean updateFont(java.lang.String,int)>($r1, $i2);
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void saveGraphicsState()>();
+        $r2 = new java.awt.geom.AffineTransform;
+        specialinvoke $r2.<java.awt.geom.AffineTransform: void <init>()>();
+        at = $r2;
+        $f0 = (float) rx;
+        $f0 = $f0 / 1000.0F;
+        $d0 = (double) $f0;
+        $f1 = (float) bl;
+        $f1 = $f1 / 1000.0F;
+        $d1 = (double) $f1;
+        virtualinvoke at.<java.awt.geom.AffineTransform: void translate(double,double)>($d0, $d1);
+        $r0 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        virtualinvoke $r0.<org.apache.fop.render.java2d.Java2DGraphicsState: void transform(java.awt.geom.AffineTransform)>(at);
+        $r3 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        $r4 = virtualinvoke $r3.<org.apache.fop.render.java2d.Java2DGraphicsState: java.awt.Graphics2D getGraph()>();
+        staticinvoke <org.apache.fop.render.java2d.Java2DRenderer: void renderText(org.apache.fop.area.inline.TextArea,java.awt.Graphics2D,org.apache.fop.fonts.Font)>(text, $r4, font);
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void restoreGraphicsState()>();
+        $i2 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getAllocIPD()>();
+        $i1 = saveIP + $i2;
+        this.<org.apache.fop.render.java2d.Java2DRenderer: int currentIPPosition> = $i1;
+        $r5 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r6 = virtualinvoke $r5.<org.apache.fop.fonts.FontInfo: java.util.Map getFonts()>();
+        $r1 = virtualinvoke font.<org.apache.fop.fonts.Font: java.lang.String getFontName()>();
+        $r7 = interfaceinvoke $r6.<java.util.Map: java.lang.Object get(java.lang.Object)>($r1);
+        tf = (org.apache.fop.fonts.Typeface) $r7;
+        $r8 = <org.apache.fop.area.Trait: java.lang.Integer FONT_SIZE>;
+        fontsize = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getTraitAsInteger(java.lang.Object)>($r8);
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void renderTextDecoration(org.apache.fop.fonts.FontMetrics,int,org.apache.fop.area.inline.InlineArea,int,int)>(tf, fontsize, text, bl, rx);
+        return;
+    }
+
+    public static void renderText(org.apache.fop.area.inline.TextArea, java.awt.Graphics2D, org.apache.fop.fonts.Font)
+    {
+        org.apache.fop.area.inline.TextArea text;
+        java.awt.Graphics2D g2d;
+        org.apache.fop.fonts.Font font;
+        java.lang.Integer $r0;
+        java.awt.Color col;
+        float textCursor, cursor, $f0;
+        java.util.Iterator iter;
+        org.apache.fop.area.inline.InlineArea child;
+        org.apache.fop.area.inline.WordArea word;
+        java.lang.String s, $r8;
+        int[] letterAdjust, offsets;
+        java.awt.font.GlyphVector gv;
+        double additionalWidth, $d0, $d1, $d2, $d3;
+        int i, tws, $i0, $i1, $i2;
+        java.awt.geom.Point2D pt;
+        org.apache.fop.area.inline.SpaceArea space;
+        char sp;
+        java.lang.Object $r1;
+        java.util.List $r2;
+        boolean $z0;
+        java.awt.Font $r3;
+        java.awt.font.FontRenderContext $r4;
+        java.awt.geom.Rectangle2D $r5;
+        java.lang.IllegalStateException $r6;
+        java.lang.StringBuffer $r7;
+
+        text := @parameter0: org.apache.fop.area.inline.TextArea;
+        g2d := @parameter1: java.awt.Graphics2D;
+        font := @parameter2: org.apache.fop.fonts.Font;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer COLOR>;
+        $r1 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: java.lang.Object getTrait(java.lang.Object)>($r0);
+        col = (java.awt.Color) $r1;
+        virtualinvoke g2d.<java.awt.Graphics2D: void setColor(java.awt.Color)>(col);
+        textCursor = 0.0F;
+        $r2 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: java.util.List getChildAreas()>();
+        iter = interfaceinvoke $r2.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label10;
+
+        $r1 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        child = (org.apache.fop.area.inline.InlineArea) $r1;
+        $z0 = child instanceof org.apache.fop.area.inline.WordArea;
+        if $z0 == 0 goto label5;
+
+        word = (org.apache.fop.area.inline.WordArea) child;
+        s = virtualinvoke word.<org.apache.fop.area.inline.WordArea: java.lang.String getWord()>();
+        letterAdjust = virtualinvoke word.<org.apache.fop.area.inline.WordArea: int[] getLetterAdjustArray()>();
+        $r3 = virtualinvoke g2d.<java.awt.Graphics2D: java.awt.Font getFont()>();
+        $r4 = virtualinvoke g2d.<java.awt.Graphics2D: java.awt.font.FontRenderContext getFontRenderContext()>();
+        gv = virtualinvoke $r3.<java.awt.Font: java.awt.font.GlyphVector createGlyphVector(java.awt.font.FontRenderContext,java.lang.String)>($r4, s);
+        additionalWidth = 0.0;
+        if letterAdjust != null goto label1;
+
+        $i0 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getTextLetterSpaceAdjust()>();
+        if $i0 != 0 goto label1;
+
+        $i0 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getTextWordSpaceAdjust()>();
+        if $i0 != 0 goto label1;
+
+        goto label4;
+
+     label1:
+        offsets = staticinvoke <org.apache.fop.render.java2d.Java2DRenderer: int[] getGlyphOffsets(java.lang.String,org.apache.fop.fonts.Font,org.apache.fop.area.inline.TextArea,int[])>(s, font, text, letterAdjust);
+        cursor = 0.0F;
+        i = 0;
+
+     label2:
+        $i1 = lengthof offsets;
+        if i >= $i1 goto label3;
+
+        pt = virtualinvoke gv.<java.awt.font.GlyphVector: java.awt.geom.Point2D getGlyphPosition(int)>(i);
+        $d0 = (double) cursor;
+        $d1 = virtualinvoke pt.<java.awt.geom.Point2D: double getY()>();
+        virtualinvoke pt.<java.awt.geom.Point2D: void setLocation(double,double)>($d0, $d1);
+        virtualinvoke gv.<java.awt.font.GlyphVector: void setGlyphPosition(int,java.awt.geom.Point2D)>(i, pt);
+        $i1 = offsets[i];
+        $f0 = (float) $i1;
+        $f0 = $f0 / 1000.0F;
+        cursor = cursor + $f0;
+        i = i + 1;
+        goto label2;
+
+     label3:
+        $d2 = (double) cursor;
+        $r5 = virtualinvoke gv.<java.awt.font.GlyphVector: java.awt.geom.Rectangle2D getLogicalBounds()>();
+        $d3 = virtualinvoke $r5.<java.awt.geom.Rectangle2D: double getWidth()>();
+        additionalWidth = $d2 - $d3;
+
+     label4:
+        virtualinvoke g2d.<java.awt.Graphics2D: void drawGlyphVector(java.awt.font.GlyphVector,float,float)>(gv, textCursor, 0.0F);
+        $d2 = (double) textCursor;
+        $r5 = virtualinvoke gv.<java.awt.font.GlyphVector: java.awt.geom.Rectangle2D getLogicalBounds()>();
+        $d3 = virtualinvoke $r5.<java.awt.geom.Rectangle2D: double getWidth()>();
+        $d3 = $d3 + additionalWidth;
+        $d2 = $d2 + $d3;
+        textCursor = (float) $d2;
+        goto label9;
+
+     label5:
+        $z0 = child instanceof org.apache.fop.area.inline.SpaceArea;
+        if $z0 == 0 goto label8;
+
+        space = (org.apache.fop.area.inline.SpaceArea) child;
+        s = virtualinvoke space.<org.apache.fop.area.inline.SpaceArea: java.lang.String getSpace()>();
+        sp = virtualinvoke s.<java.lang.String: char charAt(int)>(0);
+        $z0 = virtualinvoke space.<org.apache.fop.area.inline.SpaceArea: boolean isAdjustable()>();
+        if $z0 == 0 goto label6;
+
+        $i0 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getTextWordSpaceAdjust()>();
+        $i2 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getTextLetterSpaceAdjust()>();
+        $i1 = 2 * $i2;
+        $i0 = $i0 + $i1;
+        goto label7;
+
+     label6:
+        $i0 = 0;
+
+     label7:
+        tws = $i0;
+        $i1 = virtualinvoke font.<org.apache.fop.fonts.Font: int getCharWidth(char)>(sp);
+        $i1 = $i1 + tws;
+        $f0 = (float) $i1;
+        $f0 = $f0 / 1000.0F;
+        textCursor = textCursor + $f0;
+        goto label9;
+
+     label8:
+        $r6 = new java.lang.IllegalStateException;
+        $r7 = new java.lang.StringBuffer;
+        specialinvoke $r7.<java.lang.StringBuffer: void <init>()>();
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unsupported child element: ");
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(child);
+        $r8 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r6.<java.lang.IllegalStateException: void <init>(java.lang.String)>($r8);
+        throw $r6;
+
+     label9:
+        goto label0;
+
+     label10:
+        return;
+    }
+
+    private static int[] getGlyphOffsets(java.lang.String, org.apache.fop.fonts.Font, org.apache.fop.area.inline.TextArea, int[])
+    {
+        java.lang.String s;
+        org.apache.fop.fonts.Font font;
+        org.apache.fop.area.inline.TextArea text;
+        int[] letterAdjust, offsets;
+        int textLen, i, wordSpace, cw, ladj, tls, $i0, $i1, $i2;
+        char c, mapped;
+        boolean $z0;
+
+        s := @parameter0: java.lang.String;
+        font := @parameter1: org.apache.fop.fonts.Font;
+        text := @parameter2: org.apache.fop.area.inline.TextArea;
+        letterAdjust := @parameter3: int[];
+        textLen = virtualinvoke s.<java.lang.String: int length()>();
+        offsets = newarray (int)[textLen];
+        i = 0;
+
+     label0:
+        if i >= textLen goto label7;
+
+        c = virtualinvoke s.<java.lang.String: char charAt(int)>(i);
+        mapped = virtualinvoke font.<org.apache.fop.fonts.Font: char mapChar(char)>(c);
+        $z0 = staticinvoke <org.apache.fop.util.CharUtilities: boolean isAdjustableSpace(char)>(mapped);
+        if $z0 == 0 goto label1;
+
+        wordSpace = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getTextWordSpaceAdjust()>();
+        goto label2;
+
+     label1:
+        wordSpace = 0;
+
+     label2:
+        cw = virtualinvoke font.<org.apache.fop.fonts.Font: int getWidth(int)>(mapped);
+        if letterAdjust == null goto label3;
+
+        $i0 = textLen - 1;
+        if i >= $i0 goto label3;
+
+        $i0 = i + 1;
+        $i1 = letterAdjust[$i0];
+        goto label4;
+
+     label3:
+        $i1 = 0;
+
+     label4:
+        ladj = $i1;
+        $i0 = textLen - 1;
+        if i >= $i0 goto label5;
+
+        $i1 = virtualinvoke text.<org.apache.fop.area.inline.TextArea: int getTextLetterSpaceAdjust()>();
+        goto label6;
+
+     label5:
+        $i1 = 0;
+
+     label6:
+        tls = $i1;
+        $i2 = cw + ladj;
+        $i2 = $i2 + tls;
+        $i2 = $i2 + wordSpace;
+        offsets[i] = $i2;
+        i = i + 1;
+        goto label0;
+
+     label7:
+        return offsets;
+    }
+
+    public void renderLeader(org.apache.fop.area.inline.Leader)
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        org.apache.fop.area.inline.Leader area;
+        float startx, starty, endx, ruleThickness, rt2, half, $f0, $f1, $f2, $f3, $f4;
+        java.awt.Color col, $r5;
+        java.awt.geom.Line2D$Float line, $r3;
+        int style, $i0, $i1;
+        java.lang.Integer $r0;
+        java.lang.Object $r1;
+        org.apache.fop.render.java2d.Java2DGraphicsState $r2;
+        double $d0, $d1, $d2, $d3, $d4;
+        java.awt.Graphics2D $r4;
+        java.awt.geom.GeneralPath $r6;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        area := @parameter0: org.apache.fop.area.inline.Leader;
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void renderInlineAreaBackAndBorders(org.apache.fop.area.inline.InlineArea)>(area);
+        $i0 = this.<org.apache.fop.render.java2d.Java2DRenderer: int currentIPPosition>;
+        $i1 = virtualinvoke area.<org.apache.fop.area.inline.Leader: int getBorderAndPaddingWidthStart()>();
+        $i0 = $i0 + $i1;
+        $f0 = (float) $i0;
+        startx = $f0 / 1000.0F;
+        $i0 = this.<org.apache.fop.render.java2d.Java2DRenderer: int currentBPPosition>;
+        $i1 = virtualinvoke area.<org.apache.fop.area.inline.Leader: int getOffset()>();
+        $i0 = $i0 + $i1;
+        $f0 = (float) $i0;
+        starty = $f0 / 1000.0F;
+        $i0 = this.<org.apache.fop.render.java2d.Java2DRenderer: int currentIPPosition>;
+        $i1 = virtualinvoke area.<org.apache.fop.area.inline.Leader: int getBorderAndPaddingWidthStart()>();
+        $i0 = $i0 + $i1;
+        $i1 = virtualinvoke area.<org.apache.fop.area.inline.Leader: int getIPD()>();
+        $i0 = $i0 + $i1;
+        $f0 = (float) $i0;
+        endx = $f0 / 1000.0F;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer COLOR>;
+        $r1 = virtualinvoke area.<org.apache.fop.area.inline.Leader: java.lang.Object getTrait(java.lang.Object)>($r0);
+        col = (java.awt.Color) $r1;
+        $r2 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        virtualinvoke $r2.<org.apache.fop.render.java2d.Java2DGraphicsState: boolean updateColor(java.awt.Color)>(col);
+        $r3 = new java.awt.geom.Line2D$Float;
+        specialinvoke $r3.<java.awt.geom.Line2D$Float: void <init>()>();
+        line = $r3;
+        $d0 = (double) startx;
+        $d1 = (double) starty;
+        $d2 = (double) endx;
+        $d3 = (double) starty;
+        virtualinvoke line.<java.awt.geom.Line2D: void setLine(double,double,double,double)>($d0, $d1, $d2, $d3);
+        $i0 = virtualinvoke area.<org.apache.fop.area.inline.Leader: int getRuleThickness()>();
+        $f0 = (float) $i0;
+        ruleThickness = $f0 / 1000.0F;
+        style = virtualinvoke area.<org.apache.fop.area.inline.Leader: int getRuleStyle()>();
+        lookupswitch(style)
+        {
+            case 31: goto label0;
+            case 36: goto label1;
+            case 37: goto label0;
+            case 55: goto label2;
+            case 95: goto label5;
+            case 119: goto label2;
+            case 133: goto label0;
+            default: goto label6;
+        };
+
+     label0:
+        $f1 = starty + ruleThickness;
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void drawBorderLine(float,float,float,float,boolean,boolean,int,java.awt.Color)>(startx, starty, endx, $f1, 1, 1, style, col);
+        goto label6;
+
+     label1:
+        $r2 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        virtualinvoke $r2.<org.apache.fop.render.java2d.Java2DGraphicsState: boolean updateStroke(float,int)>(ruleThickness, style);
+        rt2 = ruleThickness / 2.0F;
+        $d0 = virtualinvoke line.<java.awt.geom.Line2D: double getX1()>();
+        $d1 = virtualinvoke line.<java.awt.geom.Line2D: double getY1()>();
+        $d2 = (double) rt2;
+        $d1 = $d1 + $d2;
+        $d2 = virtualinvoke line.<java.awt.geom.Line2D: double getX2()>();
+        $d3 = virtualinvoke line.<java.awt.geom.Line2D: double getY2()>();
+        $d4 = (double) rt2;
+        $d3 = $d3 + $d4;
+        virtualinvoke line.<java.awt.geom.Line2D: void setLine(double,double,double,double)>($d0, $d1, $d2, $d3);
+        $r2 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        $r4 = virtualinvoke $r2.<org.apache.fop.render.java2d.Java2DGraphicsState: java.awt.Graphics2D getGraph()>();
+        virtualinvoke $r4.<java.awt.Graphics2D: void draw(java.awt.Shape)>(line);
+        goto label6;
+
+     label2:
+        $i0 = virtualinvoke area.<org.apache.fop.area.inline.Leader: int getRuleThickness()>();
+        $f0 = (float) $i0;
+        half = $f0 / 2000.0F;
+        $r2 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        $r5 = staticinvoke <org.apache.fop.render.java2d.Java2DRenderer: java.awt.Color lightenColor(java.awt.Color,float)>(col, 0.6F);
+        virtualinvoke $r2.<org.apache.fop.render.java2d.Java2DGraphicsState: boolean updateColor(java.awt.Color)>($r5);
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void moveTo(float,float)>(startx, starty);
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void lineTo(float,float)>(endx, starty);
+        $f2 = 2.0F * half;
+        $f3 = starty + $f2;
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void lineTo(float,float)>(endx, $f3);
+        $f2 = 2.0F * half;
+        $f3 = starty + $f2;
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void lineTo(float,float)>(startx, $f3);
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void closePath()>();
+        $r2 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        $r4 = virtualinvoke $r2.<org.apache.fop.render.java2d.Java2DGraphicsState: java.awt.Graphics2D getGraph()>();
+        $r6 = this.<org.apache.fop.render.java2d.Java2DRenderer: java.awt.geom.GeneralPath currentPath>;
+        virtualinvoke $r4.<java.awt.Graphics2D: void fill(java.awt.Shape)>($r6);
+        this.<org.apache.fop.render.java2d.Java2DRenderer: java.awt.geom.GeneralPath currentPath> = null;
+        $r2 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        virtualinvoke $r2.<org.apache.fop.render.java2d.Java2DGraphicsState: boolean updateColor(java.awt.Color)>(col);
+        if style != 55 goto label3;
+
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void moveTo(float,float)>(startx, starty);
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void lineTo(float,float)>(endx, starty);
+        $f3 = starty + half;
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void lineTo(float,float)>(endx, $f3);
+        $f4 = startx + half;
+        $f3 = starty + half;
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void lineTo(float,float)>($f4, $f3);
+        $f2 = 2.0F * half;
+        $f3 = starty + $f2;
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void lineTo(float,float)>(startx, $f3);
+        goto label4;
+
+     label3:
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void moveTo(float,float)>(endx, starty);
+        $f2 = 2.0F * half;
+        $f3 = starty + $f2;
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void lineTo(float,float)>(endx, $f3);
+        $f2 = 2.0F * half;
+        $f3 = starty + $f2;
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void lineTo(float,float)>(startx, $f3);
+        $f3 = starty + half;
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void lineTo(float,float)>(startx, $f3);
+        $f4 = endx - half;
+        $f3 = starty + half;
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void lineTo(float,float)>($f4, $f3);
+
+     label4:
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void closePath()>();
+        $r2 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        $r4 = virtualinvoke $r2.<org.apache.fop.render.java2d.Java2DGraphicsState: java.awt.Graphics2D getGraph()>();
+        $r6 = this.<org.apache.fop.render.java2d.Java2DRenderer: java.awt.geom.GeneralPath currentPath>;
+        virtualinvoke $r4.<java.awt.Graphics2D: void fill(java.awt.Shape)>($r6);
+        this.<org.apache.fop.render.java2d.Java2DRenderer: java.awt.geom.GeneralPath currentPath> = null;
+
+     label5:
+        goto label6;
+
+     label6:
+        specialinvoke this.<org.apache.fop.render.AbstractPathOrientedRenderer: void renderLeader(org.apache.fop.area.inline.Leader)>(area);
+        return;
+    }
+
+    public void renderImage(org.apache.fop.area.inline.Image, java.awt.geom.Rectangle2D)
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        org.apache.fop.area.inline.Image image;
+        java.awt.geom.Rectangle2D pos;
+        java.lang.String url;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        image := @parameter0: org.apache.fop.area.inline.Image;
+        pos := @parameter1: java.awt.geom.Rectangle2D;
+        url = virtualinvoke image.<org.apache.fop.area.inline.Image: java.lang.String getURL()>();
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void drawImage(java.lang.String,java.awt.geom.Rectangle2D)>(url, pos);
+        return;
+    }
+
+    protected void drawImage(java.lang.String, java.awt.geom.Rectangle2D, java.util.Map)
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        java.lang.String uri, uri, $r14, $r18;
+        java.awt.geom.Rectangle2D pos;
+        java.util.Map foreignAttributes, hints;
+        int x, y, width, height, $i0, $i2, $i3;
+        org.apache.xmlgraphics.image.loader.ImageManager manager;
+        org.apache.xmlgraphics.image.loader.ImageInfo info;
+        org.apache.xmlgraphics.image.loader.ImageSessionContext sessionContext;
+        org.apache.xmlgraphics.image.loader.ImageFlavor $r0;
+        org.apache.xmlgraphics.image.loader.ImageFlavor[] flavors, $r3;
+        org.apache.xmlgraphics.image.loader.Image img;
+        org.apache.xmlgraphics.image.loader.impl.ImageGraphics2D imageG2D;
+        org.apache.fop.render.RendererContext context;
+        org.apache.xmlgraphics.image.loader.impl.ImageRendered imgRend;
+        java.awt.geom.AffineTransform at, $r6;
+        double sx, sy, $d0, $d1, $d2, $d3, $d4;
+        org.apache.xmlgraphics.image.loader.impl.ImageXMLDOM imgXML;
+        org.apache.xmlgraphics.image.loader.ImageException ie, $r15;
+        java.io.FileNotFoundException fnfe, $r19;
+        java.io.IOException ioe, $r20;
+        long $l1;
+        org.apache.fop.apps.FOUserAgent $r1, $r8;
+        org.apache.fop.apps.FopFactory $r2;
+        boolean $z0;
+        org.apache.fop.render.Graphics2DAdapter $r4;
+        org.apache.xmlgraphics.java2d.Graphics2DImagePainter $r5;
+        float $f0, $f1, $f2;
+        org.apache.xmlgraphics.image.loader.ImageSize $r7, $r9;
+        org.apache.fop.render.java2d.Java2DGraphicsState $r10;
+        java.awt.Graphics2D $r11;
+        java.awt.image.RenderedImage $r12;
+        org.w3c.dom.Document $r13;
+        org.apache.commons.logging.Log $r16;
+        java.lang.StringBuffer $r17;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        uri := @parameter0: java.lang.String;
+        pos := @parameter1: java.awt.geom.Rectangle2D;
+        foreignAttributes := @parameter2: java.util.Map;
+        $i0 = this.<org.apache.fop.render.java2d.Java2DRenderer: int currentIPPosition>;
+        $d0 = virtualinvoke pos.<java.awt.geom.Rectangle2D: double getX()>();
+        $l1 = staticinvoke <java.lang.Math: long round(double)>($d0);
+        $i2 = (int) $l1;
+        x = $i0 + $i2;
+        $i0 = this.<org.apache.fop.render.java2d.Java2DRenderer: int currentBPPosition>;
+        $d0 = virtualinvoke pos.<java.awt.geom.Rectangle2D: double getY()>();
+        $l1 = staticinvoke <java.lang.Math: long round(double)>($d0);
+        $i2 = (int) $l1;
+        y = $i0 + $i2;
+        uri = staticinvoke <org.apache.fop.datatypes.URISpecification: java.lang.String getURL(java.lang.String)>(uri);
+        $r1 = virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.apps.FOUserAgent: org.apache.fop.apps.FopFactory getFactory()>();
+        manager = virtualinvoke $r2.<org.apache.fop.apps.FopFactory: org.apache.xmlgraphics.image.loader.ImageManager getImageManager()>();
+        info = null;
+
+     label0:
+        $r1 = virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        sessionContext = virtualinvoke $r1.<org.apache.fop.apps.FOUserAgent: org.apache.xmlgraphics.image.loader.ImageSessionContext getImageSessionContext()>();
+        info = virtualinvoke manager.<org.apache.xmlgraphics.image.loader.ImageManager: org.apache.xmlgraphics.image.loader.ImageInfo getImageInfo(java.lang.String,org.apache.xmlgraphics.image.loader.ImageSessionContext)>(uri, sessionContext);
+        $r3 = newarray (org.apache.xmlgraphics.image.loader.ImageFlavor)[4];
+        $r0 = <org.apache.xmlgraphics.image.loader.ImageFlavor: org.apache.xmlgraphics.image.loader.ImageFlavor GRAPHICS2D>;
+        $r3[0] = $r0;
+        $r0 = <org.apache.xmlgraphics.image.loader.ImageFlavor: org.apache.xmlgraphics.image.loader.ImageFlavor BUFFERED_IMAGE>;
+        $r3[1] = $r0;
+        $r0 = <org.apache.xmlgraphics.image.loader.ImageFlavor: org.apache.xmlgraphics.image.loader.ImageFlavor RENDERED_IMAGE>;
+        $r3[2] = $r0;
+        $r0 = <org.apache.xmlgraphics.image.loader.ImageFlavor: org.apache.xmlgraphics.image.loader.ImageFlavor XML_DOM>;
+        $r3[3] = $r0;
+        flavors = $r3;
+        hints = staticinvoke <org.apache.xmlgraphics.image.loader.util.ImageUtil: java.util.Map getDefaultHints(org.apache.xmlgraphics.image.loader.ImageSessionContext)>(sessionContext);
+        img = virtualinvoke manager.<org.apache.xmlgraphics.image.loader.ImageManager: org.apache.xmlgraphics.image.loader.Image getImage(org.apache.xmlgraphics.image.loader.ImageInfo,org.apache.xmlgraphics.image.loader.ImageFlavor[],java.util.Map,org.apache.xmlgraphics.image.loader.ImageSessionContext)>(info, flavors, hints, sessionContext);
+        $z0 = img instanceof org.apache.xmlgraphics.image.loader.impl.ImageGraphics2D;
+        if $z0 == 0 goto label1;
+
+        imageG2D = (org.apache.xmlgraphics.image.loader.impl.ImageGraphics2D) img;
+        $d1 = virtualinvoke pos.<java.awt.geom.Rectangle2D: double getWidth()>();
+        width = (int) $d1;
+        $d1 = virtualinvoke pos.<java.awt.geom.Rectangle2D: double getHeight()>();
+        height = (int) $d1;
+        context = virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.RendererContext createRendererContext(int,int,int,int,java.util.Map)>(x, y, width, height, foreignAttributes);
+        $r4 = virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.Graphics2DAdapter getGraphics2DAdapter()>();
+        $r5 = virtualinvoke imageG2D.<org.apache.xmlgraphics.image.loader.impl.ImageGraphics2D: org.apache.xmlgraphics.java2d.Graphics2DImagePainter getGraphics2DImagePainter()>();
+        interfaceinvoke $r4.<org.apache.fop.render.Graphics2DAdapter: void paintImage(org.apache.xmlgraphics.java2d.Graphics2DImagePainter,org.apache.fop.render.RendererContext,int,int,int,int)>($r5, context, x, y, width, height);
+        goto label3;
+
+     label1:
+        $z0 = img instanceof org.apache.xmlgraphics.image.loader.impl.ImageRendered;
+        if $z0 == 0 goto label2;
+
+        imgRend = (org.apache.xmlgraphics.image.loader.impl.ImageRendered) img;
+        $r6 = new java.awt.geom.AffineTransform;
+        specialinvoke $r6.<java.awt.geom.AffineTransform: void <init>()>();
+        at = $r6;
+        $f0 = (float) x;
+        $f0 = $f0 / 1000.0F;
+        $d0 = (double) $f0;
+        $f1 = (float) y;
+        $f1 = $f1 / 1000.0F;
+        $d2 = (double) $f1;
+        virtualinvoke at.<java.awt.geom.AffineTransform: void translate(double,double)>($d0, $d2);
+        $d1 = virtualinvoke pos.<java.awt.geom.Rectangle2D: double getWidth()>();
+        $r7 = virtualinvoke info.<org.apache.xmlgraphics.image.loader.ImageInfo: org.apache.xmlgraphics.image.loader.ImageSize getSize()>();
+        $i3 = virtualinvoke $r7.<org.apache.xmlgraphics.image.loader.ImageSize: int getWidthMpt()>();
+        $d3 = (double) $i3;
+        sx = $d1 / $d3;
+        $d1 = virtualinvoke pos.<java.awt.geom.Rectangle2D: double getHeight()>();
+        $r7 = virtualinvoke info.<org.apache.xmlgraphics.image.loader.ImageInfo: org.apache.xmlgraphics.image.loader.ImageSize getSize()>();
+        $i3 = virtualinvoke $r7.<org.apache.xmlgraphics.image.loader.ImageSize: int getHeightMpt()>();
+        $d3 = (double) $i3;
+        sy = $d1 / $d3;
+        $r8 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        $f2 = virtualinvoke $r8.<org.apache.fop.apps.FOUserAgent: float getSourceResolution()>();
+        $d3 = (double) $f2;
+        $r9 = virtualinvoke info.<org.apache.xmlgraphics.image.loader.ImageInfo: org.apache.xmlgraphics.image.loader.ImageSize getSize()>();
+        $d4 = virtualinvoke $r9.<org.apache.xmlgraphics.image.loader.ImageSize: double getDpiHorizontal()>();
+        $d3 = $d3 / $d4;
+        sx = sx * $d3;
+        $r8 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        $f2 = virtualinvoke $r8.<org.apache.fop.apps.FOUserAgent: float getSourceResolution()>();
+        $d3 = (double) $f2;
+        $r9 = virtualinvoke info.<org.apache.xmlgraphics.image.loader.ImageInfo: org.apache.xmlgraphics.image.loader.ImageSize getSize()>();
+        $d4 = virtualinvoke $r9.<org.apache.xmlgraphics.image.loader.ImageSize: double getDpiVertical()>();
+        $d3 = $d3 / $d4;
+        sy = sy * $d3;
+        virtualinvoke at.<java.awt.geom.AffineTransform: void scale(double,double)>(sx, sy);
+        $r10 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        $r11 = virtualinvoke $r10.<org.apache.fop.render.java2d.Java2DGraphicsState: java.awt.Graphics2D getGraph()>();
+        $r12 = virtualinvoke imgRend.<org.apache.xmlgraphics.image.loader.impl.ImageRendered: java.awt.image.RenderedImage getRenderedImage()>();
+        virtualinvoke $r11.<java.awt.Graphics2D: void drawRenderedImage(java.awt.image.RenderedImage,java.awt.geom.AffineTransform)>($r12, at);
+        goto label3;
+
+     label2:
+        $z0 = img instanceof org.apache.xmlgraphics.image.loader.impl.ImageXMLDOM;
+        if $z0 == 0 goto label3;
+
+        imgXML = (org.apache.xmlgraphics.image.loader.impl.ImageXMLDOM) img;
+        $r13 = virtualinvoke imgXML.<org.apache.xmlgraphics.image.loader.impl.ImageXMLDOM: org.w3c.dom.Document getDocument()>();
+        $r14 = virtualinvoke imgXML.<org.apache.xmlgraphics.image.loader.impl.ImageXMLDOM: java.lang.String getRootNamespace()>();
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void renderDocument(org.w3c.dom.Document,java.lang.String,java.awt.geom.Rectangle2D,java.util.Map)>($r13, $r14, pos, foreignAttributes);
+
+     label3:
+        goto label11;
+
+     label4:
+        $r15 := @caughtexception;
+        ie = $r15;
+        $r16 = <org.apache.fop.render.java2d.Java2DRenderer: org.apache.commons.logging.Log log>;
+        $r17 = new java.lang.StringBuffer;
+        specialinvoke $r17.<java.lang.StringBuffer: void <init>()>();
+        $r17 = virtualinvoke $r17.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Error while processing image: ");
+        if info == null goto label5;
+
+        $r14 = virtualinvoke info.<org.apache.xmlgraphics.image.loader.ImageInfo: java.lang.String toString()>();
+        goto label6;
+
+     label5:
+        $r14 = uri;
+
+     label6:
+        $r17 = virtualinvoke $r17.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r14);
+        $r18 = virtualinvoke $r17.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r16.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r18, ie);
+        goto label11;
+
+     label7:
+        $r19 := @caughtexception;
+        fnfe = $r19;
+        $r16 = <org.apache.fop.render.java2d.Java2DRenderer: org.apache.commons.logging.Log log>;
+        $r18 = virtualinvoke fnfe.<java.io.FileNotFoundException: java.lang.String getMessage()>();
+        interfaceinvoke $r16.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r18);
+        goto label11;
+
+     label8:
+        $r20 := @caughtexception;
+        ioe = $r20;
+        $r16 = <org.apache.fop.render.java2d.Java2DRenderer: org.apache.commons.logging.Log log>;
+        $r17 = new java.lang.StringBuffer;
+        specialinvoke $r17.<java.lang.StringBuffer: void <init>()>();
+        $r17 = virtualinvoke $r17.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("I/O error while processing image: ");
+        if info == null goto label9;
+
+        $r14 = virtualinvoke info.<org.apache.xmlgraphics.image.loader.ImageInfo: java.lang.String toString()>();
+        goto label10;
+
+     label9:
+        $r14 = uri;
+
+     label10:
+        $r17 = virtualinvoke $r17.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r14);
+        $r18 = virtualinvoke $r17.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r16.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r18, ioe);
+
+     label11:
+        return;
+
+        catch org.apache.xmlgraphics.image.loader.ImageException from label0 to label3 with label4;
+        catch java.io.FileNotFoundException from label0 to label3 with label7;
+        catch java.io.IOException from label0 to label3 with label8;
+    }
+
+    protected org.apache.fop.render.RendererContext createRendererContext(int, int, int, int, java.util.Map)
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        int x, y, width, height;
+        java.util.Map foreignAttributes;
+        org.apache.fop.render.RendererContext context;
+        org.apache.fop.render.java2d.Java2DGraphicsState $r0;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        x := @parameter0: int;
+        y := @parameter1: int;
+        width := @parameter2: int;
+        height := @parameter3: int;
+        foreignAttributes := @parameter4: java.util.Map;
+        context = specialinvoke this.<org.apache.fop.render.AbstractPathOrientedRenderer: org.apache.fop.render.RendererContext createRendererContext(int,int,int,int,java.util.Map)>(x, y, width, height, foreignAttributes);
+        $r0 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        virtualinvoke context.<org.apache.fop.render.RendererContext: void setProperty(java.lang.String,java.lang.Object)>("state", $r0);
+        return context;
+    }
+
+    public int print(java.awt.Graphics, java.awt.print.PageFormat, int) throws java.awt.print.PrinterException
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        java.awt.Graphics g;
+        java.awt.print.PageFormat pageFormat;
+        int pageIndex, $i0;
+        java.awt.Graphics2D graphics;
+        org.apache.fop.area.PageViewport viewport;
+        java.awt.geom.AffineTransform at;
+        byte l7, l6;
+        org.apache.fop.apps.FOPException e, $r5;
+        java.lang.Throwable l8, $r7;
+        org.apache.fop.render.java2d.Java2DGraphicsState $r0, $r2;
+        java.lang.IllegalStateException $r1;
+        org.apache.fop.fonts.FontInfo $r3;
+        org.apache.fop.area.Page $r4;
+        org.apache.commons.logging.Log $r6;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        g := @parameter0: java.awt.Graphics;
+        pageFormat := @parameter1: java.awt.print.PageFormat;
+        pageIndex := @parameter2: int;
+        $i0 = virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: int getNumberOfPages()>();
+        if pageIndex < $i0 goto label0;
+
+        return 1;
+
+     label0:
+        $r0 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state>;
+        if $r0 == null goto label1;
+
+        $r1 = new java.lang.IllegalStateException;
+        specialinvoke $r1.<java.lang.IllegalStateException: void <init>(java.lang.String)>("state must be null");
+        throw $r1;
+
+     label1:
+        graphics = (java.awt.Graphics2D) g;
+
+     label2:
+        viewport = virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.area.PageViewport getPageViewport(int)>(pageIndex);
+        at = virtualinvoke graphics.<java.awt.Graphics2D: java.awt.geom.AffineTransform getTransform()>();
+        $r2 = new org.apache.fop.render.java2d.Java2DGraphicsState;
+        $r3 = this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.fonts.FontInfo fontInfo>;
+        specialinvoke $r2.<org.apache.fop.render.java2d.Java2DGraphicsState: void <init>(java.awt.Graphics2D,org.apache.fop.fonts.FontInfo,java.awt.geom.AffineTransform)>(graphics, $r3, at);
+        this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state> = $r2;
+        this.<org.apache.fop.render.java2d.Java2DRenderer: int currentBPPosition> = 0;
+        this.<org.apache.fop.render.java2d.Java2DRenderer: int currentIPPosition> = 0;
+        $r4 = virtualinvoke viewport.<org.apache.fop.area.PageViewport: org.apache.fop.area.Page getPage()>();
+        virtualinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void renderPageAreas(org.apache.fop.area.Page)>($r4);
+        l7 = 0;
+
+     label3:
+        this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state> = null;
+        return l7;
+
+     label4:
+        $r5 := @caughtexception;
+
+     label5:
+        e = $r5;
+        $r6 = <org.apache.fop.render.java2d.Java2DRenderer: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r6.<org.apache.commons.logging.Log: void error(java.lang.Object)>(e);
+        l6 = 1;
+
+     label6:
+        this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state> = null;
+        return l6;
+
+     label7:
+        $r7 := @caughtexception;
+
+     label8:
+        l8 = $r7;
+
+     label9:
+        this.<org.apache.fop.render.java2d.Java2DRenderer: org.apache.fop.render.java2d.Java2DGraphicsState state> = null;
+        throw l8;
+
+        catch org.apache.fop.apps.FOPException from label2 to label3 with label4;
+        catch java.lang.Throwable from label2 to label3 with label7;
+        catch java.lang.Throwable from label5 to label6 with label7;
+        catch java.lang.Throwable from label8 to label9 with label7;
+    }
+
+    protected void beginTextObject()
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        return;
+    }
+
+    protected void endTextObject()
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        return;
+    }
+
+    public void setTransparentPageBackground(boolean)
+    {
+        org.apache.fop.render.java2d.Java2DRenderer this;
+        boolean transparentPageBackground;
+
+        this := @this: org.apache.fop.render.java2d.Java2DRenderer;
+        transparentPageBackground := @parameter0: boolean;
+        this.<org.apache.fop.render.java2d.Java2DRenderer: boolean transparentPageBackground> = transparentPageBackground;
+        return;
+    }
+}

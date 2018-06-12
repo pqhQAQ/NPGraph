@@ -1,0 +1,430 @@
+public class org.apache.fop.pdf.PDFState extends java.lang.Object
+{
+    private org.apache.fop.pdf.PDFState$Data data;
+    private java.util.List stateStack;
+
+    public void <init>()
+    {
+        org.apache.fop.pdf.PDFState this;
+        org.apache.fop.pdf.PDFState$Data $r0;
+        java.util.ArrayList $r1;
+
+        this := @this: org.apache.fop.pdf.PDFState;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $r0 = new org.apache.fop.pdf.PDFState$Data;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFState$Data: void <init>(org.apache.fop.pdf.PDFState)>(this);
+        this.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data data> = $r0;
+        $r1 = new java.util.ArrayList;
+        specialinvoke $r1.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.pdf.PDFState: java.util.List stateStack> = $r1;
+        return;
+    }
+
+    public void push()
+    {
+        org.apache.fop.pdf.PDFState this;
+        org.apache.fop.pdf.PDFState$Data copy, $r0;
+        java.lang.CloneNotSupportedException e, $r2;
+        java.lang.Object $r1;
+        java.lang.RuntimeException $r3;
+        java.lang.String $r4;
+        java.util.List $r5;
+
+        this := @this: org.apache.fop.pdf.PDFState;
+
+     label0:
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data getData()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.pdf.PDFState$Data: java.lang.Object clone()>();
+        copy = (org.apache.fop.pdf.PDFState$Data) $r1;
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data getData()>();
+        virtualinvoke $r0.<org.apache.fop.pdf.PDFState$Data: void resetTransform()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r2 := @caughtexception;
+        e = $r2;
+        $r3 = new java.lang.RuntimeException;
+        $r4 = virtualinvoke e.<java.lang.CloneNotSupportedException: java.lang.String getMessage()>();
+        specialinvoke $r3.<java.lang.RuntimeException: void <init>(java.lang.String)>($r4);
+        throw $r3;
+
+     label3:
+        $r5 = this.<org.apache.fop.pdf.PDFState: java.util.List stateStack>;
+        interfaceinvoke $r5.<java.util.List: boolean add(java.lang.Object)>(copy);
+        return;
+
+        catch java.lang.CloneNotSupportedException from label0 to label1 with label2;
+    }
+
+    public org.apache.fop.pdf.PDFState$Data getData()
+    {
+        org.apache.fop.pdf.PDFState this;
+        org.apache.fop.pdf.PDFState$Data $r0;
+
+        this := @this: org.apache.fop.pdf.PDFState;
+        $r0 = this.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data data>;
+        return $r0;
+    }
+
+    public org.apache.fop.pdf.PDFState$Data pop()
+    {
+        org.apache.fop.pdf.PDFState this;
+        org.apache.fop.pdf.PDFState$Data popped;
+        int $i0, $i1;
+        java.util.List $r0, $r1;
+        java.lang.Object $r2;
+
+        this := @this: org.apache.fop.pdf.PDFState;
+        $i0 = virtualinvoke this.<org.apache.fop.pdf.PDFState: int getStackLevel()>();
+        if $i0 <= 0 goto label0;
+
+        $r0 = this.<org.apache.fop.pdf.PDFState: java.util.List stateStack>;
+        $r1 = this.<org.apache.fop.pdf.PDFState: java.util.List stateStack>;
+        $i1 = interfaceinvoke $r1.<java.util.List: int size()>();
+        $i1 = $i1 - 1;
+        $r2 = interfaceinvoke $r0.<java.util.List: java.lang.Object remove(int)>($i1);
+        popped = (org.apache.fop.pdf.PDFState$Data) $r2;
+        this.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data data> = popped;
+        return popped;
+
+     label0:
+        return null;
+    }
+
+    public int getStackLevel()
+    {
+        org.apache.fop.pdf.PDFState this;
+        java.util.List $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.pdf.PDFState;
+        $r0 = this.<org.apache.fop.pdf.PDFState: java.util.List stateStack>;
+        $i0 = interfaceinvoke $r0.<java.util.List: int size()>();
+        return $i0;
+    }
+
+    public boolean setLineWidth(float)
+    {
+        org.apache.fop.pdf.PDFState this;
+        float width, $f0;
+        org.apache.fop.pdf.PDFState$Data $r0;
+        byte $b0;
+
+        this := @this: org.apache.fop.pdf.PDFState;
+        width := @parameter0: float;
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data getData()>();
+        $f0 = $r0.<org.apache.fop.pdf.PDFState$Data: float lineWidth>;
+        $b0 = $f0 cmpl width;
+        if $b0 == 0 goto label0;
+
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data getData()>();
+        $r0.<org.apache.fop.pdf.PDFState$Data: float lineWidth> = width;
+        return 1;
+
+     label0:
+        return 0;
+    }
+
+    public boolean setColor(java.awt.Color)
+    {
+        org.apache.fop.pdf.PDFState this;
+        java.awt.Color col, $r1;
+        org.apache.fop.pdf.PDFState$Data $r0, $r2;
+        boolean $z0;
+
+        this := @this: org.apache.fop.pdf.PDFState;
+        col := @parameter0: java.awt.Color;
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data getData()>();
+        $r1 = $r0.<org.apache.fop.pdf.PDFState$Data: java.awt.Color color>;
+        $z0 = virtualinvoke col.<java.awt.Color: boolean equals(java.lang.Object)>($r1);
+        if $z0 != 0 goto label0;
+
+        $r2 = virtualinvoke this.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data getData()>();
+        $r2.<org.apache.fop.pdf.PDFState$Data: java.awt.Color color> = col;
+        return 1;
+
+     label0:
+        return 0;
+    }
+
+    public boolean setBackColor(java.awt.Color)
+    {
+        org.apache.fop.pdf.PDFState this;
+        java.awt.Color col, $r1;
+        org.apache.fop.pdf.PDFState$Data $r0, $r2;
+        boolean $z0;
+
+        this := @this: org.apache.fop.pdf.PDFState;
+        col := @parameter0: java.awt.Color;
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data getData()>();
+        $r1 = $r0.<org.apache.fop.pdf.PDFState$Data: java.awt.Color backcolor>;
+        $z0 = virtualinvoke col.<java.awt.Color: boolean equals(java.lang.Object)>($r1);
+        if $z0 != 0 goto label0;
+
+        $r2 = virtualinvoke this.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data getData()>();
+        $r2.<org.apache.fop.pdf.PDFState$Data: java.awt.Color backcolor> = col;
+        return 1;
+
+     label0:
+        return 0;
+    }
+
+    public boolean setPaint(java.awt.Paint)
+    {
+        org.apache.fop.pdf.PDFState this;
+        java.awt.Paint p, $r1;
+        org.apache.fop.pdf.PDFState$Data $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.pdf.PDFState;
+        p := @parameter0: java.awt.Paint;
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data getData()>();
+        $r1 = $r0.<org.apache.fop.pdf.PDFState$Data: java.awt.Paint paint>;
+        if $r1 != null goto label0;
+
+        if p == null goto label1;
+
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data getData()>();
+        $r0.<org.apache.fop.pdf.PDFState$Data: java.awt.Paint paint> = p;
+        return 1;
+
+     label0:
+        $r0 = this.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data data>;
+        $r1 = $r0.<org.apache.fop.pdf.PDFState$Data: java.awt.Paint paint>;
+        $z0 = virtualinvoke $r1.<java.lang.Object: boolean equals(java.lang.Object)>(p);
+        if $z0 != 0 goto label1;
+
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data getData()>();
+        $r0.<org.apache.fop.pdf.PDFState$Data: java.awt.Paint paint> = p;
+        return 1;
+
+     label1:
+        return 0;
+    }
+
+    public boolean checkClip(java.awt.Shape)
+    {
+        org.apache.fop.pdf.PDFState this;
+        java.awt.Shape cl, $r1, $r4;
+        org.apache.fop.pdf.PDFState$Data $r0, $r3;
+        java.awt.geom.Area $r2, $r5;
+        boolean $z0;
+
+        this := @this: org.apache.fop.pdf.PDFState;
+        cl := @parameter0: java.awt.Shape;
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data getData()>();
+        $r1 = $r0.<org.apache.fop.pdf.PDFState$Data: java.awt.Shape clip>;
+        if $r1 != null goto label0;
+
+        if cl == null goto label1;
+
+        return 1;
+
+     label0:
+        $r2 = new java.awt.geom.Area;
+        $r3 = virtualinvoke this.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data getData()>();
+        $r4 = $r3.<org.apache.fop.pdf.PDFState$Data: java.awt.Shape clip>;
+        specialinvoke $r2.<java.awt.geom.Area: void <init>(java.awt.Shape)>($r4);
+        $r5 = new java.awt.geom.Area;
+        specialinvoke $r5.<java.awt.geom.Area: void <init>(java.awt.Shape)>(cl);
+        $z0 = virtualinvoke $r2.<java.awt.geom.Area: boolean equals(java.awt.geom.Area)>($r5);
+        if $z0 != 0 goto label1;
+
+        return 1;
+
+     label1:
+        return 0;
+    }
+
+    public void setClip(java.awt.Shape)
+    {
+        org.apache.fop.pdf.PDFState this;
+        java.awt.Shape cl, $r1, $r4;
+        java.awt.geom.Area newClip, $r2, $r5;
+        org.apache.fop.pdf.PDFState$Data $r0, $r3;
+        java.awt.geom.GeneralPath $r6;
+
+        this := @this: org.apache.fop.pdf.PDFState;
+        cl := @parameter0: java.awt.Shape;
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data getData()>();
+        $r1 = $r0.<org.apache.fop.pdf.PDFState$Data: java.awt.Shape clip>;
+        if $r1 == null goto label0;
+
+        $r2 = new java.awt.geom.Area;
+        $r3 = virtualinvoke this.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data getData()>();
+        $r4 = $r3.<org.apache.fop.pdf.PDFState$Data: java.awt.Shape clip>;
+        specialinvoke $r2.<java.awt.geom.Area: void <init>(java.awt.Shape)>($r4);
+        newClip = $r2;
+        $r5 = new java.awt.geom.Area;
+        specialinvoke $r5.<java.awt.geom.Area: void <init>(java.awt.Shape)>(cl);
+        virtualinvoke newClip.<java.awt.geom.Area: void intersect(java.awt.geom.Area)>($r5);
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data getData()>();
+        $r6 = new java.awt.geom.GeneralPath;
+        specialinvoke $r6.<java.awt.geom.GeneralPath: void <init>(java.awt.Shape)>(newClip);
+        $r0.<org.apache.fop.pdf.PDFState$Data: java.awt.Shape clip> = $r6;
+        goto label1;
+
+     label0:
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data getData()>();
+        $r0.<org.apache.fop.pdf.PDFState$Data: java.awt.Shape clip> = cl;
+
+     label1:
+        return;
+    }
+
+    public boolean checkTransform(java.awt.geom.AffineTransform)
+    {
+        org.apache.fop.pdf.PDFState this;
+        java.awt.geom.AffineTransform tf, $r1;
+        org.apache.fop.pdf.PDFState$Data $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.pdf.PDFState;
+        tf := @parameter0: java.awt.geom.AffineTransform;
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data getData()>();
+        $r1 = $r0.<org.apache.fop.pdf.PDFState$Data: java.awt.geom.AffineTransform transform>;
+        $z0 = virtualinvoke tf.<java.awt.geom.AffineTransform: boolean equals(java.lang.Object)>($r1);
+        if $z0 != 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    public void setTransform(java.awt.geom.AffineTransform)
+    {
+        org.apache.fop.pdf.PDFState this;
+        java.awt.geom.AffineTransform tf;
+
+        this := @this: org.apache.fop.pdf.PDFState;
+        tf := @parameter0: java.awt.geom.AffineTransform;
+        virtualinvoke this.<org.apache.fop.pdf.PDFState: void concatenate(java.awt.geom.AffineTransform)>(tf);
+        return;
+    }
+
+    public void concatenate(java.awt.geom.AffineTransform)
+    {
+        org.apache.fop.pdf.PDFState this;
+        java.awt.geom.AffineTransform tf;
+        org.apache.fop.pdf.PDFState$Data $r0;
+
+        this := @this: org.apache.fop.pdf.PDFState;
+        tf := @parameter0: java.awt.geom.AffineTransform;
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data getData()>();
+        virtualinvoke $r0.<org.apache.fop.pdf.PDFState$Data: void concatenate(java.awt.geom.AffineTransform)>(tf);
+        return;
+    }
+
+    public java.awt.geom.AffineTransform getTransform()
+    {
+        org.apache.fop.pdf.PDFState this;
+        java.awt.geom.AffineTransform $r0, at, tf, $r4;
+        java.util.Iterator iter;
+        org.apache.fop.pdf.PDFState$Data d, $r3;
+        java.util.List $r1;
+        boolean $z0;
+        java.lang.Object $r2;
+
+        this := @this: org.apache.fop.pdf.PDFState;
+        $r0 = new java.awt.geom.AffineTransform;
+        specialinvoke $r0.<java.awt.geom.AffineTransform: void <init>()>();
+        at = $r0;
+        $r1 = this.<org.apache.fop.pdf.PDFState: java.util.List stateStack>;
+        iter = interfaceinvoke $r1.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r2 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        d = (org.apache.fop.pdf.PDFState$Data) $r2;
+        tf = d.<org.apache.fop.pdf.PDFState$Data: java.awt.geom.AffineTransform transform>;
+        virtualinvoke at.<java.awt.geom.AffineTransform: void concatenate(java.awt.geom.AffineTransform)>(tf);
+        goto label0;
+
+     label1:
+        $r3 = virtualinvoke this.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data getData()>();
+        $r4 = $r3.<org.apache.fop.pdf.PDFState$Data: java.awt.geom.AffineTransform transform>;
+        virtualinvoke at.<java.awt.geom.AffineTransform: void concatenate(java.awt.geom.AffineTransform)>($r4);
+        return at;
+    }
+
+    public java.awt.geom.AffineTransform getBaseTransform()
+    {
+        org.apache.fop.pdf.PDFState this;
+        org.apache.fop.pdf.PDFState$Data baseData;
+        java.util.List $r0;
+        int $i0;
+        java.lang.Object $r1;
+        java.awt.geom.AffineTransform $r2;
+
+        this := @this: org.apache.fop.pdf.PDFState;
+        $r0 = this.<org.apache.fop.pdf.PDFState: java.util.List stateStack>;
+        $i0 = interfaceinvoke $r0.<java.util.List: int size()>();
+        if $i0 != 0 goto label0;
+
+        return null;
+
+     label0:
+        $r0 = this.<org.apache.fop.pdf.PDFState: java.util.List stateStack>;
+        $r1 = interfaceinvoke $r0.<java.util.List: java.lang.Object get(int)>(0);
+        baseData = (org.apache.fop.pdf.PDFState$Data) $r1;
+        $r2 = baseData.<org.apache.fop.pdf.PDFState$Data: java.awt.geom.AffineTransform transform>;
+        $r1 = virtualinvoke $r2.<java.awt.geom.AffineTransform: java.lang.Object clone()>();
+        $r2 = (java.awt.geom.AffineTransform) $r1;
+        return $r2;
+    }
+
+    public org.apache.fop.pdf.PDFGState getGState()
+    {
+        org.apache.fop.pdf.PDFState this;
+        org.apache.fop.pdf.PDFGState defaultState, newstate, state, $r0, $r5;
+        java.util.Iterator iter;
+        org.apache.fop.pdf.PDFState$Data d, $r3, $r4;
+        java.util.List $r1;
+        boolean $z0;
+        java.lang.Object $r2;
+
+        this := @this: org.apache.fop.pdf.PDFState;
+        defaultState = <org.apache.fop.pdf.PDFGState: org.apache.fop.pdf.PDFGState DEFAULT>;
+        $r0 = new org.apache.fop.pdf.PDFGState;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFGState: void <init>()>();
+        newstate = $r0;
+        virtualinvoke newstate.<org.apache.fop.pdf.PDFGState: void addValues(org.apache.fop.pdf.PDFGState)>(defaultState);
+        $r1 = this.<org.apache.fop.pdf.PDFState: java.util.List stateStack>;
+        iter = interfaceinvoke $r1.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label2;
+
+        $r2 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        d = (org.apache.fop.pdf.PDFState$Data) $r2;
+        state = d.<org.apache.fop.pdf.PDFState$Data: org.apache.fop.pdf.PDFGState gstate>;
+        if state == null goto label1;
+
+        virtualinvoke newstate.<org.apache.fop.pdf.PDFGState: void addValues(org.apache.fop.pdf.PDFGState)>(state);
+
+     label1:
+        goto label0;
+
+     label2:
+        $r3 = virtualinvoke this.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data getData()>();
+        $r0 = $r3.<org.apache.fop.pdf.PDFState$Data: org.apache.fop.pdf.PDFGState gstate>;
+        if $r0 == null goto label3;
+
+        $r4 = virtualinvoke this.<org.apache.fop.pdf.PDFState: org.apache.fop.pdf.PDFState$Data getData()>();
+        $r5 = $r4.<org.apache.fop.pdf.PDFState$Data: org.apache.fop.pdf.PDFGState gstate>;
+        virtualinvoke newstate.<org.apache.fop.pdf.PDFGState: void addValues(org.apache.fop.pdf.PDFGState)>($r5);
+
+     label3:
+        return newstate;
+    }
+}

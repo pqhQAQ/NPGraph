@@ -1,0 +1,176 @@
+class org.apache.fop.area.AreaTreeParser$Handler$BlockMaker extends org.apache.fop.area.AreaTreeParser$Handler$AbstractMaker
+{
+    private final org.apache.fop.area.AreaTreeParser$Handler this$0;
+
+    private void <init>(org.apache.fop.area.AreaTreeParser$Handler)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler$BlockMaker this;
+        org.apache.fop.area.AreaTreeParser$Handler l1;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler$BlockMaker;
+        l1 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        this.<org.apache.fop.area.AreaTreeParser$Handler$BlockMaker: org.apache.fop.area.AreaTreeParser$Handler this$0> = l1;
+        specialinvoke this.<org.apache.fop.area.AreaTreeParser$Handler$AbstractMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler,org.apache.fop.area.AreaTreeParser$1)>(l1, null);
+        return;
+    }
+
+    public void startElement(org.xml.sax.Attributes)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler$BlockMaker this;
+        org.xml.sax.Attributes attributes;
+        boolean isViewport, $z0, $z1;
+        org.apache.fop.area.BlockViewport bv, $r1;
+        org.apache.fop.area.Block block, $r4;
+        java.lang.String positioning, $r5;
+        org.apache.fop.area.Area parent;
+        org.apache.fop.area.AreaTreeParser$Handler $r0, $r2;
+        org.apache.fop.area.CTM $r3;
+        int $i0, $i1;
+        java.lang.Object[] $r6;
+        java.util.Stack $r7;
+        java.lang.Object $r8;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler$BlockMaker;
+        attributes := @parameter0: org.xml.sax.Attributes;
+        $r0 = this.<org.apache.fop.area.AreaTreeParser$Handler$BlockMaker: org.apache.fop.area.AreaTreeParser$Handler this$0>;
+        isViewport = staticinvoke <org.apache.fop.area.AreaTreeParser$Handler: boolean access$4100(org.apache.fop.area.AreaTreeParser$Handler,org.xml.sax.Attributes,java.lang.String,boolean)>($r0, attributes, "is-viewport-area", 0);
+        if isViewport == 0 goto label1;
+
+        $r1 = new org.apache.fop.area.BlockViewport;
+        specialinvoke $r1.<org.apache.fop.area.BlockViewport: void <init>()>();
+        bv = $r1;
+        $r2 = this.<org.apache.fop.area.AreaTreeParser$Handler$BlockMaker: org.apache.fop.area.AreaTreeParser$Handler this$0>;
+        $z0 = staticinvoke <org.apache.fop.area.AreaTreeParser$Handler: boolean access$4100(org.apache.fop.area.AreaTreeParser$Handler,org.xml.sax.Attributes,java.lang.String,boolean)>($r2, attributes, "clipped", 0);
+        virtualinvoke bv.<org.apache.fop.area.BlockViewport: void setClip(boolean)>($z0);
+        $r2 = this.<org.apache.fop.area.AreaTreeParser$Handler$BlockMaker: org.apache.fop.area.AreaTreeParser$Handler this$0>;
+        $r3 = staticinvoke <org.apache.fop.area.AreaTreeParser$Handler: org.apache.fop.area.CTM access$5200(org.apache.fop.area.AreaTreeParser$Handler,org.xml.sax.Attributes,java.lang.String)>($r2, attributes, "ctm");
+        virtualinvoke bv.<org.apache.fop.area.BlockViewport: void setCTM(org.apache.fop.area.CTM)>($r3);
+        $i0 = virtualinvoke bv.<org.apache.fop.area.BlockViewport: int getPositioning()>();
+        if $i0 == 1 goto label0;
+
+        $r2 = this.<org.apache.fop.area.AreaTreeParser$Handler$BlockMaker: org.apache.fop.area.AreaTreeParser$Handler this$0>;
+        $i1 = staticinvoke <org.apache.fop.area.AreaTreeParser$Handler: int access$4000(org.apache.fop.area.AreaTreeParser$Handler,org.xml.sax.Attributes,java.lang.String,int)>($r2, attributes, "left-position", 0);
+        virtualinvoke bv.<org.apache.fop.area.BlockViewport: void setXOffset(int)>($i1);
+        $r2 = this.<org.apache.fop.area.AreaTreeParser$Handler$BlockMaker: org.apache.fop.area.AreaTreeParser$Handler this$0>;
+        $i1 = staticinvoke <org.apache.fop.area.AreaTreeParser$Handler: int access$4000(org.apache.fop.area.AreaTreeParser$Handler,org.xml.sax.Attributes,java.lang.String,int)>($r2, attributes, "top-position", 0);
+        virtualinvoke bv.<org.apache.fop.area.BlockViewport: void setYOffset(int)>($i1);
+
+     label0:
+        block = bv;
+        goto label2;
+
+     label1:
+        $r4 = new org.apache.fop.area.Block;
+        specialinvoke $r4.<org.apache.fop.area.Block: void <init>()>();
+        block = $r4;
+
+     label2:
+        positioning = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("positioning");
+        $r5 = "absolute";
+        $z1 = virtualinvoke $r5.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>(positioning);
+        if $z1 == 0 goto label3;
+
+        virtualinvoke block.<org.apache.fop.area.Block: void setPositioning(int)>(2);
+        goto label6;
+
+     label3:
+        $r5 = "fixed";
+        $z1 = virtualinvoke $r5.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>(positioning);
+        if $z1 == 0 goto label4;
+
+        virtualinvoke block.<org.apache.fop.area.Block: void setPositioning(int)>(3);
+        goto label6;
+
+     label4:
+        $r5 = "relative";
+        $z1 = virtualinvoke $r5.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>(positioning);
+        if $z1 == 0 goto label5;
+
+        virtualinvoke block.<org.apache.fop.area.Block: void setPositioning(int)>(1);
+        goto label6;
+
+     label5:
+        virtualinvoke block.<org.apache.fop.area.Block: void setPositioning(int)>(0);
+
+     label6:
+        $r5 = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("left-offset");
+        if $r5 == null goto label7;
+
+        $r2 = this.<org.apache.fop.area.AreaTreeParser$Handler$BlockMaker: org.apache.fop.area.AreaTreeParser$Handler this$0>;
+        $i1 = staticinvoke <org.apache.fop.area.AreaTreeParser$Handler: int access$4000(org.apache.fop.area.AreaTreeParser$Handler,org.xml.sax.Attributes,java.lang.String,int)>($r2, attributes, "left-offset", 0);
+        virtualinvoke block.<org.apache.fop.area.Block: void setXOffset(int)>($i1);
+
+     label7:
+        $r5 = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("top-offset");
+        if $r5 == null goto label8;
+
+        $r2 = this.<org.apache.fop.area.AreaTreeParser$Handler$BlockMaker: org.apache.fop.area.AreaTreeParser$Handler this$0>;
+        $i1 = staticinvoke <org.apache.fop.area.AreaTreeParser$Handler: int access$4000(org.apache.fop.area.AreaTreeParser$Handler,org.xml.sax.Attributes,java.lang.String,int)>($r2, attributes, "top-offset", 0);
+        virtualinvoke block.<org.apache.fop.area.Block: void setYOffset(int)>($i1);
+
+     label8:
+        $r0 = this.<org.apache.fop.area.AreaTreeParser$Handler$BlockMaker: org.apache.fop.area.AreaTreeParser$Handler this$0>;
+        staticinvoke <org.apache.fop.area.AreaTreeParser$Handler: void access$3600(org.apache.fop.area.AreaTreeParser$Handler,org.xml.sax.Attributes,org.apache.fop.area.AreaTreeObject)>($r0, attributes, block);
+        $r0 = this.<org.apache.fop.area.AreaTreeParser$Handler$BlockMaker: org.apache.fop.area.AreaTreeParser$Handler this$0>;
+        staticinvoke <org.apache.fop.area.AreaTreeParser$Handler: void access$4400(org.apache.fop.area.AreaTreeParser$Handler,org.xml.sax.Attributes,org.apache.fop.area.Area)>($r0, attributes, block);
+        $r0 = this.<org.apache.fop.area.AreaTreeParser$Handler$BlockMaker: org.apache.fop.area.AreaTreeParser$Handler this$0>;
+        $r6 = staticinvoke <org.apache.fop.area.AreaTreeParser$Handler: java.lang.Object[] access$4500()>();
+        staticinvoke <org.apache.fop.area.AreaTreeParser$Handler: void access$4600(org.apache.fop.area.AreaTreeParser$Handler,org.xml.sax.Attributes,org.apache.fop.area.Area,java.lang.Object[])>($r0, attributes, block, $r6);
+        $r0 = this.<org.apache.fop.area.AreaTreeParser$Handler$BlockMaker: org.apache.fop.area.AreaTreeParser$Handler this$0>;
+        $r6 = staticinvoke <org.apache.fop.area.AreaTreeParser$Handler: java.lang.Object[] access$4700()>();
+        staticinvoke <org.apache.fop.area.AreaTreeParser$Handler: void access$4600(org.apache.fop.area.AreaTreeParser$Handler,org.xml.sax.Attributes,org.apache.fop.area.Area,java.lang.Object[])>($r0, attributes, block, $r6);
+        $r0 = this.<org.apache.fop.area.AreaTreeParser$Handler$BlockMaker: org.apache.fop.area.AreaTreeParser$Handler this$0>;
+        $r6 = staticinvoke <org.apache.fop.area.AreaTreeParser$Handler: java.lang.Object[] access$4800()>();
+        staticinvoke <org.apache.fop.area.AreaTreeParser$Handler: void access$4600(org.apache.fop.area.AreaTreeParser$Handler,org.xml.sax.Attributes,org.apache.fop.area.Area,java.lang.Object[])>($r0, attributes, block, $r6);
+        $r0 = this.<org.apache.fop.area.AreaTreeParser$Handler$BlockMaker: org.apache.fop.area.AreaTreeParser$Handler this$0>;
+        $r7 = staticinvoke <org.apache.fop.area.AreaTreeParser$Handler: java.util.Stack access$3500(org.apache.fop.area.AreaTreeParser$Handler)>($r0);
+        $r8 = virtualinvoke $r7.<java.util.Stack: java.lang.Object peek()>();
+        parent = (org.apache.fop.area.Area) $r8;
+        virtualinvoke parent.<org.apache.fop.area.Area: void addChildArea(org.apache.fop.area.Area)>(block);
+        $r0 = this.<org.apache.fop.area.AreaTreeParser$Handler$BlockMaker: org.apache.fop.area.AreaTreeParser$Handler this$0>;
+        $r7 = staticinvoke <org.apache.fop.area.AreaTreeParser$Handler: java.util.Stack access$3500(org.apache.fop.area.AreaTreeParser$Handler)>($r0);
+        virtualinvoke $r7.<java.util.Stack: java.lang.Object push(java.lang.Object)>(block);
+        return;
+    }
+
+    public void endElement()
+    {
+        org.apache.fop.area.AreaTreeParser$Handler$BlockMaker this;
+        java.lang.Class $r0;
+        org.apache.fop.area.AreaTreeParser$Handler $r1, $r2;
+        java.util.Stack $r3;
+        java.lang.Object $r4;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler$BlockMaker;
+        $r1 = this.<org.apache.fop.area.AreaTreeParser$Handler$BlockMaker: org.apache.fop.area.AreaTreeParser$Handler this$0>;
+        $r2 = this.<org.apache.fop.area.AreaTreeParser$Handler$BlockMaker: org.apache.fop.area.AreaTreeParser$Handler this$0>;
+        $r3 = staticinvoke <org.apache.fop.area.AreaTreeParser$Handler: java.util.Stack access$3500(org.apache.fop.area.AreaTreeParser$Handler)>($r2);
+        $r4 = virtualinvoke $r3.<java.util.Stack: java.lang.Object pop()>();
+        $r0 = <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$area$Block>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.area.AreaTreeParser: java.lang.Class class$(java.lang.String)>("org.apache.fop.area.Block");
+        <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$area$Block> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.area.AreaTreeParser: java.lang.Class class$org$apache$fop$area$Block>;
+
+     label1:
+        staticinvoke <org.apache.fop.area.AreaTreeParser$Handler: void access$4900(org.apache.fop.area.AreaTreeParser$Handler,java.lang.Object,java.lang.Class)>($r1, $r4, $r0);
+        return;
+    }
+
+    void <init>(org.apache.fop.area.AreaTreeParser$Handler, org.apache.fop.area.AreaTreeParser$1)
+    {
+        org.apache.fop.area.AreaTreeParser$Handler$BlockMaker this;
+        org.apache.fop.area.AreaTreeParser$Handler x0;
+        org.apache.fop.area.AreaTreeParser$1 x1;
+
+        this := @this: org.apache.fop.area.AreaTreeParser$Handler$BlockMaker;
+        x0 := @parameter0: org.apache.fop.area.AreaTreeParser$Handler;
+        x1 := @parameter1: org.apache.fop.area.AreaTreeParser$1;
+        specialinvoke this.<org.apache.fop.area.AreaTreeParser$Handler$BlockMaker: void <init>(org.apache.fop.area.AreaTreeParser$Handler)>(x0);
+        return;
+    }
+}

@@ -1,0 +1,124 @@
+public class org.apache.fop.layoutmgr.FootnoteBodyLayoutManager extends org.apache.fop.layoutmgr.BlockStackingLayoutManager
+{
+
+    public void <init>(org.apache.fop.fo.flow.FootnoteBody)
+    {
+        org.apache.fop.layoutmgr.FootnoteBodyLayoutManager this;
+        org.apache.fop.fo.flow.FootnoteBody body;
+
+        this := @this: org.apache.fop.layoutmgr.FootnoteBodyLayoutManager;
+        body := @parameter0: org.apache.fop.fo.flow.FootnoteBody;
+        specialinvoke this.<org.apache.fop.layoutmgr.BlockStackingLayoutManager: void <init>(org.apache.fop.fo.FObj)>(body);
+        return;
+    }
+
+    public void addAreas(org.apache.fop.layoutmgr.PositionIterator, org.apache.fop.layoutmgr.LayoutContext)
+    {
+        org.apache.fop.layoutmgr.FootnoteBodyLayoutManager this;
+        org.apache.fop.layoutmgr.PositionIterator parentIter;
+        org.apache.fop.layoutmgr.LayoutContext layoutContext, lc, $r0;
+        null_type childLM;
+        org.apache.fop.layoutmgr.LayoutManager lastLM, $r4, childLM;
+        java.util.LinkedList positionList, $r1;
+        org.apache.fop.layoutmgr.Position pos, innerPosition;
+        org.apache.fop.layoutmgr.BlockStackingLayoutManager$StackingIter childPosIter, $r5;
+        boolean $z0, $z1;
+        java.lang.Object $r2;
+        org.apache.fop.layoutmgr.NonLeafPosition $r3;
+        java.util.ListIterator $r6;
+        short $s0;
+
+        this := @this: org.apache.fop.layoutmgr.FootnoteBodyLayoutManager;
+        parentIter := @parameter0: org.apache.fop.layoutmgr.PositionIterator;
+        layoutContext := @parameter1: org.apache.fop.layoutmgr.LayoutContext;
+        childLM = null;
+        lastLM = null;
+        $r0 = new org.apache.fop.layoutmgr.LayoutContext;
+        specialinvoke $r0.<org.apache.fop.layoutmgr.LayoutContext: void <init>(int)>(0);
+        lc = $r0;
+        $r1 = new java.util.LinkedList;
+        specialinvoke $r1.<java.util.LinkedList: void <init>()>();
+        positionList = $r1;
+
+     label0:
+        $z0 = virtualinvoke parentIter.<org.apache.fop.layoutmgr.PositionIterator: boolean hasNext()>();
+        if $z0 == 0 goto label3;
+
+        $r2 = virtualinvoke parentIter.<org.apache.fop.layoutmgr.PositionIterator: java.lang.Object next()>();
+        pos = (org.apache.fop.layoutmgr.Position) $r2;
+        innerPosition = pos;
+        $z0 = pos instanceof org.apache.fop.layoutmgr.NonLeafPosition;
+        if $z0 == 0 goto label2;
+
+        $r3 = (org.apache.fop.layoutmgr.NonLeafPosition) pos;
+        innerPosition = virtualinvoke $r3.<org.apache.fop.layoutmgr.NonLeafPosition: org.apache.fop.layoutmgr.Position getPosition()>();
+        $r4 = virtualinvoke innerPosition.<org.apache.fop.layoutmgr.Position: org.apache.fop.layoutmgr.LayoutManager getLM()>();
+        if $r4 != this goto label1;
+
+        goto label2;
+
+     label1:
+        virtualinvoke positionList.<java.util.LinkedList: boolean add(java.lang.Object)>(innerPosition);
+        lastLM = virtualinvoke innerPosition.<org.apache.fop.layoutmgr.Position: org.apache.fop.layoutmgr.LayoutManager getLM()>();
+
+     label2:
+        goto label0;
+
+     label3:
+        $r5 = new org.apache.fop.layoutmgr.BlockStackingLayoutManager$StackingIter;
+        $r6 = virtualinvoke positionList.<java.util.LinkedList: java.util.ListIterator listIterator()>();
+        specialinvoke $r5.<org.apache.fop.layoutmgr.BlockStackingLayoutManager$StackingIter: void <init>(java.util.Iterator)>($r6);
+        childPosIter = $r5;
+
+     label4:
+        $r4 = virtualinvoke childPosIter.<org.apache.fop.layoutmgr.BlockStackingLayoutManager$StackingIter: org.apache.fop.layoutmgr.LayoutManager getNextChildLM()>();
+        childLM = $r4;
+        if $r4 == null goto label7;
+
+        $s0 = 128;
+        $z1 = virtualinvoke layoutContext.<org.apache.fop.layoutmgr.LayoutContext: boolean isLastArea()>();
+        if $z1 == 0 goto label5;
+
+        if childLM != lastLM goto label5;
+
+        $z1 = 1;
+        goto label6;
+
+     label5:
+        $z1 = 0;
+
+     label6:
+        virtualinvoke lc.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int,boolean)>($s0, $z1);
+        interfaceinvoke childLM.<org.apache.fop.layoutmgr.LayoutManager: void addAreas(org.apache.fop.layoutmgr.PositionIterator,org.apache.fop.layoutmgr.LayoutContext)>(childPosIter, lc);
+        goto label4;
+
+     label7:
+        return;
+    }
+
+    public void addChildArea(org.apache.fop.area.Area)
+    {
+        org.apache.fop.layoutmgr.FootnoteBodyLayoutManager this;
+        org.apache.fop.area.Area childArea;
+        org.apache.fop.layoutmgr.LayoutManager $r0;
+
+        this := @this: org.apache.fop.layoutmgr.FootnoteBodyLayoutManager;
+        childArea := @parameter0: org.apache.fop.area.Area;
+        virtualinvoke childArea.<org.apache.fop.area.Area: void setAreaClass(int)>(4);
+        $r0 = this.<org.apache.fop.layoutmgr.FootnoteBodyLayoutManager: org.apache.fop.layoutmgr.LayoutManager parentLM>;
+        interfaceinvoke $r0.<org.apache.fop.layoutmgr.LayoutManager: void addChildArea(org.apache.fop.area.Area)>(childArea);
+        return;
+    }
+
+    protected org.apache.fop.fo.flow.FootnoteBody getFootnodeBodyFO()
+    {
+        org.apache.fop.layoutmgr.FootnoteBodyLayoutManager this;
+        org.apache.fop.fo.FObj $r0;
+        org.apache.fop.fo.flow.FootnoteBody $r1;
+
+        this := @this: org.apache.fop.layoutmgr.FootnoteBodyLayoutManager;
+        $r0 = this.<org.apache.fop.layoutmgr.FootnoteBodyLayoutManager: org.apache.fop.fo.FObj fobj>;
+        $r1 = (org.apache.fop.fo.flow.FootnoteBody) $r0;
+        return $r1;
+    }
+}

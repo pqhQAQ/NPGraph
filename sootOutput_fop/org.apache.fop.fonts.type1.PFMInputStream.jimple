@@ -1,0 +1,116 @@
+public class org.apache.fop.fonts.type1.PFMInputStream extends java.io.FilterInputStream
+{
+    private java.io.DataInputStream datain;
+
+    public void <init>(java.io.InputStream)
+    {
+        org.apache.fop.fonts.type1.PFMInputStream this;
+        java.io.InputStream in;
+        java.io.DataInputStream $r0;
+
+        this := @this: org.apache.fop.fonts.type1.PFMInputStream;
+        in := @parameter0: java.io.InputStream;
+        specialinvoke this.<java.io.FilterInputStream: void <init>(java.io.InputStream)>(in);
+        $r0 = new java.io.DataInputStream;
+        specialinvoke $r0.<java.io.DataInputStream: void <init>(java.io.InputStream)>(in);
+        this.<org.apache.fop.fonts.type1.PFMInputStream: java.io.DataInputStream datain> = $r0;
+        return;
+    }
+
+    public short readByte() throws java.io.IOException
+    {
+        org.apache.fop.fonts.type1.PFMInputStream this;
+        short s, $s1, $s3;
+        int s1, $i2;
+        java.io.DataInputStream $r0;
+        byte $b0;
+
+        this := @this: org.apache.fop.fonts.type1.PFMInputStream;
+        $r0 = this.<org.apache.fop.fonts.type1.PFMInputStream: java.io.DataInputStream datain>;
+        $b0 = virtualinvoke $r0.<java.io.DataInputStream: byte readByte()>();
+        s = (short) $b0;
+        $s1 = s & 240;
+        $s1 = $s1 >>> 4;
+        $i2 = $s1 << 4;
+        $s3 = s & 15;
+        s1 = $i2 + $s3;
+        $s1 = (short) s1;
+        return $s1;
+    }
+
+    public int readShort() throws java.io.IOException
+    {
+        org.apache.fop.fonts.type1.PFMInputStream this;
+        short i, $s1;
+        int high, low, $i0;
+        java.io.DataInputStream $r0;
+
+        this := @this: org.apache.fop.fonts.type1.PFMInputStream;
+        $r0 = this.<org.apache.fop.fonts.type1.PFMInputStream: java.io.DataInputStream datain>;
+        i = virtualinvoke $r0.<java.io.DataInputStream: short readShort()>();
+        $i0 = i & 65280;
+        high = $i0 >>> 8;
+        $s1 = i & 255;
+        low = $s1 << 8;
+        $i0 = low + high;
+        return $i0;
+    }
+
+    public long readInt() throws java.io.IOException
+    {
+        org.apache.fop.fonts.type1.PFMInputStream this;
+        int i, i1, i2, i3, i4, $i0;
+        java.io.DataInputStream $r0;
+        long $l1;
+
+        this := @this: org.apache.fop.fonts.type1.PFMInputStream;
+        $r0 = this.<org.apache.fop.fonts.type1.PFMInputStream: java.io.DataInputStream datain>;
+        i = virtualinvoke $r0.<java.io.DataInputStream: int readInt()>();
+        $i0 = i & -16777216;
+        i1 = $i0 >>> 24;
+        $i0 = i & 16711680;
+        i2 = $i0 >>> 8;
+        $i0 = i & 65280;
+        i3 = $i0 << 8;
+        $i0 = i & 255;
+        i4 = $i0 << 24;
+        $i0 = i1 + i2;
+        $i0 = $i0 + i3;
+        $i0 = $i0 + i4;
+        $l1 = (long) $i0;
+        return $l1;
+    }
+
+    public java.lang.String readString() throws java.io.IOException
+    {
+        org.apache.fop.fonts.type1.PFMInputStream this;
+        java.io.InputStreamReader $r0, reader;
+        java.lang.StringBuffer buf, $r2;
+        int ch;
+        java.io.InputStream $r1;
+        char $c0;
+        java.lang.String $r3;
+
+        this := @this: org.apache.fop.fonts.type1.PFMInputStream;
+        $r0 = new java.io.InputStreamReader;
+        $r1 = this.<org.apache.fop.fonts.type1.PFMInputStream: java.io.InputStream in>;
+        specialinvoke $r0.<java.io.InputStreamReader: void <init>(java.io.InputStream,java.lang.String)>($r1, "ISO-8859-1");
+        reader = $r0;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        buf = $r2;
+        ch = virtualinvoke reader.<java.io.InputStreamReader: int read()>();
+
+     label0:
+        if ch == 0 goto label1;
+
+        $c0 = (char) ch;
+        virtualinvoke buf.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c0);
+        ch = virtualinvoke reader.<java.io.InputStreamReader: int read()>();
+        goto label0;
+
+     label1:
+        $r3 = virtualinvoke buf.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r3;
+    }
+}

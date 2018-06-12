@@ -1,0 +1,66 @@
+public class org.apache.fop.svg.FOPSAXSVGDocumentFactory extends org.apache.batik.dom.svg.SAXSVGDocumentFactory
+{
+    private org.xml.sax.EntityResolver additionalResolver;
+
+    public void <init>(java.lang.String)
+    {
+        org.apache.fop.svg.FOPSAXSVGDocumentFactory this;
+        java.lang.String parser;
+
+        this := @this: org.apache.fop.svg.FOPSAXSVGDocumentFactory;
+        parser := @parameter0: java.lang.String;
+        specialinvoke this.<org.apache.batik.dom.svg.SAXSVGDocumentFactory: void <init>(java.lang.String)>(parser);
+        return;
+    }
+
+    public void setAdditionalEntityResolver(org.xml.sax.EntityResolver)
+    {
+        org.apache.fop.svg.FOPSAXSVGDocumentFactory this;
+        org.xml.sax.EntityResolver resolver;
+
+        this := @this: org.apache.fop.svg.FOPSAXSVGDocumentFactory;
+        resolver := @parameter0: org.xml.sax.EntityResolver;
+        this.<org.apache.fop.svg.FOPSAXSVGDocumentFactory: org.xml.sax.EntityResolver additionalResolver> = resolver;
+        return;
+    }
+
+    public org.xml.sax.InputSource resolveEntity(java.lang.String, java.lang.String) throws org.xml.sax.SAXException
+    {
+        org.apache.fop.svg.FOPSAXSVGDocumentFactory this;
+        java.lang.String publicId, systemId;
+        org.xml.sax.InputSource result, $r1;
+        java.io.IOException ioe, $r2;
+        org.xml.sax.EntityResolver $r0;
+        org.xml.sax.SAXException $r3;
+
+        this := @this: org.apache.fop.svg.FOPSAXSVGDocumentFactory;
+        publicId := @parameter0: java.lang.String;
+        systemId := @parameter1: java.lang.String;
+        $r0 = this.<org.apache.fop.svg.FOPSAXSVGDocumentFactory: org.xml.sax.EntityResolver additionalResolver>;
+        if $r0 == null goto label4;
+
+     label0:
+        $r0 = this.<org.apache.fop.svg.FOPSAXSVGDocumentFactory: org.xml.sax.EntityResolver additionalResolver>;
+        result = interfaceinvoke $r0.<org.xml.sax.EntityResolver: org.xml.sax.InputSource resolveEntity(java.lang.String,java.lang.String)>(publicId, systemId);
+        if result == null goto label2;
+
+     label1:
+        return result;
+
+     label2:
+        goto label4;
+
+     label3:
+        $r2 := @caughtexception;
+        ioe = $r2;
+        $r3 = new org.xml.sax.SAXException;
+        specialinvoke $r3.<org.xml.sax.SAXException: void <init>(java.lang.Exception)>(ioe);
+        throw $r3;
+
+     label4:
+        $r1 = specialinvoke this.<org.apache.batik.dom.svg.SAXSVGDocumentFactory: org.xml.sax.InputSource resolveEntity(java.lang.String,java.lang.String)>(publicId, systemId);
+        return $r1;
+
+        catch java.io.IOException from label0 to label1 with label3;
+    }
+}

@@ -1,0 +1,140 @@
+public class org.apache.fop.area.Block extends org.apache.fop.area.BlockParent
+{
+    public static final int STACK;
+    public static final int RELATIVE;
+    public static final int ABSOLUTE;
+    public static final int FIXED;
+    private int stacking;
+    private int positioning;
+    protected transient boolean allowBPDUpdate;
+
+    public void <init>()
+    {
+        org.apache.fop.area.Block this;
+
+        this := @this: org.apache.fop.area.Block;
+        specialinvoke this.<org.apache.fop.area.BlockParent: void <init>()>();
+        this.<org.apache.fop.area.Block: int stacking> = 2;
+        this.<org.apache.fop.area.Block: int positioning> = 0;
+        this.<org.apache.fop.area.Block: boolean allowBPDUpdate> = 1;
+        return;
+    }
+
+    public void addBlock(org.apache.fop.area.Block)
+    {
+        org.apache.fop.area.Block this, block;
+
+        this := @this: org.apache.fop.area.Block;
+        block := @parameter0: org.apache.fop.area.Block;
+        virtualinvoke this.<org.apache.fop.area.Block: void addBlock(org.apache.fop.area.Block,boolean)>(block, 1);
+        return;
+    }
+
+    public void addBlock(org.apache.fop.area.Block, boolean)
+    {
+        org.apache.fop.area.Block this, block;
+        boolean autoHeight, $z0;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.area.Block;
+        block := @parameter0: org.apache.fop.area.Block;
+        autoHeight := @parameter1: boolean;
+        if autoHeight == 0 goto label0;
+
+        $z0 = this.<org.apache.fop.area.Block: boolean allowBPDUpdate>;
+        if $z0 == 0 goto label0;
+
+        $i0 = this.<org.apache.fop.area.Block: int bpd>;
+        $i1 = virtualinvoke block.<org.apache.fop.area.Block: int getAllocBPD()>();
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.area.Block: int bpd> = $i0;
+
+     label0:
+        virtualinvoke this.<org.apache.fop.area.Block: void addChildArea(org.apache.fop.area.Area)>(block);
+        return;
+    }
+
+    public void addLineArea(org.apache.fop.area.LineArea)
+    {
+        org.apache.fop.area.Block this;
+        org.apache.fop.area.LineArea line;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.area.Block;
+        line := @parameter0: org.apache.fop.area.LineArea;
+        $i0 = this.<org.apache.fop.area.Block: int bpd>;
+        $i1 = virtualinvoke line.<org.apache.fop.area.LineArea: int getAllocBPD()>();
+        $i0 = $i0 + $i1;
+        this.<org.apache.fop.area.Block: int bpd> = $i0;
+        virtualinvoke this.<org.apache.fop.area.Block: void addChildArea(org.apache.fop.area.Area)>(line);
+        return;
+    }
+
+    public void setPositioning(int)
+    {
+        org.apache.fop.area.Block this;
+        int pos;
+
+        this := @this: org.apache.fop.area.Block;
+        pos := @parameter0: int;
+        this.<org.apache.fop.area.Block: int positioning> = pos;
+        return;
+    }
+
+    public int getPositioning()
+    {
+        org.apache.fop.area.Block this;
+        int $i0;
+
+        this := @this: org.apache.fop.area.Block;
+        $i0 = this.<org.apache.fop.area.Block: int positioning>;
+        return $i0;
+    }
+
+    public boolean isStacked()
+    {
+        org.apache.fop.area.Block this;
+        int $i0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.area.Block;
+        $i0 = virtualinvoke this.<org.apache.fop.area.Block: int getPositioning()>();
+        if $i0 == 0 goto label0;
+
+        $i0 = virtualinvoke this.<org.apache.fop.area.Block: int getPositioning()>();
+        if $i0 != 1 goto label1;
+
+     label0:
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+    }
+
+    public int getStartIndent()
+    {
+        org.apache.fop.area.Block this;
+        java.lang.Integer $r0, startIndent;
+        java.lang.Object $r1;
+        int $i0;
+
+        this := @this: org.apache.fop.area.Block;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer START_INDENT>;
+        $r1 = virtualinvoke this.<org.apache.fop.area.Block: java.lang.Object getTrait(java.lang.Object)>($r0);
+        startIndent = (java.lang.Integer) $r1;
+        if startIndent == null goto label0;
+
+        $i0 = virtualinvoke startIndent.<java.lang.Integer: int intValue()>();
+        goto label1;
+
+     label0:
+        $i0 = 0;
+
+     label1:
+        return $i0;
+    }
+}

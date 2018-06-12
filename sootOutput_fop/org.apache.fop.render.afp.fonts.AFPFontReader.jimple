@@ -1,0 +1,942 @@
+public final class org.apache.fop.render.afp.fonts.AFPFontReader extends java.lang.Object
+{
+    protected static final org.apache.commons.logging.Log log;
+    private static final org.apache.fop.render.afp.fonts.CharacterSetOrientation[] EMPTY_CSO_ARRAY;
+    private static final byte[] CODEPAGE_SF;
+    private static final byte[] CHARACTER_TABLE_SF;
+    private static final byte[] FONT_CONTROL_SF;
+    private static final byte[] FONT_ORIENTATION_SF;
+    private static final byte[] FONT_POSITION_SF;
+    private static final byte[] FONT_INDEX_SF;
+    private static final int FOP_100_DPI_FACTOR;
+    private static final int FOP_240_DPI_FACTOR;
+    private static final int FOP_300_DPI_FACTOR;
+    private static final java.lang.String ASCII_ENCODING;
+    private java.util.HashMap codePages;
+    static java.lang.Class class$org$apache$fop$render$afp$fonts$AFPFontReader;
+
+    public void <init>()
+    {
+        org.apache.fop.render.afp.fonts.AFPFontReader this;
+        java.util.HashMap $r0;
+
+        this := @this: org.apache.fop.render.afp.fonts.AFPFontReader;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.render.afp.fonts.AFPFontReader: java.util.HashMap codePages> = $r0;
+        return;
+    }
+
+    public void loadCharacterSetMetric(org.apache.fop.render.afp.fonts.CharacterSet)
+    {
+        org.apache.fop.render.afp.fonts.AFPFontReader this;
+        org.apache.fop.render.afp.fonts.CharacterSet characterSet;
+        java.io.InputStream inputStream;
+        java.lang.String cp, path, characterset, msg, filterpattern, $r0, $r1, $r4, $r20;
+        java.util.HashMap codepage, $r2;
+        java.lang.ClassLoader classLoader;
+        java.net.URL url, $r13;
+        java.io.File file, directory, $r7;
+        java.net.MalformedURLException ex, $r11;
+        org.apache.fop.render.afp.fonts.AFPFontReader$1 filter, $r12;
+        java.io.File[] csfont;
+        org.apache.fop.render.afp.tools.StructuredFieldReader sfr, $r14;
+        org.apache.fop.render.afp.fonts.AFPFontReader$FontControl fnc;
+        org.apache.fop.render.afp.fonts.CharacterSetOrientation[] csoArray;
+        int i, $i0, $i1, $i2, $i3;
+        java.lang.Exception l3, l18, $r16, $r17, ex, $r22;
+        java.lang.Throwable l17, $r21;
+        java.lang.Object $r3;
+        java.lang.Thread $r5;
+        java.lang.Class $r6;
+        java.lang.StringBuffer $r8, $r19;
+        org.apache.commons.logging.Log $r9;
+        java.io.FileNotFoundException $r10;
+        org.apache.fop.render.afp.fonts.CharacterSetOrientation $r15;
+        org.apache.fop.render.afp.exceptions.FontRuntimeException $r18;
+
+        this := @this: org.apache.fop.render.afp.fonts.AFPFontReader;
+        characterSet := @parameter0: org.apache.fop.render.afp.fonts.CharacterSet;
+        inputStream = null;
+
+     label0:
+        $r0 = new java.lang.String;
+        $r1 = virtualinvoke characterSet.<org.apache.fop.render.afp.fonts.CharacterSet: java.lang.String getCodePage()>();
+        specialinvoke $r0.<java.lang.String: void <init>(java.lang.String)>($r1);
+        cp = $r0;
+        path = virtualinvoke characterSet.<org.apache.fop.render.afp.fonts.CharacterSet: java.lang.String getPath()>();
+        $r2 = this.<org.apache.fop.render.afp.fonts.AFPFontReader: java.util.HashMap codePages>;
+        $r3 = virtualinvoke $r2.<java.util.HashMap: java.lang.Object get(java.lang.Object)>(cp);
+        codepage = (java.util.HashMap) $r3;
+        if codepage != null goto label1;
+
+        $r4 = virtualinvoke characterSet.<org.apache.fop.render.afp.fonts.CharacterSet: java.lang.String getEncoding()>();
+        codepage = staticinvoke <org.apache.fop.render.afp.fonts.AFPFontReader: java.util.HashMap loadCodePage(java.lang.String,java.lang.String,java.lang.String)>(cp, $r4, path);
+        $r2 = this.<org.apache.fop.render.afp.fonts.AFPFontReader: java.util.HashMap codePages>;
+        virtualinvoke $r2.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>(cp, codepage);
+
+     label1:
+        characterset = virtualinvoke characterSet.<org.apache.fop.render.afp.fonts.CharacterSet: java.lang.String getName()>();
+        $r5 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        classLoader = virtualinvoke $r5.<java.lang.Thread: java.lang.ClassLoader getContextClassLoader()>();
+        if classLoader != null goto label4;
+
+        $r6 = <org.apache.fop.render.afp.fonts.AFPFontReader: java.lang.Class class$org$apache$fop$render$afp$fonts$AFPFontReader>;
+        if $r6 != null goto label2;
+
+        $r6 = staticinvoke <org.apache.fop.render.afp.fonts.AFPFontReader: java.lang.Class class$(java.lang.String)>("org.apache.fop.render.afp.fonts.AFPFontReader");
+        <org.apache.fop.render.afp.fonts.AFPFontReader: java.lang.Class class$org$apache$fop$render$afp$fonts$AFPFontReader> = $r6;
+        goto label3;
+
+     label2:
+        $r6 = <org.apache.fop.render.afp.fonts.AFPFontReader: java.lang.Class class$org$apache$fop$render$afp$fonts$AFPFontReader>;
+
+     label3:
+        classLoader = virtualinvoke $r6.<java.lang.Class: java.lang.ClassLoader getClassLoader()>();
+
+     label4:
+        url = virtualinvoke classLoader.<java.lang.ClassLoader: java.net.URL getResource(java.lang.String)>(path);
+        if url != null goto label8;
+
+     label5:
+        $r7 = new java.io.File;
+        specialinvoke $r7.<java.io.File: void <init>(java.lang.String)>(path);
+        file = $r7;
+        url = virtualinvoke file.<java.io.File: java.net.URL toURL()>();
+        if url != null goto label6;
+
+        $r8 = new java.lang.StringBuffer;
+        specialinvoke $r8.<java.lang.StringBuffer: void <init>()>();
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("CharacterSet file not found for ");
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(characterset);
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" in classpath: ");
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(path);
+        msg = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r9 = <org.apache.fop.render.afp.fonts.AFPFontReader: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r9.<org.apache.commons.logging.Log: void error(java.lang.Object)>(msg);
+        $r10 = new java.io.FileNotFoundException;
+        specialinvoke $r10.<java.io.FileNotFoundException: void <init>(java.lang.String)>(msg);
+        throw $r10;
+
+     label6:
+        goto label8;
+
+     label7:
+        $r11 := @caughtexception;
+        ex = $r11;
+        $r8 = new java.lang.StringBuffer;
+        specialinvoke $r8.<java.lang.StringBuffer: void <init>()>();
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("CharacterSet file not found for ");
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(characterset);
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" in classpath: ");
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(path);
+        msg = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r9 = <org.apache.fop.render.afp.fonts.AFPFontReader: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r9.<org.apache.commons.logging.Log: void error(java.lang.Object)>(msg);
+        $r10 = new java.io.FileNotFoundException;
+        specialinvoke $r10.<java.io.FileNotFoundException: void <init>(java.lang.String)>(msg);
+        throw $r10;
+
+     label8:
+        $r7 = new java.io.File;
+        $r1 = virtualinvoke url.<java.net.URL: java.lang.String getPath()>();
+        specialinvoke $r7.<java.io.File: void <init>(java.lang.String)>($r1);
+        directory = $r7;
+        filterpattern = virtualinvoke characterset.<java.lang.String: java.lang.String trim()>();
+        $r12 = new org.apache.fop.render.afp.fonts.AFPFontReader$1;
+        specialinvoke $r12.<org.apache.fop.render.afp.fonts.AFPFontReader$1: void <init>(org.apache.fop.render.afp.fonts.AFPFontReader,java.lang.String)>(this, filterpattern);
+        filter = $r12;
+        csfont = virtualinvoke directory.<java.io.File: java.io.File[] listFiles(java.io.FilenameFilter)>(filter);
+        $i0 = lengthof csfont;
+        if $i0 >= 1 goto label9;
+
+        $r8 = new java.lang.StringBuffer;
+        specialinvoke $r8.<java.lang.StringBuffer: void <init>()>();
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("CharacterSet file search for ");
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(characterset);
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" located ");
+        $i1 = lengthof csfont;
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" files");
+        msg = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r9 = <org.apache.fop.render.afp.fonts.AFPFontReader: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r9.<org.apache.commons.logging.Log: void error(java.lang.Object)>(msg);
+        $r10 = new java.io.FileNotFoundException;
+        specialinvoke $r10.<java.io.FileNotFoundException: void <init>(java.lang.String)>(msg);
+        throw $r10;
+
+     label9:
+        $i0 = lengthof csfont;
+        if $i0 <= 1 goto label10;
+
+        $r8 = new java.lang.StringBuffer;
+        specialinvoke $r8.<java.lang.StringBuffer: void <init>()>();
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("CharacterSet file search for ");
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(characterset);
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" located ");
+        $i1 = lengthof csfont;
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" files");
+        msg = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r9 = <org.apache.fop.render.afp.fonts.AFPFontReader: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r9.<org.apache.commons.logging.Log: void warn(java.lang.Object)>(msg);
+
+     label10:
+        $r7 = csfont[0];
+        $r13 = virtualinvoke $r7.<java.io.File: java.net.URL toURL()>();
+        inputStream = virtualinvoke $r13.<java.net.URL: java.io.InputStream openStream()>();
+        if inputStream != null goto label11;
+
+        $r8 = new java.lang.StringBuffer;
+        specialinvoke $r8.<java.lang.StringBuffer: void <init>()>();
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Failed to open character set resource ");
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(characterset);
+        msg = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r9 = <org.apache.fop.render.afp.fonts.AFPFontReader: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r9.<org.apache.commons.logging.Log: void error(java.lang.Object)>(msg);
+        $r10 = new java.io.FileNotFoundException;
+        specialinvoke $r10.<java.io.FileNotFoundException: void <init>(java.lang.String)>(msg);
+        throw $r10;
+
+     label11:
+        $r14 = new org.apache.fop.render.afp.tools.StructuredFieldReader;
+        specialinvoke $r14.<org.apache.fop.render.afp.tools.StructuredFieldReader: void <init>(java.io.InputStream)>(inputStream);
+        sfr = $r14;
+        fnc = staticinvoke <org.apache.fop.render.afp.fonts.AFPFontReader: org.apache.fop.render.afp.fonts.AFPFontReader$FontControl processFontControl(org.apache.fop.render.afp.tools.StructuredFieldReader)>(sfr);
+        csoArray = staticinvoke <org.apache.fop.render.afp.fonts.AFPFontReader: org.apache.fop.render.afp.fonts.CharacterSetOrientation[] processFontOrientation(org.apache.fop.render.afp.tools.StructuredFieldReader)>(sfr);
+        $i2 = virtualinvoke fnc.<org.apache.fop.render.afp.fonts.AFPFontReader$FontControl: int getDpi()>();
+        staticinvoke <org.apache.fop.render.afp.fonts.AFPFontReader: void processFontPosition(org.apache.fop.render.afp.tools.StructuredFieldReader,org.apache.fop.render.afp.fonts.CharacterSetOrientation[],int)>(sfr, csoArray, $i2);
+        i = 0;
+
+     label12:
+        $i1 = lengthof csoArray;
+        if i >= $i1 goto label13;
+
+        $r15 = csoArray[i];
+        $i3 = virtualinvoke fnc.<org.apache.fop.render.afp.fonts.AFPFontReader$FontControl: int getDpi()>();
+        staticinvoke <org.apache.fop.render.afp.fonts.AFPFontReader: void processFontIndex(org.apache.fop.render.afp.tools.StructuredFieldReader,org.apache.fop.render.afp.fonts.CharacterSetOrientation,java.util.HashMap,int)>(sfr, $r15, codepage, $i3);
+        $r15 = csoArray[i];
+        virtualinvoke characterSet.<org.apache.fop.render.afp.fonts.CharacterSet: void addCharacterSetOrientation(org.apache.fop.render.afp.fonts.CharacterSetOrientation)>($r15);
+        i = i + 1;
+        goto label12;
+
+     label13:
+        virtualinvoke inputStream.<java.io.InputStream: void close()>();
+
+     label14:
+        goto label23;
+
+     label15:
+        $r16 := @caughtexception;
+        l3 = $r16;
+        goto label23;
+
+     label16:
+        $r17 := @caughtexception;
+
+     label17:
+        ex = $r17;
+        $r18 = new org.apache.fop.render.afp.exceptions.FontRuntimeException;
+        $r19 = new java.lang.StringBuffer;
+        specialinvoke $r19.<java.lang.StringBuffer: void <init>()>();
+        $r19 = virtualinvoke $r19.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Failed to load the character set metrics for code page ");
+        $r20 = virtualinvoke characterSet.<org.apache.fop.render.afp.fonts.CharacterSet: java.lang.String getCodePage()>();
+        $r19 = virtualinvoke $r19.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r20);
+        $r1 = virtualinvoke $r19.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r18.<org.apache.fop.render.afp.exceptions.FontRuntimeException: void <init>(java.lang.String,java.lang.Throwable)>($r1, ex);
+        throw $r18;
+
+     label18:
+        $r21 := @caughtexception;
+        l17 = $r21;
+
+     label19:
+        virtualinvoke inputStream.<java.io.InputStream: void close()>();
+
+     label20:
+        goto label22;
+
+     label21:
+        $r22 := @caughtexception;
+        l18 = $r22;
+
+     label22:
+        throw l17;
+
+     label23:
+        return;
+
+        catch java.net.MalformedURLException from label5 to label6 with label7;
+        catch java.lang.Exception from label13 to label14 with label15;
+        catch java.lang.Exception from label0 to label13 with label16;
+        catch java.lang.Throwable from label0 to label13 with label18;
+        catch java.lang.Exception from label19 to label20 with label21;
+        catch java.lang.Throwable from label17 to label19 with label18;
+    }
+
+    private static java.util.HashMap loadCodePage(java.lang.String, java.lang.String, java.lang.String) throws java.io.IOException
+    {
+        java.lang.String codePage, encoding, path, msg, filterpattern, gcgiString, charString, $r8, $r9, $r14;
+        java.util.HashMap $r0, codepages;
+        java.lang.ClassLoader classLoader;
+        java.net.URL url, $r11;
+        java.io.File file, directory, $r3;
+        java.net.MalformedURLException ex, $r7;
+        org.apache.fop.render.afp.fonts.AFPFontReader$2 filter, $r10;
+        java.io.File[] codepage;
+        java.io.InputStream is;
+        org.apache.fop.render.afp.tools.StructuredFieldReader sfr, $r12;
+        byte[] data, gcgiBytes, charBytes, $r13;
+        int position, index, $i0, $i1;
+        java.lang.Exception l16, $r16;
+        java.lang.Thread $r1;
+        java.lang.Class $r2;
+        java.lang.StringBuffer $r4;
+        org.apache.commons.logging.Log $r5;
+        java.io.FileNotFoundException $r6;
+        boolean $z0;
+        byte $b2;
+
+        codePage := @parameter0: java.lang.String;
+        encoding := @parameter1: java.lang.String;
+        path := @parameter2: java.lang.String;
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        codepages = $r0;
+        $r1 = staticinvoke <java.lang.Thread: java.lang.Thread currentThread()>();
+        classLoader = virtualinvoke $r1.<java.lang.Thread: java.lang.ClassLoader getContextClassLoader()>();
+        if classLoader != null goto label2;
+
+        $r2 = <org.apache.fop.render.afp.fonts.AFPFontReader: java.lang.Class class$org$apache$fop$render$afp$fonts$AFPFontReader>;
+        if $r2 != null goto label0;
+
+        $r2 = staticinvoke <org.apache.fop.render.afp.fonts.AFPFontReader: java.lang.Class class$(java.lang.String)>("org.apache.fop.render.afp.fonts.AFPFontReader");
+        <org.apache.fop.render.afp.fonts.AFPFontReader: java.lang.Class class$org$apache$fop$render$afp$fonts$AFPFontReader> = $r2;
+        goto label1;
+
+     label0:
+        $r2 = <org.apache.fop.render.afp.fonts.AFPFontReader: java.lang.Class class$org$apache$fop$render$afp$fonts$AFPFontReader>;
+
+     label1:
+        classLoader = virtualinvoke $r2.<java.lang.Class: java.lang.ClassLoader getClassLoader()>();
+
+     label2:
+        url = virtualinvoke classLoader.<java.lang.ClassLoader: java.net.URL getResource(java.lang.String)>(path);
+        if url != null goto label6;
+
+     label3:
+        $r3 = new java.io.File;
+        specialinvoke $r3.<java.io.File: void <init>(java.lang.String)>(path);
+        file = $r3;
+        url = virtualinvoke file.<java.io.File: java.net.URL toURL()>();
+        if url != null goto label4;
+
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("CodePage file not found for ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(codePage);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" in classpath: ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(path);
+        msg = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r5 = <org.apache.fop.render.afp.fonts.AFPFontReader: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void error(java.lang.Object)>(msg);
+        $r6 = new java.io.FileNotFoundException;
+        specialinvoke $r6.<java.io.FileNotFoundException: void <init>(java.lang.String)>(msg);
+        throw $r6;
+
+     label4:
+        goto label6;
+
+     label5:
+        $r7 := @caughtexception;
+        ex = $r7;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("CodePage file not found for ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(codePage);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" in classpath: ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(path);
+        msg = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r5 = <org.apache.fop.render.afp.fonts.AFPFontReader: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void error(java.lang.Object)>(msg);
+        $r6 = new java.io.FileNotFoundException;
+        specialinvoke $r6.<java.io.FileNotFoundException: void <init>(java.lang.String)>(msg);
+        throw $r6;
+
+     label6:
+        $r3 = new java.io.File;
+        $r8 = virtualinvoke url.<java.net.URL: java.lang.String getPath()>();
+        specialinvoke $r3.<java.io.File: void <init>(java.lang.String)>($r8);
+        directory = $r3;
+        $z0 = virtualinvoke directory.<java.io.File: boolean canRead()>();
+        if $z0 != 0 goto label7;
+
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Failed to read directory ");
+        $r9 = virtualinvoke url.<java.net.URL: java.lang.String getPath()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r9);
+        msg = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r5 = <org.apache.fop.render.afp.fonts.AFPFontReader: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void error(java.lang.Object)>(msg);
+        $r6 = new java.io.FileNotFoundException;
+        specialinvoke $r6.<java.io.FileNotFoundException: void <init>(java.lang.String)>(msg);
+        throw $r6;
+
+     label7:
+        filterpattern = virtualinvoke codePage.<java.lang.String: java.lang.String trim()>();
+        $r10 = new org.apache.fop.render.afp.fonts.AFPFontReader$2;
+        specialinvoke $r10.<org.apache.fop.render.afp.fonts.AFPFontReader$2: void <init>(java.lang.String)>(filterpattern);
+        filter = $r10;
+        codepage = virtualinvoke directory.<java.io.File: java.io.File[] listFiles(java.io.FilenameFilter)>(filter);
+        $i0 = lengthof codepage;
+        if $i0 >= 1 goto label8;
+
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("CodePage file search for ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(codePage);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" located ");
+        $i1 = lengthof codepage;
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" files");
+        msg = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r5 = <org.apache.fop.render.afp.fonts.AFPFontReader: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void error(java.lang.Object)>(msg);
+        $r6 = new java.io.FileNotFoundException;
+        specialinvoke $r6.<java.io.FileNotFoundException: void <init>(java.lang.String)>(msg);
+        throw $r6;
+
+     label8:
+        $i0 = lengthof codepage;
+        if $i0 <= 1 goto label9;
+
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("CodePage file search for ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(codePage);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" located ");
+        $i1 = lengthof codepage;
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" files");
+        msg = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r5 = <org.apache.fop.render.afp.fonts.AFPFontReader: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void warn(java.lang.Object)>(msg);
+
+     label9:
+        $r3 = codepage[0];
+        $r11 = virtualinvoke $r3.<java.io.File: java.net.URL toURL()>();
+        is = virtualinvoke $r11.<java.net.URL: java.io.InputStream openStream()>();
+        if is != null goto label10;
+
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("AFPFontReader:: loadCodePage(String):: code page file not found for ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(codePage);
+        msg = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r5 = <org.apache.fop.render.afp.fonts.AFPFontReader: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r5.<org.apache.commons.logging.Log: void error(java.lang.Object)>(msg);
+        $r6 = new java.io.FileNotFoundException;
+        specialinvoke $r6.<java.io.FileNotFoundException: void <init>(java.lang.String)>(msg);
+        throw $r6;
+
+     label10:
+        $r12 = new org.apache.fop.render.afp.tools.StructuredFieldReader;
+        specialinvoke $r12.<org.apache.fop.render.afp.tools.StructuredFieldReader: void <init>(java.io.InputStream)>(is);
+        sfr = $r12;
+        $r13 = <org.apache.fop.render.afp.fonts.AFPFontReader: byte[] CHARACTER_TABLE_SF>;
+        data = virtualinvoke sfr.<org.apache.fop.render.afp.tools.StructuredFieldReader: byte[] getNext(byte[])>($r13);
+        position = 0;
+        gcgiBytes = newarray (byte)[8];
+        charBytes = newarray (byte)[1];
+        index = 3;
+
+     label11:
+        $i1 = lengthof data;
+        if index >= $i1 goto label15;
+
+        if position >= 8 goto label12;
+
+        $b2 = data[index];
+        gcgiBytes[position] = $b2;
+        position = position + 1;
+        goto label14;
+
+     label12:
+        if position != 9 goto label13;
+
+        position = 0;
+        $b2 = data[index];
+        charBytes[0] = $b2;
+        $r14 = new java.lang.String;
+        specialinvoke $r14.<java.lang.String: void <init>(byte[],java.lang.String)>(gcgiBytes, "Cp1146");
+        gcgiString = $r14;
+        $r14 = new java.lang.String;
+        specialinvoke $r14.<java.lang.String: void <init>(byte[],java.lang.String)>(charBytes, encoding);
+        charString = $r14;
+        virtualinvoke codepages.<java.util.HashMap: java.lang.Object put(java.lang.Object,java.lang.Object)>(gcgiString, charString);
+        goto label14;
+
+     label13:
+        position = position + 1;
+
+     label14:
+        index = index + 1;
+        goto label11;
+
+     label15:
+        virtualinvoke is.<java.io.InputStream: void close()>();
+
+     label16:
+        goto label18;
+
+     label17:
+        $r16 := @caughtexception;
+        l16 = $r16;
+
+     label18:
+        return codepages;
+
+        catch java.net.MalformedURLException from label3 to label4 with label5;
+        catch java.lang.Exception from label15 to label16 with label17;
+    }
+
+    private static org.apache.fop.render.afp.fonts.AFPFontReader$FontControl processFontControl(org.apache.fop.render.afp.tools.StructuredFieldReader) throws java.io.IOException
+    {
+        org.apache.fop.render.afp.tools.StructuredFieldReader sfr;
+        byte[] $r0, fncData;
+        org.apache.fop.render.afp.fonts.AFPFontReader $r1;
+        org.apache.fop.render.afp.fonts.AFPFontReader$FontControl fontControl, $r2;
+        int dpi, $i2;
+        byte $b0, $b3;
+        short $s1, $s4;
+
+        sfr := @parameter0: org.apache.fop.render.afp.tools.StructuredFieldReader;
+        $r0 = <org.apache.fop.render.afp.fonts.AFPFontReader: byte[] FONT_CONTROL_SF>;
+        fncData = virtualinvoke sfr.<org.apache.fop.render.afp.tools.StructuredFieldReader: byte[] getNext(byte[])>($r0);
+        $r2 = new org.apache.fop.render.afp.fonts.AFPFontReader$FontControl;
+        $r1 = new org.apache.fop.render.afp.fonts.AFPFontReader;
+        specialinvoke $r1.<org.apache.fop.render.afp.fonts.AFPFontReader: void <init>()>();
+        virtualinvoke $r1.<java.lang.Object: java.lang.Class getClass()>();
+        specialinvoke $r2.<org.apache.fop.render.afp.fonts.AFPFontReader$FontControl: void <init>(org.apache.fop.render.afp.fonts.AFPFontReader,org.apache.fop.render.afp.fonts.AFPFontReader$1)>($r1, null);
+        fontControl = $r2;
+        $b0 = fncData[7];
+        if $b0 != 2 goto label0;
+
+        virtualinvoke fontControl.<org.apache.fop.render.afp.fonts.AFPFontReader$FontControl: void setRelative(boolean)>(1);
+
+     label0:
+        $b0 = fncData[9];
+        $s1 = $b0 & 255;
+        $i2 = $s1 << 8;
+        $b3 = fncData[10];
+        $s4 = $b3 & 255;
+        $i2 = $i2 + $s4;
+        dpi = $i2 / 10;
+        virtualinvoke fontControl.<org.apache.fop.render.afp.fonts.AFPFontReader$FontControl: void setDpi(int)>(dpi);
+        return fontControl;
+    }
+
+    private static org.apache.fop.render.afp.fonts.CharacterSetOrientation[] processFontOrientation(org.apache.fop.render.afp.tools.StructuredFieldReader) throws java.io.IOException
+    {
+        org.apache.fop.render.afp.tools.StructuredFieldReader sfr;
+        byte[] $r0, data, fnoData;
+        int position, index, $i0;
+        java.util.ArrayList orientations, $r1;
+        short orientation;
+        org.apache.fop.render.afp.fonts.CharacterSetOrientation cso, $r3;
+        byte $b1, $b2;
+        java.io.PrintStream $r2;
+        org.apache.fop.render.afp.fonts.CharacterSetOrientation[] $r4, $r6;
+        java.lang.Object[] $r5;
+
+        sfr := @parameter0: org.apache.fop.render.afp.tools.StructuredFieldReader;
+        $r0 = <org.apache.fop.render.afp.fonts.AFPFontReader: byte[] FONT_ORIENTATION_SF>;
+        data = virtualinvoke sfr.<org.apache.fop.render.afp.tools.StructuredFieldReader: byte[] getNext(byte[])>($r0);
+        position = 0;
+        fnoData = newarray (byte)[26];
+        $r1 = new java.util.ArrayList;
+        specialinvoke $r1.<java.util.ArrayList: void <init>()>();
+        orientations = $r1;
+        index = 3;
+
+     label0:
+        $i0 = lengthof data;
+        if index >= $i0 goto label8;
+
+        $b1 = data[index];
+        fnoData[position] = $b1;
+        position = position + 1;
+        if position != 26 goto label7;
+
+        position = 0;
+        orientation = 0;
+        $b2 = fnoData[2];
+        lookupswitch($b2)
+        {
+            case -121: goto label4;
+            case 0: goto label1;
+            case 45: goto label2;
+            case 90: goto label3;
+            default: goto label5;
+        };
+
+     label1:
+        orientation = 0;
+        goto label6;
+
+     label2:
+        orientation = 90;
+        goto label6;
+
+     label3:
+        orientation = 180;
+        goto label6;
+
+     label4:
+        orientation = 270;
+        goto label6;
+
+     label5:
+        $r2 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r2.<java.io.PrintStream: void println(java.lang.String)>("ERROR: Oriantation");
+
+     label6:
+        $r3 = new org.apache.fop.render.afp.fonts.CharacterSetOrientation;
+        specialinvoke $r3.<org.apache.fop.render.afp.fonts.CharacterSetOrientation: void <init>(int)>(orientation);
+        cso = $r3;
+        virtualinvoke orientations.<java.util.ArrayList: boolean add(java.lang.Object)>(cso);
+
+     label7:
+        index = index + 1;
+        goto label0;
+
+     label8:
+        $r4 = <org.apache.fop.render.afp.fonts.AFPFontReader: org.apache.fop.render.afp.fonts.CharacterSetOrientation[] EMPTY_CSO_ARRAY>;
+        $r5 = virtualinvoke orientations.<java.util.ArrayList: java.lang.Object[] toArray(java.lang.Object[])>($r4);
+        $r6 = (org.apache.fop.render.afp.fonts.CharacterSetOrientation[]) $r5;
+        $r6 = (org.apache.fop.render.afp.fonts.CharacterSetOrientation[]) $r6;
+        return $r6;
+    }
+
+    private static void processFontPosition(org.apache.fop.render.afp.tools.StructuredFieldReader, org.apache.fop.render.afp.fonts.CharacterSetOrientation[], int) throws java.io.IOException
+    {
+        org.apache.fop.render.afp.tools.StructuredFieldReader sfr;
+        org.apache.fop.render.afp.fonts.CharacterSetOrientation[] csoArray;
+        int dpi, position, csoIndex, index, xHeight, capHeight, ascHeight, dscHeight, fopFactor, $i0, $i4;
+        byte[] $r0, data, fpData;
+        boolean fopFactor;
+        java.lang.String msg;
+        org.apache.fop.render.afp.fonts.CharacterSetOrientation cso;
+        java.lang.StringBuffer $r1;
+        org.apache.commons.logging.Log $r2;
+        java.io.IOException $r3;
+        byte $b1, $b2, $b5;
+        short $s3, $s6;
+
+        sfr := @parameter0: org.apache.fop.render.afp.tools.StructuredFieldReader;
+        csoArray := @parameter1: org.apache.fop.render.afp.fonts.CharacterSetOrientation[];
+        dpi := @parameter2: int;
+        $r0 = <org.apache.fop.render.afp.fonts.AFPFontReader: byte[] FONT_POSITION_SF>;
+        data = virtualinvoke sfr.<org.apache.fop.render.afp.tools.StructuredFieldReader: byte[] getNext(byte[])>($r0);
+        position = 0;
+        fpData = newarray (byte)[26];
+        csoIndex = 0;
+        fopFactor = 0;
+        lookupswitch(dpi)
+        {
+            case 100: goto label0;
+            case 240: goto label1;
+            case 300: goto label2;
+            default: goto label3;
+        };
+
+     label0:
+        fopFactor = 1;
+        goto label4;
+
+     label1:
+        fopFactor = 300000;
+        goto label4;
+
+     label2:
+        fopFactor = 240000;
+        goto label4;
+
+     label3:
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unsupported font resolution of ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(dpi);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" dpi.");
+        msg = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r2 = <org.apache.fop.render.afp.fonts.AFPFontReader: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void error(java.lang.Object)>(msg);
+        $r3 = new java.io.IOException;
+        specialinvoke $r3.<java.io.IOException: void <init>(java.lang.String)>(msg);
+        throw $r3;
+
+     label4:
+        index = 3;
+
+     label5:
+        $i0 = lengthof data;
+        if index >= $i0 goto label8;
+
+        if position >= 22 goto label6;
+
+        $b1 = data[index];
+        fpData[position] = $b1;
+        goto label7;
+
+     label6:
+        if position != 22 goto label7;
+
+        position = 0;
+        cso = csoArray[csoIndex];
+        $b2 = fpData[2];
+        $s3 = $b2 & 255;
+        $i4 = $s3 << 8;
+        $b5 = fpData[3];
+        $s6 = $b5 & 255;
+        xHeight = $i4 + $s6;
+        $b2 = fpData[4];
+        $s3 = $b2 & 255;
+        $i4 = $s3 << 8;
+        $b5 = fpData[5];
+        $s6 = $b5 & 255;
+        capHeight = $i4 + $s6;
+        $b2 = fpData[6];
+        $s3 = $b2 & 255;
+        $i4 = $s3 << 8;
+        $b5 = fpData[7];
+        $s6 = $b5 & 255;
+        ascHeight = $i4 + $s6;
+        $b2 = fpData[8];
+        $s3 = $b2 & 255;
+        $i4 = $s3 << 8;
+        $b5 = fpData[9];
+        $s6 = $b5 & 255;
+        dscHeight = $i4 + $s6;
+        dscHeight = dscHeight * -1;
+        $i0 = xHeight * fopFactor;
+        virtualinvoke cso.<org.apache.fop.render.afp.fonts.CharacterSetOrientation: void setXHeight(int)>($i0);
+        $i0 = capHeight * fopFactor;
+        virtualinvoke cso.<org.apache.fop.render.afp.fonts.CharacterSetOrientation: void setCapHeight(int)>($i0);
+        $i0 = ascHeight * fopFactor;
+        virtualinvoke cso.<org.apache.fop.render.afp.fonts.CharacterSetOrientation: void setAscender(int)>($i0);
+        $i0 = dscHeight * fopFactor;
+        virtualinvoke cso.<org.apache.fop.render.afp.fonts.CharacterSetOrientation: void setDescender(int)>($i0);
+        csoIndex = csoIndex + 1;
+        $b1 = data[index];
+        fpData[position] = $b1;
+
+     label7:
+        position = position + 1;
+        index = index + 1;
+        goto label5;
+
+     label8:
+        return;
+    }
+
+    private static void processFontIndex(org.apache.fop.render.afp.tools.StructuredFieldReader, org.apache.fop.render.afp.fonts.CharacterSetOrientation, java.util.HashMap, int) throws java.io.IOException
+    {
+        org.apache.fop.render.afp.tools.StructuredFieldReader sfr;
+        org.apache.fop.render.afp.fonts.CharacterSetOrientation cso;
+        java.util.HashMap codepage;
+        int dpi, position, index, width, a, fopFactor, $i0, $i4;
+        byte[] $r0, data, gcgid, fiData;
+        boolean fopFactor;
+        java.lang.String msg, gcgiString, idx, $r4;
+        char lowest, highest, cidx;
+        java.lang.StringBuffer $r1;
+        org.apache.commons.logging.Log $r2;
+        java.io.IOException $r3;
+        byte $b1, $b2, $b5;
+        java.lang.Object $r5;
+        short $s3, $s6;
+
+        sfr := @parameter0: org.apache.fop.render.afp.tools.StructuredFieldReader;
+        cso := @parameter1: org.apache.fop.render.afp.fonts.CharacterSetOrientation;
+        codepage := @parameter2: java.util.HashMap;
+        dpi := @parameter3: int;
+        $r0 = <org.apache.fop.render.afp.fonts.AFPFontReader: byte[] FONT_INDEX_SF>;
+        data = virtualinvoke sfr.<org.apache.fop.render.afp.tools.StructuredFieldReader: byte[] getNext(byte[])>($r0);
+        fopFactor = 0;
+        lookupswitch(dpi)
+        {
+            case 100: goto label0;
+            case 240: goto label1;
+            case 300: goto label2;
+            default: goto label3;
+        };
+
+     label0:
+        fopFactor = 1;
+        goto label4;
+
+     label1:
+        fopFactor = 300000;
+        goto label4;
+
+     label2:
+        fopFactor = 240000;
+        goto label4;
+
+     label3:
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unsupported font resolution of ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(dpi);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" dpi.");
+        msg = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r2 = <org.apache.fop.render.afp.fonts.AFPFontReader: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void error(java.lang.Object)>(msg);
+        $r3 = new java.io.IOException;
+        specialinvoke $r3.<java.io.IOException: void <init>(java.lang.String)>(msg);
+        throw $r3;
+
+     label4:
+        position = 0;
+        gcgid = newarray (byte)[8];
+        fiData = newarray (byte)[20];
+        lowest = 255;
+        highest = 0;
+        index = 3;
+
+     label5:
+        $i0 = lengthof data;
+        if index >= $i0 goto label11;
+
+        if position >= 8 goto label6;
+
+        $b1 = data[index];
+        gcgid[position] = $b1;
+        position = position + 1;
+        goto label10;
+
+     label6:
+        if position >= 27 goto label7;
+
+        $i0 = position - 8;
+        $b1 = data[index];
+        fiData[$i0] = $b1;
+        position = position + 1;
+        goto label10;
+
+     label7:
+        if position != 27 goto label10;
+
+        $i0 = position - 8;
+        $b1 = data[index];
+        fiData[$i0] = $b1;
+        position = 0;
+        $r4 = new java.lang.String;
+        specialinvoke $r4.<java.lang.String: void <init>(byte[],java.lang.String)>(gcgid, "Cp1146");
+        gcgiString = $r4;
+        $r5 = virtualinvoke codepage.<java.util.HashMap: java.lang.Object get(java.lang.Object)>(gcgiString);
+        idx = (java.lang.String) $r5;
+        if idx == null goto label10;
+
+        cidx = virtualinvoke idx.<java.lang.String: char charAt(int)>(0);
+        $b2 = fiData[0];
+        $s3 = $b2 & 255;
+        $i4 = $s3 << 8;
+        $b5 = fiData[1];
+        $s6 = $b5 & 255;
+        width = $i4 + $s6;
+        if cidx >= lowest goto label8;
+
+        lowest = cidx;
+
+     label8:
+        if cidx <= highest goto label9;
+
+        highest = cidx;
+
+     label9:
+        a = width * fopFactor;
+        virtualinvoke cso.<org.apache.fop.render.afp.fonts.CharacterSetOrientation: void setWidth(int,int)>(cidx, a);
+
+     label10:
+        index = index + 1;
+        goto label5;
+
+     label11:
+        virtualinvoke cso.<org.apache.fop.render.afp.fonts.CharacterSetOrientation: void setFirstChar(int)>(lowest);
+        virtualinvoke cso.<org.apache.fop.render.afp.fonts.CharacterSetOrientation: void setLastChar(int)>(highest);
+        return;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        org.apache.commons.logging.Log $r0;
+        org.apache.fop.render.afp.fonts.CharacterSetOrientation[] $r1;
+        byte[] $r2;
+
+        $r0 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.String)>("org.apache.fop.render.afp.fonts");
+        <org.apache.fop.render.afp.fonts.AFPFontReader: org.apache.commons.logging.Log log> = $r0;
+        $r1 = newarray (org.apache.fop.render.afp.fonts.CharacterSetOrientation)[0];
+        <org.apache.fop.render.afp.fonts.AFPFontReader: org.apache.fop.render.afp.fonts.CharacterSetOrientation[] EMPTY_CSO_ARRAY> = $r1;
+        $r2 = newarray (byte)[3];
+        $r2[0] = -45;
+        $r2[1] = -88;
+        $r2[2] = -121;
+        <org.apache.fop.render.afp.fonts.AFPFontReader: byte[] CODEPAGE_SF> = $r2;
+        $r2 = newarray (byte)[3];
+        $r2[0] = -45;
+        $r2[1] = -116;
+        $r2[2] = -121;
+        <org.apache.fop.render.afp.fonts.AFPFontReader: byte[] CHARACTER_TABLE_SF> = $r2;
+        $r2 = newarray (byte)[3];
+        $r2[0] = -45;
+        $r2[1] = -89;
+        $r2[2] = -119;
+        <org.apache.fop.render.afp.fonts.AFPFontReader: byte[] FONT_CONTROL_SF> = $r2;
+        $r2 = newarray (byte)[3];
+        $r2[0] = -45;
+        $r2[1] = -82;
+        $r2[2] = -119;
+        <org.apache.fop.render.afp.fonts.AFPFontReader: byte[] FONT_ORIENTATION_SF> = $r2;
+        $r2 = newarray (byte)[3];
+        $r2[0] = -45;
+        $r2[1] = -84;
+        $r2[2] = -119;
+        <org.apache.fop.render.afp.fonts.AFPFontReader: byte[] FONT_POSITION_SF> = $r2;
+        $r2 = newarray (byte)[3];
+        $r2[0] = -45;
+        $r2[1] = -116;
+        $r2[2] = -119;
+        <org.apache.fop.render.afp.fonts.AFPFontReader: byte[] FONT_INDEX_SF> = $r2;
+        return;
+    }
+}

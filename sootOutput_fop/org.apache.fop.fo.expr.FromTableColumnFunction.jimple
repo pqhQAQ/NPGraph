@@ -1,0 +1,164 @@
+public class org.apache.fop.fo.expr.FromTableColumnFunction extends org.apache.fop.fo.expr.FunctionBase
+{
+
+    public void <init>()
+    {
+        org.apache.fop.fo.expr.FromTableColumnFunction this;
+
+        this := @this: org.apache.fop.fo.expr.FromTableColumnFunction;
+        specialinvoke this.<org.apache.fop.fo.expr.FunctionBase: void <init>()>();
+        return;
+    }
+
+    public int nbArgs()
+    {
+        org.apache.fop.fo.expr.FromTableColumnFunction this;
+
+        this := @this: org.apache.fop.fo.expr.FromTableColumnFunction;
+        return 1;
+    }
+
+    public boolean padArgsWithPropertyName()
+    {
+        org.apache.fop.fo.expr.FromTableColumnFunction this;
+
+        this := @this: org.apache.fop.fo.expr.FromTableColumnFunction;
+        return 1;
+    }
+
+    public org.apache.fop.fo.properties.Property eval(org.apache.fop.fo.properties.Property[], org.apache.fop.fo.expr.PropertyInfo) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.expr.FromTableColumnFunction this;
+        org.apache.fop.fo.properties.Property[] args;
+        org.apache.fop.fo.expr.PropertyInfo pInfo;
+        org.apache.fop.fo.FObj fo;
+        boolean propId, span, $z0;
+        java.lang.String propName;
+        byte columnNumber;
+        org.apache.fop.fo.flow.table.Table t;
+        java.util.List cols;
+        org.apache.fop.fo.flow.table.ColumnNumberManager columnIndexManager;
+        org.apache.fop.fo.PropertyList $r0;
+        int $i0, propId, columnNumber, span, $i1;
+        org.apache.fop.fo.properties.PropertyMaker $r1;
+        org.apache.fop.fo.properties.Property $r2;
+        org.apache.fop.fo.FONode $r3;
+        org.apache.fop.fo.flow.table.TableCell $r4;
+        org.apache.fop.fo.expr.PropertyException $r5;
+        org.apache.fop.datatypes.Numeric $r6;
+        org.apache.fop.fo.flow.table.TableFObj $r7;
+        java.lang.Object $r8;
+        org.apache.fop.fo.flow.table.TableColumn $r9;
+
+        this := @this: org.apache.fop.fo.expr.FromTableColumnFunction;
+        args := @parameter0: org.apache.fop.fo.properties.Property[];
+        pInfo := @parameter1: org.apache.fop.fo.expr.PropertyInfo;
+        $r0 = virtualinvoke pInfo.<org.apache.fop.fo.expr.PropertyInfo: org.apache.fop.fo.PropertyList getPropertyList()>();
+        fo = virtualinvoke $r0.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.FObj getFObj()>();
+        propId = 0;
+        $i0 = lengthof args;
+        if $i0 != 0 goto label0;
+
+        $r1 = virtualinvoke pInfo.<org.apache.fop.fo.expr.PropertyInfo: org.apache.fop.fo.properties.PropertyMaker getPropertyMaker()>();
+        propId = virtualinvoke $r1.<org.apache.fop.fo.properties.PropertyMaker: int getPropId()>();
+        goto label1;
+
+     label0:
+        $r2 = args[0];
+        propName = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: java.lang.String getString()>();
+        propId = staticinvoke <org.apache.fop.fo.FOPropertyMapping: int getPropertyId(java.lang.String)>(propName);
+
+     label1:
+        if propId == -1 goto label11;
+
+        columnNumber = -1;
+        span = 0;
+        $i0 = virtualinvoke fo.<org.apache.fop.fo.FObj: int getNameId()>();
+        if $i0 == 50 goto label5;
+
+     label2:
+        $r3 = virtualinvoke fo.<org.apache.fop.fo.FObj: org.apache.fop.fo.FONode getParent()>();
+        fo = (org.apache.fop.fo.FObj) $r3;
+        $i0 = virtualinvoke fo.<org.apache.fop.fo.FObj: int getNameId()>();
+        if $i0 == 50 goto label3;
+
+        $i0 = virtualinvoke fo.<org.apache.fop.fo.FObj: int getNameId()>();
+        if $i0 != 32 goto label2;
+
+     label3:
+        $i0 = virtualinvoke fo.<org.apache.fop.fo.FObj: int getNameId()>();
+        if $i0 != 50 goto label4;
+
+        $r4 = (org.apache.fop.fo.flow.table.TableCell) fo;
+        columnNumber = virtualinvoke $r4.<org.apache.fop.fo.flow.table.TableCell: int getColumnNumber()>();
+        $r4 = (org.apache.fop.fo.flow.table.TableCell) fo;
+        span = virtualinvoke $r4.<org.apache.fop.fo.flow.table.TableCell: int getNumberColumnsSpanned()>();
+        goto label6;
+
+     label4:
+        $r5 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r5.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>("from-table-column() may only be used on fo:table-cell or its descendants.");
+        throw $r5;
+
+     label5:
+        $r0 = virtualinvoke pInfo.<org.apache.fop.fo.expr.PropertyInfo: org.apache.fop.fo.PropertyList getPropertyList()>();
+        $r2 = virtualinvoke $r0.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(70);
+        $r6 = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        columnNumber = interfaceinvoke $r6.<org.apache.fop.datatypes.Numeric: int getValue()>();
+        $r0 = virtualinvoke pInfo.<org.apache.fop.fo.expr.PropertyInfo: org.apache.fop.fo.PropertyList getPropertyList()>();
+        $r2 = virtualinvoke $r0.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(149);
+        $r6 = virtualinvoke $r2.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        span = interfaceinvoke $r6.<org.apache.fop.datatypes.Numeric: int getValue()>();
+
+     label6:
+        $r7 = (org.apache.fop.fo.flow.table.TableFObj) fo;
+        t = virtualinvoke $r7.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.fo.flow.table.Table getTable()>();
+        cols = virtualinvoke t.<org.apache.fop.fo.flow.table.Table: java.util.List getColumns()>();
+        columnIndexManager = virtualinvoke t.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.flow.table.ColumnNumberManager getColumnNumberManager()>();
+        if cols != null goto label7;
+
+        $r0 = virtualinvoke pInfo.<org.apache.fop.fo.expr.PropertyInfo: org.apache.fop.fo.PropertyList getPropertyList()>();
+        $r2 = virtualinvoke $r0.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int,boolean,boolean)>(propId, 0, 1);
+        return $r2;
+
+     label7:
+        $z0 = virtualinvoke columnIndexManager.<org.apache.fop.fo.flow.table.ColumnNumberManager: boolean isColumnNumberUsed(int)>(columnNumber);
+        if $z0 == 0 goto label8;
+
+        $i1 = columnNumber - 1;
+        $r8 = interfaceinvoke cols.<java.util.List: java.lang.Object get(int)>($i1);
+        $r9 = (org.apache.fop.fo.flow.table.TableColumn) $r8;
+        $r2 = virtualinvoke $r9.<org.apache.fop.fo.flow.table.TableColumn: org.apache.fop.fo.properties.Property getProperty(int)>(propId);
+        return $r2;
+
+     label8:
+        span = span + -1;
+        if span <= 0 goto label9;
+
+        columnNumber = columnNumber + 1;
+        $z0 = virtualinvoke columnIndexManager.<org.apache.fop.fo.flow.table.ColumnNumberManager: boolean isColumnNumberUsed(int)>(columnNumber);
+        if $z0 != 0 goto label9;
+
+        goto label8;
+
+     label9:
+        $z0 = virtualinvoke columnIndexManager.<org.apache.fop.fo.flow.table.ColumnNumberManager: boolean isColumnNumberUsed(int)>(columnNumber);
+        if $z0 == 0 goto label10;
+
+        $i1 = columnNumber - 1;
+        $r8 = interfaceinvoke cols.<java.util.List: java.lang.Object get(int)>($i1);
+        $r9 = (org.apache.fop.fo.flow.table.TableColumn) $r8;
+        $r2 = virtualinvoke $r9.<org.apache.fop.fo.flow.table.TableColumn: org.apache.fop.fo.properties.Property getProperty(int)>(propId);
+        return $r2;
+
+     label10:
+        $r0 = virtualinvoke pInfo.<org.apache.fop.fo.expr.PropertyInfo: org.apache.fop.fo.PropertyList getPropertyList()>();
+        $r2 = virtualinvoke $r0.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int,boolean,boolean)>(propId, 0, 1);
+        return $r2;
+
+     label11:
+        $r5 = new org.apache.fop.fo.expr.PropertyException;
+        specialinvoke $r5.<org.apache.fop.fo.expr.PropertyException: void <init>(java.lang.String)>("Incorrect parameter to from-table-column() function");
+        throw $r5;
+    }
+}

@@ -1,0 +1,127 @@
+public class org.apache.fop.pdf.InMemoryStreamCache extends java.lang.Object implements org.apache.fop.pdf.StreamCache
+{
+    private int hintSize;
+    private java.io.ByteArrayOutputStream output;
+
+    public void <init>()
+    {
+        org.apache.fop.pdf.InMemoryStreamCache this;
+
+        this := @this: org.apache.fop.pdf.InMemoryStreamCache;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.pdf.InMemoryStreamCache: int hintSize> = -1;
+        return;
+    }
+
+    public void <init>(int)
+    {
+        org.apache.fop.pdf.InMemoryStreamCache this;
+        int hintSize;
+
+        this := @this: org.apache.fop.pdf.InMemoryStreamCache;
+        hintSize := @parameter0: int;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.pdf.InMemoryStreamCache: int hintSize> = -1;
+        this.<org.apache.fop.pdf.InMemoryStreamCache: int hintSize> = hintSize;
+        return;
+    }
+
+    public java.io.OutputStream getOutputStream() throws java.io.IOException
+    {
+        org.apache.fop.pdf.InMemoryStreamCache this;
+        java.io.ByteArrayOutputStream $r0, $r1;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.pdf.InMemoryStreamCache;
+        $r1 = this.<org.apache.fop.pdf.InMemoryStreamCache: java.io.ByteArrayOutputStream output>;
+        if $r1 != null goto label1;
+
+        $i0 = this.<org.apache.fop.pdf.InMemoryStreamCache: int hintSize>;
+        if $i0 > 0 goto label0;
+
+        $r0 = new java.io.ByteArrayOutputStream;
+        specialinvoke $r0.<java.io.ByteArrayOutputStream: void <init>(int)>(512);
+        this.<org.apache.fop.pdf.InMemoryStreamCache: java.io.ByteArrayOutputStream output> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = new java.io.ByteArrayOutputStream;
+        $i1 = this.<org.apache.fop.pdf.InMemoryStreamCache: int hintSize>;
+        specialinvoke $r0.<java.io.ByteArrayOutputStream: void <init>(int)>($i1);
+        this.<org.apache.fop.pdf.InMemoryStreamCache: java.io.ByteArrayOutputStream output> = $r0;
+
+     label1:
+        $r1 = this.<org.apache.fop.pdf.InMemoryStreamCache: java.io.ByteArrayOutputStream output>;
+        return $r1;
+    }
+
+    public void write(byte[]) throws java.io.IOException
+    {
+        org.apache.fop.pdf.InMemoryStreamCache this;
+        byte[] data;
+        java.io.OutputStream $r0;
+
+        this := @this: org.apache.fop.pdf.InMemoryStreamCache;
+        data := @parameter0: byte[];
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.InMemoryStreamCache: java.io.OutputStream getOutputStream()>();
+        virtualinvoke $r0.<java.io.OutputStream: void write(byte[])>(data);
+        return;
+    }
+
+    public int outputContents(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.pdf.InMemoryStreamCache this;
+        java.io.OutputStream out;
+        java.io.ByteArrayOutputStream $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.pdf.InMemoryStreamCache;
+        out := @parameter0: java.io.OutputStream;
+        $r0 = this.<org.apache.fop.pdf.InMemoryStreamCache: java.io.ByteArrayOutputStream output>;
+        if $r0 != null goto label0;
+
+        return 0;
+
+     label0:
+        $r0 = this.<org.apache.fop.pdf.InMemoryStreamCache: java.io.ByteArrayOutputStream output>;
+        virtualinvoke $r0.<java.io.ByteArrayOutputStream: void writeTo(java.io.OutputStream)>(out);
+        $r0 = this.<org.apache.fop.pdf.InMemoryStreamCache: java.io.ByteArrayOutputStream output>;
+        $i0 = virtualinvoke $r0.<java.io.ByteArrayOutputStream: int size()>();
+        return $i0;
+    }
+
+    public int getSize() throws java.io.IOException
+    {
+        org.apache.fop.pdf.InMemoryStreamCache this;
+        java.io.ByteArrayOutputStream $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.pdf.InMemoryStreamCache;
+        $r0 = this.<org.apache.fop.pdf.InMemoryStreamCache: java.io.ByteArrayOutputStream output>;
+        if $r0 != null goto label0;
+
+        return 0;
+
+     label0:
+        $r0 = this.<org.apache.fop.pdf.InMemoryStreamCache: java.io.ByteArrayOutputStream output>;
+        $i0 = virtualinvoke $r0.<java.io.ByteArrayOutputStream: int size()>();
+        return $i0;
+    }
+
+    public void clear() throws java.io.IOException
+    {
+        org.apache.fop.pdf.InMemoryStreamCache this;
+        java.io.ByteArrayOutputStream $r0;
+
+        this := @this: org.apache.fop.pdf.InMemoryStreamCache;
+        $r0 = this.<org.apache.fop.pdf.InMemoryStreamCache: java.io.ByteArrayOutputStream output>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.pdf.InMemoryStreamCache: java.io.ByteArrayOutputStream output>;
+        virtualinvoke $r0.<java.io.ByteArrayOutputStream: void close()>();
+        this.<org.apache.fop.pdf.InMemoryStreamCache: java.io.ByteArrayOutputStream output> = null;
+
+     label0:
+        return;
+    }
+}

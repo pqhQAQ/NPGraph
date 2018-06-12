@@ -1,0 +1,168 @@
+public class org.apache.fop.pdf.PDFNumber extends org.apache.fop.pdf.PDFObject
+{
+    private java.lang.Number number;
+    private static final java.lang.String BASE_FORMAT;
+    private static final java.lang.ThreadLocal[] DECIMAL_FORMAT_CACHE;
+
+    public void <init>()
+    {
+        org.apache.fop.pdf.PDFNumber this;
+
+        this := @this: org.apache.fop.pdf.PDFNumber;
+        specialinvoke this.<org.apache.fop.pdf.PDFObject: void <init>()>();
+        return;
+    }
+
+    public java.lang.Number getNumber()
+    {
+        org.apache.fop.pdf.PDFNumber this;
+        java.lang.Number $r0;
+
+        this := @this: org.apache.fop.pdf.PDFNumber;
+        $r0 = this.<org.apache.fop.pdf.PDFNumber: java.lang.Number number>;
+        return $r0;
+    }
+
+    public void setNumber(java.lang.Number)
+    {
+        org.apache.fop.pdf.PDFNumber this;
+        java.lang.Number number;
+
+        this := @this: org.apache.fop.pdf.PDFNumber;
+        number := @parameter0: java.lang.Number;
+        this.<org.apache.fop.pdf.PDFNumber: java.lang.Number number> = number;
+        return;
+    }
+
+    public static java.lang.String doubleOut(java.lang.Double)
+    {
+        java.lang.Double doubleDown;
+        double $d0;
+        java.lang.String $r0;
+
+        doubleDown := @parameter0: java.lang.Double;
+        $d0 = virtualinvoke doubleDown.<java.lang.Double: double doubleValue()>();
+        $r0 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double)>($d0);
+        return $r0;
+    }
+
+    public static java.lang.String doubleOut(double)
+    {
+        double doubleDown;
+        java.lang.String $r0;
+
+        doubleDown := @parameter0: double;
+        $r0 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double,int)>(doubleDown, 6);
+        return $r0;
+    }
+
+    public static java.lang.String doubleOut(double, int)
+    {
+        double doubleDown;
+        int dec, $i0, $i1;
+        java.lang.ThreadLocal[] $r0, $r3, $r5;
+        java.lang.StringBuffer $r1;
+        java.text.DecimalFormat df;
+        java.lang.IllegalArgumentException $r2;
+        java.lang.String $r4, $r8;
+        java.lang.ThreadLocal $r6;
+        java.lang.Object $r7;
+
+        doubleDown := @parameter0: double;
+        dec := @parameter1: int;
+        if dec < 0 goto label0;
+
+        $r0 = <org.apache.fop.pdf.PDFNumber: java.lang.ThreadLocal[] DECIMAL_FORMAT_CACHE>;
+        $i0 = lengthof $r0;
+        if dec < $i0 goto label1;
+
+     label0:
+        $r2 = new java.lang.IllegalArgumentException;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Parameter dec must be between 1 and ");
+        $r3 = <org.apache.fop.pdf.PDFNumber: java.lang.ThreadLocal[] DECIMAL_FORMAT_CACHE>;
+        $i1 = lengthof $r3;
+        $i1 = $i1 + 1;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r4 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>($r4);
+        throw $r2;
+
+     label1:
+        $r5 = <org.apache.fop.pdf.PDFNumber: java.lang.ThreadLocal[] DECIMAL_FORMAT_CACHE>;
+        $r6 = $r5[dec];
+        $r7 = virtualinvoke $r6.<java.lang.ThreadLocal: java.lang.Object get()>();
+        df = (java.text.DecimalFormat) $r7;
+        $r8 = virtualinvoke df.<java.text.DecimalFormat: java.lang.String format(double)>(doubleDown);
+        return $r8;
+    }
+
+    protected java.lang.String toPDFString()
+    {
+        org.apache.fop.pdf.PDFNumber this;
+        java.lang.StringBuffer sb, $r2;
+        java.lang.Number $r0, $r4;
+        java.lang.IllegalArgumentException $r1;
+        boolean $z0;
+        java.lang.String $r3, $r5;
+
+        this := @this: org.apache.fop.pdf.PDFNumber;
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFNumber: java.lang.Number getNumber()>();
+        if $r0 != null goto label0;
+
+        $r1 = new java.lang.IllegalArgumentException;
+        specialinvoke $r1.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("The number of this PDFNumber must not be empty");
+        throw $r1;
+
+     label0:
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>(int)>(64);
+        sb = $r2;
+        $z0 = virtualinvoke this.<org.apache.fop.pdf.PDFNumber: boolean hasObjectNumber()>();
+        if $z0 == 0 goto label1;
+
+        $r3 = virtualinvoke this.<org.apache.fop.pdf.PDFNumber: java.lang.String getObjectID()>();
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+
+     label1:
+        $r4 = virtualinvoke this.<org.apache.fop.pdf.PDFNumber: java.lang.Number getNumber()>();
+        $r3 = virtualinvoke $r4.<java.lang.Object: java.lang.String toString()>();
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $z0 = virtualinvoke this.<org.apache.fop.pdf.PDFNumber: boolean hasObjectNumber()>();
+        if $z0 == 0 goto label2;
+
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\nendobj\n");
+
+     label2:
+        $r5 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r5;
+    }
+
+    static void <clinit>()
+    {
+        int i, c;
+        org.apache.fop.pdf.PDFNumber$DecimalFormatThreadLocal $r0;
+        org.apache.fop.pdf.PDFNumber$DecimalFormatThreadLocal[] $r1;
+        java.lang.ThreadLocal[] $r2;
+
+        $r1 = newarray (org.apache.fop.pdf.PDFNumber$DecimalFormatThreadLocal)[17];
+        <org.apache.fop.pdf.PDFNumber: java.lang.ThreadLocal[] DECIMAL_FORMAT_CACHE> = $r1;
+        i = 0;
+        $r2 = <org.apache.fop.pdf.PDFNumber: java.lang.ThreadLocal[] DECIMAL_FORMAT_CACHE>;
+        c = lengthof $r2;
+
+     label0:
+        if i >= c goto label1;
+
+        $r2 = <org.apache.fop.pdf.PDFNumber: java.lang.ThreadLocal[] DECIMAL_FORMAT_CACHE>;
+        $r0 = new org.apache.fop.pdf.PDFNumber$DecimalFormatThreadLocal;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFNumber$DecimalFormatThreadLocal: void <init>(int)>(i);
+        $r2[i] = $r0;
+        i = i + 1;
+        goto label0;
+
+     label1:
+        return;
+    }
+}

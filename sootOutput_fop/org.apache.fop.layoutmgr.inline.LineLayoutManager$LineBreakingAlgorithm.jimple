@@ -1,0 +1,587 @@
+class org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm extends org.apache.fop.layoutmgr.BreakingAlgorithm
+{
+    private org.apache.fop.layoutmgr.inline.LineLayoutManager thisLLM;
+    private int pageAlignment;
+    private int activePossibility;
+    private int addedPositions;
+    private int textIndent;
+    private int fillerMinWidth;
+    private int lineHeight;
+    private int lead;
+    private int follow;
+    private int maxDiff;
+    private static final double MAX_DEMERITS;
+    private final org.apache.fop.layoutmgr.inline.LineLayoutManager this$0;
+
+    public void <init>(org.apache.fop.layoutmgr.inline.LineLayoutManager, int, int, int, int, int, int, int, int, boolean, int, org.apache.fop.layoutmgr.inline.LineLayoutManager)
+    {
+        org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm this;
+        org.apache.fop.layoutmgr.inline.LineLayoutManager l1, llm;
+        int pageAlign, textAlign, textAlignLast, indent, fillerWidth, lh, ld, fl, maxFlagCount, $i0, $i1;
+        boolean first;
+        org.apache.fop.fo.flow.Block $r1, $r2;
+
+        this := @this: org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm;
+        l1 := @parameter0: org.apache.fop.layoutmgr.inline.LineLayoutManager;
+        pageAlign := @parameter1: int;
+        textAlign := @parameter2: int;
+        textAlignLast := @parameter3: int;
+        indent := @parameter4: int;
+        fillerWidth := @parameter5: int;
+        lh := @parameter6: int;
+        ld := @parameter7: int;
+        fl := @parameter8: int;
+        first := @parameter9: boolean;
+        maxFlagCount := @parameter10: int;
+        llm := @parameter11: org.apache.fop.layoutmgr.inline.LineLayoutManager;
+        this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: org.apache.fop.layoutmgr.inline.LineLayoutManager this$0> = l1;
+        specialinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: void <init>(int,int,boolean,boolean,int)>(textAlign, textAlignLast, first, 0, maxFlagCount);
+        this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int pageAlignment> = pageAlign;
+        this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int textIndent> = indent;
+        this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int fillerMinWidth> = fillerWidth;
+        this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int lineHeight> = lh;
+        this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int lead> = ld;
+        this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int follow> = fl;
+        this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: org.apache.fop.layoutmgr.inline.LineLayoutManager thisLLM> = llm;
+        this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int activePossibility> = -1;
+        $r1 = staticinvoke <org.apache.fop.layoutmgr.inline.LineLayoutManager: org.apache.fop.fo.flow.Block access$300(org.apache.fop.layoutmgr.inline.LineLayoutManager)>(l1);
+        $i0 = virtualinvoke $r1.<org.apache.fop.fo.flow.Block: int getWidows()>();
+        $r2 = staticinvoke <org.apache.fop.layoutmgr.inline.LineLayoutManager: org.apache.fop.fo.flow.Block access$300(org.apache.fop.layoutmgr.inline.LineLayoutManager)>(l1);
+        $i1 = virtualinvoke $r2.<org.apache.fop.fo.flow.Block: int getOrphans()>();
+        if $i0 < $i1 goto label0;
+
+        $r1 = staticinvoke <org.apache.fop.layoutmgr.inline.LineLayoutManager: org.apache.fop.fo.flow.Block access$300(org.apache.fop.layoutmgr.inline.LineLayoutManager)>(l1);
+        $i0 = virtualinvoke $r1.<org.apache.fop.fo.flow.Block: int getWidows()>();
+        goto label1;
+
+     label0:
+        $r1 = staticinvoke <org.apache.fop.layoutmgr.inline.LineLayoutManager: org.apache.fop.fo.flow.Block access$300(org.apache.fop.layoutmgr.inline.LineLayoutManager)>(l1);
+        $i0 = virtualinvoke $r1.<org.apache.fop.fo.flow.Block: int getOrphans()>();
+
+     label1:
+        this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int maxDiff> = $i0;
+        return;
+    }
+
+    public void updateData1(int, double)
+    {
+        org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm this;
+        int lineCount;
+        double demerits;
+        org.apache.fop.layoutmgr.inline.LineLayoutManager $r0;
+        org.apache.fop.layoutmgr.inline.LineLayoutPossibilities $r1;
+        org.apache.commons.logging.Log $r2;
+        boolean $z0;
+        java.lang.StringBuffer $r3;
+        java.lang.String $r4;
+
+        this := @this: org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm;
+        lineCount := @parameter0: int;
+        demerits := @parameter1: double;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: org.apache.fop.layoutmgr.inline.LineLayoutManager this$0>;
+        $r1 = staticinvoke <org.apache.fop.layoutmgr.inline.LineLayoutManager: org.apache.fop.layoutmgr.inline.LineLayoutPossibilities access$400(org.apache.fop.layoutmgr.inline.LineLayoutManager)>($r0);
+        virtualinvoke $r1.<org.apache.fop.layoutmgr.inline.LineLayoutPossibilities: void addPossibility(int,double)>(lineCount, demerits);
+        $r2 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r2.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r2 = <org.apache.fop.layoutmgr.BreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Layout possibility in ");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(lineCount);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" lines; break at position:");
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r4);
+
+     label0:
+        return;
+    }
+
+    public void updateData2(org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode, org.apache.fop.layoutmgr.KnuthSequence, int)
+    {
+        org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm this;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode bestActiveNode, $r14;
+        org.apache.fop.layoutmgr.KnuthSequence par;
+        int total, difference, textAlign, lack, $i0, $i2, indent, $i3, $i4, $i5, $i6, $i7, $i8;
+        byte indent;
+        double ratio, $d0;
+        java.lang.String textDiff, $r4, $r7;
+        boolean $z0, $z1;
+        org.apache.fop.layoutmgr.inline.LineLayoutManager $r0, $r8, $r10;
+        org.apache.fop.layoutmgr.inline.LineLayoutPossibilities $r1, $r11;
+        org.apache.commons.logging.Log $r3;
+        java.lang.StringBuffer $r5, $r6;
+        org.apache.fop.fo.FObj $r9;
+        org.apache.fop.layoutmgr.inline.LineLayoutManager$Paragraph $r15, $r17;
+        org.apache.fop.traits.MinOptMax $r16, $r18;
+        org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakPosition $r19;
+
+        this := @this: org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm;
+        bestActiveNode := @parameter0: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode;
+        par := @parameter1: org.apache.fop.layoutmgr.KnuthSequence;
+        total := @parameter2: int;
+        indent = 0;
+        difference = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int difference>;
+        $i0 = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int line>;
+        if $i0 >= total goto label0;
+
+        $i0 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int alignment>;
+        goto label1;
+
+     label0:
+        $i0 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int alignmentLast>;
+
+     label1:
+        textAlign = $i0;
+        if textAlign != 23 goto label2;
+
+        $i2 = difference / 2;
+        goto label4;
+
+     label2:
+        if textAlign != 39 goto label3;
+
+        $i2 = difference;
+        goto label4;
+
+     label3:
+        $i2 = 0;
+
+     label4:
+        indent = indent + $i2;
+        $i0 = indent;
+        $i2 = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int line>;
+        if $i2 != 1 goto label5;
+
+        $z0 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: boolean bFirst>;
+        if $z0 == 0 goto label5;
+
+        $r0 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: org.apache.fop.layoutmgr.inline.LineLayoutManager this$0>;
+        $z0 = staticinvoke <org.apache.fop.layoutmgr.inline.LineLayoutManager: boolean access$100(org.apache.fop.layoutmgr.inline.LineLayoutManager)>($r0);
+        if $z0 == 0 goto label5;
+
+        $i2 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int textIndent>;
+        goto label6;
+
+     label5:
+        $i2 = 0;
+
+     label6:
+        indent = $i0 + $i2;
+        if textAlign == 70 goto label7;
+
+        if difference >= 0 goto label8;
+
+        $i0 = neg difference;
+        $i2 = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int availableShrink>;
+        if $i0 > $i2 goto label8;
+
+     label7:
+        $d0 = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: double adjustRatio>;
+        goto label9;
+
+     label8:
+        $d0 = 0.0;
+
+     label9:
+        ratio = $d0;
+        $i0 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int activePossibility>;
+        if $i0 != -1 goto label10;
+
+        this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int activePossibility> = 0;
+        this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int addedPositions> = 0;
+
+     label10:
+        $i0 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int addedPositions>;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: org.apache.fop.layoutmgr.inline.LineLayoutManager this$0>;
+        $r1 = staticinvoke <org.apache.fop.layoutmgr.inline.LineLayoutManager: org.apache.fop.layoutmgr.inline.LineLayoutPossibilities access$400(org.apache.fop.layoutmgr.inline.LineLayoutManager)>($r0);
+        $i3 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int activePossibility>;
+        $i2 = virtualinvoke $r1.<org.apache.fop.layoutmgr.inline.LineLayoutPossibilities: int getLineCount(int)>($i3);
+        if $i0 != $i2 goto label11;
+
+        $i2 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int activePossibility>;
+        $i2 = $i2 + 1;
+        this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int activePossibility> = $i2;
+        this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int addedPositions> = 0;
+
+     label11:
+        $r3 = <org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $z1 = interfaceinvoke $r3.<org.apache.commons.logging.Log: boolean isWarnEnabled()>();
+        if $z1 == 0 goto label14;
+
+        $i2 = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int availableShrink>;
+        lack = difference + $i2;
+        if lack >= 0 goto label14;
+
+        if lack >= -50000 goto label12;
+
+        $r4 = "more than 50 points";
+        goto label13;
+
+     label12:
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $i2 = neg lack;
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i2);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("mpt");
+        $r4 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+
+     label13:
+        textDiff = $r4;
+        $r3 = <org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: org.apache.commons.logging.Log log>;
+        $r6 = new java.lang.StringBuffer;
+        specialinvoke $r6.<java.lang.StringBuffer: void <init>()>();
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Line ");
+        $i3 = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int line>;
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i3);
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" of a paragraph overflows the available area by ");
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(textDiff);
+        $r6 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(".");
+        $r7 = virtualinvoke $r6.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r8 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: org.apache.fop.layoutmgr.inline.LineLayoutManager this$0>;
+        $r9 = virtualinvoke $r8.<org.apache.fop.layoutmgr.inline.LineLayoutManager: org.apache.fop.fo.FObj getFObj()>();
+        $r7 = staticinvoke <org.apache.fop.fo.FONode: java.lang.String decorateWithContextInfo(java.lang.String,org.apache.fop.fo.FONode)>($r7, $r9);
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r7);
+
+     label14:
+        $r10 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: org.apache.fop.layoutmgr.inline.LineLayoutManager this$0>;
+        $r11 = staticinvoke <org.apache.fop.layoutmgr.inline.LineLayoutManager: org.apache.fop.layoutmgr.inline.LineLayoutPossibilities access$400(org.apache.fop.layoutmgr.inline.LineLayoutManager)>($r10);
+        $i4 = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int line>;
+        if $i4 <= 1 goto label15;
+
+        $r14 = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode previous>;
+        $i4 = $r14.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int position>;
+        $i4 = $i4 + 1;
+        goto label16;
+
+     label15:
+        $i4 = 0;
+
+     label16:
+        $i5 = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int position>;
+        $i6 = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int availableShrink>;
+        $i7 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int addedPositions>;
+        if $i7 <= 0 goto label17;
+
+        $i7 = 0;
+        goto label18;
+
+     label17:
+        $r15 = (org.apache.fop.layoutmgr.inline.LineLayoutManager$Paragraph) par;
+        $r16 = staticinvoke <org.apache.fop.layoutmgr.inline.LineLayoutManager$Paragraph: org.apache.fop.traits.MinOptMax access$500(org.apache.fop.layoutmgr.inline.LineLayoutManager$Paragraph)>($r15);
+        $i7 = $r16.<org.apache.fop.traits.MinOptMax: int opt>;
+        $r17 = (org.apache.fop.layoutmgr.inline.LineLayoutManager$Paragraph) par;
+        $r18 = staticinvoke <org.apache.fop.layoutmgr.inline.LineLayoutManager$Paragraph: org.apache.fop.traits.MinOptMax access$500(org.apache.fop.layoutmgr.inline.LineLayoutManager$Paragraph)>($r17);
+        $i8 = $r18.<org.apache.fop.traits.MinOptMax: int min>;
+        $i7 = $i7 - $i8;
+
+     label18:
+        $i6 = $i6 - $i7;
+        $i7 = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int availableStretch>;
+        $r19 = specialinvoke this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakPosition makeLineBreakPosition(org.apache.fop.layoutmgr.KnuthSequence,int,int,int,int,int,double,int)>(par, $i4, $i5, $i6, $i7, difference, ratio, indent);
+        $i3 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int activePossibility>;
+        virtualinvoke $r11.<org.apache.fop.layoutmgr.inline.LineLayoutPossibilities: void addBreakPosition(org.apache.fop.layoutmgr.Position,int)>($r19, $i3);
+        $i2 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int addedPositions>;
+        $i2 = $i2 + 1;
+        this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int addedPositions> = $i2;
+        return;
+    }
+
+    public void resetAlgorithm()
+    {
+        org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm this;
+
+        this := @this: org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm;
+        this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int activePossibility> = -1;
+        return;
+    }
+
+    private org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakPosition makeLineBreakPosition(org.apache.fop.layoutmgr.KnuthSequence, int, int, int, int, int, double, int)
+    {
+        org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm this;
+        org.apache.fop.layoutmgr.KnuthSequence par;
+        int firstElementIndex, lastElementIndex, availableShrink, availableStretch, difference, indent, spaceBefore, spaceAfter, lineLead, lineFollow, maxIgnoredHeight, j, alignmentOffset, $i0, $i1, $i2, $i3, $i4;
+        double ratio;
+        boolean bZeroHeightLine, $z0;
+        java.util.ListIterator inlineIterator;
+        org.apache.fop.layoutmgr.inline.AlignmentContext lastAC, ac;
+        org.apache.fop.layoutmgr.KnuthElement element;
+        org.apache.fop.layoutmgr.inline.LineLayoutManager $r0, $r1, $r6, $r7, $r9;
+        org.apache.fop.fo.flow.Block $r2;
+        java.lang.Object $r3;
+        org.apache.fop.layoutmgr.inline.KnuthInlineBox $r4;
+        org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakPosition $r5;
+        java.util.List $r8;
+
+        this := @this: org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm;
+        par := @parameter0: org.apache.fop.layoutmgr.KnuthSequence;
+        firstElementIndex := @parameter1: int;
+        lastElementIndex := @parameter2: int;
+        availableShrink := @parameter3: int;
+        availableStretch := @parameter4: int;
+        difference := @parameter5: int;
+        ratio := @parameter6: double;
+        indent := @parameter7: int;
+        $i0 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int lineHeight>;
+        $i1 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int lead>;
+        $i0 = $i0 - $i1;
+        $i1 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int follow>;
+        $i0 = $i0 - $i1;
+        spaceBefore = $i0 / 2;
+        $i0 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int lineHeight>;
+        $i1 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int lead>;
+        $i0 = $i0 - $i1;
+        $i1 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int follow>;
+        $i0 = $i0 - $i1;
+        spaceAfter = $i0 - spaceBefore;
+        lineLead = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int lead>;
+        lineFollow = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int follow>;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: org.apache.fop.layoutmgr.inline.LineLayoutManager this$0>;
+        $i1 = staticinvoke <org.apache.fop.layoutmgr.inline.LineLayoutManager: int access$000(org.apache.fop.layoutmgr.inline.LineLayoutManager)>($r0);
+        if difference != $i1 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        bZeroHeightLine = $z0;
+        $r1 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: org.apache.fop.layoutmgr.inline.LineLayoutManager this$0>;
+        $r2 = staticinvoke <org.apache.fop.layoutmgr.inline.LineLayoutManager: org.apache.fop.fo.flow.Block access$300(org.apache.fop.layoutmgr.inline.LineLayoutManager)>($r1);
+        $i0 = virtualinvoke $r2.<org.apache.fop.fo.flow.Block: int getLineStackingStrategy()>();
+        if $i0 == 52 goto label13;
+
+        inlineIterator = virtualinvoke par.<org.apache.fop.layoutmgr.KnuthSequence: java.util.ListIterator listIterator(int)>(firstElementIndex);
+        lastAC = null;
+        maxIgnoredHeight = 0;
+        j = firstElementIndex;
+
+     label2:
+        if j > lastElementIndex goto label12;
+
+        $r3 = interfaceinvoke inlineIterator.<java.util.ListIterator: java.lang.Object next()>();
+        element = (org.apache.fop.layoutmgr.KnuthElement) $r3;
+        $z0 = element instanceof org.apache.fop.layoutmgr.inline.KnuthInlineBox;
+        if $z0 == 0 goto label11;
+
+        $r4 = (org.apache.fop.layoutmgr.inline.KnuthInlineBox) element;
+        ac = virtualinvoke $r4.<org.apache.fop.layoutmgr.inline.KnuthInlineBox: org.apache.fop.layoutmgr.inline.AlignmentContext getAlignmentContext()>();
+        if ac == null goto label9;
+
+        if lastAC == ac goto label9;
+
+        $z0 = virtualinvoke ac.<org.apache.fop.layoutmgr.inline.AlignmentContext: boolean usesInitialBaselineTable()>();
+        if $z0 == 0 goto label3;
+
+        $i0 = virtualinvoke ac.<org.apache.fop.layoutmgr.inline.AlignmentContext: int getAlignmentBaselineIdentifier()>();
+        if $i0 == 14 goto label7;
+
+        $i0 = virtualinvoke ac.<org.apache.fop.layoutmgr.inline.AlignmentContext: int getAlignmentBaselineIdentifier()>();
+        if $i0 == 4 goto label7;
+
+     label3:
+        $r1 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: org.apache.fop.layoutmgr.inline.LineLayoutManager this$0>;
+        $r2 = staticinvoke <org.apache.fop.layoutmgr.inline.LineLayoutManager: org.apache.fop.fo.flow.Block access$300(org.apache.fop.layoutmgr.inline.LineLayoutManager)>($r1);
+        $i0 = virtualinvoke $r2.<org.apache.fop.fo.flow.Block: int getLineHeightShiftAdjustment()>();
+        if $i0 == 30 goto label4;
+
+        $i0 = virtualinvoke ac.<org.apache.fop.layoutmgr.inline.AlignmentContext: int getBaselineShiftValue()>();
+        if $i0 != 0 goto label8;
+
+     label4:
+        alignmentOffset = virtualinvoke ac.<org.apache.fop.layoutmgr.inline.AlignmentContext: int getTotalAlignmentBaselineOffset()>();
+        $i1 = virtualinvoke ac.<org.apache.fop.layoutmgr.inline.AlignmentContext: int getAltitude()>();
+        $i0 = alignmentOffset + $i1;
+        if $i0 <= lineLead goto label5;
+
+        $i1 = virtualinvoke ac.<org.apache.fop.layoutmgr.inline.AlignmentContext: int getAltitude()>();
+        lineLead = alignmentOffset + $i1;
+
+     label5:
+        $i0 = virtualinvoke ac.<org.apache.fop.layoutmgr.inline.AlignmentContext: int getDepth()>();
+        $i0 = $i0 - alignmentOffset;
+        if $i0 <= lineFollow goto label6;
+
+        $i0 = virtualinvoke ac.<org.apache.fop.layoutmgr.inline.AlignmentContext: int getDepth()>();
+        lineFollow = $i0 - alignmentOffset;
+
+     label6:
+        goto label8;
+
+     label7:
+        $i0 = virtualinvoke ac.<org.apache.fop.layoutmgr.inline.AlignmentContext: int getHeight()>();
+        if $i0 <= maxIgnoredHeight goto label8;
+
+        maxIgnoredHeight = virtualinvoke ac.<org.apache.fop.layoutmgr.inline.AlignmentContext: int getHeight()>();
+
+     label8:
+        lastAC = ac;
+
+     label9:
+        if bZeroHeightLine == 0 goto label11;
+
+        $z0 = virtualinvoke element.<org.apache.fop.layoutmgr.KnuthElement: boolean isAuxiliary()>();
+        if $z0 == 0 goto label10;
+
+        if ac == null goto label11;
+
+        $i0 = virtualinvoke ac.<org.apache.fop.layoutmgr.inline.AlignmentContext: int getHeight()>();
+        if $i0 <= 0 goto label11;
+
+     label10:
+        bZeroHeightLine = 0;
+
+     label11:
+        j = j + 1;
+        goto label2;
+
+     label12:
+        $i1 = maxIgnoredHeight - lineLead;
+        if lineFollow >= $i1 goto label13;
+
+        lineFollow = maxIgnoredHeight - lineLead;
+
+     label13:
+        $r1 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: org.apache.fop.layoutmgr.inline.LineLayoutManager this$0>;
+        $i1 = lineLead + lineFollow;
+        staticinvoke <org.apache.fop.layoutmgr.inline.LineLayoutManager: int access$602(org.apache.fop.layoutmgr.inline.LineLayoutManager,int)>($r1, $i1);
+        if bZeroHeightLine == 0 goto label14;
+
+        $r5 = new org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakPosition;
+        $r6 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: org.apache.fop.layoutmgr.inline.LineLayoutManager thisLLM>;
+        $r7 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: org.apache.fop.layoutmgr.inline.LineLayoutManager this$0>;
+        $r8 = staticinvoke <org.apache.fop.layoutmgr.inline.LineLayoutManager: java.util.List access$200(org.apache.fop.layoutmgr.inline.LineLayoutManager)>($r7);
+        $i2 = interfaceinvoke $r8.<java.util.List: int indexOf(java.lang.Object)>(par);
+        $r9 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: org.apache.fop.layoutmgr.inline.LineLayoutManager this$0>;
+        $i3 = staticinvoke <org.apache.fop.layoutmgr.inline.LineLayoutManager: int access$000(org.apache.fop.layoutmgr.inline.LineLayoutManager)>($r9);
+        specialinvoke $r5.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakPosition: void <init>(org.apache.fop.layoutmgr.LayoutManager,int,int,int,int,int,int,double,double,int,int,int,int,int,int)>($r6, $i2, firstElementIndex, lastElementIndex, availableShrink, availableStretch, difference, ratio, 0.0, indent, 0, $i3, 0, 0, 0);
+        return $r5;
+
+     label14:
+        $r5 = new org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakPosition;
+        $r6 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: org.apache.fop.layoutmgr.inline.LineLayoutManager thisLLM>;
+        $r7 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: org.apache.fop.layoutmgr.inline.LineLayoutManager this$0>;
+        $r8 = staticinvoke <org.apache.fop.layoutmgr.inline.LineLayoutManager: java.util.List access$200(org.apache.fop.layoutmgr.inline.LineLayoutManager)>($r7);
+        $i2 = interfaceinvoke $r8.<java.util.List: int indexOf(java.lang.Object)>(par);
+        $i4 = lineLead + lineFollow;
+        $r9 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: org.apache.fop.layoutmgr.inline.LineLayoutManager this$0>;
+        $i3 = staticinvoke <org.apache.fop.layoutmgr.inline.LineLayoutManager: int access$000(org.apache.fop.layoutmgr.inline.LineLayoutManager)>($r9);
+        specialinvoke $r5.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakPosition: void <init>(org.apache.fop.layoutmgr.LayoutManager,int,int,int,int,int,int,double,double,int,int,int,int,int,int)>($r6, $i2, firstElementIndex, lastElementIndex, availableShrink, availableStretch, difference, ratio, 0.0, indent, $i4, $i3, spaceBefore, spaceAfter, lineLead);
+        return $r5;
+    }
+
+    public int findBreakingPoints(org.apache.fop.layoutmgr.inline.LineLayoutManager$Paragraph, double, boolean, int)
+    {
+        org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm this;
+        org.apache.fop.layoutmgr.inline.LineLayoutManager$Paragraph par;
+        double threshold;
+        boolean force;
+        int allowedBreaks, $i0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm;
+        par := @parameter0: org.apache.fop.layoutmgr.inline.LineLayoutManager$Paragraph;
+        threshold := @parameter1: double;
+        force := @parameter2: boolean;
+        allowedBreaks := @parameter3: int;
+        $i0 = specialinvoke this.<org.apache.fop.layoutmgr.BreakingAlgorithm: int findBreakingPoints(org.apache.fop.layoutmgr.KnuthSequence,double,boolean,int)>(par, threshold, force, allowedBreaks);
+        return $i0;
+    }
+
+    protected int filterActiveNodes()
+    {
+        org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm this;
+        org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode bestActiveNode, node;
+        int i, $i0, $i1;
+        double $d0;
+        byte $b2;
+
+        this := @this: org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm;
+        bestActiveNode = null;
+        $i0 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int pageAlignment>;
+        if $i0 != 70 goto label9;
+
+        i = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int startLine>;
+
+     label0:
+        $i1 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int endLine>;
+        if i >= $i1 goto label3;
+
+        node = virtualinvoke this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode getNode(int)>(i);
+
+     label1:
+        if node == null goto label2;
+
+        bestActiveNode = virtualinvoke this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode compareNodes(org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)>(bestActiveNode, node);
+        node = node.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode next>;
+        goto label1;
+
+     label2:
+        i = i + 1;
+        goto label0;
+
+     label3:
+        i = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int startLine>;
+
+     label4:
+        $i1 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int endLine>;
+        if i >= $i1 goto label8;
+
+        node = virtualinvoke this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode getNode(int)>(i);
+
+     label5:
+        if node == null goto label7;
+
+        $i0 = node.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int line>;
+        $i1 = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int line>;
+        if $i0 == $i1 goto label6;
+
+        $d0 = node.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: double totalDemerits>;
+        $b2 = $d0 cmpl 1.0E7;
+        if $b2 <= 0 goto label6;
+
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: void removeNode(int,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)>(i, node);
+
+     label6:
+        node = node.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode next>;
+        goto label5;
+
+     label7:
+        i = i + 1;
+        goto label4;
+
+     label8:
+        goto label14;
+
+     label9:
+        i = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int startLine>;
+
+     label10:
+        $i1 = this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: int endLine>;
+        if i >= $i1 goto label14;
+
+        node = virtualinvoke this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode getNode(int)>(i);
+
+     label11:
+        if node == null goto label13;
+
+        bestActiveNode = virtualinvoke this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode compareNodes(org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)>(bestActiveNode, node);
+        if node == bestActiveNode goto label12;
+
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.LineLayoutManager$LineBreakingAlgorithm: void removeNode(int,org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode)>(i, node);
+
+     label12:
+        node = node.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode next>;
+        goto label11;
+
+     label13:
+        i = i + 1;
+        goto label10;
+
+     label14:
+        $i0 = bestActiveNode.<org.apache.fop.layoutmgr.BreakingAlgorithm$KnuthNode: int line>;
+        return $i0;
+    }
+}

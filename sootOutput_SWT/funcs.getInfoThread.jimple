@@ -1,0 +1,369 @@
+class funcs.getInfoThread extends java.lang.Thread
+{
+    private com.android.ddmlib.IDevice d;
+    private int number;
+    public volatile boolean stop;
+
+    public void <init>(com.android.ddmlib.IDevice, int)
+    {
+        funcs.getInfoThread this;
+        com.android.ddmlib.IDevice d;
+        int number;
+
+        this := @this: funcs.getInfoThread;
+        d := @parameter0: com.android.ddmlib.IDevice;
+        number := @parameter1: int;
+        specialinvoke this.<java.lang.Thread: void <init>()>();
+        this.<funcs.getInfoThread: boolean stop> = 0;
+        this.<funcs.getInfoThread: com.android.ddmlib.IDevice d> = d;
+        this.<funcs.getInfoThread: int number> = number;
+        return;
+    }
+
+    public void run()
+    {
+        funcs.getInfoThread this;
+        funcs.DeviceFunction $r0;
+        data.MyDevice mydevice;
+        java.lang.String result, $r1, $r6, $r7, $r10;
+        boolean index, ram;
+        java.lang.Exception ex, $r11, $r12, $r13, $r14, $r15, $r16, $r17, $r19, $r20, $r22;
+        java.lang.String[] per;
+        int i, $i0, index, ram;
+        java.util.ArrayList $r2;
+        java.lang.Object $r3;
+        java.lang.StringBuilder $r4, $r9;
+        com.android.ddmlib.IDevice $r5;
+        java.lang.Boolean $r8;
+        java.io.PrintStream $r18;
+        java.lang.Integer $r21;
+
+        this := @this: funcs.getInfoThread;
+        $r0 = staticinvoke <funcs.DeviceFunction: funcs.DeviceFunction getDeviceFunction()>();
+        $r2 = virtualinvoke $r0.<funcs.DeviceFunction: java.util.ArrayList getAllDevices()>();
+        $i0 = this.<funcs.getInfoThread: int number>;
+        $r3 = virtualinvoke $r2.<java.util.ArrayList: java.lang.Object get(int)>($i0);
+        mydevice = (data.MyDevice) $r3;
+        result = "";
+        index = 0;
+
+     label0:
+        $r4 = new java.lang.StringBuilder;
+        $r1 = <funcs.DeviceFunction: java.lang.String ADB_PATH>;
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r1);
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>($r1);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("/adb -s ");
+        $r5 = this.<funcs.getInfoThread: com.android.ddmlib.IDevice d>;
+        $r6 = interfaceinvoke $r5.<com.android.ddmlib.IDevice: java.lang.String getSerialNumber()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r6);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" shell cat /proc/meminfo");
+        $r7 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r8 = staticinvoke <java.lang.Boolean: java.lang.Boolean valueOf(boolean)>(0);
+        result = staticinvoke <funcs.CmdToolKit: java.lang.String readConsole(java.lang.String,java.lang.Boolean)>($r7, $r8);
+        index = virtualinvoke result.<java.lang.String: int indexOf(java.lang.String)>("MemTotal:");
+        ram = 0;
+        $i0 = index + 11;
+        result = virtualinvoke result.<java.lang.String: java.lang.String substring(int)>($i0);
+        index = virtualinvoke result.<java.lang.String: int indexOf(java.lang.String)>("k");
+        result = virtualinvoke result.<java.lang.String: java.lang.String substring(int,int)>(0, index);
+        $r7 = virtualinvoke result.<java.lang.String: java.lang.String trim()>();
+        ram = staticinvoke <java.lang.Integer: int parseInt(java.lang.String)>($r7);
+        $r9 = new java.lang.StringBuilder;
+        $r10 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>(ram);
+        specialinvoke $r9.<java.lang.StringBuilder: void <init>(java.lang.String)>($r10);
+        $r9 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("K");
+        $r6 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.String toString()>();
+        mydevice.<data.MyDevice: java.lang.String Memory> = $r6;
+
+     label1:
+        goto label3;
+
+     label2:
+        $r11 := @caughtexception;
+        ex = $r11;
+        mydevice.<data.MyDevice: java.lang.String Memory> = "\u83b7\u53d6\u5931\u8d25";
+
+     label3:
+        $r4 = new java.lang.StringBuilder;
+        $r1 = <funcs.DeviceFunction: java.lang.String ADB_PATH>;
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r1);
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>($r1);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("/adb -s ");
+        $r5 = this.<funcs.getInfoThread: com.android.ddmlib.IDevice d>;
+        $r6 = interfaceinvoke $r5.<com.android.ddmlib.IDevice: java.lang.String getSerialNumber()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r6);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" shell cat /proc/cpuinfo");
+        $r7 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r8 = staticinvoke <java.lang.Boolean: java.lang.Boolean valueOf(boolean)>(0);
+        result = staticinvoke <funcs.CmdToolKit: java.lang.String readConsole(java.lang.String,java.lang.Boolean)>($r7, $r8);
+        index = virtualinvoke result.<java.lang.String: int indexOf(java.lang.String)>("Processor");
+        $i0 = index + 12;
+        result = virtualinvoke result.<java.lang.String: java.lang.String substring(int)>($i0);
+        index = virtualinvoke result.<java.lang.String: int indexOf(java.lang.String)>("\n");
+        result = virtualinvoke result.<java.lang.String: java.lang.String substring(int,int)>(0, index);
+
+     label4:
+        goto label6;
+
+     label5:
+        $r12 := @caughtexception;
+        ex = $r12;
+        result = "\u83b7\u53d6\u5931\u8d25";
+
+     label6:
+        mydevice.<data.MyDevice: java.lang.String CPU> = result;
+
+     label7:
+        $r4 = new java.lang.StringBuilder;
+        $r1 = <funcs.DeviceFunction: java.lang.String ADB_PATH>;
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r1);
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>($r1);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("/adb -s ");
+        $r5 = this.<funcs.getInfoThread: com.android.ddmlib.IDevice d>;
+        $r6 = interfaceinvoke $r5.<com.android.ddmlib.IDevice: java.lang.String getSerialNumber()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r6);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" shell netcfg");
+        $r7 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r8 = staticinvoke <java.lang.Boolean: java.lang.Boolean valueOf(boolean)>(0);
+        result = staticinvoke <funcs.CmdToolKit: java.lang.String readConsole(java.lang.String,java.lang.Boolean)>($r7, $r8);
+        index = virtualinvoke result.<java.lang.String: int indexOf(java.lang.String)>("eth0");
+        $i0 = index + 11;
+        $r7 = virtualinvoke result.<java.lang.String: java.lang.String substring(int)>($i0);
+        result = virtualinvoke $r7.<java.lang.String: java.lang.String trim()>();
+        index = virtualinvoke result.<java.lang.String: int indexOf(java.lang.String)>("/");
+        result = virtualinvoke result.<java.lang.String: java.lang.String substring(int,int)>(0, index);
+
+     label8:
+        goto label10;
+
+     label9:
+        $r13 := @caughtexception;
+        ex = $r13;
+        result = "\u83b7\u53d6\u5931\u8d25";
+
+     label10:
+        mydevice.<data.MyDevice: java.lang.String IP> = result;
+
+     label11:
+        $r4 = new java.lang.StringBuilder;
+        $r1 = <funcs.DeviceFunction: java.lang.String ADB_PATH>;
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r1);
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>($r1);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("/adb -s ");
+        $r5 = this.<funcs.getInfoThread: com.android.ddmlib.IDevice d>;
+        $r6 = interfaceinvoke $r5.<com.android.ddmlib.IDevice: java.lang.String getSerialNumber()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r6);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" shell getprop ro.product.manufacturer");
+        $r7 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r8 = staticinvoke <java.lang.Boolean: java.lang.Boolean valueOf(boolean)>(0);
+        result = staticinvoke <funcs.CmdToolKit: java.lang.String readConsole(java.lang.String,java.lang.Boolean)>($r7, $r8);
+
+     label12:
+        goto label14;
+
+     label13:
+        $r14 := @caughtexception;
+        ex = $r14;
+        result = "\u83b7\u53d6\u5931\u8d25";
+
+     label14:
+        mydevice.<data.MyDevice: java.lang.String Manufacturer> = result;
+
+     label15:
+        $r4 = new java.lang.StringBuilder;
+        $r1 = <funcs.DeviceFunction: java.lang.String ADB_PATH>;
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r1);
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>($r1);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("/adb -s ");
+        $r5 = this.<funcs.getInfoThread: com.android.ddmlib.IDevice d>;
+        $r6 = interfaceinvoke $r5.<com.android.ddmlib.IDevice: java.lang.String getSerialNumber()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r6);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" shell getprop ro.product.model");
+        $r7 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r8 = staticinvoke <java.lang.Boolean: java.lang.Boolean valueOf(boolean)>(0);
+        result = staticinvoke <funcs.CmdToolKit: java.lang.String readConsole(java.lang.String,java.lang.Boolean)>($r7, $r8);
+
+     label16:
+        goto label18;
+
+     label17:
+        $r15 := @caughtexception;
+        ex = $r15;
+        result = "\u83b7\u53d6\u5931\u8d25";
+
+     label18:
+        mydevice.<data.MyDevice: java.lang.String Model> = result;
+
+     label19:
+        $r4 = new java.lang.StringBuilder;
+        $r1 = <funcs.DeviceFunction: java.lang.String ADB_PATH>;
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r1);
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>($r1);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("/adb -s ");
+        $r5 = this.<funcs.getInfoThread: com.android.ddmlib.IDevice d>;
+        $r6 = interfaceinvoke $r5.<com.android.ddmlib.IDevice: java.lang.String getSerialNumber()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r6);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" shell getprop ro.build.version.release");
+        $r7 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r8 = staticinvoke <java.lang.Boolean: java.lang.Boolean valueOf(boolean)>(0);
+        result = staticinvoke <funcs.CmdToolKit: java.lang.String readConsole(java.lang.String,java.lang.Boolean)>($r7, $r8);
+
+     label20:
+        goto label22;
+
+     label21:
+        $r16 := @caughtexception;
+        ex = $r16;
+        result = "\u83b7\u53d6\u5931\u8d25";
+
+     label22:
+        mydevice.<data.MyDevice: java.lang.String Version> = result;
+
+     label23:
+        $r4 = new java.lang.StringBuilder;
+        $r1 = <funcs.DeviceFunction: java.lang.String ADB_PATH>;
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r1);
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>($r1);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("/adb -s ");
+        $r5 = this.<funcs.getInfoThread: com.android.ddmlib.IDevice d>;
+        $r6 = interfaceinvoke $r5.<com.android.ddmlib.IDevice: java.lang.String getSerialNumber()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r6);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" shell pm list permissions");
+        $r7 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r8 = staticinvoke <java.lang.Boolean: java.lang.Boolean valueOf(boolean)>(0);
+        result = staticinvoke <funcs.CmdToolKit: java.lang.String readConsole(java.lang.String,java.lang.Boolean)>($r7, $r8);
+        per = virtualinvoke result.<java.lang.String: java.lang.String[] split(java.lang.String)>("permission:");
+        $r2 = mydevice.<data.MyDevice: java.util.ArrayList permissions>;
+        virtualinvoke $r2.<java.util.ArrayList: void clear()>();
+        i = 2;
+        goto label25;
+
+     label24:
+        $r2 = mydevice.<data.MyDevice: java.util.ArrayList permissions>;
+        $r6 = per[i];
+        $r6 = virtualinvoke $r6.<java.lang.String: java.lang.String trim()>();
+        virtualinvoke $r2.<java.util.ArrayList: boolean add(java.lang.Object)>($r6);
+        i = i + 1;
+
+     label25:
+        $i0 = lengthof per;
+        if i < $i0 goto label24;
+
+     label26:
+        goto label28;
+
+     label27:
+        $r17 := @caughtexception;
+        ex = $r17;
+        $r18 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r18.<java.io.PrintStream: void println(java.lang.String)>("\u83b7\u53d6\u6743\u9650\u5931\u8d25");
+
+     label28:
+        $r4 = new java.lang.StringBuilder;
+        $r1 = <funcs.DeviceFunction: java.lang.String ADB_PATH>;
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r1);
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>($r1);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("/adb -s ");
+        $r5 = this.<funcs.getInfoThread: com.android.ddmlib.IDevice d>;
+        $r6 = interfaceinvoke $r5.<com.android.ddmlib.IDevice: java.lang.String getSerialNumber()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r6);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" shell pm list features");
+        $r7 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r8 = staticinvoke <java.lang.Boolean: java.lang.Boolean valueOf(boolean)>(0);
+        result = staticinvoke <funcs.CmdToolKit: java.lang.String readConsole(java.lang.String,java.lang.Boolean)>($r7, $r8);
+        per = virtualinvoke result.<java.lang.String: java.lang.String[] split(java.lang.String)>("feature:");
+        $r2 = mydevice.<data.MyDevice: java.util.ArrayList feature>;
+        virtualinvoke $r2.<java.util.ArrayList: void clear()>();
+        i = 2;
+        goto label30;
+
+     label29:
+        $r2 = mydevice.<data.MyDevice: java.util.ArrayList feature>;
+        $r6 = per[i];
+        $r6 = virtualinvoke $r6.<java.lang.String: java.lang.String trim()>();
+        virtualinvoke $r2.<java.util.ArrayList: boolean add(java.lang.Object)>($r6);
+        i = i + 1;
+
+     label30:
+        $i0 = lengthof per;
+        if i < $i0 goto label29;
+
+     label31:
+        goto label33;
+
+     label32:
+        $r19 := @caughtexception;
+        ex = $r19;
+        $r18 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r18.<java.io.PrintStream: void println(java.lang.String)>("\u83b7\u53d6\u4f20\u611f\u5668\u5931\u8d25");
+
+     label33:
+        $r4 = new java.lang.StringBuilder;
+        $r1 = <funcs.DeviceFunction: java.lang.String ADB_PATH>;
+        $r1 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r1);
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>($r1);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("/adb -s ");
+        $r5 = this.<funcs.getInfoThread: com.android.ddmlib.IDevice d>;
+        $r6 = interfaceinvoke $r5.<com.android.ddmlib.IDevice: java.lang.String getSerialNumber()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r6);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" shell pm list packages");
+        $r7 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+        $r8 = staticinvoke <java.lang.Boolean: java.lang.Boolean valueOf(boolean)>(0);
+        result = staticinvoke <funcs.CmdToolKit: java.lang.String readConsole(java.lang.String,java.lang.Boolean)>($r7, $r8);
+        per = virtualinvoke result.<java.lang.String: java.lang.String[] split(java.lang.String)>("package:");
+        $r2 = mydevice.<data.MyDevice: java.util.ArrayList packages>;
+        virtualinvoke $r2.<java.util.ArrayList: void clear()>();
+        i = 2;
+        goto label35;
+
+     label34:
+        $r2 = mydevice.<data.MyDevice: java.util.ArrayList packages>;
+        $r6 = per[i];
+        $r6 = virtualinvoke $r6.<java.lang.String: java.lang.String trim()>();
+        virtualinvoke $r2.<java.util.ArrayList: boolean add(java.lang.Object)>($r6);
+        i = i + 1;
+
+     label35:
+        $i0 = lengthof per;
+        if i < $i0 goto label34;
+
+     label36:
+        goto label38;
+
+     label37:
+        $r20 := @caughtexception;
+        ex = $r20;
+        $r18 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r18.<java.io.PrintStream: void println(java.lang.String)>("\u83b7\u53d6\u5df2\u5b89\u88c5\u5e94\u7528\u5931\u8d25");
+
+     label38:
+        $r5 = this.<funcs.getInfoThread: com.android.ddmlib.IDevice d>;
+        $r21 = interfaceinvoke $r5.<com.android.ddmlib.IDevice: java.lang.Integer getBatteryLevel()>();
+        $r6 = virtualinvoke $r21.<java.lang.Integer: java.lang.String toString()>();
+        mydevice.<data.MyDevice: java.lang.String Battery> = $r6;
+
+     label39:
+        goto label41;
+
+     label40:
+        $r22 := @caughtexception;
+        ex = $r22;
+        mydevice.<data.MyDevice: java.lang.String Battery> = "\u83b7\u53d6\u5931\u8d25";
+
+     label41:
+        $r0 = staticinvoke <funcs.DeviceFunction: funcs.DeviceFunction getDeviceFunction()>();
+        virtualinvoke $r0.<funcs.DeviceFunction: void updateTree()>();
+        return;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+        catch java.lang.Exception from label3 to label4 with label5;
+        catch java.lang.Exception from label7 to label8 with label9;
+        catch java.lang.Exception from label11 to label12 with label13;
+        catch java.lang.Exception from label15 to label16 with label17;
+        catch java.lang.Exception from label19 to label20 with label21;
+        catch java.lang.Exception from label23 to label26 with label27;
+        catch java.lang.Exception from label28 to label31 with label32;
+        catch java.lang.Exception from label33 to label36 with label37;
+        catch java.lang.Exception from label38 to label39 with label40;
+    }
+}

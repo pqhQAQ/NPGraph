@@ -1,0 +1,720 @@
+public class org.apache.fop.pdf.PDFEncryptionJCE extends org.apache.fop.pdf.PDFObject implements org.apache.fop.pdf.PDFEncryption
+{
+    private static final char[] PAD;
+    public static final int PERMISSION_PRINT;
+    public static final int PERMISSION_EDIT_CONTENT;
+    public static final int PERMISSION_COPY_CONTENT;
+    public static final int PERMISSION_EDIT_ANNOTATIONS;
+    private java.security.MessageDigest digest;
+    private java.util.Random random;
+    private org.apache.fop.pdf.PDFEncryptionParams params;
+    private byte[] fileID;
+    private byte[] encryptionKey;
+    private java.lang.String dictionary;
+
+    public void <init>(int)
+    {
+        org.apache.fop.pdf.PDFEncryptionJCE this;
+        int objnum;
+        java.security.NoSuchAlgorithmException e, $r2;
+        java.util.Random $r0;
+        java.security.MessageDigest $r1;
+        java.lang.UnsupportedOperationException $r3;
+        java.lang.String $r4;
+
+        this := @this: org.apache.fop.pdf.PDFEncryptionJCE;
+        objnum := @parameter0: int;
+        specialinvoke this.<org.apache.fop.pdf.PDFObject: void <init>()>();
+        this.<org.apache.fop.pdf.PDFEncryptionJCE: java.security.MessageDigest digest> = null;
+        $r0 = new java.util.Random;
+        specialinvoke $r0.<java.util.Random: void <init>()>();
+        this.<org.apache.fop.pdf.PDFEncryptionJCE: java.util.Random random> = $r0;
+        this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] fileID> = null;
+        this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] encryptionKey> = null;
+        this.<org.apache.fop.pdf.PDFEncryptionJCE: java.lang.String dictionary> = null;
+        virtualinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: void setObjectNumber(int)>(objnum);
+
+     label0:
+        $r1 = staticinvoke <java.security.MessageDigest: java.security.MessageDigest getInstance(java.lang.String)>("MD5");
+        this.<org.apache.fop.pdf.PDFEncryptionJCE: java.security.MessageDigest digest> = $r1;
+
+     label1:
+        goto label3;
+
+     label2:
+        $r2 := @caughtexception;
+        e = $r2;
+        $r3 = new java.lang.UnsupportedOperationException;
+        $r4 = virtualinvoke e.<java.security.NoSuchAlgorithmException: java.lang.String getMessage()>();
+        specialinvoke $r3.<java.lang.UnsupportedOperationException: void <init>(java.lang.String)>($r4);
+        throw $r3;
+
+     label3:
+        return;
+
+        catch java.security.NoSuchAlgorithmException from label0 to label1 with label2;
+    }
+
+    public static org.apache.fop.pdf.PDFEncryption make(int, org.apache.fop.pdf.PDFEncryptionParams)
+    {
+        int objnum;
+        org.apache.fop.pdf.PDFEncryptionParams params;
+        org.apache.fop.pdf.PDFEncryptionJCE $r0, impl;
+
+        objnum := @parameter0: int;
+        params := @parameter1: org.apache.fop.pdf.PDFEncryptionParams;
+        $r0 = new org.apache.fop.pdf.PDFEncryptionJCE;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFEncryptionJCE: void <init>(int)>(objnum);
+        impl = $r0;
+        virtualinvoke impl.<org.apache.fop.pdf.PDFEncryptionJCE: void setParams(org.apache.fop.pdf.PDFEncryptionParams)>(params);
+        virtualinvoke impl.<org.apache.fop.pdf.PDFEncryptionJCE: void init()>();
+        return impl;
+    }
+
+    public org.apache.fop.pdf.PDFEncryptionParams getParams()
+    {
+        org.apache.fop.pdf.PDFEncryptionJCE this;
+        org.apache.fop.pdf.PDFEncryptionParams $r0;
+
+        this := @this: org.apache.fop.pdf.PDFEncryptionJCE;
+        $r0 = this.<org.apache.fop.pdf.PDFEncryptionJCE: org.apache.fop.pdf.PDFEncryptionParams params>;
+        return $r0;
+    }
+
+    public void setParams(org.apache.fop.pdf.PDFEncryptionParams)
+    {
+        org.apache.fop.pdf.PDFEncryptionJCE this;
+        org.apache.fop.pdf.PDFEncryptionParams params;
+
+        this := @this: org.apache.fop.pdf.PDFEncryptionJCE;
+        params := @parameter0: org.apache.fop.pdf.PDFEncryptionParams;
+        this.<org.apache.fop.pdf.PDFEncryptionJCE: org.apache.fop.pdf.PDFEncryptionParams params> = params;
+        return;
+    }
+
+    private byte[] prepPassword(java.lang.String)
+    {
+        org.apache.fop.pdf.PDFEncryptionJCE this;
+        java.lang.String password;
+        byte[] obuffer, pbuffer;
+        int i, j, $i0, $i2;
+        byte $b1;
+        char[] $r0;
+        char $c3;
+
+        this := @this: org.apache.fop.pdf.PDFEncryptionJCE;
+        password := @parameter0: java.lang.String;
+        obuffer = newarray (byte)[32];
+        pbuffer = virtualinvoke password.<java.lang.String: byte[] getBytes()>();
+        i = 0;
+        j = 0;
+
+     label0:
+        $i0 = lengthof obuffer;
+        if i >= $i0 goto label1;
+
+        $i0 = lengthof pbuffer;
+        if i >= $i0 goto label1;
+
+        $b1 = pbuffer[i];
+        obuffer[i] = $b1;
+        i = i + 1;
+        goto label0;
+
+     label1:
+        $i0 = lengthof obuffer;
+        if i >= $i0 goto label2;
+
+        $i0 = i;
+        i = i + 1;
+        $r0 = <org.apache.fop.pdf.PDFEncryptionJCE: char[] PAD>;
+        $i2 = j;
+        j = j + 1;
+        $c3 = $r0[$i2];
+        $b1 = (byte) $c3;
+        obuffer[$i0] = $b1;
+        goto label1;
+
+     label2:
+        return obuffer;
+    }
+
+    public byte[] getFileID()
+    {
+        org.apache.fop.pdf.PDFEncryptionJCE this;
+        byte[] $r0, $r1;
+        java.util.Random $r2;
+
+        this := @this: org.apache.fop.pdf.PDFEncryptionJCE;
+        $r0 = this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] fileID>;
+        if $r0 != null goto label0;
+
+        $r1 = newarray (byte)[16];
+        this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] fileID> = $r1;
+        $r2 = this.<org.apache.fop.pdf.PDFEncryptionJCE: java.util.Random random>;
+        $r1 = this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] fileID>;
+        virtualinvoke $r2.<java.util.Random: void nextBytes(byte[])>($r1);
+
+     label0:
+        $r0 = this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] fileID>;
+        return $r0;
+    }
+
+    public java.lang.String getFileID(int)
+    {
+        org.apache.fop.pdf.PDFEncryptionJCE this;
+        int index;
+        byte[] id, $r0;
+        java.lang.String $r1;
+        java.util.Random $r2;
+
+        this := @this: org.apache.fop.pdf.PDFEncryptionJCE;
+        index := @parameter0: int;
+        if index != 1 goto label0;
+
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] getFileID()>();
+        $r1 = staticinvoke <org.apache.fop.pdf.PDFText: java.lang.String toHex(byte[])>($r0);
+        return $r1;
+
+     label0:
+        id = newarray (byte)[16];
+        $r2 = this.<org.apache.fop.pdf.PDFEncryptionJCE: java.util.Random random>;
+        virtualinvoke $r2.<java.util.Random: void nextBytes(byte[])>(id);
+        $r1 = staticinvoke <org.apache.fop.pdf.PDFText: java.lang.String toHex(byte[])>(id);
+        return $r1;
+    }
+
+    private byte[] encryptWithKey(byte[], byte[])
+    {
+        org.apache.fop.pdf.PDFEncryptionJCE this;
+        byte[] data, key, $r0;
+        javax.crypto.Cipher c;
+        javax.crypto.IllegalBlockSizeException e, $r1;
+        java.lang.IllegalStateException $r2;
+        java.lang.String $r3;
+        javax.crypto.BadPaddingException $r4, e;
+
+        this := @this: org.apache.fop.pdf.PDFEncryptionJCE;
+        data := @parameter0: byte[];
+        key := @parameter1: byte[];
+
+     label0:
+        c = specialinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: javax.crypto.Cipher initCipher(byte[])>(key);
+        $r0 = virtualinvoke c.<javax.crypto.Cipher: byte[] doFinal(byte[])>(data);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        e = $r1;
+        $r2 = new java.lang.IllegalStateException;
+        $r3 = virtualinvoke e.<javax.crypto.IllegalBlockSizeException: java.lang.String getMessage()>();
+        specialinvoke $r2.<java.lang.IllegalStateException: void <init>(java.lang.String)>($r3);
+        throw $r2;
+
+     label3:
+        $r4 := @caughtexception;
+        e = $r4;
+        $r2 = new java.lang.IllegalStateException;
+        $r3 = virtualinvoke e.<javax.crypto.BadPaddingException: java.lang.String getMessage()>();
+        specialinvoke $r2.<java.lang.IllegalStateException: void <init>(java.lang.String)>($r3);
+        throw $r2;
+
+        catch javax.crypto.IllegalBlockSizeException from label0 to label1 with label2;
+        catch javax.crypto.BadPaddingException from label0 to label1 with label3;
+    }
+
+    private javax.crypto.Cipher initCipher(byte[])
+    {
+        org.apache.fop.pdf.PDFEncryptionJCE this;
+        byte[] key;
+        javax.crypto.Cipher c;
+        javax.crypto.spec.SecretKeySpec keyspec, $r0;
+        java.security.InvalidKeyException e, $r2;
+        java.lang.IllegalStateException $r3;
+        java.lang.String $r4;
+        java.security.NoSuchAlgorithmException $r5, e;
+        java.lang.UnsupportedOperationException $r6;
+        javax.crypto.NoSuchPaddingException $r7, e;
+
+        this := @this: org.apache.fop.pdf.PDFEncryptionJCE;
+        key := @parameter0: byte[];
+
+     label0:
+        c = staticinvoke <javax.crypto.Cipher: javax.crypto.Cipher getInstance(java.lang.String)>("RC4");
+        $r0 = new javax.crypto.spec.SecretKeySpec;
+        specialinvoke $r0.<javax.crypto.spec.SecretKeySpec: void <init>(byte[],java.lang.String)>(key, "RC4");
+        keyspec = $r0;
+        virtualinvoke c.<javax.crypto.Cipher: void init(int,java.security.Key)>(1, keyspec);
+
+     label1:
+        return c;
+
+     label2:
+        $r2 := @caughtexception;
+        e = $r2;
+        $r3 = new java.lang.IllegalStateException;
+        $r4 = virtualinvoke e.<java.security.InvalidKeyException: java.lang.String getMessage()>();
+        specialinvoke $r3.<java.lang.IllegalStateException: void <init>(java.lang.String)>($r4);
+        throw $r3;
+
+     label3:
+        $r5 := @caughtexception;
+        e = $r5;
+        $r6 = new java.lang.UnsupportedOperationException;
+        $r4 = virtualinvoke e.<java.security.NoSuchAlgorithmException: java.lang.String getMessage()>();
+        specialinvoke $r6.<java.lang.UnsupportedOperationException: void <init>(java.lang.String)>($r4);
+        throw $r6;
+
+     label4:
+        $r7 := @caughtexception;
+        e = $r7;
+        $r6 = new java.lang.UnsupportedOperationException;
+        $r4 = virtualinvoke e.<javax.crypto.NoSuchPaddingException: java.lang.String getMessage()>();
+        specialinvoke $r6.<java.lang.UnsupportedOperationException: void <init>(java.lang.String)>($r4);
+        throw $r6;
+
+        catch java.security.InvalidKeyException from label0 to label1 with label2;
+        catch java.security.NoSuchAlgorithmException from label0 to label1 with label3;
+        catch javax.crypto.NoSuchPaddingException from label0 to label1 with label4;
+    }
+
+    private javax.crypto.Cipher initCipher(int, int)
+    {
+        org.apache.fop.pdf.PDFEncryptionJCE this;
+        int number, generation, size;
+        byte[] hash, key;
+        java.security.MessageDigest $r0;
+        javax.crypto.Cipher $r1;
+
+        this := @this: org.apache.fop.pdf.PDFEncryptionJCE;
+        number := @parameter0: int;
+        generation := @parameter1: int;
+        hash = specialinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] calcHash(int,int)>(number, generation);
+        size = lengthof hash;
+        $r0 = this.<org.apache.fop.pdf.PDFEncryptionJCE: java.security.MessageDigest digest>;
+        hash = virtualinvoke $r0.<java.security.MessageDigest: byte[] digest(byte[])>(hash);
+        key = specialinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] calcKey(byte[],int)>(hash, size);
+        $r1 = specialinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: javax.crypto.Cipher initCipher(byte[])>(key);
+        return $r1;
+    }
+
+    private byte[] encryptWithHash(byte[], byte[], int)
+    {
+        org.apache.fop.pdf.PDFEncryptionJCE this;
+        byte[] data, hash, key, hash, $r1;
+        int size;
+        java.security.MessageDigest $r0;
+
+        this := @this: org.apache.fop.pdf.PDFEncryptionJCE;
+        data := @parameter0: byte[];
+        hash := @parameter1: byte[];
+        size := @parameter2: int;
+        $r0 = this.<org.apache.fop.pdf.PDFEncryptionJCE: java.security.MessageDigest digest>;
+        hash = virtualinvoke $r0.<java.security.MessageDigest: byte[] digest(byte[])>(hash);
+        key = specialinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] calcKey(byte[],int)>(hash, size);
+        $r1 = specialinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] encryptWithKey(byte[],byte[])>(data, key);
+        return $r1;
+    }
+
+    private byte[] calcKey(byte[], int)
+    {
+        org.apache.fop.pdf.PDFEncryptionJCE this;
+        byte[] hash, key;
+        int size, i;
+        byte $b0;
+
+        this := @this: org.apache.fop.pdf.PDFEncryptionJCE;
+        hash := @parameter0: byte[];
+        size := @parameter1: int;
+        key = newarray (byte)[size];
+        i = 0;
+
+     label0:
+        if i >= size goto label1;
+
+        $b0 = hash[i];
+        key[i] = $b0;
+        i = i + 1;
+        goto label0;
+
+     label1:
+        return key;
+    }
+
+    public void init()
+    {
+        org.apache.fop.pdf.PDFEncryptionJCE this;
+        byte[] oValue, hash, uValue, $r4, $r7, $r9;
+        int permissions, i, $i0, $i1;
+        org.apache.fop.pdf.PDFEncryptionParams $r0, $r2, $r5;
+        java.lang.String $r1, $r3, $r6, $r11;
+        boolean $z0;
+        java.security.MessageDigest $r8;
+        byte $b2, $b3;
+        java.lang.StringBuffer $r10;
+
+        this := @this: org.apache.fop.pdf.PDFEncryptionJCE;
+        $r0 = this.<org.apache.fop.pdf.PDFEncryptionJCE: org.apache.fop.pdf.PDFEncryptionParams params>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.pdf.PDFEncryptionParams: java.lang.String getOwnerPassword()>();
+        $i0 = virtualinvoke $r1.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label0;
+
+        $r2 = this.<org.apache.fop.pdf.PDFEncryptionJCE: org.apache.fop.pdf.PDFEncryptionParams params>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.pdf.PDFEncryptionParams: java.lang.String getUserPassword()>();
+        $r4 = specialinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] prepPassword(java.lang.String)>($r3);
+        $r5 = this.<org.apache.fop.pdf.PDFEncryptionJCE: org.apache.fop.pdf.PDFEncryptionParams params>;
+        $r6 = virtualinvoke $r5.<org.apache.fop.pdf.PDFEncryptionParams: java.lang.String getOwnerPassword()>();
+        $r7 = specialinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] prepPassword(java.lang.String)>($r6);
+        oValue = specialinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] encryptWithHash(byte[],byte[],int)>($r4, $r7, 5);
+        goto label1;
+
+     label0:
+        $r2 = this.<org.apache.fop.pdf.PDFEncryptionJCE: org.apache.fop.pdf.PDFEncryptionParams params>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.pdf.PDFEncryptionParams: java.lang.String getUserPassword()>();
+        $r4 = specialinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] prepPassword(java.lang.String)>($r3);
+        $r5 = this.<org.apache.fop.pdf.PDFEncryptionJCE: org.apache.fop.pdf.PDFEncryptionParams params>;
+        $r6 = virtualinvoke $r5.<org.apache.fop.pdf.PDFEncryptionParams: java.lang.String getUserPassword()>();
+        $r7 = specialinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] prepPassword(java.lang.String)>($r6);
+        oValue = specialinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] encryptWithHash(byte[],byte[],int)>($r4, $r7, 5);
+
+     label1:
+        permissions = -4;
+        $r0 = this.<org.apache.fop.pdf.PDFEncryptionJCE: org.apache.fop.pdf.PDFEncryptionParams params>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.pdf.PDFEncryptionParams: boolean isAllowPrint()>();
+        if $z0 != 0 goto label2;
+
+        permissions = permissions + -4;
+
+     label2:
+        $r0 = this.<org.apache.fop.pdf.PDFEncryptionJCE: org.apache.fop.pdf.PDFEncryptionParams params>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.pdf.PDFEncryptionParams: boolean isAllowCopyContent()>();
+        if $z0 != 0 goto label3;
+
+        permissions = permissions + -16;
+
+     label3:
+        $r0 = this.<org.apache.fop.pdf.PDFEncryptionJCE: org.apache.fop.pdf.PDFEncryptionParams params>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.pdf.PDFEncryptionParams: boolean isAllowEditContent()>();
+        if $z0 != 0 goto label4;
+
+        permissions = permissions + -8;
+
+     label4:
+        $r0 = this.<org.apache.fop.pdf.PDFEncryptionJCE: org.apache.fop.pdf.PDFEncryptionParams params>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.pdf.PDFEncryptionParams: boolean isAllowEditAnnotations()>();
+        if $z0 != 0 goto label5;
+
+        permissions = permissions + -32;
+
+     label5:
+        $r8 = this.<org.apache.fop.pdf.PDFEncryptionJCE: java.security.MessageDigest digest>;
+        $r2 = this.<org.apache.fop.pdf.PDFEncryptionJCE: org.apache.fop.pdf.PDFEncryptionParams params>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.pdf.PDFEncryptionParams: java.lang.String getUserPassword()>();
+        $r4 = specialinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] prepPassword(java.lang.String)>($r3);
+        virtualinvoke $r8.<java.security.MessageDigest: void update(byte[])>($r4);
+        $r8 = this.<org.apache.fop.pdf.PDFEncryptionJCE: java.security.MessageDigest digest>;
+        virtualinvoke $r8.<java.security.MessageDigest: void update(byte[])>(oValue);
+        $r8 = this.<org.apache.fop.pdf.PDFEncryptionJCE: java.security.MessageDigest digest>;
+        $i1 = permissions >>> 0;
+        $b2 = (byte) $i1;
+        virtualinvoke $r8.<java.security.MessageDigest: void update(byte)>($b2);
+        $r8 = this.<org.apache.fop.pdf.PDFEncryptionJCE: java.security.MessageDigest digest>;
+        $i1 = permissions >>> 8;
+        $b2 = (byte) $i1;
+        virtualinvoke $r8.<java.security.MessageDigest: void update(byte)>($b2);
+        $r8 = this.<org.apache.fop.pdf.PDFEncryptionJCE: java.security.MessageDigest digest>;
+        $i1 = permissions >>> 16;
+        $b2 = (byte) $i1;
+        virtualinvoke $r8.<java.security.MessageDigest: void update(byte)>($b2);
+        $r8 = this.<org.apache.fop.pdf.PDFEncryptionJCE: java.security.MessageDigest digest>;
+        $i1 = permissions >>> 24;
+        $b2 = (byte) $i1;
+        virtualinvoke $r8.<java.security.MessageDigest: void update(byte)>($b2);
+        $r8 = this.<org.apache.fop.pdf.PDFEncryptionJCE: java.security.MessageDigest digest>;
+        $r4 = virtualinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] getFileID()>();
+        virtualinvoke $r8.<java.security.MessageDigest: void update(byte[])>($r4);
+        $r8 = this.<org.apache.fop.pdf.PDFEncryptionJCE: java.security.MessageDigest digest>;
+        hash = virtualinvoke $r8.<java.security.MessageDigest: byte[] digest()>();
+        $r4 = newarray (byte)[5];
+        this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] encryptionKey> = $r4;
+        i = 0;
+
+     label6:
+        if i >= 5 goto label7;
+
+        $r9 = this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] encryptionKey>;
+        $b3 = hash[i];
+        $r9[i] = $b3;
+        i = i + 1;
+        goto label6;
+
+     label7:
+        $r4 = specialinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] prepPassword(java.lang.String)>("");
+        $r7 = this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] encryptionKey>;
+        uValue = specialinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] encryptWithKey(byte[],byte[])>($r4, $r7);
+        $r10 = new java.lang.StringBuffer;
+        specialinvoke $r10.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: java.lang.String getObjectID()>();
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("<< /Filter /Standard\n/V 1\n/R 2\n/Length 40\n/P ");
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(permissions);
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\n/O ");
+        $r3 = staticinvoke <org.apache.fop.pdf.PDFText: java.lang.String toHex(byte[])>(oValue);
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\n/U ");
+        $r3 = staticinvoke <org.apache.fop.pdf.PDFText: java.lang.String toHex(byte[])>(uValue);
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\n>>\nendobj\n");
+        $r11 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.String toString()>();
+        this.<org.apache.fop.pdf.PDFEncryptionJCE: java.lang.String dictionary> = $r11;
+        return;
+    }
+
+    public byte[] encryptData(byte[], int, int)
+    {
+        org.apache.fop.pdf.PDFEncryptionJCE this;
+        byte[] data, hash, $r0;
+        int number, generation, $i0;
+        java.lang.IllegalStateException $r1;
+
+        this := @this: org.apache.fop.pdf.PDFEncryptionJCE;
+        data := @parameter0: byte[];
+        number := @parameter1: int;
+        generation := @parameter2: int;
+        $r0 = this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] encryptionKey>;
+        if $r0 != null goto label0;
+
+        $r1 = new java.lang.IllegalStateException;
+        specialinvoke $r1.<java.lang.IllegalStateException: void <init>(java.lang.String)>("PDF Encryption has not been initialized");
+        throw $r1;
+
+     label0:
+        hash = specialinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] calcHash(int,int)>(number, generation);
+        $i0 = lengthof hash;
+        $r0 = specialinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] encryptWithHash(byte[],byte[],int)>(data, hash, $i0);
+        return $r0;
+    }
+
+    public byte[] encrypt(byte[], org.apache.fop.pdf.PDFObject)
+    {
+        org.apache.fop.pdf.PDFEncryptionJCE this;
+        byte[] data, $r1;
+        org.apache.fop.pdf.PDFObject refObj, o;
+        boolean $z0;
+        java.lang.IllegalStateException $r0;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.pdf.PDFEncryptionJCE;
+        data := @parameter0: byte[];
+        refObj := @parameter1: org.apache.fop.pdf.PDFObject;
+        o = refObj;
+
+     label0:
+        if o == null goto label1;
+
+        $z0 = virtualinvoke o.<org.apache.fop.pdf.PDFObject: boolean hasObjectNumber()>();
+        if $z0 != 0 goto label1;
+
+        o = virtualinvoke o.<org.apache.fop.pdf.PDFObject: org.apache.fop.pdf.PDFObject getParent()>();
+        goto label0;
+
+     label1:
+        if o != null goto label2;
+
+        $r0 = new java.lang.IllegalStateException;
+        specialinvoke $r0.<java.lang.IllegalStateException: void <init>(java.lang.String)>("No object number could be obtained for a PDF object");
+        throw $r0;
+
+     label2:
+        $i0 = virtualinvoke o.<org.apache.fop.pdf.PDFObject: int getObjectNumber()>();
+        $i1 = virtualinvoke o.<org.apache.fop.pdf.PDFObject: int getGeneration()>();
+        $r1 = virtualinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] encryptData(byte[],int,int)>(data, $i0, $i1);
+        return $r1;
+    }
+
+    private byte[] calcHash(int, int)
+    {
+        org.apache.fop.pdf.PDFEncryptionJCE this;
+        int number, generation, i, $i0, $i1, i, $i3;
+        byte[] hash, $r0, $r1, $r2;
+        byte $b2;
+
+        this := @this: org.apache.fop.pdf.PDFEncryptionJCE;
+        number := @parameter0: int;
+        generation := @parameter1: int;
+        $r0 = this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] encryptionKey>;
+        $i0 = lengthof $r0;
+        $i0 = $i0 + 5;
+        hash = newarray (byte)[$i0];
+        i = 0;
+
+     label0:
+        $r1 = this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] encryptionKey>;
+        $i1 = lengthof $r1;
+        if i >= $i1 goto label1;
+
+        $r2 = this.<org.apache.fop.pdf.PDFEncryptionJCE: byte[] encryptionKey>;
+        $b2 = $r2[i];
+        hash[i] = $b2;
+        i = i + 1;
+        goto label0;
+
+     label1:
+        i = i + 1;
+        $i3 = number >>> 0;
+        $b2 = (byte) $i3;
+        hash[i] = $b2;
+        i = i + 1;
+        $i3 = number >>> 8;
+        $b2 = (byte) $i3;
+        hash[i] = $b2;
+        i = i + 1;
+        $i3 = number >>> 16;
+        $b2 = (byte) $i3;
+        hash[i] = $b2;
+        i = i + 1;
+        $i3 = generation >>> 0;
+        $b2 = (byte) $i3;
+        hash[i] = $b2;
+        i = i + 1;
+        $i3 = generation >>> 8;
+        $b2 = (byte) $i3;
+        hash[i] = $b2;
+        return hash;
+    }
+
+    public org.apache.fop.pdf.PDFFilter makeFilter(int, int)
+    {
+        org.apache.fop.pdf.PDFEncryptionJCE this;
+        int number, generation;
+        org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter $r0;
+
+        this := @this: org.apache.fop.pdf.PDFEncryptionJCE;
+        number := @parameter0: int;
+        generation := @parameter1: int;
+        $r0 = new org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFEncryptionJCE$EncryptionFilter: void <init>(org.apache.fop.pdf.PDFEncryptionJCE,org.apache.fop.pdf.PDFEncryptionJCE,int,int)>(this, this, number, generation);
+        return $r0;
+    }
+
+    public void applyFilter(org.apache.fop.pdf.AbstractPDFStream)
+    {
+        org.apache.fop.pdf.PDFEncryptionJCE this;
+        org.apache.fop.pdf.AbstractPDFStream stream;
+        org.apache.fop.pdf.PDFFilterList $r0;
+        int $i0, $i1;
+        org.apache.fop.pdf.PDFFilter $r1;
+
+        this := @this: org.apache.fop.pdf.PDFEncryptionJCE;
+        stream := @parameter0: org.apache.fop.pdf.AbstractPDFStream;
+        $r0 = virtualinvoke stream.<org.apache.fop.pdf.AbstractPDFStream: org.apache.fop.pdf.PDFFilterList getFilterList()>();
+        $i0 = virtualinvoke stream.<org.apache.fop.pdf.AbstractPDFStream: int getObjectNumber()>();
+        $i1 = virtualinvoke stream.<org.apache.fop.pdf.AbstractPDFStream: int getGeneration()>();
+        $r1 = virtualinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: org.apache.fop.pdf.PDFFilter makeFilter(int,int)>($i0, $i1);
+        virtualinvoke $r0.<org.apache.fop.pdf.PDFFilterList: void addFilter(org.apache.fop.pdf.PDFFilter)>($r1);
+        return;
+    }
+
+    public byte[] toPDF()
+    {
+        org.apache.fop.pdf.PDFEncryptionJCE this;
+        java.lang.String $r0;
+        java.lang.IllegalStateException $r1;
+        byte[] $r2;
+
+        this := @this: org.apache.fop.pdf.PDFEncryptionJCE;
+        $r0 = this.<org.apache.fop.pdf.PDFEncryptionJCE: java.lang.String dictionary>;
+        if $r0 != null goto label0;
+
+        $r1 = new java.lang.IllegalStateException;
+        specialinvoke $r1.<java.lang.IllegalStateException: void <init>(java.lang.String)>("PDF Encryption has not been initialized");
+        throw $r1;
+
+     label0:
+        $r0 = this.<org.apache.fop.pdf.PDFEncryptionJCE: java.lang.String dictionary>;
+        $r2 = staticinvoke <org.apache.fop.pdf.PDFEncryptionJCE: byte[] encode(java.lang.String)>($r0);
+        return $r2;
+    }
+
+    public java.lang.String getTrailerEntry()
+    {
+        org.apache.fop.pdf.PDFEncryptionJCE this;
+        java.lang.StringBuffer $r0;
+        int $i0;
+        java.lang.String $r1, $r2;
+
+        this := @this: org.apache.fop.pdf.PDFEncryptionJCE;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("/Encrypt ");
+        $i0 = virtualinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: int getObjectNumber()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $i0 = virtualinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: int getGeneration()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" R\n/ID[");
+        $r1 = virtualinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: java.lang.String getFileID(int)>(1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r1 = virtualinvoke this.<org.apache.fop.pdf.PDFEncryptionJCE: java.lang.String getFileID(int)>(2);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("]\n");
+        $r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r2;
+    }
+
+    static javax.crypto.Cipher access$000(org.apache.fop.pdf.PDFEncryptionJCE, int, int)
+    {
+        org.apache.fop.pdf.PDFEncryptionJCE x0;
+        int x1, x2;
+        javax.crypto.Cipher $r0;
+
+        x0 := @parameter0: org.apache.fop.pdf.PDFEncryptionJCE;
+        x1 := @parameter1: int;
+        x2 := @parameter2: int;
+        $r0 = specialinvoke x0.<org.apache.fop.pdf.PDFEncryptionJCE: javax.crypto.Cipher initCipher(int,int)>(x1, x2);
+        return $r0;
+    }
+
+    static void <clinit>()
+    {
+        char[] $r0;
+
+        $r0 = newarray (char)[32];
+        $r0[0] = 40;
+        $r0[1] = 191;
+        $r0[2] = 78;
+        $r0[3] = 94;
+        $r0[4] = 78;
+        $r0[5] = 117;
+        $r0[6] = 138;
+        $r0[7] = 65;
+        $r0[8] = 100;
+        $r0[9] = 0;
+        $r0[10] = 78;
+        $r0[11] = 86;
+        $r0[12] = 255;
+        $r0[13] = 250;
+        $r0[14] = 1;
+        $r0[15] = 8;
+        $r0[16] = 46;
+        $r0[17] = 46;
+        $r0[18] = 0;
+        $r0[19] = 182;
+        $r0[20] = 208;
+        $r0[21] = 104;
+        $r0[22] = 62;
+        $r0[23] = 128;
+        $r0[24] = 47;
+        $r0[25] = 12;
+        $r0[26] = 169;
+        $r0[27] = 254;
+        $r0[28] = 100;
+        $r0[29] = 83;
+        $r0[30] = 105;
+        $r0[31] = 122;
+        <org.apache.fop.pdf.PDFEncryptionJCE: char[] PAD> = $r0;
+        return;
+    }
+}

@@ -1,0 +1,182 @@
+public class org.apache.fop.render.awt.viewer.ImageProxyPanel extends javax.swing.JPanel
+{
+    private java.lang.ref.Reference imageRef;
+    private java.awt.Dimension size;
+    private org.apache.fop.render.awt.AWTRenderer renderer;
+    private int page;
+
+    public void <init>(org.apache.fop.render.awt.AWTRenderer, int)
+    {
+        org.apache.fop.render.awt.viewer.ImageProxyPanel this;
+        org.apache.fop.render.awt.AWTRenderer renderer;
+        int page;
+
+        this := @this: org.apache.fop.render.awt.viewer.ImageProxyPanel;
+        renderer := @parameter0: org.apache.fop.render.awt.AWTRenderer;
+        page := @parameter1: int;
+        specialinvoke this.<javax.swing.JPanel: void <init>()>();
+        this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: org.apache.fop.render.awt.AWTRenderer renderer> = renderer;
+        this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: int page> = page;
+        virtualinvoke this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: void setOpaque(boolean)>(0);
+        return;
+    }
+
+    public java.awt.Dimension getMinimumSize()
+    {
+        org.apache.fop.render.awt.viewer.ImageProxyPanel this;
+        java.awt.Dimension $r0;
+
+        this := @this: org.apache.fop.render.awt.viewer.ImageProxyPanel;
+        $r0 = virtualinvoke this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: java.awt.Dimension getPreferredSize()>();
+        return $r0;
+    }
+
+    public java.awt.Dimension getPreferredSize()
+    {
+        org.apache.fop.render.awt.viewer.ImageProxyPanel this;
+        java.awt.Insets insets;
+        org.apache.fop.apps.FOPException fopEx, $r5;
+        java.awt.Dimension $r0, $r2, $r3, $r4;
+        org.apache.fop.render.awt.AWTRenderer $r1;
+        int $i0, $i1, $i2, $i3;
+
+        this := @this: org.apache.fop.render.awt.viewer.ImageProxyPanel;
+        $r0 = this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: java.awt.Dimension size>;
+        if $r0 != null goto label3;
+
+     label0:
+        insets = virtualinvoke this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: java.awt.Insets getInsets()>();
+        $r1 = this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: org.apache.fop.render.awt.AWTRenderer renderer>;
+        $i0 = this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: int page>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.render.awt.AWTRenderer: java.awt.Dimension getPageImageSize(int)>($i0);
+        this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: java.awt.Dimension size> = $r2;
+        $r2 = new java.awt.Dimension;
+        $r3 = this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: java.awt.Dimension size>;
+        $i1 = $r3.<java.awt.Dimension: int width>;
+        $i2 = insets.<java.awt.Insets: int left>;
+        $i1 = $i1 + $i2;
+        $i2 = insets.<java.awt.Insets: int right>;
+        $i1 = $i1 + $i2;
+        $r4 = this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: java.awt.Dimension size>;
+        $i2 = $r4.<java.awt.Dimension: int height>;
+        $i3 = insets.<java.awt.Insets: int top>;
+        $i2 = $i2 + $i3;
+        $i3 = insets.<java.awt.Insets: int bottom>;
+        $i2 = $i2 + $i3;
+        specialinvoke $r2.<java.awt.Dimension: void <init>(int,int)>($i1, $i2);
+        this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: java.awt.Dimension size> = $r2;
+
+     label1:
+        goto label3;
+
+     label2:
+        $r5 := @caughtexception;
+        fopEx = $r5;
+        $r0 = new java.awt.Dimension;
+        specialinvoke $r0.<java.awt.Dimension: void <init>(int,int)>(10, 10);
+        return $r0;
+
+     label3:
+        $r0 = this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: java.awt.Dimension size>;
+        return $r0;
+
+        catch org.apache.fop.apps.FOPException from label0 to label1 with label2;
+    }
+
+    public void setPage(int)
+    {
+        org.apache.fop.render.awt.viewer.ImageProxyPanel this;
+        int pg, $i0;
+
+        this := @this: org.apache.fop.render.awt.viewer.ImageProxyPanel;
+        pg := @parameter0: int;
+        $i0 = this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: int page>;
+        if $i0 == pg goto label0;
+
+        this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: int page> = pg;
+        this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: java.lang.ref.Reference imageRef> = null;
+        virtualinvoke this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: void repaint()>();
+
+     label0:
+        return;
+    }
+
+    public synchronized void paintComponent(java.awt.Graphics)
+    {
+        org.apache.fop.render.awt.viewer.ImageProxyPanel this;
+        java.awt.Graphics graphics;
+        null_type image;
+        int x, y, $i0, $i1, $i2, $i3, $i4;
+        org.apache.fop.apps.FOPException fopEx, $r5;
+        boolean $z0;
+        java.awt.Color $r0;
+        java.lang.ref.Reference $r1;
+        java.lang.Object $r2;
+        org.apache.fop.render.awt.AWTRenderer $r3;
+        java.awt.image.BufferedImage image;
+        java.lang.ref.SoftReference $r4;
+
+        this := @this: org.apache.fop.render.awt.viewer.ImageProxyPanel;
+        graphics := @parameter0: java.awt.Graphics;
+
+     label0:
+        $z0 = virtualinvoke this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: boolean isOpaque()>();
+        if $z0 == 0 goto label1;
+
+        $r0 = virtualinvoke this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: java.awt.Color getBackground()>();
+        virtualinvoke graphics.<java.awt.Graphics: void setColor(java.awt.Color)>($r0);
+        $i0 = virtualinvoke this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: int getWidth()>();
+        $i1 = virtualinvoke this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: int getHeight()>();
+        virtualinvoke graphics.<java.awt.Graphics: void fillRect(int,int,int,int)>(0, 0, $i0, $i1);
+
+     label1:
+        specialinvoke this.<javax.swing.JPanel: void paintComponent(java.awt.Graphics)>(graphics);
+        image = null;
+        $r1 = this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: java.lang.ref.Reference imageRef>;
+        if $r1 == null goto label2;
+
+        $r1 = this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: java.lang.ref.Reference imageRef>;
+        $r2 = virtualinvoke $r1.<java.lang.ref.Reference: java.lang.Object get()>();
+        if $r2 != null goto label3;
+
+     label2:
+        $r3 = this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: org.apache.fop.render.awt.AWTRenderer renderer>;
+        $i2 = this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: int page>;
+        image = virtualinvoke $r3.<org.apache.fop.render.awt.AWTRenderer: java.awt.image.BufferedImage getPageImage(int)>($i2);
+        $r4 = new java.lang.ref.SoftReference;
+        specialinvoke $r4.<java.lang.ref.SoftReference: void <init>(java.lang.Object)>(image);
+        this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: java.lang.ref.Reference imageRef> = $r4;
+        goto label4;
+
+     label3:
+        $r1 = this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: java.lang.ref.Reference imageRef>;
+        $r2 = virtualinvoke $r1.<java.lang.ref.Reference: java.lang.Object get()>();
+        image = (java.awt.image.BufferedImage) $r2;
+
+     label4:
+        $i3 = virtualinvoke this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: int getWidth()>();
+        $i2 = virtualinvoke image.<java.awt.image.BufferedImage: int getWidth()>();
+        $i3 = $i3 - $i2;
+        x = $i3 / 2;
+        $i3 = virtualinvoke this.<org.apache.fop.render.awt.viewer.ImageProxyPanel: int getHeight()>();
+        $i2 = virtualinvoke image.<java.awt.image.BufferedImage: int getHeight()>();
+        $i3 = $i3 - $i2;
+        y = $i3 / 2;
+        $i1 = virtualinvoke image.<java.awt.image.BufferedImage: int getWidth()>();
+        $i4 = virtualinvoke image.<java.awt.image.BufferedImage: int getHeight()>();
+        virtualinvoke graphics.<java.awt.Graphics: boolean drawImage(java.awt.Image,int,int,int,int,java.awt.image.ImageObserver)>(image, x, y, $i1, $i4, null);
+
+     label5:
+        goto label7;
+
+     label6:
+        $r5 := @caughtexception;
+        fopEx = $r5;
+        virtualinvoke fopEx.<org.apache.fop.apps.FOPException: void printStackTrace()>();
+
+     label7:
+        return;
+
+        catch org.apache.fop.apps.FOPException from label0 to label5 with label6;
+    }
+}

@@ -1,0 +1,162 @@
+public abstract class org.apache.fop.fo.flow.table.TableCellContainer extends org.apache.fop.fo.flow.table.TableFObj implements org.apache.fop.fo.flow.table.ColumnNumberManagerHolder
+{
+    protected java.util.List pendingSpans;
+    protected org.apache.fop.fo.flow.table.ColumnNumberManager columnNumberManager;
+
+    public void <init>(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.flow.table.TableCellContainer this;
+        org.apache.fop.fo.FONode parent;
+
+        this := @this: org.apache.fop.fo.flow.table.TableCellContainer;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        specialinvoke this.<org.apache.fop.fo.flow.table.TableFObj: void <init>(org.apache.fop.fo.FONode)>(parent);
+        return;
+    }
+
+    protected void addTableCellChild(org.apache.fop.fo.flow.table.TableCell, boolean) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.table.TableCellContainer this;
+        org.apache.fop.fo.flow.table.TableCell cell;
+        boolean firstRow, $z0;
+        int colNumber, colSpan, rowSpan, i, $i0, $i1, $i2;
+        org.apache.fop.fo.flow.table.Table t;
+        java.lang.StringBuffer $r0;
+        org.apache.fop.fo.ValidationException $r1;
+        org.xml.sax.Locator $r2;
+        java.lang.String $r3, $r4;
+        java.util.List $r5;
+        org.apache.fop.fo.flow.table.PendingSpan $r6;
+        org.apache.fop.fo.flow.table.ColumnNumberManager $r8;
+        org.apache.fop.fo.flow.table.RowGroupBuilder $r9;
+
+        this := @this: org.apache.fop.fo.flow.table.TableCellContainer;
+        cell := @parameter0: org.apache.fop.fo.flow.table.TableCell;
+        firstRow := @parameter1: boolean;
+        colNumber = virtualinvoke cell.<org.apache.fop.fo.flow.table.TableCell: int getColumnNumber()>();
+        colSpan = virtualinvoke cell.<org.apache.fop.fo.flow.table.TableCell: int getNumberColumnsSpanned()>();
+        rowSpan = virtualinvoke cell.<org.apache.fop.fo.flow.table.TableCell: int getNumberRowsSpanned()>();
+        t = virtualinvoke this.<org.apache.fop.fo.flow.table.TableCellContainer: org.apache.fop.fo.flow.table.Table getTable()>();
+        $z0 = virtualinvoke t.<org.apache.fop.fo.flow.table.Table: boolean hasExplicitColumns()>();
+        if $z0 == 0 goto label0;
+
+        $i0 = colNumber + colSpan;
+        $i0 = $i0 - 1;
+        $i1 = virtualinvoke t.<org.apache.fop.fo.flow.table.Table: int getNumberOfColumns()>();
+        if $i0 <= $i1 goto label2;
+
+        $r1 = new org.apache.fop.fo.ValidationException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r2 = this.<org.apache.fop.fo.flow.table.TableCellContainer: org.xml.sax.Locator locator>;
+        $r3 = staticinvoke <org.apache.fop.fo.FONode: java.lang.String errorText(org.xml.sax.Locator)>($r2);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("column-number or number of cells in the row overflows the number of fo:table-column specified for the table.");
+        $r4 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r1.<org.apache.fop.fo.ValidationException: void <init>(java.lang.String)>($r4);
+        throw $r1;
+
+     label0:
+        $i1 = colNumber + colSpan;
+        $i1 = $i1 - 1;
+        virtualinvoke t.<org.apache.fop.fo.flow.table.Table: void ensureColumnNumber(int)>($i1);
+
+     label1:
+        $r5 = this.<org.apache.fop.fo.flow.table.TableCellContainer: java.util.List pendingSpans>;
+        $i0 = interfaceinvoke $r5.<java.util.List: int size()>();
+        $i1 = colNumber + colSpan;
+        $i1 = $i1 - 1;
+        if $i0 >= $i1 goto label2;
+
+        $r5 = this.<org.apache.fop.fo.flow.table.TableCellContainer: java.util.List pendingSpans>;
+        interfaceinvoke $r5.<java.util.List: boolean add(java.lang.Object)>(null);
+        goto label1;
+
+     label2:
+        if firstRow == 0 goto label3;
+
+        specialinvoke this.<org.apache.fop.fo.flow.table.TableCellContainer: void handleCellWidth(org.apache.fop.fo.flow.table.TableCell,int,int)>(cell, colNumber, colSpan);
+
+     label3:
+        if rowSpan <= 1 goto label5;
+
+        i = 0;
+
+     label4:
+        if i >= colSpan goto label5;
+
+        $r5 = this.<org.apache.fop.fo.flow.table.TableCellContainer: java.util.List pendingSpans>;
+        $i1 = colNumber - 1;
+        $i1 = $i1 + i;
+        $r6 = new org.apache.fop.fo.flow.table.PendingSpan;
+        specialinvoke $r6.<org.apache.fop.fo.flow.table.PendingSpan: void <init>(int)>(rowSpan);
+        interfaceinvoke $r5.<java.util.List: java.lang.Object set(int,java.lang.Object)>($i1, $r6);
+        i = i + 1;
+        goto label4;
+
+     label5:
+        $r8 = this.<org.apache.fop.fo.flow.table.TableCellContainer: org.apache.fop.fo.flow.table.ColumnNumberManager columnNumberManager>;
+        $i2 = colNumber + colSpan;
+        $i2 = $i2 - 1;
+        virtualinvoke $r8.<org.apache.fop.fo.flow.table.ColumnNumberManager: void signalUsedColumnNumbers(int,int)>(colNumber, $i2);
+        $r9 = virtualinvoke t.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.flow.table.RowGroupBuilder getRowGroupBuilder()>();
+        virtualinvoke $r9.<org.apache.fop.fo.flow.table.RowGroupBuilder: void addTableCell(org.apache.fop.fo.flow.table.TableCell)>(cell);
+        return;
+    }
+
+    private void handleCellWidth(org.apache.fop.fo.flow.table.TableCell, int, int) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.table.TableCellContainer this;
+        org.apache.fop.fo.flow.table.TableCell cell;
+        int colNumber, colSpan, i, $i0, $i1;
+        org.apache.fop.fo.flow.table.Table t;
+        org.apache.fop.datatypes.Length colWidth, $r0;
+        org.apache.fop.fo.flow.table.TableColumn col;
+
+        this := @this: org.apache.fop.fo.flow.table.TableCellContainer;
+        cell := @parameter0: org.apache.fop.fo.flow.table.TableCell;
+        colNumber := @parameter1: int;
+        colSpan := @parameter2: int;
+        t = virtualinvoke this.<org.apache.fop.fo.flow.table.TableCellContainer: org.apache.fop.fo.flow.table.Table getTable()>();
+        colWidth = null;
+        $r0 = virtualinvoke cell.<org.apache.fop.fo.flow.table.TableCell: org.apache.fop.datatypes.Length getWidth()>();
+        $i0 = interfaceinvoke $r0.<org.apache.fop.datatypes.Length: int getEnum()>();
+        if $i0 == 9 goto label0;
+
+        if colSpan != 1 goto label0;
+
+        colWidth = virtualinvoke cell.<org.apache.fop.fo.flow.table.TableCell: org.apache.fop.datatypes.Length getWidth()>();
+
+     label0:
+        i = colNumber;
+
+     label1:
+        $i1 = colNumber + colSpan;
+        if i >= $i1 goto label3;
+
+        $i1 = i - 1;
+        col = virtualinvoke t.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.flow.table.TableColumn getColumn(int)>($i1);
+        if colWidth == null goto label2;
+
+        virtualinvoke col.<org.apache.fop.fo.flow.table.TableColumn: void setColumnWidth(org.apache.fop.datatypes.Length)>(colWidth);
+
+     label2:
+        i = i + 1;
+        goto label1;
+
+     label3:
+        return;
+    }
+
+    abstract org.apache.fop.fo.flow.table.TableBody getTablePart();
+
+    public org.apache.fop.fo.flow.table.ColumnNumberManager getColumnNumberManager()
+    {
+        org.apache.fop.fo.flow.table.TableCellContainer this;
+        org.apache.fop.fo.flow.table.ColumnNumberManager $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.TableCellContainer;
+        $r0 = this.<org.apache.fop.fo.flow.table.TableCellContainer: org.apache.fop.fo.flow.table.ColumnNumberManager columnNumberManager>;
+        return $r0;
+    }
+}

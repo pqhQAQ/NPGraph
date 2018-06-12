@@ -1,0 +1,128 @@
+public class org.apache.fop.layoutmgr.table.TableRowIterator extends java.lang.Object
+{
+    public static final int BODY;
+    public static final int HEADER;
+    public static final int FOOTER;
+    protected org.apache.fop.fo.flow.table.Table table;
+    private int tablePart;
+    private java.util.Iterator rowGroupsIter;
+    private int rowIndex;
+
+    public void <init>(org.apache.fop.fo.flow.table.Table, int)
+    {
+        org.apache.fop.layoutmgr.table.TableRowIterator this;
+        org.apache.fop.fo.flow.table.Table table;
+        int tablePart;
+        java.util.LinkedList rowGroupsList, $r3;
+        org.apache.fop.fo.FONode$FONodeIterator iter;
+        org.apache.fop.fo.FONode node;
+        org.apache.fop.fo.flow.table.TableBody $r0;
+        java.util.List $r1;
+        java.util.Iterator $r2;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableRowIterator;
+        table := @parameter0: org.apache.fop.fo.flow.table.Table;
+        tablePart := @parameter1: int;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.layoutmgr.table.TableRowIterator: int rowIndex> = 0;
+        this.<org.apache.fop.layoutmgr.table.TableRowIterator: org.apache.fop.fo.flow.table.Table table> = table;
+        this.<org.apache.fop.layoutmgr.table.TableRowIterator: int tablePart> = tablePart;
+        lookupswitch(tablePart)
+        {
+            case 1: goto label0;
+            case 2: goto label1;
+            default: goto label2;
+        };
+
+     label0:
+        $r0 = virtualinvoke table.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.flow.table.TableBody getTableHeader()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.table.TableBody: java.util.List getRowGroups()>();
+        $r2 = interfaceinvoke $r1.<java.util.List: java.util.Iterator iterator()>();
+        this.<org.apache.fop.layoutmgr.table.TableRowIterator: java.util.Iterator rowGroupsIter> = $r2;
+        goto label6;
+
+     label1:
+        $r0 = virtualinvoke table.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.flow.table.TableBody getTableFooter()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.table.TableBody: java.util.List getRowGroups()>();
+        $r2 = interfaceinvoke $r1.<java.util.List: java.util.Iterator iterator()>();
+        this.<org.apache.fop.layoutmgr.table.TableRowIterator: java.util.Iterator rowGroupsIter> = $r2;
+        goto label6;
+
+     label2:
+        $r3 = new java.util.LinkedList;
+        specialinvoke $r3.<java.util.LinkedList: void <init>()>();
+        rowGroupsList = $r3;
+        iter = virtualinvoke table.<org.apache.fop.fo.flow.table.Table: org.apache.fop.fo.FONode$FONodeIterator getChildNodes()>();
+
+     label3:
+        $z0 = interfaceinvoke iter.<org.apache.fop.fo.FONode$FONodeIterator: boolean hasNext()>();
+        if $z0 == 0 goto label5;
+
+        node = interfaceinvoke iter.<org.apache.fop.fo.FONode$FONodeIterator: org.apache.fop.fo.FONode nextNode()>();
+        $z0 = node instanceof org.apache.fop.fo.flow.table.TableBody;
+        if $z0 == 0 goto label4;
+
+        $r0 = (org.apache.fop.fo.flow.table.TableBody) node;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.flow.table.TableBody: java.util.List getRowGroups()>();
+        interfaceinvoke rowGroupsList.<java.util.List: boolean addAll(java.util.Collection)>($r1);
+
+     label4:
+        goto label3;
+
+     label5:
+        $r2 = interfaceinvoke rowGroupsList.<java.util.List: java.util.Iterator iterator()>();
+        this.<org.apache.fop.layoutmgr.table.TableRowIterator: java.util.Iterator rowGroupsIter> = $r2;
+
+     label6:
+        return;
+    }
+
+    org.apache.fop.fo.flow.table.EffRow[] getNextRowGroup()
+    {
+        org.apache.fop.layoutmgr.table.TableRowIterator this;
+        java.util.List rowGroup, gridUnits;
+        org.apache.fop.fo.flow.table.EffRow[] effRowGroup;
+        int i, $i0, $i1, $i2, $i3, $i4;
+        java.util.Iterator rowIter, $r2;
+        org.apache.fop.fo.flow.table.EffRow $r0;
+        boolean $z0;
+        java.lang.Object $r3;
+
+        this := @this: org.apache.fop.layoutmgr.table.TableRowIterator;
+        $r2 = this.<org.apache.fop.layoutmgr.table.TableRowIterator: java.util.Iterator rowGroupsIter>;
+        $z0 = interfaceinvoke $r2.<java.util.Iterator: boolean hasNext()>();
+        if $z0 != 0 goto label0;
+
+        return null;
+
+     label0:
+        $r2 = this.<org.apache.fop.layoutmgr.table.TableRowIterator: java.util.Iterator rowGroupsIter>;
+        $r3 = interfaceinvoke $r2.<java.util.Iterator: java.lang.Object next()>();
+        rowGroup = (java.util.List) $r3;
+        $i2 = interfaceinvoke rowGroup.<java.util.List: int size()>();
+        effRowGroup = newarray (org.apache.fop.fo.flow.table.EffRow)[$i2];
+        i = 0;
+        rowIter = interfaceinvoke rowGroup.<java.util.List: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke rowIter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label2;
+
+        $r3 = interfaceinvoke rowIter.<java.util.Iterator: java.lang.Object next()>();
+        gridUnits = (java.util.List) $r3;
+        $i0 = i;
+        i = i + 1;
+        $r0 = new org.apache.fop.fo.flow.table.EffRow;
+        $i1 = this.<org.apache.fop.layoutmgr.table.TableRowIterator: int rowIndex>;
+        $i3 = $i1 + 1;
+        this.<org.apache.fop.layoutmgr.table.TableRowIterator: int rowIndex> = $i3;
+        $i4 = this.<org.apache.fop.layoutmgr.table.TableRowIterator: int tablePart>;
+        specialinvoke $r0.<org.apache.fop.fo.flow.table.EffRow: void <init>(int,int,java.util.List)>($i1, $i4, gridUnits);
+        effRowGroup[$i0] = $r0;
+        goto label1;
+
+     label2:
+        return effRowGroup;
+    }
+}

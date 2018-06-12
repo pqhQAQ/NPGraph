@@ -1,0 +1,153 @@
+method: data.MyScript.startAnalyse:2018501004
+1864089205:this := @this: data.MyScript
+1991261055:source = this
+80953218:this.<data.MyScript: boolean finishanalyse> = 0
+512800953:$r0 = new java.util.ArrayList
+247664456:specialinvoke $r0.<java.util.ArrayList: void <init>()>()
+673204106:this.<data.MyScript: java.util.ArrayList actionseq> = $r0
+154914381:$r0 = new java.util.ArrayList
+60790404:specialinvoke $r0.<java.util.ArrayList: void <init>()>()
+1649587703:this.<data.MyScript: java.util.ArrayList locators> = $r0
+606641551:$r1 = new java.io.File
+1289026375:$r2 = source.<data.MyScript: java.lang.String scriptpath>
+851253689:specialinvoke $r1.<java.io.File: void <init>(java.lang.String)>($r2)
+484694709:srcfile = $r1
+2032712698:reader = null
+1632458810:$r3 = new java.io.BufferedReader
+219527103:$r4 = new java.io.FileReader
+843654510:specialinvoke $r4.<java.io.FileReader: void <init>(java.io.File)>(srcfile)
+1614312076:specialinvoke $r3.<java.io.BufferedReader: void <init>(java.io.Reader)>($r4)
+434665134:reader = $r3
+664244536:templine = null
+110861185:line = 1
+1375614346:goto [?= $r10 = virtualinvoke reader.<java.io.BufferedReader: java.lang.String readLine()>()]
+141369620:line = line + 1
+577006121:$z0 = virtualinvoke templine.<java.lang.String: boolean contains(java.lang.CharSequence)>("wd")
+1853209442:if $z0 == 0 goto $r10 = virtualinvoke reader.<java.io.BufferedReader: java.lang.String readLine()>()
+1935759253:$r5 = <java.lang.System: java.io.PrintStream out>
+2075996768:$r6 = new java.lang.StringBuilder
+1633134782:specialinvoke $r6.<java.lang.StringBuilder: void <init>(java.lang.String)>("line ")
+2070071126:$r6 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(line)
+457572055:$r6 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(": ")
+66192343:$r6 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(templine)
+98179655:$r7 = virtualinvoke $r6.<java.lang.StringBuilder: java.lang.String toString()>()
+838020689:virtualinvoke $r5.<java.io.PrintStream: void println(java.lang.String)>($r7)
+1823798172:locator = null
+1212103909:i = 0
+800523121:goto [?= $r17 = <data.MyScript: java.lang.String[] pythonFstLocators>]
+407046192:$r8 = <data.MyScript: java.lang.String[] pythonFstLocators>
+116868973:fstcall = $r8[i]
+1416775853:$r9 = new java.lang.StringBuilder
+1898822291:specialinvoke $r9.<java.lang.StringBuilder: void <init>(java.lang.String)>("\\s*wd\\s*\\.\\s*")
+504829511:$r9 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(fstcall)
+571952660:$r9 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\\s*\\(\\s*\"(.+)[^\\\\]\"\\s*\\)")
+671552648:$r10 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.String toString()>()
+2017789149:locatorpatt = staticinvoke <java.util.regex.Pattern: java.util.regex.Pattern compile(java.lang.String)>($r10)
+821529469:locatormatcher = virtualinvoke locatorpatt.<java.util.regex.Pattern: java.util.regex.Matcher matcher(java.lang.CharSequence)>(templine)
+529762438:$z0 = virtualinvoke locatormatcher.<java.util.regex.Matcher: boolean find()>()
+250095004:if $z0 == 0 goto i = i + 1
+1241236050:$i0 = virtualinvoke locatormatcher.<java.util.regex.Matcher: int start(int)>(1)
+1031523095:$i1 = virtualinvoke locatormatcher.<java.util.regex.Matcher: int end(int)>(1)
+719177553:$i1 = $i1 + 1
+1296725169:tempvalue = virtualinvoke templine.<java.lang.String: java.lang.String substring(int,int)>($i0, $i1)
+1395865627:$r11 = new data.Locator
+259102304:$r12 = <data.MyScript: java.lang.String[] seqLocators>
+2085116975:$r2 = $r12[i]
+1956936697:specialinvoke $r11.<data.Locator: void <init>(java.lang.String,java.lang.String)>($r2, tempvalue)
+1523012674:locator = $r11
+970596280:$r13 = this.<data.MyScript: java.util.ArrayList locators>
+575144513:virtualinvoke $r13.<java.util.ArrayList: boolean add(java.lang.Object)>(locator)
+1550206923:$i0 = virtualinvoke locatormatcher.<java.util.regex.Matcher: int end()>()
+1751581344:templine = virtualinvoke templine.<java.lang.String: java.lang.String substring(int)>($i0)
+1683475417:actionpatt = staticinvoke <java.util.regex.Pattern: java.util.regex.Pattern compile(java.lang.String)>("\\s*\\.\\s*click\\s*\\(\\s*\\)")
+208163752:actionmatcher = virtualinvoke actionpatt.<java.util.regex.Pattern: java.util.regex.Matcher matcher(java.lang.CharSequence)>(templine)
+1094492095:$z0 = virtualinvoke actionmatcher.<java.util.regex.Matcher: boolean find()>()
+1931204110:if $z0 == 0 goto actionpatt = staticinvoke <java.util.regex.Pattern: java.util.regex.Pattern compile(java.lang.String)>("\\s*\\.\\s*send_keys\\s*\\(\\s*(.*)[^\\\\]\\)")
+679636012:$r5 = <java.lang.System: java.io.PrintStream out>
+1766536087:$r7 = virtualinvoke actionmatcher.<java.util.regex.Matcher: java.lang.String group(int)>(0)
+1210594434:virtualinvoke $r5.<java.io.PrintStream: void println(java.lang.String)>($r7)
+1200580560:$r14 = new data.action.ActionTap
+1846607060:specialinvoke $r14.<data.action.ActionTap: void <init>(data.Locator)>(locator)
+491190976:newaction = $r14
+1157328446:$r13 = this.<data.MyScript: java.util.ArrayList actionseq>
+629934844:virtualinvoke $r13.<java.util.ArrayList: boolean add(java.lang.Object)>(newaction)
+937721400:goto [?= $r1 = new java.io.File]
+1237332040:actionpatt = staticinvoke <java.util.regex.Pattern: java.util.regex.Pattern compile(java.lang.String)>("\\s*\\.\\s*send_keys\\s*\\(\\s*(.*)[^\\\\]\\)")
+814133879:actionmatcher = virtualinvoke actionpatt.<java.util.regex.Pattern: java.util.regex.Matcher matcher(java.lang.CharSequence)>(templine)
+1494812128:$z0 = virtualinvoke actionmatcher.<java.util.regex.Matcher: boolean find()>()
+2043732690:if $z0 == 0 goto $r5 = <java.lang.System: java.io.PrintStream out>
+1285232991:$i2 = virtualinvoke actionmatcher.<java.util.regex.Matcher: int groupCount()>()
+1170459588:if $i2 <= 0 goto $r15 = new data.action.ActionText
+964088996:$r5 = <java.lang.System: java.io.PrintStream out>
+960496636:$r7 = virtualinvoke actionmatcher.<java.util.regex.Matcher: java.lang.String group(int)>(1)
+432386753:virtualinvoke $r5.<java.io.PrintStream: void println(java.lang.String)>($r7)
+39496223:$r15 = new data.action.ActionText
+1322688819:$r16 = virtualinvoke actionmatcher.<java.util.regex.Matcher: java.lang.String group(int)>(1)
+1827750836:specialinvoke $r15.<data.action.ActionText: void <init>(data.Locator,java.lang.String)>(locator, $r16)
+1402213964:newaction = $r15
+524550770:goto [?= $r13 = this.<data.MyScript: java.util.ArrayList actionseq>]
+704420455:$r15 = new data.action.ActionText
+1321402892:specialinvoke $r15.<data.action.ActionText: void <init>(data.Locator,java.lang.String)>(locator, "")
+1690012217:newaction = $r15
+2059670237:$r13 = this.<data.MyScript: java.util.ArrayList actionseq>
+220543398:virtualinvoke $r13.<java.util.ArrayList: boolean add(java.lang.Object)>(newaction)
+1973219771:goto [?= $r1 = new java.io.File]
+314730576:$r5 = <java.lang.System: java.io.PrintStream out>
+1778255363:virtualinvoke $r5.<java.io.PrintStream: void println(java.lang.String)>("Error: Do not find action.")
+607970642:goto [?= $r1 = new java.io.File]
+435387668:i = i + 1
+1789994622:$r17 = <data.MyScript: java.lang.String[] pythonFstLocators>
+1461730149:$i0 = lengthof $r17
+1865838205:if i < $i0 goto $r8 = <data.MyScript: java.lang.String[] pythonFstLocators>
+1586497941:$r1 = new java.io.File
+1870591004:specialinvoke $r1.<java.io.File: void <init>(java.lang.String)>("Scripts/appium.seq")
+2009895795:file = $r1
+116115464:virtualinvoke file.<java.io.File: boolean createNewFile()>()
+1136310873:$r18 = new java.io.BufferedWriter
+1884310131:$r19 = new java.io.FileWriter
+1395048902:specialinvoke $r19.<java.io.FileWriter: void <init>(java.io.File)>(file)
+360437968:specialinvoke $r18.<java.io.BufferedWriter: void <init>(java.io.Writer)>($r19)
+1977043636:bw = $r18
+2022850302:$r13 = this.<data.MyScript: java.util.ArrayList actionseq>
+1008921860:l10 = virtualinvoke $r13.<java.util.ArrayList: java.util.Iterator iterator()>()
+418824308:goto [?= $z0 = interfaceinvoke l10.<java.util.Iterator: boolean hasNext()>()]
+203822411:$r20 = interfaceinvoke l10.<java.util.Iterator: java.lang.Object next()>()
+251142536:action = (data.action.Action) $r20
+1784897636:$r7 = virtualinvoke action.<java.lang.Object: java.lang.String toString()>()
+575503309:virtualinvoke bw.<java.io.BufferedWriter: void write(java.lang.String)>($r7)
+719263437:$z0 = interfaceinvoke l10.<java.util.Iterator: boolean hasNext()>()
+475136696:if $z0 != 0 goto $r20 = interfaceinvoke l10.<java.util.Iterator: java.lang.Object next()>()
+123463094:virtualinvoke bw.<java.io.BufferedWriter: void flush()>()
+648694292:virtualinvoke bw.<java.io.BufferedWriter: void close()>()
+753288344:$r10 = virtualinvoke reader.<java.io.BufferedReader: java.lang.String readLine()>()
+1296626002:templine = $r10
+1876649505:if $r10 != null goto line = line + 1
+16466470:virtualinvoke reader.<java.io.BufferedReader: void close()>()
+794063966:this.<data.MyScript: boolean finishanalyse> = 1
+1369694104:goto [?= (branch)]
+2145257149:$r21 := @caughtexception
+1571593735:e = $r21
+1635431954:virtualinvoke e.<java.io.IOException: void printStackTrace()>()
+1906571199:if reader == null goto return
+974795325:virtualinvoke reader.<java.io.BufferedReader: void close()>()
+232284312:goto [?= return]
+811265241:$r22 := @caughtexception
+2024645185:e1 = $r22
+879634262:virtualinvoke e1.<java.io.IOException: void printStackTrace()>()
+735615486:goto [?= return]
+855928364:$r23 := @caughtexception
+426117423:l15 = $r23
+667193006:if reader == null goto throw l15
+588045970:virtualinvoke reader.<java.io.BufferedReader: void close()>()
+568874296:goto [?= throw l15]
+1738514455:$r24 := @caughtexception
+473096428:e1 = $r24
+1540932693:virtualinvoke e1.<java.io.IOException: void printStackTrace()>()
+246343491:throw l15
+1996313640:if reader == null goto return
+1386486400:virtualinvoke reader.<java.io.BufferedReader: void close()>()
+331871203:goto [?= return]
+140922433:$r25 := @caughtexception
+744277562:e1 = $r25
+579967210:virtualinvoke e1.<java.io.IOException: void printStackTrace()>()
+80624737:return

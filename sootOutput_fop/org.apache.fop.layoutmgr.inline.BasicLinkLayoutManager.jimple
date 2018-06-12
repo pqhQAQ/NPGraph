@@ -1,0 +1,86 @@
+public class org.apache.fop.layoutmgr.inline.BasicLinkLayoutManager extends org.apache.fop.layoutmgr.inline.InlineLayoutManager
+{
+    private org.apache.fop.fo.flow.BasicLink fobj;
+
+    public void <init>(org.apache.fop.fo.flow.BasicLink)
+    {
+        org.apache.fop.layoutmgr.inline.BasicLinkLayoutManager this;
+        org.apache.fop.fo.flow.BasicLink node;
+
+        this := @this: org.apache.fop.layoutmgr.inline.BasicLinkLayoutManager;
+        node := @parameter0: org.apache.fop.fo.flow.BasicLink;
+        specialinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: void <init>(org.apache.fop.fo.flow.InlineLevel)>(node);
+        this.<org.apache.fop.layoutmgr.inline.BasicLinkLayoutManager: org.apache.fop.fo.flow.BasicLink fobj> = node;
+        return;
+    }
+
+    protected org.apache.fop.area.inline.InlineArea createArea(boolean)
+    {
+        org.apache.fop.layoutmgr.inline.BasicLinkLayoutManager this;
+        boolean bInlineParent;
+        org.apache.fop.area.inline.InlineArea area;
+        org.apache.fop.layoutmgr.LayoutManager $r0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.BasicLinkLayoutManager;
+        bInlineParent := @parameter0: boolean;
+        area = specialinvoke this.<org.apache.fop.layoutmgr.inline.InlineLayoutManager: org.apache.fop.area.inline.InlineArea createArea(boolean)>(bInlineParent);
+        $r0 = this.<org.apache.fop.layoutmgr.inline.BasicLinkLayoutManager: org.apache.fop.layoutmgr.LayoutManager parentLM>;
+        specialinvoke this.<org.apache.fop.layoutmgr.inline.BasicLinkLayoutManager: void setupBasicLinkArea(org.apache.fop.layoutmgr.LayoutManager,org.apache.fop.area.inline.InlineArea)>($r0, area);
+        return area;
+    }
+
+    private void setupBasicLinkArea(org.apache.fop.layoutmgr.LayoutManager, org.apache.fop.area.inline.InlineArea)
+    {
+        org.apache.fop.layoutmgr.inline.BasicLinkLayoutManager this;
+        org.apache.fop.layoutmgr.LayoutManager parentLM;
+        org.apache.fop.area.inline.InlineArea area;
+        java.lang.String idref, url, $r3;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm;
+        org.apache.fop.area.LinkResolver res, $r1;
+        org.apache.fop.fo.flow.BasicLink $r0;
+        boolean $z0;
+        org.apache.fop.area.PageViewport $r2;
+        int $i0;
+        java.lang.Integer $r4;
+
+        this := @this: org.apache.fop.layoutmgr.inline.BasicLinkLayoutManager;
+        parentLM := @parameter0: org.apache.fop.layoutmgr.LayoutManager;
+        area := @parameter1: org.apache.fop.area.inline.InlineArea;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.BasicLinkLayoutManager: org.apache.fop.fo.flow.BasicLink fobj>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.fo.flow.BasicLink: boolean hasInternalDestination()>();
+        if $z0 == 0 goto label1;
+
+        $r0 = this.<org.apache.fop.layoutmgr.inline.BasicLinkLayoutManager: org.apache.fop.fo.flow.BasicLink fobj>;
+        idref = virtualinvoke $r0.<org.apache.fop.fo.flow.BasicLink: java.lang.String getInternalDestination()>();
+        pslm = virtualinvoke this.<org.apache.fop.layoutmgr.inline.BasicLinkLayoutManager: org.apache.fop.layoutmgr.PageSequenceLayoutManager getPSLM()>();
+        $r1 = new org.apache.fop.area.LinkResolver;
+        specialinvoke $r1.<org.apache.fop.area.LinkResolver: void <init>(java.lang.String,org.apache.fop.area.Area)>(idref, area);
+        res = $r1;
+        $r2 = virtualinvoke pslm.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.area.PageViewport getFirstPVWithID(java.lang.String)>(idref);
+        virtualinvoke res.<org.apache.fop.area.LinkResolver: void resolveIDRef(java.lang.String,org.apache.fop.area.PageViewport)>(idref, $r2);
+        $z0 = virtualinvoke res.<org.apache.fop.area.LinkResolver: boolean isResolved()>();
+        if $z0 != 0 goto label0;
+
+        virtualinvoke pslm.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: void addUnresolvedArea(java.lang.String,org.apache.fop.area.Resolvable)>(idref, res);
+
+     label0:
+        goto label2;
+
+     label1:
+        $r0 = this.<org.apache.fop.layoutmgr.inline.BasicLinkLayoutManager: org.apache.fop.fo.flow.BasicLink fobj>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.fo.flow.BasicLink: boolean hasExternalDestination()>();
+        if $z0 == 0 goto label2;
+
+        $r0 = this.<org.apache.fop.layoutmgr.inline.BasicLinkLayoutManager: org.apache.fop.fo.flow.BasicLink fobj>;
+        $r3 = virtualinvoke $r0.<org.apache.fop.fo.flow.BasicLink: java.lang.String getExternalDestination()>();
+        url = staticinvoke <org.apache.fop.datatypes.URISpecification: java.lang.String getURL(java.lang.String)>($r3);
+        $i0 = virtualinvoke url.<java.lang.String: int length()>();
+        if $i0 <= 0 goto label2;
+
+        $r4 = <org.apache.fop.area.Trait: java.lang.Integer EXTERNAL_LINK>;
+        virtualinvoke area.<org.apache.fop.area.inline.InlineArea: void addTrait(java.lang.Object,java.lang.Object)>($r4, url);
+
+     label2:
+        return;
+    }
+}

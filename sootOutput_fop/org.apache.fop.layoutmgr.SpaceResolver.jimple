@@ -1,0 +1,1637 @@
+public class org.apache.fop.layoutmgr.SpaceResolver extends java.lang.Object
+{
+    protected static org.apache.commons.logging.Log log;
+    private org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] firstPart;
+    private org.apache.fop.layoutmgr.BreakElement breakPoss;
+    private org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] secondPart;
+    private org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] noBreak;
+    private org.apache.fop.traits.MinOptMax[] firstPartLengths;
+    private org.apache.fop.traits.MinOptMax[] secondPartLengths;
+    private org.apache.fop.traits.MinOptMax[] noBreakLengths;
+    private boolean isFirst;
+    private boolean isLast;
+    static java.lang.Class class$org$apache$fop$layoutmgr$SpaceResolver;
+
+    private void <init>(java.util.List, org.apache.fop.layoutmgr.BreakElement, java.util.List, boolean, boolean)
+    {
+        org.apache.fop.layoutmgr.SpaceResolver this;
+        java.util.List first, second, $r8, $r11;
+        org.apache.fop.layoutmgr.BreakElement breakPoss;
+        boolean isFirst, isLast, $z0;
+        int c, i, $i0;
+        java.util.ListIterator iter;
+        org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] $r0, $r2, $r6, $r13;
+        org.apache.fop.traits.MinOptMax[] $r1, $r5, $r14;
+        java.lang.Object $r3;
+        org.apache.fop.layoutmgr.UnresolvedListElementWithLength $r4;
+        org.apache.fop.traits.MinOptMax $r7;
+        org.apache.commons.logging.Log $r9;
+        java.lang.StringBuffer $r10;
+        java.lang.String $r12, $r15;
+
+        this := @this: org.apache.fop.layoutmgr.SpaceResolver;
+        first := @parameter0: java.util.List;
+        breakPoss := @parameter1: org.apache.fop.layoutmgr.BreakElement;
+        second := @parameter2: java.util.List;
+        isFirst := @parameter3: boolean;
+        isLast := @parameter4: boolean;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.layoutmgr.SpaceResolver: boolean isFirst> = isFirst;
+        this.<org.apache.fop.layoutmgr.SpaceResolver: boolean isLast> = isLast;
+        c = 0;
+        if first == null goto label0;
+
+        $i0 = interfaceinvoke first.<java.util.List: int size()>();
+        c = c + $i0;
+
+     label0:
+        if second == null goto label1;
+
+        $i0 = interfaceinvoke second.<java.util.List: int size()>();
+        c = c + $i0;
+
+     label1:
+        $r0 = newarray (org.apache.fop.layoutmgr.UnresolvedListElementWithLength)[c];
+        this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] noBreak> = $r0;
+        $r1 = newarray (org.apache.fop.traits.MinOptMax)[c];
+        this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] noBreakLengths> = $r1;
+        i = 0;
+        if first == null goto label3;
+
+        iter = interfaceinvoke first.<java.util.List: java.util.ListIterator listIterator()>();
+
+     label2:
+        $z0 = interfaceinvoke iter.<java.util.ListIterator: boolean hasNext()>();
+        if $z0 == 0 goto label3;
+
+        $r2 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] noBreak>;
+        $r3 = interfaceinvoke iter.<java.util.ListIterator: java.lang.Object next()>();
+        $r4 = (org.apache.fop.layoutmgr.UnresolvedListElementWithLength) $r3;
+        $r2[i] = $r4;
+        $r5 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] noBreakLengths>;
+        $r6 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] noBreak>;
+        $r4 = $r6[i];
+        $r7 = virtualinvoke $r4.<org.apache.fop.layoutmgr.UnresolvedListElementWithLength: org.apache.fop.traits.MinOptMax getLength()>();
+        $r5[i] = $r7;
+        i = i + 1;
+        goto label2;
+
+     label3:
+        if second == null goto label5;
+
+        iter = interfaceinvoke second.<java.util.List: java.util.ListIterator listIterator()>();
+
+     label4:
+        $z0 = interfaceinvoke iter.<java.util.ListIterator: boolean hasNext()>();
+        if $z0 == 0 goto label5;
+
+        $r2 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] noBreak>;
+        $r3 = interfaceinvoke iter.<java.util.ListIterator: java.lang.Object next()>();
+        $r4 = (org.apache.fop.layoutmgr.UnresolvedListElementWithLength) $r3;
+        $r2[i] = $r4;
+        $r5 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] noBreakLengths>;
+        $r6 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] noBreak>;
+        $r4 = $r6[i];
+        $r7 = virtualinvoke $r4.<org.apache.fop.layoutmgr.UnresolvedListElementWithLength: org.apache.fop.traits.MinOptMax getLength()>();
+        $r5[i] = $r7;
+        i = i + 1;
+        goto label4;
+
+     label5:
+        if breakPoss == null goto label9;
+
+        $r8 = virtualinvoke breakPoss.<org.apache.fop.layoutmgr.BreakElement: java.util.List getPendingAfterMarks()>();
+        if $r8 == null goto label7;
+
+        $r9 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r9.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label6;
+
+        $r9 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $r10 = new java.lang.StringBuffer;
+        specialinvoke $r10.<java.lang.StringBuffer: void <init>()>();
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("    adding pending before break: ");
+        $r11 = virtualinvoke breakPoss.<org.apache.fop.layoutmgr.BreakElement: java.util.List getPendingAfterMarks()>();
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r11);
+        $r12 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r9.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r12);
+
+     label6:
+        $r11 = virtualinvoke breakPoss.<org.apache.fop.layoutmgr.BreakElement: java.util.List getPendingAfterMarks()>();
+        interfaceinvoke first.<java.util.List: boolean addAll(int,java.util.Collection)>(0, $r11);
+
+     label7:
+        $r8 = virtualinvoke breakPoss.<org.apache.fop.layoutmgr.BreakElement: java.util.List getPendingBeforeMarks()>();
+        if $r8 == null goto label9;
+
+        $r9 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r9.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label8;
+
+        $r9 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $r10 = new java.lang.StringBuffer;
+        specialinvoke $r10.<java.lang.StringBuffer: void <init>()>();
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("    adding pending after break: ");
+        $r11 = virtualinvoke breakPoss.<org.apache.fop.layoutmgr.BreakElement: java.util.List getPendingBeforeMarks()>();
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r11);
+        $r12 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r9.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r12);
+
+     label8:
+        $r11 = virtualinvoke breakPoss.<org.apache.fop.layoutmgr.BreakElement: java.util.List getPendingBeforeMarks()>();
+        interfaceinvoke second.<java.util.List: boolean addAll(int,java.util.Collection)>(0, $r11);
+
+     label9:
+        $r9 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r9.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label10;
+
+        $r9 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $r10 = new java.lang.StringBuffer;
+        specialinvoke $r10.<java.lang.StringBuffer: void <init>()>();
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("before: ");
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(first);
+        $r12 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r9.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r12);
+        $r9 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $r10 = new java.lang.StringBuffer;
+        specialinvoke $r10.<java.lang.StringBuffer: void <init>()>();
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("  break: ");
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(breakPoss);
+        $r12 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r9.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r12);
+        $r9 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $r10 = new java.lang.StringBuffer;
+        specialinvoke $r10.<java.lang.StringBuffer: void <init>()>();
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("after: ");
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(second);
+        $r12 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r9.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r12);
+        $r9 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $r10 = new java.lang.StringBuffer;
+        specialinvoke $r10.<java.lang.StringBuffer: void <init>()>();
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("NO-BREAK: ");
+        $r13 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] noBreak>;
+        $r14 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] noBreakLengths>;
+        $r15 = specialinvoke this.<org.apache.fop.layoutmgr.SpaceResolver: java.lang.String toString(java.lang.Object[],java.lang.Object[])>($r13, $r14);
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r15);
+        $r12 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r9.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r12);
+
+     label10:
+        if first == null goto label12;
+
+        $i0 = interfaceinvoke first.<java.util.List: int size()>();
+        $r0 = newarray (org.apache.fop.layoutmgr.UnresolvedListElementWithLength)[$i0];
+        this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] firstPart> = $r0;
+        $r0 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] firstPart>;
+        $i0 = lengthof $r0;
+        $r1 = newarray (org.apache.fop.traits.MinOptMax)[$i0];
+        this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] firstPartLengths> = $r1;
+        $r0 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] firstPart>;
+        interfaceinvoke first.<java.util.List: java.lang.Object[] toArray(java.lang.Object[])>($r0);
+        i = 0;
+
+     label11:
+        $r0 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] firstPart>;
+        $i0 = lengthof $r0;
+        if i >= $i0 goto label12;
+
+        $r5 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] firstPartLengths>;
+        $r6 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] firstPart>;
+        $r4 = $r6[i];
+        $r7 = virtualinvoke $r4.<org.apache.fop.layoutmgr.UnresolvedListElementWithLength: org.apache.fop.traits.MinOptMax getLength()>();
+        $r5[i] = $r7;
+        i = i + 1;
+        goto label11;
+
+     label12:
+        this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.BreakElement breakPoss> = breakPoss;
+        if second == null goto label14;
+
+        $i0 = interfaceinvoke second.<java.util.List: int size()>();
+        $r0 = newarray (org.apache.fop.layoutmgr.UnresolvedListElementWithLength)[$i0];
+        this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] secondPart> = $r0;
+        $r0 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] secondPart>;
+        $i0 = lengthof $r0;
+        $r1 = newarray (org.apache.fop.traits.MinOptMax)[$i0];
+        this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] secondPartLengths> = $r1;
+        $r0 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] secondPart>;
+        interfaceinvoke second.<java.util.List: java.lang.Object[] toArray(java.lang.Object[])>($r0);
+        i = 0;
+
+     label13:
+        $r0 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] secondPart>;
+        $i0 = lengthof $r0;
+        if i >= $i0 goto label14;
+
+        $r5 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] secondPartLengths>;
+        $r6 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] secondPart>;
+        $r4 = $r6[i];
+        $r7 = virtualinvoke $r4.<org.apache.fop.layoutmgr.UnresolvedListElementWithLength: org.apache.fop.traits.MinOptMax getLength()>();
+        $r5[i] = $r7;
+        i = i + 1;
+        goto label13;
+
+     label14:
+        specialinvoke this.<org.apache.fop.layoutmgr.SpaceResolver: void resolve()>();
+        return;
+    }
+
+    private java.lang.String toString(java.lang.Object[], java.lang.Object[])
+    {
+        org.apache.fop.layoutmgr.SpaceResolver this;
+        java.lang.Object[] arr1, arr2;
+        java.lang.StringBuffer sb, $r1;
+        int i, $i0, $i1;
+        java.lang.IllegalArgumentException $r0;
+        java.lang.Object $r2;
+        java.lang.String $r3, $r4;
+
+        this := @this: org.apache.fop.layoutmgr.SpaceResolver;
+        arr1 := @parameter0: java.lang.Object[];
+        arr2 := @parameter1: java.lang.Object[];
+        $i0 = lengthof arr1;
+        $i1 = lengthof arr2;
+        if $i0 == $i1 goto label0;
+
+        $r0 = new java.lang.IllegalArgumentException;
+        specialinvoke $r0.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("The length of both arrays must be equal");
+
+     label0:
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>(java.lang.String)>("[");
+        sb = $r1;
+        i = 0;
+
+     label1:
+        $i1 = lengthof arr1;
+        if i >= $i1 goto label3;
+
+        if i <= 0 goto label2;
+
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", ");
+
+     label2:
+        $r2 = arr1[i];
+        $r3 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r2);
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("/");
+        $r2 = arr2[i];
+        $r3 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r2);
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        i = i + 1;
+        goto label1;
+
+     label3:
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("]");
+        $r4 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r4;
+    }
+
+    private void removeConditionalBorderAndPadding(org.apache.fop.layoutmgr.UnresolvedListElement[], org.apache.fop.traits.MinOptMax[], boolean)
+    {
+        org.apache.fop.layoutmgr.SpaceResolver this;
+        org.apache.fop.layoutmgr.UnresolvedListElement[] elems;
+        org.apache.fop.traits.MinOptMax[] lengths;
+        boolean reverse, $z0;
+        int i, effIndex, $i0, $i1;
+        org.apache.fop.layoutmgr.BorderOrPaddingElement bop;
+        org.apache.fop.layoutmgr.UnresolvedListElement $r0;
+        org.apache.commons.logging.Log $r1;
+        java.lang.StringBuffer $r2;
+        java.lang.String $r3, $r4;
+
+        this := @this: org.apache.fop.layoutmgr.SpaceResolver;
+        elems := @parameter0: org.apache.fop.layoutmgr.UnresolvedListElement[];
+        lengths := @parameter1: org.apache.fop.traits.MinOptMax[];
+        reverse := @parameter2: boolean;
+        i = 0;
+
+     label0:
+        $i0 = lengthof elems;
+        if i >= $i0 goto label5;
+
+        if reverse == 0 goto label1;
+
+        $i1 = lengthof elems;
+        $i1 = $i1 - 1;
+        effIndex = $i1 - i;
+        goto label2;
+
+     label1:
+        effIndex = i;
+
+     label2:
+        $r0 = elems[effIndex];
+        $z0 = $r0 instanceof org.apache.fop.layoutmgr.BorderOrPaddingElement;
+        if $z0 == 0 goto label4;
+
+        $r0 = elems[effIndex];
+        bop = (org.apache.fop.layoutmgr.BorderOrPaddingElement) $r0;
+        $z0 = virtualinvoke bop.<org.apache.fop.layoutmgr.BorderOrPaddingElement: boolean isConditional()>();
+        if $z0 == 0 goto label4;
+
+        $z0 = virtualinvoke bop.<org.apache.fop.layoutmgr.BorderOrPaddingElement: boolean isFirst()>();
+        if $z0 != 0 goto label4;
+
+        $z0 = virtualinvoke bop.<org.apache.fop.layoutmgr.BorderOrPaddingElement: boolean isLast()>();
+        if $z0 != 0 goto label4;
+
+        $r1 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label3;
+
+        $r1 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Nulling conditional element: ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(bop);
+        $r3 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r3);
+
+     label3:
+        lengths[effIndex] = null;
+
+     label4:
+        i = i + 1;
+        goto label0;
+
+     label5:
+        $r1 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label6;
+
+        $i1 = lengthof elems;
+        if $i1 <= 0 goto label6;
+
+        $r1 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("-->Resulting list: ");
+        $r4 = specialinvoke this.<org.apache.fop.layoutmgr.SpaceResolver: java.lang.String toString(java.lang.Object[],java.lang.Object[])>(elems, lengths);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r3 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r3);
+
+     label6:
+        return;
+    }
+
+    private void performSpaceResolutionRule1(org.apache.fop.layoutmgr.UnresolvedListElement[], org.apache.fop.traits.MinOptMax[], boolean)
+    {
+        org.apache.fop.layoutmgr.SpaceResolver this;
+        org.apache.fop.layoutmgr.UnresolvedListElement[] elems;
+        org.apache.fop.traits.MinOptMax[] lengths;
+        boolean reverse, $z0;
+        int i, effIndex, $i0, $i1;
+        org.apache.fop.traits.MinOptMax $r0;
+        org.apache.fop.layoutmgr.UnresolvedListElement $r1, $r4;
+        org.apache.commons.logging.Log $r2;
+        java.lang.StringBuffer $r3;
+        java.lang.String $r5, $r6;
+
+        this := @this: org.apache.fop.layoutmgr.SpaceResolver;
+        elems := @parameter0: org.apache.fop.layoutmgr.UnresolvedListElement[];
+        lengths := @parameter1: org.apache.fop.traits.MinOptMax[];
+        reverse := @parameter2: boolean;
+        i = 0;
+
+     label0:
+        $i0 = lengthof elems;
+        if i >= $i0 goto label8;
+
+        if reverse == 0 goto label1;
+
+        $i1 = lengthof elems;
+        $i1 = $i1 - 1;
+        effIndex = $i1 - i;
+        goto label2;
+
+     label1:
+        effIndex = i;
+
+     label2:
+        $r0 = lengths[effIndex];
+        if $r0 != null goto label3;
+
+        goto label7;
+
+     label3:
+        $r1 = elems[effIndex];
+        $z0 = $r1 instanceof org.apache.fop.layoutmgr.BorderOrPaddingElement;
+        if $z0 == 0 goto label4;
+
+        goto label8;
+
+     label4:
+        $r1 = elems[effIndex];
+        $z0 = virtualinvoke $r1.<org.apache.fop.layoutmgr.UnresolvedListElement: boolean isConditional()>();
+        if $z0 != 0 goto label5;
+
+        goto label8;
+
+     label5:
+        $r2 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r2.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label6;
+
+        $r2 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Nulling conditional element using 4.3.1, rule 1: ");
+        $r4 = elems[effIndex];
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r4);
+        $r5 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r5);
+
+     label6:
+        lengths[effIndex] = null;
+
+     label7:
+        i = i + 1;
+        goto label0;
+
+     label8:
+        $r2 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r2.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label9;
+
+        $i1 = lengthof elems;
+        if $i1 <= 0 goto label9;
+
+        $r2 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("-->Resulting list: ");
+        $r6 = specialinvoke this.<org.apache.fop.layoutmgr.SpaceResolver: java.lang.String toString(java.lang.Object[],java.lang.Object[])>(elems, lengths);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r5 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r5);
+
+     label9:
+        return;
+    }
+
+    private void performSpaceResolutionRules2to3(org.apache.fop.layoutmgr.UnresolvedListElement[], org.apache.fop.traits.MinOptMax[], int, int)
+    {
+        org.apache.fop.layoutmgr.SpaceResolver this;
+        org.apache.fop.layoutmgr.UnresolvedListElement[] elems;
+        org.apache.fop.traits.MinOptMax[] lengths;
+        int start, end, remaining, i, highestPrecedence, greatestOptimum, min, max, $i0, $i1, $i2;
+        org.apache.commons.logging.Log $r0;
+        java.lang.StringBuffer $r1;
+        boolean hasForcing, $z0;
+        org.apache.fop.layoutmgr.SpaceElement space;
+        java.lang.String $r2, $r7;
+        org.apache.fop.traits.MinOptMax $r3, $r6;
+        org.apache.fop.layoutmgr.UnresolvedListElement $r4, $r5;
+
+        this := @this: org.apache.fop.layoutmgr.SpaceResolver;
+        elems := @parameter0: org.apache.fop.layoutmgr.UnresolvedListElement[];
+        lengths := @parameter1: org.apache.fop.traits.MinOptMax[];
+        start := @parameter2: int;
+        end := @parameter3: int;
+        $r0 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("rule 2-3: ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(start);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("-");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(end);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r2);
+
+     label0:
+        hasForcing = 0;
+        remaining = 0;
+        i = start;
+
+     label1:
+        if i > end goto label4;
+
+        $r3 = lengths[i];
+        if $r3 != null goto label2;
+
+        goto label3;
+
+     label2:
+        remaining = remaining + 1;
+        $r4 = elems[i];
+        space = (org.apache.fop.layoutmgr.SpaceElement) $r4;
+        $z0 = virtualinvoke space.<org.apache.fop.layoutmgr.SpaceElement: boolean isForcing()>();
+        if $z0 == 0 goto label3;
+
+        hasForcing = 1;
+        goto label4;
+
+     label3:
+        i = i + 1;
+        goto label1;
+
+     label4:
+        if remaining != 0 goto label5;
+
+        return;
+
+     label5:
+        if hasForcing == 0 goto label11;
+
+        i = start;
+
+     label6:
+        if i > end goto label10;
+
+        $r3 = lengths[i];
+        if $r3 != null goto label7;
+
+        goto label9;
+
+     label7:
+        $r4 = elems[i];
+        space = (org.apache.fop.layoutmgr.SpaceElement) $r4;
+        $z0 = virtualinvoke space.<org.apache.fop.layoutmgr.SpaceElement: boolean isForcing()>();
+        if $z0 != 0 goto label9;
+
+        $r0 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label8;
+
+        $r0 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Nulling non-forcing space-specifier using 4.3.1, rule 2: ");
+        $r5 = elems[i];
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r5);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r2);
+
+     label8:
+        lengths[i] = null;
+
+     label9:
+        i = i + 1;
+        goto label6;
+
+     label10:
+        return;
+
+     label11:
+        highestPrecedence = -2147483648;
+        i = start;
+
+     label12:
+        if i > end goto label15;
+
+        $r3 = lengths[i];
+        if $r3 != null goto label13;
+
+        goto label14;
+
+     label13:
+        $r4 = elems[i];
+        space = (org.apache.fop.layoutmgr.SpaceElement) $r4;
+        $i0 = virtualinvoke space.<org.apache.fop.layoutmgr.SpaceElement: int getPrecedence()>();
+        highestPrecedence = staticinvoke <java.lang.Math: int max(int,int)>(highestPrecedence, $i0);
+
+     label14:
+        i = i + 1;
+        goto label12;
+
+     label15:
+        if highestPrecedence == 0 goto label16;
+
+        $r0 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label16;
+
+        $r0 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Highest precedence is ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(highestPrecedence);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r2);
+
+     label16:
+        remaining = 0;
+        greatestOptimum = -2147483648;
+        i = start;
+
+     label17:
+        if i > end goto label22;
+
+        $r3 = lengths[i];
+        if $r3 != null goto label18;
+
+        goto label21;
+
+     label18:
+        $r4 = elems[i];
+        space = (org.apache.fop.layoutmgr.SpaceElement) $r4;
+        $i1 = virtualinvoke space.<org.apache.fop.layoutmgr.SpaceElement: int getPrecedence()>();
+        if $i1 == highestPrecedence goto label20;
+
+        $r0 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label19;
+
+        $r0 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Nulling space-specifier with precedence ");
+        $i2 = virtualinvoke space.<org.apache.fop.layoutmgr.SpaceElement: int getPrecedence()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" using 4.3.1, rule 3: ");
+        $r5 = elems[i];
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r5);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r2);
+
+     label19:
+        lengths[i] = null;
+        goto label21;
+
+     label20:
+        $r6 = virtualinvoke space.<org.apache.fop.layoutmgr.SpaceElement: org.apache.fop.traits.MinOptMax getLength()>();
+        $i0 = $r6.<org.apache.fop.traits.MinOptMax: int opt>;
+        greatestOptimum = staticinvoke <java.lang.Math: int max(int,int)>(greatestOptimum, $i0);
+        remaining = remaining + 1;
+
+     label21:
+        i = i + 1;
+        goto label17;
+
+     label22:
+        $r0 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label23;
+
+        $r0 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Greatest optimum: ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(greatestOptimum);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r2);
+
+     label23:
+        if remaining > 1 goto label24;
+
+        return;
+
+     label24:
+        remaining = 0;
+        i = start;
+
+     label25:
+        if i > end goto label30;
+
+        $r3 = lengths[i];
+        if $r3 != null goto label26;
+
+        goto label29;
+
+     label26:
+        $r4 = elems[i];
+        space = (org.apache.fop.layoutmgr.SpaceElement) $r4;
+        $r3 = virtualinvoke space.<org.apache.fop.layoutmgr.SpaceElement: org.apache.fop.traits.MinOptMax getLength()>();
+        $i1 = $r3.<org.apache.fop.traits.MinOptMax: int opt>;
+        if $i1 >= greatestOptimum goto label28;
+
+        $r0 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label27;
+
+        $r0 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Nulling space-specifier with smaller optimum length using 4.3.1, rule 3: ");
+        $r5 = elems[i];
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r5);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r2);
+
+     label27:
+        lengths[i] = null;
+        goto label29;
+
+     label28:
+        remaining = remaining + 1;
+
+     label29:
+        i = i + 1;
+        goto label25;
+
+     label30:
+        if remaining > 1 goto label31;
+
+        return;
+
+     label31:
+        min = -2147483648;
+        max = 2147483647;
+        i = start;
+
+     label32:
+        if i > end goto label37;
+
+        $r3 = lengths[i];
+        if $r3 != null goto label33;
+
+        goto label36;
+
+     label33:
+        $r4 = elems[i];
+        space = (org.apache.fop.layoutmgr.SpaceElement) $r4;
+        $r6 = virtualinvoke space.<org.apache.fop.layoutmgr.SpaceElement: org.apache.fop.traits.MinOptMax getLength()>();
+        $i0 = $r6.<org.apache.fop.traits.MinOptMax: int min>;
+        min = staticinvoke <java.lang.Math: int max(int,int)>(min, $i0);
+        $r6 = virtualinvoke space.<org.apache.fop.layoutmgr.SpaceElement: org.apache.fop.traits.MinOptMax getLength()>();
+        $i0 = $r6.<org.apache.fop.traits.MinOptMax: int max>;
+        max = staticinvoke <java.lang.Math: int min(int,int)>(max, $i0);
+        if remaining <= 1 goto label35;
+
+        $r0 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label34;
+
+        $r0 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Nulling non-last space-specifier using 4.3.1, rule 3, second part: ");
+        $r5 = elems[i];
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r5);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r2);
+
+     label34:
+        lengths[i] = null;
+        remaining = remaining + -1;
+        goto label36;
+
+     label35:
+        $r3 = lengths[i];
+        $r3.<org.apache.fop.traits.MinOptMax: int min> = min;
+        $r3 = lengths[i];
+        $r3.<org.apache.fop.traits.MinOptMax: int max> = max;
+
+     label36:
+        i = i + 1;
+        goto label32;
+
+     label37:
+        $r0 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label38;
+
+        $i1 = lengthof elems;
+        if $i1 <= 0 goto label38;
+
+        $r0 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Remaining spaces: ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(remaining);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r2);
+        $r0 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("-->Resulting list: ");
+        $r7 = specialinvoke this.<org.apache.fop.layoutmgr.SpaceResolver: java.lang.String toString(java.lang.Object[],java.lang.Object[])>(elems, lengths);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r7);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r2);
+
+     label38:
+        return;
+    }
+
+    private void performSpaceResolutionRules2to3(org.apache.fop.layoutmgr.UnresolvedListElement[], org.apache.fop.traits.MinOptMax[])
+    {
+        org.apache.fop.layoutmgr.SpaceResolver this;
+        org.apache.fop.layoutmgr.UnresolvedListElement[] elems;
+        org.apache.fop.traits.MinOptMax[] lengths;
+        int start, i, $i0, $i1;
+        org.apache.fop.layoutmgr.UnresolvedListElement $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.SpaceResolver;
+        elems := @parameter0: org.apache.fop.layoutmgr.UnresolvedListElement[];
+        lengths := @parameter1: org.apache.fop.traits.MinOptMax[];
+        start = 0;
+        i = start;
+
+     label0:
+        $i0 = lengthof elems;
+        if i >= $i0 goto label5;
+
+        $r0 = elems[i];
+        $z0 = $r0 instanceof org.apache.fop.layoutmgr.SpaceElement;
+        if $z0 == 0 goto label4;
+
+     label1:
+        $i0 = lengthof elems;
+        if i >= $i0 goto label3;
+
+        $r0 = elems[i];
+        if $r0 == null goto label2;
+
+        $r0 = elems[i];
+        $z0 = $r0 instanceof org.apache.fop.layoutmgr.SpaceElement;
+        if $z0 == 0 goto label3;
+
+     label2:
+        i = i + 1;
+        goto label1;
+
+     label3:
+        $i1 = i - 1;
+        specialinvoke this.<org.apache.fop.layoutmgr.SpaceResolver: void performSpaceResolutionRules2to3(org.apache.fop.layoutmgr.UnresolvedListElement[],org.apache.fop.traits.MinOptMax[],int,int)>(elems, lengths, start, $i1);
+
+     label4:
+        i = i + 1;
+        start = i;
+        goto label0;
+
+     label5:
+        return;
+    }
+
+    private boolean hasFirstPart()
+    {
+        org.apache.fop.layoutmgr.SpaceResolver this;
+        org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] $r0;
+        int $i0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.SpaceResolver;
+        $r0 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] firstPart>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] firstPart>;
+        $i0 = lengthof $r0;
+        if $i0 <= 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    private boolean hasSecondPart()
+    {
+        org.apache.fop.layoutmgr.SpaceResolver this;
+        org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] $r0;
+        int $i0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.SpaceResolver;
+        $r0 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] secondPart>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] secondPart>;
+        $i0 = lengthof $r0;
+        if $i0 <= 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    private void resolve()
+    {
+        org.apache.fop.layoutmgr.SpaceResolver this;
+        org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] tempList, $r1, $r3;
+        org.apache.fop.traits.MinOptMax[] tempLengths, $r2, $r5;
+        org.apache.fop.layoutmgr.BreakElement $r0;
+        boolean $z0;
+        org.apache.commons.logging.Log $r4;
+        java.lang.IllegalStateException $r6;
+
+        this := @this: org.apache.fop.layoutmgr.SpaceResolver;
+        $r0 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.BreakElement breakPoss>;
+        if $r0 == null goto label2;
+
+        $z0 = specialinvoke this.<org.apache.fop.layoutmgr.SpaceResolver: boolean hasFirstPart()>();
+        if $z0 == 0 goto label0;
+
+        $r1 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] firstPart>;
+        $r2 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] firstPartLengths>;
+        specialinvoke this.<org.apache.fop.layoutmgr.SpaceResolver: void removeConditionalBorderAndPadding(org.apache.fop.layoutmgr.UnresolvedListElement[],org.apache.fop.traits.MinOptMax[],boolean)>($r1, $r2, 1);
+        $r1 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] firstPart>;
+        $r2 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] firstPartLengths>;
+        specialinvoke this.<org.apache.fop.layoutmgr.SpaceResolver: void performSpaceResolutionRule1(org.apache.fop.layoutmgr.UnresolvedListElement[],org.apache.fop.traits.MinOptMax[],boolean)>($r1, $r2, 1);
+        $r1 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] firstPart>;
+        $r2 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] firstPartLengths>;
+        specialinvoke this.<org.apache.fop.layoutmgr.SpaceResolver: void performSpaceResolutionRules2to3(org.apache.fop.layoutmgr.UnresolvedListElement[],org.apache.fop.traits.MinOptMax[])>($r1, $r2);
+
+     label0:
+        $z0 = specialinvoke this.<org.apache.fop.layoutmgr.SpaceResolver: boolean hasSecondPart()>();
+        if $z0 == 0 goto label1;
+
+        $r1 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] secondPart>;
+        $r2 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] secondPartLengths>;
+        specialinvoke this.<org.apache.fop.layoutmgr.SpaceResolver: void removeConditionalBorderAndPadding(org.apache.fop.layoutmgr.UnresolvedListElement[],org.apache.fop.traits.MinOptMax[],boolean)>($r1, $r2, 0);
+        $r1 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] secondPart>;
+        $r2 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] secondPartLengths>;
+        specialinvoke this.<org.apache.fop.layoutmgr.SpaceResolver: void performSpaceResolutionRule1(org.apache.fop.layoutmgr.UnresolvedListElement[],org.apache.fop.traits.MinOptMax[],boolean)>($r1, $r2, 0);
+        $r1 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] secondPart>;
+        $r2 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] secondPartLengths>;
+        specialinvoke this.<org.apache.fop.layoutmgr.SpaceResolver: void performSpaceResolutionRules2to3(org.apache.fop.layoutmgr.UnresolvedListElement[],org.apache.fop.traits.MinOptMax[])>($r1, $r2);
+
+     label1:
+        $r3 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] noBreak>;
+        if $r3 == null goto label6;
+
+        $r1 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] noBreak>;
+        $r2 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] noBreakLengths>;
+        specialinvoke this.<org.apache.fop.layoutmgr.SpaceResolver: void performSpaceResolutionRules2to3(org.apache.fop.layoutmgr.UnresolvedListElement[],org.apache.fop.traits.MinOptMax[])>($r1, $r2);
+        goto label6;
+
+     label2:
+        $z0 = this.<org.apache.fop.layoutmgr.SpaceResolver: boolean isFirst>;
+        if $z0 == 0 goto label3;
+
+        $r1 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] secondPart>;
+        $r2 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] secondPartLengths>;
+        specialinvoke this.<org.apache.fop.layoutmgr.SpaceResolver: void removeConditionalBorderAndPadding(org.apache.fop.layoutmgr.UnresolvedListElement[],org.apache.fop.traits.MinOptMax[],boolean)>($r1, $r2, 0);
+        $r1 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] secondPart>;
+        $r2 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] secondPartLengths>;
+        specialinvoke this.<org.apache.fop.layoutmgr.SpaceResolver: void performSpaceResolutionRule1(org.apache.fop.layoutmgr.UnresolvedListElement[],org.apache.fop.traits.MinOptMax[],boolean)>($r1, $r2, 0);
+
+     label3:
+        $z0 = this.<org.apache.fop.layoutmgr.SpaceResolver: boolean isLast>;
+        if $z0 == 0 goto label4;
+
+        $r1 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] firstPart>;
+        $r2 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] firstPartLengths>;
+        specialinvoke this.<org.apache.fop.layoutmgr.SpaceResolver: void removeConditionalBorderAndPadding(org.apache.fop.layoutmgr.UnresolvedListElement[],org.apache.fop.traits.MinOptMax[],boolean)>($r1, $r2, 1);
+        $r1 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] firstPart>;
+        $r2 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] firstPartLengths>;
+        specialinvoke this.<org.apache.fop.layoutmgr.SpaceResolver: void performSpaceResolutionRule1(org.apache.fop.layoutmgr.UnresolvedListElement[],org.apache.fop.traits.MinOptMax[],boolean)>($r1, $r2, 1);
+
+     label4:
+        $z0 = specialinvoke this.<org.apache.fop.layoutmgr.SpaceResolver: boolean hasFirstPart()>();
+        if $z0 == 0 goto label5;
+
+        $r4 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r4.<org.apache.commons.logging.Log: void trace(java.lang.Object)>("Swapping first and second parts.");
+        tempList = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] secondPart>;
+        tempLengths = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] secondPartLengths>;
+        $r1 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] firstPart>;
+        this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] secondPart> = $r1;
+        $r5 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] firstPartLengths>;
+        this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] secondPartLengths> = $r5;
+        this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] firstPart> = tempList;
+        this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] firstPartLengths> = tempLengths;
+        $z0 = specialinvoke this.<org.apache.fop.layoutmgr.SpaceResolver: boolean hasFirstPart()>();
+        if $z0 == 0 goto label5;
+
+        $r6 = new java.lang.IllegalStateException;
+        specialinvoke $r6.<java.lang.IllegalStateException: void <init>(java.lang.String)>("Didn\'t expect more than one parts in ano-break condition.");
+        throw $r6;
+
+     label5:
+        $r1 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] secondPart>;
+        $r2 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] secondPartLengths>;
+        specialinvoke this.<org.apache.fop.layoutmgr.SpaceResolver: void performSpaceResolutionRules2to3(org.apache.fop.layoutmgr.UnresolvedListElement[],org.apache.fop.traits.MinOptMax[])>($r1, $r2);
+
+     label6:
+        return;
+    }
+
+    private org.apache.fop.traits.MinOptMax sum(org.apache.fop.traits.MinOptMax[])
+    {
+        org.apache.fop.layoutmgr.SpaceResolver this;
+        org.apache.fop.traits.MinOptMax[] lengths;
+        org.apache.fop.traits.MinOptMax $r0, sum, $r1;
+        int i, $i0;
+
+        this := @this: org.apache.fop.layoutmgr.SpaceResolver;
+        lengths := @parameter0: org.apache.fop.traits.MinOptMax[];
+        $r0 = new org.apache.fop.traits.MinOptMax;
+        specialinvoke $r0.<org.apache.fop.traits.MinOptMax: void <init>()>();
+        sum = $r0;
+        i = 0;
+
+     label0:
+        $i0 = lengthof lengths;
+        if i >= $i0 goto label2;
+
+        $r0 = lengths[i];
+        if $r0 == null goto label1;
+
+        $r1 = lengths[i];
+        virtualinvoke sum.<org.apache.fop.traits.MinOptMax: void add(org.apache.fop.traits.MinOptMax)>($r1);
+
+     label1:
+        i = i + 1;
+        goto label0;
+
+     label2:
+        return sum;
+    }
+
+    private void generate(java.util.ListIterator)
+    {
+        org.apache.fop.layoutmgr.SpaceResolver this;
+        java.util.ListIterator iter;
+        org.apache.fop.traits.MinOptMax $r0, noBreakLength, glue1, glue3;
+        int glue2w, glue2stretch, glue2shrink, $i0, $i1, $i2, $i3, $i4, $i5, $i6;
+        boolean hasPrecedingNonBlock, forcedBreak, $z0;
+        org.apache.fop.layoutmgr.SpaceResolver$SpaceHandlingPosition pos, $r17;
+        org.apache.fop.traits.MinOptMax[] $r1;
+        org.apache.commons.logging.Log $r2;
+        java.lang.StringBuffer $r3;
+        java.lang.String $r4;
+        org.apache.fop.layoutmgr.BreakElement $r5, $r11, $r12, $r13, $r15;
+        org.apache.fop.layoutmgr.KnuthPenalty $r6;
+        org.apache.fop.layoutmgr.Position $r7, $r10;
+        org.apache.fop.layoutmgr.KnuthGlue $r8;
+        org.apache.fop.layoutmgr.KnuthBox $r9;
+        org.apache.fop.layoutmgr.SpaceResolver$SpaceHandlingBreakPosition $r14;
+        java.lang.IllegalStateException $r16;
+
+        this := @this: org.apache.fop.layoutmgr.SpaceResolver;
+        iter := @parameter0: java.util.ListIterator;
+        $r0 = new org.apache.fop.traits.MinOptMax;
+        specialinvoke $r0.<org.apache.fop.traits.MinOptMax: void <init>()>();
+        noBreakLength = $r0;
+        $r1 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] firstPartLengths>;
+        glue1 = specialinvoke this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax sum(org.apache.fop.traits.MinOptMax[])>($r1);
+        $r1 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] secondPartLengths>;
+        glue3 = specialinvoke this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax sum(org.apache.fop.traits.MinOptMax[])>($r1);
+        $r1 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] noBreakLengths>;
+        noBreakLength = specialinvoke this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax sum(org.apache.fop.traits.MinOptMax[])>($r1);
+        $i0 = noBreakLength.<org.apache.fop.traits.MinOptMax: int opt>;
+        $i1 = glue1.<org.apache.fop.traits.MinOptMax: int opt>;
+        $i0 = $i0 - $i1;
+        $i1 = glue3.<org.apache.fop.traits.MinOptMax: int opt>;
+        glue2w = $i0 - $i1;
+        $i0 = noBreakLength.<org.apache.fop.traits.MinOptMax: int max>;
+        $i1 = noBreakLength.<org.apache.fop.traits.MinOptMax: int opt>;
+        glue2stretch = $i0 - $i1;
+        $i0 = noBreakLength.<org.apache.fop.traits.MinOptMax: int opt>;
+        $i1 = noBreakLength.<org.apache.fop.traits.MinOptMax: int min>;
+        glue2shrink = $i0 - $i1;
+        $i1 = glue1.<org.apache.fop.traits.MinOptMax: int max>;
+        $i2 = glue1.<org.apache.fop.traits.MinOptMax: int opt>;
+        $i1 = $i1 - $i2;
+        glue2stretch = glue2stretch - $i1;
+        $i1 = glue3.<org.apache.fop.traits.MinOptMax: int max>;
+        $i2 = glue3.<org.apache.fop.traits.MinOptMax: int opt>;
+        $i1 = $i1 - $i2;
+        glue2stretch = glue2stretch - $i1;
+        $i1 = glue1.<org.apache.fop.traits.MinOptMax: int opt>;
+        $i2 = glue1.<org.apache.fop.traits.MinOptMax: int min>;
+        $i1 = $i1 - $i2;
+        glue2shrink = glue2shrink - $i1;
+        $i1 = glue3.<org.apache.fop.traits.MinOptMax: int opt>;
+        $i2 = glue3.<org.apache.fop.traits.MinOptMax: int min>;
+        $i1 = $i1 - $i2;
+        glue2shrink = glue2shrink - $i1;
+        hasPrecedingNonBlock = 0;
+        $r2 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r2.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r2 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("noBreakLength=");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(noBreakLength);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", glue1=");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(glue1);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", glue2=");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(glue2w);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("+");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(glue2stretch);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("-");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(glue2shrink);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", glue3=");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(glue3);
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r4);
+
+     label0:
+        $r5 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.BreakElement breakPoss>;
+        if $r5 == null goto label5;
+
+        $r5 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.BreakElement breakPoss>;
+        forcedBreak = virtualinvoke $r5.<org.apache.fop.layoutmgr.BreakElement: boolean isForcedBreak()>();
+        $z0 = virtualinvoke glue1.<org.apache.fop.traits.MinOptMax: boolean isNonZero()>();
+        if $z0 == 0 goto label1;
+
+        $r6 = new org.apache.fop.layoutmgr.KnuthPenalty;
+        $r7 = (org.apache.fop.layoutmgr.Position) null;
+        specialinvoke $r6.<org.apache.fop.layoutmgr.KnuthPenalty: void <init>(int,int,boolean,org.apache.fop.layoutmgr.Position,boolean)>(0, 1000, 0, $r7, 1);
+        interfaceinvoke iter.<java.util.ListIterator: void add(java.lang.Object)>($r6);
+        $r8 = new org.apache.fop.layoutmgr.KnuthGlue;
+        $i3 = glue1.<org.apache.fop.traits.MinOptMax: int opt>;
+        $i4 = glue1.<org.apache.fop.traits.MinOptMax: int max>;
+        $i5 = glue1.<org.apache.fop.traits.MinOptMax: int opt>;
+        $i4 = $i4 - $i5;
+        $i5 = glue1.<org.apache.fop.traits.MinOptMax: int opt>;
+        $i6 = glue1.<org.apache.fop.traits.MinOptMax: int min>;
+        $i5 = $i5 - $i6;
+        $r7 = (org.apache.fop.layoutmgr.Position) null;
+        specialinvoke $r8.<org.apache.fop.layoutmgr.KnuthGlue: void <init>(int,int,int,org.apache.fop.layoutmgr.Position,boolean)>($i3, $i4, $i5, $r7, 1);
+        interfaceinvoke iter.<java.util.ListIterator: void add(java.lang.Object)>($r8);
+        if forcedBreak == 0 goto label1;
+
+        $r9 = new org.apache.fop.layoutmgr.KnuthBox;
+        $r10 = (org.apache.fop.layoutmgr.Position) null;
+        specialinvoke $r9.<org.apache.fop.layoutmgr.KnuthBox: void <init>(int,org.apache.fop.layoutmgr.Position,boolean)>(0, $r10, 1);
+        interfaceinvoke iter.<java.util.ListIterator: void add(java.lang.Object)>($r9);
+
+     label1:
+        $r6 = new org.apache.fop.layoutmgr.KnuthPenalty;
+        $r11 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.BreakElement breakPoss>;
+        $i3 = virtualinvoke $r11.<org.apache.fop.layoutmgr.BreakElement: int getPenaltyWidth()>();
+        $r12 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.BreakElement breakPoss>;
+        $i4 = virtualinvoke $r12.<org.apache.fop.layoutmgr.BreakElement: int getPenaltyValue()>();
+        $r13 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.BreakElement breakPoss>;
+        $i6 = virtualinvoke $r13.<org.apache.fop.layoutmgr.BreakElement: int getBreakClass()>();
+        $r14 = new org.apache.fop.layoutmgr.SpaceResolver$SpaceHandlingBreakPosition;
+        $r15 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.BreakElement breakPoss>;
+        specialinvoke $r14.<org.apache.fop.layoutmgr.SpaceResolver$SpaceHandlingBreakPosition: void <init>(org.apache.fop.layoutmgr.SpaceResolver,org.apache.fop.layoutmgr.BreakElement)>(this, $r15);
+        specialinvoke $r6.<org.apache.fop.layoutmgr.KnuthPenalty: void <init>(int,int,boolean,int,org.apache.fop.layoutmgr.Position,boolean)>($i3, $i4, 0, $i6, $r14, 0);
+        interfaceinvoke iter.<java.util.ListIterator: void add(java.lang.Object)>($r6);
+        $r5 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.BreakElement breakPoss>;
+        $i0 = virtualinvoke $r5.<org.apache.fop.layoutmgr.BreakElement: int getPenaltyValue()>();
+        if $i0 > -1000 goto label2;
+
+        return;
+
+     label2:
+        if glue2w != 0 goto label3;
+
+        if glue2stretch != 0 goto label3;
+
+        if glue2shrink == 0 goto label4;
+
+     label3:
+        $r8 = new org.apache.fop.layoutmgr.KnuthGlue;
+        $r7 = (org.apache.fop.layoutmgr.Position) null;
+        specialinvoke $r8.<org.apache.fop.layoutmgr.KnuthGlue: void <init>(int,int,int,org.apache.fop.layoutmgr.Position,boolean)>(glue2w, glue2stretch, glue2shrink, $r7, 1);
+        interfaceinvoke iter.<java.util.ListIterator: void add(java.lang.Object)>($r8);
+
+     label4:
+        goto label6;
+
+     label5:
+        $z0 = virtualinvoke glue1.<org.apache.fop.traits.MinOptMax: boolean isNonZero()>();
+        if $z0 == 0 goto label6;
+
+        $r16 = new java.lang.IllegalStateException;
+        specialinvoke $r16.<java.lang.IllegalStateException: void <init>(java.lang.String)>("glue1 should be 0 in this case");
+        throw $r16;
+
+     label6:
+        pos = null;
+        $r5 = this.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.BreakElement breakPoss>;
+        if $r5 != null goto label7;
+
+        $r17 = new org.apache.fop.layoutmgr.SpaceResolver$SpaceHandlingPosition;
+        specialinvoke $r17.<org.apache.fop.layoutmgr.SpaceResolver$SpaceHandlingPosition: void <init>(org.apache.fop.layoutmgr.SpaceResolver)>(this);
+        pos = $r17;
+
+     label7:
+        $z0 = virtualinvoke glue3.<org.apache.fop.traits.MinOptMax: boolean isNonZero()>();
+        if $z0 != 0 goto label8;
+
+        if pos == null goto label9;
+
+     label8:
+        $r9 = new org.apache.fop.layoutmgr.KnuthBox;
+        specialinvoke $r9.<org.apache.fop.layoutmgr.KnuthBox: void <init>(int,org.apache.fop.layoutmgr.Position,boolean)>(0, pos, 1);
+        interfaceinvoke iter.<java.util.ListIterator: void add(java.lang.Object)>($r9);
+
+     label9:
+        $z0 = virtualinvoke glue3.<org.apache.fop.traits.MinOptMax: boolean isNonZero()>();
+        if $z0 == 0 goto label10;
+
+        $r6 = new org.apache.fop.layoutmgr.KnuthPenalty;
+        $r7 = (org.apache.fop.layoutmgr.Position) null;
+        specialinvoke $r6.<org.apache.fop.layoutmgr.KnuthPenalty: void <init>(int,int,boolean,org.apache.fop.layoutmgr.Position,boolean)>(0, 1000, 0, $r7, 1);
+        interfaceinvoke iter.<java.util.ListIterator: void add(java.lang.Object)>($r6);
+        $r8 = new org.apache.fop.layoutmgr.KnuthGlue;
+        $i3 = glue3.<org.apache.fop.traits.MinOptMax: int opt>;
+        $i4 = glue3.<org.apache.fop.traits.MinOptMax: int max>;
+        $i5 = glue3.<org.apache.fop.traits.MinOptMax: int opt>;
+        $i4 = $i4 - $i5;
+        $i5 = glue3.<org.apache.fop.traits.MinOptMax: int opt>;
+        $i6 = glue3.<org.apache.fop.traits.MinOptMax: int min>;
+        $i5 = $i5 - $i6;
+        $r7 = (org.apache.fop.layoutmgr.Position) null;
+        specialinvoke $r8.<org.apache.fop.layoutmgr.KnuthGlue: void <init>(int,int,int,org.apache.fop.layoutmgr.Position,boolean)>($i3, $i4, $i5, $r7, 1);
+        interfaceinvoke iter.<java.util.ListIterator: void add(java.lang.Object)>($r8);
+        hasPrecedingNonBlock = 1;
+
+     label10:
+        $z0 = this.<org.apache.fop.layoutmgr.SpaceResolver: boolean isLast>;
+        if $z0 == 0 goto label11;
+
+        if hasPrecedingNonBlock == 0 goto label11;
+
+        $r9 = new org.apache.fop.layoutmgr.KnuthBox;
+        $r10 = (org.apache.fop.layoutmgr.Position) null;
+        specialinvoke $r9.<org.apache.fop.layoutmgr.KnuthBox: void <init>(int,org.apache.fop.layoutmgr.Position,boolean)>(0, $r10, 1);
+        interfaceinvoke iter.<java.util.ListIterator: void add(java.lang.Object)>($r9);
+
+     label11:
+        return;
+    }
+
+    public static void resolveElementList(java.util.LinkedList)
+    {
+        java.util.LinkedList elems;
+        org.apache.commons.logging.Log $r0;
+        boolean first, last, skipNextElement, $z0;
+        java.util.ArrayList unresolvedFirst, unresolvedSecond, currentGroup, swapList, $r1;
+        java.util.ListIterator iter;
+        org.apache.fop.layoutmgr.ListElement el;
+        org.apache.fop.layoutmgr.BreakElement breakPoss;
+        org.apache.fop.layoutmgr.SpaceResolver resolver, $r5;
+        java.lang.Object $r2;
+        java.lang.StringBuffer $r3;
+        java.lang.String $r4;
+        int $i0;
+
+        elems := @parameter0: java.util.LinkedList;
+        $r0 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>(elems);
+
+     label0:
+        first = 1;
+        last = 0;
+        skipNextElement = 0;
+        $r1 = new java.util.ArrayList;
+        specialinvoke $r1.<java.util.ArrayList: void <init>()>();
+        unresolvedFirst = $r1;
+        $r1 = new java.util.ArrayList;
+        specialinvoke $r1.<java.util.ArrayList: void <init>()>();
+        unresolvedSecond = $r1;
+        iter = virtualinvoke elems.<java.util.LinkedList: java.util.ListIterator listIterator()>();
+
+     label1:
+        $z0 = interfaceinvoke iter.<java.util.ListIterator: boolean hasNext()>();
+        if $z0 == 0 goto label14;
+
+        $r2 = interfaceinvoke iter.<java.util.ListIterator: java.lang.Object next()>();
+        el = (org.apache.fop.layoutmgr.ListElement) $r2;
+        $z0 = virtualinvoke el.<org.apache.fop.layoutmgr.ListElement: boolean isUnresolvedElement()>();
+        if $z0 == 0 goto label13;
+
+        $r0 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label2;
+
+        $r0 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("unresolved found: ");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(el);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(boolean)>(first);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("/");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(boolean)>(last);
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r4);
+
+     label2:
+        breakPoss = null;
+        interfaceinvoke unresolvedFirst.<java.util.List: void clear()>();
+        interfaceinvoke unresolvedSecond.<java.util.List: void clear()>();
+        $z0 = el instanceof org.apache.fop.layoutmgr.BreakElement;
+        if $z0 == 0 goto label3;
+
+        breakPoss = (org.apache.fop.layoutmgr.BreakElement) el;
+        currentGroup = unresolvedSecond;
+        goto label4;
+
+     label3:
+        currentGroup = unresolvedFirst;
+        interfaceinvoke currentGroup.<java.util.List: boolean add(java.lang.Object)>(el);
+
+     label4:
+        interfaceinvoke iter.<java.util.ListIterator: void remove()>();
+        last = 1;
+        skipNextElement = 1;
+
+     label5:
+        $z0 = interfaceinvoke iter.<java.util.ListIterator: boolean hasNext()>();
+        if $z0 == 0 goto label9;
+
+        $r2 = interfaceinvoke iter.<java.util.ListIterator: java.lang.Object next()>();
+        el = (org.apache.fop.layoutmgr.ListElement) $r2;
+        $z0 = el instanceof org.apache.fop.layoutmgr.BreakElement;
+        if $z0 == 0 goto label6;
+
+        if breakPoss == null goto label6;
+
+        skipNextElement = 0;
+        last = 0;
+        goto label9;
+
+     label6:
+        if currentGroup != unresolvedFirst goto label7;
+
+        $z0 = el instanceof org.apache.fop.layoutmgr.BreakElement;
+        if $z0 == 0 goto label7;
+
+        breakPoss = (org.apache.fop.layoutmgr.BreakElement) el;
+        interfaceinvoke iter.<java.util.ListIterator: void remove()>();
+        currentGroup = unresolvedSecond;
+        goto label5;
+
+     label7:
+        $z0 = virtualinvoke el.<org.apache.fop.layoutmgr.ListElement: boolean isUnresolvedElement()>();
+        if $z0 == 0 goto label8;
+
+        interfaceinvoke currentGroup.<java.util.List: boolean add(java.lang.Object)>(el);
+        interfaceinvoke iter.<java.util.ListIterator: void remove()>();
+        goto label5;
+
+     label8:
+        last = 0;
+        goto label9;
+
+     label9:
+        if breakPoss != null goto label10;
+
+        $i0 = interfaceinvoke unresolvedSecond.<java.util.List: int size()>();
+        if $i0 != 0 goto label10;
+
+        if last != 0 goto label10;
+
+        $r0 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>("Swap first and second parts in no-break condition, second part is empty.");
+        swapList = unresolvedSecond;
+        unresolvedSecond = unresolvedFirst;
+        unresolvedFirst = swapList;
+
+     label10:
+        $r0 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("----start space resolution (first=");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(boolean)>(first);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", last=");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(boolean)>(last);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(")...");
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r4);
+        $r5 = new org.apache.fop.layoutmgr.SpaceResolver;
+        specialinvoke $r5.<org.apache.fop.layoutmgr.SpaceResolver: void <init>(java.util.List,org.apache.fop.layoutmgr.BreakElement,java.util.List,boolean,boolean)>(unresolvedFirst, breakPoss, unresolvedSecond, first, last);
+        resolver = $r5;
+        if last != 0 goto label11;
+
+        interfaceinvoke iter.<java.util.ListIterator: java.lang.Object previous()>();
+
+     label11:
+        specialinvoke resolver.<org.apache.fop.layoutmgr.SpaceResolver: void generate(java.util.ListIterator)>(iter);
+        if last != 0 goto label12;
+
+        if skipNextElement == 0 goto label12;
+
+        interfaceinvoke iter.<java.util.ListIterator: java.lang.Object next()>();
+
+     label12:
+        $r0 = <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("----end space resolution.");
+
+     label13:
+        first = 0;
+        goto label1;
+
+     label14:
+        return;
+    }
+
+    public static void performConditionalsNotification(java.util.List, int, int, int)
+    {
+        java.util.List effectiveList;
+        int startElementIndex, endElementIndex, prevBreak, i;
+        org.apache.fop.layoutmgr.KnuthElement el, $r2;
+        org.apache.fop.layoutmgr.SpaceResolver$SpaceHandlingBreakPosition beforeBreak, afterBreak, noBreak;
+        org.apache.fop.layoutmgr.Position pos;
+        org.apache.fop.layoutmgr.RelSide $r0;
+        java.lang.Object $r1;
+        boolean $z0;
+        org.apache.fop.layoutmgr.SpaceResolver$SpaceHandlingPosition $r3;
+
+        effectiveList := @parameter0: java.util.List;
+        startElementIndex := @parameter1: int;
+        endElementIndex := @parameter2: int;
+        prevBreak := @parameter3: int;
+        el = null;
+        if prevBreak <= 0 goto label0;
+
+        $r1 = interfaceinvoke effectiveList.<java.util.List: java.lang.Object get(int)>(prevBreak);
+        el = (org.apache.fop.layoutmgr.KnuthElement) $r1;
+
+     label0:
+        beforeBreak = null;
+        afterBreak = null;
+        if el == null goto label1;
+
+        $z0 = virtualinvoke el.<org.apache.fop.layoutmgr.KnuthElement: boolean isPenalty()>();
+        if $z0 == 0 goto label1;
+
+        pos = virtualinvoke el.<org.apache.fop.layoutmgr.KnuthElement: org.apache.fop.layoutmgr.Position getPosition()>();
+        $z0 = pos instanceof org.apache.fop.layoutmgr.SpaceResolver$SpaceHandlingBreakPosition;
+        if $z0 == 0 goto label1;
+
+        beforeBreak = (org.apache.fop.layoutmgr.SpaceResolver$SpaceHandlingBreakPosition) pos;
+        $r0 = <org.apache.fop.layoutmgr.RelSide: org.apache.fop.layoutmgr.RelSide BEFORE>;
+        virtualinvoke beforeBreak.<org.apache.fop.layoutmgr.SpaceResolver$SpaceHandlingBreakPosition: void notifyBreakSituation(boolean,org.apache.fop.layoutmgr.RelSide)>(1, $r0);
+
+     label1:
+        $r1 = interfaceinvoke effectiveList.<java.util.List: java.lang.Object get(int)>(endElementIndex);
+        el = (org.apache.fop.layoutmgr.KnuthElement) $r1;
+        if el == null goto label2;
+
+        $z0 = virtualinvoke el.<org.apache.fop.layoutmgr.KnuthElement: boolean isPenalty()>();
+        if $z0 == 0 goto label2;
+
+        pos = virtualinvoke el.<org.apache.fop.layoutmgr.KnuthElement: org.apache.fop.layoutmgr.Position getPosition()>();
+        $z0 = pos instanceof org.apache.fop.layoutmgr.SpaceResolver$SpaceHandlingBreakPosition;
+        if $z0 == 0 goto label2;
+
+        afterBreak = (org.apache.fop.layoutmgr.SpaceResolver$SpaceHandlingBreakPosition) pos;
+        $r0 = <org.apache.fop.layoutmgr.RelSide: org.apache.fop.layoutmgr.RelSide AFTER>;
+        virtualinvoke afterBreak.<org.apache.fop.layoutmgr.SpaceResolver$SpaceHandlingBreakPosition: void notifyBreakSituation(boolean,org.apache.fop.layoutmgr.RelSide)>(1, $r0);
+
+     label2:
+        i = startElementIndex;
+
+     label3:
+        if i > endElementIndex goto label6;
+
+        $r1 = interfaceinvoke effectiveList.<java.util.List: java.lang.Object get(int)>(i);
+        $r2 = (org.apache.fop.layoutmgr.KnuthElement) $r1;
+        pos = virtualinvoke $r2.<org.apache.fop.layoutmgr.KnuthElement: org.apache.fop.layoutmgr.Position getPosition()>();
+        $z0 = pos instanceof org.apache.fop.layoutmgr.SpaceResolver$SpaceHandlingPosition;
+        if $z0 == 0 goto label4;
+
+        $r3 = (org.apache.fop.layoutmgr.SpaceResolver$SpaceHandlingPosition) pos;
+        virtualinvoke $r3.<org.apache.fop.layoutmgr.SpaceResolver$SpaceHandlingPosition: void notifySpaceSituation()>();
+        goto label5;
+
+     label4:
+        $z0 = pos instanceof org.apache.fop.layoutmgr.SpaceResolver$SpaceHandlingBreakPosition;
+        if $z0 == 0 goto label5;
+
+        noBreak = (org.apache.fop.layoutmgr.SpaceResolver$SpaceHandlingBreakPosition) pos;
+        if noBreak == beforeBreak goto label5;
+
+        if noBreak == afterBreak goto label5;
+
+        virtualinvoke noBreak.<org.apache.fop.layoutmgr.SpaceResolver$SpaceHandlingBreakPosition: void notifyBreakSituation(boolean,org.apache.fop.layoutmgr.RelSide)>(0, null);
+
+     label5:
+        i = i + 1;
+        goto label3;
+
+     label6:
+        return;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] access$000(org.apache.fop.layoutmgr.SpaceResolver)
+    {
+        org.apache.fop.layoutmgr.SpaceResolver x0;
+        org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] $r0;
+
+        x0 := @parameter0: org.apache.fop.layoutmgr.SpaceResolver;
+        $r0 = x0.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] secondPart>;
+        return $r0;
+    }
+
+    static org.apache.fop.traits.MinOptMax[] access$100(org.apache.fop.layoutmgr.SpaceResolver)
+    {
+        org.apache.fop.layoutmgr.SpaceResolver x0;
+        org.apache.fop.traits.MinOptMax[] $r0;
+
+        x0 := @parameter0: org.apache.fop.layoutmgr.SpaceResolver;
+        $r0 = x0.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] secondPartLengths>;
+        return $r0;
+    }
+
+    static org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] access$200(org.apache.fop.layoutmgr.SpaceResolver)
+    {
+        org.apache.fop.layoutmgr.SpaceResolver x0;
+        org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] $r0;
+
+        x0 := @parameter0: org.apache.fop.layoutmgr.SpaceResolver;
+        $r0 = x0.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] firstPart>;
+        return $r0;
+    }
+
+    static org.apache.fop.traits.MinOptMax[] access$300(org.apache.fop.layoutmgr.SpaceResolver)
+    {
+        org.apache.fop.layoutmgr.SpaceResolver x0;
+        org.apache.fop.traits.MinOptMax[] $r0;
+
+        x0 := @parameter0: org.apache.fop.layoutmgr.SpaceResolver;
+        $r0 = x0.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] firstPartLengths>;
+        return $r0;
+    }
+
+    static org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] access$400(org.apache.fop.layoutmgr.SpaceResolver)
+    {
+        org.apache.fop.layoutmgr.SpaceResolver x0;
+        org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] $r0;
+
+        x0 := @parameter0: org.apache.fop.layoutmgr.SpaceResolver;
+        $r0 = x0.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.UnresolvedListElementWithLength[] noBreak>;
+        return $r0;
+    }
+
+    static org.apache.fop.traits.MinOptMax[] access$500(org.apache.fop.layoutmgr.SpaceResolver)
+    {
+        org.apache.fop.layoutmgr.SpaceResolver x0;
+        org.apache.fop.traits.MinOptMax[] $r0;
+
+        x0 := @parameter0: org.apache.fop.layoutmgr.SpaceResolver;
+        $r0 = x0.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.traits.MinOptMax[] noBreakLengths>;
+        return $r0;
+    }
+
+    static org.apache.fop.layoutmgr.BreakElement access$600(org.apache.fop.layoutmgr.SpaceResolver)
+    {
+        org.apache.fop.layoutmgr.SpaceResolver x0;
+        org.apache.fop.layoutmgr.BreakElement $r0;
+
+        x0 := @parameter0: org.apache.fop.layoutmgr.SpaceResolver;
+        $r0 = x0.<org.apache.fop.layoutmgr.SpaceResolver: org.apache.fop.layoutmgr.BreakElement breakPoss>;
+        return $r0;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.layoutmgr.SpaceResolver: java.lang.Class class$org$apache$fop$layoutmgr$SpaceResolver>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.layoutmgr.SpaceResolver: java.lang.Class class$(java.lang.String)>("org.apache.fop.layoutmgr.SpaceResolver");
+        <org.apache.fop.layoutmgr.SpaceResolver: java.lang.Class class$org$apache$fop$layoutmgr$SpaceResolver> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.layoutmgr.SpaceResolver: java.lang.Class class$org$apache$fop$layoutmgr$SpaceResolver>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.layoutmgr.SpaceResolver: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

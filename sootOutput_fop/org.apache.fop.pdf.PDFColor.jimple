@@ -1,0 +1,964 @@
+public class org.apache.fop.pdf.PDFColor extends org.apache.fop.pdf.PDFPathPaint
+{
+    private static double blackFactor;
+    private double red;
+    private double green;
+    private double blue;
+    private double cyan;
+    private double magenta;
+    private double yellow;
+    private double black;
+    private org.apache.fop.util.ColorExt colorExt;
+
+    public void <init>(double, double, double)
+    {
+        org.apache.fop.pdf.PDFColor this;
+        double theRed, theGreen, theBlue;
+        org.apache.fop.pdf.PDFDeviceColorSpace $r0;
+
+        this := @this: org.apache.fop.pdf.PDFColor;
+        theRed := @parameter0: double;
+        theGreen := @parameter1: double;
+        theBlue := @parameter2: double;
+        specialinvoke this.<org.apache.fop.pdf.PDFPathPaint: void <init>()>();
+        this.<org.apache.fop.pdf.PDFColor: double red> = -1.0;
+        this.<org.apache.fop.pdf.PDFColor: double green> = -1.0;
+        this.<org.apache.fop.pdf.PDFColor: double blue> = -1.0;
+        this.<org.apache.fop.pdf.PDFColor: double cyan> = -1.0;
+        this.<org.apache.fop.pdf.PDFColor: double magenta> = -1.0;
+        this.<org.apache.fop.pdf.PDFColor: double yellow> = -1.0;
+        this.<org.apache.fop.pdf.PDFColor: double black> = -1.0;
+        this.<org.apache.fop.pdf.PDFColor: org.apache.fop.util.ColorExt colorExt> = null;
+        $r0 = new org.apache.fop.pdf.PDFDeviceColorSpace;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFDeviceColorSpace: void <init>(int)>(2);
+        this.<org.apache.fop.pdf.PDFColor: org.apache.fop.pdf.PDFDeviceColorSpace colorSpace> = $r0;
+        this.<org.apache.fop.pdf.PDFColor: double red> = theRed;
+        this.<org.apache.fop.pdf.PDFColor: double green> = theGreen;
+        this.<org.apache.fop.pdf.PDFColor: double blue> = theBlue;
+        return;
+    }
+
+    public void <init>(org.apache.fop.pdf.PDFDocument, java.awt.Color)
+    {
+        org.apache.fop.pdf.PDFColor this;
+        org.apache.fop.pdf.PDFDocument pdfDoc;
+        java.awt.Color col;
+        org.apache.fop.pdf.PDFICCStream pdfIccStream, $r5;
+        java.awt.color.ColorSpace ceCs, $r8;
+        java.io.IOException ioe, $r10;
+        org.apache.fop.util.ColorExt $r0, $r2, $r13;
+        org.apache.fop.pdf.PDFResources $r1;
+        java.lang.String $r3, $r14;
+        org.apache.fop.pdf.PDFICCBasedColorSpace $r4;
+        java.awt.color.ICC_ColorSpace $r6;
+        java.awt.color.ICC_Profile $r7;
+        byte[] $r9;
+        org.apache.commons.logging.Log $r11;
+        java.lang.StringBuffer $r12;
+        org.apache.fop.pdf.PDFFactory $r16;
+        boolean $z0;
+
+        this := @this: org.apache.fop.pdf.PDFColor;
+        pdfDoc := @parameter0: org.apache.fop.pdf.PDFDocument;
+        col := @parameter1: java.awt.Color;
+        specialinvoke this.<org.apache.fop.pdf.PDFColor: void <init>(java.awt.Color)>(col);
+        $r0 = this.<org.apache.fop.pdf.PDFColor: org.apache.fop.util.ColorExt colorExt>;
+        if $r0 == null goto label4;
+
+        $r1 = virtualinvoke pdfDoc.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFResources getResources()>();
+        $r2 = this.<org.apache.fop.pdf.PDFColor: org.apache.fop.util.ColorExt colorExt>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.util.ColorExt: java.lang.String getIccProfileName()>();
+        $r4 = virtualinvoke $r1.<org.apache.fop.pdf.PDFResources: org.apache.fop.pdf.PDFICCBasedColorSpace getColorSpace(java.lang.String)>($r3);
+        if $r4 != null goto label4;
+
+        $r5 = new org.apache.fop.pdf.PDFICCStream;
+        specialinvoke $r5.<org.apache.fop.pdf.PDFICCStream: void <init>()>();
+        pdfIccStream = $r5;
+        $r0 = this.<org.apache.fop.pdf.PDFColor: org.apache.fop.util.ColorExt colorExt>;
+        ceCs = virtualinvoke $r0.<org.apache.fop.util.ColorExt: java.awt.color.ColorSpace getOrigColorSpace()>();
+
+     label0:
+        $r6 = (java.awt.color.ICC_ColorSpace) ceCs;
+        $r7 = virtualinvoke $r6.<java.awt.color.ICC_ColorSpace: java.awt.color.ICC_Profile getProfile()>();
+        virtualinvoke pdfIccStream.<org.apache.fop.pdf.PDFICCStream: void setColorSpace(java.awt.color.ICC_Profile,org.apache.fop.pdf.PDFDeviceColorSpace)>($r7, null);
+        $r2 = this.<org.apache.fop.pdf.PDFColor: org.apache.fop.util.ColorExt colorExt>;
+        $r8 = virtualinvoke $r2.<org.apache.fop.util.ColorExt: java.awt.color.ColorSpace getColorSpace()>();
+        $r6 = (java.awt.color.ICC_ColorSpace) $r8;
+        $r7 = virtualinvoke $r6.<java.awt.color.ICC_ColorSpace: java.awt.color.ICC_Profile getProfile()>();
+        $r9 = virtualinvoke $r7.<java.awt.color.ICC_Profile: byte[] getData()>();
+        virtualinvoke pdfIccStream.<org.apache.fop.pdf.PDFICCStream: void setData(byte[])>($r9);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r10 := @caughtexception;
+        ioe = $r10;
+        $r11 = <org.apache.fop.pdf.PDFColor: org.apache.commons.logging.Log log>;
+        $r12 = new java.lang.StringBuffer;
+        specialinvoke $r12.<java.lang.StringBuffer: void <init>()>();
+        $r12 = virtualinvoke $r12.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Failed to set profile data for ");
+        $r13 = this.<org.apache.fop.pdf.PDFColor: org.apache.fop.util.ColorExt colorExt>;
+        $r14 = virtualinvoke $r13.<org.apache.fop.util.ColorExt: java.lang.String getIccProfileName()>();
+        $r12 = virtualinvoke $r12.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r14);
+        $r3 = virtualinvoke $r12.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r11.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r3);
+
+     label3:
+        virtualinvoke pdfDoc.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFObject registerObject(org.apache.fop.pdf.PDFObject)>(pdfIccStream);
+        $r16 = virtualinvoke pdfDoc.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFFactory getFactory()>();
+        $r13 = this.<org.apache.fop.pdf.PDFColor: org.apache.fop.util.ColorExt colorExt>;
+        $r14 = virtualinvoke $r13.<org.apache.fop.util.ColorExt: java.lang.String getIccProfileName()>();
+        virtualinvoke $r16.<org.apache.fop.pdf.PDFFactory: org.apache.fop.pdf.PDFICCBasedColorSpace makeICCBasedColorSpace(org.apache.fop.pdf.PDFResourceContext,java.lang.String,org.apache.fop.pdf.PDFICCStream)>(null, $r14, pdfIccStream);
+        $r11 = <org.apache.fop.pdf.PDFColor: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r11.<org.apache.commons.logging.Log: boolean isInfoEnabled()>();
+        if $z0 == 0 goto label4;
+
+        $r11 = <org.apache.fop.pdf.PDFColor: org.apache.commons.logging.Log log>;
+        $r12 = new java.lang.StringBuffer;
+        specialinvoke $r12.<java.lang.StringBuffer: void <init>()>();
+        $r12 = virtualinvoke $r12.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Adding PDFICCStream ");
+        $r13 = this.<org.apache.fop.pdf.PDFColor: org.apache.fop.util.ColorExt colorExt>;
+        $r14 = virtualinvoke $r13.<org.apache.fop.util.ColorExt: java.lang.String getIccProfileName()>();
+        $r12 = virtualinvoke $r12.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r14);
+        $r12 = virtualinvoke $r12.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" for ");
+        $r13 = this.<org.apache.fop.pdf.PDFColor: org.apache.fop.util.ColorExt colorExt>;
+        $r14 = virtualinvoke $r13.<org.apache.fop.util.ColorExt: java.lang.String getIccProfileSrc()>();
+        $r12 = virtualinvoke $r12.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r14);
+        $r3 = virtualinvoke $r12.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r11.<org.apache.commons.logging.Log: void info(java.lang.Object)>($r3);
+
+     label4:
+        return;
+
+        catch java.io.IOException from label0 to label1 with label2;
+    }
+
+    public void <init>(java.awt.Color)
+    {
+        org.apache.fop.pdf.PDFColor this;
+        java.awt.Color col;
+        java.awt.color.ColorSpace cs;
+        org.apache.fop.util.ColorExt ce;
+        float[] cmyk, rgb, comps, $r1;
+        boolean $z0;
+        org.apache.fop.pdf.PDFDeviceColorSpace $r0;
+        float $f0;
+        double $d0;
+
+        this := @this: org.apache.fop.pdf.PDFColor;
+        col := @parameter0: java.awt.Color;
+        specialinvoke this.<org.apache.fop.pdf.PDFPathPaint: void <init>()>();
+        this.<org.apache.fop.pdf.PDFColor: double red> = -1.0;
+        this.<org.apache.fop.pdf.PDFColor: double green> = -1.0;
+        this.<org.apache.fop.pdf.PDFColor: double blue> = -1.0;
+        this.<org.apache.fop.pdf.PDFColor: double cyan> = -1.0;
+        this.<org.apache.fop.pdf.PDFColor: double magenta> = -1.0;
+        this.<org.apache.fop.pdf.PDFColor: double yellow> = -1.0;
+        this.<org.apache.fop.pdf.PDFColor: double black> = -1.0;
+        this.<org.apache.fop.pdf.PDFColor: org.apache.fop.util.ColorExt colorExt> = null;
+        cs = virtualinvoke col.<java.awt.Color: java.awt.color.ColorSpace getColorSpace()>();
+        ce = null;
+        $z0 = col instanceof org.apache.fop.util.ColorExt;
+        if $z0 == 0 goto label0;
+
+        ce = (org.apache.fop.util.ColorExt) col;
+        cs = virtualinvoke ce.<org.apache.fop.util.ColorExt: java.awt.color.ColorSpace getOrigColorSpace()>();
+
+     label0:
+        if cs == null goto label3;
+
+        $z0 = cs instanceof org.apache.fop.util.CMYKColorSpace;
+        if $z0 == 0 goto label3;
+
+        $r0 = new org.apache.fop.pdf.PDFDeviceColorSpace;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFDeviceColorSpace: void <init>(int)>(3);
+        this.<org.apache.fop.pdf.PDFColor: org.apache.fop.pdf.PDFDeviceColorSpace colorSpace> = $r0;
+        if ce != null goto label1;
+
+        $r1 = virtualinvoke col.<java.awt.Color: float[] getColorComponents(float[])>(null);
+        goto label2;
+
+     label1:
+        $r1 = virtualinvoke ce.<org.apache.fop.util.ColorExt: float[] getOriginalColorComponents()>();
+
+     label2:
+        cmyk = $r1;
+        $f0 = cmyk[0];
+        $d0 = (double) $f0;
+        this.<org.apache.fop.pdf.PDFColor: double cyan> = $d0;
+        $f0 = cmyk[1];
+        $d0 = (double) $f0;
+        this.<org.apache.fop.pdf.PDFColor: double magenta> = $d0;
+        $f0 = cmyk[2];
+        $d0 = (double) $f0;
+        this.<org.apache.fop.pdf.PDFColor: double yellow> = $d0;
+        $f0 = cmyk[3];
+        $d0 = (double) $f0;
+        this.<org.apache.fop.pdf.PDFColor: double black> = $d0;
+        goto label5;
+
+     label3:
+        if ce == null goto label4;
+
+        this.<org.apache.fop.pdf.PDFColor: org.apache.fop.util.ColorExt colorExt> = ce;
+        rgb = virtualinvoke col.<java.awt.Color: float[] getRGBColorComponents(float[])>(null);
+        $f0 = rgb[0];
+        $d0 = (double) $f0;
+        this.<org.apache.fop.pdf.PDFColor: double red> = $d0;
+        $f0 = rgb[1];
+        $d0 = (double) $f0;
+        this.<org.apache.fop.pdf.PDFColor: double green> = $d0;
+        $f0 = rgb[2];
+        $d0 = (double) $f0;
+        this.<org.apache.fop.pdf.PDFColor: double blue> = $d0;
+        $r0 = new org.apache.fop.pdf.PDFDeviceColorSpace;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFDeviceColorSpace: void <init>(int)>(2);
+        this.<org.apache.fop.pdf.PDFColor: org.apache.fop.pdf.PDFDeviceColorSpace colorSpace> = $r0;
+        goto label5;
+
+     label4:
+        $r0 = new org.apache.fop.pdf.PDFDeviceColorSpace;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFDeviceColorSpace: void <init>(int)>(2);
+        this.<org.apache.fop.pdf.PDFColor: org.apache.fop.pdf.PDFDeviceColorSpace colorSpace> = $r0;
+        comps = newarray (float)[3];
+        comps = virtualinvoke col.<java.awt.Color: float[] getColorComponents(float[])>(comps);
+        $f0 = comps[0];
+        $d0 = (double) $f0;
+        this.<org.apache.fop.pdf.PDFColor: double red> = $d0;
+        $f0 = comps[1];
+        $d0 = (double) $f0;
+        this.<org.apache.fop.pdf.PDFColor: double green> = $d0;
+        $f0 = comps[2];
+        $d0 = (double) $f0;
+        this.<org.apache.fop.pdf.PDFColor: double blue> = $d0;
+
+     label5:
+        return;
+    }
+
+    public void <init>(int, int, int)
+    {
+        org.apache.fop.pdf.PDFColor this;
+        int theRed, theGreen, theBlue;
+        double $d0, $d1, $d2;
+
+        this := @this: org.apache.fop.pdf.PDFColor;
+        theRed := @parameter0: int;
+        theGreen := @parameter1: int;
+        theBlue := @parameter2: int;
+        $d0 = (double) theRed;
+        $d0 = $d0 / 255.0;
+        $d1 = (double) theGreen;
+        $d1 = $d1 / 255.0;
+        $d2 = (double) theBlue;
+        $d2 = $d2 / 255.0;
+        specialinvoke this.<org.apache.fop.pdf.PDFColor: void <init>(double,double,double)>($d0, $d1, $d2);
+        return;
+    }
+
+    public void <init>(double, double, double, double)
+    {
+        org.apache.fop.pdf.PDFColor this;
+        double theCyan, theMagenta, theYellow, theBlack;
+        org.apache.fop.pdf.PDFDeviceColorSpace $r0;
+
+        this := @this: org.apache.fop.pdf.PDFColor;
+        theCyan := @parameter0: double;
+        theMagenta := @parameter1: double;
+        theYellow := @parameter2: double;
+        theBlack := @parameter3: double;
+        specialinvoke this.<org.apache.fop.pdf.PDFPathPaint: void <init>()>();
+        this.<org.apache.fop.pdf.PDFColor: double red> = -1.0;
+        this.<org.apache.fop.pdf.PDFColor: double green> = -1.0;
+        this.<org.apache.fop.pdf.PDFColor: double blue> = -1.0;
+        this.<org.apache.fop.pdf.PDFColor: double cyan> = -1.0;
+        this.<org.apache.fop.pdf.PDFColor: double magenta> = -1.0;
+        this.<org.apache.fop.pdf.PDFColor: double yellow> = -1.0;
+        this.<org.apache.fop.pdf.PDFColor: double black> = -1.0;
+        this.<org.apache.fop.pdf.PDFColor: org.apache.fop.util.ColorExt colorExt> = null;
+        $r0 = new org.apache.fop.pdf.PDFDeviceColorSpace;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFDeviceColorSpace: void <init>(int)>(3);
+        this.<org.apache.fop.pdf.PDFColor: org.apache.fop.pdf.PDFDeviceColorSpace colorSpace> = $r0;
+        this.<org.apache.fop.pdf.PDFColor: double cyan> = theCyan;
+        this.<org.apache.fop.pdf.PDFColor: double magenta> = theMagenta;
+        this.<org.apache.fop.pdf.PDFColor: double yellow> = theYellow;
+        this.<org.apache.fop.pdf.PDFColor: double black> = theBlack;
+        return;
+    }
+
+    public java.util.List getVector()
+    {
+        org.apache.fop.pdf.PDFColor this;
+        java.util.ArrayList $r0, theColorVector;
+        org.apache.fop.pdf.PDFDeviceColorSpace $r1;
+        int $i0;
+        java.lang.Double $r2;
+        double $d0;
+
+        this := @this: org.apache.fop.pdf.PDFColor;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        theColorVector = $r0;
+        $r1 = this.<org.apache.fop.pdf.PDFColor: org.apache.fop.pdf.PDFDeviceColorSpace colorSpace>;
+        $i0 = virtualinvoke $r1.<org.apache.fop.pdf.PDFDeviceColorSpace: int getColorSpace()>();
+        if $i0 != 2 goto label0;
+
+        $r2 = new java.lang.Double;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double red>;
+        specialinvoke $r2.<java.lang.Double: void <init>(double)>($d0);
+        interfaceinvoke theColorVector.<java.util.List: boolean add(java.lang.Object)>($r2);
+        $r2 = new java.lang.Double;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double green>;
+        specialinvoke $r2.<java.lang.Double: void <init>(double)>($d0);
+        interfaceinvoke theColorVector.<java.util.List: boolean add(java.lang.Object)>($r2);
+        $r2 = new java.lang.Double;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double blue>;
+        specialinvoke $r2.<java.lang.Double: void <init>(double)>($d0);
+        interfaceinvoke theColorVector.<java.util.List: boolean add(java.lang.Object)>($r2);
+        goto label2;
+
+     label0:
+        $r1 = this.<org.apache.fop.pdf.PDFColor: org.apache.fop.pdf.PDFDeviceColorSpace colorSpace>;
+        $i0 = virtualinvoke $r1.<org.apache.fop.pdf.PDFDeviceColorSpace: int getColorSpace()>();
+        if $i0 != 3 goto label1;
+
+        $r2 = new java.lang.Double;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double cyan>;
+        specialinvoke $r2.<java.lang.Double: void <init>(double)>($d0);
+        interfaceinvoke theColorVector.<java.util.List: boolean add(java.lang.Object)>($r2);
+        $r2 = new java.lang.Double;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double magenta>;
+        specialinvoke $r2.<java.lang.Double: void <init>(double)>($d0);
+        interfaceinvoke theColorVector.<java.util.List: boolean add(java.lang.Object)>($r2);
+        $r2 = new java.lang.Double;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double yellow>;
+        specialinvoke $r2.<java.lang.Double: void <init>(double)>($d0);
+        interfaceinvoke theColorVector.<java.util.List: boolean add(java.lang.Object)>($r2);
+        $r2 = new java.lang.Double;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double black>;
+        specialinvoke $r2.<java.lang.Double: void <init>(double)>($d0);
+        interfaceinvoke theColorVector.<java.util.List: boolean add(java.lang.Object)>($r2);
+        goto label2;
+
+     label1:
+        $r2 = new java.lang.Double;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double black>;
+        specialinvoke $r2.<java.lang.Double: void <init>(double)>($d0);
+        interfaceinvoke theColorVector.<java.util.List: boolean add(java.lang.Object)>($r2);
+
+     label2:
+        return theColorVector;
+    }
+
+    public double red()
+    {
+        org.apache.fop.pdf.PDFColor this;
+        double $d0;
+
+        this := @this: org.apache.fop.pdf.PDFColor;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double red>;
+        return $d0;
+    }
+
+    public double green()
+    {
+        org.apache.fop.pdf.PDFColor this;
+        double $d0;
+
+        this := @this: org.apache.fop.pdf.PDFColor;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double green>;
+        return $d0;
+    }
+
+    public double blue()
+    {
+        org.apache.fop.pdf.PDFColor this;
+        double $d0;
+
+        this := @this: org.apache.fop.pdf.PDFColor;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double blue>;
+        return $d0;
+    }
+
+    public int red255()
+    {
+        org.apache.fop.pdf.PDFColor this;
+        double $d0;
+        int $i0;
+
+        this := @this: org.apache.fop.pdf.PDFColor;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double red>;
+        $d0 = $d0 * 255.0;
+        $i0 = (int) $d0;
+        return $i0;
+    }
+
+    public int green255()
+    {
+        org.apache.fop.pdf.PDFColor this;
+        double $d0;
+        int $i0;
+
+        this := @this: org.apache.fop.pdf.PDFColor;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double green>;
+        $d0 = $d0 * 255.0;
+        $i0 = (int) $d0;
+        return $i0;
+    }
+
+    public int blue255()
+    {
+        org.apache.fop.pdf.PDFColor this;
+        double $d0;
+        int $i0;
+
+        this := @this: org.apache.fop.pdf.PDFColor;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double blue>;
+        $d0 = $d0 * 255.0;
+        $i0 = (int) $d0;
+        return $i0;
+    }
+
+    public double cyan()
+    {
+        org.apache.fop.pdf.PDFColor this;
+        double $d0;
+
+        this := @this: org.apache.fop.pdf.PDFColor;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double cyan>;
+        return $d0;
+    }
+
+    public double magenta()
+    {
+        org.apache.fop.pdf.PDFColor this;
+        double $d0;
+
+        this := @this: org.apache.fop.pdf.PDFColor;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double magenta>;
+        return $d0;
+    }
+
+    public double yellow()
+    {
+        org.apache.fop.pdf.PDFColor this;
+        double $d0;
+
+        this := @this: org.apache.fop.pdf.PDFColor;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double yellow>;
+        return $d0;
+    }
+
+    public double black()
+    {
+        org.apache.fop.pdf.PDFColor this;
+        double $d0;
+
+        this := @this: org.apache.fop.pdf.PDFColor;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double black>;
+        return $d0;
+    }
+
+    public void setColorSpace(int)
+    {
+        org.apache.fop.pdf.PDFColor this;
+        int theColorSpace, theOldColorSpace;
+        org.apache.fop.pdf.PDFDeviceColorSpace $r0;
+
+        this := @this: org.apache.fop.pdf.PDFColor;
+        theColorSpace := @parameter0: int;
+        $r0 = this.<org.apache.fop.pdf.PDFColor: org.apache.fop.pdf.PDFDeviceColorSpace colorSpace>;
+        theOldColorSpace = virtualinvoke $r0.<org.apache.fop.pdf.PDFDeviceColorSpace: int getColorSpace()>();
+        if theOldColorSpace == theColorSpace goto label6;
+
+        if theOldColorSpace != 2 goto label1;
+
+        if theColorSpace != 3 goto label0;
+
+        virtualinvoke this.<org.apache.fop.pdf.PDFColor: void convertRGBtoCMYK()>();
+        goto label5;
+
+     label0:
+        virtualinvoke this.<org.apache.fop.pdf.PDFColor: void convertRGBtoGRAY()>();
+        goto label5;
+
+     label1:
+        if theOldColorSpace != 3 goto label3;
+
+        if theColorSpace != 2 goto label2;
+
+        virtualinvoke this.<org.apache.fop.pdf.PDFColor: void convertCMYKtoRGB()>();
+        goto label5;
+
+     label2:
+        virtualinvoke this.<org.apache.fop.pdf.PDFColor: void convertCMYKtoGRAY()>();
+        goto label5;
+
+     label3:
+        if theColorSpace != 2 goto label4;
+
+        virtualinvoke this.<org.apache.fop.pdf.PDFColor: void convertGRAYtoRGB()>();
+        goto label5;
+
+     label4:
+        virtualinvoke this.<org.apache.fop.pdf.PDFColor: void convertGRAYtoCMYK()>();
+
+     label5:
+        $r0 = this.<org.apache.fop.pdf.PDFColor: org.apache.fop.pdf.PDFDeviceColorSpace colorSpace>;
+        virtualinvoke $r0.<org.apache.fop.pdf.PDFDeviceColorSpace: void setColorSpace(int)>(theColorSpace);
+
+     label6:
+        return;
+    }
+
+    public java.lang.String getColorSpaceOut(boolean)
+    {
+        org.apache.fop.pdf.PDFColor this;
+        boolean fillNotStroke, same;
+        java.lang.StringBuffer $r0, p, $r2;
+        float[] colorArgs;
+        int ix, $i0, $i1;
+        org.apache.fop.util.ColorExt $r1, $r3;
+        java.lang.String $r4, $r5, $r7;
+        float $f0;
+        org.apache.fop.pdf.PDFDeviceColorSpace $r6;
+        double $d0, $d1;
+        byte $b2;
+
+        this := @this: org.apache.fop.pdf.PDFColor;
+        fillNotStroke := @parameter0: boolean;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>(java.lang.String)>("");
+        p = $r0;
+        $r1 = this.<org.apache.fop.pdf.PDFColor: org.apache.fop.util.ColorExt colorExt>;
+        if $r1 == null goto label7;
+
+        if fillNotStroke == 0 goto label0;
+
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("/");
+        $r3 = this.<org.apache.fop.pdf.PDFColor: org.apache.fop.util.ColorExt colorExt>;
+        $r4 = virtualinvoke $r3.<org.apache.fop.util.ColorExt: java.lang.String getIccProfileName()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" cs ");
+        $r5 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        goto label1;
+
+     label0:
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("/");
+        $r3 = this.<org.apache.fop.pdf.PDFColor: org.apache.fop.util.ColorExt colorExt>;
+        $r4 = virtualinvoke $r3.<org.apache.fop.util.ColorExt: java.lang.String getIccProfileName()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" CS ");
+        $r5 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+
+     label1:
+        $r1 = this.<org.apache.fop.pdf.PDFColor: org.apache.fop.util.ColorExt colorExt>;
+        colorArgs = virtualinvoke $r1.<org.apache.fop.util.ColorExt: float[] getOriginalColorComponents()>();
+        if colorArgs != null goto label2;
+
+        $r1 = this.<org.apache.fop.pdf.PDFColor: org.apache.fop.util.ColorExt colorExt>;
+        colorArgs = virtualinvoke $r1.<org.apache.fop.util.ColorExt: float[] getColorComponents(float[])>(null);
+
+     label2:
+        ix = 0;
+
+     label3:
+        $i0 = lengthof colorArgs;
+        if ix >= $i0 goto label4;
+
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $f0 = colorArgs[ix];
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(float)>($f0);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $r5 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        ix = ix + 1;
+        goto label3;
+
+     label4:
+        if fillNotStroke == 0 goto label5;
+
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("sc\n");
+        goto label6;
+
+     label5:
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("SC\n");
+
+     label6:
+        goto label17;
+
+     label7:
+        $r6 = this.<org.apache.fop.pdf.PDFColor: org.apache.fop.pdf.PDFDeviceColorSpace colorSpace>;
+        $i1 = virtualinvoke $r6.<org.apache.fop.pdf.PDFDeviceColorSpace: int getColorSpace()>();
+        if $i1 != 2 goto label13;
+
+        same = 0;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double red>;
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double green>;
+        $b2 = $d0 cmpl $d1;
+        if $b2 != 0 goto label8;
+
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double red>;
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double blue>;
+        $b2 = $d0 cmpl $d1;
+        if $b2 != 0 goto label8;
+
+        same = 1;
+
+     label8:
+        if fillNotStroke == 0 goto label10;
+
+        if same == 0 goto label9;
+
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double red>;
+        $r4 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double)>($d1);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" g\n");
+        $r5 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        goto label12;
+
+     label9:
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double red>;
+        $r4 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double)>($d1);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double green>;
+        $r4 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double)>($d1);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double blue>;
+        $r4 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double)>($d1);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" rg\n");
+        $r5 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        goto label12;
+
+     label10:
+        if same == 0 goto label11;
+
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double red>;
+        $r4 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double)>($d1);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" G\n");
+        $r5 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        goto label12;
+
+     label11:
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double red>;
+        $r4 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double)>($d1);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double green>;
+        $r4 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double)>($d1);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double blue>;
+        $r4 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double)>($d1);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" RG\n");
+        $r5 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+
+     label12:
+        goto label17;
+
+     label13:
+        $r6 = this.<org.apache.fop.pdf.PDFColor: org.apache.fop.pdf.PDFDeviceColorSpace colorSpace>;
+        $i1 = virtualinvoke $r6.<org.apache.fop.pdf.PDFDeviceColorSpace: int getColorSpace()>();
+        if $i1 != 3 goto label15;
+
+        if fillNotStroke == 0 goto label14;
+
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double cyan>;
+        $r4 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double)>($d1);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double magenta>;
+        $r4 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double)>($d1);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double yellow>;
+        $r4 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double)>($d1);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double black>;
+        $r4 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double)>($d1);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" k\n");
+        $r5 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        goto label17;
+
+     label14:
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double cyan>;
+        $r4 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double)>($d1);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double magenta>;
+        $r4 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double)>($d1);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double yellow>;
+        $r4 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double)>($d1);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double black>;
+        $r4 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double)>($d1);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" K\n");
+        $r5 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        goto label17;
+
+     label15:
+        if fillNotStroke == 0 goto label16;
+
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double black>;
+        $r4 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double)>($d1);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" g\n");
+        $r5 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        goto label17;
+
+     label16:
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double black>;
+        $r4 = staticinvoke <org.apache.fop.pdf.PDFNumber: java.lang.String doubleOut(double)>($d1);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" G\n");
+        $r5 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+
+     label17:
+        $r7 = virtualinvoke p.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r7;
+    }
+
+    protected void convertCMYKtoRGB()
+    {
+        org.apache.fop.pdf.PDFColor this;
+        double $d0, $d1;
+
+        this := @this: org.apache.fop.pdf.PDFColor;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double cyan>;
+        $d1 = 1.0 - $d0;
+        this.<org.apache.fop.pdf.PDFColor: double red> = $d1;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double green>;
+        $d1 = 1.0 - $d0;
+        this.<org.apache.fop.pdf.PDFColor: double green> = $d1;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double yellow>;
+        $d1 = 1.0 - $d0;
+        this.<org.apache.fop.pdf.PDFColor: double blue> = $d1;
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double black>;
+        $d0 = <org.apache.fop.pdf.PDFColor: double blackFactor>;
+        $d1 = $d1 / $d0;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double red>;
+        $d1 = $d1 + $d0;
+        this.<org.apache.fop.pdf.PDFColor: double red> = $d1;
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double black>;
+        $d0 = <org.apache.fop.pdf.PDFColor: double blackFactor>;
+        $d1 = $d1 / $d0;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double green>;
+        $d1 = $d1 + $d0;
+        this.<org.apache.fop.pdf.PDFColor: double green> = $d1;
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double black>;
+        $d0 = <org.apache.fop.pdf.PDFColor: double blackFactor>;
+        $d1 = $d1 / $d0;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double blue>;
+        $d1 = $d1 + $d0;
+        this.<org.apache.fop.pdf.PDFColor: double blue> = $d1;
+        return;
+    }
+
+    protected void convertRGBtoCMYK()
+    {
+        org.apache.fop.pdf.PDFColor this;
+        double $d0, $d1;
+
+        this := @this: org.apache.fop.pdf.PDFColor;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double red>;
+        $d1 = 1.0 - $d0;
+        this.<org.apache.fop.pdf.PDFColor: double cyan> = $d1;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double green>;
+        $d1 = 1.0 - $d0;
+        this.<org.apache.fop.pdf.PDFColor: double magenta> = $d1;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double blue>;
+        $d1 = 1.0 - $d0;
+        this.<org.apache.fop.pdf.PDFColor: double yellow> = $d1;
+        this.<org.apache.fop.pdf.PDFColor: double black> = 0.0;
+        return;
+    }
+
+    protected void convertGRAYtoRGB()
+    {
+        org.apache.fop.pdf.PDFColor this;
+        double $d0, $d1;
+
+        this := @this: org.apache.fop.pdf.PDFColor;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double black>;
+        $d1 = 1.0 - $d0;
+        this.<org.apache.fop.pdf.PDFColor: double red> = $d1;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double black>;
+        $d1 = 1.0 - $d0;
+        this.<org.apache.fop.pdf.PDFColor: double green> = $d1;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double black>;
+        $d1 = 1.0 - $d0;
+        this.<org.apache.fop.pdf.PDFColor: double blue> = $d1;
+        return;
+    }
+
+    protected void convertGRAYtoCMYK()
+    {
+        org.apache.fop.pdf.PDFColor this;
+        double $d0;
+
+        this := @this: org.apache.fop.pdf.PDFColor;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double black>;
+        this.<org.apache.fop.pdf.PDFColor: double cyan> = $d0;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double black>;
+        this.<org.apache.fop.pdf.PDFColor: double magenta> = $d0;
+        $d0 = this.<org.apache.fop.pdf.PDFColor: double black>;
+        this.<org.apache.fop.pdf.PDFColor: double yellow> = $d0;
+        return;
+    }
+
+    protected void convertCMYKtoGRAY()
+    {
+        org.apache.fop.pdf.PDFColor this;
+        double tempDouble, $d0, $d1, $d2;
+        byte $b0;
+
+        this := @this: org.apache.fop.pdf.PDFColor;
+        tempDouble = 0.0;
+        tempDouble = this.<org.apache.fop.pdf.PDFColor: double cyan>;
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double magenta>;
+        $b0 = $d1 cmpg tempDouble;
+        if $b0 >= 0 goto label0;
+
+        tempDouble = this.<org.apache.fop.pdf.PDFColor: double magenta>;
+
+     label0:
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double yellow>;
+        $b0 = $d1 cmpg tempDouble;
+        if $b0 >= 0 goto label1;
+
+        tempDouble = this.<org.apache.fop.pdf.PDFColor: double yellow>;
+
+     label1:
+        $d0 = <org.apache.fop.pdf.PDFColor: double blackFactor>;
+        $d2 = tempDouble / $d0;
+        this.<org.apache.fop.pdf.PDFColor: double black> = $d2;
+        return;
+    }
+
+    protected void convertRGBtoGRAY()
+    {
+        org.apache.fop.pdf.PDFColor this;
+        double tempDouble, $d0, $d1, $d2, $d3;
+        byte $b0;
+
+        this := @this: org.apache.fop.pdf.PDFColor;
+        tempDouble = 0.0;
+        tempDouble = this.<org.apache.fop.pdf.PDFColor: double red>;
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double green>;
+        $b0 = $d1 cmpg tempDouble;
+        if $b0 >= 0 goto label0;
+
+        tempDouble = this.<org.apache.fop.pdf.PDFColor: double green>;
+
+     label0:
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double blue>;
+        $b0 = $d1 cmpg tempDouble;
+        if $b0 >= 0 goto label1;
+
+        tempDouble = this.<org.apache.fop.pdf.PDFColor: double blue>;
+
+     label1:
+        $d0 = <org.apache.fop.pdf.PDFColor: double blackFactor>;
+        $d2 = tempDouble / $d0;
+        $d3 = 1.0 - $d2;
+        this.<org.apache.fop.pdf.PDFColor: double black> = $d3;
+        return;
+    }
+
+    public byte[] toPDF()
+    {
+        org.apache.fop.pdf.PDFColor this;
+        byte[] $r0;
+
+        this := @this: org.apache.fop.pdf.PDFColor;
+        $r0 = newarray (byte)[0];
+        return $r0;
+    }
+
+    public boolean equals(java.lang.Object)
+    {
+        org.apache.fop.pdf.PDFColor this, color;
+        java.lang.Object obj;
+        boolean $z0;
+        double $d0, $d1;
+        byte $b0;
+
+        this := @this: org.apache.fop.pdf.PDFColor;
+        obj := @parameter0: java.lang.Object;
+        $z0 = obj instanceof org.apache.fop.pdf.PDFColor;
+        if $z0 != 0 goto label0;
+
+        return 0;
+
+     label0:
+        color = (org.apache.fop.pdf.PDFColor) obj;
+        $d0 = color.<org.apache.fop.pdf.PDFColor: double red>;
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double red>;
+        $b0 = $d0 cmpl $d1;
+        if $b0 != 0 goto label1;
+
+        $d0 = color.<org.apache.fop.pdf.PDFColor: double green>;
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double green>;
+        $b0 = $d0 cmpl $d1;
+        if $b0 != 0 goto label1;
+
+        $d0 = color.<org.apache.fop.pdf.PDFColor: double blue>;
+        $d1 = this.<org.apache.fop.pdf.PDFColor: double blue>;
+        $b0 = $d0 cmpl $d1;
+        if $b0 != 0 goto label1;
+
+        return 1;
+
+     label1:
+        return 0;
+    }
+
+    static void <clinit>()
+    {
+        <org.apache.fop.pdf.PDFColor: double blackFactor> = 2.0;
+        return;
+    }
+}

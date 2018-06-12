@@ -1,0 +1,801 @@
+public class org.apache.fop.render.afp.modca.AFPDataStream extends java.lang.Object
+{
+    protected static org.apache.commons.logging.Log log;
+    private boolean complete;
+    private org.apache.fop.render.afp.modca.Document document;
+    private org.apache.fop.render.afp.modca.PageGroup currentPageGroup;
+    private org.apache.fop.render.afp.modca.PageObject currentPageObject;
+    private org.apache.fop.render.afp.modca.Overlay currentOverlay;
+    private org.apache.fop.render.afp.modca.AbstractPageObject currentPage;
+    private int pageCount;
+    private int ovlCount;
+    private int portraitRotation;
+    private int landscapeRotation;
+    private int xOffset;
+    private int yOffset;
+    private int rotation;
+    private java.io.OutputStream outputStream;
+
+    public void <init>()
+    {
+        org.apache.fop.render.afp.modca.AFPDataStream this;
+
+        this := @this: org.apache.fop.render.afp.modca.AFPDataStream;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: boolean complete> = 0;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.Document document> = null;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageGroup currentPageGroup> = null;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageObject currentPageObject> = null;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.Overlay currentOverlay> = null;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.AbstractPageObject currentPage> = null;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: int pageCount> = 0;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: int ovlCount> = 0;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: int portraitRotation> = 0;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: int landscapeRotation> = 270;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: int xOffset> = 0;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: int yOffset> = 0;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: java.io.OutputStream outputStream> = null;
+        return;
+    }
+
+    public void startDocument(java.io.OutputStream)
+    {
+        org.apache.fop.render.afp.modca.AFPDataStream this;
+        java.io.OutputStream docOutputStream;
+        java.lang.String msg, $r3;
+        java.lang.StringBuffer $r0;
+        org.apache.fop.render.afp.modca.Document $r1, $r5;
+        org.apache.commons.logging.Log $r2;
+        java.lang.IllegalStateException $r4;
+
+        this := @this: org.apache.fop.render.afp.modca.AFPDataStream;
+        docOutputStream := @parameter0: java.io.OutputStream;
+        $r1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.Document document>;
+        if $r1 == null goto label0;
+
+        msg = "Invalid state - document already started.";
+        $r2 = <org.apache.fop.render.afp.modca.AFPDataStream: org.apache.commons.logging.Log log>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("startDocument():: ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(msg);
+        $r3 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r3);
+        $r4 = new java.lang.IllegalStateException;
+        specialinvoke $r4.<java.lang.IllegalStateException: void <init>(java.lang.String)>(msg);
+        throw $r4;
+
+     label0:
+        $r5 = new org.apache.fop.render.afp.modca.Document;
+        specialinvoke $r5.<org.apache.fop.render.afp.modca.Document: void <init>()>();
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.Document document> = $r5;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: java.io.OutputStream outputStream> = docOutputStream;
+        return;
+    }
+
+    public void endDocument() throws java.io.IOException
+    {
+        org.apache.fop.render.afp.modca.AFPDataStream this;
+        java.lang.String msg, $r2;
+        java.lang.StringBuffer $r0;
+        boolean $z0;
+        org.apache.commons.logging.Log $r1;
+        java.lang.IllegalStateException $r3;
+        org.apache.fop.render.afp.modca.PageObject $r4;
+        org.apache.fop.render.afp.modca.PageGroup $r5;
+        org.apache.fop.render.afp.modca.Document $r6;
+        java.io.OutputStream $r7, $r8;
+
+        this := @this: org.apache.fop.render.afp.modca.AFPDataStream;
+        $z0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: boolean complete>;
+        if $z0 == 0 goto label0;
+
+        msg = "Invalid state - document already ended.";
+        $r1 = <org.apache.fop.render.afp.modca.AFPDataStream: org.apache.commons.logging.Log log>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("endDocument():: ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(msg);
+        $r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r2);
+        $r3 = new java.lang.IllegalStateException;
+        specialinvoke $r3.<java.lang.IllegalStateException: void <init>(java.lang.String)>(msg);
+        throw $r3;
+
+     label0:
+        $r4 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageObject currentPageObject>;
+        if $r4 == null goto label1;
+
+        virtualinvoke this.<org.apache.fop.render.afp.modca.AFPDataStream: void endPage()>();
+
+     label1:
+        $r5 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageGroup currentPageGroup>;
+        if $r5 == null goto label2;
+
+        virtualinvoke this.<org.apache.fop.render.afp.modca.AFPDataStream: void endPageGroup()>();
+
+     label2:
+        $r6 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.Document document>;
+        virtualinvoke $r6.<org.apache.fop.render.afp.modca.Document: void endDocument()>();
+        $r6 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.Document document>;
+        $r7 = this.<org.apache.fop.render.afp.modca.AFPDataStream: java.io.OutputStream outputStream>;
+        virtualinvoke $r6.<org.apache.fop.render.afp.modca.Document: void writeDataStream(java.io.OutputStream)>($r7);
+        $r8 = this.<org.apache.fop.render.afp.modca.AFPDataStream: java.io.OutputStream outputStream>;
+        virtualinvoke $r8.<java.io.OutputStream: void flush()>();
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: boolean complete> = 1;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.Document document> = null;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: java.io.OutputStream outputStream> = null;
+        return;
+    }
+
+    public void startPage(int, int, int, int, int)
+    {
+        org.apache.fop.render.afp.modca.AFPDataStream this;
+        int pageWidth, pageHeight, pageRotation, pageWidthResolution, pageHeightResolution, $i0, $i1;
+        java.lang.StringBuffer $r0;
+        java.lang.String pageName, $r2;
+        org.apache.fop.render.afp.modca.PageObject $r3;
+
+        this := @this: org.apache.fop.render.afp.modca.AFPDataStream;
+        pageWidth := @parameter0: int;
+        pageHeight := @parameter1: int;
+        pageRotation := @parameter2: int;
+        pageWidthResolution := @parameter3: int;
+        pageHeightResolution := @parameter4: int;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("PGN");
+        $i0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int pageCount>;
+        $i1 = $i0 + 1;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: int pageCount> = $i1;
+        $r2 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>($i0);
+        $r2 = staticinvoke <org.apache.fop.render.afp.tools.StringUtils: java.lang.String lpad(java.lang.String,char,int)>($r2, 48, 5);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        pageName = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r3 = new org.apache.fop.render.afp.modca.PageObject;
+        specialinvoke $r3.<org.apache.fop.render.afp.modca.PageObject: void <init>(java.lang.String,int,int,int,int,int)>(pageName, pageWidth, pageHeight, pageRotation, pageWidthResolution, pageHeightResolution);
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageObject currentPageObject> = $r3;
+        $r3 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageObject currentPageObject>;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.AbstractPageObject currentPage> = $r3;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.Overlay currentOverlay> = null;
+        virtualinvoke this.<org.apache.fop.render.afp.modca.AFPDataStream: void setOffsets(int,int,int)>(0, 0, 0);
+        return;
+    }
+
+    public void startOverlay(int, int, int, int, int, int, int)
+    {
+        org.apache.fop.render.afp.modca.AFPDataStream this;
+        int overlayX, overlayY, overlayWidth, overlayHeight, overlayWidthResolution, overlayHeightResolution, overlayRotation, $i0, $i1;
+        java.lang.StringBuffer $r0;
+        java.lang.String overlayName, $r2;
+        org.apache.fop.render.afp.modca.Overlay $r3;
+        org.apache.fop.render.afp.modca.PageObject $r4;
+
+        this := @this: org.apache.fop.render.afp.modca.AFPDataStream;
+        overlayX := @parameter0: int;
+        overlayY := @parameter1: int;
+        overlayWidth := @parameter2: int;
+        overlayHeight := @parameter3: int;
+        overlayWidthResolution := @parameter4: int;
+        overlayHeightResolution := @parameter5: int;
+        overlayRotation := @parameter6: int;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("OVL");
+        $i0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int ovlCount>;
+        $i1 = $i0 + 1;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: int ovlCount> = $i1;
+        $r2 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>($i0);
+        $r2 = staticinvoke <org.apache.fop.render.afp.tools.StringUtils: java.lang.String lpad(java.lang.String,char,int)>($r2, 48, 5);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        overlayName = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r3 = new org.apache.fop.render.afp.modca.Overlay;
+        specialinvoke $r3.<org.apache.fop.render.afp.modca.Overlay: void <init>(java.lang.String,int,int,int,int,int)>(overlayName, overlayWidth, overlayHeight, overlayWidthResolution, overlayHeightResolution, overlayRotation);
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.Overlay currentOverlay> = $r3;
+        $r4 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageObject currentPageObject>;
+        $r3 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.Overlay currentOverlay>;
+        virtualinvoke $r4.<org.apache.fop.render.afp.modca.PageObject: void addOverlay(org.apache.fop.render.afp.modca.Overlay)>($r3);
+        $r4 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageObject currentPageObject>;
+        virtualinvoke $r4.<org.apache.fop.render.afp.modca.PageObject: void createIncludePageOverlay(java.lang.String,int,int,int)>(overlayName, overlayX, overlayY, 0);
+        $r3 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.Overlay currentOverlay>;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.AbstractPageObject currentPage> = $r3;
+        virtualinvoke this.<org.apache.fop.render.afp.modca.AFPDataStream: void setOffsets(int,int,int)>(0, 0, 0);
+        return;
+    }
+
+    public void endOverlay()
+    {
+        org.apache.fop.render.afp.modca.AFPDataStream this;
+        org.apache.fop.render.afp.modca.Overlay $r0;
+        org.apache.fop.render.afp.modca.PageObject $r1;
+
+        this := @this: org.apache.fop.render.afp.modca.AFPDataStream;
+        $r0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.Overlay currentOverlay>;
+        virtualinvoke $r0.<org.apache.fop.render.afp.modca.Overlay: void endPage()>();
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.Overlay currentOverlay> = null;
+        $r1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageObject currentPageObject>;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.AbstractPageObject currentPage> = $r1;
+        return;
+    }
+
+    public org.apache.fop.render.afp.modca.PageObject savePage()
+    {
+        org.apache.fop.render.afp.modca.AFPDataStream this;
+        org.apache.fop.render.afp.modca.PageObject pageObject, $r1;
+        org.apache.fop.render.afp.modca.PageGroup $r0;
+        org.apache.fop.render.afp.modca.Document $r2;
+
+        this := @this: org.apache.fop.render.afp.modca.AFPDataStream;
+        pageObject = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageObject currentPageObject>;
+        $r0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageGroup currentPageGroup>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageGroup currentPageGroup>;
+        $r1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageObject currentPageObject>;
+        virtualinvoke $r0.<org.apache.fop.render.afp.modca.PageGroup: void addPage(org.apache.fop.render.afp.modca.PageObject)>($r1);
+        goto label1;
+
+     label0:
+        $r2 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.Document document>;
+        $r1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageObject currentPageObject>;
+        virtualinvoke $r2.<org.apache.fop.render.afp.modca.Document: void addPage(org.apache.fop.render.afp.modca.PageObject)>($r1);
+
+     label1:
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageObject currentPageObject> = null;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.AbstractPageObject currentPage> = null;
+        return pageObject;
+    }
+
+    public void restorePage(org.apache.fop.render.afp.modca.PageObject)
+    {
+        org.apache.fop.render.afp.modca.AFPDataStream this;
+        org.apache.fop.render.afp.modca.PageObject pageObject;
+
+        this := @this: org.apache.fop.render.afp.modca.AFPDataStream;
+        pageObject := @parameter0: org.apache.fop.render.afp.modca.PageObject;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageObject currentPageObject> = pageObject;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.AbstractPageObject currentPage> = pageObject;
+        return;
+    }
+
+    public void endPage() throws java.io.IOException
+    {
+        org.apache.fop.render.afp.modca.AFPDataStream this;
+        org.apache.fop.render.afp.modca.PageObject $r0, $r2;
+        org.apache.fop.render.afp.modca.PageGroup $r1;
+        org.apache.fop.render.afp.modca.Document $r3;
+        java.io.OutputStream $r4;
+
+        this := @this: org.apache.fop.render.afp.modca.AFPDataStream;
+        $r0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageObject currentPageObject>;
+        virtualinvoke $r0.<org.apache.fop.render.afp.modca.PageObject: void endPage()>();
+        $r1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageGroup currentPageGroup>;
+        if $r1 == null goto label0;
+
+        $r1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageGroup currentPageGroup>;
+        $r2 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageObject currentPageObject>;
+        virtualinvoke $r1.<org.apache.fop.render.afp.modca.PageGroup: void addPage(org.apache.fop.render.afp.modca.PageObject)>($r2);
+        goto label1;
+
+     label0:
+        $r3 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.Document document>;
+        $r2 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageObject currentPageObject>;
+        virtualinvoke $r3.<org.apache.fop.render.afp.modca.Document: void addPage(org.apache.fop.render.afp.modca.PageObject)>($r2);
+        $r3 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.Document document>;
+        $r4 = this.<org.apache.fop.render.afp.modca.AFPDataStream: java.io.OutputStream outputStream>;
+        virtualinvoke $r3.<org.apache.fop.render.afp.modca.Document: void writeDataStream(java.io.OutputStream)>($r4);
+
+     label1:
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageObject currentPageObject> = null;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.AbstractPageObject currentPage> = null;
+        return;
+    }
+
+    public void setOffsets(int, int, int)
+    {
+        org.apache.fop.render.afp.modca.AFPDataStream this;
+        int xOff, yOff, rot;
+
+        this := @this: org.apache.fop.render.afp.modca.AFPDataStream;
+        xOff := @parameter0: int;
+        yOff := @parameter1: int;
+        rot := @parameter2: int;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: int xOffset> = xOff;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: int yOffset> = yOff;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: int rotation> = rot;
+        return;
+    }
+
+    public void createFont(byte, org.apache.fop.render.afp.fonts.AFPFont, int)
+    {
+        org.apache.fop.render.afp.modca.AFPDataStream this;
+        byte fontReference;
+        org.apache.fop.render.afp.fonts.AFPFont font;
+        int size;
+        org.apache.fop.render.afp.modca.AbstractPageObject $r0;
+
+        this := @this: org.apache.fop.render.afp.modca.AFPDataStream;
+        fontReference := @parameter0: byte;
+        font := @parameter1: org.apache.fop.render.afp.fonts.AFPFont;
+        size := @parameter2: int;
+        $r0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.AbstractPageObject currentPage>;
+        virtualinvoke $r0.<org.apache.fop.render.afp.modca.AbstractPageObject: void createFont(byte,org.apache.fop.render.afp.fonts.AFPFont,int)>(fontReference, font, size);
+        return;
+    }
+
+    public void createText(int, int, int, java.awt.Color, int, int, byte[])
+    {
+        org.apache.fop.render.afp.modca.AFPDataStream this;
+        int fontNumber, x, y, vsci, ica, $i0, $i1, $i2;
+        java.awt.Color col;
+        byte[] data;
+        org.apache.fop.render.afp.modca.AbstractPageObject $r0;
+
+        this := @this: org.apache.fop.render.afp.modca.AFPDataStream;
+        fontNumber := @parameter0: int;
+        x := @parameter1: int;
+        y := @parameter2: int;
+        col := @parameter3: java.awt.Color;
+        vsci := @parameter4: int;
+        ica := @parameter5: int;
+        data := @parameter6: byte[];
+        $r0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.AbstractPageObject currentPage>;
+        $i0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int xOffset>;
+        $i1 = x + $i0;
+        $i2 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int yOffset>;
+        $i0 = y + $i2;
+        $i2 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int rotation>;
+        virtualinvoke $r0.<org.apache.fop.render.afp.modca.AbstractPageObject: void createText(int,int,int,int,java.awt.Color,int,int,byte[])>(fontNumber, $i1, $i0, $i2, col, vsci, ica, data);
+        return;
+    }
+
+    public org.apache.fop.render.afp.modca.ImageObject getImageObject(int, int, int, int, int, int)
+    {
+        org.apache.fop.render.afp.modca.AFPDataStream this;
+        int x, y, w, h, wr, hr, xOrigin, yOrigin, width, height, widthResolution, heightResolution, $i0, $i1, $i2;
+        org.apache.fop.render.afp.modca.ImageObject io;
+        org.apache.fop.render.afp.modca.AbstractPageObject $r0;
+
+        this := @this: org.apache.fop.render.afp.modca.AFPDataStream;
+        x := @parameter0: int;
+        y := @parameter1: int;
+        w := @parameter2: int;
+        h := @parameter3: int;
+        wr := @parameter4: int;
+        hr := @parameter5: int;
+        $i0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int rotation>;
+        lookupswitch($i0)
+        {
+            case 90: goto label0;
+            case 180: goto label1;
+            case 270: goto label2;
+            default: goto label3;
+        };
+
+     label0:
+        $r0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.AbstractPageObject currentPage>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.render.afp.modca.AbstractPageObject: int getWidth()>();
+        $i0 = $i0 - y;
+        $i1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int yOffset>;
+        xOrigin = $i0 - $i1;
+        $i1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int xOffset>;
+        yOrigin = x + $i1;
+        width = h;
+        height = w;
+        widthResolution = hr;
+        heightResolution = wr;
+        goto label4;
+
+     label1:
+        $r0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.AbstractPageObject currentPage>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.render.afp.modca.AbstractPageObject: int getWidth()>();
+        $i0 = $i0 - x;
+        $i1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int xOffset>;
+        xOrigin = $i0 - $i1;
+        $r0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.AbstractPageObject currentPage>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.render.afp.modca.AbstractPageObject: int getHeight()>();
+        $i0 = $i0 - y;
+        $i1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int yOffset>;
+        yOrigin = $i0 - $i1;
+        width = w;
+        height = h;
+        widthResolution = wr;
+        heightResolution = hr;
+        goto label4;
+
+     label2:
+        $i1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int yOffset>;
+        xOrigin = y + $i1;
+        $r0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.AbstractPageObject currentPage>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.render.afp.modca.AbstractPageObject: int getHeight()>();
+        $i0 = $i0 - x;
+        $i1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int xOffset>;
+        yOrigin = $i0 - $i1;
+        width = h;
+        height = w;
+        widthResolution = hr;
+        heightResolution = wr;
+        goto label4;
+
+     label3:
+        $i1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int xOffset>;
+        xOrigin = x + $i1;
+        $i1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int yOffset>;
+        yOrigin = y + $i1;
+        width = w;
+        height = h;
+        widthResolution = wr;
+        heightResolution = hr;
+
+     label4:
+        $r0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.AbstractPageObject currentPage>;
+        io = virtualinvoke $r0.<org.apache.fop.render.afp.modca.AbstractPageObject: org.apache.fop.render.afp.modca.ImageObject getImageObject()>();
+        $i2 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int rotation>;
+        virtualinvoke io.<org.apache.fop.render.afp.modca.ImageObject: void setImageViewport(int,int,int,int,int,int,int)>(xOrigin, yOrigin, width, height, $i2, widthResolution, heightResolution);
+        return io;
+    }
+
+    public void createLine(int, int, int, int, int, java.awt.Color)
+    {
+        org.apache.fop.render.afp.modca.AFPDataStream this;
+        int x1, y1, x2, y2, thickness, $i0, $i1, $i2, $i3, $i4, $i5;
+        java.awt.Color col;
+        org.apache.fop.render.afp.modca.AbstractPageObject $r0;
+
+        this := @this: org.apache.fop.render.afp.modca.AFPDataStream;
+        x1 := @parameter0: int;
+        y1 := @parameter1: int;
+        x2 := @parameter2: int;
+        y2 := @parameter3: int;
+        thickness := @parameter4: int;
+        col := @parameter5: java.awt.Color;
+        $r0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.AbstractPageObject currentPage>;
+        $i0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int xOffset>;
+        $i1 = x1 + $i0;
+        $i2 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int yOffset>;
+        $i0 = y1 + $i2;
+        $i3 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int xOffset>;
+        $i2 = x2 + $i3;
+        $i4 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int yOffset>;
+        $i3 = y2 + $i4;
+        $i5 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int rotation>;
+        virtualinvoke $r0.<org.apache.fop.render.afp.modca.AbstractPageObject: void createLine(int,int,int,int,int,int,java.awt.Color)>($i1, $i0, $i2, $i3, thickness, $i5, col);
+        return;
+    }
+
+    public void createShading(int, int, int, int, int, int, int)
+    {
+        org.apache.fop.render.afp.modca.AFPDataStream this;
+        int x, y, w, h, red, green, blue, $i0, $i1, $i2;
+        org.apache.fop.render.afp.modca.AbstractPageObject $r0;
+
+        this := @this: org.apache.fop.render.afp.modca.AFPDataStream;
+        x := @parameter0: int;
+        y := @parameter1: int;
+        w := @parameter2: int;
+        h := @parameter3: int;
+        red := @parameter4: int;
+        green := @parameter5: int;
+        blue := @parameter6: int;
+        $r0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.AbstractPageObject currentPage>;
+        $i0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int xOffset>;
+        $i1 = x + $i0;
+        $i2 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int xOffset>;
+        $i0 = y + $i2;
+        virtualinvoke $r0.<org.apache.fop.render.afp.modca.AbstractPageObject: void createShading(int,int,int,int,int,int,int)>($i1, $i0, w, h, red, green, blue);
+        return;
+    }
+
+    public void createIncludePageOverlay(java.lang.String)
+    {
+        org.apache.fop.render.afp.modca.AFPDataStream this;
+        java.lang.String name;
+        org.apache.fop.render.afp.modca.ActiveEnvironmentGroup aeg;
+        org.apache.fop.render.afp.modca.PageObject $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.render.afp.modca.AFPDataStream;
+        name := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageObject currentPageObject>;
+        $i0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int rotation>;
+        virtualinvoke $r0.<org.apache.fop.render.afp.modca.PageObject: void createIncludePageOverlay(java.lang.String,int,int,int)>(name, 0, 0, $i0);
+        $r0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageObject currentPageObject>;
+        aeg = virtualinvoke $r0.<org.apache.fop.render.afp.modca.PageObject: org.apache.fop.render.afp.modca.ActiveEnvironmentGroup getActiveEnvironmentGroup()>();
+        virtualinvoke aeg.<org.apache.fop.render.afp.modca.ActiveEnvironmentGroup: void createOverlay(java.lang.String)>(name);
+        return;
+    }
+
+    public void createInvokeMediumMap(java.lang.String)
+    {
+        org.apache.fop.render.afp.modca.AFPDataStream this;
+        java.lang.String name;
+        org.apache.fop.render.afp.modca.PageGroup $r0;
+
+        this := @this: org.apache.fop.render.afp.modca.AFPDataStream;
+        name := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageGroup currentPageGroup>;
+        if $r0 != null goto label0;
+
+        virtualinvoke this.<org.apache.fop.render.afp.modca.AFPDataStream: void startPageGroup()>();
+
+     label0:
+        $r0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageGroup currentPageGroup>;
+        virtualinvoke $r0.<org.apache.fop.render.afp.modca.PageGroup: void createInvokeMediumMap(java.lang.String)>(name);
+        return;
+    }
+
+    public void createIncludePageSegment(java.lang.String, int, int)
+    {
+        org.apache.fop.render.afp.modca.AFPDataStream this;
+        java.lang.String name;
+        int x, y, xOrigin, yOrigin, $i0, $i1;
+        org.apache.fop.render.afp.modca.AbstractPageObject $r0;
+
+        this := @this: org.apache.fop.render.afp.modca.AFPDataStream;
+        name := @parameter0: java.lang.String;
+        x := @parameter1: int;
+        y := @parameter2: int;
+        $i0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int rotation>;
+        lookupswitch($i0)
+        {
+            case 90: goto label0;
+            case 180: goto label1;
+            case 270: goto label2;
+            default: goto label3;
+        };
+
+     label0:
+        $r0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.AbstractPageObject currentPage>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.render.afp.modca.AbstractPageObject: int getWidth()>();
+        $i0 = $i0 - y;
+        $i1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int yOffset>;
+        xOrigin = $i0 - $i1;
+        $i1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int xOffset>;
+        yOrigin = x + $i1;
+        goto label4;
+
+     label1:
+        $r0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.AbstractPageObject currentPage>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.render.afp.modca.AbstractPageObject: int getWidth()>();
+        $i0 = $i0 - x;
+        $i1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int xOffset>;
+        xOrigin = $i0 - $i1;
+        $r0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.AbstractPageObject currentPage>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.render.afp.modca.AbstractPageObject: int getHeight()>();
+        $i0 = $i0 - y;
+        $i1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int yOffset>;
+        yOrigin = $i0 - $i1;
+        goto label4;
+
+     label2:
+        $i1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int yOffset>;
+        xOrigin = y + $i1;
+        $r0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.AbstractPageObject currentPage>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.render.afp.modca.AbstractPageObject: int getHeight()>();
+        $i0 = $i0 - x;
+        $i1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int xOffset>;
+        yOrigin = $i0 - $i1;
+        goto label4;
+
+     label3:
+        $i1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int xOffset>;
+        xOrigin = x + $i1;
+        $i1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int yOffset>;
+        yOrigin = y + $i1;
+
+     label4:
+        $r0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.AbstractPageObject currentPage>;
+        virtualinvoke $r0.<org.apache.fop.render.afp.modca.AbstractPageObject: void createIncludePageSegment(java.lang.String,int,int)>(name, xOrigin, yOrigin);
+        return;
+    }
+
+    public void createPageTagLogicalElement(org.apache.fop.render.afp.modca.TagLogicalElementBean[])
+    {
+        org.apache.fop.render.afp.modca.AFPDataStream this;
+        org.apache.fop.render.afp.modca.TagLogicalElementBean[] attributes;
+        int i, $i0;
+        java.lang.String name, value;
+        org.apache.fop.render.afp.modca.TagLogicalElementBean $r0;
+        org.apache.fop.render.afp.modca.AbstractPageObject $r1;
+
+        this := @this: org.apache.fop.render.afp.modca.AFPDataStream;
+        attributes := @parameter0: org.apache.fop.render.afp.modca.TagLogicalElementBean[];
+        i = 0;
+
+     label0:
+        $i0 = lengthof attributes;
+        if i >= $i0 goto label1;
+
+        $r0 = attributes[i];
+        name = virtualinvoke $r0.<org.apache.fop.render.afp.modca.TagLogicalElementBean: java.lang.String getKey()>();
+        $r0 = attributes[i];
+        value = virtualinvoke $r0.<org.apache.fop.render.afp.modca.TagLogicalElementBean: java.lang.String getValue()>();
+        $r1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.AbstractPageObject currentPage>;
+        virtualinvoke $r1.<org.apache.fop.render.afp.modca.AbstractPageObject: void createTagLogicalElement(java.lang.String,java.lang.String)>(name, value);
+        i = i + 1;
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    public void createPageGroupTagLogicalElement(org.apache.fop.render.afp.modca.TagLogicalElementBean[])
+    {
+        org.apache.fop.render.afp.modca.AFPDataStream this;
+        org.apache.fop.render.afp.modca.TagLogicalElementBean[] attributes;
+        int i, $i0;
+        java.lang.String name, value;
+        org.apache.fop.render.afp.modca.TagLogicalElementBean $r0;
+        org.apache.fop.render.afp.modca.PageGroup $r1;
+
+        this := @this: org.apache.fop.render.afp.modca.AFPDataStream;
+        attributes := @parameter0: org.apache.fop.render.afp.modca.TagLogicalElementBean[];
+        i = 0;
+
+     label0:
+        $i0 = lengthof attributes;
+        if i >= $i0 goto label1;
+
+        $r0 = attributes[i];
+        name = virtualinvoke $r0.<org.apache.fop.render.afp.modca.TagLogicalElementBean: java.lang.String getKey()>();
+        $r0 = attributes[i];
+        value = virtualinvoke $r0.<org.apache.fop.render.afp.modca.TagLogicalElementBean: java.lang.String getValue()>();
+        $r1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageGroup currentPageGroup>;
+        virtualinvoke $r1.<org.apache.fop.render.afp.modca.PageGroup: void createTagLogicalElement(java.lang.String,java.lang.String)>(name, value);
+        i = i + 1;
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    public void createTagLogicalElement(java.lang.String, java.lang.String)
+    {
+        org.apache.fop.render.afp.modca.AFPDataStream this;
+        java.lang.String name, value;
+        org.apache.fop.render.afp.modca.PageGroup $r0;
+        org.apache.fop.render.afp.modca.AbstractPageObject $r1;
+
+        this := @this: org.apache.fop.render.afp.modca.AFPDataStream;
+        name := @parameter0: java.lang.String;
+        value := @parameter1: java.lang.String;
+        $r0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageGroup currentPageGroup>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageGroup currentPageGroup>;
+        virtualinvoke $r0.<org.apache.fop.render.afp.modca.PageGroup: void createTagLogicalElement(java.lang.String,java.lang.String)>(name, value);
+        goto label1;
+
+     label0:
+        $r1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.AbstractPageObject currentPage>;
+        virtualinvoke $r1.<org.apache.fop.render.afp.modca.AbstractPageObject: void createTagLogicalElement(java.lang.String,java.lang.String)>(name, value);
+
+     label1:
+        return;
+    }
+
+    public void createNoOperation(java.lang.String)
+    {
+        org.apache.fop.render.afp.modca.AFPDataStream this;
+        java.lang.String content;
+        org.apache.fop.render.afp.modca.AbstractPageObject $r0;
+
+        this := @this: org.apache.fop.render.afp.modca.AFPDataStream;
+        content := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.AbstractPageObject currentPage>;
+        virtualinvoke $r0.<org.apache.fop.render.afp.modca.AbstractPageObject: void createNoOperation(java.lang.String)>(content);
+        return;
+    }
+
+    public void startPageGroup()
+    {
+        org.apache.fop.render.afp.modca.AFPDataStream this;
+        java.lang.StringBuffer $r0;
+        int $i0, $i1;
+        java.lang.String pageGroupName, $r2;
+        org.apache.fop.render.afp.modca.PageGroup $r3;
+
+        this := @this: org.apache.fop.render.afp.modca.AFPDataStream;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("PGP");
+        $i0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: int pageCount>;
+        $i1 = $i0 + 1;
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: int pageCount> = $i1;
+        $r2 = staticinvoke <java.lang.String: java.lang.String valueOf(int)>($i0);
+        $r2 = staticinvoke <org.apache.fop.render.afp.tools.StringUtils: java.lang.String lpad(java.lang.String,char,int)>($r2, 48, 5);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        pageGroupName = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r3 = new org.apache.fop.render.afp.modca.PageGroup;
+        specialinvoke $r3.<org.apache.fop.render.afp.modca.PageGroup: void <init>(java.lang.String)>(pageGroupName);
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageGroup currentPageGroup> = $r3;
+        return;
+    }
+
+    public void endPageGroup() throws java.io.IOException
+    {
+        org.apache.fop.render.afp.modca.AFPDataStream this;
+        org.apache.fop.render.afp.modca.PageGroup $r0, $r2;
+        org.apache.fop.render.afp.modca.Document $r1;
+        java.io.OutputStream $r3;
+
+        this := @this: org.apache.fop.render.afp.modca.AFPDataStream;
+        $r0 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageGroup currentPageGroup>;
+        virtualinvoke $r0.<org.apache.fop.render.afp.modca.PageGroup: void endPageGroup()>();
+        $r1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.Document document>;
+        $r2 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageGroup currentPageGroup>;
+        virtualinvoke $r1.<org.apache.fop.render.afp.modca.Document: void addPageGroup(org.apache.fop.render.afp.modca.PageGroup)>($r2);
+        $r1 = this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.Document document>;
+        $r3 = this.<org.apache.fop.render.afp.modca.AFPDataStream: java.io.OutputStream outputStream>;
+        virtualinvoke $r1.<org.apache.fop.render.afp.modca.Document: void writeDataStream(java.io.OutputStream)>($r3);
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: org.apache.fop.render.afp.modca.PageGroup currentPageGroup> = null;
+        return;
+    }
+
+    public void setPortraitRotation(int)
+    {
+        org.apache.fop.render.afp.modca.AFPDataStream this;
+        int pageRotation;
+        java.lang.IllegalArgumentException $r0;
+
+        this := @this: org.apache.fop.render.afp.modca.AFPDataStream;
+        pageRotation := @parameter0: int;
+        if pageRotation == 0 goto label0;
+
+        if pageRotation == 90 goto label0;
+
+        if pageRotation == 180 goto label0;
+
+        if pageRotation != 270 goto label1;
+
+     label0:
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: int portraitRotation> = pageRotation;
+        goto label2;
+
+     label1:
+        $r0 = new java.lang.IllegalArgumentException;
+        specialinvoke $r0.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("The portrait rotation must be one of the values 0, 90, 180, 270");
+        throw $r0;
+
+     label2:
+        return;
+    }
+
+    public void setLandscapeRotation(int)
+    {
+        org.apache.fop.render.afp.modca.AFPDataStream this;
+        int pageRotation;
+        java.lang.IllegalArgumentException $r0;
+
+        this := @this: org.apache.fop.render.afp.modca.AFPDataStream;
+        pageRotation := @parameter0: int;
+        if pageRotation == 0 goto label0;
+
+        if pageRotation == 90 goto label0;
+
+        if pageRotation == 180 goto label0;
+
+        if pageRotation != 270 goto label1;
+
+     label0:
+        this.<org.apache.fop.render.afp.modca.AFPDataStream: int landscapeRotation> = pageRotation;
+        goto label2;
+
+     label1:
+        $r0 = new java.lang.IllegalArgumentException;
+        specialinvoke $r0.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("The landscape rotation must be one of the values 0, 90, 180, 270");
+        throw $r0;
+
+     label2:
+        return;
+    }
+
+    static void <clinit>()
+    {
+        org.apache.commons.logging.Log $r0;
+
+        $r0 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.String)>("org.apache.fop.render.afp.modca");
+        <org.apache.fop.render.afp.modca.AFPDataStream: org.apache.commons.logging.Log log> = $r0;
+        return;
+    }
+}

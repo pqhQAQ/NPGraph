@@ -1,0 +1,411 @@
+class org.apache.fop.fo.flow.table.CollapsingBorderResolver extends java.lang.Object implements org.apache.fop.fo.flow.table.BorderResolver
+{
+    private org.apache.fop.fo.flow.table.Table table;
+    private java.util.List previousRow;
+    private boolean firstInTable;
+    private java.util.List footerFirstRow;
+    private java.util.List footerLastRow;
+    private org.apache.fop.fo.flow.table.CollapsingBorderResolver$Resolver delegate;
+    private org.apache.fop.fo.flow.table.CollapsingBorderResolver$Resolver resolverInBody;
+    private org.apache.fop.fo.flow.table.CollapsingBorderResolver$Resolver resolverInFooter;
+    private java.util.List leadingBorders;
+    private java.util.List trailingBorders;
+    private java.util.List headerLastRow;
+    static java.lang.Class class$org$apache$fop$fo$flow$table$CollapsingBorderResolver;
+
+    void <init>(org.apache.fop.fo.flow.table.Table)
+    {
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver this;
+        org.apache.fop.fo.flow.table.Table table;
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver$ResolverInBody $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.CollapsingBorderResolver;
+        table := @parameter0: org.apache.fop.fo.flow.table.Table;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $r0 = new org.apache.fop.fo.flow.table.CollapsingBorderResolver$ResolverInBody;
+        specialinvoke $r0.<org.apache.fop.fo.flow.table.CollapsingBorderResolver$ResolverInBody: void <init>(org.apache.fop.fo.flow.table.CollapsingBorderResolver,org.apache.fop.fo.flow.table.CollapsingBorderResolver$1)>(this, null);
+        this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: org.apache.fop.fo.flow.table.CollapsingBorderResolver$Resolver resolverInBody> = $r0;
+        this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: java.util.List headerLastRow> = null;
+        this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: org.apache.fop.fo.flow.table.Table table> = table;
+        this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: boolean firstInTable> = 1;
+        return;
+    }
+
+    public void endRow(java.util.List, org.apache.fop.fo.flow.table.TableCellContainer)
+    {
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver this;
+        java.util.List row;
+        org.apache.fop.fo.flow.table.TableCellContainer container;
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver$Resolver $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.CollapsingBorderResolver;
+        row := @parameter0: java.util.List;
+        container := @parameter1: org.apache.fop.fo.flow.table.TableCellContainer;
+        $r0 = this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: org.apache.fop.fo.flow.table.CollapsingBorderResolver$Resolver delegate>;
+        virtualinvoke $r0.<org.apache.fop.fo.flow.table.CollapsingBorderResolver$Resolver: void endRow(java.util.List,org.apache.fop.fo.flow.table.TableCellContainer)>(row, container);
+        return;
+    }
+
+    public void startPart(org.apache.fop.fo.flow.table.TableBody)
+    {
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver this;
+        org.apache.fop.fo.flow.table.TableBody part;
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver$ResolverInHeader $r0;
+        java.util.Iterator colIter;
+        org.apache.fop.fo.flow.table.ConditionalBorder border;
+        boolean $z0;
+        java.util.List $r1;
+        org.apache.fop.fo.flow.table.Table $r2, $r4;
+        java.util.ArrayList $r3;
+        int $i0;
+        java.lang.Object $r5;
+        org.apache.fop.fo.flow.table.TableColumn $r6;
+        org.apache.fop.fo.flow.table.BorderSpecification $r7;
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver$ResolverInFooter $r8;
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver$Resolver $r9, $r10;
+
+        this := @this: org.apache.fop.fo.flow.table.CollapsingBorderResolver;
+        part := @parameter0: org.apache.fop.fo.flow.table.TableBody;
+        $z0 = virtualinvoke part.<org.apache.fop.fo.flow.table.TableBody: boolean isTableHeader()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = new org.apache.fop.fo.flow.table.CollapsingBorderResolver$ResolverInHeader;
+        specialinvoke $r0.<org.apache.fop.fo.flow.table.CollapsingBorderResolver$ResolverInHeader: void <init>(org.apache.fop.fo.flow.table.CollapsingBorderResolver,org.apache.fop.fo.flow.table.CollapsingBorderResolver$1)>(this, null);
+        this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: org.apache.fop.fo.flow.table.CollapsingBorderResolver$Resolver delegate> = $r0;
+        goto label8;
+
+     label0:
+        $r1 = this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: java.util.List leadingBorders>;
+        if $r1 == null goto label1;
+
+        $r2 = this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: org.apache.fop.fo.flow.table.Table table>;
+        $z0 = virtualinvoke $r2.<org.apache.fop.fo.flow.table.Table: boolean omitHeaderAtBreak()>();
+        if $z0 == 0 goto label3;
+
+     label1:
+        $r3 = new java.util.ArrayList;
+        $r4 = this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: org.apache.fop.fo.flow.table.Table table>;
+        $i0 = virtualinvoke $r4.<org.apache.fop.fo.flow.table.Table: int getNumberOfColumns()>();
+        specialinvoke $r3.<java.util.ArrayList: void <init>(int)>($i0);
+        this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: java.util.List leadingBorders> = $r3;
+        $r2 = this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: org.apache.fop.fo.flow.table.Table table>;
+        $r1 = virtualinvoke $r2.<org.apache.fop.fo.flow.table.Table: java.util.List getColumns()>();
+        colIter = interfaceinvoke $r1.<java.util.List: java.util.Iterator iterator()>();
+
+     label2:
+        $z0 = interfaceinvoke colIter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label3;
+
+        $r5 = interfaceinvoke colIter.<java.util.Iterator: java.lang.Object next()>();
+        $r6 = (org.apache.fop.fo.flow.table.TableColumn) $r5;
+        border = $r6.<org.apache.fop.fo.flow.table.TableColumn: org.apache.fop.fo.flow.table.ConditionalBorder borderBefore>;
+        $r7 = border.<org.apache.fop.fo.flow.table.ConditionalBorder: org.apache.fop.fo.flow.table.BorderSpecification rest>;
+        border.<org.apache.fop.fo.flow.table.ConditionalBorder: org.apache.fop.fo.flow.table.BorderSpecification leadingTrailing> = $r7;
+        $r1 = this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: java.util.List leadingBorders>;
+        interfaceinvoke $r1.<java.util.List: boolean add(java.lang.Object)>(border);
+        goto label2;
+
+     label3:
+        $z0 = virtualinvoke part.<org.apache.fop.fo.flow.table.TableBody: boolean isTableFooter()>();
+        if $z0 == 0 goto label4;
+
+        $r8 = new org.apache.fop.fo.flow.table.CollapsingBorderResolver$ResolverInFooter;
+        specialinvoke $r8.<org.apache.fop.fo.flow.table.CollapsingBorderResolver$ResolverInFooter: void <init>(org.apache.fop.fo.flow.table.CollapsingBorderResolver,org.apache.fop.fo.flow.table.CollapsingBorderResolver$1)>(this, null);
+        this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: org.apache.fop.fo.flow.table.CollapsingBorderResolver$Resolver resolverInFooter> = $r8;
+        $r9 = this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: org.apache.fop.fo.flow.table.CollapsingBorderResolver$Resolver resolverInFooter>;
+        this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: org.apache.fop.fo.flow.table.CollapsingBorderResolver$Resolver delegate> = $r9;
+        goto label8;
+
+     label4:
+        $r1 = this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: java.util.List trailingBorders>;
+        if $r1 == null goto label5;
+
+        $r2 = this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: org.apache.fop.fo.flow.table.Table table>;
+        $z0 = virtualinvoke $r2.<org.apache.fop.fo.flow.table.Table: boolean omitFooterAtBreak()>();
+        if $z0 == 0 goto label7;
+
+     label5:
+        $r3 = new java.util.ArrayList;
+        $r4 = this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: org.apache.fop.fo.flow.table.Table table>;
+        $i0 = virtualinvoke $r4.<org.apache.fop.fo.flow.table.Table: int getNumberOfColumns()>();
+        specialinvoke $r3.<java.util.ArrayList: void <init>(int)>($i0);
+        this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: java.util.List trailingBorders> = $r3;
+        $r2 = this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: org.apache.fop.fo.flow.table.Table table>;
+        $r1 = virtualinvoke $r2.<org.apache.fop.fo.flow.table.Table: java.util.List getColumns()>();
+        colIter = interfaceinvoke $r1.<java.util.List: java.util.Iterator iterator()>();
+
+     label6:
+        $z0 = interfaceinvoke colIter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label7;
+
+        $r5 = interfaceinvoke colIter.<java.util.Iterator: java.lang.Object next()>();
+        $r6 = (org.apache.fop.fo.flow.table.TableColumn) $r5;
+        border = $r6.<org.apache.fop.fo.flow.table.TableColumn: org.apache.fop.fo.flow.table.ConditionalBorder borderAfter>;
+        $r7 = border.<org.apache.fop.fo.flow.table.ConditionalBorder: org.apache.fop.fo.flow.table.BorderSpecification rest>;
+        border.<org.apache.fop.fo.flow.table.ConditionalBorder: org.apache.fop.fo.flow.table.BorderSpecification leadingTrailing> = $r7;
+        $r1 = this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: java.util.List trailingBorders>;
+        interfaceinvoke $r1.<java.util.List: boolean add(java.lang.Object)>(border);
+        goto label6;
+
+     label7:
+        $r9 = this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: org.apache.fop.fo.flow.table.CollapsingBorderResolver$Resolver resolverInBody>;
+        this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: org.apache.fop.fo.flow.table.CollapsingBorderResolver$Resolver delegate> = $r9;
+
+     label8:
+        $r10 = this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: org.apache.fop.fo.flow.table.CollapsingBorderResolver$Resolver delegate>;
+        virtualinvoke $r10.<org.apache.fop.fo.flow.table.CollapsingBorderResolver$Resolver: void startPart(org.apache.fop.fo.flow.table.TableBody)>(part);
+        return;
+    }
+
+    public void endPart()
+    {
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver this;
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver$Resolver $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.CollapsingBorderResolver;
+        $r0 = this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: org.apache.fop.fo.flow.table.CollapsingBorderResolver$Resolver delegate>;
+        virtualinvoke $r0.<org.apache.fop.fo.flow.table.CollapsingBorderResolver$Resolver: void endPart()>();
+        return;
+    }
+
+    public void endTable()
+    {
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver this;
+        java.util.Iterator iter;
+        org.apache.fop.fo.flow.table.GridUnit gu;
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver$Resolver $r0;
+        java.util.List $r1;
+        boolean $z0;
+        java.lang.Object $r2;
+        org.apache.fop.fo.flow.table.ConditionalBorder $r3, $r4;
+        org.apache.fop.fo.flow.table.BorderSpecification $r5;
+
+        this := @this: org.apache.fop.fo.flow.table.CollapsingBorderResolver;
+        $r0 = this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: org.apache.fop.fo.flow.table.CollapsingBorderResolver$Resolver delegate>;
+        virtualinvoke $r0.<org.apache.fop.fo.flow.table.CollapsingBorderResolver$Resolver: void endTable()>();
+        this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: org.apache.fop.fo.flow.table.CollapsingBorderResolver$Resolver delegate> = null;
+        $r1 = this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: java.util.List headerLastRow>;
+        if $r1 == null goto label1;
+
+        $r1 = this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: java.util.List headerLastRow>;
+        iter = interfaceinvoke $r1.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r2 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        gu = (org.apache.fop.fo.flow.table.GridUnit) $r2;
+        $r3 = gu.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.ConditionalBorder borderAfter>;
+        $r4 = gu.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.ConditionalBorder borderAfter>;
+        $r5 = $r4.<org.apache.fop.fo.flow.table.ConditionalBorder: org.apache.fop.fo.flow.table.BorderSpecification nonLeadingTrailing>;
+        $r3.<org.apache.fop.fo.flow.table.ConditionalBorder: org.apache.fop.fo.flow.table.BorderSpecification leadingTrailing> = $r5;
+        goto label0;
+
+     label1:
+        $r1 = this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: java.util.List footerLastRow>;
+        if $r1 == null goto label3;
+
+        $r1 = this.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: java.util.List footerLastRow>;
+        iter = interfaceinvoke $r1.<java.util.List: java.util.Iterator iterator()>();
+
+     label2:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label3;
+
+        $r2 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        gu = (org.apache.fop.fo.flow.table.GridUnit) $r2;
+        $r3 = gu.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.ConditionalBorder borderAfter>;
+        $r4 = gu.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.ConditionalBorder borderAfter>;
+        $r5 = $r4.<org.apache.fop.fo.flow.table.ConditionalBorder: org.apache.fop.fo.flow.table.BorderSpecification nonLeadingTrailing>;
+        $r3.<org.apache.fop.fo.flow.table.ConditionalBorder: org.apache.fop.fo.flow.table.BorderSpecification leadingTrailing> = $r5;
+        goto label2;
+
+     label3:
+        return;
+    }
+
+    static boolean access$100(org.apache.fop.fo.flow.table.CollapsingBorderResolver)
+    {
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver x0;
+        boolean $z0;
+
+        x0 := @parameter0: org.apache.fop.fo.flow.table.CollapsingBorderResolver;
+        $z0 = x0.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: boolean firstInTable>;
+        return $z0;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static org.apache.fop.fo.flow.table.Table access$200(org.apache.fop.fo.flow.table.CollapsingBorderResolver)
+    {
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver x0;
+        org.apache.fop.fo.flow.table.Table $r0;
+
+        x0 := @parameter0: org.apache.fop.fo.flow.table.CollapsingBorderResolver;
+        $r0 = x0.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: org.apache.fop.fo.flow.table.Table table>;
+        return $r0;
+    }
+
+    static boolean access$102(org.apache.fop.fo.flow.table.CollapsingBorderResolver, boolean)
+    {
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver x0;
+        boolean x1;
+
+        x0 := @parameter0: org.apache.fop.fo.flow.table.CollapsingBorderResolver;
+        x1 := @parameter1: boolean;
+        x0.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: boolean firstInTable> = x1;
+        return x1;
+    }
+
+    static java.util.List access$300(org.apache.fop.fo.flow.table.CollapsingBorderResolver)
+    {
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver x0;
+        java.util.List $r0;
+
+        x0 := @parameter0: org.apache.fop.fo.flow.table.CollapsingBorderResolver;
+        $r0 = x0.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: java.util.List leadingBorders>;
+        return $r0;
+    }
+
+    static java.util.List access$400(org.apache.fop.fo.flow.table.CollapsingBorderResolver)
+    {
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver x0;
+        java.util.List $r0;
+
+        x0 := @parameter0: org.apache.fop.fo.flow.table.CollapsingBorderResolver;
+        $r0 = x0.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: java.util.List trailingBorders>;
+        return $r0;
+    }
+
+    static java.util.List access$500(org.apache.fop.fo.flow.table.CollapsingBorderResolver)
+    {
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver x0;
+        java.util.List $r0;
+
+        x0 := @parameter0: org.apache.fop.fo.flow.table.CollapsingBorderResolver;
+        $r0 = x0.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: java.util.List previousRow>;
+        return $r0;
+    }
+
+    static java.util.List access$502(org.apache.fop.fo.flow.table.CollapsingBorderResolver, java.util.List)
+    {
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver x0;
+        java.util.List x1;
+
+        x0 := @parameter0: org.apache.fop.fo.flow.table.CollapsingBorderResolver;
+        x1 := @parameter1: java.util.List;
+        x0.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: java.util.List previousRow> = x1;
+        return x1;
+    }
+
+    static java.util.List access$302(org.apache.fop.fo.flow.table.CollapsingBorderResolver, java.util.List)
+    {
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver x0;
+        java.util.List x1;
+
+        x0 := @parameter0: org.apache.fop.fo.flow.table.CollapsingBorderResolver;
+        x1 := @parameter1: java.util.List;
+        x0.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: java.util.List leadingBorders> = x1;
+        return x1;
+    }
+
+    static java.util.List access$702(org.apache.fop.fo.flow.table.CollapsingBorderResolver, java.util.List)
+    {
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver x0;
+        java.util.List x1;
+
+        x0 := @parameter0: org.apache.fop.fo.flow.table.CollapsingBorderResolver;
+        x1 := @parameter1: java.util.List;
+        x0.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: java.util.List headerLastRow> = x1;
+        return x1;
+    }
+
+    static java.util.List access$800(org.apache.fop.fo.flow.table.CollapsingBorderResolver)
+    {
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver x0;
+        java.util.List $r0;
+
+        x0 := @parameter0: org.apache.fop.fo.flow.table.CollapsingBorderResolver;
+        $r0 = x0.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: java.util.List footerFirstRow>;
+        return $r0;
+    }
+
+    static java.util.List access$802(org.apache.fop.fo.flow.table.CollapsingBorderResolver, java.util.List)
+    {
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver x0;
+        java.util.List x1;
+
+        x0 := @parameter0: org.apache.fop.fo.flow.table.CollapsingBorderResolver;
+        x1 := @parameter1: java.util.List;
+        x0.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: java.util.List footerFirstRow> = x1;
+        return x1;
+    }
+
+    static java.util.List access$900(org.apache.fop.fo.flow.table.CollapsingBorderResolver)
+    {
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver x0;
+        java.util.List $r0;
+
+        x0 := @parameter0: org.apache.fop.fo.flow.table.CollapsingBorderResolver;
+        $r0 = x0.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: java.util.List footerLastRow>;
+        return $r0;
+    }
+
+    static java.util.List access$902(org.apache.fop.fo.flow.table.CollapsingBorderResolver, java.util.List)
+    {
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver x0;
+        java.util.List x1;
+
+        x0 := @parameter0: org.apache.fop.fo.flow.table.CollapsingBorderResolver;
+        x1 := @parameter1: java.util.List;
+        x0.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: java.util.List footerLastRow> = x1;
+        return x1;
+    }
+
+    static java.util.List access$402(org.apache.fop.fo.flow.table.CollapsingBorderResolver, java.util.List)
+    {
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver x0;
+        java.util.List x1;
+
+        x0 := @parameter0: org.apache.fop.fo.flow.table.CollapsingBorderResolver;
+        x1 := @parameter1: java.util.List;
+        x0.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: java.util.List trailingBorders> = x1;
+        return x1;
+    }
+
+    static org.apache.fop.fo.flow.table.CollapsingBorderResolver$Resolver access$1000(org.apache.fop.fo.flow.table.CollapsingBorderResolver)
+    {
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver x0;
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver$Resolver $r0;
+
+        x0 := @parameter0: org.apache.fop.fo.flow.table.CollapsingBorderResolver;
+        $r0 = x0.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: org.apache.fop.fo.flow.table.CollapsingBorderResolver$Resolver resolverInFooter>;
+        return $r0;
+    }
+}

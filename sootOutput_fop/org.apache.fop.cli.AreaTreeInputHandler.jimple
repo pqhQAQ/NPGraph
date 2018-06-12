@@ -1,0 +1,80 @@
+public class org.apache.fop.cli.AreaTreeInputHandler extends org.apache.fop.cli.InputHandler
+{
+
+    public void <init>(java.io.File, java.io.File, java.util.Vector)
+    {
+        org.apache.fop.cli.AreaTreeInputHandler this;
+        java.io.File xmlfile, xsltfile;
+        java.util.Vector params;
+
+        this := @this: org.apache.fop.cli.AreaTreeInputHandler;
+        xmlfile := @parameter0: java.io.File;
+        xsltfile := @parameter1: java.io.File;
+        params := @parameter2: java.util.Vector;
+        specialinvoke this.<org.apache.fop.cli.InputHandler: void <init>(java.io.File,java.io.File,java.util.Vector)>(xmlfile, xsltfile, params);
+        return;
+    }
+
+    public void <init>(java.io.File)
+    {
+        org.apache.fop.cli.AreaTreeInputHandler this;
+        java.io.File atfile;
+
+        this := @this: org.apache.fop.cli.AreaTreeInputHandler;
+        atfile := @parameter0: java.io.File;
+        specialinvoke this.<org.apache.fop.cli.InputHandler: void <init>(java.io.File)>(atfile);
+        return;
+    }
+
+    public void renderTo(org.apache.fop.apps.FOUserAgent, java.lang.String, java.io.OutputStream) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.cli.AreaTreeInputHandler this;
+        org.apache.fop.apps.FOUserAgent userAgent;
+        java.lang.String outputFormat;
+        java.io.OutputStream out;
+        org.apache.fop.fonts.FontInfo $r0, fontInfo;
+        org.apache.fop.area.RenderPagesModel treeModel, $r1;
+        org.apache.fop.area.AreaTreeParser parser, $r2;
+        javax.xml.transform.sax.SAXResult res, $r3;
+        org.xml.sax.SAXException e, $r5;
+        org.xml.sax.ContentHandler $r4;
+        org.apache.fop.apps.FOPException $r6;
+
+        this := @this: org.apache.fop.cli.AreaTreeInputHandler;
+        userAgent := @parameter0: org.apache.fop.apps.FOUserAgent;
+        outputFormat := @parameter1: java.lang.String;
+        out := @parameter2: java.io.OutputStream;
+        $r0 = new org.apache.fop.fonts.FontInfo;
+        specialinvoke $r0.<org.apache.fop.fonts.FontInfo: void <init>()>();
+        fontInfo = $r0;
+        $r1 = new org.apache.fop.area.RenderPagesModel;
+        specialinvoke $r1.<org.apache.fop.area.RenderPagesModel: void <init>(org.apache.fop.apps.FOUserAgent,java.lang.String,org.apache.fop.fonts.FontInfo,java.io.OutputStream)>(userAgent, outputFormat, fontInfo, out);
+        treeModel = $r1;
+        $r2 = new org.apache.fop.area.AreaTreeParser;
+        specialinvoke $r2.<org.apache.fop.area.AreaTreeParser: void <init>()>();
+        parser = $r2;
+        $r3 = new javax.xml.transform.sax.SAXResult;
+        $r4 = virtualinvoke parser.<org.apache.fop.area.AreaTreeParser: org.xml.sax.ContentHandler getContentHandler(org.apache.fop.area.AreaTreeModel,org.apache.fop.apps.FOUserAgent)>(treeModel, userAgent);
+        specialinvoke $r3.<javax.xml.transform.sax.SAXResult: void <init>(org.xml.sax.ContentHandler)>($r4);
+        res = $r3;
+        virtualinvoke this.<org.apache.fop.cli.AreaTreeInputHandler: void transformTo(javax.xml.transform.Result)>(res);
+
+     label0:
+        virtualinvoke treeModel.<org.apache.fop.area.AreaTreeModel: void endDocument()>();
+
+     label1:
+        goto label3;
+
+     label2:
+        $r5 := @caughtexception;
+        e = $r5;
+        $r6 = new org.apache.fop.apps.FOPException;
+        specialinvoke $r6.<org.apache.fop.apps.FOPException: void <init>(java.lang.Exception)>(e);
+        throw $r6;
+
+     label3:
+        return;
+
+        catch org.xml.sax.SAXException from label0 to label1 with label2;
+    }
+}

@@ -1,0 +1,209 @@
+public class org.apache.fop.render.bitmap.PNGRenderer_onthefly extends org.apache.fop.render.java2d.Java2DRenderer
+{
+    public static final java.lang.String MIME_TYPE;
+    private java.lang.String fileSyntax;
+    private java.io.File outputDir;
+    private org.apache.xmlgraphics.image.codec.png.PNGEncodeParam renderParams;
+    private java.io.OutputStream firstOutputStream;
+
+    public void <init>()
+    {
+        org.apache.fop.render.bitmap.PNGRenderer_onthefly this;
+
+        this := @this: org.apache.fop.render.bitmap.PNGRenderer_onthefly;
+        specialinvoke this.<org.apache.fop.render.java2d.Java2DRenderer: void <init>()>();
+        return;
+    }
+
+    public java.lang.String getMimeType()
+    {
+        org.apache.fop.render.bitmap.PNGRenderer_onthefly this;
+
+        this := @this: org.apache.fop.render.bitmap.PNGRenderer_onthefly;
+        return "image/png";
+    }
+
+    public boolean supportsOutOfOrder()
+    {
+        org.apache.fop.render.bitmap.PNGRenderer_onthefly this;
+
+        this := @this: org.apache.fop.render.bitmap.PNGRenderer_onthefly;
+        return 1;
+    }
+
+    public void startRenderer(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.render.bitmap.PNGRenderer_onthefly this;
+        java.io.OutputStream outputStream;
+        org.apache.commons.logging.Log $r0;
+
+        this := @this: org.apache.fop.render.bitmap.PNGRenderer_onthefly;
+        outputStream := @parameter0: java.io.OutputStream;
+        $r0 = <org.apache.fop.render.bitmap.PNGRenderer_onthefly: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void info(java.lang.Object)>("rendering areas to PNG");
+        specialinvoke this.<org.apache.fop.render.bitmap.PNGRenderer_onthefly: void setOutputDirectory()>();
+        this.<org.apache.fop.render.bitmap.PNGRenderer_onthefly: java.io.OutputStream firstOutputStream> = outputStream;
+        return;
+    }
+
+    private void setOutputDirectory()
+    {
+        org.apache.fop.render.bitmap.PNGRenderer_onthefly this;
+        java.io.File f, $r1;
+        java.lang.String s, $r2;
+        int i, $i0;
+        org.apache.fop.apps.FOUserAgent $r0;
+        char $c1;
+
+        this := @this: org.apache.fop.render.bitmap.PNGRenderer_onthefly;
+        $r0 = virtualinvoke this.<org.apache.fop.render.bitmap.PNGRenderer_onthefly: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        f = virtualinvoke $r0.<org.apache.fop.apps.FOUserAgent: java.io.File getOutputFile()>();
+        $r1 = virtualinvoke f.<java.io.File: java.io.File getParentFile()>();
+        this.<org.apache.fop.render.bitmap.PNGRenderer_onthefly: java.io.File outputDir> = $r1;
+        s = virtualinvoke f.<java.io.File: java.lang.String getName()>();
+        i = virtualinvoke s.<java.lang.String: int lastIndexOf(java.lang.String)>(".");
+        $i0 = i - 1;
+        $c1 = virtualinvoke s.<java.lang.String: char charAt(int)>($i0);
+        if $c1 != 49 goto label0;
+
+        i = i + -1;
+
+     label0:
+        $r2 = virtualinvoke s.<java.lang.String: java.lang.String substring(int,int)>(0, i);
+        this.<org.apache.fop.render.bitmap.PNGRenderer_onthefly: java.lang.String fileSyntax> = $r2;
+        return;
+    }
+
+    public void renderPage(org.apache.fop.area.PageViewport) throws java.io.IOException
+    {
+        org.apache.fop.render.bitmap.PNGRenderer_onthefly this;
+        org.apache.fop.area.PageViewport pageViewport;
+        java.awt.image.BufferedImage image;
+        java.io.OutputStream os, $r6;
+        org.apache.xmlgraphics.image.codec.png.PNGImageEncoder encoder, $r4;
+        java.lang.Throwable l5, $r7;
+        org.apache.commons.logging.Log $r0;
+        java.lang.StringBuffer $r1;
+        int $i0, $i1;
+        java.lang.String $r2;
+        org.apache.xmlgraphics.image.codec.png.PNGEncodeParam $r3, $r5;
+
+        this := @this: org.apache.fop.render.bitmap.PNGRenderer_onthefly;
+        pageViewport := @parameter0: org.apache.fop.area.PageViewport;
+        image = virtualinvoke this.<org.apache.fop.render.bitmap.PNGRenderer_onthefly: java.awt.image.BufferedImage getPageImage(org.apache.fop.area.PageViewport)>(pageViewport);
+        $r0 = <org.apache.fop.render.bitmap.PNGRenderer_onthefly: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Encoding page");
+        $i0 = virtualinvoke this.<org.apache.fop.render.bitmap.PNGRenderer_onthefly: int getCurrentPageNumber()>();
+        $i0 = $i0 + 1;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r2);
+        $r3 = staticinvoke <org.apache.xmlgraphics.image.codec.png.PNGEncodeParam: org.apache.xmlgraphics.image.codec.png.PNGEncodeParam getDefaultEncodeParam(java.awt.image.RenderedImage)>(image);
+        this.<org.apache.fop.render.bitmap.PNGRenderer_onthefly: org.apache.xmlgraphics.image.codec.png.PNGEncodeParam renderParams> = $r3;
+        $i1 = virtualinvoke this.<org.apache.fop.render.bitmap.PNGRenderer_onthefly: int getCurrentPageNumber()>();
+        os = specialinvoke this.<org.apache.fop.render.bitmap.PNGRenderer_onthefly: java.io.OutputStream getCurrentOutputStream(int)>($i1);
+        if os == null goto label6;
+
+     label0:
+        $r4 = new org.apache.xmlgraphics.image.codec.png.PNGImageEncoder;
+        $r5 = this.<org.apache.fop.render.bitmap.PNGRenderer_onthefly: org.apache.xmlgraphics.image.codec.png.PNGEncodeParam renderParams>;
+        specialinvoke $r4.<org.apache.xmlgraphics.image.codec.png.PNGImageEncoder: void <init>(java.io.OutputStream,org.apache.xmlgraphics.image.codec.png.PNGEncodeParam)>(os, $r5);
+        encoder = $r4;
+        virtualinvoke encoder.<org.apache.xmlgraphics.image.codec.png.PNGImageEncoder: void encode(java.awt.image.RenderedImage)>(image);
+
+     label1:
+        $r6 = this.<org.apache.fop.render.bitmap.PNGRenderer_onthefly: java.io.OutputStream firstOutputStream>;
+        if os == $r6 goto label6;
+
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.OutputStream)>(os);
+        goto label6;
+
+     label2:
+        $r7 := @caughtexception;
+
+     label3:
+        l5 = $r7;
+
+     label4:
+        $r6 = this.<org.apache.fop.render.bitmap.PNGRenderer_onthefly: java.io.OutputStream firstOutputStream>;
+        if os == $r6 goto label5;
+
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.OutputStream)>(os);
+
+     label5:
+        throw l5;
+
+     label6:
+        $i1 = virtualinvoke this.<org.apache.fop.render.bitmap.PNGRenderer_onthefly: int getCurrentPageNumber()>();
+        $i1 = $i1 + 1;
+        virtualinvoke this.<org.apache.fop.render.bitmap.PNGRenderer_onthefly: void setCurrentPageNumber(int)>($i1);
+        return;
+
+        catch java.lang.Throwable from label0 to label1 with label2;
+        catch java.lang.Throwable from label3 to label4 with label2;
+    }
+
+    private java.io.OutputStream getCurrentOutputStream(int)
+    {
+        org.apache.fop.render.bitmap.PNGRenderer_onthefly this;
+        int pageNumber, $i0;
+        java.lang.StringBuffer $r0;
+        java.io.File f, $r2, $r3;
+        java.io.BufferedOutputStream os, $r6;
+        java.io.FileNotFoundException e, $r8;
+        java.io.OutputStream $r1;
+        java.lang.String $r4, $r5;
+        java.io.FileOutputStream $r7;
+        org.apache.fop.apps.FOPException $r9;
+
+        this := @this: org.apache.fop.render.bitmap.PNGRenderer_onthefly;
+        pageNumber := @parameter0: int;
+        if pageNumber != 0 goto label0;
+
+        $r1 = this.<org.apache.fop.render.bitmap.PNGRenderer_onthefly: java.io.OutputStream firstOutputStream>;
+        return $r1;
+
+     label0:
+        $r2 = new java.io.File;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r3 = this.<org.apache.fop.render.bitmap.PNGRenderer_onthefly: java.io.File outputDir>;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r3);
+        $r4 = <java.io.File: java.lang.String separator>;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r4 = this.<org.apache.fop.render.bitmap.PNGRenderer_onthefly: java.lang.String fileSyntax>;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $i0 = pageNumber + 1;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(".png");
+        $r5 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r2.<java.io.File: void <init>(java.lang.String)>($r5);
+        f = $r2;
+
+     label1:
+        $r6 = new java.io.BufferedOutputStream;
+        $r7 = new java.io.FileOutputStream;
+        specialinvoke $r7.<java.io.FileOutputStream: void <init>(java.io.File)>(f);
+        specialinvoke $r6.<java.io.BufferedOutputStream: void <init>(java.io.OutputStream)>($r7);
+        os = $r6;
+
+     label2:
+        return os;
+
+     label3:
+        $r8 := @caughtexception;
+        e = $r8;
+        $r9 = new org.apache.fop.apps.FOPException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Can\'t build the OutputStream\n");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(e);
+        $r5 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r9.<org.apache.fop.apps.FOPException: void <init>(java.lang.String)>($r5);
+        return null;
+
+        catch java.io.FileNotFoundException from label1 to label2 with label3;
+    }
+}

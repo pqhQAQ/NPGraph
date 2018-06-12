@@ -1,0 +1,216 @@
+public class org.apache.fop.render.txt.border.BorderManager extends java.lang.Object
+{
+    private org.apache.fop.render.txt.border.AbstractBorderElement[][] borderInfo;
+    private int width;
+    private int height;
+    private int startX;
+    private int startY;
+    private org.apache.fop.render.txt.TXTState state;
+
+    public void <init>(int, int, org.apache.fop.render.txt.TXTState)
+    {
+        org.apache.fop.render.txt.border.BorderManager this;
+        int pageWidth, pageHeight;
+        org.apache.fop.render.txt.TXTState state;
+        org.apache.fop.render.txt.border.AbstractBorderElement[][] $r0;
+
+        this := @this: org.apache.fop.render.txt.border.BorderManager;
+        pageWidth := @parameter0: int;
+        pageHeight := @parameter1: int;
+        state := @parameter2: org.apache.fop.render.txt.TXTState;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.render.txt.border.BorderManager: org.apache.fop.render.txt.TXTState state> = state;
+        $r0 = newmultiarray (org.apache.fop.render.txt.border.AbstractBorderElement)[pageHeight][pageWidth];
+        this.<org.apache.fop.render.txt.border.BorderManager: org.apache.fop.render.txt.border.AbstractBorderElement[][] borderInfo> = $r0;
+        return;
+    }
+
+    public void addBorderElement(int, int, int, int)
+    {
+        org.apache.fop.render.txt.border.BorderManager this;
+        int x, y, style, type;
+        null_type be;
+        org.apache.fop.render.txt.border.SolidAndDoubleBorderElement $r0;
+        org.apache.fop.render.txt.border.AbstractBorderElement be, $r6, $r9;
+        org.apache.fop.render.txt.border.DottedBorderElement $r1;
+        org.apache.fop.render.txt.border.DashedBorderElement $r2;
+        org.apache.fop.render.txt.TXTState $r3;
+        org.apache.fop.render.txt.border.AbstractBorderElement[][] $r4, $r7;
+        org.apache.fop.render.txt.border.AbstractBorderElement[] $r5, $r8;
+
+        this := @this: org.apache.fop.render.txt.border.BorderManager;
+        x := @parameter0: int;
+        y := @parameter1: int;
+        style := @parameter2: int;
+        type := @parameter3: int;
+        be = null;
+        if style == 133 goto label0;
+
+        if style != 37 goto label1;
+
+     label0:
+        $r0 = new org.apache.fop.render.txt.border.SolidAndDoubleBorderElement;
+        specialinvoke $r0.<org.apache.fop.render.txt.border.SolidAndDoubleBorderElement: void <init>(int,int)>(style, type);
+        be = $r0;
+        goto label4;
+
+     label1:
+        if style != 36 goto label2;
+
+        $r1 = new org.apache.fop.render.txt.border.DottedBorderElement;
+        specialinvoke $r1.<org.apache.fop.render.txt.border.DottedBorderElement: void <init>()>();
+        be = $r1;
+        goto label4;
+
+     label2:
+        if style != 31 goto label3;
+
+        $r2 = new org.apache.fop.render.txt.border.DashedBorderElement;
+        specialinvoke $r2.<org.apache.fop.render.txt.border.DashedBorderElement: void <init>(int)>(type);
+        be = $r2;
+        goto label4;
+
+     label3:
+        return;
+
+     label4:
+        $r3 = this.<org.apache.fop.render.txt.border.BorderManager: org.apache.fop.render.txt.TXTState state>;
+        virtualinvoke be.<org.apache.fop.render.txt.border.AbstractBorderElement: void transformElement(org.apache.fop.render.txt.TXTState)>($r3);
+        $r4 = this.<org.apache.fop.render.txt.border.BorderManager: org.apache.fop.render.txt.border.AbstractBorderElement[][] borderInfo>;
+        $r5 = $r4[y];
+        $r6 = $r5[x];
+        if $r6 == null goto label5;
+
+        $r4 = this.<org.apache.fop.render.txt.border.BorderManager: org.apache.fop.render.txt.border.AbstractBorderElement[][] borderInfo>;
+        $r5 = $r4[y];
+        $r7 = this.<org.apache.fop.render.txt.border.BorderManager: org.apache.fop.render.txt.border.AbstractBorderElement[][] borderInfo>;
+        $r8 = $r7[y];
+        $r9 = $r8[x];
+        $r9 = virtualinvoke $r9.<org.apache.fop.render.txt.border.AbstractBorderElement: org.apache.fop.render.txt.border.AbstractBorderElement merge(org.apache.fop.render.txt.border.AbstractBorderElement)>(be);
+        $r5[x] = $r9;
+        goto label6;
+
+     label5:
+        $r4 = this.<org.apache.fop.render.txt.border.BorderManager: org.apache.fop.render.txt.border.AbstractBorderElement[][] borderInfo>;
+        $r5 = $r4[y];
+        $r5[x] = be;
+
+     label6:
+        return;
+    }
+
+    public java.lang.Character getCharacter(int, int)
+    {
+        org.apache.fop.render.txt.border.BorderManager this;
+        int x, y;
+        java.lang.Character c, $r3;
+        org.apache.fop.render.txt.border.AbstractBorderElement[][] $r0, $r4;
+        org.apache.fop.render.txt.border.AbstractBorderElement[] $r1, $r5;
+        org.apache.fop.render.txt.border.AbstractBorderElement $r2, $r6;
+        char $c0;
+
+        this := @this: org.apache.fop.render.txt.border.BorderManager;
+        x := @parameter0: int;
+        y := @parameter1: int;
+        c = null;
+        $r0 = this.<org.apache.fop.render.txt.border.BorderManager: org.apache.fop.render.txt.border.AbstractBorderElement[][] borderInfo>;
+        $r1 = $r0[y];
+        $r2 = $r1[x];
+        if $r2 == null goto label0;
+
+        $r3 = new java.lang.Character;
+        $r4 = this.<org.apache.fop.render.txt.border.BorderManager: org.apache.fop.render.txt.border.AbstractBorderElement[][] borderInfo>;
+        $r5 = $r4[y];
+        $r6 = $r5[x];
+        $c0 = virtualinvoke $r6.<org.apache.fop.render.txt.border.AbstractBorderElement: char convert2Char()>();
+        specialinvoke $r3.<java.lang.Character: void <init>(char)>($c0);
+        c = $r3;
+
+     label0:
+        return c;
+    }
+
+    public int getWidth()
+    {
+        org.apache.fop.render.txt.border.BorderManager this;
+        int $i0;
+
+        this := @this: org.apache.fop.render.txt.border.BorderManager;
+        $i0 = this.<org.apache.fop.render.txt.border.BorderManager: int width>;
+        return $i0;
+    }
+
+    public void setWidth(int)
+    {
+        org.apache.fop.render.txt.border.BorderManager this;
+        int width;
+
+        this := @this: org.apache.fop.render.txt.border.BorderManager;
+        width := @parameter0: int;
+        this.<org.apache.fop.render.txt.border.BorderManager: int width> = width;
+        return;
+    }
+
+    public int getHeight()
+    {
+        org.apache.fop.render.txt.border.BorderManager this;
+        int $i0;
+
+        this := @this: org.apache.fop.render.txt.border.BorderManager;
+        $i0 = this.<org.apache.fop.render.txt.border.BorderManager: int height>;
+        return $i0;
+    }
+
+    public void setHeight(int)
+    {
+        org.apache.fop.render.txt.border.BorderManager this;
+        int height;
+
+        this := @this: org.apache.fop.render.txt.border.BorderManager;
+        height := @parameter0: int;
+        this.<org.apache.fop.render.txt.border.BorderManager: int height> = height;
+        return;
+    }
+
+    public int getStartX()
+    {
+        org.apache.fop.render.txt.border.BorderManager this;
+        int $i0;
+
+        this := @this: org.apache.fop.render.txt.border.BorderManager;
+        $i0 = this.<org.apache.fop.render.txt.border.BorderManager: int startX>;
+        return $i0;
+    }
+
+    public void setStartX(int)
+    {
+        org.apache.fop.render.txt.border.BorderManager this;
+        int startX;
+
+        this := @this: org.apache.fop.render.txt.border.BorderManager;
+        startX := @parameter0: int;
+        this.<org.apache.fop.render.txt.border.BorderManager: int startX> = startX;
+        return;
+    }
+
+    public int getStartY()
+    {
+        org.apache.fop.render.txt.border.BorderManager this;
+        int $i0;
+
+        this := @this: org.apache.fop.render.txt.border.BorderManager;
+        $i0 = this.<org.apache.fop.render.txt.border.BorderManager: int startY>;
+        return $i0;
+    }
+
+    public void setStartY(int)
+    {
+        org.apache.fop.render.txt.border.BorderManager this;
+        int startY;
+
+        this := @this: org.apache.fop.render.txt.border.BorderManager;
+        startY := @parameter0: int;
+        this.<org.apache.fop.render.txt.border.BorderManager: int startY> = startY;
+        return;
+    }
+}

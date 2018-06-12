@@ -1,0 +1,1100 @@
+public class org.apache.fop.layoutmgr.PageBreaker extends org.apache.fop.layoutmgr.AbstractBreaker
+{
+    private org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm;
+    private boolean firstPart;
+    private boolean pageBreakHandled;
+    private boolean needColumnBalancing;
+    private org.apache.fop.layoutmgr.PageProvider pageProvider;
+    private org.apache.fop.area.Block separatorArea;
+    private org.apache.fop.layoutmgr.FlowLayoutManager childFLM;
+    private org.apache.fop.layoutmgr.StaticContentLayoutManager footnoteSeparatorLM;
+
+    public void <init>(org.apache.fop.layoutmgr.PageSequenceLayoutManager)
+    {
+        org.apache.fop.layoutmgr.PageBreaker this;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm;
+        org.apache.fop.layoutmgr.PageProvider $r0;
+        org.apache.fop.layoutmgr.LayoutManagerMaker $r1;
+        org.apache.fop.fo.pagination.PageSequence $r2;
+        org.apache.fop.fo.pagination.Flow $r3;
+        org.apache.fop.layoutmgr.FlowLayoutManager $r4;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreaker;
+        pslm := @parameter0: org.apache.fop.layoutmgr.PageSequenceLayoutManager;
+        specialinvoke this.<org.apache.fop.layoutmgr.AbstractBreaker: void <init>()>();
+        this.<org.apache.fop.layoutmgr.PageBreaker: boolean firstPart> = 1;
+        this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.FlowLayoutManager childFLM> = null;
+        this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.StaticContentLayoutManager footnoteSeparatorLM> = null;
+        this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm> = pslm;
+        $r0 = virtualinvoke pslm.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.layoutmgr.PageProvider getPageProvider()>();
+        this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageProvider pageProvider> = $r0;
+        $r1 = virtualinvoke pslm.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.layoutmgr.LayoutManagerMaker getLayoutManagerMaker()>();
+        $r2 = virtualinvoke pslm.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.fo.pagination.PageSequence getPageSequence()>();
+        $r3 = virtualinvoke $r2.<org.apache.fop.fo.pagination.PageSequence: org.apache.fop.fo.pagination.Flow getMainFlow()>();
+        $r4 = interfaceinvoke $r1.<org.apache.fop.layoutmgr.LayoutManagerMaker: org.apache.fop.layoutmgr.FlowLayoutManager makeFlowLayoutManager(org.apache.fop.layoutmgr.PageSequenceLayoutManager,org.apache.fop.fo.pagination.Flow)>(pslm, $r3);
+        this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.FlowLayoutManager childFLM> = $r4;
+        return;
+    }
+
+    protected void updateLayoutContext(org.apache.fop.layoutmgr.LayoutContext)
+    {
+        org.apache.fop.layoutmgr.PageBreaker this;
+        org.apache.fop.layoutmgr.LayoutContext context;
+        int flowIPD;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager $r0;
+        org.apache.fop.area.PageViewport $r1;
+        org.apache.fop.area.Span $r2;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreaker;
+        context := @parameter0: org.apache.fop.layoutmgr.LayoutContext;
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.area.PageViewport getCurrentPV()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.area.PageViewport: org.apache.fop.area.Span getCurrentSpan()>();
+        flowIPD = virtualinvoke $r2.<org.apache.fop.area.Span: int getColumnWidth()>();
+        virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: void setRefIPD(int)>(flowIPD);
+        return;
+    }
+
+    protected org.apache.fop.layoutmgr.LayoutManager getTopLevelLM()
+    {
+        org.apache.fop.layoutmgr.PageBreaker this;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager $r0;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreaker;
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        return $r0;
+    }
+
+    protected org.apache.fop.layoutmgr.PageProvider getPageProvider()
+    {
+        org.apache.fop.layoutmgr.PageBreaker this;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager $r0;
+        org.apache.fop.layoutmgr.PageProvider $r1;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreaker;
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.layoutmgr.PageProvider getPageProvider()>();
+        return $r1;
+    }
+
+    protected org.apache.fop.layoutmgr.PageBreakingAlgorithm$PageBreakingLayoutListener getLayoutListener()
+    {
+        org.apache.fop.layoutmgr.PageBreaker this;
+        org.apache.fop.layoutmgr.PageBreaker$1 $r0;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreaker;
+        $r0 = new org.apache.fop.layoutmgr.PageBreaker$1;
+        specialinvoke $r0.<org.apache.fop.layoutmgr.PageBreaker$1: void <init>(org.apache.fop.layoutmgr.PageBreaker)>(this);
+        return $r0;
+    }
+
+    protected int handleSpanChange(org.apache.fop.layoutmgr.LayoutContext, int)
+    {
+        org.apache.fop.layoutmgr.PageBreaker this;
+        org.apache.fop.layoutmgr.LayoutContext childLC;
+        int nextSequenceStartsOn, $i0, $i1;
+        boolean $z0, $z1;
+        org.apache.commons.logging.Log $r1;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreaker;
+        childLC := @parameter0: org.apache.fop.layoutmgr.LayoutContext;
+        nextSequenceStartsOn := @parameter1: int;
+        this.<org.apache.fop.layoutmgr.PageBreaker: boolean needColumnBalancing> = 0;
+        $i0 = virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: int getNextSpan()>();
+        if $i0 == 0 goto label2;
+
+        nextSequenceStartsOn = virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: int getNextSpan()>();
+        $i1 = virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: int getNextSpan()>();
+        if $i1 != 5 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        this.<org.apache.fop.layoutmgr.PageBreaker: boolean needColumnBalancing> = $z0;
+
+     label2:
+        $z1 = this.<org.apache.fop.layoutmgr.PageBreaker: boolean needColumnBalancing>;
+        if $z1 == 0 goto label3;
+
+        $r1 = <org.apache.fop.layoutmgr.AbstractBreaker: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("Column balancing necessary for the next element list!!!");
+
+     label3:
+        return nextSequenceStartsOn;
+    }
+
+    protected int getNextBlockList(org.apache.fop.layoutmgr.LayoutContext, int)
+    {
+        org.apache.fop.layoutmgr.PageBreaker this;
+        org.apache.fop.layoutmgr.LayoutContext childLC;
+        int nextSequenceStartsOn, $i0, $i1, $i2;
+        boolean $z0;
+        org.apache.fop.layoutmgr.PageProvider $r0;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager $r1, $r2;
+        org.apache.fop.area.PageViewport $r3;
+        org.apache.fop.area.Span $r4;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreaker;
+        childLC := @parameter0: org.apache.fop.layoutmgr.LayoutContext;
+        nextSequenceStartsOn := @parameter1: int;
+        $z0 = this.<org.apache.fop.layoutmgr.PageBreaker: boolean firstPart>;
+        if $z0 != 0 goto label0;
+
+        specialinvoke this.<org.apache.fop.layoutmgr.PageBreaker: void handleBreakTrait(int)>(nextSequenceStartsOn);
+
+     label0:
+        this.<org.apache.fop.layoutmgr.PageBreaker: boolean firstPart> = 0;
+        this.<org.apache.fop.layoutmgr.PageBreaker: boolean pageBreakHandled> = 1;
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageProvider pageProvider>;
+        $r1 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $i0 = virtualinvoke $r1.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: int getCurrentPageNum()>();
+        $r2 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.area.PageViewport getCurrentPV()>();
+        $r4 = virtualinvoke $r3.<org.apache.fop.area.PageViewport: org.apache.fop.area.Span getCurrentSpan()>();
+        $i1 = virtualinvoke $r4.<org.apache.fop.area.Span: int getCurrentFlowIndex()>();
+        virtualinvoke $r0.<org.apache.fop.layoutmgr.PageProvider: void setStartOfNextElementList(int,int)>($i0, $i1);
+        $i2 = specialinvoke this.<org.apache.fop.layoutmgr.AbstractBreaker: int getNextBlockList(org.apache.fop.layoutmgr.LayoutContext,int)>(childLC, nextSequenceStartsOn);
+        return $i2;
+    }
+
+    protected java.util.LinkedList getNextKnuthElements(org.apache.fop.layoutmgr.LayoutContext, int)
+    {
+        org.apache.fop.layoutmgr.PageBreaker this;
+        org.apache.fop.layoutmgr.LayoutContext context, footnoteContext, $r3;
+        int alignment, $i0, $i1;
+        java.util.LinkedList contentList, footnoteBodyLMs, $r9;
+        boolean bFootnotesPresent, $z0;
+        java.util.ListIterator contentListIterator, footnoteBodyIterator;
+        org.apache.fop.layoutmgr.ListElement element;
+        org.apache.fop.layoutmgr.FootnoteBodyLayoutManager fblm;
+        org.apache.fop.fo.pagination.StaticContent footnoteSeparator;
+        org.apache.fop.layoutmgr.FlowLayoutManager $r0, $r8;
+        java.lang.Object $r1;
+        org.apache.fop.layoutmgr.KnuthBlockBox $r2;
+        org.apache.fop.traits.MinOptMax $r4;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager $r5, $r10, $r15;
+        org.apache.fop.area.PageViewport $r6;
+        org.apache.fop.area.RegionReference $r7;
+        org.apache.fop.fo.pagination.PageSequence $r11;
+        org.apache.fop.area.Block $r12, $r13, $r16, $r19;
+        org.apache.fop.layoutmgr.LayoutManagerMaker $r14;
+        org.apache.fop.layoutmgr.StaticContentLayoutManager $r17, $r18;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreaker;
+        context := @parameter0: org.apache.fop.layoutmgr.LayoutContext;
+        alignment := @parameter1: int;
+        contentList = null;
+
+     label0:
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.FlowLayoutManager childFLM>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.layoutmgr.FlowLayoutManager: boolean isFinished()>();
+        if $z0 != 0 goto label1;
+
+        if contentList != null goto label1;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.FlowLayoutManager childFLM>;
+        contentList = virtualinvoke $r0.<org.apache.fop.layoutmgr.FlowLayoutManager: java.util.LinkedList getNextKnuthElements(org.apache.fop.layoutmgr.LayoutContext,int)>(context, alignment);
+        goto label0;
+
+     label1:
+        bFootnotesPresent = 0;
+        if contentList == null goto label5;
+
+        contentListIterator = virtualinvoke contentList.<java.util.LinkedList: java.util.ListIterator listIterator()>();
+
+     label2:
+        $z0 = interfaceinvoke contentListIterator.<java.util.ListIterator: boolean hasNext()>();
+        if $z0 == 0 goto label5;
+
+        $r1 = interfaceinvoke contentListIterator.<java.util.ListIterator: java.lang.Object next()>();
+        element = (org.apache.fop.layoutmgr.ListElement) $r1;
+        $z0 = element instanceof org.apache.fop.layoutmgr.KnuthBlockBox;
+        if $z0 == 0 goto label4;
+
+        $r2 = (org.apache.fop.layoutmgr.KnuthBlockBox) element;
+        $z0 = virtualinvoke $r2.<org.apache.fop.layoutmgr.KnuthBlockBox: boolean hasAnchors()>();
+        if $z0 == 0 goto label4;
+
+        bFootnotesPresent = 1;
+        $r3 = new org.apache.fop.layoutmgr.LayoutContext;
+        specialinvoke $r3.<org.apache.fop.layoutmgr.LayoutContext: void <init>(org.apache.fop.layoutmgr.LayoutContext)>(context);
+        footnoteContext = $r3;
+        $r4 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: org.apache.fop.traits.MinOptMax getStackLimitBP()>();
+        virtualinvoke footnoteContext.<org.apache.fop.layoutmgr.LayoutContext: void setStackLimitBP(org.apache.fop.traits.MinOptMax)>($r4);
+        $r5 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r6 = virtualinvoke $r5.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.area.PageViewport getCurrentPV()>();
+        $r7 = virtualinvoke $r6.<org.apache.fop.area.PageViewport: org.apache.fop.area.RegionReference getRegionReference(int)>(36);
+        $i0 = virtualinvoke $r7.<org.apache.fop.area.RegionReference: int getIPD()>();
+        virtualinvoke footnoteContext.<org.apache.fop.layoutmgr.LayoutContext: void setRefIPD(int)>($i0);
+        $r2 = (org.apache.fop.layoutmgr.KnuthBlockBox) element;
+        footnoteBodyLMs = virtualinvoke $r2.<org.apache.fop.layoutmgr.KnuthBlockBox: java.util.LinkedList getFootnoteBodyLMs()>();
+        footnoteBodyIterator = virtualinvoke footnoteBodyLMs.<java.util.LinkedList: java.util.ListIterator listIterator()>();
+
+     label3:
+        $z0 = interfaceinvoke footnoteBodyIterator.<java.util.ListIterator: boolean hasNext()>();
+        if $z0 == 0 goto label4;
+
+        $r1 = interfaceinvoke footnoteBodyIterator.<java.util.ListIterator: java.lang.Object next()>();
+        fblm = (org.apache.fop.layoutmgr.FootnoteBodyLayoutManager) $r1;
+        $r8 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.FlowLayoutManager childFLM>;
+        virtualinvoke fblm.<org.apache.fop.layoutmgr.FootnoteBodyLayoutManager: void setParent(org.apache.fop.layoutmgr.LayoutManager)>($r8);
+        virtualinvoke fblm.<org.apache.fop.layoutmgr.FootnoteBodyLayoutManager: void initialize()>();
+        $r2 = (org.apache.fop.layoutmgr.KnuthBlockBox) element;
+        $r9 = virtualinvoke fblm.<org.apache.fop.layoutmgr.FootnoteBodyLayoutManager: java.util.LinkedList getNextKnuthElements(org.apache.fop.layoutmgr.LayoutContext,int)>(footnoteContext, alignment);
+        virtualinvoke $r2.<org.apache.fop.layoutmgr.KnuthBlockBox: void addElementList(java.util.LinkedList)>($r9);
+        goto label3;
+
+     label4:
+        goto label2;
+
+     label5:
+        if bFootnotesPresent == 0 goto label6;
+
+        $r10 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r11 = virtualinvoke $r10.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.fo.pagination.PageSequence getPageSequence()>();
+        footnoteSeparator = virtualinvoke $r11.<org.apache.fop.fo.pagination.PageSequence: org.apache.fop.fo.pagination.StaticContent getStaticContent(java.lang.String)>("xsl-footnote-separator");
+        if footnoteSeparator == null goto label6;
+
+        $r12 = new org.apache.fop.area.Block;
+        specialinvoke $r12.<org.apache.fop.area.Block: void <init>()>();
+        this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.area.Block separatorArea> = $r12;
+        $r13 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.area.Block separatorArea>;
+        $r5 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r6 = virtualinvoke $r5.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.area.PageViewport getCurrentPV()>();
+        $r7 = virtualinvoke $r6.<org.apache.fop.area.PageViewport: org.apache.fop.area.RegionReference getRegionReference(int)>(36);
+        $i0 = virtualinvoke $r7.<org.apache.fop.area.RegionReference: int getIPD()>();
+        virtualinvoke $r13.<org.apache.fop.area.Block: void setIPD(int)>($i0);
+        $r5 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r14 = virtualinvoke $r5.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.layoutmgr.LayoutManagerMaker getLayoutManagerMaker()>();
+        $r15 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r16 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.area.Block separatorArea>;
+        $r17 = interfaceinvoke $r14.<org.apache.fop.layoutmgr.LayoutManagerMaker: org.apache.fop.layoutmgr.StaticContentLayoutManager makeStaticContentLayoutManager(org.apache.fop.layoutmgr.PageSequenceLayoutManager,org.apache.fop.fo.pagination.StaticContent,org.apache.fop.area.Block)>($r15, footnoteSeparator, $r16);
+        this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.StaticContentLayoutManager footnoteSeparatorLM> = $r17;
+        $r18 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.StaticContentLayoutManager footnoteSeparatorLM>;
+        virtualinvoke $r18.<org.apache.fop.layoutmgr.StaticContentLayoutManager: void doLayout()>();
+        $r4 = new org.apache.fop.traits.MinOptMax;
+        $r19 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.area.Block separatorArea>;
+        $i1 = virtualinvoke $r19.<org.apache.fop.area.Block: int getBPD()>();
+        specialinvoke $r4.<org.apache.fop.traits.MinOptMax: void <init>(int)>($i1);
+        this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.traits.MinOptMax footnoteSeparatorLength> = $r4;
+
+     label6:
+        return contentList;
+    }
+
+    protected int getCurrentDisplayAlign()
+    {
+        org.apache.fop.layoutmgr.PageBreaker this;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager $r0;
+        org.apache.fop.layoutmgr.Page $r1;
+        org.apache.fop.fo.pagination.SimplePageMaster $r2;
+        org.apache.fop.fo.pagination.Region $r3;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreaker;
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.layoutmgr.Page getCurrentPage()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.layoutmgr.Page: org.apache.fop.fo.pagination.SimplePageMaster getSimplePageMaster()>();
+        $r3 = virtualinvoke $r2.<org.apache.fop.fo.pagination.SimplePageMaster: org.apache.fop.fo.pagination.Region getRegion(int)>(36);
+        $i0 = virtualinvoke $r3.<org.apache.fop.fo.pagination.Region: int getDisplayAlign()>();
+        return $i0;
+    }
+
+    protected boolean hasMoreContent()
+    {
+        org.apache.fop.layoutmgr.PageBreaker this;
+        org.apache.fop.layoutmgr.FlowLayoutManager $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreaker;
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.FlowLayoutManager childFLM>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.layoutmgr.FlowLayoutManager: boolean isFinished()>();
+        if $z0 != 0 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        return $z0;
+    }
+
+    protected void addAreas(org.apache.fop.layoutmgr.PositionIterator, org.apache.fop.layoutmgr.LayoutContext)
+    {
+        org.apache.fop.layoutmgr.PageBreaker this;
+        org.apache.fop.layoutmgr.PositionIterator posIter;
+        org.apache.fop.layoutmgr.LayoutContext context;
+        org.apache.fop.fo.pagination.StaticContent footnoteSeparator;
+        org.apache.fop.layoutmgr.StaticContentLayoutManager $r0, $r11;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager $r1, $r5, $r9;
+        org.apache.fop.fo.pagination.PageSequence $r2;
+        org.apache.fop.area.Block $r3, $r4, $r10;
+        org.apache.fop.area.PageViewport $r6;
+        org.apache.fop.area.RegionReference $r7;
+        int $i0;
+        org.apache.fop.layoutmgr.LayoutManagerMaker $r8;
+        org.apache.fop.layoutmgr.FlowLayoutManager $r12;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreaker;
+        posIter := @parameter0: org.apache.fop.layoutmgr.PositionIterator;
+        context := @parameter1: org.apache.fop.layoutmgr.LayoutContext;
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.StaticContentLayoutManager footnoteSeparatorLM>;
+        if $r0 == null goto label0;
+
+        $r1 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.fo.pagination.PageSequence getPageSequence()>();
+        footnoteSeparator = virtualinvoke $r2.<org.apache.fop.fo.pagination.PageSequence: org.apache.fop.fo.pagination.StaticContent getStaticContent(java.lang.String)>("xsl-footnote-separator");
+        $r3 = new org.apache.fop.area.Block;
+        specialinvoke $r3.<org.apache.fop.area.Block: void <init>()>();
+        this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.area.Block separatorArea> = $r3;
+        $r4 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.area.Block separatorArea>;
+        $r5 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r6 = virtualinvoke $r5.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.area.PageViewport getCurrentPV()>();
+        $r7 = virtualinvoke $r6.<org.apache.fop.area.PageViewport: org.apache.fop.area.RegionReference getRegionReference(int)>(36);
+        $i0 = virtualinvoke $r7.<org.apache.fop.area.RegionReference: int getIPD()>();
+        virtualinvoke $r4.<org.apache.fop.area.Block: void setIPD(int)>($i0);
+        $r5 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r8 = virtualinvoke $r5.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.layoutmgr.LayoutManagerMaker getLayoutManagerMaker()>();
+        $r9 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r10 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.area.Block separatorArea>;
+        $r11 = interfaceinvoke $r8.<org.apache.fop.layoutmgr.LayoutManagerMaker: org.apache.fop.layoutmgr.StaticContentLayoutManager makeStaticContentLayoutManager(org.apache.fop.layoutmgr.PageSequenceLayoutManager,org.apache.fop.fo.pagination.StaticContent,org.apache.fop.area.Block)>($r9, footnoteSeparator, $r10);
+        this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.StaticContentLayoutManager footnoteSeparatorLM> = $r11;
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.StaticContentLayoutManager footnoteSeparatorLM>;
+        virtualinvoke $r0.<org.apache.fop.layoutmgr.StaticContentLayoutManager: void doLayout()>();
+
+     label0:
+        $r12 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.FlowLayoutManager childFLM>;
+        virtualinvoke $r12.<org.apache.fop.layoutmgr.FlowLayoutManager: void addAreas(org.apache.fop.layoutmgr.PositionIterator,org.apache.fop.layoutmgr.LayoutContext)>(posIter, context);
+        return;
+    }
+
+    protected void doPhase3(org.apache.fop.layoutmgr.PageBreakingAlgorithm, int, org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence, org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence)
+    {
+        org.apache.fop.layoutmgr.PageBreaker this;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm alg;
+        int partCount;
+        org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence originalList, effectiveList;
+        boolean $z0;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager $r0;
+        org.apache.fop.fo.pagination.PageSequence $r1;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreaker;
+        alg := @parameter0: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        partCount := @parameter1: int;
+        originalList := @parameter2: org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence;
+        effectiveList := @parameter3: org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence;
+        $z0 = this.<org.apache.fop.layoutmgr.PageBreaker: boolean needColumnBalancing>;
+        if $z0 == 0 goto label0;
+
+        specialinvoke this.<org.apache.fop.layoutmgr.PageBreaker: void doPhase3WithColumnBalancing(org.apache.fop.layoutmgr.PageBreakingAlgorithm,int,org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence,org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence)>(alg, partCount, originalList, effectiveList);
+        goto label2;
+
+     label0:
+        $z0 = virtualinvoke this.<org.apache.fop.layoutmgr.PageBreaker: boolean hasMoreContent()>();
+        if $z0 != 0 goto label1;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.fo.pagination.PageSequence getPageSequence()>();
+        $z0 = virtualinvoke $r1.<org.apache.fop.fo.pagination.PageSequence: boolean hasPagePositionLast()>();
+        if $z0 == 0 goto label1;
+
+        specialinvoke this.<org.apache.fop.layoutmgr.PageBreaker: void doPhase3WithLastPage(org.apache.fop.layoutmgr.PageBreakingAlgorithm,int,org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence,org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence)>(alg, partCount, originalList, effectiveList);
+        goto label2;
+
+     label1:
+        virtualinvoke this.<org.apache.fop.layoutmgr.PageBreaker: void addAreas(org.apache.fop.layoutmgr.PageBreakingAlgorithm,int,org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence,org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence)>(alg, partCount, originalList, effectiveList);
+
+     label2:
+        return;
+    }
+
+    private void doPhase3WithLastPage(org.apache.fop.layoutmgr.PageBreakingAlgorithm, int, org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence, org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence)
+    {
+        org.apache.fop.layoutmgr.PageBreaker this;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm alg, algRestart, $r10;
+        int partCount, restartPoint, newStartPos, currentPageNum, iOptPageCount, $i0, $i1, $i2, $i3, $i4;
+        org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence originalList, effectiveList;
+        org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition pbp;
+        boolean replaceLastPage, $z0, $z1;
+        org.apache.fop.layoutmgr.PageProvider $r0, $r12, $r19;
+        java.util.LinkedList $r1, $r15;
+        java.lang.Object $r2;
+        org.apache.commons.logging.Log $r3;
+        java.lang.StringBuffer $r4;
+        java.lang.String $r5;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager $r6, $r7, $r16;
+        org.apache.fop.area.PageViewport $r8, $r17;
+        org.apache.fop.area.Span $r9;
+        org.apache.fop.layoutmgr.LayoutManager $r11;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm$PageBreakingLayoutListener $r13;
+        org.apache.fop.traits.MinOptMax $r14;
+        org.apache.fop.area.BodyRegion $r18;
+        org.apache.fop.layoutmgr.Page $r20;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreaker;
+        alg := @parameter0: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        partCount := @parameter1: int;
+        originalList := @parameter2: org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence;
+        effectiveList := @parameter3: org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence;
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageProvider pageProvider>;
+        restartPoint = virtualinvoke $r0.<org.apache.fop.layoutmgr.PageProvider: int getStartingPartIndexForLastPage(int)>(partCount);
+        if restartPoint <= 0 goto label1;
+
+        virtualinvoke this.<org.apache.fop.layoutmgr.PageBreaker: void addAreas(org.apache.fop.layoutmgr.PageBreakingAlgorithm,int,org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence,org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence)>(alg, restartPoint, originalList, effectiveList);
+        $r1 = virtualinvoke alg.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.LinkedList getPageBreaks()>();
+        $i0 = restartPoint - 1;
+        $r2 = virtualinvoke $r1.<java.util.LinkedList: java.lang.Object get(int)>($i0);
+        pbp = (org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition) $r2;
+        newStartPos = virtualinvoke pbp.<org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition: int getLeafPos()>();
+        if newStartPos <= 0 goto label0;
+
+        specialinvoke this.<org.apache.fop.layoutmgr.PageBreaker: void handleBreakTrait(int)>(104);
+
+     label0:
+        goto label2;
+
+     label1:
+        newStartPos = 0;
+
+     label2:
+        $r3 = <org.apache.fop.layoutmgr.AbstractBreaker: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("Last page handling now!!!");
+        $r3 = <org.apache.fop.layoutmgr.AbstractBreaker: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("===================================================");
+        $r3 = <org.apache.fop.layoutmgr.AbstractBreaker: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Restarting at ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(restartPoint);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", new start position: ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(newStartPos);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r5);
+        this.<org.apache.fop.layoutmgr.PageBreaker: boolean pageBreakHandled> = 1;
+        $r6 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        currentPageNum = virtualinvoke $r6.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: int getCurrentPageNum()>();
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageProvider pageProvider>;
+        $r7 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r8 = virtualinvoke $r7.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.area.PageViewport getCurrentPV()>();
+        $r9 = virtualinvoke $r8.<org.apache.fop.area.PageViewport: org.apache.fop.area.Span getCurrentSpan()>();
+        $i1 = virtualinvoke $r9.<org.apache.fop.area.Span: int getCurrentFlowIndex()>();
+        virtualinvoke $r0.<org.apache.fop.layoutmgr.PageProvider: void setStartOfNextElementList(int,int)>(currentPageNum, $i1);
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageProvider pageProvider>;
+        virtualinvoke $r0.<org.apache.fop.layoutmgr.PageProvider: void setLastPageIndex(int)>(currentPageNum);
+        $r10 = new org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        $r11 = virtualinvoke this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.LayoutManager getTopLevelLM()>();
+        $r12 = virtualinvoke this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageProvider getPageProvider()>();
+        $r13 = virtualinvoke this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageBreakingAlgorithm$PageBreakingLayoutListener getLayoutListener()>();
+        $i2 = virtualinvoke alg.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int getAlignment()>();
+        $i3 = virtualinvoke alg.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int getAlignmentLast()>();
+        $r14 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.traits.MinOptMax footnoteSeparatorLength>;
+        $z0 = virtualinvoke this.<org.apache.fop.layoutmgr.PageBreaker: boolean isPartOverflowRecoveryActivated()>();
+        specialinvoke $r10.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: void <init>(org.apache.fop.layoutmgr.LayoutManager,org.apache.fop.layoutmgr.PageProvider,org.apache.fop.layoutmgr.PageBreakingAlgorithm$PageBreakingLayoutListener,int,int,org.apache.fop.traits.MinOptMax,boolean,boolean,boolean)>($r11, $r12, $r13, $i2, $i3, $r14, $z0, 0, 0);
+        algRestart = $r10;
+        iOptPageCount = virtualinvoke algRestart.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int findBreakingPoints(org.apache.fop.layoutmgr.KnuthSequence,int,double,boolean,int)>(effectiveList, newStartPos, 1.0, 1, 0);
+        $r3 = <org.apache.fop.layoutmgr.AbstractBreaker: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("restart: iOptPageCount= ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(iOptPageCount);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" pageBreaks.size()= ");
+        $r15 = virtualinvoke algRestart.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.LinkedList getPageBreaks()>();
+        $i1 = virtualinvoke $r15.<java.util.LinkedList: int size()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r5);
+        $r16 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r17 = virtualinvoke $r16.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.area.PageViewport getCurrentPV()>();
+        $r18 = virtualinvoke $r17.<org.apache.fop.area.PageViewport: org.apache.fop.area.BodyRegion getBodyRegion()>();
+        $i0 = virtualinvoke $r18.<org.apache.fop.area.BodyRegion: int getColumnCount()>();
+        if iOptPageCount > $i0 goto label3;
+
+        $z1 = 1;
+        goto label4;
+
+     label3:
+        $z1 = 0;
+
+     label4:
+        replaceLastPage = $z1;
+        if replaceLastPage == 0 goto label5;
+
+        $r6 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r19 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageProvider pageProvider>;
+        $r20 = virtualinvoke $r19.<org.apache.fop.layoutmgr.PageProvider: org.apache.fop.layoutmgr.Page getPage(boolean,int)>(0, currentPageNum);
+        virtualinvoke $r6.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: void setCurrentPage(org.apache.fop.layoutmgr.Page)>($r20);
+        effectiveList.<org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence: int ignoreAtStart> = newStartPos;
+        virtualinvoke this.<org.apache.fop.layoutmgr.PageBreaker: void addAreas(org.apache.fop.layoutmgr.PageBreakingAlgorithm,int,org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence,org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence)>(algRestart, iOptPageCount, originalList, effectiveList);
+        goto label6;
+
+     label5:
+        effectiveList.<org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence: int ignoreAtStart> = newStartPos;
+        $i4 = partCount - restartPoint;
+        virtualinvoke this.<org.apache.fop.layoutmgr.PageBreaker: void addAreas(org.apache.fop.layoutmgr.PageBreakingAlgorithm,int,int,org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence,org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence)>(alg, restartPoint, $i4, originalList, effectiveList);
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageProvider pageProvider>;
+        $i0 = currentPageNum + 1;
+        virtualinvoke $r0.<org.apache.fop.layoutmgr.PageProvider: void setLastPageIndex(int)>($i0);
+        $r6 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r16 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r20 = virtualinvoke $r16.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.layoutmgr.Page makeNewPage(boolean,boolean)>(1, 1);
+        virtualinvoke $r6.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: void setCurrentPage(org.apache.fop.layoutmgr.Page)>($r20);
+
+     label6:
+        $r3 = <org.apache.fop.layoutmgr.AbstractBreaker: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("===================================================");
+        return;
+    }
+
+    private void doPhase3WithColumnBalancing(org.apache.fop.layoutmgr.PageBreakingAlgorithm, int, org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence, org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence)
+    {
+        org.apache.fop.layoutmgr.PageBreaker this;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm alg;
+        int partCount, restartPoint, newStartPos, iOptPageCount, $i0, $i1, $i2, $i3;
+        org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence originalList, effectiveList;
+        org.apache.commons.logging.Log $r0;
+        org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition pbp;
+        org.apache.fop.layoutmgr.BalancingColumnBreakingAlgorithm algRestart, $r10;
+        org.apache.fop.layoutmgr.PageProvider $r1, $r12;
+        java.util.LinkedList $r2, $r18;
+        java.lang.Object $r3;
+        java.lang.StringBuffer $r4;
+        java.lang.String $r5;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager $r6, $r7, $r15;
+        org.apache.fop.area.PageViewport $r8, $r16, $r19;
+        org.apache.fop.area.Span $r9;
+        org.apache.fop.layoutmgr.LayoutManager $r11;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm$PageBreakingLayoutListener $r13;
+        org.apache.fop.traits.MinOptMax $r14;
+        boolean $z0;
+        org.apache.fop.area.BodyRegion $r17, $r20;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreaker;
+        alg := @parameter0: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        partCount := @parameter1: int;
+        originalList := @parameter2: org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence;
+        effectiveList := @parameter3: org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence;
+        $r0 = <org.apache.fop.layoutmgr.AbstractBreaker: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("Column balancing now!!!");
+        $r0 = <org.apache.fop.layoutmgr.AbstractBreaker: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("===================================================");
+        $r1 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageProvider pageProvider>;
+        restartPoint = virtualinvoke $r1.<org.apache.fop.layoutmgr.PageProvider: int getStartingPartIndexForLastPage(int)>(partCount);
+        if restartPoint <= 0 goto label1;
+
+        virtualinvoke this.<org.apache.fop.layoutmgr.PageBreaker: void addAreas(org.apache.fop.layoutmgr.PageBreakingAlgorithm,int,org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence,org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence)>(alg, restartPoint, originalList, effectiveList);
+        $r2 = virtualinvoke alg.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.LinkedList getPageBreaks()>();
+        $i0 = restartPoint - 1;
+        $r3 = virtualinvoke $r2.<java.util.LinkedList: java.lang.Object get(int)>($i0);
+        pbp = (org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition) $r3;
+        newStartPos = virtualinvoke pbp.<org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition: int getLeafPos()>();
+        if newStartPos <= 0 goto label0;
+
+        specialinvoke this.<org.apache.fop.layoutmgr.PageBreaker: void handleBreakTrait(int)>(104);
+
+     label0:
+        goto label2;
+
+     label1:
+        newStartPos = 0;
+
+     label2:
+        $r0 = <org.apache.fop.layoutmgr.AbstractBreaker: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Restarting at ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(restartPoint);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", new start position: ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(newStartPos);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r5);
+        this.<org.apache.fop.layoutmgr.PageBreaker: boolean pageBreakHandled> = 1;
+        $r1 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageProvider pageProvider>;
+        $r6 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $i0 = virtualinvoke $r6.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: int getCurrentPageNum()>();
+        $r7 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r8 = virtualinvoke $r7.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.area.PageViewport getCurrentPV()>();
+        $r9 = virtualinvoke $r8.<org.apache.fop.area.PageViewport: org.apache.fop.area.Span getCurrentSpan()>();
+        $i1 = virtualinvoke $r9.<org.apache.fop.area.Span: int getCurrentFlowIndex()>();
+        virtualinvoke $r1.<org.apache.fop.layoutmgr.PageProvider: void setStartOfNextElementList(int,int)>($i0, $i1);
+        $r10 = new org.apache.fop.layoutmgr.BalancingColumnBreakingAlgorithm;
+        $r11 = virtualinvoke this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.LayoutManager getTopLevelLM()>();
+        $r12 = virtualinvoke this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageProvider getPageProvider()>();
+        $r13 = virtualinvoke this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageBreakingAlgorithm$PageBreakingLayoutListener getLayoutListener()>();
+        $i2 = this.<org.apache.fop.layoutmgr.PageBreaker: int alignment>;
+        $r14 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.traits.MinOptMax footnoteSeparatorLength>;
+        $z0 = virtualinvoke this.<org.apache.fop.layoutmgr.PageBreaker: boolean isPartOverflowRecoveryActivated()>();
+        $r15 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r16 = virtualinvoke $r15.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.area.PageViewport getCurrentPV()>();
+        $r17 = virtualinvoke $r16.<org.apache.fop.area.PageViewport: org.apache.fop.area.BodyRegion getBodyRegion()>();
+        $i3 = virtualinvoke $r17.<org.apache.fop.area.BodyRegion: int getColumnCount()>();
+        specialinvoke $r10.<org.apache.fop.layoutmgr.BalancingColumnBreakingAlgorithm: void <init>(org.apache.fop.layoutmgr.LayoutManager,org.apache.fop.layoutmgr.PageProvider,org.apache.fop.layoutmgr.PageBreakingAlgorithm$PageBreakingLayoutListener,int,int,org.apache.fop.traits.MinOptMax,boolean,int)>($r11, $r12, $r13, $i2, 135, $r14, $z0, $i3);
+        algRestart = $r10;
+        iOptPageCount = virtualinvoke algRestart.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: int findBreakingPoints(org.apache.fop.layoutmgr.KnuthSequence,int,double,boolean,int)>(effectiveList, newStartPos, 1.0, 1, 0);
+        $r0 = <org.apache.fop.layoutmgr.AbstractBreaker: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("restart: iOptPageCount= ");
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(iOptPageCount);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" pageBreaks.size()= ");
+        $r18 = virtualinvoke algRestart.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.LinkedList getPageBreaks()>();
+        $i1 = virtualinvoke $r18.<java.util.LinkedList: int size()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r5 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r5);
+        $r6 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r19 = virtualinvoke $r6.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.area.PageViewport getCurrentPV()>();
+        $r20 = virtualinvoke $r19.<org.apache.fop.area.PageViewport: org.apache.fop.area.BodyRegion getBodyRegion()>();
+        $i0 = virtualinvoke $r20.<org.apache.fop.area.BodyRegion: int getColumnCount()>();
+        if iOptPageCount <= $i0 goto label3;
+
+        $r0 = <org.apache.fop.layoutmgr.AbstractBreaker: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void warn(java.lang.Object)>("Breaking algorithm produced more columns than are available.");
+
+     label3:
+        effectiveList.<org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence: int ignoreAtStart> = newStartPos;
+        virtualinvoke this.<org.apache.fop.layoutmgr.PageBreaker: void addAreas(org.apache.fop.layoutmgr.PageBreakingAlgorithm,int,org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence,org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence)>(algRestart, iOptPageCount, originalList, effectiveList);
+        $r0 = <org.apache.fop.layoutmgr.AbstractBreaker: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("===================================================");
+        return;
+    }
+
+    protected void startPart(org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence, int)
+    {
+        org.apache.fop.layoutmgr.PageBreaker this;
+        org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence list;
+        int breakClass, $i0, $i1;
+        org.apache.commons.logging.Log $r0;
+        java.lang.StringBuffer $r1;
+        java.lang.String $r2;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager $r3, $r7, $r8;
+        org.apache.fop.layoutmgr.Page $r4;
+        java.lang.IllegalStateException $r5;
+        boolean $z0;
+        org.apache.fop.layoutmgr.PageProvider $r6;
+        org.apache.fop.area.PageViewport $r9;
+        org.apache.fop.area.Span $r10;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreaker;
+        list := @parameter0: org.apache.fop.layoutmgr.AbstractBreaker$BlockSequence;
+        breakClass := @parameter1: int;
+        $r0 = <org.apache.fop.layoutmgr.AbstractBreaker: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("startPart() breakClass=");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(breakClass);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r2);
+        $r3 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r4 = virtualinvoke $r3.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.layoutmgr.Page getCurrentPage()>();
+        if $r4 != null goto label0;
+
+        $r5 = new java.lang.IllegalStateException;
+        specialinvoke $r5.<java.lang.IllegalStateException: void <init>(java.lang.String)>("curPage must not be null");
+        throw $r5;
+
+     label0:
+        $z0 = this.<org.apache.fop.layoutmgr.PageBreaker: boolean pageBreakHandled>;
+        if $z0 != 0 goto label2;
+
+        $z0 = this.<org.apache.fop.layoutmgr.PageBreaker: boolean firstPart>;
+        if $z0 != 0 goto label1;
+
+        specialinvoke this.<org.apache.fop.layoutmgr.PageBreaker: void handleBreakTrait(int)>(breakClass);
+
+     label1:
+        $r6 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageProvider pageProvider>;
+        $r7 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $i0 = virtualinvoke $r7.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: int getCurrentPageNum()>();
+        $r8 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r9 = virtualinvoke $r8.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.area.PageViewport getCurrentPV()>();
+        $r10 = virtualinvoke $r9.<org.apache.fop.area.PageViewport: org.apache.fop.area.Span getCurrentSpan()>();
+        $i1 = virtualinvoke $r10.<org.apache.fop.area.Span: int getCurrentFlowIndex()>();
+        virtualinvoke $r6.<org.apache.fop.layoutmgr.PageProvider: void setStartOfNextElementList(int,int)>($i0, $i1);
+
+     label2:
+        this.<org.apache.fop.layoutmgr.PageBreaker: boolean pageBreakHandled> = 0;
+        this.<org.apache.fop.layoutmgr.PageBreaker: boolean firstPart> = 0;
+        return;
+    }
+
+    protected void handleEmptyContent()
+    {
+        org.apache.fop.layoutmgr.PageBreaker this;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager $r0;
+        org.apache.fop.area.PageViewport $r1;
+        org.apache.fop.area.Page $r2;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreaker;
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.area.PageViewport getCurrentPV()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.area.PageViewport: org.apache.fop.area.Page getPage()>();
+        virtualinvoke $r2.<org.apache.fop.area.Page: void fakeNonEmpty()>();
+        return;
+    }
+
+    protected void finishPart(org.apache.fop.layoutmgr.PageBreakingAlgorithm, org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition)
+    {
+        org.apache.fop.layoutmgr.PageBreaker this;
+        org.apache.fop.layoutmgr.PageBreakingAlgorithm alg;
+        org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition pbp;
+        int i, firstIndex, lastIndex, topOffset, $i0, $i1, $i2;
+        java.util.LinkedList elementList;
+        org.apache.fop.layoutmgr.LayoutContext childLC, $r0;
+        org.apache.fop.area.Footnote parentArea;
+        org.apache.fop.layoutmgr.KnuthPossPosIter $r1;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager $r2;
+        org.apache.fop.area.PageViewport $r3;
+        org.apache.fop.area.BodyRegion $r4;
+        org.apache.fop.area.Block $r5, $r6;
+        org.apache.fop.area.Span $r7;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreaker;
+        alg := @parameter0: org.apache.fop.layoutmgr.PageBreakingAlgorithm;
+        pbp := @parameter1: org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition;
+        $i0 = pbp.<org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition: int footnoteFirstListIndex>;
+        $i1 = pbp.<org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition: int footnoteLastListIndex>;
+        if $i0 < $i1 goto label0;
+
+        $i0 = pbp.<org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition: int footnoteFirstElementIndex>;
+        $i1 = pbp.<org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition: int footnoteLastElementIndex>;
+        if $i0 > $i1 goto label8;
+
+     label0:
+        i = pbp.<org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition: int footnoteFirstListIndex>;
+
+     label1:
+        $i1 = pbp.<org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition: int footnoteLastListIndex>;
+        if i > $i1 goto label6;
+
+        elementList = virtualinvoke alg.<org.apache.fop.layoutmgr.PageBreakingAlgorithm: java.util.LinkedList getFootnoteList(int)>(i);
+        $i1 = pbp.<org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition: int footnoteFirstListIndex>;
+        if i != $i1 goto label2;
+
+        $i0 = pbp.<org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition: int footnoteFirstElementIndex>;
+        goto label3;
+
+     label2:
+        $i0 = 0;
+
+     label3:
+        firstIndex = $i0;
+        $i1 = pbp.<org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition: int footnoteLastListIndex>;
+        if i != $i1 goto label4;
+
+        $i0 = pbp.<org.apache.fop.layoutmgr.AbstractBreaker$PageBreakPosition: int footnoteLastElementIndex>;
+        goto label5;
+
+     label4:
+        $i0 = virtualinvoke elementList.<java.util.LinkedList: int size()>();
+        $i0 = $i0 - 1;
+
+     label5:
+        lastIndex = $i0;
+        staticinvoke <org.apache.fop.layoutmgr.SpaceResolver: void performConditionalsNotification(java.util.List,int,int,int)>(elementList, firstIndex, lastIndex, -1);
+        $r0 = new org.apache.fop.layoutmgr.LayoutContext;
+        specialinvoke $r0.<org.apache.fop.layoutmgr.LayoutContext: void <init>(int)>(0);
+        childLC = $r0;
+        $r1 = new org.apache.fop.layoutmgr.KnuthPossPosIter;
+        $i2 = lastIndex + 1;
+        specialinvoke $r1.<org.apache.fop.layoutmgr.KnuthPossPosIter: void <init>(java.util.List,int,int)>(elementList, firstIndex, $i2);
+        staticinvoke <org.apache.fop.layoutmgr.AreaAdditionUtil: void addAreas(org.apache.fop.layoutmgr.BlockStackingLayoutManager,org.apache.fop.layoutmgr.PositionIterator,org.apache.fop.layoutmgr.LayoutContext)>(null, $r1, childLC);
+        i = i + 1;
+        goto label1;
+
+     label6:
+        $r2 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.area.PageViewport getCurrentPV()>();
+        $r4 = virtualinvoke $r3.<org.apache.fop.area.PageViewport: org.apache.fop.area.BodyRegion getBodyRegion()>();
+        parentArea = virtualinvoke $r4.<org.apache.fop.area.BodyRegion: org.apache.fop.area.Footnote getFootnote()>();
+        $r2 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.area.PageViewport getCurrentPV()>();
+        $r4 = virtualinvoke $r3.<org.apache.fop.area.PageViewport: org.apache.fop.area.BodyRegion getBodyRegion()>();
+        $i0 = virtualinvoke $r4.<org.apache.fop.area.BodyRegion: int getBPD()>();
+        $i1 = virtualinvoke parentArea.<org.apache.fop.area.Footnote: int getBPD()>();
+        topOffset = $i0 - $i1;
+        $r5 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.area.Block separatorArea>;
+        if $r5 == null goto label7;
+
+        $r6 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.area.Block separatorArea>;
+        $i1 = virtualinvoke $r6.<org.apache.fop.area.Block: int getBPD()>();
+        topOffset = topOffset - $i1;
+
+     label7:
+        virtualinvoke parentArea.<org.apache.fop.area.Footnote: void setTop(int)>(topOffset);
+        $r6 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.area.Block separatorArea>;
+        virtualinvoke parentArea.<org.apache.fop.area.Footnote: void setSeparator(org.apache.fop.area.Block)>($r6);
+
+     label8:
+        $r2 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.area.PageViewport getCurrentPV()>();
+        $r7 = virtualinvoke $r3.<org.apache.fop.area.PageViewport: org.apache.fop.area.Span getCurrentSpan()>();
+        virtualinvoke $r7.<org.apache.fop.area.Span: void notifyFlowsFinished()>();
+        return;
+    }
+
+    protected org.apache.fop.layoutmgr.LayoutManager getCurrentChildLM()
+    {
+        org.apache.fop.layoutmgr.PageBreaker this;
+        org.apache.fop.layoutmgr.FlowLayoutManager $r0;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreaker;
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.FlowLayoutManager childFLM>;
+        return $r0;
+    }
+
+    protected void observeElementList(java.util.List)
+    {
+        org.apache.fop.layoutmgr.PageBreaker this;
+        java.util.List elementList;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager $r0;
+        org.apache.fop.fo.FObj $r1;
+        org.apache.fop.fo.pagination.PageSequence $r2;
+        java.lang.String $r3;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreaker;
+        elementList := @parameter0: java.util.List;
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.fo.FObj getFObj()>();
+        $r2 = (org.apache.fop.fo.pagination.PageSequence) $r1;
+        $r3 = virtualinvoke $r2.<org.apache.fop.fo.pagination.PageSequence: java.lang.String getId()>();
+        staticinvoke <org.apache.fop.layoutmgr.ElementListObserver: void observe(java.util.List,java.lang.String,java.lang.String)>(elementList, "breaker", $r3);
+        return;
+    }
+
+    private void handleBreakTrait(int)
+    {
+        org.apache.fop.layoutmgr.PageBreaker this;
+        int breakVal, $i0, $i1;
+        org.apache.fop.layoutmgr.Page curPage;
+        org.apache.fop.area.PageViewport pv, $r1;
+        boolean forceNewPageWithSpan, $z0;
+        org.apache.fop.fo.pagination.RegionBody rb;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager $r0, $r8;
+        org.apache.fop.area.Span $r2;
+        org.apache.fop.fo.pagination.SimplePageMaster $r3;
+        org.apache.fop.fo.pagination.Region $r4;
+        org.apache.commons.logging.Log $r6;
+        java.lang.StringBuffer $r7;
+        java.lang.String $r9;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreaker;
+        breakVal := @parameter0: int;
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        curPage = virtualinvoke $r0.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.layoutmgr.Page getCurrentPage()>();
+        if breakVal != 5 goto label0;
+
+        $r1 = virtualinvoke curPage.<org.apache.fop.layoutmgr.Page: org.apache.fop.area.PageViewport getPageViewport()>();
+        virtualinvoke $r1.<org.apache.fop.area.PageViewport: org.apache.fop.area.Span createSpan(boolean)>(1);
+        return;
+
+     label0:
+        if breakVal != 95 goto label1;
+
+        $r1 = virtualinvoke curPage.<org.apache.fop.layoutmgr.Page: org.apache.fop.area.PageViewport getPageViewport()>();
+        virtualinvoke $r1.<org.apache.fop.area.PageViewport: org.apache.fop.area.Span createSpan(boolean)>(0);
+        return;
+
+     label1:
+        if breakVal == 28 goto label2;
+
+        if breakVal <= 0 goto label2;
+
+        if breakVal != 9 goto label7;
+
+     label2:
+        pv = virtualinvoke curPage.<org.apache.fop.layoutmgr.Page: org.apache.fop.area.PageViewport getPageViewport()>();
+        forceNewPageWithSpan = 0;
+        $r3 = virtualinvoke curPage.<org.apache.fop.layoutmgr.Page: org.apache.fop.fo.pagination.SimplePageMaster getSimplePageMaster()>();
+        $r4 = virtualinvoke $r3.<org.apache.fop.fo.pagination.SimplePageMaster: org.apache.fop.fo.pagination.Region getRegion(int)>(36);
+        rb = (org.apache.fop.fo.pagination.RegionBody) $r4;
+        if breakVal >= 0 goto label3;
+
+        $i0 = virtualinvoke rb.<org.apache.fop.fo.pagination.RegionBody: int getColumnCount()>();
+        if $i0 <= 1 goto label3;
+
+        $r2 = virtualinvoke pv.<org.apache.fop.area.PageViewport: org.apache.fop.area.Span getCurrentSpan()>();
+        $i0 = virtualinvoke $r2.<org.apache.fop.area.Span: int getColumnCount()>();
+        if $i0 != 1 goto label3;
+
+        forceNewPageWithSpan = 1;
+
+     label3:
+        if forceNewPageWithSpan == 0 goto label4;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        curPage = virtualinvoke $r0.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.layoutmgr.Page makeNewPage(boolean,boolean)>(0, 0);
+        $r1 = virtualinvoke curPage.<org.apache.fop.layoutmgr.Page: org.apache.fop.area.PageViewport getPageViewport()>();
+        virtualinvoke $r1.<org.apache.fop.area.PageViewport: org.apache.fop.area.Span createSpan(boolean)>(1);
+        goto label6;
+
+     label4:
+        $r2 = virtualinvoke pv.<org.apache.fop.area.PageViewport: org.apache.fop.area.Span getCurrentSpan()>();
+        $z0 = virtualinvoke $r2.<org.apache.fop.area.Span: boolean hasMoreFlows()>();
+        if $z0 == 0 goto label5;
+
+        $r2 = virtualinvoke pv.<org.apache.fop.area.PageViewport: org.apache.fop.area.Span getCurrentSpan()>();
+        virtualinvoke $r2.<org.apache.fop.area.Span: org.apache.fop.area.NormalFlow moveToNextFlow()>();
+        goto label6;
+
+     label5:
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        virtualinvoke $r0.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.layoutmgr.Page makeNewPage(boolean,boolean)>(0, 0);
+
+     label6:
+        return;
+
+     label7:
+        $r6 = <org.apache.fop.layoutmgr.PageBreaker: org.apache.commons.logging.Log log>;
+        $r7 = new java.lang.StringBuffer;
+        specialinvoke $r7.<java.lang.StringBuffer: void <init>()>();
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("handling break-before after page ");
+        $r8 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $i1 = virtualinvoke $r8.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: int getCurrentPageNum()>();
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" breakVal=");
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(breakVal);
+        $r9 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r6.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r9);
+        $z0 = specialinvoke this.<org.apache.fop.layoutmgr.PageBreaker: boolean needBlankPageBeforeNew(int)>(breakVal);
+        if $z0 == 0 goto label8;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        virtualinvoke $r0.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.layoutmgr.Page makeNewPage(boolean,boolean)>(1, 0);
+
+     label8:
+        $z0 = specialinvoke this.<org.apache.fop.layoutmgr.PageBreaker: boolean needNewPage(int)>(breakVal);
+        if $z0 == 0 goto label9;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        virtualinvoke $r0.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.layoutmgr.Page makeNewPage(boolean,boolean)>(0, 0);
+
+     label9:
+        return;
+    }
+
+    private boolean needBlankPageBeforeNew(int)
+    {
+        org.apache.fop.layoutmgr.PageBreaker this;
+        int breakVal, $i0;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager $r0;
+        org.apache.fop.layoutmgr.Page $r1;
+        org.apache.fop.area.PageViewport $r2;
+        org.apache.fop.area.Page $r3;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreaker;
+        breakVal := @parameter0: int;
+        if breakVal == 104 goto label0;
+
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.layoutmgr.Page getCurrentPage()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.layoutmgr.Page: org.apache.fop.area.PageViewport getPageViewport()>();
+        $r3 = virtualinvoke $r2.<org.apache.fop.area.PageViewport: org.apache.fop.area.Page getPage()>();
+        $z0 = virtualinvoke $r3.<org.apache.fop.area.Page: boolean isEmpty()>();
+        if $z0 == 0 goto label1;
+
+     label0:
+        return 0;
+
+     label1:
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: int getCurrentPageNum()>();
+        $i0 = $i0 % 2;
+        if $i0 != 0 goto label4;
+
+        if breakVal != 44 goto label2;
+
+        $z0 = 1;
+        goto label3;
+
+     label2:
+        $z0 = 0;
+
+     label3:
+        return $z0;
+
+     label4:
+        if breakVal != 100 goto label5;
+
+        $z0 = 1;
+        goto label6;
+
+     label5:
+        $z0 = 0;
+
+     label6:
+        return $z0;
+    }
+
+    private boolean needNewPage(int)
+    {
+        org.apache.fop.layoutmgr.PageBreaker this;
+        int breakVal, $i0;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager $r0;
+        org.apache.fop.layoutmgr.Page $r1;
+        org.apache.fop.area.PageViewport $r2;
+        org.apache.fop.area.Page $r3;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.PageBreaker;
+        breakVal := @parameter0: int;
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: org.apache.fop.layoutmgr.Page getCurrentPage()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.layoutmgr.Page: org.apache.fop.area.PageViewport getPageViewport()>();
+        $r3 = virtualinvoke $r2.<org.apache.fop.area.PageViewport: org.apache.fop.area.Page getPage()>();
+        $z0 = virtualinvoke $r3.<org.apache.fop.area.Page: boolean isEmpty()>();
+        if $z0 == 0 goto label6;
+
+        if breakVal != 104 goto label0;
+
+        return 0;
+
+     label0:
+        $r0 = this.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.layoutmgr.PageSequenceLayoutManager: int getCurrentPageNum()>();
+        $i0 = $i0 % 2;
+        if $i0 != 0 goto label3;
+
+        if breakVal != 100 goto label1;
+
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+
+     label3:
+        if breakVal != 44 goto label4;
+
+        $z0 = 1;
+        goto label5;
+
+     label4:
+        $z0 = 0;
+
+     label5:
+        return $z0;
+
+     label6:
+        return 1;
+    }
+
+    static org.apache.fop.layoutmgr.PageProvider access$000(org.apache.fop.layoutmgr.PageBreaker)
+    {
+        org.apache.fop.layoutmgr.PageBreaker x0;
+        org.apache.fop.layoutmgr.PageProvider $r0;
+
+        x0 := @parameter0: org.apache.fop.layoutmgr.PageBreaker;
+        $r0 = x0.<org.apache.fop.layoutmgr.PageBreaker: org.apache.fop.layoutmgr.PageProvider pageProvider>;
+        return $r0;
+    }
+}

@@ -1,0 +1,82 @@
+public class org.apache.fop.pdf.PDFTTFStream extends org.apache.fop.pdf.PDFStream
+{
+    private int origLength;
+
+    public void <init>(int)
+    {
+        org.apache.fop.pdf.PDFTTFStream this;
+        int len;
+
+        this := @this: org.apache.fop.pdf.PDFTTFStream;
+        len := @parameter0: int;
+        specialinvoke this.<org.apache.fop.pdf.PDFStream: void <init>()>();
+        this.<org.apache.fop.pdf.PDFTTFStream: int origLength> = len;
+        return;
+    }
+
+    protected int output(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFTTFStream this;
+        java.io.OutputStream stream;
+        org.apache.commons.logging.Log $r0;
+        java.lang.StringBuffer $r1;
+        int length, $i0;
+        boolean $z0;
+        java.lang.String $r2;
+
+        this := @this: org.apache.fop.pdf.PDFTTFStream;
+        stream := @parameter0: java.io.OutputStream;
+        $r0 = <org.apache.fop.pdf.PDFTTFStream: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = <org.apache.fop.pdf.PDFTTFStream: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Writing ");
+        $i0 = this.<org.apache.fop.pdf.PDFTTFStream: int origLength>;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" bytes of TTF font data");
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r2);
+
+     label0:
+        length = specialinvoke this.<org.apache.fop.pdf.PDFStream: int output(java.io.OutputStream)>(stream);
+        $r0 = <org.apache.fop.pdf.PDFTTFStream: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("Embedded TrueType/OpenType font");
+        return length;
+    }
+
+    protected void populateStreamDict(java.lang.Object)
+    {
+        org.apache.fop.pdf.PDFTTFStream this;
+        java.lang.Object lengthEntry;
+        int $i0;
+
+        this := @this: org.apache.fop.pdf.PDFTTFStream;
+        lengthEntry := @parameter0: java.lang.Object;
+        $i0 = this.<org.apache.fop.pdf.PDFTTFStream: int origLength>;
+        virtualinvoke this.<org.apache.fop.pdf.PDFTTFStream: void put(java.lang.String,int)>("Length1", $i0);
+        specialinvoke this.<org.apache.fop.pdf.PDFStream: void populateStreamDict(java.lang.Object)>(lengthEntry);
+        return;
+    }
+
+    public void setData(byte[], int) throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFTTFStream this;
+        byte[] data;
+        int size;
+        org.apache.fop.pdf.StreamCache $r0;
+        java.io.OutputStream $r1;
+
+        this := @this: org.apache.fop.pdf.PDFTTFStream;
+        data := @parameter0: byte[];
+        size := @parameter1: int;
+        $r0 = this.<org.apache.fop.pdf.PDFTTFStream: org.apache.fop.pdf.StreamCache data>;
+        interfaceinvoke $r0.<org.apache.fop.pdf.StreamCache: void clear()>();
+        $r0 = this.<org.apache.fop.pdf.PDFTTFStream: org.apache.fop.pdf.StreamCache data>;
+        $r1 = interfaceinvoke $r0.<org.apache.fop.pdf.StreamCache: java.io.OutputStream getOutputStream()>();
+        virtualinvoke $r1.<java.io.OutputStream: void write(byte[],int,int)>(data, 0, size);
+        return;
+    }
+}

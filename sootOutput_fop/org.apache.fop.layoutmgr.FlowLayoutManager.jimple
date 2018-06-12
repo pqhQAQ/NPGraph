@@ -1,0 +1,637 @@
+public class org.apache.fop.layoutmgr.FlowLayoutManager extends org.apache.fop.layoutmgr.BlockStackingLayoutManager implements org.apache.fop.layoutmgr.BlockLevelLayoutManager
+{
+    private static org.apache.commons.logging.Log log;
+    private org.apache.fop.area.BlockParent[] currentAreas;
+    private int currentSpan;
+    static java.lang.Class class$org$apache$fop$layoutmgr$FlowLayoutManager;
+
+    public void <init>(org.apache.fop.layoutmgr.PageSequenceLayoutManager, org.apache.fop.fo.pagination.Flow)
+    {
+        org.apache.fop.layoutmgr.FlowLayoutManager this;
+        org.apache.fop.layoutmgr.PageSequenceLayoutManager pslm;
+        org.apache.fop.fo.pagination.Flow node;
+        org.apache.fop.area.BlockParent[] $r0;
+
+        this := @this: org.apache.fop.layoutmgr.FlowLayoutManager;
+        pslm := @parameter0: org.apache.fop.layoutmgr.PageSequenceLayoutManager;
+        node := @parameter1: org.apache.fop.fo.pagination.Flow;
+        specialinvoke this.<org.apache.fop.layoutmgr.BlockStackingLayoutManager: void <init>(org.apache.fop.fo.FObj)>(node);
+        $r0 = newarray (org.apache.fop.area.BlockParent)[6];
+        this.<org.apache.fop.layoutmgr.FlowLayoutManager: org.apache.fop.area.BlockParent[] currentAreas> = $r0;
+        this.<org.apache.fop.layoutmgr.FlowLayoutManager: int currentSpan> = 95;
+        virtualinvoke this.<org.apache.fop.layoutmgr.FlowLayoutManager: void setParent(org.apache.fop.layoutmgr.LayoutManager)>(pslm);
+        return;
+    }
+
+    public java.util.LinkedList getNextKnuthElements(org.apache.fop.layoutmgr.LayoutContext, int)
+    {
+        org.apache.fop.layoutmgr.FlowLayoutManager this;
+        org.apache.fop.layoutmgr.LayoutContext context, childLC, $r13;
+        int alignment, span, $i0, $i1, $i2;
+        java.util.LinkedList returnList, returnedList, tempList, $r4;
+        org.apache.fop.layoutmgr.LayoutManager curLM, $r5;
+        org.apache.fop.layoutmgr.Position $r0;
+        org.apache.fop.area.PageViewport $r1;
+        org.apache.fop.area.Span $r2;
+        org.apache.fop.area.BodyRegion $r3;
+        boolean $z0;
+        org.apache.commons.logging.Log $r6;
+        org.apache.fop.layoutmgr.BlockLayoutManager $r7;
+        org.apache.fop.fo.flow.Block $r8;
+        org.apache.fop.layoutmgr.BlockContainerLayoutManager $r9;
+        org.apache.fop.fo.flow.BlockContainer $r10;
+        java.lang.StringBuffer $r11;
+        java.lang.String $r12;
+        org.apache.fop.traits.MinOptMax $r14;
+        org.apache.fop.layoutmgr.Page $r15;
+        org.apache.fop.fo.pagination.SimplePageMaster $r16;
+        org.apache.fop.layoutmgr.BreakElement $r17;
+        java.lang.Object $r18;
+        org.apache.fop.layoutmgr.ListElement $r19;
+
+        this := @this: org.apache.fop.layoutmgr.FlowLayoutManager;
+        context := @parameter0: org.apache.fop.layoutmgr.LayoutContext;
+        alignment := @parameter1: int;
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.FlowLayoutManager: org.apache.fop.area.PageViewport getCurrentPV()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.area.PageViewport: org.apache.fop.area.Span getCurrentSpan()>();
+        virtualinvoke $r2.<org.apache.fop.area.Span: int getColumnWidth()>();
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.FlowLayoutManager: org.apache.fop.area.PageViewport getCurrentPV()>();
+        $r3 = virtualinvoke $r1.<org.apache.fop.area.PageViewport: org.apache.fop.area.BodyRegion getBodyRegion()>();
+        virtualinvoke $r3.<org.apache.fop.area.BodyRegion: int getBPD()>();
+        $r4 = new java.util.LinkedList;
+        specialinvoke $r4.<java.util.LinkedList: void <init>()>();
+        returnList = $r4;
+
+     label0:
+        $r5 = virtualinvoke this.<org.apache.fop.layoutmgr.FlowLayoutManager: org.apache.fop.layoutmgr.LayoutManager getChildLM()>();
+        curLM = $r5;
+        if $r5 == null goto label13;
+
+        $z0 = curLM instanceof org.apache.fop.layoutmgr.inline.InlineLevelLayoutManager;
+        if $z0 == 0 goto label1;
+
+        $r6 = <org.apache.fop.layoutmgr.FlowLayoutManager: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r6.<org.apache.commons.logging.Log: void error(java.lang.Object)>("inline area not allowed under flow - ignoring");
+        interfaceinvoke curLM.<org.apache.fop.layoutmgr.LayoutManager: void setFinished(boolean)>(1);
+        goto label0;
+
+     label1:
+        span = 95;
+        $z0 = curLM instanceof org.apache.fop.layoutmgr.BlockLayoutManager;
+        if $z0 == 0 goto label2;
+
+        $r7 = (org.apache.fop.layoutmgr.BlockLayoutManager) curLM;
+        $r8 = virtualinvoke $r7.<org.apache.fop.layoutmgr.BlockLayoutManager: org.apache.fop.fo.flow.Block getBlockFO()>();
+        span = virtualinvoke $r8.<org.apache.fop.fo.flow.Block: int getSpan()>();
+        goto label3;
+
+     label2:
+        $z0 = curLM instanceof org.apache.fop.layoutmgr.BlockContainerLayoutManager;
+        if $z0 == 0 goto label3;
+
+        $r9 = (org.apache.fop.layoutmgr.BlockContainerLayoutManager) curLM;
+        $r10 = virtualinvoke $r9.<org.apache.fop.layoutmgr.BlockContainerLayoutManager: org.apache.fop.fo.flow.BlockContainer getBlockContainerFO()>();
+        span = virtualinvoke $r10.<org.apache.fop.fo.flow.BlockContainer: int getSpan()>();
+
+     label3:
+        $i0 = this.<org.apache.fop.layoutmgr.FlowLayoutManager: int currentSpan>;
+        if $i0 == span goto label4;
+
+        $r6 = <org.apache.fop.layoutmgr.FlowLayoutManager: org.apache.commons.logging.Log log>;
+        $r11 = new java.lang.StringBuffer;
+        specialinvoke $r11.<java.lang.StringBuffer: void <init>()>();
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("span change from ");
+        $i1 = this.<org.apache.fop.layoutmgr.FlowLayoutManager: int currentSpan>;
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" to ");
+        $r11 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(span);
+        $r12 = virtualinvoke $r11.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r6.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r12);
+        virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: void signalSpanChange(int)>(span);
+        this.<org.apache.fop.layoutmgr.FlowLayoutManager: int currentSpan> = span;
+        staticinvoke <org.apache.fop.layoutmgr.SpaceResolver: void resolveElementList(java.util.LinkedList)>(returnList);
+        return returnList;
+
+     label4:
+        $r13 = new org.apache.fop.layoutmgr.LayoutContext;
+        specialinvoke $r13.<org.apache.fop.layoutmgr.LayoutContext: void <init>(int)>(0);
+        childLC = $r13;
+        $r14 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: org.apache.fop.traits.MinOptMax getStackLimitBP()>();
+        virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: void setStackLimitBP(org.apache.fop.traits.MinOptMax)>($r14);
+        $i2 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: int getRefIPD()>();
+        virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: void setRefIPD(int)>($i2);
+        $r15 = virtualinvoke this.<org.apache.fop.layoutmgr.FlowLayoutManager: org.apache.fop.layoutmgr.Page getCurrentPage()>();
+        $r16 = virtualinvoke $r15.<org.apache.fop.layoutmgr.Page: org.apache.fop.fo.pagination.SimplePageMaster getSimplePageMaster()>();
+        $i2 = virtualinvoke $r16.<org.apache.fop.fo.pagination.SimplePageMaster: int getWritingMode()>();
+        virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: void setWritingMode(int)>($i2);
+        returnedList = interfaceinvoke curLM.<org.apache.fop.layoutmgr.LayoutManager: java.util.LinkedList getNextKnuthElements(org.apache.fop.layoutmgr.LayoutContext,int)>(childLC, alignment);
+        $i0 = virtualinvoke returnList.<java.util.LinkedList: int size()>();
+        if $i0 != 0 goto label5;
+
+        $z0 = virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: boolean isKeepWithPreviousPending()>();
+        if $z0 == 0 goto label5;
+
+        virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int)>(1024);
+        virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int,boolean)>(1024, 0);
+
+     label5:
+        tempList = returnedList;
+        $r4 = new java.util.LinkedList;
+        specialinvoke $r4.<java.util.LinkedList: void <init>()>();
+        returnedList = $r4;
+        virtualinvoke this.<org.apache.fop.layoutmgr.FlowLayoutManager: void wrapPositionElements(java.util.List,java.util.List)>(tempList, returnedList);
+        $i0 = virtualinvoke returnedList.<java.util.LinkedList: int size()>();
+        if $i0 != 1 goto label6;
+
+        $z0 = staticinvoke <org.apache.fop.layoutmgr.ElementListUtils: boolean endsWithForcedBreak(java.util.LinkedList)>(returnedList);
+        if $z0 == 0 goto label6;
+
+        virtualinvoke returnList.<java.util.LinkedList: boolean addAll(java.util.Collection)>(returnedList);
+        staticinvoke <org.apache.fop.layoutmgr.SpaceResolver: void resolveElementList(java.util.LinkedList)>(returnList);
+        return returnList;
+
+     label6:
+        $i0 = virtualinvoke returnList.<java.util.LinkedList: int size()>();
+        if $i0 <= 0 goto label9;
+
+        $z0 = virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: boolean isKeepWithNextPending()>();
+        if $z0 != 0 goto label7;
+
+        $z0 = virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: boolean isKeepWithPreviousPending()>();
+        if $z0 == 0 goto label8;
+
+     label7:
+        virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int,boolean)>(512, 0);
+        virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int,boolean)>(1024, 0);
+        $r17 = new org.apache.fop.layoutmgr.BreakElement;
+        $r0 = new org.apache.fop.layoutmgr.Position;
+        specialinvoke $r0.<org.apache.fop.layoutmgr.Position: void <init>(org.apache.fop.layoutmgr.LayoutManager)>(this);
+        specialinvoke $r17.<org.apache.fop.layoutmgr.BreakElement: void <init>(org.apache.fop.layoutmgr.Position,int,org.apache.fop.layoutmgr.LayoutContext)>($r0, 1000, context);
+        virtualinvoke returnList.<java.util.LinkedList: boolean add(java.lang.Object)>($r17);
+        goto label9;
+
+     label8:
+        $r18 = virtualinvoke returnList.<java.util.LinkedList: java.lang.Object getLast()>();
+        $r19 = (org.apache.fop.layoutmgr.ListElement) $r18;
+        $z0 = virtualinvoke $r19.<org.apache.fop.layoutmgr.ListElement: boolean isGlue()>();
+        if $z0 != 0 goto label9;
+
+        $r17 = new org.apache.fop.layoutmgr.BreakElement;
+        $r0 = new org.apache.fop.layoutmgr.Position;
+        specialinvoke $r0.<org.apache.fop.layoutmgr.Position: void <init>(org.apache.fop.layoutmgr.LayoutManager)>(this);
+        specialinvoke $r17.<org.apache.fop.layoutmgr.BreakElement: void <init>(org.apache.fop.layoutmgr.Position,int,org.apache.fop.layoutmgr.LayoutContext)>($r0, 0, context);
+        virtualinvoke returnList.<java.util.LinkedList: boolean add(java.lang.Object)>($r17);
+
+     label9:
+        $i0 = virtualinvoke returnedList.<java.util.LinkedList: int size()>();
+        if $i0 <= 0 goto label11;
+
+        virtualinvoke returnList.<java.util.LinkedList: boolean addAll(java.util.Collection)>(returnedList);
+        $z0 = staticinvoke <org.apache.fop.layoutmgr.ElementListUtils: boolean endsWithForcedBreak(java.util.LinkedList)>(returnList);
+        if $z0 == 0 goto label11;
+
+        $z0 = interfaceinvoke curLM.<org.apache.fop.layoutmgr.LayoutManager: boolean isFinished()>();
+        if $z0 == 0 goto label10;
+
+        $z0 = virtualinvoke this.<org.apache.fop.layoutmgr.FlowLayoutManager: boolean hasNextChildLM()>();
+        if $z0 != 0 goto label10;
+
+        virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: void clearPendingMarks()>();
+        goto label13;
+
+     label10:
+        staticinvoke <org.apache.fop.layoutmgr.SpaceResolver: void resolveElementList(java.util.LinkedList)>(returnList);
+        return returnList;
+
+     label11:
+        $z0 = virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: boolean isKeepWithNextPending()>();
+        if $z0 == 0 goto label12;
+
+        virtualinvoke childLC.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int,boolean)>(512, 0);
+        virtualinvoke context.<org.apache.fop.layoutmgr.LayoutContext: void setFlags(int)>(512);
+
+     label12:
+        goto label0;
+
+     label13:
+        staticinvoke <org.apache.fop.layoutmgr.SpaceResolver: void resolveElementList(java.util.LinkedList)>(returnList);
+        virtualinvoke this.<org.apache.fop.layoutmgr.FlowLayoutManager: void setFinished(boolean)>(1);
+        $i0 = virtualinvoke returnList.<java.util.LinkedList: int size()>();
+        if $i0 <= 0 goto label14;
+
+        return returnList;
+
+     label14:
+        return null;
+    }
+
+    public int negotiateBPDAdjustment(int, org.apache.fop.layoutmgr.KnuthElement)
+    {
+        org.apache.fop.layoutmgr.FlowLayoutManager this;
+        int adj, returnValue;
+        org.apache.fop.layoutmgr.KnuthElement lastElement;
+        org.apache.commons.logging.Log $r0;
+        java.lang.StringBuffer $r1;
+        org.apache.fop.layoutmgr.NonLeafPosition savedPos;
+        java.lang.String $r2;
+        org.apache.fop.layoutmgr.Position $r3, $r4;
+        boolean $z0;
+        org.apache.fop.layoutmgr.LayoutManager $r5;
+        org.apache.fop.layoutmgr.BlockLevelLayoutManager $r6;
+
+        this := @this: org.apache.fop.layoutmgr.FlowLayoutManager;
+        adj := @parameter0: int;
+        lastElement := @parameter1: org.apache.fop.layoutmgr.KnuthElement;
+        $r0 = <org.apache.fop.layoutmgr.FlowLayoutManager: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" FLM.negotiateBPDAdjustment> ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(adj);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r2);
+        $r3 = virtualinvoke lastElement.<org.apache.fop.layoutmgr.KnuthElement: org.apache.fop.layoutmgr.Position getPosition()>();
+        $z0 = $r3 instanceof org.apache.fop.layoutmgr.NonLeafPosition;
+        if $z0 == 0 goto label0;
+
+        $r3 = virtualinvoke lastElement.<org.apache.fop.layoutmgr.KnuthElement: org.apache.fop.layoutmgr.Position getPosition()>();
+        savedPos = (org.apache.fop.layoutmgr.NonLeafPosition) $r3;
+        $r4 = virtualinvoke savedPos.<org.apache.fop.layoutmgr.NonLeafPosition: org.apache.fop.layoutmgr.Position getPosition()>();
+        virtualinvoke lastElement.<org.apache.fop.layoutmgr.KnuthElement: void setPosition(org.apache.fop.layoutmgr.Position)>($r4);
+        $r5 = virtualinvoke lastElement.<org.apache.fop.layoutmgr.KnuthElement: org.apache.fop.layoutmgr.LayoutManager getLayoutManager()>();
+        $r6 = (org.apache.fop.layoutmgr.BlockLevelLayoutManager) $r5;
+        returnValue = interfaceinvoke $r6.<org.apache.fop.layoutmgr.BlockLevelLayoutManager: int negotiateBPDAdjustment(int,org.apache.fop.layoutmgr.KnuthElement)>(adj, lastElement);
+        virtualinvoke lastElement.<org.apache.fop.layoutmgr.KnuthElement: void setPosition(org.apache.fop.layoutmgr.Position)>(savedPos);
+        $r0 = <org.apache.fop.layoutmgr.FlowLayoutManager: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" FLM.negotiateBPDAdjustment> result ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(returnValue);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r2);
+        return returnValue;
+
+     label0:
+        return 0;
+    }
+
+    public void discardSpace(org.apache.fop.layoutmgr.KnuthGlue)
+    {
+        org.apache.fop.layoutmgr.FlowLayoutManager this;
+        org.apache.fop.layoutmgr.KnuthGlue spaceGlue;
+        org.apache.commons.logging.Log $r0;
+        org.apache.fop.layoutmgr.NonLeafPosition savedPos;
+        org.apache.fop.layoutmgr.Position $r1, $r2;
+        boolean $z0;
+        org.apache.fop.layoutmgr.LayoutManager $r3;
+        org.apache.fop.layoutmgr.BlockLevelLayoutManager $r4;
+
+        this := @this: org.apache.fop.layoutmgr.FlowLayoutManager;
+        spaceGlue := @parameter0: org.apache.fop.layoutmgr.KnuthGlue;
+        $r0 = <org.apache.fop.layoutmgr.FlowLayoutManager: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>(" FLM.discardSpace> ");
+        $r1 = virtualinvoke spaceGlue.<org.apache.fop.layoutmgr.KnuthGlue: org.apache.fop.layoutmgr.Position getPosition()>();
+        $z0 = $r1 instanceof org.apache.fop.layoutmgr.NonLeafPosition;
+        if $z0 == 0 goto label0;
+
+        $r1 = virtualinvoke spaceGlue.<org.apache.fop.layoutmgr.KnuthGlue: org.apache.fop.layoutmgr.Position getPosition()>();
+        savedPos = (org.apache.fop.layoutmgr.NonLeafPosition) $r1;
+        $r2 = virtualinvoke savedPos.<org.apache.fop.layoutmgr.NonLeafPosition: org.apache.fop.layoutmgr.Position getPosition()>();
+        virtualinvoke spaceGlue.<org.apache.fop.layoutmgr.KnuthGlue: void setPosition(org.apache.fop.layoutmgr.Position)>($r2);
+        $r3 = virtualinvoke spaceGlue.<org.apache.fop.layoutmgr.KnuthGlue: org.apache.fop.layoutmgr.LayoutManager getLayoutManager()>();
+        $r4 = (org.apache.fop.layoutmgr.BlockLevelLayoutManager) $r3;
+        interfaceinvoke $r4.<org.apache.fop.layoutmgr.BlockLevelLayoutManager: void discardSpace(org.apache.fop.layoutmgr.KnuthGlue)>(spaceGlue);
+        virtualinvoke spaceGlue.<org.apache.fop.layoutmgr.KnuthGlue: void setPosition(org.apache.fop.layoutmgr.Position)>(savedPos);
+
+     label0:
+        return;
+    }
+
+    public boolean mustKeepTogether()
+    {
+        org.apache.fop.layoutmgr.FlowLayoutManager this;
+
+        this := @this: org.apache.fop.layoutmgr.FlowLayoutManager;
+        return 0;
+    }
+
+    public boolean mustKeepWithPrevious()
+    {
+        org.apache.fop.layoutmgr.FlowLayoutManager this;
+
+        this := @this: org.apache.fop.layoutmgr.FlowLayoutManager;
+        return 0;
+    }
+
+    public boolean mustKeepWithNext()
+    {
+        org.apache.fop.layoutmgr.FlowLayoutManager this;
+
+        this := @this: org.apache.fop.layoutmgr.FlowLayoutManager;
+        return 0;
+    }
+
+    public java.util.LinkedList getChangedKnuthElements(java.util.List, int)
+    {
+        org.apache.fop.layoutmgr.FlowLayoutManager this;
+        java.util.List oldList, $r8;
+        int alignment, fromIndex, $i0;
+        java.util.ListIterator oldListIterator, listIter;
+        java.util.LinkedList returnedList, returnList, $r1, $r9;
+        org.apache.fop.layoutmgr.KnuthElement prevElement, currElement, oldElement, returnedElement, $r11;
+        org.apache.fop.layoutmgr.BlockLevelLayoutManager prevLM, currLM;
+        org.apache.fop.layoutmgr.Position $r0, $r3, $r4, $r12;
+        boolean $z0;
+        java.lang.Object $r2;
+        org.apache.fop.layoutmgr.NonLeafPosition $r5;
+        org.apache.fop.layoutmgr.LayoutManager $r6, $r7;
+        org.apache.fop.layoutmgr.KnuthPenalty $r10;
+
+        this := @this: org.apache.fop.layoutmgr.FlowLayoutManager;
+        oldList := @parameter0: java.util.List;
+        alignment := @parameter1: int;
+        oldListIterator = interfaceinvoke oldList.<java.util.List: java.util.ListIterator listIterator()>();
+        $r1 = new java.util.LinkedList;
+        specialinvoke $r1.<java.util.LinkedList: void <init>()>();
+        returnedList = $r1;
+        $r1 = new java.util.LinkedList;
+        specialinvoke $r1.<java.util.LinkedList: void <init>()>();
+        returnList = $r1;
+        prevElement = null;
+        currElement = null;
+        fromIndex = 0;
+
+     label0:
+        $z0 = interfaceinvoke oldListIterator.<java.util.ListIterator: boolean hasNext()>();
+        if $z0 == 0 goto label2;
+
+        $r2 = interfaceinvoke oldListIterator.<java.util.ListIterator: java.lang.Object next()>();
+        oldElement = (org.apache.fop.layoutmgr.KnuthElement) $r2;
+        $r3 = virtualinvoke oldElement.<org.apache.fop.layoutmgr.KnuthElement: org.apache.fop.layoutmgr.Position getPosition()>();
+        $z0 = $r3 instanceof org.apache.fop.layoutmgr.NonLeafPosition;
+        if $z0 == 0 goto label1;
+
+        $r4 = virtualinvoke oldElement.<org.apache.fop.layoutmgr.KnuthElement: org.apache.fop.layoutmgr.Position getPosition()>();
+        $r5 = (org.apache.fop.layoutmgr.NonLeafPosition) $r4;
+        $r4 = virtualinvoke $r5.<org.apache.fop.layoutmgr.NonLeafPosition: org.apache.fop.layoutmgr.Position getPosition()>();
+        virtualinvoke oldElement.<org.apache.fop.layoutmgr.KnuthElement: void setPosition(org.apache.fop.layoutmgr.Position)>($r4);
+        goto label0;
+
+     label1:
+        interfaceinvoke oldListIterator.<java.util.ListIterator: void remove()>();
+        goto label0;
+
+     label2:
+        oldListIterator = interfaceinvoke oldList.<java.util.List: java.util.ListIterator listIterator()>();
+
+     label3:
+        $z0 = interfaceinvoke oldListIterator.<java.util.ListIterator: boolean hasNext()>();
+        if $z0 == 0 goto label7;
+
+        $r2 = interfaceinvoke oldListIterator.<java.util.ListIterator: java.lang.Object next()>();
+        currElement = (org.apache.fop.layoutmgr.KnuthElement) $r2;
+        if prevElement == null goto label6;
+
+        $r6 = virtualinvoke prevElement.<org.apache.fop.layoutmgr.KnuthElement: org.apache.fop.layoutmgr.LayoutManager getLayoutManager()>();
+        $r7 = virtualinvoke currElement.<org.apache.fop.layoutmgr.KnuthElement: org.apache.fop.layoutmgr.LayoutManager getLayoutManager()>();
+        if $r6 == $r7 goto label6;
+
+        $r6 = virtualinvoke prevElement.<org.apache.fop.layoutmgr.KnuthElement: org.apache.fop.layoutmgr.LayoutManager getLayoutManager()>();
+        prevLM = (org.apache.fop.layoutmgr.BlockLevelLayoutManager) $r6;
+        $r6 = virtualinvoke currElement.<org.apache.fop.layoutmgr.KnuthElement: org.apache.fop.layoutmgr.LayoutManager getLayoutManager()>();
+        currLM = (org.apache.fop.layoutmgr.BlockLevelLayoutManager) $r6;
+        $i0 = interfaceinvoke oldListIterator.<java.util.ListIterator: int previousIndex()>();
+        $r8 = interfaceinvoke oldList.<java.util.List: java.util.List subList(int,int)>(fromIndex, $i0);
+        $r9 = interfaceinvoke prevLM.<org.apache.fop.layoutmgr.BlockLevelLayoutManager: java.util.LinkedList getChangedKnuthElements(java.util.List,int)>($r8, alignment);
+        virtualinvoke returnedList.<java.util.LinkedList: boolean addAll(java.util.Collection)>($r9);
+        fromIndex = interfaceinvoke oldListIterator.<java.util.ListIterator: int previousIndex()>();
+        $z0 = interfaceinvoke prevLM.<org.apache.fop.layoutmgr.BlockLevelLayoutManager: boolean mustKeepWithNext()>();
+        if $z0 != 0 goto label4;
+
+        $z0 = interfaceinvoke currLM.<org.apache.fop.layoutmgr.BlockLevelLayoutManager: boolean mustKeepWithPrevious()>();
+        if $z0 == 0 goto label5;
+
+     label4:
+        $r10 = new org.apache.fop.layoutmgr.KnuthPenalty;
+        $r0 = new org.apache.fop.layoutmgr.Position;
+        specialinvoke $r0.<org.apache.fop.layoutmgr.Position: void <init>(org.apache.fop.layoutmgr.LayoutManager)>(this);
+        specialinvoke $r10.<org.apache.fop.layoutmgr.KnuthPenalty: void <init>(int,int,boolean,org.apache.fop.layoutmgr.Position,boolean)>(0, 1000, 0, $r0, 0);
+        virtualinvoke returnedList.<java.util.LinkedList: boolean add(java.lang.Object)>($r10);
+        goto label6;
+
+     label5:
+        $r2 = virtualinvoke returnedList.<java.util.LinkedList: java.lang.Object getLast()>();
+        $r11 = (org.apache.fop.layoutmgr.KnuthElement) $r2;
+        $z0 = virtualinvoke $r11.<org.apache.fop.layoutmgr.KnuthElement: boolean isGlue()>();
+        if $z0 != 0 goto label6;
+
+        $r10 = new org.apache.fop.layoutmgr.KnuthPenalty;
+        $r0 = new org.apache.fop.layoutmgr.Position;
+        specialinvoke $r0.<org.apache.fop.layoutmgr.Position: void <init>(org.apache.fop.layoutmgr.LayoutManager)>(this);
+        specialinvoke $r10.<org.apache.fop.layoutmgr.KnuthPenalty: void <init>(int,int,boolean,org.apache.fop.layoutmgr.Position,boolean)>(0, 0, 0, $r0, 0);
+        virtualinvoke returnedList.<java.util.LinkedList: boolean add(java.lang.Object)>($r10);
+
+     label6:
+        prevElement = currElement;
+        goto label3;
+
+     label7:
+        if currElement == null goto label8;
+
+        $r6 = virtualinvoke currElement.<org.apache.fop.layoutmgr.KnuthElement: org.apache.fop.layoutmgr.LayoutManager getLayoutManager()>();
+        currLM = (org.apache.fop.layoutmgr.BlockLevelLayoutManager) $r6;
+        $i0 = interfaceinvoke oldList.<java.util.List: int size()>();
+        $r8 = interfaceinvoke oldList.<java.util.List: java.util.List subList(int,int)>(fromIndex, $i0);
+        $r9 = interfaceinvoke currLM.<org.apache.fop.layoutmgr.BlockLevelLayoutManager: java.util.LinkedList getChangedKnuthElements(java.util.List,int)>($r8, alignment);
+        virtualinvoke returnedList.<java.util.LinkedList: boolean addAll(java.util.Collection)>($r9);
+
+     label8:
+        listIter = virtualinvoke returnedList.<java.util.LinkedList: java.util.ListIterator listIterator()>();
+
+     label9:
+        $z0 = interfaceinvoke listIter.<java.util.ListIterator: boolean hasNext()>();
+        if $z0 == 0 goto label11;
+
+        $r2 = interfaceinvoke listIter.<java.util.ListIterator: java.lang.Object next()>();
+        returnedElement = (org.apache.fop.layoutmgr.KnuthElement) $r2;
+        $r6 = virtualinvoke returnedElement.<org.apache.fop.layoutmgr.KnuthElement: org.apache.fop.layoutmgr.LayoutManager getLayoutManager()>();
+        if $r6 == this goto label10;
+
+        $r5 = new org.apache.fop.layoutmgr.NonLeafPosition;
+        $r12 = virtualinvoke returnedElement.<org.apache.fop.layoutmgr.KnuthElement: org.apache.fop.layoutmgr.Position getPosition()>();
+        specialinvoke $r5.<org.apache.fop.layoutmgr.NonLeafPosition: void <init>(org.apache.fop.layoutmgr.LayoutManager,org.apache.fop.layoutmgr.Position)>(this, $r12);
+        virtualinvoke returnedElement.<org.apache.fop.layoutmgr.KnuthElement: void setPosition(org.apache.fop.layoutmgr.Position)>($r5);
+
+     label10:
+        virtualinvoke returnList.<java.util.LinkedList: boolean add(java.lang.Object)>(returnedElement);
+        goto label9;
+
+     label11:
+        return returnList;
+    }
+
+    public void addAreas(org.apache.fop.layoutmgr.PositionIterator, org.apache.fop.layoutmgr.LayoutContext)
+    {
+        org.apache.fop.layoutmgr.FlowLayoutManager this;
+        org.apache.fop.layoutmgr.PositionIterator parentIter;
+        org.apache.fop.layoutmgr.LayoutContext layoutContext;
+
+        this := @this: org.apache.fop.layoutmgr.FlowLayoutManager;
+        parentIter := @parameter0: org.apache.fop.layoutmgr.PositionIterator;
+        layoutContext := @parameter1: org.apache.fop.layoutmgr.LayoutContext;
+        staticinvoke <org.apache.fop.layoutmgr.AreaAdditionUtil: void addAreas(org.apache.fop.layoutmgr.BlockStackingLayoutManager,org.apache.fop.layoutmgr.PositionIterator,org.apache.fop.layoutmgr.LayoutContext)>(this, parentIter, layoutContext);
+        virtualinvoke this.<org.apache.fop.layoutmgr.FlowLayoutManager: void flush()>();
+        return;
+    }
+
+    public void addChildArea(org.apache.fop.area.Area)
+    {
+        org.apache.fop.layoutmgr.FlowLayoutManager this;
+        org.apache.fop.area.Area childArea;
+        org.apache.fop.area.BlockParent[] $r1;
+        int $i0;
+        org.apache.fop.area.BlockParent $r2;
+
+        this := @this: org.apache.fop.layoutmgr.FlowLayoutManager;
+        childArea := @parameter0: org.apache.fop.area.Area;
+        virtualinvoke this.<org.apache.fop.layoutmgr.FlowLayoutManager: org.apache.fop.area.Area getParentArea(org.apache.fop.area.Area)>(childArea);
+        $r1 = this.<org.apache.fop.layoutmgr.FlowLayoutManager: org.apache.fop.area.BlockParent[] currentAreas>;
+        $i0 = virtualinvoke childArea.<org.apache.fop.area.Area: int getAreaClass()>();
+        $r2 = $r1[$i0];
+        virtualinvoke this.<org.apache.fop.layoutmgr.FlowLayoutManager: void addChildToArea(org.apache.fop.area.Area,org.apache.fop.area.BlockParent)>(childArea, $r2);
+        return;
+    }
+
+    public org.apache.fop.area.Area getParentArea(org.apache.fop.area.Area)
+    {
+        org.apache.fop.layoutmgr.FlowLayoutManager this;
+        org.apache.fop.area.Area childArea;
+        null_type parentArea;
+        int aclass;
+        java.lang.StringBuffer $r0;
+        org.apache.fop.area.PageViewport $r1;
+        org.apache.fop.area.BlockParent parentArea;
+        org.apache.fop.area.BodyRegion $r2;
+        java.lang.IllegalStateException $r3;
+        java.lang.String $r4;
+        org.apache.fop.area.BlockParent[] $r5;
+
+        this := @this: org.apache.fop.layoutmgr.FlowLayoutManager;
+        childArea := @parameter0: org.apache.fop.area.Area;
+        parentArea = null;
+        aclass = virtualinvoke childArea.<org.apache.fop.area.Area: int getAreaClass()>();
+        if aclass != 0 goto label0;
+
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.FlowLayoutManager: org.apache.fop.area.PageViewport getCurrentPV()>();
+        parentArea = virtualinvoke $r1.<org.apache.fop.area.PageViewport: org.apache.fop.area.NormalFlow getCurrentFlow()>();
+        goto label3;
+
+     label0:
+        if aclass != 3 goto label1;
+
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.FlowLayoutManager: org.apache.fop.area.PageViewport getCurrentPV()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.area.PageViewport: org.apache.fop.area.BodyRegion getBodyRegion()>();
+        parentArea = virtualinvoke $r2.<org.apache.fop.area.BodyRegion: org.apache.fop.area.BeforeFloat getBeforeFloat()>();
+        goto label3;
+
+     label1:
+        if aclass != 4 goto label2;
+
+        $r1 = virtualinvoke this.<org.apache.fop.layoutmgr.FlowLayoutManager: org.apache.fop.area.PageViewport getCurrentPV()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.area.PageViewport: org.apache.fop.area.BodyRegion getBodyRegion()>();
+        parentArea = virtualinvoke $r2.<org.apache.fop.area.BodyRegion: org.apache.fop.area.Footnote getFootnote()>();
+        goto label3;
+
+     label2:
+        $r3 = new java.lang.IllegalStateException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("(internal error) Invalid area class (");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(aclass);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(") requested.");
+        $r4 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r3.<java.lang.IllegalStateException: void <init>(java.lang.String)>($r4);
+        throw $r3;
+
+     label3:
+        $r5 = this.<org.apache.fop.layoutmgr.FlowLayoutManager: org.apache.fop.area.BlockParent[] currentAreas>;
+        $r5[aclass] = parentArea;
+        virtualinvoke this.<org.apache.fop.layoutmgr.FlowLayoutManager: void setCurrentArea(org.apache.fop.area.BlockParent)>(parentArea);
+        return parentArea;
+    }
+
+    public int getContentAreaIPD()
+    {
+        org.apache.fop.layoutmgr.FlowLayoutManager this;
+        org.apache.fop.area.PageViewport $r0;
+        org.apache.fop.area.Span $r1;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.FlowLayoutManager;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.FlowLayoutManager: org.apache.fop.area.PageViewport getCurrentPV()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.area.PageViewport: org.apache.fop.area.Span getCurrentSpan()>();
+        $i0 = virtualinvoke $r1.<org.apache.fop.area.Span: int getColumnWidth()>();
+        return $i0;
+    }
+
+    public int getContentAreaBPD()
+    {
+        org.apache.fop.layoutmgr.FlowLayoutManager this;
+        org.apache.fop.area.PageViewport $r0;
+        org.apache.fop.area.BodyRegion $r1;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.FlowLayoutManager;
+        $r0 = virtualinvoke this.<org.apache.fop.layoutmgr.FlowLayoutManager: org.apache.fop.area.PageViewport getCurrentPV()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.area.PageViewport: org.apache.fop.area.BodyRegion getBodyRegion()>();
+        $i0 = virtualinvoke $r1.<org.apache.fop.area.BodyRegion: int getBPD()>();
+        return $i0;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.layoutmgr.FlowLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$FlowLayoutManager>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.layoutmgr.FlowLayoutManager: java.lang.Class class$(java.lang.String)>("org.apache.fop.layoutmgr.FlowLayoutManager");
+        <org.apache.fop.layoutmgr.FlowLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$FlowLayoutManager> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.layoutmgr.FlowLayoutManager: java.lang.Class class$org$apache$fop$layoutmgr$FlowLayoutManager>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.layoutmgr.FlowLayoutManager: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

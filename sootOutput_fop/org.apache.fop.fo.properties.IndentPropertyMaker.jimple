@@ -1,0 +1,292 @@
+public class org.apache.fop.fo.properties.IndentPropertyMaker extends org.apache.fop.fo.properties.CorrespondingPropertyMaker
+{
+    private int[] paddingCorresponding;
+    private int[] borderWidthCorresponding;
+
+    public void <init>(org.apache.fop.fo.properties.PropertyMaker)
+    {
+        org.apache.fop.fo.properties.IndentPropertyMaker this;
+        org.apache.fop.fo.properties.PropertyMaker baseMaker;
+
+        this := @this: org.apache.fop.fo.properties.IndentPropertyMaker;
+        baseMaker := @parameter0: org.apache.fop.fo.properties.PropertyMaker;
+        specialinvoke this.<org.apache.fop.fo.properties.CorrespondingPropertyMaker: void <init>(org.apache.fop.fo.properties.PropertyMaker)>(baseMaker);
+        this.<org.apache.fop.fo.properties.IndentPropertyMaker: int[] paddingCorresponding> = null;
+        this.<org.apache.fop.fo.properties.IndentPropertyMaker: int[] borderWidthCorresponding> = null;
+        return;
+    }
+
+    public void setPaddingCorresponding(int[])
+    {
+        org.apache.fop.fo.properties.IndentPropertyMaker this;
+        int[] paddingCorresponding;
+
+        this := @this: org.apache.fop.fo.properties.IndentPropertyMaker;
+        paddingCorresponding := @parameter0: int[];
+        this.<org.apache.fop.fo.properties.IndentPropertyMaker: int[] paddingCorresponding> = paddingCorresponding;
+        return;
+    }
+
+    public void setBorderWidthCorresponding(int[])
+    {
+        org.apache.fop.fo.properties.IndentPropertyMaker this;
+        int[] borderWidthCorresponding;
+
+        this := @this: org.apache.fop.fo.properties.IndentPropertyMaker;
+        borderWidthCorresponding := @parameter0: int[];
+        this.<org.apache.fop.fo.properties.IndentPropertyMaker: int[] borderWidthCorresponding> = borderWidthCorresponding;
+        return;
+    }
+
+    public org.apache.fop.fo.properties.Property compute(org.apache.fop.fo.PropertyList) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.properties.IndentPropertyMaker this;
+        org.apache.fop.fo.PropertyList propertyList;
+        org.apache.fop.fo.FObj $r0;
+        org.apache.fop.apps.FOUserAgent $r1;
+        boolean $z0;
+        org.apache.fop.fo.properties.Property $r2;
+
+        this := @this: org.apache.fop.fo.properties.IndentPropertyMaker;
+        propertyList := @parameter0: org.apache.fop.fo.PropertyList;
+        $r0 = virtualinvoke propertyList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.FObj getFObj()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.FObj: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        $z0 = virtualinvoke $r1.<org.apache.fop.apps.FOUserAgent: boolean isBreakIndentInheritanceOnReferenceAreaBoundary()>();
+        if $z0 == 0 goto label0;
+
+        $r2 = virtualinvoke this.<org.apache.fop.fo.properties.IndentPropertyMaker: org.apache.fop.fo.properties.Property computeAlternativeRuleset(org.apache.fop.fo.PropertyList)>(propertyList);
+        return $r2;
+
+     label0:
+        $r2 = virtualinvoke this.<org.apache.fop.fo.properties.IndentPropertyMaker: org.apache.fop.fo.properties.Property computeConforming(org.apache.fop.fo.PropertyList)>(propertyList);
+        return $r2;
+    }
+
+    public org.apache.fop.fo.properties.Property computeConforming(org.apache.fop.fo.PropertyList) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.properties.IndentPropertyMaker this;
+        org.apache.fop.fo.PropertyList propertyList, pList;
+        org.apache.fop.datatypes.Numeric padding, border, margin, v, $r6;
+        int marginProp, $i0, $i1, $i2;
+        org.apache.fop.fo.properties.Property indent, $r1, $r5;
+        int[] $r0;
+        org.apache.fop.fo.properties.PropertyMaker $r2, $r4;
+        org.apache.fop.fo.FObj $r3;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.properties.IndentPropertyMaker;
+        propertyList := @parameter0: org.apache.fop.fo.PropertyList;
+        pList = virtualinvoke this.<org.apache.fop.fo.properties.IndentPropertyMaker: org.apache.fop.fo.PropertyList getWMPropertyList(org.apache.fop.fo.PropertyList)>(propertyList);
+        if pList != null goto label0;
+
+        return null;
+
+     label0:
+        $r0 = this.<org.apache.fop.fo.properties.IndentPropertyMaker: int[] paddingCorresponding>;
+        $r1 = specialinvoke this.<org.apache.fop.fo.properties.IndentPropertyMaker: org.apache.fop.fo.properties.Property getCorresponding(int[],org.apache.fop.fo.PropertyList)>($r0, propertyList);
+        padding = virtualinvoke $r1.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        $r0 = this.<org.apache.fop.fo.properties.IndentPropertyMaker: int[] borderWidthCorresponding>;
+        $r1 = specialinvoke this.<org.apache.fop.fo.properties.IndentPropertyMaker: org.apache.fop.fo.properties.Property getCorresponding(int[],org.apache.fop.fo.PropertyList)>($r0, propertyList);
+        border = virtualinvoke $r1.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        $i0 = this.<org.apache.fop.fo.properties.IndentPropertyMaker: int lr_tb>;
+        $i1 = this.<org.apache.fop.fo.properties.IndentPropertyMaker: int rl_tb>;
+        $i2 = this.<org.apache.fop.fo.properties.IndentPropertyMaker: int tb_rl>;
+        marginProp = virtualinvoke pList.<org.apache.fop.fo.PropertyList: int getWritingMode(int,int,int)>($i0, $i1, $i2);
+        $r1 = virtualinvoke propertyList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property getExplicitOrShorthand(int)>(marginProp);
+        if $r1 != null goto label2;
+
+        $r2 = this.<org.apache.fop.fo.properties.IndentPropertyMaker: org.apache.fop.fo.properties.PropertyMaker baseMaker>;
+        $i0 = $r2.<org.apache.fop.fo.properties.PropertyMaker: int propId>;
+        indent = virtualinvoke propertyList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property getExplicit(int)>($i0);
+        if indent != null goto label1;
+
+        return null;
+
+     label1:
+        return indent;
+
+     label2:
+        $r1 = virtualinvoke propertyList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(marginProp);
+        margin = virtualinvoke $r1.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        v = <org.apache.fop.fo.properties.FixedLength: org.apache.fop.fo.properties.FixedLength ZERO_FIXED_LENGTH>;
+        $r3 = virtualinvoke propertyList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.FObj getFObj()>();
+        $z0 = virtualinvoke $r3.<org.apache.fop.fo.FObj: boolean generatesReferenceAreas()>();
+        if $z0 != 0 goto label3;
+
+        $r4 = this.<org.apache.fop.fo.properties.IndentPropertyMaker: org.apache.fop.fo.properties.PropertyMaker baseMaker>;
+        $i1 = $r4.<org.apache.fop.fo.properties.PropertyMaker: int propId>;
+        $r5 = virtualinvoke propertyList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property getInherited(int)>($i1);
+        $r6 = virtualinvoke $r5.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        v = staticinvoke <org.apache.fop.fo.expr.NumericOp: org.apache.fop.datatypes.Numeric addition(org.apache.fop.datatypes.Numeric,org.apache.fop.datatypes.Numeric)>(v, $r6);
+
+     label3:
+        v = staticinvoke <org.apache.fop.fo.expr.NumericOp: org.apache.fop.datatypes.Numeric addition(org.apache.fop.datatypes.Numeric,org.apache.fop.datatypes.Numeric)>(v, margin);
+        v = staticinvoke <org.apache.fop.fo.expr.NumericOp: org.apache.fop.datatypes.Numeric addition(org.apache.fop.datatypes.Numeric,org.apache.fop.datatypes.Numeric)>(v, padding);
+        v = staticinvoke <org.apache.fop.fo.expr.NumericOp: org.apache.fop.datatypes.Numeric addition(org.apache.fop.datatypes.Numeric,org.apache.fop.datatypes.Numeric)>(v, border);
+        $r1 = (org.apache.fop.fo.properties.Property) v;
+        return $r1;
+    }
+
+    private boolean isInherited(org.apache.fop.fo.PropertyList)
+    {
+        org.apache.fop.fo.properties.IndentPropertyMaker this;
+        org.apache.fop.fo.PropertyList pList;
+        org.apache.fop.fo.FONode nd;
+        org.apache.fop.fo.FObj $r0;
+        org.apache.fop.apps.FOUserAgent $r1;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.properties.IndentPropertyMaker;
+        pList := @parameter0: org.apache.fop.fo.PropertyList;
+        $r0 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.FObj getFObj()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.FObj: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        $z0 = virtualinvoke $r1.<org.apache.fop.apps.FOUserAgent: boolean isBreakIndentInheritanceOnReferenceAreaBoundary()>();
+        if $z0 == 0 goto label3;
+
+        $r0 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.FObj getFObj()>();
+        nd = virtualinvoke $r0.<org.apache.fop.fo.FObj: org.apache.fop.fo.FONode getParent()>();
+        $z0 = nd instanceof org.apache.fop.fo.FObj;
+        if $z0 == 0 goto label0;
+
+        $r0 = (org.apache.fop.fo.FObj) nd;
+        $z0 = virtualinvoke $r0.<org.apache.fop.fo.FObj: boolean generatesReferenceAreas()>();
+        if $z0 != 0 goto label1;
+
+     label0:
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        return $z0;
+
+     label3:
+        return 1;
+    }
+
+    public org.apache.fop.fo.properties.Property computeAlternativeRuleset(org.apache.fop.fo.PropertyList) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.properties.IndentPropertyMaker this;
+        org.apache.fop.fo.PropertyList propertyList, pList, pl;
+        org.apache.fop.datatypes.Numeric padding, border, margin, v, $r6;
+        int marginProp, $i0, $i1, $i2;
+        boolean marginNearest, $z0;
+        org.apache.fop.fo.properties.Property indent, $r1, $r5;
+        int[] $r0;
+        org.apache.fop.fo.properties.PropertyMaker $r2, $r4;
+        org.apache.fop.fo.properties.FixedLength $r3;
+
+        this := @this: org.apache.fop.fo.properties.IndentPropertyMaker;
+        propertyList := @parameter0: org.apache.fop.fo.PropertyList;
+        pList = virtualinvoke this.<org.apache.fop.fo.properties.IndentPropertyMaker: org.apache.fop.fo.PropertyList getWMPropertyList(org.apache.fop.fo.PropertyList)>(propertyList);
+        if pList != null goto label0;
+
+        return null;
+
+     label0:
+        $r0 = this.<org.apache.fop.fo.properties.IndentPropertyMaker: int[] paddingCorresponding>;
+        $r1 = specialinvoke this.<org.apache.fop.fo.properties.IndentPropertyMaker: org.apache.fop.fo.properties.Property getCorresponding(int[],org.apache.fop.fo.PropertyList)>($r0, propertyList);
+        padding = virtualinvoke $r1.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        $r0 = this.<org.apache.fop.fo.properties.IndentPropertyMaker: int[] borderWidthCorresponding>;
+        $r1 = specialinvoke this.<org.apache.fop.fo.properties.IndentPropertyMaker: org.apache.fop.fo.properties.Property getCorresponding(int[],org.apache.fop.fo.PropertyList)>($r0, propertyList);
+        border = virtualinvoke $r1.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        $i0 = this.<org.apache.fop.fo.properties.IndentPropertyMaker: int lr_tb>;
+        $i1 = this.<org.apache.fop.fo.properties.IndentPropertyMaker: int rl_tb>;
+        $i2 = this.<org.apache.fop.fo.properties.IndentPropertyMaker: int tb_rl>;
+        marginProp = virtualinvoke pList.<org.apache.fop.fo.PropertyList: int getWritingMode(int,int,int)>($i0, $i1, $i2);
+        marginNearest = 0;
+        pl = virtualinvoke propertyList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.PropertyList getParentPropertyList()>();
+
+     label1:
+        if pl == null goto label4;
+
+        $r2 = this.<org.apache.fop.fo.properties.IndentPropertyMaker: org.apache.fop.fo.properties.PropertyMaker baseMaker>;
+        $i0 = $r2.<org.apache.fop.fo.properties.PropertyMaker: int propId>;
+        $r1 = virtualinvoke pl.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property getExplicit(int)>($i0);
+        if $r1 == null goto label2;
+
+        goto label4;
+
+     label2:
+        $r1 = virtualinvoke pl.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property getExplicitOrShorthand(int)>(marginProp);
+        if $r1 == null goto label3;
+
+        marginNearest = 1;
+        goto label4;
+
+     label3:
+        pl = virtualinvoke pl.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.PropertyList getParentPropertyList()>();
+        goto label1;
+
+     label4:
+        $r1 = virtualinvoke propertyList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property getExplicitOrShorthand(int)>(marginProp);
+        if $r1 != null goto label8;
+
+        $r2 = this.<org.apache.fop.fo.properties.IndentPropertyMaker: org.apache.fop.fo.properties.PropertyMaker baseMaker>;
+        $i0 = $r2.<org.apache.fop.fo.properties.PropertyMaker: int propId>;
+        indent = virtualinvoke propertyList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property getExplicit(int)>($i0);
+        if indent != null goto label7;
+
+        $z0 = specialinvoke this.<org.apache.fop.fo.properties.IndentPropertyMaker: boolean isInherited(org.apache.fop.fo.PropertyList)>(propertyList);
+        if $z0 != 0 goto label5;
+
+        if marginNearest != 0 goto label6;
+
+     label5:
+        return null;
+
+     label6:
+        $r3 = <org.apache.fop.fo.properties.FixedLength: org.apache.fop.fo.properties.FixedLength ZERO_FIXED_LENGTH>;
+        return $r3;
+
+     label7:
+        return indent;
+
+     label8:
+        $r1 = virtualinvoke propertyList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(marginProp);
+        margin = virtualinvoke $r1.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        v = <org.apache.fop.fo.properties.FixedLength: org.apache.fop.fo.properties.FixedLength ZERO_FIXED_LENGTH>;
+        $z0 = specialinvoke this.<org.apache.fop.fo.properties.IndentPropertyMaker: boolean isInherited(org.apache.fop.fo.PropertyList)>(propertyList);
+        if $z0 == 0 goto label9;
+
+        $r4 = this.<org.apache.fop.fo.properties.IndentPropertyMaker: org.apache.fop.fo.properties.PropertyMaker baseMaker>;
+        $i1 = $r4.<org.apache.fop.fo.properties.PropertyMaker: int propId>;
+        $r5 = virtualinvoke propertyList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property getInherited(int)>($i1);
+        $r6 = virtualinvoke $r5.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        v = staticinvoke <org.apache.fop.fo.expr.NumericOp: org.apache.fop.datatypes.Numeric addition(org.apache.fop.datatypes.Numeric,org.apache.fop.datatypes.Numeric)>(v, $r6);
+
+     label9:
+        v = staticinvoke <org.apache.fop.fo.expr.NumericOp: org.apache.fop.datatypes.Numeric addition(org.apache.fop.datatypes.Numeric,org.apache.fop.datatypes.Numeric)>(v, margin);
+        v = staticinvoke <org.apache.fop.fo.expr.NumericOp: org.apache.fop.datatypes.Numeric addition(org.apache.fop.datatypes.Numeric,org.apache.fop.datatypes.Numeric)>(v, padding);
+        v = staticinvoke <org.apache.fop.fo.expr.NumericOp: org.apache.fop.datatypes.Numeric addition(org.apache.fop.datatypes.Numeric,org.apache.fop.datatypes.Numeric)>(v, border);
+        $r1 = (org.apache.fop.fo.properties.Property) v;
+        return $r1;
+    }
+
+    private org.apache.fop.fo.properties.Property getCorresponding(int[], org.apache.fop.fo.PropertyList) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.properties.IndentPropertyMaker this;
+        int[] corresponding;
+        org.apache.fop.fo.PropertyList propertyList, pList;
+        int wmcorr, $i0, $i1, $i2;
+        org.apache.fop.fo.properties.Property $r0;
+
+        this := @this: org.apache.fop.fo.properties.IndentPropertyMaker;
+        corresponding := @parameter0: int[];
+        propertyList := @parameter1: org.apache.fop.fo.PropertyList;
+        pList = virtualinvoke this.<org.apache.fop.fo.properties.IndentPropertyMaker: org.apache.fop.fo.PropertyList getWMPropertyList(org.apache.fop.fo.PropertyList)>(propertyList);
+        if pList == null goto label0;
+
+        $i0 = corresponding[0];
+        $i1 = corresponding[1];
+        $i2 = corresponding[2];
+        wmcorr = virtualinvoke pList.<org.apache.fop.fo.PropertyList: int getWritingMode(int,int,int)>($i0, $i1, $i2);
+        $r0 = virtualinvoke propertyList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(wmcorr);
+        return $r0;
+
+     label0:
+        return null;
+    }
+}

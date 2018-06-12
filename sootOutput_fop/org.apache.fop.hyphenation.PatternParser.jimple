@@ -1,0 +1,950 @@
+public class org.apache.fop.hyphenation.PatternParser extends org.xml.sax.helpers.DefaultHandler implements org.apache.fop.hyphenation.PatternConsumer
+{
+    org.xml.sax.XMLReader parser;
+    int currElement;
+    org.apache.fop.hyphenation.PatternConsumer consumer;
+    java.lang.StringBuffer token;
+    java.util.ArrayList exception;
+    char hyphenChar;
+    java.lang.String errMsg;
+    static final int ELEM_CLASSES;
+    static final int ELEM_EXCEPTIONS;
+    static final int ELEM_PATTERNS;
+    static final int ELEM_HYPHEN;
+
+    public void <init>() throws org.apache.fop.hyphenation.HyphenationException
+    {
+        org.apache.fop.hyphenation.PatternParser this;
+        java.lang.StringBuffer $r0;
+        org.xml.sax.XMLReader $r1, $r2;
+
+        this := @this: org.apache.fop.hyphenation.PatternParser;
+        specialinvoke this.<org.xml.sax.helpers.DefaultHandler: void <init>()>();
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        this.<org.apache.fop.hyphenation.PatternParser: java.lang.StringBuffer token> = $r0;
+        $r1 = staticinvoke <org.apache.fop.hyphenation.PatternParser: org.xml.sax.XMLReader createParser()>();
+        this.<org.apache.fop.hyphenation.PatternParser: org.xml.sax.XMLReader parser> = $r1;
+        $r2 = this.<org.apache.fop.hyphenation.PatternParser: org.xml.sax.XMLReader parser>;
+        interfaceinvoke $r2.<org.xml.sax.XMLReader: void setContentHandler(org.xml.sax.ContentHandler)>(this);
+        $r2 = this.<org.apache.fop.hyphenation.PatternParser: org.xml.sax.XMLReader parser>;
+        interfaceinvoke $r2.<org.xml.sax.XMLReader: void setErrorHandler(org.xml.sax.ErrorHandler)>(this);
+        this.<org.apache.fop.hyphenation.PatternParser: char hyphenChar> = 45;
+        return;
+    }
+
+    public void <init>(org.apache.fop.hyphenation.PatternConsumer) throws org.apache.fop.hyphenation.HyphenationException
+    {
+        org.apache.fop.hyphenation.PatternParser this;
+        org.apache.fop.hyphenation.PatternConsumer consumer;
+
+        this := @this: org.apache.fop.hyphenation.PatternParser;
+        consumer := @parameter0: org.apache.fop.hyphenation.PatternConsumer;
+        specialinvoke this.<org.apache.fop.hyphenation.PatternParser: void <init>()>();
+        this.<org.apache.fop.hyphenation.PatternParser: org.apache.fop.hyphenation.PatternConsumer consumer> = consumer;
+        return;
+    }
+
+    public void setConsumer(org.apache.fop.hyphenation.PatternConsumer)
+    {
+        org.apache.fop.hyphenation.PatternParser this;
+        org.apache.fop.hyphenation.PatternConsumer consumer;
+
+        this := @this: org.apache.fop.hyphenation.PatternParser;
+        consumer := @parameter0: org.apache.fop.hyphenation.PatternConsumer;
+        this.<org.apache.fop.hyphenation.PatternParser: org.apache.fop.hyphenation.PatternConsumer consumer> = consumer;
+        return;
+    }
+
+    public void parse(java.lang.String) throws org.apache.fop.hyphenation.HyphenationException
+    {
+        org.apache.fop.hyphenation.PatternParser this;
+        java.lang.String filename;
+        java.io.File $r0;
+
+        this := @this: org.apache.fop.hyphenation.PatternParser;
+        filename := @parameter0: java.lang.String;
+        $r0 = new java.io.File;
+        specialinvoke $r0.<java.io.File: void <init>(java.lang.String)>(filename);
+        virtualinvoke this.<org.apache.fop.hyphenation.PatternParser: void parse(java.io.File)>($r0);
+        return;
+    }
+
+    public void parse(java.io.File) throws org.apache.fop.hyphenation.HyphenationException
+    {
+        org.apache.fop.hyphenation.PatternParser this;
+        java.io.File file;
+        org.xml.sax.InputSource $r0, src;
+        java.net.MalformedURLException e, $r3;
+        java.net.URL $r1;
+        java.lang.String $r2, $r6;
+        org.apache.fop.hyphenation.HyphenationException $r4;
+        java.lang.StringBuffer $r5;
+
+        this := @this: org.apache.fop.hyphenation.PatternParser;
+        file := @parameter0: java.io.File;
+
+     label0:
+        $r0 = new org.xml.sax.InputSource;
+        $r1 = virtualinvoke file.<java.io.File: java.net.URL toURL()>();
+        $r2 = virtualinvoke $r1.<java.net.URL: java.lang.String toExternalForm()>();
+        specialinvoke $r0.<org.xml.sax.InputSource: void <init>(java.lang.String)>($r2);
+        src = $r0;
+        virtualinvoke this.<org.apache.fop.hyphenation.PatternParser: void parse(org.xml.sax.InputSource)>(src);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r3 := @caughtexception;
+        e = $r3;
+        $r4 = new org.apache.fop.hyphenation.HyphenationException;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Error converting the File \'");
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(file);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\' to a URL: ");
+        $r6 = virtualinvoke e.<java.net.MalformedURLException: java.lang.String getMessage()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r2 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r4.<org.apache.fop.hyphenation.HyphenationException: void <init>(java.lang.String)>($r2);
+        throw $r4;
+
+     label3:
+        return;
+
+        catch java.net.MalformedURLException from label0 to label1 with label2;
+    }
+
+    public void parse(org.xml.sax.InputSource) throws org.apache.fop.hyphenation.HyphenationException
+    {
+        org.apache.fop.hyphenation.PatternParser this;
+        org.xml.sax.InputSource source;
+        java.io.FileNotFoundException fnfe, $r2;
+        java.lang.StringBuffer $r0;
+        java.io.IOException ioe, $r6;
+        org.xml.sax.SAXException e, $r7;
+        org.xml.sax.XMLReader $r1;
+        org.apache.fop.hyphenation.HyphenationException $r3;
+        java.lang.String $r4, $r5;
+
+        this := @this: org.apache.fop.hyphenation.PatternParser;
+        source := @parameter0: org.xml.sax.InputSource;
+
+     label0:
+        $r1 = this.<org.apache.fop.hyphenation.PatternParser: org.xml.sax.XMLReader parser>;
+        interfaceinvoke $r1.<org.xml.sax.XMLReader: void parse(org.xml.sax.InputSource)>(source);
+
+     label1:
+        goto label5;
+
+     label2:
+        $r2 := @caughtexception;
+        fnfe = $r2;
+        $r3 = new org.apache.fop.hyphenation.HyphenationException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("File not found: ");
+        $r4 = virtualinvoke fnfe.<java.io.FileNotFoundException: java.lang.String getMessage()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4);
+        $r5 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r3.<org.apache.fop.hyphenation.HyphenationException: void <init>(java.lang.String)>($r5);
+        throw $r3;
+
+     label3:
+        $r6 := @caughtexception;
+        ioe = $r6;
+        $r3 = new org.apache.fop.hyphenation.HyphenationException;
+        $r5 = virtualinvoke ioe.<java.io.IOException: java.lang.String getMessage()>();
+        specialinvoke $r3.<org.apache.fop.hyphenation.HyphenationException: void <init>(java.lang.String)>($r5);
+        throw $r3;
+
+     label4:
+        $r7 := @caughtexception;
+        e = $r7;
+        $r3 = new org.apache.fop.hyphenation.HyphenationException;
+        $r5 = this.<org.apache.fop.hyphenation.PatternParser: java.lang.String errMsg>;
+        specialinvoke $r3.<org.apache.fop.hyphenation.HyphenationException: void <init>(java.lang.String)>($r5);
+        throw $r3;
+
+     label5:
+        return;
+
+        catch java.io.FileNotFoundException from label0 to label1 with label2;
+        catch java.io.IOException from label0 to label1 with label3;
+        catch org.xml.sax.SAXException from label0 to label1 with label4;
+    }
+
+    static org.xml.sax.XMLReader createParser()
+    {
+        javax.xml.parsers.SAXParserFactory factory;
+        java.lang.Exception e, $r3;
+        java.lang.StringBuffer $r0;
+        javax.xml.parsers.SAXParser $r1;
+        org.xml.sax.XMLReader $r2;
+        java.lang.RuntimeException $r4;
+        java.lang.String $r5, $r6;
+
+     label0:
+        factory = staticinvoke <javax.xml.parsers.SAXParserFactory: javax.xml.parsers.SAXParserFactory newInstance()>();
+        virtualinvoke factory.<javax.xml.parsers.SAXParserFactory: void setNamespaceAware(boolean)>(1);
+        $r1 = virtualinvoke factory.<javax.xml.parsers.SAXParserFactory: javax.xml.parsers.SAXParser newSAXParser()>();
+        $r2 = virtualinvoke $r1.<javax.xml.parsers.SAXParser: org.xml.sax.XMLReader getXMLReader()>();
+
+     label1:
+        return $r2;
+
+     label2:
+        $r3 := @caughtexception;
+        e = $r3;
+        $r4 = new java.lang.RuntimeException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Couldn\'t create XMLReader: ");
+        $r5 = virtualinvoke e.<java.lang.Exception: java.lang.String getMessage()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r6 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r4.<java.lang.RuntimeException: void <init>(java.lang.String)>($r6);
+        throw $r4;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+
+    protected java.lang.String readToken(java.lang.StringBuffer)
+    {
+        org.apache.fop.hyphenation.PatternParser this;
+        java.lang.StringBuffer chars, $r0;
+        boolean space, $z0;
+        int i, countr, $i0, $i3;
+        java.lang.String word, $r1;
+        char $c1, $c2;
+
+        this := @this: org.apache.fop.hyphenation.PatternParser;
+        chars := @parameter0: java.lang.StringBuffer;
+        space = 0;
+        i = 0;
+
+     label0:
+        $i0 = virtualinvoke chars.<java.lang.StringBuffer: int length()>();
+        if i >= $i0 goto label1;
+
+        $c1 = virtualinvoke chars.<java.lang.StringBuffer: char charAt(int)>(i);
+        $z0 = staticinvoke <java.lang.Character: boolean isWhitespace(char)>($c1);
+        if $z0 == 0 goto label1;
+
+        space = 1;
+        i = i + 1;
+        goto label0;
+
+     label1:
+        if space == 0 goto label4;
+
+        countr = i;
+
+     label2:
+        $i0 = virtualinvoke chars.<java.lang.StringBuffer: int length()>();
+        if countr >= $i0 goto label3;
+
+        $i0 = countr - i;
+        $c2 = virtualinvoke chars.<java.lang.StringBuffer: char charAt(int)>(countr);
+        virtualinvoke chars.<java.lang.StringBuffer: void setCharAt(int,char)>($i0, $c2);
+        countr = countr + 1;
+        goto label2;
+
+     label3:
+        $i0 = virtualinvoke chars.<java.lang.StringBuffer: int length()>();
+        $i0 = $i0 - i;
+        virtualinvoke chars.<java.lang.StringBuffer: void setLength(int)>($i0);
+        $r0 = this.<org.apache.fop.hyphenation.PatternParser: java.lang.StringBuffer token>;
+        $i3 = virtualinvoke $r0.<java.lang.StringBuffer: int length()>();
+        if $i3 <= 0 goto label4;
+
+        $r0 = this.<org.apache.fop.hyphenation.PatternParser: java.lang.StringBuffer token>;
+        word = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r0 = this.<org.apache.fop.hyphenation.PatternParser: java.lang.StringBuffer token>;
+        virtualinvoke $r0.<java.lang.StringBuffer: void setLength(int)>(0);
+        return word;
+
+     label4:
+        space = 0;
+        i = 0;
+
+     label5:
+        $i0 = virtualinvoke chars.<java.lang.StringBuffer: int length()>();
+        if i >= $i0 goto label7;
+
+        $c1 = virtualinvoke chars.<java.lang.StringBuffer: char charAt(int)>(i);
+        $z0 = staticinvoke <java.lang.Character: boolean isWhitespace(char)>($c1);
+        if $z0 == 0 goto label6;
+
+        space = 1;
+        goto label7;
+
+     label6:
+        i = i + 1;
+        goto label5;
+
+     label7:
+        $r0 = this.<org.apache.fop.hyphenation.PatternParser: java.lang.StringBuffer token>;
+        $r1 = virtualinvoke chars.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r1 = virtualinvoke $r1.<java.lang.String: java.lang.String substring(int,int)>(0, i);
+        virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        countr = i;
+
+     label8:
+        $i0 = virtualinvoke chars.<java.lang.StringBuffer: int length()>();
+        if countr >= $i0 goto label9;
+
+        $i0 = countr - i;
+        $c2 = virtualinvoke chars.<java.lang.StringBuffer: char charAt(int)>(countr);
+        virtualinvoke chars.<java.lang.StringBuffer: void setCharAt(int,char)>($i0, $c2);
+        countr = countr + 1;
+        goto label8;
+
+     label9:
+        $i0 = virtualinvoke chars.<java.lang.StringBuffer: int length()>();
+        $i0 = $i0 - i;
+        virtualinvoke chars.<java.lang.StringBuffer: void setLength(int)>($i0);
+        if space == 0 goto label10;
+
+        $r0 = this.<org.apache.fop.hyphenation.PatternParser: java.lang.StringBuffer token>;
+        word = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r0 = this.<org.apache.fop.hyphenation.PatternParser: java.lang.StringBuffer token>;
+        virtualinvoke $r0.<java.lang.StringBuffer: void setLength(int)>(0);
+        return word;
+
+     label10:
+        $r0 = this.<org.apache.fop.hyphenation.PatternParser: java.lang.StringBuffer token>;
+        virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.StringBuffer)>(chars);
+        return null;
+    }
+
+    protected static java.lang.String getPattern(java.lang.String)
+    {
+        java.lang.String word, $r1;
+        java.lang.StringBuffer $r0, pat;
+        int len, i;
+        char $c0, $c1;
+        boolean $z0;
+
+        word := @parameter0: java.lang.String;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        pat = $r0;
+        len = virtualinvoke word.<java.lang.String: int length()>();
+        i = 0;
+
+     label0:
+        if i >= len goto label2;
+
+        $c0 = virtualinvoke word.<java.lang.String: char charAt(int)>(i);
+        $z0 = staticinvoke <java.lang.Character: boolean isDigit(char)>($c0);
+        if $z0 != 0 goto label1;
+
+        $c1 = virtualinvoke word.<java.lang.String: char charAt(int)>(i);
+        virtualinvoke pat.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c1);
+
+     label1:
+        i = i + 1;
+        goto label0;
+
+     label2:
+        $r1 = virtualinvoke pat.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r1;
+    }
+
+    protected java.util.ArrayList normalizeException(java.util.ArrayList)
+    {
+        org.apache.fop.hyphenation.PatternParser this;
+        java.util.ArrayList ex, $r0, res;
+        int i, j, $i0, $i3;
+        java.lang.Object item;
+        java.lang.String str, $r1, $r3;
+        java.lang.StringBuffer buf, $r2;
+        char c, $c1, $c2;
+        char[] h;
+        boolean $z0;
+        org.apache.fop.hyphenation.Hyphen $r4;
+
+        this := @this: org.apache.fop.hyphenation.PatternParser;
+        ex := @parameter0: java.util.ArrayList;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        res = $r0;
+        i = 0;
+
+     label0:
+        $i0 = virtualinvoke ex.<java.util.ArrayList: int size()>();
+        if i >= $i0 goto label8;
+
+        item = virtualinvoke ex.<java.util.ArrayList: java.lang.Object get(int)>(i);
+        $z0 = item instanceof java.lang.String;
+        if $z0 == 0 goto label6;
+
+        str = (java.lang.String) item;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        buf = $r2;
+        j = 0;
+
+     label1:
+        $i0 = virtualinvoke str.<java.lang.String: int length()>();
+        if j >= $i0 goto label4;
+
+        c = virtualinvoke str.<java.lang.String: char charAt(int)>(j);
+        $c1 = this.<org.apache.fop.hyphenation.PatternParser: char hyphenChar>;
+        if c == $c1 goto label2;
+
+        virtualinvoke buf.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(c);
+        goto label3;
+
+     label2:
+        $r3 = virtualinvoke buf.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke res.<java.util.ArrayList: boolean add(java.lang.Object)>($r3);
+        virtualinvoke buf.<java.lang.StringBuffer: void setLength(int)>(0);
+        h = newarray (char)[1];
+        $c2 = this.<org.apache.fop.hyphenation.PatternParser: char hyphenChar>;
+        h[0] = $c2;
+        $r4 = new org.apache.fop.hyphenation.Hyphen;
+        $r1 = new java.lang.String;
+        specialinvoke $r1.<java.lang.String: void <init>(char[])>(h);
+        specialinvoke $r4.<org.apache.fop.hyphenation.Hyphen: void <init>(java.lang.String,java.lang.String,java.lang.String)>($r1, null, null);
+        virtualinvoke res.<java.util.ArrayList: boolean add(java.lang.Object)>($r4);
+
+     label3:
+        j = j + 1;
+        goto label1;
+
+     label4:
+        $i3 = virtualinvoke buf.<java.lang.StringBuffer: int length()>();
+        if $i3 <= 0 goto label5;
+
+        $r3 = virtualinvoke buf.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke res.<java.util.ArrayList: boolean add(java.lang.Object)>($r3);
+
+     label5:
+        goto label7;
+
+     label6:
+        virtualinvoke res.<java.util.ArrayList: boolean add(java.lang.Object)>(item);
+
+     label7:
+        i = i + 1;
+        goto label0;
+
+     label8:
+        return res;
+    }
+
+    protected java.lang.String getExceptionWord(java.util.ArrayList)
+    {
+        org.apache.fop.hyphenation.PatternParser this;
+        java.util.ArrayList ex;
+        java.lang.StringBuffer $r0, res;
+        int i, $i0;
+        java.lang.Object item;
+        boolean $z0;
+        java.lang.String $r1, $r3;
+        org.apache.fop.hyphenation.Hyphen $r2, $r4;
+
+        this := @this: org.apache.fop.hyphenation.PatternParser;
+        ex := @parameter0: java.util.ArrayList;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        res = $r0;
+        i = 0;
+
+     label0:
+        $i0 = virtualinvoke ex.<java.util.ArrayList: int size()>();
+        if i >= $i0 goto label3;
+
+        item = virtualinvoke ex.<java.util.ArrayList: java.lang.Object get(int)>(i);
+        $z0 = item instanceof java.lang.String;
+        if $z0 == 0 goto label1;
+
+        $r1 = (java.lang.String) item;
+        virtualinvoke res.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        goto label2;
+
+     label1:
+        $r2 = (org.apache.fop.hyphenation.Hyphen) item;
+        $r3 = $r2.<org.apache.fop.hyphenation.Hyphen: java.lang.String noBreak>;
+        if $r3 == null goto label2;
+
+        $r4 = (org.apache.fop.hyphenation.Hyphen) item;
+        $r1 = $r4.<org.apache.fop.hyphenation.Hyphen: java.lang.String noBreak>;
+        virtualinvoke res.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+
+     label2:
+        i = i + 1;
+        goto label0;
+
+     label3:
+        $r3 = virtualinvoke res.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r3;
+    }
+
+    protected static java.lang.String getInterletterValues(java.lang.String)
+    {
+        java.lang.String pat, word, $r1;
+        java.lang.StringBuffer $r0, il;
+        int len, i;
+        char c;
+        boolean $z0;
+
+        pat := @parameter0: java.lang.String;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        il = $r0;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(pat);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("a");
+        word = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        len = virtualinvoke word.<java.lang.String: int length()>();
+        i = 0;
+
+     label0:
+        if i >= len goto label3;
+
+        c = virtualinvoke word.<java.lang.String: char charAt(int)>(i);
+        $z0 = staticinvoke <java.lang.Character: boolean isDigit(char)>(c);
+        if $z0 == 0 goto label1;
+
+        virtualinvoke il.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(c);
+        i = i + 1;
+        goto label2;
+
+     label1:
+        virtualinvoke il.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(48);
+
+     label2:
+        i = i + 1;
+        goto label0;
+
+     label3:
+        $r1 = virtualinvoke il.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r1;
+    }
+
+    public void startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+    {
+        org.apache.fop.hyphenation.PatternParser this;
+        java.lang.String uri, local, raw, h, $r4, $r6, $r7, $r8;
+        org.xml.sax.Attributes attrs;
+        boolean $z0;
+        int $i0;
+        char $c1;
+        java.util.ArrayList $r0, $r2;
+        java.lang.StringBuffer $r1, $r3;
+        org.apache.fop.hyphenation.Hyphen $r5;
+
+        this := @this: org.apache.fop.hyphenation.PatternParser;
+        uri := @parameter0: java.lang.String;
+        local := @parameter1: java.lang.String;
+        raw := @parameter2: java.lang.String;
+        attrs := @parameter3: org.xml.sax.Attributes;
+        $z0 = virtualinvoke local.<java.lang.String: boolean equals(java.lang.Object)>("hyphen-char");
+        if $z0 == 0 goto label1;
+
+        h = interfaceinvoke attrs.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("value");
+        if h == null goto label0;
+
+        $i0 = virtualinvoke h.<java.lang.String: int length()>();
+        if $i0 != 1 goto label0;
+
+        $c1 = virtualinvoke h.<java.lang.String: char charAt(int)>(0);
+        this.<org.apache.fop.hyphenation.PatternParser: char hyphenChar> = $c1;
+
+     label0:
+        goto label6;
+
+     label1:
+        $z0 = virtualinvoke local.<java.lang.String: boolean equals(java.lang.Object)>("classes");
+        if $z0 == 0 goto label2;
+
+        this.<org.apache.fop.hyphenation.PatternParser: int currElement> = 1;
+        goto label6;
+
+     label2:
+        $z0 = virtualinvoke local.<java.lang.String: boolean equals(java.lang.Object)>("patterns");
+        if $z0 == 0 goto label3;
+
+        this.<org.apache.fop.hyphenation.PatternParser: int currElement> = 3;
+        goto label6;
+
+     label3:
+        $z0 = virtualinvoke local.<java.lang.String: boolean equals(java.lang.Object)>("exceptions");
+        if $z0 == 0 goto label4;
+
+        this.<org.apache.fop.hyphenation.PatternParser: int currElement> = 2;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.hyphenation.PatternParser: java.util.ArrayList exception> = $r0;
+        goto label6;
+
+     label4:
+        $z0 = virtualinvoke local.<java.lang.String: boolean equals(java.lang.Object)>("hyphen");
+        if $z0 == 0 goto label6;
+
+        $r1 = this.<org.apache.fop.hyphenation.PatternParser: java.lang.StringBuffer token>;
+        $i0 = virtualinvoke $r1.<java.lang.StringBuffer: int length()>();
+        if $i0 <= 0 goto label5;
+
+        $r2 = this.<org.apache.fop.hyphenation.PatternParser: java.util.ArrayList exception>;
+        $r3 = this.<org.apache.fop.hyphenation.PatternParser: java.lang.StringBuffer token>;
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r2.<java.util.ArrayList: boolean add(java.lang.Object)>($r4);
+
+     label5:
+        $r2 = this.<org.apache.fop.hyphenation.PatternParser: java.util.ArrayList exception>;
+        $r5 = new org.apache.fop.hyphenation.Hyphen;
+        $r6 = interfaceinvoke attrs.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("pre");
+        $r7 = interfaceinvoke attrs.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("no");
+        $r8 = interfaceinvoke attrs.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>("post");
+        specialinvoke $r5.<org.apache.fop.hyphenation.Hyphen: void <init>(java.lang.String,java.lang.String,java.lang.String)>($r6, $r7, $r8);
+        virtualinvoke $r2.<java.util.ArrayList: boolean add(java.lang.Object)>($r5);
+        this.<org.apache.fop.hyphenation.PatternParser: int currElement> = 4;
+
+     label6:
+        $r1 = this.<org.apache.fop.hyphenation.PatternParser: java.lang.StringBuffer token>;
+        virtualinvoke $r1.<java.lang.StringBuffer: void setLength(int)>(0);
+        return;
+    }
+
+    public void endElement(java.lang.String, java.lang.String, java.lang.String)
+    {
+        org.apache.fop.hyphenation.PatternParser this;
+        java.lang.String uri, local, raw, word, $r5, $r7;
+        java.lang.StringBuffer $r0;
+        int $i0;
+        org.apache.fop.hyphenation.PatternConsumer $r1;
+        java.util.ArrayList $r2, $r3, $r4;
+        java.lang.Object $r6;
+
+        this := @this: org.apache.fop.hyphenation.PatternParser;
+        uri := @parameter0: java.lang.String;
+        local := @parameter1: java.lang.String;
+        raw := @parameter2: java.lang.String;
+        $r0 = this.<org.apache.fop.hyphenation.PatternParser: java.lang.StringBuffer token>;
+        $i0 = virtualinvoke $r0.<java.lang.StringBuffer: int length()>();
+        if $i0 <= 0 goto label4;
+
+        $r0 = this.<org.apache.fop.hyphenation.PatternParser: java.lang.StringBuffer token>;
+        word = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        $i0 = this.<org.apache.fop.hyphenation.PatternParser: int currElement>;
+        tableswitch($i0)
+        {
+            case 1: goto label0;
+            case 2: goto label1;
+            case 3: goto label2;
+            case 4: goto label3;
+            default: goto label3;
+        };
+
+     label0:
+        $r1 = this.<org.apache.fop.hyphenation.PatternParser: org.apache.fop.hyphenation.PatternConsumer consumer>;
+        interfaceinvoke $r1.<org.apache.fop.hyphenation.PatternConsumer: void addClass(java.lang.String)>(word);
+        goto label3;
+
+     label1:
+        $r2 = this.<org.apache.fop.hyphenation.PatternParser: java.util.ArrayList exception>;
+        virtualinvoke $r2.<java.util.ArrayList: boolean add(java.lang.Object)>(word);
+        $r3 = this.<org.apache.fop.hyphenation.PatternParser: java.util.ArrayList exception>;
+        $r4 = virtualinvoke this.<org.apache.fop.hyphenation.PatternParser: java.util.ArrayList normalizeException(java.util.ArrayList)>($r3);
+        this.<org.apache.fop.hyphenation.PatternParser: java.util.ArrayList exception> = $r4;
+        $r1 = this.<org.apache.fop.hyphenation.PatternParser: org.apache.fop.hyphenation.PatternConsumer consumer>;
+        $r3 = this.<org.apache.fop.hyphenation.PatternParser: java.util.ArrayList exception>;
+        $r5 = virtualinvoke this.<org.apache.fop.hyphenation.PatternParser: java.lang.String getExceptionWord(java.util.ArrayList)>($r3);
+        $r3 = this.<org.apache.fop.hyphenation.PatternParser: java.util.ArrayList exception>;
+        $r6 = virtualinvoke $r3.<java.util.ArrayList: java.lang.Object clone()>();
+        $r3 = (java.util.ArrayList) $r6;
+        interfaceinvoke $r1.<org.apache.fop.hyphenation.PatternConsumer: void addException(java.lang.String,java.util.ArrayList)>($r5, $r3);
+        goto label3;
+
+     label2:
+        $r1 = this.<org.apache.fop.hyphenation.PatternParser: org.apache.fop.hyphenation.PatternConsumer consumer>;
+        $r5 = staticinvoke <org.apache.fop.hyphenation.PatternParser: java.lang.String getPattern(java.lang.String)>(word);
+        $r7 = staticinvoke <org.apache.fop.hyphenation.PatternParser: java.lang.String getInterletterValues(java.lang.String)>(word);
+        interfaceinvoke $r1.<org.apache.fop.hyphenation.PatternConsumer: void addPattern(java.lang.String,java.lang.String)>($r5, $r7);
+        goto label3;
+
+     label3:
+        $i0 = this.<org.apache.fop.hyphenation.PatternParser: int currElement>;
+        if $i0 == 4 goto label4;
+
+        $r0 = this.<org.apache.fop.hyphenation.PatternParser: java.lang.StringBuffer token>;
+        virtualinvoke $r0.<java.lang.StringBuffer: void setLength(int)>(0);
+
+     label4:
+        $i0 = this.<org.apache.fop.hyphenation.PatternParser: int currElement>;
+        if $i0 != 4 goto label5;
+
+        this.<org.apache.fop.hyphenation.PatternParser: int currElement> = 2;
+        goto label6;
+
+     label5:
+        this.<org.apache.fop.hyphenation.PatternParser: int currElement> = 0;
+
+     label6:
+        return;
+    }
+
+    public void characters(char[], int, int)
+    {
+        org.apache.fop.hyphenation.PatternParser this;
+        char[] ch;
+        int start, length, $i0;
+        java.lang.StringBuffer $r0, chars;
+        java.lang.String word, $r5, $r7;
+        org.apache.fop.hyphenation.PatternConsumer $r1;
+        java.util.ArrayList $r2, $r3, $r4;
+        java.lang.Object $r6;
+
+        this := @this: org.apache.fop.hyphenation.PatternParser;
+        ch := @parameter0: char[];
+        start := @parameter1: int;
+        length := @parameter2: int;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>(int)>(length);
+        chars = $r0;
+        virtualinvoke chars.<java.lang.StringBuffer: java.lang.StringBuffer append(char[],int,int)>(ch, start, length);
+        word = virtualinvoke this.<org.apache.fop.hyphenation.PatternParser: java.lang.String readToken(java.lang.StringBuffer)>(chars);
+
+     label0:
+        if word == null goto label5;
+
+        $i0 = this.<org.apache.fop.hyphenation.PatternParser: int currElement>;
+        tableswitch($i0)
+        {
+            case 1: goto label1;
+            case 2: goto label2;
+            case 3: goto label3;
+            default: goto label4;
+        };
+
+     label1:
+        $r1 = this.<org.apache.fop.hyphenation.PatternParser: org.apache.fop.hyphenation.PatternConsumer consumer>;
+        interfaceinvoke $r1.<org.apache.fop.hyphenation.PatternConsumer: void addClass(java.lang.String)>(word);
+        goto label4;
+
+     label2:
+        $r2 = this.<org.apache.fop.hyphenation.PatternParser: java.util.ArrayList exception>;
+        virtualinvoke $r2.<java.util.ArrayList: boolean add(java.lang.Object)>(word);
+        $r3 = this.<org.apache.fop.hyphenation.PatternParser: java.util.ArrayList exception>;
+        $r4 = virtualinvoke this.<org.apache.fop.hyphenation.PatternParser: java.util.ArrayList normalizeException(java.util.ArrayList)>($r3);
+        this.<org.apache.fop.hyphenation.PatternParser: java.util.ArrayList exception> = $r4;
+        $r1 = this.<org.apache.fop.hyphenation.PatternParser: org.apache.fop.hyphenation.PatternConsumer consumer>;
+        $r3 = this.<org.apache.fop.hyphenation.PatternParser: java.util.ArrayList exception>;
+        $r5 = virtualinvoke this.<org.apache.fop.hyphenation.PatternParser: java.lang.String getExceptionWord(java.util.ArrayList)>($r3);
+        $r3 = this.<org.apache.fop.hyphenation.PatternParser: java.util.ArrayList exception>;
+        $r6 = virtualinvoke $r3.<java.util.ArrayList: java.lang.Object clone()>();
+        $r3 = (java.util.ArrayList) $r6;
+        interfaceinvoke $r1.<org.apache.fop.hyphenation.PatternConsumer: void addException(java.lang.String,java.util.ArrayList)>($r5, $r3);
+        $r2 = this.<org.apache.fop.hyphenation.PatternParser: java.util.ArrayList exception>;
+        virtualinvoke $r2.<java.util.ArrayList: void clear()>();
+        goto label4;
+
+     label3:
+        $r1 = this.<org.apache.fop.hyphenation.PatternParser: org.apache.fop.hyphenation.PatternConsumer consumer>;
+        $r5 = staticinvoke <org.apache.fop.hyphenation.PatternParser: java.lang.String getPattern(java.lang.String)>(word);
+        $r7 = staticinvoke <org.apache.fop.hyphenation.PatternParser: java.lang.String getInterletterValues(java.lang.String)>(word);
+        interfaceinvoke $r1.<org.apache.fop.hyphenation.PatternConsumer: void addPattern(java.lang.String,java.lang.String)>($r5, $r7);
+
+     label4:
+        word = virtualinvoke this.<org.apache.fop.hyphenation.PatternParser: java.lang.String readToken(java.lang.StringBuffer)>(chars);
+        goto label0;
+
+     label5:
+        return;
+    }
+
+    public void warning(org.xml.sax.SAXParseException)
+    {
+        org.apache.fop.hyphenation.PatternParser this;
+        org.xml.sax.SAXParseException ex;
+        java.lang.StringBuffer $r0;
+        java.lang.String $r1, $r2;
+
+        this := @this: org.apache.fop.hyphenation.PatternParser;
+        ex := @parameter0: org.xml.sax.SAXParseException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("[Warning] ");
+        $r1 = specialinvoke this.<org.apache.fop.hyphenation.PatternParser: java.lang.String getLocationString(org.xml.sax.SAXParseException)>(ex);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": ");
+        $r1 = virtualinvoke ex.<org.xml.sax.SAXParseException: java.lang.String getMessage()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        this.<org.apache.fop.hyphenation.PatternParser: java.lang.String errMsg> = $r2;
+        return;
+    }
+
+    public void error(org.xml.sax.SAXParseException)
+    {
+        org.apache.fop.hyphenation.PatternParser this;
+        org.xml.sax.SAXParseException ex;
+        java.lang.StringBuffer $r0;
+        java.lang.String $r1, $r2;
+
+        this := @this: org.apache.fop.hyphenation.PatternParser;
+        ex := @parameter0: org.xml.sax.SAXParseException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("[Error] ");
+        $r1 = specialinvoke this.<org.apache.fop.hyphenation.PatternParser: java.lang.String getLocationString(org.xml.sax.SAXParseException)>(ex);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": ");
+        $r1 = virtualinvoke ex.<org.xml.sax.SAXParseException: java.lang.String getMessage()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        this.<org.apache.fop.hyphenation.PatternParser: java.lang.String errMsg> = $r2;
+        return;
+    }
+
+    public void fatalError(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
+    {
+        org.apache.fop.hyphenation.PatternParser this;
+        org.xml.sax.SAXParseException ex;
+        java.lang.StringBuffer $r0;
+        java.lang.String $r1, $r2;
+
+        this := @this: org.apache.fop.hyphenation.PatternParser;
+        ex := @parameter0: org.xml.sax.SAXParseException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("[Fatal Error] ");
+        $r1 = specialinvoke this.<org.apache.fop.hyphenation.PatternParser: java.lang.String getLocationString(org.xml.sax.SAXParseException)>(ex);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": ");
+        $r1 = virtualinvoke ex.<org.xml.sax.SAXParseException: java.lang.String getMessage()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        this.<org.apache.fop.hyphenation.PatternParser: java.lang.String errMsg> = $r2;
+        throw ex;
+    }
+
+    private java.lang.String getLocationString(org.xml.sax.SAXParseException)
+    {
+        org.apache.fop.hyphenation.PatternParser this;
+        org.xml.sax.SAXParseException ex;
+        java.lang.StringBuffer $r0, str;
+        java.lang.String systemId, $r1;
+        int index, $i0;
+
+        this := @this: org.apache.fop.hyphenation.PatternParser;
+        ex := @parameter0: org.xml.sax.SAXParseException;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        str = $r0;
+        systemId = virtualinvoke ex.<org.xml.sax.SAXParseException: java.lang.String getSystemId()>();
+        if systemId == null goto label1;
+
+        index = virtualinvoke systemId.<java.lang.String: int lastIndexOf(int)>(47);
+        if index == -1 goto label0;
+
+        $i0 = index + 1;
+        systemId = virtualinvoke systemId.<java.lang.String: java.lang.String substring(int)>($i0);
+
+     label0:
+        virtualinvoke str.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(systemId);
+
+     label1:
+        virtualinvoke str.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(58);
+        $i0 = virtualinvoke ex.<org.xml.sax.SAXParseException: int getLineNumber()>();
+        virtualinvoke str.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        virtualinvoke str.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(58);
+        $i0 = virtualinvoke ex.<org.xml.sax.SAXParseException: int getColumnNumber()>();
+        virtualinvoke str.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r1 = virtualinvoke str.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r1;
+    }
+
+    public void addClass(java.lang.String)
+    {
+        org.apache.fop.hyphenation.PatternParser this;
+        java.lang.String c, $r2;
+        java.io.PrintStream $r0;
+        java.lang.StringBuffer $r1;
+
+        this := @this: org.apache.fop.hyphenation.PatternParser;
+        c := @parameter0: java.lang.String;
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("class: ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(c);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>($r2);
+        return;
+    }
+
+    public void addException(java.lang.String, java.util.ArrayList)
+    {
+        org.apache.fop.hyphenation.PatternParser this;
+        java.lang.String w, $r2, $r3;
+        java.util.ArrayList e;
+        java.io.PrintStream $r0;
+        java.lang.StringBuffer $r1;
+
+        this := @this: org.apache.fop.hyphenation.PatternParser;
+        w := @parameter0: java.lang.String;
+        e := @parameter1: java.util.ArrayList;
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("exception: ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(w);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" : ");
+        $r2 = virtualinvoke e.<java.util.ArrayList: java.lang.String toString()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>($r3);
+        return;
+    }
+
+    public void addPattern(java.lang.String, java.lang.String)
+    {
+        org.apache.fop.hyphenation.PatternParser this;
+        java.lang.String p, v, $r2;
+        java.io.PrintStream $r0;
+        java.lang.StringBuffer $r1;
+
+        this := @this: org.apache.fop.hyphenation.PatternParser;
+        p := @parameter0: java.lang.String;
+        v := @parameter1: java.lang.String;
+        $r0 = <java.lang.System: java.io.PrintStream out>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("pattern: ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(p);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" : ");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(v);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r0.<java.io.PrintStream: void println(java.lang.String)>($r2);
+        return;
+    }
+
+    public static void main(java.lang.String[]) throws java.lang.Exception
+    {
+        java.lang.String[] args;
+        org.apache.fop.hyphenation.PatternParser pp, $r0;
+        int $i0;
+        java.lang.String $r1;
+
+        args := @parameter0: java.lang.String[];
+        $i0 = lengthof args;
+        if $i0 <= 0 goto label0;
+
+        $r0 = new org.apache.fop.hyphenation.PatternParser;
+        specialinvoke $r0.<org.apache.fop.hyphenation.PatternParser: void <init>()>();
+        pp = $r0;
+        virtualinvoke pp.<org.apache.fop.hyphenation.PatternParser: void setConsumer(org.apache.fop.hyphenation.PatternConsumer)>(pp);
+        $r1 = args[0];
+        virtualinvoke pp.<org.apache.fop.hyphenation.PatternParser: void parse(java.lang.String)>($r1);
+
+     label0:
+        return;
+    }
+}

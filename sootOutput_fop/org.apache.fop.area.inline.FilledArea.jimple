@@ -1,0 +1,160 @@
+public class org.apache.fop.area.inline.FilledArea extends org.apache.fop.area.inline.InlineParent
+{
+    private int unitWidth;
+
+    public void <init>()
+    {
+        org.apache.fop.area.inline.FilledArea this;
+
+        this := @this: org.apache.fop.area.inline.FilledArea;
+        specialinvoke this.<org.apache.fop.area.inline.InlineParent: void <init>()>();
+        return;
+    }
+
+    private void setChildOffset(java.util.ListIterator, int)
+    {
+        org.apache.fop.area.inline.FilledArea this;
+        java.util.ListIterator childrenIterator, $r3;
+        int v;
+        org.apache.fop.area.inline.InlineArea child;
+        boolean $z0;
+        java.lang.Object $r0;
+        org.apache.fop.area.inline.InlineParent $r1;
+        java.util.List $r2;
+
+        this := @this: org.apache.fop.area.inline.FilledArea;
+        childrenIterator := @parameter0: java.util.ListIterator;
+        v := @parameter1: int;
+
+     label0:
+        $z0 = interfaceinvoke childrenIterator.<java.util.ListIterator: boolean hasNext()>();
+        if $z0 == 0 goto label4;
+
+        $r0 = interfaceinvoke childrenIterator.<java.util.ListIterator: java.lang.Object next()>();
+        child = (org.apache.fop.area.inline.InlineArea) $r0;
+        $z0 = child instanceof org.apache.fop.area.inline.InlineParent;
+        if $z0 == 0 goto label1;
+
+        $r1 = (org.apache.fop.area.inline.InlineParent) child;
+        $r2 = virtualinvoke $r1.<org.apache.fop.area.inline.InlineParent: java.util.List getChildAreas()>();
+        $r3 = interfaceinvoke $r2.<java.util.List: java.util.ListIterator listIterator()>();
+        specialinvoke this.<org.apache.fop.area.inline.FilledArea: void setChildOffset(java.util.ListIterator,int)>($r3, v);
+        goto label3;
+
+     label1:
+        $z0 = child instanceof org.apache.fop.area.inline.Viewport;
+        if $z0 == 0 goto label2;
+
+        goto label3;
+
+     label2:
+        virtualinvoke child.<org.apache.fop.area.inline.InlineArea: void setOffset(int)>(v);
+
+     label3:
+        goto label0;
+
+     label4:
+        return;
+    }
+
+    public void setUnitWidth(int)
+    {
+        org.apache.fop.area.inline.FilledArea this;
+        int w;
+
+        this := @this: org.apache.fop.area.inline.FilledArea;
+        w := @parameter0: int;
+        this.<org.apache.fop.area.inline.FilledArea: int unitWidth> = w;
+        return;
+    }
+
+    public int getUnitWidth()
+    {
+        org.apache.fop.area.inline.FilledArea this;
+        int $i0;
+
+        this := @this: org.apache.fop.area.inline.FilledArea;
+        $i0 = this.<org.apache.fop.area.inline.FilledArea: int unitWidth>;
+        return $i0;
+    }
+
+    public int getBPD()
+    {
+        org.apache.fop.area.inline.FilledArea this;
+        int bpd, $i0;
+        java.util.Iterator childAreaIt;
+        org.apache.fop.area.inline.InlineArea area;
+        java.util.List $r0;
+        boolean $z0;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.area.inline.FilledArea;
+        bpd = 0;
+        $r0 = virtualinvoke this.<org.apache.fop.area.inline.FilledArea: java.util.List getChildAreas()>();
+        childAreaIt = interfaceinvoke $r0.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke childAreaIt.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label2;
+
+        $r1 = interfaceinvoke childAreaIt.<java.util.Iterator: java.lang.Object next()>();
+        area = (org.apache.fop.area.inline.InlineArea) $r1;
+        $i0 = virtualinvoke area.<org.apache.fop.area.inline.InlineArea: int getBPD()>();
+        if bpd >= $i0 goto label1;
+
+        bpd = virtualinvoke area.<org.apache.fop.area.inline.InlineArea: int getBPD()>();
+
+     label1:
+        goto label0;
+
+     label2:
+        return bpd;
+    }
+
+    public java.util.List getChildAreas()
+    {
+        org.apache.fop.area.inline.FilledArea this;
+        int units, count, $i0, $i1;
+        java.util.ArrayList newList, $r0;
+        java.util.List $r1;
+
+        this := @this: org.apache.fop.area.inline.FilledArea;
+        $i0 = virtualinvoke this.<org.apache.fop.area.inline.FilledArea: int getIPD()>();
+        $i1 = this.<org.apache.fop.area.inline.FilledArea: int unitWidth>;
+        units = $i0 / $i1;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        newList = $r0;
+        count = 0;
+
+     label0:
+        if count >= units goto label1;
+
+        $r1 = this.<org.apache.fop.area.inline.FilledArea: java.util.List inlines>;
+        interfaceinvoke newList.<java.util.List: boolean addAll(java.util.Collection)>($r1);
+        count = count + 1;
+        goto label0;
+
+     label1:
+        return newList;
+    }
+
+    public boolean applyVariationFactor(double, int, int)
+    {
+        org.apache.fop.area.inline.FilledArea this;
+        double variationFactor;
+        int lineStretch, lineShrink, $i0, $i1;
+        org.apache.fop.area.inline.InlineArea$InlineAdjustingInfo $r0;
+
+        this := @this: org.apache.fop.area.inline.FilledArea;
+        variationFactor := @parameter0: double;
+        lineStretch := @parameter1: int;
+        lineShrink := @parameter2: int;
+        $i0 = virtualinvoke this.<org.apache.fop.area.inline.FilledArea: int getIPD()>();
+        $r0 = this.<org.apache.fop.area.inline.FilledArea: org.apache.fop.area.inline.InlineArea$InlineAdjustingInfo adjustingInfo>;
+        $i1 = virtualinvoke $r0.<org.apache.fop.area.inline.InlineArea$InlineAdjustingInfo: int applyVariationFactor(double)>(variationFactor);
+        $i0 = $i0 + $i1;
+        virtualinvoke this.<org.apache.fop.area.inline.FilledArea: void setIPD(int)>($i0);
+        return 0;
+    }
+}

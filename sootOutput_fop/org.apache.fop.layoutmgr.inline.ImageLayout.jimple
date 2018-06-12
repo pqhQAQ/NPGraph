@@ -1,0 +1,701 @@
+public class org.apache.fop.layoutmgr.inline.ImageLayout extends java.lang.Object implements org.apache.fop.fo.Constants
+{
+    protected static org.apache.commons.logging.Log log;
+    private org.apache.fop.fo.GraphicsProperties props;
+    private org.apache.fop.datatypes.PercentBaseContext percentBaseContext;
+    private java.awt.Dimension intrinsicSize;
+    private java.awt.Rectangle placement;
+    private java.awt.Dimension viewportSize;
+    private boolean clip;
+    static java.lang.Class class$org$apache$fop$layoutmgr$inline$ImageLayout;
+
+    public void <init>(org.apache.fop.fo.GraphicsProperties, org.apache.fop.datatypes.PercentBaseContext, java.awt.Dimension)
+    {
+        org.apache.fop.layoutmgr.inline.ImageLayout this;
+        org.apache.fop.fo.GraphicsProperties props;
+        org.apache.fop.datatypes.PercentBaseContext percentBaseContext;
+        java.awt.Dimension intrinsicSize, $r0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ImageLayout;
+        props := @parameter0: org.apache.fop.fo.GraphicsProperties;
+        percentBaseContext := @parameter1: org.apache.fop.datatypes.PercentBaseContext;
+        intrinsicSize := @parameter2: java.awt.Dimension;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $r0 = new java.awt.Dimension;
+        specialinvoke $r0.<java.awt.Dimension: void <init>(int,int)>(-1, -1);
+        this.<org.apache.fop.layoutmgr.inline.ImageLayout: java.awt.Dimension viewportSize> = $r0;
+        this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.fo.GraphicsProperties props> = props;
+        this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.datatypes.PercentBaseContext percentBaseContext> = percentBaseContext;
+        this.<org.apache.fop.layoutmgr.inline.ImageLayout: java.awt.Dimension intrinsicSize> = intrinsicSize;
+        virtualinvoke this.<org.apache.fop.layoutmgr.inline.ImageLayout: void doLayout()>();
+        return;
+    }
+
+    protected void doLayout()
+    {
+        org.apache.fop.layoutmgr.inline.ImageLayout this;
+        int bpd, ipd, cwidth, cheight, overflow, xoffset, yoffset, $i0;
+        org.apache.fop.datatypes.Length len, $r9;
+        boolean constrainIntrinsicSize;
+        java.awt.Dimension constrainedIntrinsicSize, adjustedDim, $r4, $r5;
+        org.apache.fop.fo.GraphicsProperties $r0, $r6, $r8;
+        org.apache.fop.fo.properties.LengthRangeProperty $r1, $r7;
+        org.apache.fop.datatypes.PercentBaseContext $r2;
+        org.apache.fop.fo.properties.Property $r3;
+        org.apache.commons.logging.Log $r10;
+        java.awt.Rectangle $r11;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ImageLayout;
+        bpd = -1;
+        ipd = -1;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.fo.GraphicsProperties props>;
+        $r1 = interfaceinvoke $r0.<org.apache.fop.fo.GraphicsProperties: org.apache.fop.fo.properties.LengthRangeProperty getBlockProgressionDimension()>();
+        $r2 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.datatypes.PercentBaseContext percentBaseContext>;
+        $r3 = virtualinvoke $r1.<org.apache.fop.fo.properties.LengthRangeProperty: org.apache.fop.fo.properties.Property getOptimum(org.apache.fop.datatypes.PercentBaseContext)>($r2);
+        len = virtualinvoke $r3.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        $i0 = interfaceinvoke len.<org.apache.fop.datatypes.Length: int getEnum()>();
+        if $i0 == 9 goto label0;
+
+        $r2 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.datatypes.PercentBaseContext percentBaseContext>;
+        bpd = interfaceinvoke len.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>($r2);
+
+     label0:
+        $r0 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.fo.GraphicsProperties props>;
+        $r1 = interfaceinvoke $r0.<org.apache.fop.fo.GraphicsProperties: org.apache.fop.fo.properties.LengthRangeProperty getBlockProgressionDimension()>();
+        $r2 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.datatypes.PercentBaseContext percentBaseContext>;
+        $r3 = virtualinvoke $r1.<org.apache.fop.fo.properties.LengthRangeProperty: org.apache.fop.fo.properties.Property getMinimum(org.apache.fop.datatypes.PercentBaseContext)>($r2);
+        len = virtualinvoke $r3.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        if bpd != -1 goto label1;
+
+        $i0 = interfaceinvoke len.<org.apache.fop.datatypes.Length: int getEnum()>();
+        if $i0 == 9 goto label1;
+
+        $r2 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.datatypes.PercentBaseContext percentBaseContext>;
+        bpd = interfaceinvoke len.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>($r2);
+
+     label1:
+        $r0 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.fo.GraphicsProperties props>;
+        $r1 = interfaceinvoke $r0.<org.apache.fop.fo.GraphicsProperties: org.apache.fop.fo.properties.LengthRangeProperty getInlineProgressionDimension()>();
+        $r2 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.datatypes.PercentBaseContext percentBaseContext>;
+        $r3 = virtualinvoke $r1.<org.apache.fop.fo.properties.LengthRangeProperty: org.apache.fop.fo.properties.Property getOptimum(org.apache.fop.datatypes.PercentBaseContext)>($r2);
+        len = virtualinvoke $r3.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        $i0 = interfaceinvoke len.<org.apache.fop.datatypes.Length: int getEnum()>();
+        if $i0 == 9 goto label2;
+
+        $r2 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.datatypes.PercentBaseContext percentBaseContext>;
+        ipd = interfaceinvoke len.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>($r2);
+
+     label2:
+        $r0 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.fo.GraphicsProperties props>;
+        $r1 = interfaceinvoke $r0.<org.apache.fop.fo.GraphicsProperties: org.apache.fop.fo.properties.LengthRangeProperty getInlineProgressionDimension()>();
+        $r2 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.datatypes.PercentBaseContext percentBaseContext>;
+        $r3 = virtualinvoke $r1.<org.apache.fop.fo.properties.LengthRangeProperty: org.apache.fop.fo.properties.Property getMinimum(org.apache.fop.datatypes.PercentBaseContext)>($r2);
+        len = virtualinvoke $r3.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        if ipd != -1 goto label3;
+
+        $i0 = interfaceinvoke len.<org.apache.fop.datatypes.Length: int getEnum()>();
+        if $i0 == 9 goto label3;
+
+        $r2 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.datatypes.PercentBaseContext percentBaseContext>;
+        ipd = interfaceinvoke len.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>($r2);
+
+     label3:
+        constrainIntrinsicSize = 0;
+        cwidth = -1;
+        cheight = -1;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.fo.GraphicsProperties props>;
+        len = interfaceinvoke $r0.<org.apache.fop.fo.GraphicsProperties: org.apache.fop.datatypes.Length getContentWidth()>();
+        $i0 = interfaceinvoke len.<org.apache.fop.datatypes.Length: int getEnum()>();
+        if $i0 == 9 goto label11;
+
+        $i0 = interfaceinvoke len.<org.apache.fop.datatypes.Length: int getEnum()>();
+        lookupswitch($i0)
+        {
+            case 125: goto label4;
+            case 187: goto label6;
+            case 188: goto label8;
+            default: goto label10;
+        };
+
+     label4:
+        if ipd == -1 goto label5;
+
+        cwidth = ipd;
+
+     label5:
+        constrainIntrinsicSize = 1;
+        goto label11;
+
+     label6:
+        if ipd == -1 goto label7;
+
+        $r4 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: java.awt.Dimension intrinsicSize>;
+        $i0 = $r4.<java.awt.Dimension: int width>;
+        if $i0 <= ipd goto label7;
+
+        cwidth = ipd;
+
+     label7:
+        constrainIntrinsicSize = 1;
+        goto label11;
+
+     label8:
+        if ipd == -1 goto label9;
+
+        $r4 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: java.awt.Dimension intrinsicSize>;
+        $i0 = $r4.<java.awt.Dimension: int width>;
+        if $i0 >= ipd goto label9;
+
+        cwidth = ipd;
+
+     label9:
+        constrainIntrinsicSize = 1;
+        goto label11;
+
+     label10:
+        $r2 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.datatypes.PercentBaseContext percentBaseContext>;
+        cwidth = interfaceinvoke len.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>($r2);
+
+     label11:
+        $r0 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.fo.GraphicsProperties props>;
+        len = interfaceinvoke $r0.<org.apache.fop.fo.GraphicsProperties: org.apache.fop.datatypes.Length getContentHeight()>();
+        $i0 = interfaceinvoke len.<org.apache.fop.datatypes.Length: int getEnum()>();
+        if $i0 == 9 goto label19;
+
+        $i0 = interfaceinvoke len.<org.apache.fop.datatypes.Length: int getEnum()>();
+        lookupswitch($i0)
+        {
+            case 125: goto label12;
+            case 187: goto label14;
+            case 188: goto label16;
+            default: goto label18;
+        };
+
+     label12:
+        if bpd == -1 goto label13;
+
+        cheight = bpd;
+
+     label13:
+        constrainIntrinsicSize = 1;
+        goto label19;
+
+     label14:
+        if bpd == -1 goto label15;
+
+        $r4 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: java.awt.Dimension intrinsicSize>;
+        $i0 = $r4.<java.awt.Dimension: int height>;
+        if $i0 <= bpd goto label15;
+
+        cheight = bpd;
+
+     label15:
+        constrainIntrinsicSize = 1;
+        goto label19;
+
+     label16:
+        if bpd == -1 goto label17;
+
+        $r4 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: java.awt.Dimension intrinsicSize>;
+        $i0 = $r4.<java.awt.Dimension: int height>;
+        if $i0 >= bpd goto label17;
+
+        cheight = bpd;
+
+     label17:
+        constrainIntrinsicSize = 1;
+        goto label19;
+
+     label18:
+        $r2 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.datatypes.PercentBaseContext percentBaseContext>;
+        cheight = interfaceinvoke len.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>($r2);
+
+     label19:
+        if constrainIntrinsicSize == 0 goto label20;
+
+        $r5 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: java.awt.Dimension intrinsicSize>;
+        constrainedIntrinsicSize = specialinvoke this.<org.apache.fop.layoutmgr.inline.ImageLayout: java.awt.Dimension constrain(java.awt.Dimension)>($r5);
+        goto label21;
+
+     label20:
+        constrainedIntrinsicSize = this.<org.apache.fop.layoutmgr.inline.ImageLayout: java.awt.Dimension intrinsicSize>;
+
+     label21:
+        adjustedDim = specialinvoke this.<org.apache.fop.layoutmgr.inline.ImageLayout: java.awt.Dimension adjustContentSize(int,int,java.awt.Dimension)>(cwidth, cheight, constrainedIntrinsicSize);
+        cwidth = adjustedDim.<java.awt.Dimension: int width>;
+        cheight = adjustedDim.<java.awt.Dimension: int height>;
+        if ipd != -1 goto label22;
+
+        $r6 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.fo.GraphicsProperties props>;
+        $r7 = interfaceinvoke $r6.<org.apache.fop.fo.GraphicsProperties: org.apache.fop.fo.properties.LengthRangeProperty getInlineProgressionDimension()>();
+        $r8 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.fo.GraphicsProperties props>;
+        $r9 = interfaceinvoke $r8.<org.apache.fop.fo.GraphicsProperties: org.apache.fop.datatypes.Length getContentWidth()>();
+        ipd = specialinvoke this.<org.apache.fop.layoutmgr.inline.ImageLayout: int constrainExtent(int,org.apache.fop.fo.properties.LengthRangeProperty,org.apache.fop.datatypes.Length)>(cwidth, $r7, $r9);
+
+     label22:
+        if bpd != -1 goto label23;
+
+        $r6 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.fo.GraphicsProperties props>;
+        $r7 = interfaceinvoke $r6.<org.apache.fop.fo.GraphicsProperties: org.apache.fop.fo.properties.LengthRangeProperty getBlockProgressionDimension()>();
+        $r8 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.fo.GraphicsProperties props>;
+        $r9 = interfaceinvoke $r8.<org.apache.fop.fo.GraphicsProperties: org.apache.fop.datatypes.Length getContentHeight()>();
+        bpd = specialinvoke this.<org.apache.fop.layoutmgr.inline.ImageLayout: int constrainExtent(int,org.apache.fop.fo.properties.LengthRangeProperty,org.apache.fop.datatypes.Length)>(cheight, $r7, $r9);
+
+     label23:
+        this.<org.apache.fop.layoutmgr.inline.ImageLayout: boolean clip> = 0;
+        if cwidth > ipd goto label24;
+
+        if cheight <= bpd goto label26;
+
+     label24:
+        $r0 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.fo.GraphicsProperties props>;
+        overflow = interfaceinvoke $r0.<org.apache.fop.fo.GraphicsProperties: int getOverflow()>();
+        if overflow != 57 goto label25;
+
+        this.<org.apache.fop.layoutmgr.inline.ImageLayout: boolean clip> = 1;
+        goto label26;
+
+     label25:
+        if overflow != 42 goto label26;
+
+        $r10 = <org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r10.<org.apache.commons.logging.Log: void error(java.lang.Object)>("Object overflows the viewport: clipping");
+        this.<org.apache.fop.layoutmgr.inline.ImageLayout: boolean clip> = 1;
+
+     label26:
+        xoffset = virtualinvoke this.<org.apache.fop.layoutmgr.inline.ImageLayout: int computeXOffset(int,int)>(ipd, cwidth);
+        yoffset = virtualinvoke this.<org.apache.fop.layoutmgr.inline.ImageLayout: int computeYOffset(int,int)>(bpd, cheight);
+        $r4 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: java.awt.Dimension viewportSize>;
+        virtualinvoke $r4.<java.awt.Dimension: void setSize(int,int)>(ipd, bpd);
+        $r11 = new java.awt.Rectangle;
+        specialinvoke $r11.<java.awt.Rectangle: void <init>(int,int,int,int)>(xoffset, yoffset, cwidth, cheight);
+        this.<org.apache.fop.layoutmgr.inline.ImageLayout: java.awt.Rectangle placement> = $r11;
+        return;
+    }
+
+    private int constrainExtent(int, org.apache.fop.fo.properties.LengthRangeProperty, org.apache.fop.datatypes.Length)
+    {
+        org.apache.fop.layoutmgr.inline.ImageLayout this;
+        int extent, max, min, $i0;
+        org.apache.fop.fo.properties.LengthRangeProperty range;
+        org.apache.fop.datatypes.Length contextExtent, len;
+        boolean mayScaleUp, mayScaleDown, $z0;
+        org.apache.fop.datatypes.PercentBaseContext $r0;
+        org.apache.fop.fo.properties.Property $r1;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ImageLayout;
+        extent := @parameter0: int;
+        range := @parameter1: org.apache.fop.fo.properties.LengthRangeProperty;
+        contextExtent := @parameter2: org.apache.fop.datatypes.Length;
+        $i0 = interfaceinvoke contextExtent.<org.apache.fop.datatypes.Length: int getEnum()>();
+        if $i0 == 187 goto label0;
+
+        $z0 = 1;
+        goto label1;
+
+     label0:
+        $z0 = 0;
+
+     label1:
+        mayScaleUp = $z0;
+        $i0 = interfaceinvoke contextExtent.<org.apache.fop.datatypes.Length: int getEnum()>();
+        if $i0 == 188 goto label2;
+
+        $z0 = 1;
+        goto label3;
+
+     label2:
+        $z0 = 0;
+
+     label3:
+        mayScaleDown = $z0;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.datatypes.PercentBaseContext percentBaseContext>;
+        $r1 = virtualinvoke range.<org.apache.fop.fo.properties.LengthRangeProperty: org.apache.fop.fo.properties.Property getMaximum(org.apache.fop.datatypes.PercentBaseContext)>($r0);
+        len = virtualinvoke $r1.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        $i0 = interfaceinvoke len.<org.apache.fop.datatypes.Length: int getEnum()>();
+        if $i0 == 9 goto label4;
+
+        $r0 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.datatypes.PercentBaseContext percentBaseContext>;
+        max = interfaceinvoke len.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>($r0);
+        if max == -1 goto label4;
+
+        if mayScaleDown == 0 goto label4;
+
+        extent = staticinvoke <java.lang.Math: int min(int,int)>(extent, max);
+
+     label4:
+        $r0 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.datatypes.PercentBaseContext percentBaseContext>;
+        $r1 = virtualinvoke range.<org.apache.fop.fo.properties.LengthRangeProperty: org.apache.fop.fo.properties.Property getMinimum(org.apache.fop.datatypes.PercentBaseContext)>($r0);
+        len = virtualinvoke $r1.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Length getLength()>();
+        $i0 = interfaceinvoke len.<org.apache.fop.datatypes.Length: int getEnum()>();
+        if $i0 == 9 goto label5;
+
+        $r0 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.datatypes.PercentBaseContext percentBaseContext>;
+        min = interfaceinvoke len.<org.apache.fop.datatypes.Length: int getValue(org.apache.fop.datatypes.PercentBaseContext)>($r0);
+        if min == -1 goto label5;
+
+        if mayScaleUp == 0 goto label5;
+
+        extent = staticinvoke <java.lang.Math: int max(int,int)>(extent, min);
+
+     label5:
+        return extent;
+    }
+
+    private java.awt.Dimension constrain(java.awt.Dimension)
+    {
+        org.apache.fop.layoutmgr.inline.ImageLayout this;
+        java.awt.Dimension size, $r0, adjusted;
+        int effWidth, effHeight, scaling, $i0, $i1, $i3;
+        double rat1, rat2, $d0, $d1, $d2, $d3;
+        org.apache.fop.fo.GraphicsProperties $r1, $r3, $r5;
+        org.apache.fop.fo.properties.LengthRangeProperty $r2;
+        org.apache.fop.datatypes.Length $r4;
+        byte $b2;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ImageLayout;
+        size := @parameter0: java.awt.Dimension;
+        $r0 = new java.awt.Dimension;
+        specialinvoke $r0.<java.awt.Dimension: void <init>(java.awt.Dimension)>(size);
+        adjusted = $r0;
+        $i0 = size.<java.awt.Dimension: int width>;
+        $r1 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.fo.GraphicsProperties props>;
+        $r2 = interfaceinvoke $r1.<org.apache.fop.fo.GraphicsProperties: org.apache.fop.fo.properties.LengthRangeProperty getInlineProgressionDimension()>();
+        $r3 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.fo.GraphicsProperties props>;
+        $r4 = interfaceinvoke $r3.<org.apache.fop.fo.GraphicsProperties: org.apache.fop.datatypes.Length getContentWidth()>();
+        effWidth = specialinvoke this.<org.apache.fop.layoutmgr.inline.ImageLayout: int constrainExtent(int,org.apache.fop.fo.properties.LengthRangeProperty,org.apache.fop.datatypes.Length)>($i0, $r2, $r4);
+        $i0 = size.<java.awt.Dimension: int height>;
+        $r1 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.fo.GraphicsProperties props>;
+        $r2 = interfaceinvoke $r1.<org.apache.fop.fo.GraphicsProperties: org.apache.fop.fo.properties.LengthRangeProperty getBlockProgressionDimension()>();
+        $r3 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.fo.GraphicsProperties props>;
+        $r4 = interfaceinvoke $r3.<org.apache.fop.fo.GraphicsProperties: org.apache.fop.datatypes.Length getContentHeight()>();
+        effHeight = specialinvoke this.<org.apache.fop.layoutmgr.inline.ImageLayout: int constrainExtent(int,org.apache.fop.fo.properties.LengthRangeProperty,org.apache.fop.datatypes.Length)>($i0, $r2, $r4);
+        $r5 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.fo.GraphicsProperties props>;
+        scaling = interfaceinvoke $r5.<org.apache.fop.fo.GraphicsProperties: int getScaling()>();
+        if scaling != 154 goto label2;
+
+        $d0 = (double) effWidth;
+        $i1 = size.<java.awt.Dimension: int width>;
+        $d1 = (double) $i1;
+        rat1 = $d0 / $d1;
+        $d0 = (double) effHeight;
+        $i1 = size.<java.awt.Dimension: int height>;
+        $d1 = (double) $i1;
+        rat2 = $d0 / $d1;
+        $b2 = rat1 cmpg rat2;
+        if $b2 >= 0 goto label0;
+
+        adjusted.<java.awt.Dimension: int width> = effWidth;
+        $i3 = size.<java.awt.Dimension: int height>;
+        $d2 = (double) $i3;
+        $d3 = rat1 * $d2;
+        $i0 = (int) $d3;
+        adjusted.<java.awt.Dimension: int height> = $i0;
+        goto label1;
+
+     label0:
+        $b2 = rat1 cmpl rat2;
+        if $b2 <= 0 goto label1;
+
+        $i3 = size.<java.awt.Dimension: int width>;
+        $d2 = (double) $i3;
+        $d3 = rat2 * $d2;
+        $i0 = (int) $d3;
+        adjusted.<java.awt.Dimension: int width> = $i0;
+        adjusted.<java.awt.Dimension: int height> = effHeight;
+
+     label1:
+        goto label3;
+
+     label2:
+        adjusted.<java.awt.Dimension: int width> = effWidth;
+        adjusted.<java.awt.Dimension: int height> = effHeight;
+
+     label3:
+        return adjusted;
+    }
+
+    private java.awt.Dimension adjustContentSize(int, int, java.awt.Dimension)
+    {
+        org.apache.fop.layoutmgr.inline.ImageLayout this;
+        int cwidth, cheight, scaling, $i0, $i1, $i2, $i3;
+        java.awt.Dimension defaultSize, $r0, dim;
+        double rat1, rat2, $d0, $d1, $d2, $d3;
+        org.apache.fop.fo.GraphicsProperties $r1;
+        byte $b4;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ImageLayout;
+        cwidth := @parameter0: int;
+        cheight := @parameter1: int;
+        defaultSize := @parameter2: java.awt.Dimension;
+        $r0 = new java.awt.Dimension;
+        specialinvoke $r0.<java.awt.Dimension: void <init>(int,int)>(cwidth, cheight);
+        dim = $r0;
+        $r1 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.fo.GraphicsProperties props>;
+        scaling = interfaceinvoke $r1.<org.apache.fop.fo.GraphicsProperties: int getScaling()>();
+        if scaling == 154 goto label0;
+
+        if cwidth == -1 goto label0;
+
+        if cheight != -1 goto label9;
+
+     label0:
+        if cwidth != -1 goto label1;
+
+        if cheight != -1 goto label1;
+
+        $i0 = defaultSize.<java.awt.Dimension: int width>;
+        dim.<java.awt.Dimension: int width> = $i0;
+        $i0 = defaultSize.<java.awt.Dimension: int height>;
+        dim.<java.awt.Dimension: int height> = $i0;
+        goto label9;
+
+     label1:
+        if cwidth != -1 goto label3;
+
+        $i1 = defaultSize.<java.awt.Dimension: int height>;
+        if $i1 != 0 goto label2;
+
+        dim.<java.awt.Dimension: int width> = 0;
+        goto label9;
+
+     label2:
+        $i0 = defaultSize.<java.awt.Dimension: int width>;
+        $d0 = (double) $i0;
+        $d1 = (double) cheight;
+        $d0 = $d0 * $d1;
+        $i2 = defaultSize.<java.awt.Dimension: int height>;
+        $d1 = (double) $i2;
+        $d0 = $d0 / $d1;
+        $i0 = (int) $d0;
+        dim.<java.awt.Dimension: int width> = $i0;
+        goto label9;
+
+     label3:
+        if cheight != -1 goto label5;
+
+        $i1 = defaultSize.<java.awt.Dimension: int width>;
+        if $i1 != 0 goto label4;
+
+        dim.<java.awt.Dimension: int height> = 0;
+        goto label9;
+
+     label4:
+        $i0 = defaultSize.<java.awt.Dimension: int height>;
+        $d0 = (double) $i0;
+        $d1 = (double) cwidth;
+        $d0 = $d0 * $d1;
+        $i2 = defaultSize.<java.awt.Dimension: int width>;
+        $d1 = (double) $i2;
+        $d0 = $d0 / $d1;
+        $i0 = (int) $d0;
+        dim.<java.awt.Dimension: int height> = $i0;
+        goto label9;
+
+     label5:
+        $i1 = defaultSize.<java.awt.Dimension: int width>;
+        if $i1 == 0 goto label6;
+
+        $i1 = defaultSize.<java.awt.Dimension: int height>;
+        if $i1 != 0 goto label7;
+
+     label6:
+        dim.<java.awt.Dimension: int width> = 0;
+        dim.<java.awt.Dimension: int height> = 0;
+        goto label9;
+
+     label7:
+        $d2 = (double) cwidth;
+        $i3 = defaultSize.<java.awt.Dimension: int width>;
+        $d3 = (double) $i3;
+        rat1 = $d2 / $d3;
+        $d2 = (double) cheight;
+        $i3 = defaultSize.<java.awt.Dimension: int height>;
+        $d3 = (double) $i3;
+        rat2 = $d2 / $d3;
+        $b4 = rat1 cmpg rat2;
+        if $b4 >= 0 goto label8;
+
+        $i2 = defaultSize.<java.awt.Dimension: int height>;
+        $d1 = (double) $i2;
+        $d0 = rat1 * $d1;
+        $i0 = (int) $d0;
+        dim.<java.awt.Dimension: int height> = $i0;
+        goto label9;
+
+     label8:
+        $b4 = rat1 cmpl rat2;
+        if $b4 <= 0 goto label9;
+
+        $i2 = defaultSize.<java.awt.Dimension: int width>;
+        $d1 = (double) $i2;
+        $d0 = rat2 * $d1;
+        $i0 = (int) $d0;
+        dim.<java.awt.Dimension: int width> = $i0;
+
+     label9:
+        return dim;
+    }
+
+    public int computeXOffset(int, int)
+    {
+        org.apache.fop.layoutmgr.inline.ImageLayout this;
+        int ipd, cwidth, xoffset, $i0;
+        org.apache.fop.fo.GraphicsProperties $r0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ImageLayout;
+        ipd := @parameter0: int;
+        cwidth := @parameter1: int;
+        xoffset = 0;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.fo.GraphicsProperties props>;
+        $i0 = interfaceinvoke $r0.<org.apache.fop.fo.GraphicsProperties: int getTextAlign()>();
+        lookupswitch($i0)
+        {
+            case 23: goto label0;
+            case 39: goto label1;
+            case 70: goto label3;
+            case 135: goto label2;
+            default: goto label3;
+        };
+
+     label0:
+        $i0 = ipd - cwidth;
+        xoffset = $i0 / 2;
+        goto label3;
+
+     label1:
+        xoffset = ipd - cwidth;
+        goto label3;
+
+     label2:
+        goto label3;
+
+     label3:
+        return xoffset;
+    }
+
+    public int computeYOffset(int, int)
+    {
+        org.apache.fop.layoutmgr.inline.ImageLayout this;
+        int bpd, cheight, yoffset, $i0;
+        org.apache.fop.fo.GraphicsProperties $r0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ImageLayout;
+        bpd := @parameter0: int;
+        cheight := @parameter1: int;
+        yoffset = 0;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.fop.fo.GraphicsProperties props>;
+        $i0 = interfaceinvoke $r0.<org.apache.fop.fo.GraphicsProperties: int getDisplayAlign()>();
+        lookupswitch($i0)
+        {
+            case 3: goto label1;
+            case 9: goto label3;
+            case 13: goto label0;
+            case 23: goto label2;
+            default: goto label3;
+        };
+
+     label0:
+        goto label3;
+
+     label1:
+        yoffset = bpd - cheight;
+        goto label3;
+
+     label2:
+        $i0 = bpd - cheight;
+        yoffset = $i0 / 2;
+        goto label3;
+
+     label3:
+        return yoffset;
+    }
+
+    public java.awt.Rectangle getPlacement()
+    {
+        org.apache.fop.layoutmgr.inline.ImageLayout this;
+        java.awt.Rectangle $r0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ImageLayout;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: java.awt.Rectangle placement>;
+        return $r0;
+    }
+
+    public java.awt.Dimension getViewportSize()
+    {
+        org.apache.fop.layoutmgr.inline.ImageLayout this;
+        java.awt.Dimension $r0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ImageLayout;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: java.awt.Dimension viewportSize>;
+        return $r0;
+    }
+
+    public java.awt.Dimension getIntrinsicSize()
+    {
+        org.apache.fop.layoutmgr.inline.ImageLayout this;
+        java.awt.Dimension $r0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ImageLayout;
+        $r0 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: java.awt.Dimension intrinsicSize>;
+        return $r0;
+    }
+
+    public boolean isClipped()
+    {
+        org.apache.fop.layoutmgr.inline.ImageLayout this;
+        boolean $z0;
+
+        this := @this: org.apache.fop.layoutmgr.inline.ImageLayout;
+        $z0 = this.<org.apache.fop.layoutmgr.inline.ImageLayout: boolean clip>;
+        return $z0;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.layoutmgr.inline.ImageLayout: java.lang.Class class$org$apache$fop$layoutmgr$inline$ImageLayout>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.layoutmgr.inline.ImageLayout: java.lang.Class class$(java.lang.String)>("org.apache.fop.layoutmgr.inline.ImageLayout");
+        <org.apache.fop.layoutmgr.inline.ImageLayout: java.lang.Class class$org$apache$fop$layoutmgr$inline$ImageLayout> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.layoutmgr.inline.ImageLayout: java.lang.Class class$org$apache$fop$layoutmgr$inline$ImageLayout>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.layoutmgr.inline.ImageLayout: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

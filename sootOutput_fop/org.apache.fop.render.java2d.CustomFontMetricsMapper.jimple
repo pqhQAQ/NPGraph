@@ -1,0 +1,324 @@
+public class org.apache.fop.render.java2d.CustomFontMetricsMapper extends org.apache.fop.fonts.Typeface implements org.apache.fop.render.java2d.FontMetricsMapper
+{
+    private org.apache.fop.fonts.Typeface typeface;
+    private java.awt.Font font;
+    private float size;
+    private static final int TYPE1_FONT;
+
+    public void <init>(org.apache.fop.fonts.CustomFont) throws java.awt.FontFormatException, java.io.IOException
+    {
+        org.apache.fop.render.java2d.CustomFontMetricsMapper this;
+        org.apache.fop.fonts.CustomFont fontMetrics;
+        javax.xml.transform.Source $r0;
+
+        this := @this: org.apache.fop.render.java2d.CustomFontMetricsMapper;
+        fontMetrics := @parameter0: org.apache.fop.fonts.CustomFont;
+        specialinvoke this.<org.apache.fop.fonts.Typeface: void <init>()>();
+        this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: float size> = 1.0F;
+        this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: org.apache.fop.fonts.Typeface typeface> = fontMetrics;
+        $r0 = virtualinvoke fontMetrics.<org.apache.fop.fonts.CustomFont: javax.xml.transform.Source getEmbedFileSource()>();
+        specialinvoke this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: void initialize(javax.xml.transform.Source)>($r0);
+        return;
+    }
+
+    public void <init>(org.apache.fop.fonts.LazyFont, javax.xml.transform.Source) throws java.awt.FontFormatException, java.io.IOException
+    {
+        org.apache.fop.render.java2d.CustomFontMetricsMapper this;
+        org.apache.fop.fonts.LazyFont fontMetrics;
+        javax.xml.transform.Source fontSource;
+
+        this := @this: org.apache.fop.render.java2d.CustomFontMetricsMapper;
+        fontMetrics := @parameter0: org.apache.fop.fonts.LazyFont;
+        fontSource := @parameter1: javax.xml.transform.Source;
+        specialinvoke this.<org.apache.fop.fonts.Typeface: void <init>()>();
+        this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: float size> = 1.0F;
+        this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: org.apache.fop.fonts.Typeface typeface> = fontMetrics;
+        specialinvoke this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: void initialize(javax.xml.transform.Source)>(fontSource);
+        return;
+    }
+
+    private void initialize(javax.xml.transform.Source) throws java.awt.FontFormatException, java.io.IOException
+    {
+        org.apache.fop.render.java2d.CustomFontMetricsMapper this;
+        javax.xml.transform.Source source;
+        byte type;
+        null_type is;
+        org.apache.fop.fonts.FontType $r0, $r2;
+        org.apache.fop.fonts.Typeface $r1;
+        boolean $z0;
+        javax.xml.transform.stream.StreamSource $r3;
+        java.io.InputStream is;
+        java.lang.String $r4, $r6;
+        java.net.URL $r5;
+        java.lang.IllegalArgumentException $r7;
+        java.awt.Font $r8;
+
+        this := @this: org.apache.fop.render.java2d.CustomFontMetricsMapper;
+        source := @parameter0: javax.xml.transform.Source;
+        type = 0;
+        $r0 = <org.apache.fop.fonts.FontType: org.apache.fop.fonts.FontType TYPE1>;
+        $r1 = this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: org.apache.fop.fonts.Typeface typeface>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.fonts.Typeface: org.apache.fop.fonts.FontType getFontType()>();
+        $z0 = virtualinvoke $r0.<org.apache.fop.fonts.FontType: boolean equals(java.lang.Object)>($r2);
+        if $z0 == 0 goto label0;
+
+        type = 1;
+
+     label0:
+        is = null;
+        $z0 = source instanceof javax.xml.transform.stream.StreamSource;
+        if $z0 == 0 goto label1;
+
+        $r3 = (javax.xml.transform.stream.StreamSource) source;
+        is = virtualinvoke $r3.<javax.xml.transform.stream.StreamSource: java.io.InputStream getInputStream()>();
+        goto label3;
+
+     label1:
+        $r4 = interfaceinvoke source.<javax.xml.transform.Source: java.lang.String getSystemId()>();
+        if $r4 == null goto label2;
+
+        $r5 = new java.net.URL;
+        $r6 = interfaceinvoke source.<javax.xml.transform.Source: java.lang.String getSystemId()>();
+        specialinvoke $r5.<java.net.URL: void <init>(java.lang.String)>($r6);
+        is = virtualinvoke $r5.<java.net.URL: java.io.InputStream openStream()>();
+        goto label3;
+
+     label2:
+        $r7 = new java.lang.IllegalArgumentException;
+        specialinvoke $r7.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("No font source provided.");
+        throw $r7;
+
+     label3:
+        $r8 = staticinvoke <java.awt.Font: java.awt.Font createFont(int,java.io.InputStream)>(type, is);
+        this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: java.awt.Font font> = $r8;
+        virtualinvoke is.<java.io.InputStream: void close()>();
+        return;
+    }
+
+    public final java.lang.String getEncoding()
+    {
+        org.apache.fop.render.java2d.CustomFontMetricsMapper this;
+
+        this := @this: org.apache.fop.render.java2d.CustomFontMetricsMapper;
+        return null;
+    }
+
+    public final boolean hasChar(char)
+    {
+        org.apache.fop.render.java2d.CustomFontMetricsMapper this;
+        char c;
+        java.awt.Font $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.java2d.CustomFontMetricsMapper;
+        c := @parameter0: char;
+        $r0 = this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: java.awt.Font font>;
+        $z0 = virtualinvoke $r0.<java.awt.Font: boolean canDisplay(char)>(c);
+        return $z0;
+    }
+
+    public final char mapChar(char)
+    {
+        org.apache.fop.render.java2d.CustomFontMetricsMapper this;
+        char c, $c0;
+        org.apache.fop.fonts.Typeface $r0;
+
+        this := @this: org.apache.fop.render.java2d.CustomFontMetricsMapper;
+        c := @parameter0: char;
+        $r0 = this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: org.apache.fop.fonts.Typeface typeface>;
+        $c0 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: char mapChar(char)>(c);
+        return $c0;
+    }
+
+    public final java.awt.Font getFont(int)
+    {
+        org.apache.fop.render.java2d.CustomFontMetricsMapper this;
+        int size;
+        float $f0, $f1, $f2;
+        byte $b0;
+        java.awt.Font $r0, $r1;
+
+        this := @this: org.apache.fop.render.java2d.CustomFontMetricsMapper;
+        size := @parameter0: int;
+        $f0 = this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: float size>;
+        $f1 = (float) size;
+        $b0 = $f0 cmpl $f1;
+        if $b0 != 0 goto label0;
+
+        $r0 = this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: java.awt.Font font>;
+        return $r0;
+
+     label0:
+        $f1 = (float) size;
+        $f1 = $f1 / 1000.0F;
+        this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: float size> = $f1;
+        $r1 = this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: java.awt.Font font>;
+        $f2 = this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: float size>;
+        $r1 = virtualinvoke $r1.<java.awt.Font: java.awt.Font deriveFont(float)>($f2);
+        this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: java.awt.Font font> = $r1;
+        $r0 = this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: java.awt.Font font>;
+        return $r0;
+    }
+
+    public final int getAscender(int)
+    {
+        org.apache.fop.render.java2d.CustomFontMetricsMapper this;
+        int size, $i0;
+        org.apache.fop.fonts.Typeface $r0;
+
+        this := @this: org.apache.fop.render.java2d.CustomFontMetricsMapper;
+        size := @parameter0: int;
+        $r0 = this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: org.apache.fop.fonts.Typeface typeface>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: int getAscender(int)>(size);
+        return $i0;
+    }
+
+    public final int getCapHeight(int)
+    {
+        org.apache.fop.render.java2d.CustomFontMetricsMapper this;
+        int size, $i0;
+        org.apache.fop.fonts.Typeface $r0;
+
+        this := @this: org.apache.fop.render.java2d.CustomFontMetricsMapper;
+        size := @parameter0: int;
+        $r0 = this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: org.apache.fop.fonts.Typeface typeface>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: int getCapHeight(int)>(size);
+        return $i0;
+    }
+
+    public final int getDescender(int)
+    {
+        org.apache.fop.render.java2d.CustomFontMetricsMapper this;
+        int size, $i0;
+        org.apache.fop.fonts.Typeface $r0;
+
+        this := @this: org.apache.fop.render.java2d.CustomFontMetricsMapper;
+        size := @parameter0: int;
+        $r0 = this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: org.apache.fop.fonts.Typeface typeface>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: int getDescender(int)>(size);
+        return $i0;
+    }
+
+    public final java.lang.String getEmbedFontName()
+    {
+        org.apache.fop.render.java2d.CustomFontMetricsMapper this;
+        org.apache.fop.fonts.Typeface $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.render.java2d.CustomFontMetricsMapper;
+        $r0 = this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: org.apache.fop.fonts.Typeface typeface>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: java.lang.String getEmbedFontName()>();
+        return $r1;
+    }
+
+    public final java.util.Set getFamilyNames()
+    {
+        org.apache.fop.render.java2d.CustomFontMetricsMapper this;
+        org.apache.fop.fonts.Typeface $r0;
+        java.util.Set $r1;
+
+        this := @this: org.apache.fop.render.java2d.CustomFontMetricsMapper;
+        $r0 = this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: org.apache.fop.fonts.Typeface typeface>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: java.util.Set getFamilyNames()>();
+        return $r1;
+    }
+
+    public final java.lang.String getFontName()
+    {
+        org.apache.fop.render.java2d.CustomFontMetricsMapper this;
+        org.apache.fop.fonts.Typeface $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.render.java2d.CustomFontMetricsMapper;
+        $r0 = this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: org.apache.fop.fonts.Typeface typeface>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: java.lang.String getFontName()>();
+        return $r1;
+    }
+
+    public final org.apache.fop.fonts.FontType getFontType()
+    {
+        org.apache.fop.render.java2d.CustomFontMetricsMapper this;
+        org.apache.fop.fonts.Typeface $r0;
+        org.apache.fop.fonts.FontType $r1;
+
+        this := @this: org.apache.fop.render.java2d.CustomFontMetricsMapper;
+        $r0 = this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: org.apache.fop.fonts.Typeface typeface>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: org.apache.fop.fonts.FontType getFontType()>();
+        return $r1;
+    }
+
+    public final java.lang.String getFullName()
+    {
+        org.apache.fop.render.java2d.CustomFontMetricsMapper this;
+        org.apache.fop.fonts.Typeface $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.render.java2d.CustomFontMetricsMapper;
+        $r0 = this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: org.apache.fop.fonts.Typeface typeface>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: java.lang.String getFullName()>();
+        return $r1;
+    }
+
+    public final java.util.Map getKerningInfo()
+    {
+        org.apache.fop.render.java2d.CustomFontMetricsMapper this;
+        org.apache.fop.fonts.Typeface $r0;
+        java.util.Map $r1;
+
+        this := @this: org.apache.fop.render.java2d.CustomFontMetricsMapper;
+        $r0 = this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: org.apache.fop.fonts.Typeface typeface>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: java.util.Map getKerningInfo()>();
+        return $r1;
+    }
+
+    public final int getWidth(int, int)
+    {
+        org.apache.fop.render.java2d.CustomFontMetricsMapper this;
+        int i, size, $i0;
+        org.apache.fop.fonts.Typeface $r0;
+
+        this := @this: org.apache.fop.render.java2d.CustomFontMetricsMapper;
+        i := @parameter0: int;
+        size := @parameter1: int;
+        $r0 = this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: org.apache.fop.fonts.Typeface typeface>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: int getWidth(int,int)>(i, size);
+        return $i0;
+    }
+
+    public final int[] getWidths()
+    {
+        org.apache.fop.render.java2d.CustomFontMetricsMapper this;
+        org.apache.fop.fonts.Typeface $r0;
+        int[] $r1;
+
+        this := @this: org.apache.fop.render.java2d.CustomFontMetricsMapper;
+        $r0 = this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: org.apache.fop.fonts.Typeface typeface>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: int[] getWidths()>();
+        return $r1;
+    }
+
+    public final int getXHeight(int)
+    {
+        org.apache.fop.render.java2d.CustomFontMetricsMapper this;
+        int size, $i0;
+        org.apache.fop.fonts.Typeface $r0;
+
+        this := @this: org.apache.fop.render.java2d.CustomFontMetricsMapper;
+        size := @parameter0: int;
+        $r0 = this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: org.apache.fop.fonts.Typeface typeface>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: int getXHeight(int)>(size);
+        return $i0;
+    }
+
+    public final boolean hasKerningInfo()
+    {
+        org.apache.fop.render.java2d.CustomFontMetricsMapper this;
+        org.apache.fop.fonts.Typeface $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.java2d.CustomFontMetricsMapper;
+        $r0 = this.<org.apache.fop.render.java2d.CustomFontMetricsMapper: org.apache.fop.fonts.Typeface typeface>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.fonts.Typeface: boolean hasKerningInfo()>();
+        return $z0;
+    }
+}

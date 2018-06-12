@@ -1,0 +1,472 @@
+class org.apache.fop.fo.flow.table.FixedColRowGroupBuilder extends org.apache.fop.fo.flow.table.RowGroupBuilder
+{
+    private int numberOfColumns;
+    private org.apache.fop.fo.flow.table.TableRow currentTableRow;
+    private int currentRowIndex;
+    private java.util.List rows;
+    private boolean firstInPart;
+    private java.util.List lastRow;
+    private org.apache.fop.fo.flow.table.BorderResolver borderResolver;
+    static final boolean $assertionsDisabled;
+    static java.lang.Class class$org$apache$fop$fo$flow$table$FixedColRowGroupBuilder;
+
+    void <init>(org.apache.fop.fo.flow.table.Table)
+    {
+        org.apache.fop.fo.flow.table.FixedColRowGroupBuilder this;
+        org.apache.fop.fo.flow.table.Table t;
+        int $i0;
+        boolean $z0;
+        org.apache.fop.fo.flow.table.SeparateBorderResolver $r0;
+        org.apache.fop.fo.flow.table.CollapsingBorderResolver $r1;
+
+        this := @this: org.apache.fop.fo.flow.table.FixedColRowGroupBuilder;
+        t := @parameter0: org.apache.fop.fo.flow.table.Table;
+        specialinvoke this.<org.apache.fop.fo.flow.table.RowGroupBuilder: void <init>(org.apache.fop.fo.flow.table.Table)>(t);
+        this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: org.apache.fop.fo.flow.table.TableRow currentTableRow> = null;
+        this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: boolean firstInPart> = 1;
+        $i0 = virtualinvoke t.<org.apache.fop.fo.flow.table.Table: int getNumberOfColumns()>();
+        this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: int numberOfColumns> = $i0;
+        $z0 = virtualinvoke t.<org.apache.fop.fo.flow.table.Table: boolean isSeparateBorderModel()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = new org.apache.fop.fo.flow.table.SeparateBorderResolver;
+        specialinvoke $r0.<org.apache.fop.fo.flow.table.SeparateBorderResolver: void <init>()>();
+        this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: org.apache.fop.fo.flow.table.BorderResolver borderResolver> = $r0;
+        goto label1;
+
+     label0:
+        $r1 = new org.apache.fop.fo.flow.table.CollapsingBorderResolver;
+        specialinvoke $r1.<org.apache.fop.fo.flow.table.CollapsingBorderResolver: void <init>(org.apache.fop.fo.flow.table.Table)>(t);
+        this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: org.apache.fop.fo.flow.table.BorderResolver borderResolver> = $r1;
+
+     label1:
+        specialinvoke this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: void initialize()>();
+        return;
+    }
+
+    private void initialize()
+    {
+        org.apache.fop.fo.flow.table.FixedColRowGroupBuilder this;
+        java.util.ArrayList $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.FixedColRowGroupBuilder;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: java.util.List rows> = $r0;
+        this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: int currentRowIndex> = 0;
+        return;
+    }
+
+    void addTableCell(org.apache.fop.fo.flow.table.TableCell)
+    {
+        org.apache.fop.fo.flow.table.FixedColRowGroupBuilder this;
+        org.apache.fop.fo.flow.table.TableCell cell;
+        int i, j, columnIndex, $i0, $i1, $i2;
+        java.util.ArrayList effRow, $r1;
+        org.apache.fop.fo.flow.table.PrimaryGridUnit pgu, $r2;
+        java.util.List row, $r0;
+        org.apache.fop.fo.flow.table.GridUnit[] cellRow;
+        org.apache.fop.fo.flow.table.GridUnit gu, $r4;
+        java.lang.Object $r3;
+
+        this := @this: org.apache.fop.fo.flow.table.FixedColRowGroupBuilder;
+        cell := @parameter0: org.apache.fop.fo.flow.table.TableCell;
+        $r0 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: java.util.List rows>;
+        i = interfaceinvoke $r0.<java.util.List: int size()>();
+
+     label0:
+        $i0 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: int currentRowIndex>;
+        $i1 = virtualinvoke cell.<org.apache.fop.fo.flow.table.TableCell: int getNumberRowsSpanned()>();
+        $i0 = $i0 + $i1;
+        if i >= $i0 goto label3;
+
+        $r1 = new java.util.ArrayList;
+        $i1 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: int numberOfColumns>;
+        specialinvoke $r1.<java.util.ArrayList: void <init>(int)>($i1);
+        effRow = $r1;
+        j = 0;
+
+     label1:
+        $i0 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: int numberOfColumns>;
+        if j >= $i0 goto label2;
+
+        interfaceinvoke effRow.<java.util.List: boolean add(java.lang.Object)>(null);
+        j = j + 1;
+        goto label1;
+
+     label2:
+        $r0 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: java.util.List rows>;
+        interfaceinvoke $r0.<java.util.List: boolean add(java.lang.Object)>(effRow);
+        i = i + 1;
+        goto label0;
+
+     label3:
+        $i2 = virtualinvoke cell.<org.apache.fop.fo.flow.table.TableCell: int getColumnNumber()>();
+        columnIndex = $i2 - 1;
+        $r2 = new org.apache.fop.fo.flow.table.PrimaryGridUnit;
+        specialinvoke $r2.<org.apache.fop.fo.flow.table.PrimaryGridUnit: void <init>(org.apache.fop.fo.flow.table.TableCell,int)>(cell, columnIndex);
+        pgu = $r2;
+        $r0 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: java.util.List rows>;
+        $i0 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: int currentRowIndex>;
+        $r3 = interfaceinvoke $r0.<java.util.List: java.lang.Object get(int)>($i0);
+        row = (java.util.List) $r3;
+        interfaceinvoke row.<java.util.List: java.lang.Object set(int,java.lang.Object)>(columnIndex, pgu);
+        $i2 = virtualinvoke cell.<org.apache.fop.fo.flow.table.TableCell: int getNumberColumnsSpanned()>();
+        cellRow = newarray (org.apache.fop.fo.flow.table.GridUnit)[$i2];
+        cellRow[0] = pgu;
+        j = 1;
+
+     label4:
+        $i0 = virtualinvoke cell.<org.apache.fop.fo.flow.table.TableCell: int getNumberColumnsSpanned()>();
+        if j >= $i0 goto label5;
+
+        $r4 = new org.apache.fop.fo.flow.table.GridUnit;
+        specialinvoke $r4.<org.apache.fop.fo.flow.table.GridUnit: void <init>(org.apache.fop.fo.flow.table.PrimaryGridUnit,int,int)>(pgu, j, 0);
+        gu = $r4;
+        $i0 = columnIndex + j;
+        interfaceinvoke row.<java.util.List: java.lang.Object set(int,java.lang.Object)>($i0, gu);
+        cellRow[j] = gu;
+        j = j + 1;
+        goto label4;
+
+     label5:
+        virtualinvoke pgu.<org.apache.fop.fo.flow.table.PrimaryGridUnit: void addRow(org.apache.fop.fo.flow.table.GridUnit[])>(cellRow);
+        i = 1;
+
+     label6:
+        $i0 = virtualinvoke cell.<org.apache.fop.fo.flow.table.TableCell: int getNumberRowsSpanned()>();
+        if i >= $i0 goto label9;
+
+        $r0 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: java.util.List rows>;
+        $i0 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: int currentRowIndex>;
+        $i0 = $i0 + i;
+        $r3 = interfaceinvoke $r0.<java.util.List: java.lang.Object get(int)>($i0);
+        row = (java.util.List) $r3;
+        $i2 = virtualinvoke cell.<org.apache.fop.fo.flow.table.TableCell: int getNumberColumnsSpanned()>();
+        cellRow = newarray (org.apache.fop.fo.flow.table.GridUnit)[$i2];
+        j = 0;
+
+     label7:
+        $i0 = virtualinvoke cell.<org.apache.fop.fo.flow.table.TableCell: int getNumberColumnsSpanned()>();
+        if j >= $i0 goto label8;
+
+        $r4 = new org.apache.fop.fo.flow.table.GridUnit;
+        specialinvoke $r4.<org.apache.fop.fo.flow.table.GridUnit: void <init>(org.apache.fop.fo.flow.table.PrimaryGridUnit,int,int)>(pgu, j, i);
+        gu = $r4;
+        $i0 = columnIndex + j;
+        interfaceinvoke row.<java.util.List: java.lang.Object set(int,java.lang.Object)>($i0, gu);
+        cellRow[j] = gu;
+        j = j + 1;
+        goto label7;
+
+     label8:
+        virtualinvoke pgu.<org.apache.fop.fo.flow.table.PrimaryGridUnit: void addRow(org.apache.fop.fo.flow.table.GridUnit[])>(cellRow);
+        i = i + 1;
+        goto label6;
+
+     label9:
+        return;
+    }
+
+    private static void setFlagForCols(int, java.util.List)
+    {
+        int flag;
+        java.util.List row;
+        java.util.ListIterator iter;
+        boolean $z0;
+        java.lang.Object $r0;
+        org.apache.fop.fo.flow.table.GridUnit $r1;
+
+        flag := @parameter0: int;
+        row := @parameter1: java.util.List;
+        iter = interfaceinvoke row.<java.util.List: java.util.ListIterator listIterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.ListIterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r0 = interfaceinvoke iter.<java.util.ListIterator: java.lang.Object next()>();
+        $r1 = (org.apache.fop.fo.flow.table.GridUnit) $r0;
+        virtualinvoke $r1.<org.apache.fop.fo.flow.table.GridUnit: void setFlag(int)>(flag);
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    void startTableRow(org.apache.fop.fo.flow.table.TableRow)
+    {
+        org.apache.fop.fo.flow.table.FixedColRowGroupBuilder this;
+        org.apache.fop.fo.flow.table.TableRow tableRow;
+
+        this := @this: org.apache.fop.fo.flow.table.FixedColRowGroupBuilder;
+        tableRow := @parameter0: org.apache.fop.fo.flow.table.TableRow;
+        this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: org.apache.fop.fo.flow.table.TableRow currentTableRow> = tableRow;
+        return;
+    }
+
+    void endTableRow()
+    {
+        org.apache.fop.fo.flow.table.FixedColRowGroupBuilder this;
+        boolean $z0;
+        java.util.Iterator iter;
+        org.apache.fop.fo.flow.table.GridUnit gu;
+        org.apache.fop.fo.flow.table.TableRow $r0, $r5;
+        java.lang.AssertionError $r1;
+        int $i0, $i1;
+        java.util.List $r2, $r3;
+        java.lang.Object $r4;
+
+        this := @this: org.apache.fop.fo.flow.table.FixedColRowGroupBuilder;
+        $z0 = <org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: boolean $assertionsDisabled>;
+        if $z0 != 0 goto label0;
+
+        $r0 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: org.apache.fop.fo.flow.table.TableRow currentTableRow>;
+        if $r0 != null goto label0;
+
+        $r1 = new java.lang.AssertionError;
+        specialinvoke $r1.<java.lang.AssertionError: void <init>()>();
+        throw $r1;
+
+     label0:
+        $i0 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: int currentRowIndex>;
+        if $i0 <= 0 goto label1;
+
+        $r0 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: org.apache.fop.fo.flow.table.TableRow currentTableRow>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fo.flow.table.TableRow: int getBreakBefore()>();
+        if $i0 == 9 goto label1;
+
+        $r0 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: org.apache.fop.fo.flow.table.TableRow currentTableRow>;
+        virtualinvoke $r0.<org.apache.fop.fo.flow.table.TableRow: void attributeWarning(java.lang.String)>("break-before ignored because of row spanning in progress (See XSL 1.1, 7.20.2)");
+
+     label1:
+        $i0 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: int currentRowIndex>;
+        $r2 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: java.util.List rows>;
+        $i1 = interfaceinvoke $r2.<java.util.List: int size()>();
+        $i1 = $i1 - 1;
+        if $i0 >= $i1 goto label2;
+
+        $r0 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: org.apache.fop.fo.flow.table.TableRow currentTableRow>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fo.flow.table.TableRow: int getBreakAfter()>();
+        if $i0 == 9 goto label2;
+
+        $r0 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: org.apache.fop.fo.flow.table.TableRow currentTableRow>;
+        virtualinvoke $r0.<org.apache.fop.fo.flow.table.TableRow: void attributeWarning(java.lang.String)>("break-after ignored because of row spanning in progress (See XSL 1.1, 7.20.1)");
+
+     label2:
+        $r3 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: java.util.List rows>;
+        $i1 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: int currentRowIndex>;
+        $r4 = interfaceinvoke $r3.<java.util.List: java.lang.Object get(int)>($i1);
+        $r3 = (java.util.List) $r4;
+        iter = interfaceinvoke $r3.<java.util.List: java.util.Iterator iterator()>();
+
+     label3:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label5;
+
+        $r4 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        gu = (org.apache.fop.fo.flow.table.GridUnit) $r4;
+        if gu == null goto label4;
+
+        $r5 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: org.apache.fop.fo.flow.table.TableRow currentTableRow>;
+        virtualinvoke gu.<org.apache.fop.fo.flow.table.GridUnit: void setRow(org.apache.fop.fo.flow.table.TableRow)>($r5);
+
+     label4:
+        goto label3;
+
+     label5:
+        $r5 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: org.apache.fop.fo.flow.table.TableRow currentTableRow>;
+        specialinvoke this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: void handleRowEnd(org.apache.fop.fo.flow.table.TableCellContainer)>($r5);
+        return;
+    }
+
+    void endRow(org.apache.fop.fo.flow.table.TableBody)
+    {
+        org.apache.fop.fo.flow.table.FixedColRowGroupBuilder this;
+        org.apache.fop.fo.flow.table.TableBody body;
+
+        this := @this: org.apache.fop.fo.flow.table.FixedColRowGroupBuilder;
+        body := @parameter0: org.apache.fop.fo.flow.table.TableBody;
+        specialinvoke this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: void handleRowEnd(org.apache.fop.fo.flow.table.TableCellContainer)>(body);
+        return;
+    }
+
+    private void handleRowEnd(org.apache.fop.fo.flow.table.TableCellContainer)
+    {
+        org.apache.fop.fo.flow.table.FixedColRowGroupBuilder this;
+        org.apache.fop.fo.flow.table.TableCellContainer container;
+        java.util.List currentRow, $r1, $r6;
+        int i, $i0, $i1;
+        org.apache.fop.fo.flow.table.EmptyGridUnit $r0;
+        java.lang.Object $r2;
+        org.apache.fop.fo.flow.table.Table $r3;
+        org.apache.fop.fo.flow.table.TableRow $r4;
+        org.apache.fop.fo.flow.table.BorderResolver $r5;
+        boolean $z0;
+        org.apache.fop.fo.flow.table.TableBody $r7;
+
+        this := @this: org.apache.fop.fo.flow.table.FixedColRowGroupBuilder;
+        container := @parameter0: org.apache.fop.fo.flow.table.TableCellContainer;
+        $r1 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: java.util.List rows>;
+        $i0 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: int currentRowIndex>;
+        $r2 = interfaceinvoke $r1.<java.util.List: java.lang.Object get(int)>($i0);
+        currentRow = (java.util.List) $r2;
+        this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: java.util.List lastRow> = currentRow;
+        i = 0;
+
+     label0:
+        $i0 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: int numberOfColumns>;
+        if i >= $i0 goto label2;
+
+        $r2 = interfaceinvoke currentRow.<java.util.List: java.lang.Object get(int)>(i);
+        if $r2 != null goto label1;
+
+        $r0 = new org.apache.fop.fo.flow.table.EmptyGridUnit;
+        $r3 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: org.apache.fop.fo.flow.table.Table table>;
+        $r4 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: org.apache.fop.fo.flow.table.TableRow currentTableRow>;
+        specialinvoke $r0.<org.apache.fop.fo.flow.table.EmptyGridUnit: void <init>(org.apache.fop.fo.flow.table.Table,org.apache.fop.fo.flow.table.TableRow,int)>($r3, $r4, i);
+        interfaceinvoke currentRow.<java.util.List: java.lang.Object set(int,java.lang.Object)>(i, $r0);
+
+     label1:
+        i = i + 1;
+        goto label0;
+
+     label2:
+        $r5 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: org.apache.fop.fo.flow.table.BorderResolver borderResolver>;
+        interfaceinvoke $r5.<org.apache.fop.fo.flow.table.BorderResolver: void endRow(java.util.List,org.apache.fop.fo.flow.table.TableCellContainer)>(currentRow, container);
+        $z0 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: boolean firstInPart>;
+        if $z0 == 0 goto label3;
+
+        staticinvoke <org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: void setFlagForCols(int,java.util.List)>(0, currentRow);
+        this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: boolean firstInPart> = 0;
+
+     label3:
+        $i1 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: int currentRowIndex>;
+        $r6 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: java.util.List rows>;
+        $i0 = interfaceinvoke $r6.<java.util.List: int size()>();
+        $i0 = $i0 - 1;
+        if $i1 != $i0 goto label4;
+
+        $r7 = virtualinvoke container.<org.apache.fop.fo.flow.table.TableCellContainer: org.apache.fop.fo.flow.table.TableBody getTablePart()>();
+        $r6 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: java.util.List rows>;
+        virtualinvoke $r7.<org.apache.fop.fo.flow.table.TableBody: void addRowGroup(java.util.List)>($r6);
+        specialinvoke this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: void initialize()>();
+        goto label5;
+
+     label4:
+        $i0 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: int currentRowIndex>;
+        $i0 = $i0 + 1;
+        this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: int currentRowIndex> = $i0;
+
+     label5:
+        this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: org.apache.fop.fo.flow.table.TableRow currentTableRow> = null;
+        return;
+    }
+
+    void startTablePart(org.apache.fop.fo.flow.table.TableBody)
+    {
+        org.apache.fop.fo.flow.table.FixedColRowGroupBuilder this;
+        org.apache.fop.fo.flow.table.TableBody part;
+        org.apache.fop.fo.flow.table.BorderResolver $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.FixedColRowGroupBuilder;
+        part := @parameter0: org.apache.fop.fo.flow.table.TableBody;
+        this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: boolean firstInPart> = 1;
+        $r0 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: org.apache.fop.fo.flow.table.BorderResolver borderResolver>;
+        interfaceinvoke $r0.<org.apache.fop.fo.flow.table.BorderResolver: void startPart(org.apache.fop.fo.flow.table.TableBody)>(part);
+        return;
+    }
+
+    void endTablePart() throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.flow.table.FixedColRowGroupBuilder this;
+        java.util.List $r0, $r2;
+        int $i0;
+        org.apache.fop.fo.ValidationException $r1;
+        org.apache.fop.fo.flow.table.BorderResolver $r3;
+
+        this := @this: org.apache.fop.fo.flow.table.FixedColRowGroupBuilder;
+        $r0 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: java.util.List rows>;
+        $i0 = interfaceinvoke $r0.<java.util.List: int size()>();
+        if $i0 <= 0 goto label0;
+
+        $r1 = new org.apache.fop.fo.ValidationException;
+        specialinvoke $r1.<org.apache.fop.fo.ValidationException: void <init>(java.lang.String)>("A table-cell is spanning more rows than available in its parent element.");
+        throw $r1;
+
+     label0:
+        $r2 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: java.util.List lastRow>;
+        staticinvoke <org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: void setFlagForCols(int,java.util.List)>(1, $r2);
+        $r3 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: org.apache.fop.fo.flow.table.BorderResolver borderResolver>;
+        interfaceinvoke $r3.<org.apache.fop.fo.flow.table.BorderResolver: void endPart()>();
+        return;
+    }
+
+    void endTable()
+    {
+        org.apache.fop.fo.flow.table.FixedColRowGroupBuilder this;
+        org.apache.fop.fo.flow.table.BorderResolver $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.FixedColRowGroupBuilder;
+        $r0 = this.<org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: org.apache.fop.fo.flow.table.BorderResolver borderResolver>;
+        interfaceinvoke $r0.<org.apache.fop.fo.flow.table.BorderResolver: void endTable()>();
+        return;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        boolean $z0;
+
+        $r0 = <org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: java.lang.Class class$org$apache$fop$fo$flow$table$FixedColRowGroupBuilder>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: java.lang.Class class$(java.lang.String)>("org.apache.fop.fo.flow.table.FixedColRowGroupBuilder");
+        <org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: java.lang.Class class$org$apache$fop$fo$flow$table$FixedColRowGroupBuilder> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: java.lang.Class class$org$apache$fop$fo$flow$table$FixedColRowGroupBuilder>;
+
+     label1:
+        $z0 = virtualinvoke $r0.<java.lang.Class: boolean desiredAssertionStatus()>();
+        if $z0 != 0 goto label2;
+
+        $z0 = 1;
+        goto label3;
+
+     label2:
+        $z0 = 0;
+
+     label3:
+        <org.apache.fop.fo.flow.table.FixedColRowGroupBuilder: boolean $assertionsDisabled> = $z0;
+        return;
+    }
+}

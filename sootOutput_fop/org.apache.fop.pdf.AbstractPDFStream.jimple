@@ -1,0 +1,279 @@
+public abstract class org.apache.fop.pdf.AbstractPDFStream extends org.apache.fop.pdf.PDFDictionary
+{
+    private org.apache.fop.pdf.PDFFilterList filters;
+
+    public void <init>()
+    {
+        org.apache.fop.pdf.AbstractPDFStream this;
+
+        this := @this: org.apache.fop.pdf.AbstractPDFStream;
+        specialinvoke this.<org.apache.fop.pdf.PDFDictionary: void <init>()>();
+        return;
+    }
+
+    protected void setupFilterList()
+    {
+        org.apache.fop.pdf.AbstractPDFStream this;
+        org.apache.fop.pdf.PDFFilterList $r0;
+        boolean $z0;
+        org.apache.fop.pdf.PDFDocument $r1, $r3;
+        java.util.Map $r2;
+
+        this := @this: org.apache.fop.pdf.AbstractPDFStream;
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.AbstractPDFStream: org.apache.fop.pdf.PDFFilterList getFilterList()>();
+        $z0 = virtualinvoke $r0.<org.apache.fop.pdf.PDFFilterList: boolean isInitialized()>();
+        if $z0 != 0 goto label0;
+
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.AbstractPDFStream: org.apache.fop.pdf.PDFFilterList getFilterList()>();
+        $r1 = virtualinvoke this.<org.apache.fop.pdf.AbstractPDFStream: org.apache.fop.pdf.PDFDocument getDocumentSafely()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.pdf.PDFDocument: java.util.Map getFilterMap()>();
+        virtualinvoke $r0.<org.apache.fop.pdf.PDFFilterList: void addDefaultFilters(java.util.Map,java.lang.String)>($r2, "default");
+
+     label0:
+        virtualinvoke this.<org.apache.fop.pdf.AbstractPDFStream: void prepareImplicitFilters()>();
+        $r3 = virtualinvoke this.<org.apache.fop.pdf.AbstractPDFStream: org.apache.fop.pdf.PDFDocument getDocument()>();
+        virtualinvoke $r3.<org.apache.fop.pdf.PDFDocument: void applyEncryption(org.apache.fop.pdf.AbstractPDFStream)>(this);
+        return;
+    }
+
+    public org.apache.fop.pdf.PDFFilterList getFilterList()
+    {
+        org.apache.fop.pdf.AbstractPDFStream this;
+        org.apache.fop.pdf.PDFFilterList $r0, $r1;
+        boolean hasFilterEntries, $z0, $z1;
+        org.apache.fop.pdf.PDFDocument $r2, $r3;
+        java.lang.Object $r4;
+
+        this := @this: org.apache.fop.pdf.AbstractPDFStream;
+        $r1 = this.<org.apache.fop.pdf.AbstractPDFStream: org.apache.fop.pdf.PDFFilterList filters>;
+        if $r1 != null goto label4;
+
+        $r2 = virtualinvoke this.<org.apache.fop.pdf.AbstractPDFStream: org.apache.fop.pdf.PDFDocument getDocument()>();
+        if $r2 != null goto label0;
+
+        $r0 = new org.apache.fop.pdf.PDFFilterList;
+        specialinvoke $r0.<org.apache.fop.pdf.PDFFilterList: void <init>()>();
+        this.<org.apache.fop.pdf.AbstractPDFStream: org.apache.fop.pdf.PDFFilterList filters> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = new org.apache.fop.pdf.PDFFilterList;
+        $r3 = virtualinvoke this.<org.apache.fop.pdf.AbstractPDFStream: org.apache.fop.pdf.PDFDocument getDocument()>();
+        $z0 = virtualinvoke $r3.<org.apache.fop.pdf.PDFDocument: boolean isEncryptionActive()>();
+        specialinvoke $r0.<org.apache.fop.pdf.PDFFilterList: void <init>(boolean)>($z0);
+        this.<org.apache.fop.pdf.AbstractPDFStream: org.apache.fop.pdf.PDFFilterList filters> = $r0;
+
+     label1:
+        $r4 = virtualinvoke this.<org.apache.fop.pdf.AbstractPDFStream: java.lang.Object get(java.lang.String)>("Filter");
+        if $r4 == null goto label2;
+
+        $z1 = 1;
+        goto label3;
+
+     label2:
+        $z1 = 0;
+
+     label3:
+        hasFilterEntries = $z1;
+        if hasFilterEntries == 0 goto label4;
+
+        $r1 = this.<org.apache.fop.pdf.AbstractPDFStream: org.apache.fop.pdf.PDFFilterList filters>;
+        virtualinvoke $r1.<org.apache.fop.pdf.PDFFilterList: void setDisableAllFilters(boolean)>(1);
+
+     label4:
+        $r1 = this.<org.apache.fop.pdf.AbstractPDFStream: org.apache.fop.pdf.PDFFilterList filters>;
+        return $r1;
+    }
+
+    protected abstract int getSizeHint() throws java.io.IOException;
+
+    protected abstract void outputRawStreamData(java.io.OutputStream) throws java.io.IOException;
+
+    protected int outputStreamData(org.apache.fop.pdf.StreamCache, java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.pdf.AbstractPDFStream this;
+        org.apache.fop.pdf.StreamCache encodedStream;
+        java.io.OutputStream out;
+        byte length;
+        byte[] p;
+        int $i0, length;
+
+        this := @this: org.apache.fop.pdf.AbstractPDFStream;
+        encodedStream := @parameter0: org.apache.fop.pdf.StreamCache;
+        out := @parameter1: java.io.OutputStream;
+        length = 0;
+        p = staticinvoke <org.apache.fop.pdf.AbstractPDFStream: byte[] encode(java.lang.String)>("stream\n");
+        virtualinvoke out.<java.io.OutputStream: void write(byte[])>(p);
+        $i0 = lengthof p;
+        length = length + $i0;
+        interfaceinvoke encodedStream.<org.apache.fop.pdf.StreamCache: int outputContents(java.io.OutputStream)>(out);
+        $i0 = interfaceinvoke encodedStream.<org.apache.fop.pdf.StreamCache: int getSize()>();
+        length = length + $i0;
+        p = staticinvoke <org.apache.fop.pdf.AbstractPDFStream: byte[] encode(java.lang.String)>("\nendstream");
+        virtualinvoke out.<java.io.OutputStream: void write(byte[])>(p);
+        $i0 = lengthof p;
+        length = length + $i0;
+        return length;
+    }
+
+    protected org.apache.fop.pdf.StreamCache encodeStream() throws java.io.IOException
+    {
+        org.apache.fop.pdf.AbstractPDFStream this;
+        org.apache.fop.pdf.StreamCacheFactory $r0;
+        org.apache.fop.pdf.StreamCache encodedStream;
+        java.io.OutputStream filteredOutput, $r2;
+        int $i0;
+        org.apache.fop.pdf.PDFFilterList $r1;
+
+        this := @this: org.apache.fop.pdf.AbstractPDFStream;
+        $r0 = staticinvoke <org.apache.fop.pdf.StreamCacheFactory: org.apache.fop.pdf.StreamCacheFactory getInstance()>();
+        $i0 = virtualinvoke this.<org.apache.fop.pdf.AbstractPDFStream: int getSizeHint()>();
+        encodedStream = virtualinvoke $r0.<org.apache.fop.pdf.StreamCacheFactory: org.apache.fop.pdf.StreamCache createStreamCache(int)>($i0);
+        $r1 = virtualinvoke this.<org.apache.fop.pdf.AbstractPDFStream: org.apache.fop.pdf.PDFFilterList getFilterList()>();
+        $r2 = interfaceinvoke encodedStream.<org.apache.fop.pdf.StreamCache: java.io.OutputStream getOutputStream()>();
+        filteredOutput = virtualinvoke $r1.<org.apache.fop.pdf.PDFFilterList: java.io.OutputStream applyFilters(java.io.OutputStream)>($r2);
+        virtualinvoke this.<org.apache.fop.pdf.AbstractPDFStream: void outputRawStreamData(java.io.OutputStream)>(filteredOutput);
+        virtualinvoke filteredOutput.<java.io.OutputStream: void flush()>();
+        virtualinvoke filteredOutput.<java.io.OutputStream: void close()>();
+        return encodedStream;
+    }
+
+    protected int encodeAndWriteStream(java.io.OutputStream, org.apache.fop.pdf.PDFNumber) throws java.io.IOException
+    {
+        org.apache.fop.pdf.AbstractPDFStream this;
+        java.io.OutputStream out, filteredOutput;
+        org.apache.fop.pdf.PDFNumber refLength;
+        byte bytesWritten;
+        byte[] buf;
+        org.apache.fop.util.CloseBlockerOutputStream cbout, $r0;
+        org.apache.commons.io.output.CountingOutputStream cout, $r1;
+        int $i0, bytesWritten, $i1;
+        org.apache.fop.pdf.PDFFilterList $r2;
+        java.lang.Integer $r3;
+
+        this := @this: org.apache.fop.pdf.AbstractPDFStream;
+        out := @parameter0: java.io.OutputStream;
+        refLength := @parameter1: org.apache.fop.pdf.PDFNumber;
+        bytesWritten = 0;
+        buf = staticinvoke <org.apache.fop.pdf.AbstractPDFStream: byte[] encode(java.lang.String)>("stream\n");
+        virtualinvoke out.<java.io.OutputStream: void write(byte[])>(buf);
+        $i0 = lengthof buf;
+        bytesWritten = bytesWritten + $i0;
+        $r0 = new org.apache.fop.util.CloseBlockerOutputStream;
+        specialinvoke $r0.<org.apache.fop.util.CloseBlockerOutputStream: void <init>(java.io.OutputStream)>(out);
+        cbout = $r0;
+        $r1 = new org.apache.commons.io.output.CountingOutputStream;
+        specialinvoke $r1.<org.apache.commons.io.output.CountingOutputStream: void <init>(java.io.OutputStream)>(cbout);
+        cout = $r1;
+        $r2 = virtualinvoke this.<org.apache.fop.pdf.AbstractPDFStream: org.apache.fop.pdf.PDFFilterList getFilterList()>();
+        filteredOutput = virtualinvoke $r2.<org.apache.fop.pdf.PDFFilterList: java.io.OutputStream applyFilters(java.io.OutputStream)>(cout);
+        virtualinvoke this.<org.apache.fop.pdf.AbstractPDFStream: void outputRawStreamData(java.io.OutputStream)>(filteredOutput);
+        virtualinvoke filteredOutput.<java.io.OutputStream: void close()>();
+        $r3 = new java.lang.Integer;
+        $i1 = virtualinvoke cout.<org.apache.commons.io.output.CountingOutputStream: int getCount()>();
+        specialinvoke $r3.<java.lang.Integer: void <init>(int)>($i1);
+        virtualinvoke refLength.<org.apache.fop.pdf.PDFNumber: void setNumber(java.lang.Number)>($r3);
+        $i0 = virtualinvoke cout.<org.apache.commons.io.output.CountingOutputStream: int getCount()>();
+        bytesWritten = bytesWritten + $i0;
+        buf = staticinvoke <org.apache.fop.pdf.AbstractPDFStream: byte[] encode(java.lang.String)>("\nendstream");
+        virtualinvoke out.<java.io.OutputStream: void write(byte[])>(buf);
+        $i0 = lengthof buf;
+        bytesWritten = bytesWritten + $i0;
+        return bytesWritten;
+    }
+
+    protected int output(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.pdf.AbstractPDFStream this;
+        java.io.OutputStream stream;
+        org.apache.commons.io.output.CountingOutputStream cout, $r0;
+        java.io.Writer writer;
+        org.apache.fop.pdf.StreamCache encodedStream;
+        org.apache.fop.pdf.PDFNumber refLength, $r3;
+        java.lang.Object lengthEntry;
+        java.lang.String $r1;
+        org.apache.fop.pdf.PDFDocument $r2;
+        boolean $z0;
+        java.lang.Integer $r5;
+        int $i0, $i1;
+
+        this := @this: org.apache.fop.pdf.AbstractPDFStream;
+        stream := @parameter0: java.io.OutputStream;
+        virtualinvoke this.<org.apache.fop.pdf.AbstractPDFStream: void setupFilterList()>();
+        $r0 = new org.apache.commons.io.output.CountingOutputStream;
+        specialinvoke $r0.<org.apache.commons.io.output.CountingOutputStream: void <init>(java.io.OutputStream)>(stream);
+        cout = $r0;
+        writer = staticinvoke <org.apache.fop.pdf.PDFDocument: java.io.Writer getWriterFor(java.io.OutputStream)>(cout);
+        $r1 = virtualinvoke this.<org.apache.fop.pdf.AbstractPDFStream: java.lang.String getObjectID()>();
+        virtualinvoke writer.<java.io.Writer: void write(java.lang.String)>($r1);
+        encodedStream = null;
+        refLength = null;
+        $r2 = virtualinvoke this.<org.apache.fop.pdf.AbstractPDFStream: org.apache.fop.pdf.PDFDocument getDocument()>();
+        $z0 = virtualinvoke $r2.<org.apache.fop.pdf.PDFDocument: boolean isEncodingOnTheFly()>();
+        if $z0 == 0 goto label0;
+
+        $r3 = new org.apache.fop.pdf.PDFNumber;
+        specialinvoke $r3.<org.apache.fop.pdf.PDFNumber: void <init>()>();
+        refLength = $r3;
+        $r2 = virtualinvoke this.<org.apache.fop.pdf.AbstractPDFStream: org.apache.fop.pdf.PDFDocument getDocumentSafely()>();
+        virtualinvoke $r2.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFObject registerObject(org.apache.fop.pdf.PDFObject)>(refLength);
+        lengthEntry = refLength;
+        goto label1;
+
+     label0:
+        encodedStream = virtualinvoke this.<org.apache.fop.pdf.AbstractPDFStream: org.apache.fop.pdf.StreamCache encodeStream()>();
+        $r5 = new java.lang.Integer;
+        $i0 = interfaceinvoke encodedStream.<org.apache.fop.pdf.StreamCache: int getSize()>();
+        $i0 = $i0 + 1;
+        specialinvoke $r5.<java.lang.Integer: void <init>(int)>($i0);
+        lengthEntry = $r5;
+
+     label1:
+        virtualinvoke this.<org.apache.fop.pdf.AbstractPDFStream: void populateStreamDict(java.lang.Object)>(lengthEntry);
+        virtualinvoke this.<org.apache.fop.pdf.AbstractPDFStream: void writeDictionary(java.io.OutputStream,java.io.Writer)>(cout, writer);
+        virtualinvoke writer.<java.io.Writer: void flush()>();
+        if encodedStream != null goto label2;
+
+        virtualinvoke this.<org.apache.fop.pdf.AbstractPDFStream: int encodeAndWriteStream(java.io.OutputStream,org.apache.fop.pdf.PDFNumber)>(cout, refLength);
+        goto label3;
+
+     label2:
+        virtualinvoke this.<org.apache.fop.pdf.AbstractPDFStream: int outputStreamData(org.apache.fop.pdf.StreamCache,java.io.OutputStream)>(encodedStream, cout);
+        interfaceinvoke encodedStream.<org.apache.fop.pdf.StreamCache: void clear()>();
+
+     label3:
+        virtualinvoke writer.<java.io.Writer: void write(java.lang.String)>("\nendobj\n");
+        virtualinvoke writer.<java.io.Writer: void flush()>();
+        $i1 = virtualinvoke cout.<org.apache.commons.io.output.CountingOutputStream: int getCount()>();
+        return $i1;
+    }
+
+    protected void populateStreamDict(java.lang.Object)
+    {
+        org.apache.fop.pdf.AbstractPDFStream this;
+        java.lang.Object lengthEntry;
+        org.apache.fop.pdf.PDFFilterList $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.pdf.AbstractPDFStream;
+        lengthEntry := @parameter0: java.lang.Object;
+        virtualinvoke this.<org.apache.fop.pdf.AbstractPDFStream: void put(java.lang.String,java.lang.Object)>("Length", lengthEntry);
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.AbstractPDFStream: org.apache.fop.pdf.PDFFilterList getFilterList()>();
+        $z0 = virtualinvoke $r0.<org.apache.fop.pdf.PDFFilterList: boolean isDisableAllFilters()>();
+        if $z0 != 0 goto label0;
+
+        $r0 = virtualinvoke this.<org.apache.fop.pdf.AbstractPDFStream: org.apache.fop.pdf.PDFFilterList getFilterList()>();
+        virtualinvoke $r0.<org.apache.fop.pdf.PDFFilterList: void putFilterDictEntries(org.apache.fop.pdf.PDFDictionary)>(this);
+
+     label0:
+        return;
+    }
+
+    protected void prepareImplicitFilters()
+    {
+        org.apache.fop.pdf.AbstractPDFStream this;
+
+        this := @this: org.apache.fop.pdf.AbstractPDFStream;
+        return;
+    }
+}

@@ -1,0 +1,67 @@
+public class data.MyApp$analyze_name extends java.lang.Thread
+{
+    java.lang.String path;
+    final data.MyApp this$0;
+
+    public void <init>(data.MyApp, java.lang.String)
+    {
+        data.MyApp$analyze_name this;
+        data.MyApp l1;
+        java.lang.String apk_name;
+
+        this := @this: data.MyApp$analyze_name;
+        l1 := @parameter0: data.MyApp;
+        apk_name := @parameter1: java.lang.String;
+        this.<data.MyApp$analyze_name: data.MyApp this$0> = l1;
+        specialinvoke this.<java.lang.Thread: void <init>()>();
+        this.<data.MyApp$analyze_name: java.lang.String path> = apk_name;
+        return;
+    }
+
+    public void run()
+    {
+        data.MyApp$analyze_name this;
+        java.lang.String name, cmd, result, $r1;
+        java.io.IOException e, $r3;
+        java.lang.StringBuilder $r0;
+        java.lang.Boolean $r2;
+        int $i0, $i1;
+        java.io.PrintStream $r4;
+        data.MyApp $r5;
+
+        this := @this: data.MyApp$analyze_name;
+        name = "";
+        $r0 = new java.lang.StringBuilder;
+        specialinvoke $r0.<java.lang.StringBuilder: void <init>(java.lang.String)>("tools/aapt dump badging ");
+        $r1 = this.<data.MyApp$analyze_name: java.lang.String path>;
+        $r0 = virtualinvoke $r0.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r1);
+        cmd = virtualinvoke $r0.<java.lang.StringBuilder: java.lang.String toString()>();
+        result = "";
+
+     label0:
+        $r2 = staticinvoke <java.lang.Boolean: java.lang.Boolean valueOf(boolean)>(0);
+        result = staticinvoke <funcs.CmdToolKit: java.lang.String readConsole2(java.lang.String,java.lang.Boolean)>(cmd, $r2);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r3 := @caughtexception;
+        e = $r3;
+        virtualinvoke e.<java.io.IOException: void printStackTrace()>();
+
+     label3:
+        $i0 = virtualinvoke result.<java.lang.String: int indexOf(java.lang.String)>("package: name=");
+        $i0 = $i0 + 15;
+        name = virtualinvoke result.<java.lang.String: java.lang.String substring(int)>($i0);
+        $i1 = virtualinvoke name.<java.lang.String: int indexOf(java.lang.String)>("\'");
+        name = virtualinvoke name.<java.lang.String: java.lang.String substring(int,int)>(0, $i1);
+        $r4 = <java.lang.System: java.io.PrintStream out>;
+        virtualinvoke $r4.<java.io.PrintStream: void println(java.lang.String)>(name);
+        $r5 = this.<data.MyApp$analyze_name: data.MyApp this$0>;
+        $r5.<data.MyApp: java.lang.String packagename> = name;
+        return;
+
+        catch java.io.IOException from label0 to label1 with label2;
+    }
+}

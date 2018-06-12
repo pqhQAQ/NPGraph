@@ -1,0 +1,173 @@
+public class org.apache.fop.svg.PDFANode extends org.apache.batik.gvt.CompositeGraphicsNode
+{
+    private java.lang.String destination;
+    private java.awt.geom.AffineTransform transform;
+
+    public void <init>()
+    {
+        org.apache.fop.svg.PDFANode this;
+
+        this := @this: org.apache.fop.svg.PDFANode;
+        specialinvoke this.<org.apache.batik.gvt.CompositeGraphicsNode: void <init>()>();
+        return;
+    }
+
+    public void setDestination(java.lang.String)
+    {
+        org.apache.fop.svg.PDFANode this;
+        java.lang.String dest;
+
+        this := @this: org.apache.fop.svg.PDFANode;
+        dest := @parameter0: java.lang.String;
+        this.<org.apache.fop.svg.PDFANode: java.lang.String destination> = dest;
+        return;
+    }
+
+    public void setTransform(java.awt.geom.AffineTransform)
+    {
+        org.apache.fop.svg.PDFANode this;
+        java.awt.geom.AffineTransform tf;
+
+        this := @this: org.apache.fop.svg.PDFANode;
+        tf := @parameter0: java.awt.geom.AffineTransform;
+        this.<org.apache.fop.svg.PDFANode: java.awt.geom.AffineTransform transform> = tf;
+        return;
+    }
+
+    public void paint(java.awt.Graphics2D)
+    {
+        org.apache.fop.svg.PDFANode this;
+        java.awt.Graphics2D g2d;
+        org.apache.fop.svg.PDFGraphics2D pdfg;
+        byte type;
+        java.lang.String nums, tok, $r0, $r1, $r8, $r11;
+        float x, y, width, height, $f0;
+        int count, $i0;
+        java.util.StringTokenizer st, $r2;
+        java.lang.Exception e, $r3;
+        java.awt.geom.Rectangle2D$Float destRect, $r4;
+        boolean $z0;
+        java.awt.geom.AffineTransform $r5, $r10;
+        java.awt.Shape $r6;
+        java.awt.Rectangle destRect;
+        double $d0;
+        java.lang.StringBuffer $r7;
+        java.awt.geom.Rectangle2D $r9;
+
+        this := @this: org.apache.fop.svg.PDFANode;
+        g2d := @parameter0: java.awt.Graphics2D;
+        $z0 = this.<org.apache.fop.svg.PDFANode: boolean isVisible>;
+        if $z0 == 0 goto label11;
+
+        specialinvoke this.<org.apache.batik.gvt.CompositeGraphicsNode: void paint(java.awt.Graphics2D)>(g2d);
+        $z0 = g2d instanceof org.apache.fop.svg.PDFGraphics2D;
+        if $z0 == 0 goto label11;
+
+        pdfg = (org.apache.fop.svg.PDFGraphics2D) g2d;
+        type = 0;
+        virtualinvoke this.<org.apache.fop.svg.PDFANode: java.awt.Shape getOutline()>();
+        $r0 = this.<org.apache.fop.svg.PDFANode: java.lang.String destination>;
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean startsWith(java.lang.String)>("#svgView(viewBox(");
+        if $z0 == 0 goto label10;
+
+        type = 1;
+        $r0 = this.<org.apache.fop.svg.PDFANode: java.lang.String destination>;
+        $r1 = this.<org.apache.fop.svg.PDFANode: java.lang.String destination>;
+        $i0 = virtualinvoke $r1.<java.lang.String: int length()>();
+        $i0 = $i0 - 2;
+        nums = virtualinvoke $r0.<java.lang.String: java.lang.String substring(int,int)>(17, $i0);
+        x = 0.0F;
+        y = 0.0F;
+        width = 0.0F;
+        height = 0.0F;
+        count = 0;
+
+     label0:
+        $r2 = new java.util.StringTokenizer;
+        specialinvoke $r2.<java.util.StringTokenizer: void <init>(java.lang.String,java.lang.String)>(nums, ",");
+        st = $r2;
+
+     label1:
+        $z0 = virtualinvoke st.<java.util.StringTokenizer: boolean hasMoreTokens()>();
+        if $z0 == 0 goto label7;
+
+        tok = virtualinvoke st.<java.util.StringTokenizer: java.lang.String nextToken()>();
+        count = count + 1;
+        tableswitch(count)
+        {
+            case 1: goto label2;
+            case 2: goto label3;
+            case 3: goto label4;
+            case 4: goto label5;
+            default: goto label6;
+        };
+
+     label2:
+        x = staticinvoke <java.lang.Float: float parseFloat(java.lang.String)>(tok);
+        goto label6;
+
+     label3:
+        y = staticinvoke <java.lang.Float: float parseFloat(java.lang.String)>(tok);
+        goto label6;
+
+     label4:
+        width = staticinvoke <java.lang.Float: float parseFloat(java.lang.String)>(tok);
+        goto label6;
+
+     label5:
+        height = staticinvoke <java.lang.Float: float parseFloat(java.lang.String)>(tok);
+        goto label6;
+
+     label6:
+        goto label1;
+
+     label7:
+        goto label9;
+
+     label8:
+        $r3 := @caughtexception;
+        e = $r3;
+        virtualinvoke e.<java.lang.Exception: void printStackTrace()>();
+
+     label9:
+        $r4 = new java.awt.geom.Rectangle2D$Float;
+        specialinvoke $r4.<java.awt.geom.Rectangle2D$Float: void <init>(float,float,float,float)>(x, y, width, height);
+        destRect = $r4;
+        $r5 = this.<org.apache.fop.svg.PDFANode: java.awt.geom.AffineTransform transform>;
+        $r6 = virtualinvoke $r5.<java.awt.geom.AffineTransform: java.awt.Shape createTransformedShape(java.awt.Shape)>(destRect);
+        destRect = interfaceinvoke $r6.<java.awt.Shape: java.awt.Rectangle getBounds()>();
+        $d0 = virtualinvoke destRect.<java.awt.geom.Rectangle2D: double getX()>();
+        x = (float) $d0;
+        $d0 = virtualinvoke destRect.<java.awt.geom.Rectangle2D: double getY()>();
+        y = (float) $d0;
+        $d0 = virtualinvoke destRect.<java.awt.geom.Rectangle2D: double getWidth()>();
+        width = (float) $d0;
+        $d0 = virtualinvoke destRect.<java.awt.geom.Rectangle2D: double getHeight()>();
+        height = (float) $d0;
+        $r7 = new java.lang.StringBuffer;
+        specialinvoke $r7.<java.lang.StringBuffer: void <init>()>();
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("");
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(float)>(x);
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(float)>(y);
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $f0 = x + width;
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(float)>($f0);
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $f0 = y + height;
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(float)>($f0);
+        $r8 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.String toString()>();
+        this.<org.apache.fop.svg.PDFANode: java.lang.String destination> = $r8;
+
+     label10:
+        $r9 = virtualinvoke this.<org.apache.fop.svg.PDFANode: java.awt.geom.Rectangle2D getBounds()>();
+        $r10 = this.<org.apache.fop.svg.PDFANode: java.awt.geom.AffineTransform transform>;
+        $r11 = this.<org.apache.fop.svg.PDFANode: java.lang.String destination>;
+        virtualinvoke pdfg.<org.apache.fop.svg.PDFGraphics2D: void addLink(java.awt.geom.Rectangle2D,java.awt.geom.AffineTransform,java.lang.String,int)>($r9, $r10, $r11, type);
+
+     label11:
+        return;
+
+        catch java.lang.Exception from label0 to label7 with label8;
+    }
+}

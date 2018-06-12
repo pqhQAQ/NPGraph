@@ -1,0 +1,299 @@
+public abstract class org.apache.fop.render.PrintRenderer extends org.apache.fop.render.AbstractRenderer
+{
+    protected org.apache.fop.fonts.FontInfo fontInfo;
+    protected org.apache.fop.fonts.FontResolver fontResolver;
+    protected java.util.List fontList;
+
+    public void <init>()
+    {
+        org.apache.fop.render.PrintRenderer this;
+
+        this := @this: org.apache.fop.render.PrintRenderer;
+        specialinvoke this.<org.apache.fop.render.AbstractRenderer: void <init>()>();
+        this.<org.apache.fop.render.PrintRenderer: org.apache.fop.fonts.FontResolver fontResolver> = null;
+        this.<org.apache.fop.render.PrintRenderer: java.util.List fontList> = null;
+        return;
+    }
+
+    public void addFontList(java.util.List)
+    {
+        org.apache.fop.render.PrintRenderer this;
+        java.util.List fontInfoList, $r0;
+
+        this := @this: org.apache.fop.render.PrintRenderer;
+        fontInfoList := @parameter0: java.util.List;
+        $r0 = this.<org.apache.fop.render.PrintRenderer: java.util.List fontList>;
+        if $r0 != null goto label0;
+
+        virtualinvoke this.<org.apache.fop.render.PrintRenderer: void setFontList(java.util.List)>(fontInfoList);
+        goto label1;
+
+     label0:
+        $r0 = this.<org.apache.fop.render.PrintRenderer: java.util.List fontList>;
+        interfaceinvoke $r0.<java.util.List: boolean addAll(java.util.Collection)>(fontInfoList);
+
+     label1:
+        return;
+    }
+
+    public void setFontList(java.util.List)
+    {
+        org.apache.fop.render.PrintRenderer this;
+        java.util.List fontList;
+
+        this := @this: org.apache.fop.render.PrintRenderer;
+        fontList := @parameter0: java.util.List;
+        this.<org.apache.fop.render.PrintRenderer: java.util.List fontList> = fontList;
+        return;
+    }
+
+    public void setupFontInfo(org.apache.fop.fonts.FontInfo)
+    {
+        org.apache.fop.render.PrintRenderer this;
+        org.apache.fop.fonts.FontInfo inFontInfo, $r0;
+        java.util.List $r1;
+        org.apache.fop.fonts.FontResolver $r2;
+        org.apache.fop.apps.FOUserAgent $r3;
+        org.apache.fop.apps.FopFactory $r4;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.PrintRenderer;
+        inFontInfo := @parameter0: org.apache.fop.fonts.FontInfo;
+        this.<org.apache.fop.render.PrintRenderer: org.apache.fop.fonts.FontInfo fontInfo> = inFontInfo;
+        $r0 = this.<org.apache.fop.render.PrintRenderer: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r1 = this.<org.apache.fop.render.PrintRenderer: java.util.List fontList>;
+        $r2 = this.<org.apache.fop.render.PrintRenderer: org.apache.fop.fonts.FontResolver fontResolver>;
+        $r3 = this.<org.apache.fop.render.PrintRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        $r4 = virtualinvoke $r3.<org.apache.fop.apps.FOUserAgent: org.apache.fop.apps.FopFactory getFactory()>();
+        $z0 = virtualinvoke $r4.<org.apache.fop.apps.FopFactory: boolean isBase14KerningEnabled()>();
+        staticinvoke <org.apache.fop.fonts.FontSetup: void setup(org.apache.fop.fonts.FontInfo,java.util.List,org.apache.fop.fonts.FontResolver,boolean)>($r0, $r1, $r2, $z0);
+        return;
+    }
+
+    protected java.lang.String getInternalFontNameForArea(org.apache.fop.area.Area)
+    {
+        org.apache.fop.render.PrintRenderer this;
+        org.apache.fop.area.Area area;
+        java.lang.Integer $r0;
+        org.apache.fop.fonts.FontTriplet triplet;
+        java.lang.Object $r1;
+        org.apache.fop.fonts.FontInfo $r2;
+        java.lang.String $r3;
+
+        this := @this: org.apache.fop.render.PrintRenderer;
+        area := @parameter0: org.apache.fop.area.Area;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer FONT>;
+        $r1 = virtualinvoke area.<org.apache.fop.area.Area: java.lang.Object getTrait(java.lang.Object)>($r0);
+        triplet = (org.apache.fop.fonts.FontTriplet) $r1;
+        $r2 = this.<org.apache.fop.render.PrintRenderer: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.fonts.FontInfo: java.lang.String getInternalFontKey(org.apache.fop.fonts.FontTriplet)>(triplet);
+        return $r3;
+    }
+
+    protected org.apache.fop.fonts.Font getFontFromArea(org.apache.fop.area.Area)
+    {
+        org.apache.fop.render.PrintRenderer this;
+        org.apache.fop.area.Area area;
+        java.lang.Integer $r0, $r2;
+        org.apache.fop.fonts.FontTriplet triplet;
+        int size;
+        java.lang.Object $r1;
+        org.apache.fop.fonts.FontInfo $r3;
+        org.apache.fop.fonts.Font $r4;
+
+        this := @this: org.apache.fop.render.PrintRenderer;
+        area := @parameter0: org.apache.fop.area.Area;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer FONT>;
+        $r1 = virtualinvoke area.<org.apache.fop.area.Area: java.lang.Object getTrait(java.lang.Object)>($r0);
+        triplet = (org.apache.fop.fonts.FontTriplet) $r1;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer FONT_SIZE>;
+        $r1 = virtualinvoke area.<org.apache.fop.area.Area: java.lang.Object getTrait(java.lang.Object)>($r0);
+        $r2 = (java.lang.Integer) $r1;
+        size = virtualinvoke $r2.<java.lang.Integer: int intValue()>();
+        $r3 = this.<org.apache.fop.render.PrintRenderer: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r4 = virtualinvoke $r3.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.Font getFontInstance(org.apache.fop.fonts.FontTriplet,int)>(triplet, size);
+        return $r4;
+    }
+
+    public static java.awt.Color lightenColor(java.awt.Color, float)
+    {
+        java.awt.Color col, $r1;
+        float factor, $f0, $f1, $f2, $f3, $f4;
+        float[] cols;
+        byte $b0, $b1;
+        double $d0, $d1, $d2;
+
+        col := @parameter0: java.awt.Color;
+        factor := @parameter1: float;
+        cols = newarray (float)[4];
+        cols = virtualinvoke col.<java.awt.Color: float[] getRGBComponents(float[])>(cols);
+        $b0 = factor cmpl 0.0F;
+        if $b0 <= 0 goto label0;
+
+        $b1 = 0;
+        $f0 = cols[$b1];
+        $d0 = (double) $f0;
+        $f1 = cols[0];
+        $d1 = (double) $f1;
+        $d2 = 1.0 - $d1;
+        $d1 = (double) factor;
+        $d2 = $d2 * $d1;
+        $d0 = $d0 + $d2;
+        $f0 = (float) $d0;
+        cols[$b1] = $f0;
+        $b1 = 1;
+        $f0 = cols[$b1];
+        $d0 = (double) $f0;
+        $f1 = cols[1];
+        $d1 = (double) $f1;
+        $d2 = 1.0 - $d1;
+        $d1 = (double) factor;
+        $d2 = $d2 * $d1;
+        $d0 = $d0 + $d2;
+        $f0 = (float) $d0;
+        cols[$b1] = $f0;
+        $b1 = 2;
+        $f0 = cols[$b1];
+        $d0 = (double) $f0;
+        $f1 = cols[2];
+        $d1 = (double) $f1;
+        $d2 = 1.0 - $d1;
+        $d1 = (double) factor;
+        $d2 = $d2 * $d1;
+        $d0 = $d0 + $d2;
+        $f0 = (float) $d0;
+        cols[$b1] = $f0;
+        goto label1;
+
+     label0:
+        $b1 = 0;
+        $f0 = cols[$b1];
+        $f2 = cols[0];
+        $f3 = neg factor;
+        $f2 = $f2 * $f3;
+        $f0 = $f0 - $f2;
+        cols[$b1] = $f0;
+        $b1 = 1;
+        $f0 = cols[$b1];
+        $f2 = cols[1];
+        $f3 = neg factor;
+        $f2 = $f2 * $f3;
+        $f0 = $f0 - $f2;
+        cols[$b1] = $f0;
+        $b1 = 2;
+        $f0 = cols[$b1];
+        $f2 = cols[2];
+        $f3 = neg factor;
+        $f2 = $f2 * $f3;
+        $f0 = $f0 - $f2;
+        cols[$b1] = $f0;
+
+     label1:
+        $r1 = new java.awt.Color;
+        $f0 = cols[0];
+        $f2 = cols[1];
+        $f3 = cols[2];
+        $f4 = cols[3];
+        specialinvoke $r1.<java.awt.Color: void <init>(float,float,float,float)>($f0, $f2, $f3, $f4);
+        return $r1;
+    }
+
+    protected org.apache.fop.render.RendererContext createRendererContext(int, int, int, int, java.util.Map)
+    {
+        org.apache.fop.render.PrintRenderer this;
+        int x, y, width, height;
+        java.util.Map foreignAttributes;
+        org.apache.fop.render.RendererContext $r0, context;
+        java.lang.String $r1;
+        org.apache.fop.apps.FOUserAgent $r2;
+        java.lang.Integer $r3;
+        org.apache.fop.area.PageViewport $r4;
+
+        this := @this: org.apache.fop.render.PrintRenderer;
+        x := @parameter0: int;
+        y := @parameter1: int;
+        width := @parameter2: int;
+        height := @parameter3: int;
+        foreignAttributes := @parameter4: java.util.Map;
+        $r0 = new org.apache.fop.render.RendererContext;
+        $r1 = virtualinvoke this.<org.apache.fop.render.PrintRenderer: java.lang.String getMimeType()>();
+        specialinvoke $r0.<org.apache.fop.render.RendererContext: void <init>(org.apache.fop.render.AbstractRenderer,java.lang.String)>(this, $r1);
+        context = $r0;
+        $r2 = this.<org.apache.fop.render.PrintRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        virtualinvoke context.<org.apache.fop.render.RendererContext: void setUserAgent(org.apache.fop.apps.FOUserAgent)>($r2);
+        $r3 = new java.lang.Integer;
+        specialinvoke $r3.<java.lang.Integer: void <init>(int)>(width);
+        virtualinvoke context.<org.apache.fop.render.RendererContext: void setProperty(java.lang.String,java.lang.Object)>("width", $r3);
+        $r3 = new java.lang.Integer;
+        specialinvoke $r3.<java.lang.Integer: void <init>(int)>(height);
+        virtualinvoke context.<org.apache.fop.render.RendererContext: void setProperty(java.lang.String,java.lang.Object)>("height", $r3);
+        $r3 = new java.lang.Integer;
+        specialinvoke $r3.<java.lang.Integer: void <init>(int)>(x);
+        virtualinvoke context.<org.apache.fop.render.RendererContext: void setProperty(java.lang.String,java.lang.Object)>("xpos", $r3);
+        $r3 = new java.lang.Integer;
+        specialinvoke $r3.<java.lang.Integer: void <init>(int)>(y);
+        virtualinvoke context.<org.apache.fop.render.RendererContext: void setProperty(java.lang.String,java.lang.Object)>("ypos", $r3);
+        $r4 = virtualinvoke this.<org.apache.fop.render.PrintRenderer: org.apache.fop.area.PageViewport getCurrentPageViewport()>();
+        virtualinvoke context.<org.apache.fop.render.RendererContext: void setProperty(java.lang.String,java.lang.Object)>("pageViewport", $r4);
+        if foreignAttributes == null goto label0;
+
+        virtualinvoke context.<org.apache.fop.render.RendererContext: void setProperty(java.lang.String,java.lang.Object)>("foreign-attributes", foreignAttributes);
+
+     label0:
+        return context;
+    }
+
+    public void renderDocument(org.w3c.dom.Document, java.lang.String, java.awt.geom.Rectangle2D, java.util.Map)
+    {
+        org.apache.fop.render.PrintRenderer this;
+        org.w3c.dom.Document doc;
+        java.lang.String ns;
+        java.awt.geom.Rectangle2D pos;
+        java.util.Map foreignAttributes;
+        int x, y, width, height, $i0, $i1;
+        org.apache.fop.render.RendererContext context;
+        double $d0, $d1;
+
+        this := @this: org.apache.fop.render.PrintRenderer;
+        doc := @parameter0: org.w3c.dom.Document;
+        ns := @parameter1: java.lang.String;
+        pos := @parameter2: java.awt.geom.Rectangle2D;
+        foreignAttributes := @parameter3: java.util.Map;
+        $i0 = this.<org.apache.fop.render.PrintRenderer: int currentIPPosition>;
+        $d0 = virtualinvoke pos.<java.awt.geom.Rectangle2D: double getX()>();
+        $i1 = (int) $d0;
+        x = $i0 + $i1;
+        $i0 = this.<org.apache.fop.render.PrintRenderer: int currentBPPosition>;
+        $d0 = virtualinvoke pos.<java.awt.geom.Rectangle2D: double getY()>();
+        $i1 = (int) $d0;
+        y = $i0 + $i1;
+        $d1 = virtualinvoke pos.<java.awt.geom.Rectangle2D: double getWidth()>();
+        width = (int) $d1;
+        $d1 = virtualinvoke pos.<java.awt.geom.Rectangle2D: double getHeight()>();
+        height = (int) $d1;
+        context = virtualinvoke this.<org.apache.fop.render.PrintRenderer: org.apache.fop.render.RendererContext createRendererContext(int,int,int,int,java.util.Map)>(x, y, width, height, foreignAttributes);
+        virtualinvoke this.<org.apache.fop.render.PrintRenderer: void renderXML(org.apache.fop.render.RendererContext,org.w3c.dom.Document,java.lang.String)>(context, doc, ns);
+        return;
+    }
+
+    public org.apache.fop.fonts.FontResolver getFontResolver()
+    {
+        org.apache.fop.render.PrintRenderer this;
+        org.apache.fop.render.DefaultFontResolver $r0;
+        org.apache.fop.fonts.FontResolver $r1;
+        org.apache.fop.apps.FOUserAgent $r2;
+
+        this := @this: org.apache.fop.render.PrintRenderer;
+        $r1 = this.<org.apache.fop.render.PrintRenderer: org.apache.fop.fonts.FontResolver fontResolver>;
+        if $r1 != null goto label0;
+
+        $r0 = new org.apache.fop.render.DefaultFontResolver;
+        $r2 = this.<org.apache.fop.render.AbstractRenderer: org.apache.fop.apps.FOUserAgent userAgent>;
+        specialinvoke $r0.<org.apache.fop.render.DefaultFontResolver: void <init>(org.apache.fop.apps.FOUserAgent)>($r2);
+        this.<org.apache.fop.render.PrintRenderer: org.apache.fop.fonts.FontResolver fontResolver> = $r0;
+
+     label0:
+        $r1 = this.<org.apache.fop.render.PrintRenderer: org.apache.fop.fonts.FontResolver fontResolver>;
+        return $r1;
+    }
+}

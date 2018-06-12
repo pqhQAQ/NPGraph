@@ -1,0 +1,995 @@
+public class org.apache.fop.render.ps.PSTextPainter extends java.lang.Object implements org.apache.batik.gvt.TextPainter
+{
+    protected org.apache.commons.logging.Log log;
+    private org.apache.fop.render.ps.NativeTextHandler nativeTextHandler;
+    private org.apache.fop.fonts.FontInfo fontInfo;
+    protected static final org.apache.batik.gvt.TextPainter PROXY_PAINTER;
+    static java.lang.Class class$org$apache$fop$render$ps$PSTextPainter;
+
+    public void <init>(org.apache.fop.render.ps.NativeTextHandler)
+    {
+        org.apache.fop.render.ps.PSTextPainter this;
+        org.apache.fop.render.ps.NativeTextHandler nativeTextHandler;
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r2;
+        org.apache.fop.fonts.FontInfo $r3;
+
+        this := @this: org.apache.fop.render.ps.PSTextPainter;
+        nativeTextHandler := @parameter0: org.apache.fop.render.ps.NativeTextHandler;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $r0 = <org.apache.fop.render.ps.PSTextPainter: java.lang.Class class$org$apache$fop$render$ps$PSTextPainter>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.render.ps.PSTextPainter: java.lang.Class class$(java.lang.String)>("org.apache.fop.render.ps.PSTextPainter");
+        <org.apache.fop.render.ps.PSTextPainter: java.lang.Class class$org$apache$fop$render$ps$PSTextPainter> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.render.ps.PSTextPainter: java.lang.Class class$org$apache$fop$render$ps$PSTextPainter>;
+
+     label1:
+        $r2 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        this.<org.apache.fop.render.ps.PSTextPainter: org.apache.commons.logging.Log log> = $r2;
+        this.<org.apache.fop.render.ps.PSTextPainter: org.apache.fop.render.ps.NativeTextHandler nativeTextHandler> = nativeTextHandler;
+        $r3 = virtualinvoke nativeTextHandler.<org.apache.fop.render.ps.NativeTextHandler: org.apache.fop.fonts.FontInfo getFontInfo()>();
+        this.<org.apache.fop.render.ps.PSTextPainter: org.apache.fop.fonts.FontInfo fontInfo> = $r3;
+        return;
+    }
+
+    public void paint(org.apache.batik.gvt.TextNode, java.awt.Graphics2D)
+    {
+        org.apache.fop.render.ps.PSTextPainter this;
+        org.apache.batik.gvt.TextNode node;
+        java.awt.Graphics2D g2d;
+        java.awt.geom.Point2D loc;
+        boolean $z0;
+        org.apache.batik.gvt.TextPainter $r0;
+        java.util.List $r1;
+
+        this := @this: org.apache.fop.render.ps.PSTextPainter;
+        node := @parameter0: org.apache.batik.gvt.TextNode;
+        g2d := @parameter1: java.awt.Graphics2D;
+        virtualinvoke node.<org.apache.batik.gvt.TextNode: java.lang.String getText()>();
+        loc = virtualinvoke node.<org.apache.batik.gvt.TextNode: java.awt.geom.Point2D getLocation()>();
+        $z0 = specialinvoke this.<org.apache.fop.render.ps.PSTextPainter: boolean hasUnsupportedAttributes(org.apache.batik.gvt.TextNode)>(node);
+        if $z0 == 0 goto label0;
+
+        $r0 = <org.apache.fop.render.ps.PSTextPainter: org.apache.batik.gvt.TextPainter PROXY_PAINTER>;
+        interfaceinvoke $r0.<org.apache.batik.gvt.TextPainter: void paint(org.apache.batik.gvt.TextNode,java.awt.Graphics2D)>(node, g2d);
+        goto label1;
+
+     label0:
+        $r1 = virtualinvoke node.<org.apache.batik.gvt.TextNode: java.util.List getTextRuns()>();
+        virtualinvoke this.<org.apache.fop.render.ps.PSTextPainter: void paintTextRuns(java.util.List,java.awt.Graphics2D,java.awt.geom.Point2D)>($r1, g2d, loc);
+
+     label1:
+        return;
+    }
+
+    private boolean hasUnsupportedAttributes(org.apache.batik.gvt.TextNode)
+    {
+        org.apache.fop.render.ps.PSTextPainter this;
+        org.apache.batik.gvt.TextNode node;
+        java.util.Iterator i;
+        org.apache.batik.gvt.renderer.StrokingTextPainter$TextRun run;
+        java.text.AttributedCharacterIterator aci;
+        boolean hasUnsupported, $z0;
+        java.util.List $r0;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.render.ps.PSTextPainter;
+        node := @parameter0: org.apache.batik.gvt.TextNode;
+        $r0 = virtualinvoke node.<org.apache.batik.gvt.TextNode: java.util.List getTextRuns()>();
+        i = interfaceinvoke $r0.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke i.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label2;
+
+        $r1 = interfaceinvoke i.<java.util.Iterator: java.lang.Object next()>();
+        run = (org.apache.batik.gvt.renderer.StrokingTextPainter$TextRun) $r1;
+        aci = virtualinvoke run.<org.apache.batik.gvt.renderer.StrokingTextPainter$TextRun: java.text.AttributedCharacterIterator getACI()>();
+        hasUnsupported = specialinvoke this.<org.apache.fop.render.ps.PSTextPainter: boolean hasUnsupportedAttributes(java.text.AttributedCharacterIterator)>(aci);
+        if hasUnsupported == 0 goto label1;
+
+        return 1;
+
+     label1:
+        goto label0;
+
+     label2:
+        return 0;
+    }
+
+    private boolean hasUnsupportedAttributes(java.text.AttributedCharacterIterator)
+    {
+        org.apache.fop.render.ps.PSTextPainter this;
+        java.text.AttributedCharacterIterator aci;
+        boolean hasunsupported, $z0;
+        java.lang.String text;
+        org.apache.fop.fonts.Font font;
+        org.apache.batik.gvt.text.TextPaintInfo tpi;
+        java.awt.Paint foreground, $r4;
+        java.awt.Color col;
+        java.lang.Object letSpace, wordSpace, lengthAdjust, writeMod, vertOr, rcDel, $r2;
+        org.apache.commons.logging.Log $r0;
+        org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute $r1;
+        java.awt.Stroke $r3;
+        java.awt.font.TextAttribute $r5;
+        int $i0;
+        java.lang.Integer $r6;
+
+        this := @this: org.apache.fop.render.ps.PSTextPainter;
+        aci := @parameter0: java.text.AttributedCharacterIterator;
+        hasunsupported = 0;
+        text = virtualinvoke this.<org.apache.fop.render.ps.PSTextPainter: java.lang.String getText(java.text.AttributedCharacterIterator)>(aci);
+        font = specialinvoke this.<org.apache.fop.render.ps.PSTextPainter: org.apache.fop.fonts.Font makeFont(java.text.AttributedCharacterIterator)>(aci);
+        $z0 = specialinvoke this.<org.apache.fop.render.ps.PSTextPainter: boolean hasUnsupportedGlyphs(java.lang.String,org.apache.fop.fonts.Font)>(text, font);
+        if $z0 == 0 goto label0;
+
+        $r0 = this.<org.apache.fop.render.ps.PSTextPainter: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>("-> Unsupported glyphs found");
+        hasunsupported = 1;
+
+     label0:
+        $r1 = <org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute: org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute PAINT_INFO>;
+        $r2 = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r1);
+        tpi = (org.apache.batik.gvt.text.TextPaintInfo) $r2;
+        if tpi == null goto label3;
+
+        $r3 = tpi.<org.apache.batik.gvt.text.TextPaintInfo: java.awt.Stroke strokeStroke>;
+        if $r3 == null goto label1;
+
+        $r4 = tpi.<org.apache.batik.gvt.text.TextPaintInfo: java.awt.Paint strokePaint>;
+        if $r4 != null goto label2;
+
+     label1:
+        $r3 = tpi.<org.apache.batik.gvt.text.TextPaintInfo: java.awt.Stroke strikethroughStroke>;
+        if $r3 != null goto label2;
+
+        $r3 = tpi.<org.apache.batik.gvt.text.TextPaintInfo: java.awt.Stroke underlineStroke>;
+        if $r3 != null goto label2;
+
+        $r3 = tpi.<org.apache.batik.gvt.text.TextPaintInfo: java.awt.Stroke overlineStroke>;
+        if $r3 == null goto label3;
+
+     label2:
+        $r0 = this.<org.apache.fop.render.ps.PSTextPainter: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>("-> under/overlines etc. found");
+        hasunsupported = 1;
+
+     label3:
+        $r5 = <java.awt.font.TextAttribute: java.awt.font.TextAttribute FOREGROUND>;
+        $r2 = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r5);
+        foreground = (java.awt.Paint) $r2;
+        $z0 = foreground instanceof java.awt.Color;
+        if $z0 == 0 goto label4;
+
+        col = (java.awt.Color) foreground;
+        $i0 = virtualinvoke col.<java.awt.Color: int getAlpha()>();
+        if $i0 == 255 goto label4;
+
+        $r0 = this.<org.apache.fop.render.ps.PSTextPainter: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>("-> transparency found");
+        hasunsupported = 1;
+
+     label4:
+        $r1 = <org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute: org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute LETTER_SPACING>;
+        letSpace = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r1);
+        if letSpace == null goto label5;
+
+        $r0 = this.<org.apache.fop.render.ps.PSTextPainter: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>("-> letter spacing found");
+        hasunsupported = 1;
+
+     label5:
+        $r1 = <org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute: org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute WORD_SPACING>;
+        wordSpace = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r1);
+        if wordSpace == null goto label6;
+
+        $r0 = this.<org.apache.fop.render.ps.PSTextPainter: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>("-> word spacing found");
+        hasunsupported = 1;
+
+     label6:
+        $r1 = <org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute: org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute LENGTH_ADJUST>;
+        lengthAdjust = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r1);
+        if lengthAdjust == null goto label7;
+
+        $r0 = this.<org.apache.fop.render.ps.PSTextPainter: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>("-> length adjustments found");
+        hasunsupported = 1;
+
+     label7:
+        $r1 = <org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute: org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute WRITING_MODE>;
+        writeMod = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r1);
+        if writeMod == null goto label8;
+
+        $r6 = <org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute: java.lang.Integer WRITING_MODE_LTR>;
+        $z0 = virtualinvoke $r6.<java.lang.Integer: boolean equals(java.lang.Object)>(writeMod);
+        if $z0 != 0 goto label8;
+
+        $r0 = this.<org.apache.fop.render.ps.PSTextPainter: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>("-> Unsupported writing modes found");
+        hasunsupported = 1;
+
+     label8:
+        $r1 = <org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute: org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute VERTICAL_ORIENTATION>;
+        vertOr = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r1);
+        $r6 = <org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute: java.lang.Integer ORIENTATION_ANGLE>;
+        $z0 = virtualinvoke $r6.<java.lang.Integer: boolean equals(java.lang.Object)>(vertOr);
+        if $z0 == 0 goto label9;
+
+        $r0 = this.<org.apache.fop.render.ps.PSTextPainter: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>("-> vertical orientation found");
+        hasunsupported = 1;
+
+     label9:
+        $r1 = <org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute: org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute TEXT_COMPOUND_DELIMITER>;
+        rcDel = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r1);
+        $z0 = rcDel instanceof org.apache.batik.dom.svg.SVGOMTextElement;
+        if $z0 != 0 goto label10;
+
+        $r0 = this.<org.apache.fop.render.ps.PSTextPainter: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>("-> spans found");
+        hasunsupported = 1;
+
+     label10:
+        if hasunsupported == 0 goto label11;
+
+        $r0 = this.<org.apache.fop.render.ps.PSTextPainter: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void trace(java.lang.Object)>("Unsupported attributes found in ACI, using StrokingTextPainter");
+
+     label11:
+        return hasunsupported;
+    }
+
+    protected void paintTextRuns(java.util.List, java.awt.Graphics2D, java.awt.geom.Point2D)
+    {
+        org.apache.fop.render.ps.PSTextPainter this;
+        java.util.List textRuns;
+        java.awt.Graphics2D g2d;
+        java.awt.geom.Point2D loc, currentloc;
+        java.util.Iterator i;
+        org.apache.batik.gvt.renderer.StrokingTextPainter$TextRun run;
+        boolean $z0;
+        java.lang.Object $r0;
+
+        this := @this: org.apache.fop.render.ps.PSTextPainter;
+        textRuns := @parameter0: java.util.List;
+        g2d := @parameter1: java.awt.Graphics2D;
+        loc := @parameter2: java.awt.geom.Point2D;
+        currentloc = loc;
+        i = interfaceinvoke textRuns.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke i.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r0 = interfaceinvoke i.<java.util.Iterator: java.lang.Object next()>();
+        run = (org.apache.batik.gvt.renderer.StrokingTextPainter$TextRun) $r0;
+        currentloc = virtualinvoke this.<org.apache.fop.render.ps.PSTextPainter: java.awt.geom.Point2D paintTextRun(org.apache.batik.gvt.renderer.StrokingTextPainter$TextRun,java.awt.Graphics2D,java.awt.geom.Point2D)>(run, g2d, currentloc);
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    protected java.awt.geom.Point2D paintTextRun(org.apache.batik.gvt.renderer.StrokingTextPainter$TextRun, java.awt.Graphics2D, java.awt.geom.Point2D)
+    {
+        org.apache.fop.render.ps.PSTextPainter this;
+        org.apache.batik.gvt.renderer.StrokingTextPainter$TextRun run;
+        java.awt.Graphics2D g2d;
+        java.awt.geom.Point2D loc, $r0;
+        java.text.AttributedCharacterIterator aci;
+
+        this := @this: org.apache.fop.render.ps.PSTextPainter;
+        run := @parameter0: org.apache.batik.gvt.renderer.StrokingTextPainter$TextRun;
+        g2d := @parameter1: java.awt.Graphics2D;
+        loc := @parameter2: java.awt.geom.Point2D;
+        aci = virtualinvoke run.<org.apache.batik.gvt.renderer.StrokingTextPainter$TextRun: java.text.AttributedCharacterIterator getACI()>();
+        $r0 = virtualinvoke this.<org.apache.fop.render.ps.PSTextPainter: java.awt.geom.Point2D paintACI(java.text.AttributedCharacterIterator,java.awt.Graphics2D,java.awt.geom.Point2D)>(aci, g2d, loc);
+        return $r0;
+    }
+
+    protected java.lang.String getText(java.text.AttributedCharacterIterator)
+    {
+        org.apache.fop.render.ps.PSTextPainter this;
+        java.text.AttributedCharacterIterator aci;
+        java.lang.StringBuffer $r0, sb;
+        char c;
+        int $i0, $i1;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.render.ps.PSTextPainter;
+        aci := @parameter0: java.text.AttributedCharacterIterator;
+        $r0 = new java.lang.StringBuffer;
+        $i0 = interfaceinvoke aci.<java.text.AttributedCharacterIterator: int getEndIndex()>();
+        $i1 = interfaceinvoke aci.<java.text.AttributedCharacterIterator: int getBeginIndex()>();
+        $i0 = $i0 - $i1;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>(int)>($i0);
+        sb = $r0;
+        c = interfaceinvoke aci.<java.text.AttributedCharacterIterator: char first()>();
+
+     label0:
+        if c == 65535 goto label1;
+
+        virtualinvoke sb.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>(c);
+        c = interfaceinvoke aci.<java.text.AttributedCharacterIterator: char next()>();
+        goto label0;
+
+     label1:
+        $r1 = virtualinvoke sb.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r1;
+    }
+
+    protected java.awt.geom.Point2D paintACI(java.text.AttributedCharacterIterator, java.awt.Graphics2D, java.awt.geom.Point2D)
+    {
+        org.apache.fop.render.ps.PSTextPainter this;
+        java.text.AttributedCharacterIterator aci;
+        java.awt.Graphics2D g2d;
+        java.awt.geom.Point2D loc;
+        org.apache.batik.gvt.text.TextPaintInfo tpi;
+        org.apache.batik.gvt.TextNode$Anchor anchor;
+        java.util.List gvtFonts;
+        java.awt.Paint foreground, strokePaint;
+        java.awt.Stroke stroke;
+        java.lang.Float fontSize, posture, taWeight;
+        java.awt.Color col;
+        org.apache.fop.fonts.Font font;
+        java.awt.Font awtFont;
+        java.lang.String txt;
+        float advance, tx, $f0;
+        org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute $r0;
+        java.lang.Object $r1;
+        java.awt.font.TextAttribute $r2;
+        boolean $z0;
+        int $i1;
+        double $d0, $d1;
+
+        this := @this: org.apache.fop.render.ps.PSTextPainter;
+        aci := @parameter0: java.text.AttributedCharacterIterator;
+        g2d := @parameter1: java.awt.Graphics2D;
+        loc := @parameter2: java.awt.geom.Point2D;
+        interfaceinvoke aci.<java.text.AttributedCharacterIterator: char first()>();
+        specialinvoke this.<org.apache.fop.render.ps.PSTextPainter: void updateLocationFromACI(java.text.AttributedCharacterIterator,java.awt.geom.Point2D)>(aci, loc);
+        $r0 = <org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute: org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute PAINT_INFO>;
+        $r1 = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r0);
+        tpi = (org.apache.batik.gvt.text.TextPaintInfo) $r1;
+        if tpi != null goto label0;
+
+        return loc;
+
+     label0:
+        $r0 = <org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute: org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute ANCHOR_TYPE>;
+        $r1 = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r0);
+        anchor = (org.apache.batik.gvt.TextNode$Anchor) $r1;
+        $r0 = <org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute: org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute GVT_FONT_FAMILIES>;
+        $r1 = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r0);
+        gvtFonts = (java.util.List) $r1;
+        foreground = tpi.<org.apache.batik.gvt.text.TextPaintInfo: java.awt.Paint fillPaint>;
+        strokePaint = tpi.<org.apache.batik.gvt.text.TextPaintInfo: java.awt.Paint strokePaint>;
+        stroke = tpi.<org.apache.batik.gvt.text.TextPaintInfo: java.awt.Stroke strokeStroke>;
+        $r2 = <java.awt.font.TextAttribute: java.awt.font.TextAttribute SIZE>;
+        $r1 = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r2);
+        fontSize = (java.lang.Float) $r1;
+        if fontSize != null goto label1;
+
+        return loc;
+
+     label1:
+        $r2 = <java.awt.font.TextAttribute: java.awt.font.TextAttribute POSTURE>;
+        $r1 = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r2);
+        posture = (java.lang.Float) $r1;
+        $r2 = <java.awt.font.TextAttribute: java.awt.font.TextAttribute WEIGHT>;
+        $r1 = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r2);
+        taWeight = (java.lang.Float) $r1;
+        $z0 = foreground instanceof java.awt.Color;
+        if $z0 == 0 goto label2;
+
+        col = (java.awt.Color) foreground;
+        virtualinvoke g2d.<java.awt.Graphics2D: void setColor(java.awt.Color)>(col);
+
+     label2:
+        virtualinvoke g2d.<java.awt.Graphics2D: void setPaint(java.awt.Paint)>(foreground);
+        virtualinvoke g2d.<java.awt.Graphics2D: void setStroke(java.awt.Stroke)>(stroke);
+        font = specialinvoke this.<org.apache.fop.render.ps.PSTextPainter: org.apache.fop.fonts.Font makeFont(java.text.AttributedCharacterIterator)>(aci);
+        awtFont = specialinvoke this.<org.apache.fop.render.ps.PSTextPainter: java.awt.Font makeAWTFont(java.text.AttributedCharacterIterator,org.apache.fop.fonts.Font)>(aci, font);
+        virtualinvoke g2d.<java.awt.Graphics2D: void setFont(java.awt.Font)>(awtFont);
+        txt = virtualinvoke this.<org.apache.fop.render.ps.PSTextPainter: java.lang.String getText(java.text.AttributedCharacterIterator)>(aci);
+        advance = specialinvoke this.<org.apache.fop.render.ps.PSTextPainter: float getStringWidth(java.lang.String,org.apache.fop.fonts.Font)>(txt, font);
+        tx = 0.0F;
+        if anchor == null goto label5;
+
+        $i1 = virtualinvoke anchor.<org.apache.batik.gvt.TextNode$Anchor: int getType()>();
+        lookupswitch($i1)
+        {
+            case 1: goto label3;
+            case 2: goto label4;
+            default: goto label5;
+        };
+
+     label3:
+        $f0 = neg advance;
+        tx = $f0 / 2.0F;
+        goto label5;
+
+     label4:
+        tx = neg advance;
+        goto label5;
+
+     label5:
+        virtualinvoke this.<org.apache.fop.render.ps.PSTextPainter: void drawPrimitiveString(java.awt.Graphics2D,java.awt.geom.Point2D,org.apache.fop.fonts.Font,java.lang.String,float)>(g2d, loc, font, txt, tx);
+        $d0 = virtualinvoke loc.<java.awt.geom.Point2D: double getX()>();
+        $d1 = (double) advance;
+        $d0 = $d0 + $d1;
+        $d1 = virtualinvoke loc.<java.awt.geom.Point2D: double getY()>();
+        virtualinvoke loc.<java.awt.geom.Point2D: void setLocation(double,double)>($d0, $d1);
+        return loc;
+    }
+
+    protected void drawPrimitiveString(java.awt.Graphics2D, java.awt.geom.Point2D, org.apache.fop.fonts.Font, java.lang.String, float)
+    {
+        org.apache.fop.render.ps.PSTextPainter this;
+        java.awt.Graphics2D g2d;
+        java.awt.geom.Point2D loc;
+        org.apache.fop.fonts.Font font;
+        java.lang.String txt;
+        float tx, $f0, $f1;
+        java.io.IOException ioe, $r1;
+        java.lang.Throwable l7, $r3;
+        org.apache.fop.render.ps.NativeTextHandler $r0;
+        double $d0, $d1, $d2;
+        boolean $z0;
+        org.apache.xmlgraphics.java2d.ps.PSGraphics2D $r2;
+
+        this := @this: org.apache.fop.render.ps.PSTextPainter;
+        g2d := @parameter0: java.awt.Graphics2D;
+        loc := @parameter1: java.awt.geom.Point2D;
+        font := @parameter2: org.apache.fop.fonts.Font;
+        txt := @parameter3: java.lang.String;
+        tx := @parameter4: float;
+        $r0 = this.<org.apache.fop.render.ps.PSTextPainter: org.apache.fop.render.ps.NativeTextHandler nativeTextHandler>;
+        virtualinvoke $r0.<org.apache.fop.render.ps.NativeTextHandler: void setOverrideFont(org.apache.fop.fonts.Font)>(font);
+
+     label0:
+        $r0 = this.<org.apache.fop.render.ps.PSTextPainter: org.apache.fop.render.ps.NativeTextHandler nativeTextHandler>;
+        $d0 = virtualinvoke loc.<java.awt.geom.Point2D: double getX()>();
+        $d1 = (double) tx;
+        $d0 = $d0 + $d1;
+        $f0 = (float) $d0;
+        $d2 = virtualinvoke loc.<java.awt.geom.Point2D: double getY()>();
+        $f1 = (float) $d2;
+        virtualinvoke $r0.<org.apache.fop.render.ps.NativeTextHandler: void drawString(java.lang.String,float,float)>(txt, $f0, $f1);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r1 := @caughtexception;
+        ioe = $r1;
+        $z0 = g2d instanceof org.apache.xmlgraphics.java2d.ps.PSGraphics2D;
+        if $z0 == 0 goto label3;
+
+        $r2 = (org.apache.xmlgraphics.java2d.ps.PSGraphics2D) g2d;
+        virtualinvoke $r2.<org.apache.xmlgraphics.java2d.ps.PSGraphics2D: void handleIOException(java.io.IOException)>(ioe);
+
+     label3:
+        $r0 = this.<org.apache.fop.render.ps.PSTextPainter: org.apache.fop.render.ps.NativeTextHandler nativeTextHandler>;
+        virtualinvoke $r0.<org.apache.fop.render.ps.NativeTextHandler: void setOverrideFont(org.apache.fop.fonts.Font)>(null);
+        goto label7;
+
+     label4:
+        $r3 := @caughtexception;
+
+     label5:
+        l7 = $r3;
+
+     label6:
+        $r0 = this.<org.apache.fop.render.ps.PSTextPainter: org.apache.fop.render.ps.NativeTextHandler nativeTextHandler>;
+        virtualinvoke $r0.<org.apache.fop.render.ps.NativeTextHandler: void setOverrideFont(org.apache.fop.fonts.Font)>(null);
+        throw l7;
+
+     label7:
+        return;
+
+        catch java.io.IOException from label0 to label1 with label2;
+        catch java.lang.Throwable from label0 to label3 with label4;
+        catch java.lang.Throwable from label5 to label6 with label4;
+    }
+
+    private void updateLocationFromACI(java.text.AttributedCharacterIterator, java.awt.geom.Point2D)
+    {
+        org.apache.fop.render.ps.PSTextPainter this;
+        java.text.AttributedCharacterIterator aci;
+        java.awt.geom.Point2D loc;
+        org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute $r0;
+        java.lang.Float xpos, ypos, dxpos, dypos;
+        java.lang.Object $r1;
+        double $d0, $d1, $d2;
+
+        this := @this: org.apache.fop.render.ps.PSTextPainter;
+        aci := @parameter0: java.text.AttributedCharacterIterator;
+        loc := @parameter1: java.awt.geom.Point2D;
+        $r0 = <org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute: org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute X>;
+        $r1 = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r0);
+        xpos = (java.lang.Float) $r1;
+        $r0 = <org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute: org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute Y>;
+        $r1 = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r0);
+        ypos = (java.lang.Float) $r1;
+        $r0 = <org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute: org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute DX>;
+        $r1 = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r0);
+        dxpos = (java.lang.Float) $r1;
+        $r0 = <org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute: org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute DY>;
+        $r1 = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r0);
+        dypos = (java.lang.Float) $r1;
+        if xpos == null goto label0;
+
+        $d0 = virtualinvoke xpos.<java.lang.Float: double doubleValue()>();
+        $d1 = virtualinvoke loc.<java.awt.geom.Point2D: double getY()>();
+        virtualinvoke loc.<java.awt.geom.Point2D: void setLocation(double,double)>($d0, $d1);
+
+     label0:
+        if ypos == null goto label1;
+
+        $d0 = virtualinvoke loc.<java.awt.geom.Point2D: double getX()>();
+        $d1 = virtualinvoke ypos.<java.lang.Float: double doubleValue()>();
+        virtualinvoke loc.<java.awt.geom.Point2D: void setLocation(double,double)>($d0, $d1);
+
+     label1:
+        if dxpos == null goto label2;
+
+        $d0 = virtualinvoke loc.<java.awt.geom.Point2D: double getX()>();
+        $d1 = virtualinvoke dxpos.<java.lang.Float: double doubleValue()>();
+        $d0 = $d0 + $d1;
+        $d1 = virtualinvoke loc.<java.awt.geom.Point2D: double getY()>();
+        virtualinvoke loc.<java.awt.geom.Point2D: void setLocation(double,double)>($d0, $d1);
+
+     label2:
+        if dypos == null goto label3;
+
+        $d0 = virtualinvoke loc.<java.awt.geom.Point2D: double getX()>();
+        $d1 = virtualinvoke loc.<java.awt.geom.Point2D: double getY()>();
+        $d2 = virtualinvoke dypos.<java.lang.Float: double doubleValue()>();
+        $d1 = $d1 + $d2;
+        virtualinvoke loc.<java.awt.geom.Point2D: void setLocation(double,double)>($d0, $d1);
+
+     label3:
+        return;
+    }
+
+    private java.lang.String getStyle(java.text.AttributedCharacterIterator)
+    {
+        org.apache.fop.render.ps.PSTextPainter this;
+        java.text.AttributedCharacterIterator aci;
+        java.awt.font.TextAttribute $r0;
+        java.lang.Float posture;
+        java.lang.Object $r1;
+        float $f0;
+        double $d0;
+        byte $b0;
+        java.lang.String $r2;
+
+        this := @this: org.apache.fop.render.ps.PSTextPainter;
+        aci := @parameter0: java.text.AttributedCharacterIterator;
+        $r0 = <java.awt.font.TextAttribute: java.awt.font.TextAttribute POSTURE>;
+        $r1 = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r0);
+        posture = (java.lang.Float) $r1;
+        if posture == null goto label0;
+
+        $f0 = virtualinvoke posture.<java.lang.Float: float floatValue()>();
+        $d0 = (double) $f0;
+        $b0 = $d0 cmpl 0.0;
+        if $b0 <= 0 goto label0;
+
+        $r2 = "italic";
+        goto label1;
+
+     label0:
+        $r2 = "normal";
+
+     label1:
+        return $r2;
+    }
+
+    private int getWeight(java.text.AttributedCharacterIterator)
+    {
+        org.apache.fop.render.ps.PSTextPainter this;
+        java.text.AttributedCharacterIterator aci;
+        java.awt.font.TextAttribute $r0;
+        java.lang.Float taWeight;
+        java.lang.Object $r1;
+        float $f0;
+        double $d0;
+        byte $b0;
+        short $s1;
+
+        this := @this: org.apache.fop.render.ps.PSTextPainter;
+        aci := @parameter0: java.text.AttributedCharacterIterator;
+        $r0 = <java.awt.font.TextAttribute: java.awt.font.TextAttribute WEIGHT>;
+        $r1 = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r0);
+        taWeight = (java.lang.Float) $r1;
+        if taWeight == null goto label0;
+
+        $f0 = virtualinvoke taWeight.<java.lang.Float: float floatValue()>();
+        $d0 = (double) $f0;
+        $b0 = $d0 cmpl 1.0;
+        if $b0 <= 0 goto label0;
+
+        $s1 = 700;
+        goto label1;
+
+     label0:
+        $s1 = 400;
+
+     label1:
+        return $s1;
+    }
+
+    private org.apache.fop.fonts.Font makeFont(java.text.AttributedCharacterIterator)
+    {
+        org.apache.fop.render.ps.PSTextPainter this;
+        java.text.AttributedCharacterIterator aci;
+        java.awt.font.TextAttribute $r0;
+        java.lang.Float fontSize, $r2;
+        java.lang.String style, fontFamily;
+        int weight, fsize;
+        null_type fontFamily;
+        java.util.List gvtFonts;
+        java.util.Iterator i;
+        org.apache.batik.gvt.font.GVTFontFamily fam;
+        org.apache.fop.fonts.FontTriplet triplet;
+        java.lang.Object $r1;
+        org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute $r3;
+        boolean $z0;
+        org.apache.fop.fonts.FontInfo $r4;
+        float $f0;
+        org.apache.fop.fonts.Font $r5;
+
+        this := @this: org.apache.fop.render.ps.PSTextPainter;
+        aci := @parameter0: java.text.AttributedCharacterIterator;
+        $r0 = <java.awt.font.TextAttribute: java.awt.font.TextAttribute SIZE>;
+        $r1 = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r0);
+        fontSize = (java.lang.Float) $r1;
+        if fontSize != null goto label0;
+
+        $r2 = new java.lang.Float;
+        specialinvoke $r2.<java.lang.Float: void <init>(float)>(10.0F);
+        fontSize = $r2;
+
+     label0:
+        style = specialinvoke this.<org.apache.fop.render.ps.PSTextPainter: java.lang.String getStyle(java.text.AttributedCharacterIterator)>(aci);
+        weight = specialinvoke this.<org.apache.fop.render.ps.PSTextPainter: int getWeight(java.text.AttributedCharacterIterator)>(aci);
+        fontFamily = null;
+        $r3 = <org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute: org.apache.batik.gvt.text.GVTAttributedCharacterIterator$TextAttribute GVT_FONT_FAMILIES>;
+        $r1 = interfaceinvoke aci.<java.text.AttributedCharacterIterator: java.lang.Object getAttribute(java.text.AttributedCharacterIterator$Attribute)>($r3);
+        gvtFonts = (java.util.List) $r1;
+        if gvtFonts == null goto label3;
+
+        i = interfaceinvoke gvtFonts.<java.util.List: java.util.Iterator iterator()>();
+
+     label1:
+        $z0 = interfaceinvoke i.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label3;
+
+        $r1 = interfaceinvoke i.<java.util.Iterator: java.lang.Object next()>();
+        fam = (org.apache.batik.gvt.font.GVTFontFamily) $r1;
+        fontFamily = interfaceinvoke fam.<org.apache.batik.gvt.font.GVTFontFamily: java.lang.String getFamilyName()>();
+        $r4 = this.<org.apache.fop.render.ps.PSTextPainter: org.apache.fop.fonts.FontInfo fontInfo>;
+        $z0 = virtualinvoke $r4.<org.apache.fop.fonts.FontInfo: boolean hasFont(java.lang.String,java.lang.String,int)>(fontFamily, style, weight);
+        if $z0 == 0 goto label2;
+
+        $r4 = this.<org.apache.fop.render.ps.PSTextPainter: org.apache.fop.fonts.FontInfo fontInfo>;
+        triplet = virtualinvoke $r4.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet fontLookup(java.lang.String,java.lang.String,int)>(fontFamily, style, weight);
+        $f0 = virtualinvoke fontSize.<java.lang.Float: float floatValue()>();
+        $f0 = $f0 * 1000.0F;
+        fsize = (int) $f0;
+        $r4 = this.<org.apache.fop.render.ps.PSTextPainter: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r5 = virtualinvoke $r4.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.Font getFontInstance(org.apache.fop.fonts.FontTriplet,int)>(triplet, fsize);
+        return $r5;
+
+     label2:
+        goto label1;
+
+     label3:
+        $r4 = this.<org.apache.fop.render.ps.PSTextPainter: org.apache.fop.fonts.FontInfo fontInfo>;
+        triplet = virtualinvoke $r4.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.FontTriplet fontLookup(java.lang.String,java.lang.String,int)>("any", style, 400);
+        $f0 = virtualinvoke fontSize.<java.lang.Float: float floatValue()>();
+        $f0 = $f0 * 1000.0F;
+        fsize = (int) $f0;
+        $r4 = this.<org.apache.fop.render.ps.PSTextPainter: org.apache.fop.fonts.FontInfo fontInfo>;
+        $r5 = virtualinvoke $r4.<org.apache.fop.fonts.FontInfo: org.apache.fop.fonts.Font getFontInstance(org.apache.fop.fonts.FontTriplet,int)>(triplet, fsize);
+        return $r5;
+    }
+
+    private java.awt.Font makeAWTFont(java.text.AttributedCharacterIterator, org.apache.fop.fonts.Font)
+    {
+        org.apache.fop.render.ps.PSTextPainter this;
+        java.text.AttributedCharacterIterator aci;
+        org.apache.fop.fonts.Font font;
+        java.lang.String style, $r0, $r2;
+        int weight, $i0;
+        byte fStyle;
+        boolean $z0;
+        java.awt.Font $r1;
+
+        this := @this: org.apache.fop.render.ps.PSTextPainter;
+        aci := @parameter0: java.text.AttributedCharacterIterator;
+        font := @parameter1: org.apache.fop.fonts.Font;
+        style = specialinvoke this.<org.apache.fop.render.ps.PSTextPainter: java.lang.String getStyle(java.text.AttributedCharacterIterator)>(aci);
+        weight = specialinvoke this.<org.apache.fop.render.ps.PSTextPainter: int getWeight(java.text.AttributedCharacterIterator)>(aci);
+        fStyle = 0;
+        if weight != 700 goto label0;
+
+        fStyle = fStyle | 1;
+
+     label0:
+        $r0 = "italic";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(style);
+        if $z0 == 0 goto label1;
+
+        fStyle = fStyle | 2;
+
+     label1:
+        $r1 = new java.awt.Font;
+        $r2 = virtualinvoke font.<org.apache.fop.fonts.Font: java.lang.String getFontName()>();
+        $i0 = virtualinvoke font.<org.apache.fop.fonts.Font: int getFontSize()>();
+        $i0 = $i0 / 1000;
+        specialinvoke $r1.<java.awt.Font: void <init>(java.lang.String,int,int)>($r2, fStyle, $i0);
+        return $r1;
+    }
+
+    private float getStringWidth(java.lang.String, org.apache.fop.fonts.Font)
+    {
+        org.apache.fop.render.ps.PSTextPainter this;
+        java.lang.String str;
+        org.apache.fop.fonts.Font font;
+        float wordWidth, whitespaceWidth, charWidth, $f0;
+        int i, $i1, $i2;
+        char c, $c0;
+        byte $b3;
+
+        this := @this: org.apache.fop.render.ps.PSTextPainter;
+        str := @parameter0: java.lang.String;
+        font := @parameter1: org.apache.fop.fonts.Font;
+        wordWidth = 0.0F;
+        $c0 = virtualinvoke font.<org.apache.fop.fonts.Font: char mapChar(char)>(32);
+        $i1 = virtualinvoke font.<org.apache.fop.fonts.Font: int getWidth(int)>($c0);
+        whitespaceWidth = (float) $i1;
+        i = 0;
+
+     label0:
+        $i2 = virtualinvoke str.<java.lang.String: int length()>();
+        if i >= $i2 goto label3;
+
+        c = virtualinvoke str.<java.lang.String: char charAt(int)>(i);
+        if c == 32 goto label1;
+
+        if c == 10 goto label1;
+
+        if c == 13 goto label1;
+
+        if c == 9 goto label1;
+
+        $c0 = virtualinvoke font.<org.apache.fop.fonts.Font: char mapChar(char)>(c);
+        $i1 = virtualinvoke font.<org.apache.fop.fonts.Font: int getWidth(int)>($c0);
+        charWidth = (float) $i1;
+        $b3 = charWidth cmpg 0.0F;
+        if $b3 > 0 goto label2;
+
+        charWidth = whitespaceWidth;
+        goto label2;
+
+     label1:
+        charWidth = whitespaceWidth;
+
+     label2:
+        wordWidth = wordWidth + charWidth;
+        i = i + 1;
+        goto label0;
+
+     label3:
+        $f0 = wordWidth / 1000.0F;
+        return $f0;
+    }
+
+    private boolean hasUnsupportedGlyphs(java.lang.String, org.apache.fop.fonts.Font)
+    {
+        org.apache.fop.render.ps.PSTextPainter this;
+        java.lang.String str;
+        org.apache.fop.fonts.Font font;
+        int i, $i0;
+        char c;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.ps.PSTextPainter;
+        str := @parameter0: java.lang.String;
+        font := @parameter1: org.apache.fop.fonts.Font;
+        i = 0;
+
+     label0:
+        $i0 = virtualinvoke str.<java.lang.String: int length()>();
+        if i >= $i0 goto label2;
+
+        c = virtualinvoke str.<java.lang.String: char charAt(int)>(i);
+        if c == 32 goto label1;
+
+        if c == 10 goto label1;
+
+        if c == 13 goto label1;
+
+        if c == 9 goto label1;
+
+        $z0 = virtualinvoke font.<org.apache.fop.fonts.Font: boolean hasChar(char)>(c);
+        if $z0 != 0 goto label1;
+
+        return 1;
+
+     label1:
+        i = i + 1;
+        goto label0;
+
+     label2:
+        return 0;
+    }
+
+    public java.awt.Shape getOutline(org.apache.batik.gvt.TextNode)
+    {
+        org.apache.fop.render.ps.PSTextPainter this;
+        org.apache.batik.gvt.TextNode node;
+        org.apache.batik.gvt.TextPainter $r0;
+        java.awt.Shape $r1;
+
+        this := @this: org.apache.fop.render.ps.PSTextPainter;
+        node := @parameter0: org.apache.batik.gvt.TextNode;
+        $r0 = <org.apache.fop.render.ps.PSTextPainter: org.apache.batik.gvt.TextPainter PROXY_PAINTER>;
+        $r1 = interfaceinvoke $r0.<org.apache.batik.gvt.TextPainter: java.awt.Shape getOutline(org.apache.batik.gvt.TextNode)>(node);
+        return $r1;
+    }
+
+    public java.awt.geom.Rectangle2D getBounds2D(org.apache.batik.gvt.TextNode)
+    {
+        org.apache.fop.render.ps.PSTextPainter this;
+        org.apache.batik.gvt.TextNode node;
+        org.apache.batik.gvt.TextPainter $r0;
+        java.awt.geom.Rectangle2D $r1;
+
+        this := @this: org.apache.fop.render.ps.PSTextPainter;
+        node := @parameter0: org.apache.batik.gvt.TextNode;
+        $r0 = <org.apache.fop.render.ps.PSTextPainter: org.apache.batik.gvt.TextPainter PROXY_PAINTER>;
+        $r1 = interfaceinvoke $r0.<org.apache.batik.gvt.TextPainter: java.awt.geom.Rectangle2D getBounds2D(org.apache.batik.gvt.TextNode)>(node);
+        return $r1;
+    }
+
+    public java.awt.geom.Rectangle2D getGeometryBounds(org.apache.batik.gvt.TextNode)
+    {
+        org.apache.fop.render.ps.PSTextPainter this;
+        org.apache.batik.gvt.TextNode node;
+        org.apache.batik.gvt.TextPainter $r0;
+        java.awt.geom.Rectangle2D $r1;
+
+        this := @this: org.apache.fop.render.ps.PSTextPainter;
+        node := @parameter0: org.apache.batik.gvt.TextNode;
+        $r0 = <org.apache.fop.render.ps.PSTextPainter: org.apache.batik.gvt.TextPainter PROXY_PAINTER>;
+        $r1 = interfaceinvoke $r0.<org.apache.batik.gvt.TextPainter: java.awt.geom.Rectangle2D getGeometryBounds(org.apache.batik.gvt.TextNode)>(node);
+        return $r1;
+    }
+
+    public org.apache.batik.gvt.text.Mark getMark(org.apache.batik.gvt.TextNode, int, boolean)
+    {
+        org.apache.fop.render.ps.PSTextPainter this;
+        org.apache.batik.gvt.TextNode node;
+        int pos;
+        boolean all;
+
+        this := @this: org.apache.fop.render.ps.PSTextPainter;
+        node := @parameter0: org.apache.batik.gvt.TextNode;
+        pos := @parameter1: int;
+        all := @parameter2: boolean;
+        return null;
+    }
+
+    public org.apache.batik.gvt.text.Mark selectAt(double, double, org.apache.batik.gvt.TextNode)
+    {
+        org.apache.fop.render.ps.PSTextPainter this;
+        double x, y;
+        org.apache.batik.gvt.TextNode node;
+
+        this := @this: org.apache.fop.render.ps.PSTextPainter;
+        x := @parameter0: double;
+        y := @parameter1: double;
+        node := @parameter2: org.apache.batik.gvt.TextNode;
+        return null;
+    }
+
+    public org.apache.batik.gvt.text.Mark selectTo(double, double, org.apache.batik.gvt.text.Mark)
+    {
+        org.apache.fop.render.ps.PSTextPainter this;
+        double x, y;
+        org.apache.batik.gvt.text.Mark beginMark;
+
+        this := @this: org.apache.fop.render.ps.PSTextPainter;
+        x := @parameter0: double;
+        y := @parameter1: double;
+        beginMark := @parameter2: org.apache.batik.gvt.text.Mark;
+        return null;
+    }
+
+    public org.apache.batik.gvt.text.Mark selectFirst(org.apache.batik.gvt.TextNode)
+    {
+        org.apache.fop.render.ps.PSTextPainter this;
+        org.apache.batik.gvt.TextNode node;
+
+        this := @this: org.apache.fop.render.ps.PSTextPainter;
+        node := @parameter0: org.apache.batik.gvt.TextNode;
+        return null;
+    }
+
+    public org.apache.batik.gvt.text.Mark selectLast(org.apache.batik.gvt.TextNode)
+    {
+        org.apache.fop.render.ps.PSTextPainter this;
+        org.apache.batik.gvt.TextNode node;
+
+        this := @this: org.apache.fop.render.ps.PSTextPainter;
+        node := @parameter0: org.apache.batik.gvt.TextNode;
+        return null;
+    }
+
+    public int[] getSelected(org.apache.batik.gvt.text.Mark, org.apache.batik.gvt.text.Mark)
+    {
+        org.apache.fop.render.ps.PSTextPainter this;
+        org.apache.batik.gvt.text.Mark start, finish;
+
+        this := @this: org.apache.fop.render.ps.PSTextPainter;
+        start := @parameter0: org.apache.batik.gvt.text.Mark;
+        finish := @parameter1: org.apache.batik.gvt.text.Mark;
+        return null;
+    }
+
+    public java.awt.Shape getHighlightShape(org.apache.batik.gvt.text.Mark, org.apache.batik.gvt.text.Mark)
+    {
+        org.apache.fop.render.ps.PSTextPainter this;
+        org.apache.batik.gvt.text.Mark beginMark, endMark;
+
+        this := @this: org.apache.fop.render.ps.PSTextPainter;
+        beginMark := @parameter0: org.apache.batik.gvt.text.Mark;
+        endMark := @parameter1: org.apache.batik.gvt.text.Mark;
+        return null;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        org.apache.batik.gvt.TextPainter $r0;
+
+        $r0 = staticinvoke <org.apache.batik.gvt.renderer.StrokingTextPainter: org.apache.batik.gvt.TextPainter getInstance()>();
+        <org.apache.fop.render.ps.PSTextPainter: org.apache.batik.gvt.TextPainter PROXY_PAINTER> = $r0;
+        return;
+    }
+}

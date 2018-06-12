@@ -1,0 +1,283 @@
+public class org.apache.fop.area.LineArea extends org.apache.fop.area.Area
+{
+    private org.apache.fop.area.LineArea$LineAdjustingInfo adjustingInfo;
+    private java.util.List inlineAreas;
+
+    public void <init>()
+    {
+        org.apache.fop.area.LineArea this;
+        java.util.ArrayList $r0;
+
+        this := @this: org.apache.fop.area.LineArea;
+        specialinvoke this.<org.apache.fop.area.Area: void <init>()>();
+        this.<org.apache.fop.area.LineArea: org.apache.fop.area.LineArea$LineAdjustingInfo adjustingInfo> = null;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.area.LineArea: java.util.List inlineAreas> = $r0;
+        return;
+    }
+
+    public void <init>(int, int, int, int)
+    {
+        org.apache.fop.area.LineArea this;
+        int alignment, diff, stretch, shrink;
+        java.util.ArrayList $r0;
+        org.apache.fop.area.LineArea$LineAdjustingInfo $r1;
+
+        this := @this: org.apache.fop.area.LineArea;
+        alignment := @parameter0: int;
+        diff := @parameter1: int;
+        stretch := @parameter2: int;
+        shrink := @parameter3: int;
+        specialinvoke this.<org.apache.fop.area.Area: void <init>()>();
+        this.<org.apache.fop.area.LineArea: org.apache.fop.area.LineArea$LineAdjustingInfo adjustingInfo> = null;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.area.LineArea: java.util.List inlineAreas> = $r0;
+        $r1 = new org.apache.fop.area.LineArea$LineAdjustingInfo;
+        specialinvoke $r1.<org.apache.fop.area.LineArea$LineAdjustingInfo: void <init>(org.apache.fop.area.LineArea,int,int,int,int,org.apache.fop.area.LineArea$1)>(this, alignment, diff, stretch, shrink, null);
+        this.<org.apache.fop.area.LineArea: org.apache.fop.area.LineArea$LineAdjustingInfo adjustingInfo> = $r1;
+        return;
+    }
+
+    public void addChildArea(org.apache.fop.area.Area)
+    {
+        org.apache.fop.area.LineArea this;
+        org.apache.fop.area.Area childArea;
+        boolean $z0;
+        org.apache.fop.area.inline.InlineArea $r0, $r1;
+
+        this := @this: org.apache.fop.area.LineArea;
+        childArea := @parameter0: org.apache.fop.area.Area;
+        $z0 = childArea instanceof org.apache.fop.area.inline.InlineArea;
+        if $z0 == 0 goto label0;
+
+        $r0 = (org.apache.fop.area.inline.InlineArea) childArea;
+        virtualinvoke this.<org.apache.fop.area.LineArea: void addInlineArea(org.apache.fop.area.inline.InlineArea)>($r0);
+        $r1 = (org.apache.fop.area.inline.InlineArea) childArea;
+        virtualinvoke $r1.<org.apache.fop.area.inline.InlineArea: void setParentArea(org.apache.fop.area.Area)>(this);
+
+     label0:
+        return;
+    }
+
+    public void addInlineArea(org.apache.fop.area.inline.InlineArea)
+    {
+        org.apache.fop.area.LineArea this;
+        org.apache.fop.area.inline.InlineArea area;
+        java.util.List $r0;
+
+        this := @this: org.apache.fop.area.LineArea;
+        area := @parameter0: org.apache.fop.area.inline.InlineArea;
+        $r0 = this.<org.apache.fop.area.LineArea: java.util.List inlineAreas>;
+        interfaceinvoke $r0.<java.util.List: boolean add(java.lang.Object)>(area);
+        return;
+    }
+
+    public java.util.List getInlineAreas()
+    {
+        org.apache.fop.area.LineArea this;
+        java.util.List $r0;
+
+        this := @this: org.apache.fop.area.LineArea;
+        $r0 = this.<org.apache.fop.area.LineArea: java.util.List inlineAreas>;
+        return $r0;
+    }
+
+    public int getStartIndent()
+    {
+        org.apache.fop.area.LineArea this;
+        java.lang.Integer $r0;
+        boolean $z0;
+        int $i0;
+
+        this := @this: org.apache.fop.area.LineArea;
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer START_INDENT>;
+        $z0 = virtualinvoke this.<org.apache.fop.area.LineArea: boolean hasTrait(java.lang.Object)>($r0);
+        if $z0 == 0 goto label0;
+
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer START_INDENT>;
+        $i0 = virtualinvoke this.<org.apache.fop.area.LineArea: int getTraitAsInteger(java.lang.Object)>($r0);
+        return $i0;
+
+     label0:
+        return 0;
+    }
+
+    public void updateExtentsFromChildren()
+    {
+        org.apache.fop.area.LineArea this;
+        int ipd, bpd, i, len, $i0;
+        java.util.List $r0, $r1;
+        java.lang.Object $r2;
+        org.apache.fop.area.inline.InlineArea $r3;
+
+        this := @this: org.apache.fop.area.LineArea;
+        ipd = 0;
+        bpd = 0;
+        i = 0;
+        $r0 = this.<org.apache.fop.area.LineArea: java.util.List inlineAreas>;
+        len = interfaceinvoke $r0.<java.util.List: int size()>();
+
+     label0:
+        if i >= len goto label1;
+
+        $r1 = this.<org.apache.fop.area.LineArea: java.util.List inlineAreas>;
+        $r2 = interfaceinvoke $r1.<java.util.List: java.lang.Object get(int)>(i);
+        $r3 = (org.apache.fop.area.inline.InlineArea) $r2;
+        $i0 = virtualinvoke $r3.<org.apache.fop.area.inline.InlineArea: int getAllocIPD()>();
+        ipd = staticinvoke <java.lang.Math: int max(int,int)>(ipd, $i0);
+        $r1 = this.<org.apache.fop.area.LineArea: java.util.List inlineAreas>;
+        $r2 = interfaceinvoke $r1.<java.util.List: java.lang.Object get(int)>(i);
+        $r3 = (org.apache.fop.area.inline.InlineArea) $r2;
+        $i0 = virtualinvoke $r3.<org.apache.fop.area.inline.InlineArea: int getAllocBPD()>();
+        bpd = bpd + $i0;
+        i = i + 1;
+        goto label0;
+
+     label1:
+        virtualinvoke this.<org.apache.fop.area.LineArea: void setIPD(int)>(ipd);
+        virtualinvoke this.<org.apache.fop.area.LineArea: void setBPD(int)>(bpd);
+        return;
+    }
+
+    public void handleIPDVariation(int)
+    {
+        org.apache.fop.area.LineArea this;
+        int ipdVariation, $i0, $i1, $i2, $i3, $i4;
+        java.lang.Integer $r0, $r1;
+        org.apache.fop.area.LineArea$LineAdjustingInfo l2, $r2, $r3, $r4;
+        double $d0, $d1;
+        float $f0, $f1;
+        boolean $z0;
+        java.lang.RuntimeException $r5;
+
+        this := @this: org.apache.fop.area.LineArea;
+        ipdVariation := @parameter0: int;
+        $r2 = this.<org.apache.fop.area.LineArea: org.apache.fop.area.LineArea$LineAdjustingInfo adjustingInfo>;
+        $i0 = staticinvoke <org.apache.fop.area.LineArea$LineAdjustingInfo: int access$100(org.apache.fop.area.LineArea$LineAdjustingInfo)>($r2);
+        lookupswitch($i0)
+        {
+            case 23: goto label1;
+            case 39: goto label2;
+            case 70: goto label3;
+            case 135: goto label0;
+            default: goto label4;
+        };
+
+     label0:
+        goto label5;
+
+     label1:
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer START_INDENT>;
+        $r1 = new java.lang.Integer;
+        $i1 = virtualinvoke this.<org.apache.fop.area.LineArea: int getStartIndent()>();
+        $i2 = ipdVariation / 2;
+        $i1 = $i1 - $i2;
+        specialinvoke $r1.<java.lang.Integer: void <init>(int)>($i1);
+        virtualinvoke this.<org.apache.fop.area.LineArea: void addTrait(java.lang.Object,java.lang.Object)>($r0, $r1);
+        goto label5;
+
+     label2:
+        $r0 = <org.apache.fop.area.Trait: java.lang.Integer START_INDENT>;
+        $r1 = new java.lang.Integer;
+        $i1 = virtualinvoke this.<org.apache.fop.area.LineArea: int getStartIndent()>();
+        $i1 = $i1 - ipdVariation;
+        specialinvoke $r1.<java.lang.Integer: void <init>(int)>($i1);
+        virtualinvoke this.<org.apache.fop.area.LineArea: void addTrait(java.lang.Object,java.lang.Object)>($r0, $r1);
+        goto label5;
+
+     label3:
+        l2 = this.<org.apache.fop.area.LineArea: org.apache.fop.area.LineArea$LineAdjustingInfo adjustingInfo>;
+        $d0 = staticinvoke <org.apache.fop.area.LineArea$LineAdjustingInfo: double access$200(org.apache.fop.area.LineArea$LineAdjustingInfo)>(l2);
+        $r3 = this.<org.apache.fop.area.LineArea: org.apache.fop.area.LineArea$LineAdjustingInfo adjustingInfo>;
+        $i3 = staticinvoke <org.apache.fop.area.LineArea$LineAdjustingInfo: int access$300(org.apache.fop.area.LineArea$LineAdjustingInfo)>($r3);
+        $i3 = $i3 - ipdVariation;
+        $f0 = (float) $i3;
+        $r4 = this.<org.apache.fop.area.LineArea: org.apache.fop.area.LineArea$LineAdjustingInfo adjustingInfo>;
+        $i1 = staticinvoke <org.apache.fop.area.LineArea$LineAdjustingInfo: int access$300(org.apache.fop.area.LineArea$LineAdjustingInfo)>($r4);
+        $f1 = (float) $i1;
+        $f0 = $f0 / $f1;
+        $d1 = (double) $f0;
+        $d0 = $d0 * $d1;
+        staticinvoke <org.apache.fop.area.LineArea$LineAdjustingInfo: double access$202(org.apache.fop.area.LineArea$LineAdjustingInfo,double)>(l2, $d0);
+        l2 = this.<org.apache.fop.area.LineArea: org.apache.fop.area.LineArea$LineAdjustingInfo adjustingInfo>;
+        $i4 = staticinvoke <org.apache.fop.area.LineArea$LineAdjustingInfo: int access$300(org.apache.fop.area.LineArea$LineAdjustingInfo)>(l2);
+        $i4 = $i4 - ipdVariation;
+        staticinvoke <org.apache.fop.area.LineArea$LineAdjustingInfo: int access$302(org.apache.fop.area.LineArea$LineAdjustingInfo,int)>(l2, $i4);
+        $r2 = this.<org.apache.fop.area.LineArea: org.apache.fop.area.LineArea$LineAdjustingInfo adjustingInfo>;
+        $z0 = staticinvoke <org.apache.fop.area.LineArea$LineAdjustingInfo: boolean access$400(org.apache.fop.area.LineArea$LineAdjustingInfo)>($r2);
+        if $z0 == 0 goto label5;
+
+        virtualinvoke this.<org.apache.fop.area.LineArea: void finalise()>();
+        goto label5;
+
+     label4:
+        $r5 = new java.lang.RuntimeException;
+        specialinvoke $r5.<java.lang.RuntimeException: void <init>()>();
+        throw $r5;
+
+     label5:
+        return;
+    }
+
+    public void finalise()
+    {
+        org.apache.fop.area.LineArea this;
+        boolean bUnresolvedAreasPresent, $z0, $z1;
+        int i, len, $i0, $i1, $i2;
+        org.apache.fop.area.LineArea$LineAdjustingInfo $r0, $r5, $r6, $r7;
+        java.util.List $r1, $r2;
+        java.lang.Object $r3;
+        org.apache.fop.area.inline.InlineArea $r4;
+        double $d0;
+
+        this := @this: org.apache.fop.area.LineArea;
+        $r0 = this.<org.apache.fop.area.LineArea: org.apache.fop.area.LineArea$LineAdjustingInfo adjustingInfo>;
+        $i0 = staticinvoke <org.apache.fop.area.LineArea$LineAdjustingInfo: int access$100(org.apache.fop.area.LineArea$LineAdjustingInfo)>($r0);
+        if $i0 != 70 goto label4;
+
+        bUnresolvedAreasPresent = 0;
+        i = 0;
+        $r1 = this.<org.apache.fop.area.LineArea: java.util.List inlineAreas>;
+        len = interfaceinvoke $r1.<java.util.List: int size()>();
+
+     label0:
+        if i >= len goto label1;
+
+        $r2 = this.<org.apache.fop.area.LineArea: java.util.List inlineAreas>;
+        $r3 = interfaceinvoke $r2.<java.util.List: java.lang.Object get(int)>(i);
+        $r4 = (org.apache.fop.area.inline.InlineArea) $r3;
+        $r5 = this.<org.apache.fop.area.LineArea: org.apache.fop.area.LineArea$LineAdjustingInfo adjustingInfo>;
+        $d0 = staticinvoke <org.apache.fop.area.LineArea$LineAdjustingInfo: double access$200(org.apache.fop.area.LineArea$LineAdjustingInfo)>($r5);
+        $r6 = this.<org.apache.fop.area.LineArea: org.apache.fop.area.LineArea$LineAdjustingInfo adjustingInfo>;
+        $i1 = staticinvoke <org.apache.fop.area.LineArea$LineAdjustingInfo: int access$500(org.apache.fop.area.LineArea$LineAdjustingInfo)>($r6);
+        $r7 = this.<org.apache.fop.area.LineArea: org.apache.fop.area.LineArea$LineAdjustingInfo adjustingInfo>;
+        $i2 = staticinvoke <org.apache.fop.area.LineArea$LineAdjustingInfo: int access$600(org.apache.fop.area.LineArea$LineAdjustingInfo)>($r7);
+        $z0 = virtualinvoke $r4.<org.apache.fop.area.inline.InlineArea: boolean applyVariationFactor(double,int,int)>($d0, $i1, $i2);
+        bUnresolvedAreasPresent = bUnresolvedAreasPresent | $z0;
+        i = i + 1;
+        goto label0;
+
+     label1:
+        if bUnresolvedAreasPresent != 0 goto label2;
+
+        this.<org.apache.fop.area.LineArea: org.apache.fop.area.LineArea$LineAdjustingInfo adjustingInfo> = null;
+        goto label4;
+
+     label2:
+        $r0 = this.<org.apache.fop.area.LineArea: org.apache.fop.area.LineArea$LineAdjustingInfo adjustingInfo>;
+        $z1 = staticinvoke <org.apache.fop.area.LineArea$LineAdjustingInfo: boolean access$400(org.apache.fop.area.LineArea$LineAdjustingInfo)>($r0);
+        if $z1 != 0 goto label3;
+
+        $r0 = this.<org.apache.fop.area.LineArea: org.apache.fop.area.LineArea$LineAdjustingInfo adjustingInfo>;
+        staticinvoke <org.apache.fop.area.LineArea$LineAdjustingInfo: boolean access$402(org.apache.fop.area.LineArea$LineAdjustingInfo,boolean)>($r0, 1);
+
+     label3:
+        $r0 = this.<org.apache.fop.area.LineArea: org.apache.fop.area.LineArea$LineAdjustingInfo adjustingInfo>;
+        staticinvoke <org.apache.fop.area.LineArea$LineAdjustingInfo: double access$202(org.apache.fop.area.LineArea$LineAdjustingInfo,double)>($r0, 1.0);
+
+     label4:
+        return;
+    }
+}

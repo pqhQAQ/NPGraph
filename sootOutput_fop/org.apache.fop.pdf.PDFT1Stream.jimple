@@ -1,0 +1,128 @@
+public class org.apache.fop.pdf.PDFT1Stream extends org.apache.fop.pdf.AbstractPDFStream
+{
+    private org.apache.fop.fonts.type1.PFBData pfb;
+
+    public void <init>()
+    {
+        org.apache.fop.pdf.PDFT1Stream this;
+
+        this := @this: org.apache.fop.pdf.PDFT1Stream;
+        specialinvoke this.<org.apache.fop.pdf.AbstractPDFStream: void <init>()>();
+        return;
+    }
+
+    protected int getSizeHint() throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFT1Stream this;
+        org.apache.fop.fonts.type1.PFBData $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.pdf.PDFT1Stream;
+        $r0 = this.<org.apache.fop.pdf.PDFT1Stream: org.apache.fop.fonts.type1.PFBData pfb>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.pdf.PDFT1Stream: org.apache.fop.fonts.type1.PFBData pfb>;
+        $i0 = virtualinvoke $r0.<org.apache.fop.fonts.type1.PFBData: int getLength()>();
+        return $i0;
+
+     label0:
+        return 0;
+    }
+
+    protected int output(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFT1Stream this;
+        java.io.OutputStream stream;
+        int length, $i0;
+        org.apache.fop.fonts.type1.PFBData $r0, $r4;
+        java.lang.IllegalStateException $r1;
+        org.apache.commons.logging.Log $r2;
+        boolean $z0;
+        java.lang.StringBuffer $r3;
+        java.lang.String $r5;
+
+        this := @this: org.apache.fop.pdf.PDFT1Stream;
+        stream := @parameter0: java.io.OutputStream;
+        $r0 = this.<org.apache.fop.pdf.PDFT1Stream: org.apache.fop.fonts.type1.PFBData pfb>;
+        if $r0 != null goto label0;
+
+        $r1 = new java.lang.IllegalStateException;
+        specialinvoke $r1.<java.lang.IllegalStateException: void <init>(java.lang.String)>("pfb must not be null at this point");
+        throw $r1;
+
+     label0:
+        $r2 = <org.apache.fop.pdf.PDFT1Stream: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r2.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label1;
+
+        $r2 = <org.apache.fop.pdf.PDFT1Stream: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Writing ");
+        $r4 = this.<org.apache.fop.pdf.PDFT1Stream: org.apache.fop.fonts.type1.PFBData pfb>;
+        $i0 = virtualinvoke $r4.<org.apache.fop.fonts.type1.PFBData: int getLength()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" bytes of Type 1 font data");
+        $r5 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r5);
+
+     label1:
+        length = specialinvoke this.<org.apache.fop.pdf.AbstractPDFStream: int output(java.io.OutputStream)>(stream);
+        $r2 = <org.apache.fop.pdf.PDFT1Stream: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("Embedded Type1 font");
+        return length;
+    }
+
+    protected void populateStreamDict(java.lang.Object)
+    {
+        org.apache.fop.pdf.PDFT1Stream this;
+        java.lang.Object lengthEntry;
+        java.lang.Integer $r0;
+        org.apache.fop.fonts.type1.PFBData $r1;
+        int $i0;
+
+        this := @this: org.apache.fop.pdf.PDFT1Stream;
+        lengthEntry := @parameter0: java.lang.Object;
+        specialinvoke this.<org.apache.fop.pdf.AbstractPDFStream: void populateStreamDict(java.lang.Object)>(lengthEntry);
+        $r0 = new java.lang.Integer;
+        $r1 = this.<org.apache.fop.pdf.PDFT1Stream: org.apache.fop.fonts.type1.PFBData pfb>;
+        $i0 = virtualinvoke $r1.<org.apache.fop.fonts.type1.PFBData: int getLength1()>();
+        specialinvoke $r0.<java.lang.Integer: void <init>(int)>($i0);
+        virtualinvoke this.<org.apache.fop.pdf.PDFT1Stream: void put(java.lang.String,java.lang.Object)>("Length1", $r0);
+        $r0 = new java.lang.Integer;
+        $r1 = this.<org.apache.fop.pdf.PDFT1Stream: org.apache.fop.fonts.type1.PFBData pfb>;
+        $i0 = virtualinvoke $r1.<org.apache.fop.fonts.type1.PFBData: int getLength2()>();
+        specialinvoke $r0.<java.lang.Integer: void <init>(int)>($i0);
+        virtualinvoke this.<org.apache.fop.pdf.PDFT1Stream: void put(java.lang.String,java.lang.Object)>("Length2", $r0);
+        $r0 = new java.lang.Integer;
+        $r1 = this.<org.apache.fop.pdf.PDFT1Stream: org.apache.fop.fonts.type1.PFBData pfb>;
+        $i0 = virtualinvoke $r1.<org.apache.fop.fonts.type1.PFBData: int getLength3()>();
+        specialinvoke $r0.<java.lang.Integer: void <init>(int)>($i0);
+        virtualinvoke this.<org.apache.fop.pdf.PDFT1Stream: void put(java.lang.String,java.lang.Object)>("Length3", $r0);
+        return;
+    }
+
+    protected void outputRawStreamData(java.io.OutputStream) throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFT1Stream this;
+        java.io.OutputStream out;
+        org.apache.fop.fonts.type1.PFBData $r0;
+
+        this := @this: org.apache.fop.pdf.PDFT1Stream;
+        out := @parameter0: java.io.OutputStream;
+        $r0 = this.<org.apache.fop.pdf.PDFT1Stream: org.apache.fop.fonts.type1.PFBData pfb>;
+        virtualinvoke $r0.<org.apache.fop.fonts.type1.PFBData: void outputAllParts(java.io.OutputStream)>(out);
+        return;
+    }
+
+    public void setData(org.apache.fop.fonts.type1.PFBData) throws java.io.IOException
+    {
+        org.apache.fop.pdf.PDFT1Stream this;
+        org.apache.fop.fonts.type1.PFBData pfb;
+
+        this := @this: org.apache.fop.pdf.PDFT1Stream;
+        pfb := @parameter0: org.apache.fop.fonts.type1.PFBData;
+        this.<org.apache.fop.pdf.PDFT1Stream: org.apache.fop.fonts.type1.PFBData pfb> = pfb;
+        return;
+    }
+}

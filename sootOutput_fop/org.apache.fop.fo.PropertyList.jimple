@@ -1,0 +1,864 @@
+public abstract class org.apache.fop.fo.PropertyList extends java.lang.Object
+{
+    private int writingMode;
+    private static boolean[] inheritableProperty;
+    protected org.apache.fop.fo.PropertyList parentPropertyList;
+    private org.apache.fop.fo.FObj fobj;
+    private static org.apache.commons.logging.Log log;
+    static java.lang.Class class$org$apache$fop$fo$PropertyList;
+
+    public void <init>(org.apache.fop.fo.FObj, org.apache.fop.fo.PropertyList)
+    {
+        org.apache.fop.fo.PropertyList this, parentPropertyList;
+        org.apache.fop.fo.FObj fObjToAttach;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        fObjToAttach := @parameter0: org.apache.fop.fo.FObj;
+        parentPropertyList := @parameter1: org.apache.fop.fo.PropertyList;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.PropertyList parentPropertyList> = null;
+        this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.FObj fobj> = null;
+        this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.FObj fobj> = fObjToAttach;
+        this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.PropertyList parentPropertyList> = parentPropertyList;
+        return;
+    }
+
+    public org.apache.fop.fo.FObj getFObj()
+    {
+        org.apache.fop.fo.PropertyList this;
+        org.apache.fop.fo.FObj $r0;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        $r0 = this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.FObj fobj>;
+        return $r0;
+    }
+
+    public org.apache.fop.fo.FObj getParentFObj()
+    {
+        org.apache.fop.fo.PropertyList this, $r0;
+        org.apache.fop.fo.FObj $r1;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        $r0 = this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.PropertyList parentPropertyList>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.PropertyList parentPropertyList>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.FObj getFObj()>();
+        return $r1;
+
+     label0:
+        return null;
+    }
+
+    public org.apache.fop.fo.PropertyList getParentPropertyList()
+    {
+        org.apache.fop.fo.PropertyList this, $r0;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        $r0 = this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.PropertyList parentPropertyList>;
+        return $r0;
+    }
+
+    public org.apache.fop.fo.properties.Property getExplicitOrShorthand(int) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.PropertyList this;
+        int propId;
+        org.apache.fop.fo.properties.Property p;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        propId := @parameter0: int;
+        p = virtualinvoke this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property getExplicit(int)>(propId);
+        if p != null goto label0;
+
+        p = specialinvoke this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property getShorthand(int)>(propId);
+
+     label0:
+        return p;
+    }
+
+    public abstract org.apache.fop.fo.properties.Property getExplicit(int);
+
+    public abstract void putExplicit(int, org.apache.fop.fo.properties.Property);
+
+    public org.apache.fop.fo.properties.Property getInherited(int) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.PropertyList this;
+        int propId;
+        boolean $z0;
+        org.apache.fop.fo.properties.Property $r0;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        propId := @parameter0: int;
+        $z0 = specialinvoke this.<org.apache.fop.fo.PropertyList: boolean isInherited(int)>(propId);
+        if $z0 == 0 goto label0;
+
+        $r0 = virtualinvoke this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property getFromParent(int)>(propId);
+        return $r0;
+
+     label0:
+        $r0 = specialinvoke this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property makeProperty(int)>(propId);
+        return $r0;
+    }
+
+    public org.apache.fop.fo.properties.Property get(int) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.PropertyList this;
+        int propId;
+        org.apache.fop.fo.properties.Property $r0;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        propId := @parameter0: int;
+        $r0 = virtualinvoke this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int,boolean,boolean)>(propId, 1, 1);
+        return $r0;
+    }
+
+    public org.apache.fop.fo.properties.Property get(int, boolean, boolean) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.PropertyList this;
+        int propId, $i0;
+        boolean bTryInherit, bTryDefault;
+        org.apache.fop.fo.properties.PropertyMaker propertyMaker;
+        org.apache.fop.fo.properties.Property $r0;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        propId := @parameter0: int;
+        bTryInherit := @parameter1: boolean;
+        bTryDefault := @parameter2: boolean;
+        $i0 = propId & 511;
+        propertyMaker = specialinvoke this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.PropertyMaker findMaker(int)>($i0);
+        if propertyMaker == null goto label0;
+
+        $i0 = propId & -512;
+        $r0 = virtualinvoke propertyMaker.<org.apache.fop.fo.properties.PropertyMaker: org.apache.fop.fo.properties.Property get(int,org.apache.fop.fo.PropertyList,boolean,boolean)>($i0, this, bTryInherit, bTryDefault);
+        return $r0;
+
+     label0:
+        return null;
+    }
+
+    public org.apache.fop.fo.properties.Property getNearestSpecified(int) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.PropertyList this, pList;
+        int propId;
+        null_type p;
+        org.apache.fop.fo.properties.Property p, $r0;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        propId := @parameter0: int;
+        p = null;
+        pList = this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.PropertyList parentPropertyList>;
+
+     label0:
+        if pList == null goto label2;
+
+        p = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property getExplicit(int)>(propId);
+        if p == null goto label1;
+
+        return p;
+
+     label1:
+        pList = pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.PropertyList parentPropertyList>;
+        goto label0;
+
+     label2:
+        $r0 = specialinvoke this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property makeProperty(int)>(propId);
+        return $r0;
+    }
+
+    public org.apache.fop.fo.properties.Property getFromParent(int) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.PropertyList this, $r0;
+        int propId;
+        org.apache.fop.fo.properties.Property $r1;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        propId := @parameter0: int;
+        $r0 = this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.PropertyList parentPropertyList>;
+        if $r0 == null goto label0;
+
+        $r0 = this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.PropertyList parentPropertyList>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(propId);
+        return $r1;
+
+     label0:
+        $r1 = specialinvoke this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property makeProperty(int)>(propId);
+        return $r1;
+    }
+
+    public void setWritingMode() throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.PropertyList this, $r2;
+        org.apache.fop.fo.FObj p, $r0;
+        boolean $z0;
+        org.apache.fop.fo.properties.Property $r1;
+        int $i0;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        $r0 = this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.FObj fobj>;
+        p = virtualinvoke $r0.<org.apache.fop.fo.FObj: org.apache.fop.fo.FObj findNearestAncestorFObj()>();
+        $r0 = this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.FObj fobj>;
+        $z0 = virtualinvoke $r0.<org.apache.fop.fo.FObj: boolean generatesReferenceAreas()>();
+        if $z0 != 0 goto label0;
+
+        if p != null goto label1;
+
+     label0:
+        $r1 = virtualinvoke this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(245);
+        $i0 = virtualinvoke $r1.<org.apache.fop.fo.properties.Property: int getEnum()>();
+        this.<org.apache.fop.fo.PropertyList: int writingMode> = $i0;
+        goto label2;
+
+     label1:
+        $r2 = virtualinvoke this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.PropertyList getParentPropertyList()>();
+        $i0 = virtualinvoke $r2.<org.apache.fop.fo.PropertyList: int getWritingMode()>();
+        this.<org.apache.fop.fo.PropertyList: int writingMode> = $i0;
+
+     label2:
+        return;
+    }
+
+    public int getWritingMode()
+    {
+        org.apache.fop.fo.PropertyList this;
+        int $i0;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        $i0 = this.<org.apache.fop.fo.PropertyList: int writingMode>;
+        return $i0;
+    }
+
+    public int getWritingMode(int, int, int)
+    {
+        org.apache.fop.fo.PropertyList this;
+        int lrtb, rltb, tbrl, $i0;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        lrtb := @parameter0: int;
+        rltb := @parameter1: int;
+        tbrl := @parameter2: int;
+        $i0 = this.<org.apache.fop.fo.PropertyList: int writingMode>;
+        lookupswitch($i0)
+        {
+            case 79: goto label0;
+            case 121: goto label1;
+            case 140: goto label2;
+            default: goto label3;
+        };
+
+     label0:
+        return lrtb;
+
+     label1:
+        return rltb;
+
+     label2:
+        return tbrl;
+
+     label3:
+        return -1;
+    }
+
+    public void addAttributesToList(org.xml.sax.Attributes) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.PropertyList this;
+        org.xml.sax.Attributes attributes;
+        java.lang.String attributeName, attributeValue, attributeNS, $r2, $r6, $r7, $r9;
+        org.apache.fop.apps.FopFactory factory;
+        int i, $i0, $i1;
+        org.apache.fop.fo.ElementMapping mapping;
+        org.apache.fop.util.QName attName, $r4;
+        org.apache.fop.fo.FObj $r0;
+        org.apache.fop.apps.FOUserAgent $r1;
+        boolean $z0;
+        org.apache.fop.fo.ElementMappingRegistry $r3;
+        java.lang.StringBuffer $r5, $r8;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        attributes := @parameter0: org.xml.sax.Attributes;
+        attributeName = "column-number";
+        attributeValue = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>(attributeName);
+        specialinvoke this.<org.apache.fop.fo.PropertyList: void convertAttributeToProperty(org.xml.sax.Attributes,java.lang.String,java.lang.String)>(attributes, attributeName, attributeValue);
+        attributeName = "number-columns-spanned";
+        attributeValue = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>(attributeName);
+        specialinvoke this.<org.apache.fop.fo.PropertyList: void convertAttributeToProperty(org.xml.sax.Attributes,java.lang.String,java.lang.String)>(attributes, attributeName, attributeValue);
+        attributeName = "font";
+        attributeValue = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>(attributeName);
+        specialinvoke this.<org.apache.fop.fo.PropertyList: void convertAttributeToProperty(org.xml.sax.Attributes,java.lang.String,java.lang.String)>(attributes, attributeName, attributeValue);
+        if attributeValue != null goto label0;
+
+        attributeName = "font-size";
+        attributeValue = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>(attributeName);
+        specialinvoke this.<org.apache.fop.fo.PropertyList: void convertAttributeToProperty(org.xml.sax.Attributes,java.lang.String,java.lang.String)>(attributes, attributeName, attributeValue);
+
+     label0:
+        $r0 = virtualinvoke this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.FObj getFObj()>();
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.FObj: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        factory = virtualinvoke $r1.<org.apache.fop.apps.FOUserAgent: org.apache.fop.apps.FopFactory getFactory()>();
+        i = 0;
+
+     label1:
+        $i0 = interfaceinvoke attributes.<org.xml.sax.Attributes: int getLength()>();
+        if i >= $i0 goto label8;
+
+        attributeNS = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getURI(int)>(i);
+        attributeName = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getQName(int)>(i);
+        attributeValue = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(int)>(i);
+        if attributeNS == null goto label2;
+
+        $i1 = virtualinvoke attributeNS.<java.lang.String: int length()>();
+        if $i1 == 0 goto label2;
+
+        $r2 = "xml:lang";
+        $z0 = virtualinvoke $r2.<java.lang.String: boolean equals(java.lang.Object)>(attributeName);
+        if $z0 == 0 goto label3;
+
+     label2:
+        specialinvoke this.<org.apache.fop.fo.PropertyList: void convertAttributeToProperty(org.xml.sax.Attributes,java.lang.String,java.lang.String)>(attributes, attributeName, attributeValue);
+        goto label7;
+
+     label3:
+        $z0 = virtualinvoke factory.<org.apache.fop.apps.FopFactory: boolean isNamespaceIgnored(java.lang.String)>(attributeNS);
+        if $z0 != 0 goto label7;
+
+        $r3 = virtualinvoke factory.<org.apache.fop.apps.FopFactory: org.apache.fop.fo.ElementMappingRegistry getElementMappingRegistry()>();
+        mapping = virtualinvoke $r3.<org.apache.fop.fo.ElementMappingRegistry: org.apache.fop.fo.ElementMapping getElementMapping(java.lang.String)>(attributeNS);
+        if mapping == null goto label6;
+
+        $r4 = new org.apache.fop.util.QName;
+        specialinvoke $r4.<org.apache.fop.util.QName: void <init>(java.lang.String,java.lang.String)>(attributeNS, attributeName);
+        attName = $r4;
+        $z0 = virtualinvoke mapping.<org.apache.fop.fo.ElementMapping: boolean isAttributeProperty(org.apache.fop.util.QName)>(attName);
+        if $z0 == 0 goto label4;
+
+        $r2 = virtualinvoke mapping.<org.apache.fop.fo.ElementMapping: java.lang.String getStandardPrefix()>();
+        if $r2 == null goto label4;
+
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r6 = virtualinvoke mapping.<org.apache.fop.fo.ElementMapping: java.lang.String getStandardPrefix()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(":");
+        $r6 = virtualinvoke attName.<org.apache.fop.util.QName: java.lang.String getLocalName()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r7 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke this.<org.apache.fop.fo.PropertyList: void convertAttributeToProperty(org.xml.sax.Attributes,java.lang.String,java.lang.String)>(attributes, $r7, attributeValue);
+        goto label5;
+
+     label4:
+        $r0 = virtualinvoke this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.FObj getFObj()>();
+        virtualinvoke $r0.<org.apache.fop.fo.FObj: void addForeignAttribute(org.apache.fop.util.QName,java.lang.String)>(attName, attributeValue);
+
+     label5:
+        goto label7;
+
+     label6:
+        $r8 = new java.lang.StringBuffer;
+        specialinvoke $r8.<java.lang.StringBuffer: void <init>()>();
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Error processing foreign attribute: ");
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(attributeNS);
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("/@");
+        $r8 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(attributeName);
+        $r9 = virtualinvoke $r8.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.fo.PropertyList: void handleInvalidProperty(java.lang.String,java.lang.String)>($r9, attributeName);
+
+     label7:
+        i = i + 1;
+        goto label1;
+
+     label8:
+        return;
+    }
+
+    protected boolean isValidPropertyName(java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.PropertyList this;
+        java.lang.String propertyName, errorMessage, $r0;
+        int propId, subpropId;
+        java.lang.Object[] $r1;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        propertyName := @parameter0: java.lang.String;
+        $r0 = staticinvoke <org.apache.fop.fo.PropertyList: java.lang.String findBasePropertyName(java.lang.String)>(propertyName);
+        propId = staticinvoke <org.apache.fop.fo.FOPropertyMapping: int getPropertyId(java.lang.String)>($r0);
+        $r0 = staticinvoke <org.apache.fop.fo.PropertyList: java.lang.String findSubPropertyName(java.lang.String)>(propertyName);
+        subpropId = staticinvoke <org.apache.fop.fo.FOPropertyMapping: int getSubPropertyId(java.lang.String)>($r0);
+        if propId == -1 goto label0;
+
+        if subpropId != -1 goto label1;
+
+        $r0 = staticinvoke <org.apache.fop.fo.PropertyList: java.lang.String findSubPropertyName(java.lang.String)>(propertyName);
+        if $r0 == null goto label1;
+
+     label0:
+        $r1 = newarray (java.lang.Object)[1];
+        $r1[0] = propertyName;
+        errorMessage = staticinvoke <java.text.MessageFormat: java.lang.String format(java.lang.String,java.lang.Object[])>("Invalid property name \'\'{0}\'\'.", $r1);
+        virtualinvoke this.<org.apache.fop.fo.PropertyList: void handleInvalidProperty(java.lang.String,java.lang.String)>(errorMessage, propertyName);
+        return 0;
+
+     label1:
+        return 1;
+    }
+
+    private void convertAttributeToProperty(org.xml.sax.Attributes, java.lang.String, java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.PropertyList this;
+        org.xml.sax.Attributes attributes;
+        java.lang.String attributeName, attributeValue, basePropertyName, subPropertyName, $r3, $r6;
+        org.apache.fop.fo.FObj parentFO, $r0;
+        int propId, subpropId;
+        org.apache.fop.fo.properties.PropertyMaker propertyMaker;
+        null_type prop;
+        org.apache.fop.fo.properties.Property baseProperty, $r4, prop;
+        org.apache.fop.fo.expr.PropertyException e, $r5;
+        boolean $z0;
+        org.apache.commons.logging.Log $r1;
+        java.lang.StringBuffer $r2;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        attributes := @parameter0: org.xml.sax.Attributes;
+        attributeName := @parameter1: java.lang.String;
+        attributeValue := @parameter2: java.lang.String;
+        if attributeValue == null goto label8;
+
+        $z0 = virtualinvoke this.<org.apache.fop.fo.PropertyList: boolean isValidPropertyName(java.lang.String)>(attributeName);
+        if $z0 != 0 goto label0;
+
+        return;
+
+     label0:
+        $r0 = this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.FObj fobj>;
+        parentFO = virtualinvoke $r0.<org.apache.fop.fo.FObj: org.apache.fop.fo.FObj findNearestAncestorFObj()>();
+        basePropertyName = staticinvoke <org.apache.fop.fo.PropertyList: java.lang.String findBasePropertyName(java.lang.String)>(attributeName);
+        subPropertyName = staticinvoke <org.apache.fop.fo.PropertyList: java.lang.String findSubPropertyName(java.lang.String)>(attributeName);
+        propId = staticinvoke <org.apache.fop.fo.FOPropertyMapping: int getPropertyId(java.lang.String)>(basePropertyName);
+        subpropId = staticinvoke <org.apache.fop.fo.FOPropertyMapping: int getSubPropertyId(java.lang.String)>(subPropertyName);
+        propertyMaker = specialinvoke this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.PropertyMaker findMaker(int)>(propId);
+        if propertyMaker != null goto label1;
+
+        $r1 = <org.apache.fop.fo.PropertyList: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("No PropertyMaker registered for ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(attributeName);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(". Ignoring property.");
+        $r3 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r3);
+        return;
+
+     label1:
+        prop = null;
+        if subPropertyName != null goto label4;
+
+        $r4 = virtualinvoke this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property getExplicit(int)>(propId);
+        if $r4 == null goto label3;
+
+     label2:
+        return;
+
+     label3:
+        prop = virtualinvoke propertyMaker.<org.apache.fop.fo.properties.PropertyMaker: org.apache.fop.fo.properties.Property make(org.apache.fop.fo.PropertyList,java.lang.String,org.apache.fop.fo.FObj)>(this, attributeValue, parentFO);
+        goto label5;
+
+     label4:
+        baseProperty = specialinvoke this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property findBaseProperty(org.xml.sax.Attributes,org.apache.fop.fo.FObj,int,java.lang.String,org.apache.fop.fo.properties.PropertyMaker)>(attributes, parentFO, propId, basePropertyName, propertyMaker);
+        prop = virtualinvoke propertyMaker.<org.apache.fop.fo.properties.PropertyMaker: org.apache.fop.fo.properties.Property make(org.apache.fop.fo.properties.Property,int,org.apache.fop.fo.PropertyList,java.lang.String,org.apache.fop.fo.FObj)>(baseProperty, subpropId, this, attributeValue, parentFO);
+
+     label5:
+        if prop == null goto label6;
+
+        virtualinvoke this.<org.apache.fop.fo.PropertyList: void putExplicit(int,org.apache.fop.fo.properties.Property)>(propId, prop);
+
+     label6:
+        goto label8;
+
+     label7:
+        $r5 := @caughtexception;
+        e = $r5;
+        $r1 = <org.apache.fop.fo.PropertyList: org.apache.commons.logging.Log log>;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Ignoring property: ");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(attributeName);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("=\"");
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(attributeValue);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\" (");
+        $r6 = virtualinvoke e.<org.apache.fop.fo.expr.PropertyException: java.lang.String getMessage()>();
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r2 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(")");
+        $r3 = virtualinvoke $r2.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r3);
+
+     label8:
+        return;
+
+        catch org.apache.fop.fo.expr.PropertyException from label1 to label2 with label7;
+        catch org.apache.fop.fo.expr.PropertyException from label3 to label6 with label7;
+    }
+
+    private org.apache.fop.fo.properties.Property findBaseProperty(org.xml.sax.Attributes, org.apache.fop.fo.FObj, int, java.lang.String, org.apache.fop.fo.properties.PropertyMaker) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.PropertyList this;
+        org.xml.sax.Attributes attributes;
+        org.apache.fop.fo.FObj parentFO;
+        int propId;
+        java.lang.String basePropertyName, basePropertyValue;
+        org.apache.fop.fo.properties.PropertyMaker propertyMaker;
+        org.apache.fop.fo.properties.Property baseProperty;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        attributes := @parameter0: org.xml.sax.Attributes;
+        parentFO := @parameter1: org.apache.fop.fo.FObj;
+        propId := @parameter2: int;
+        basePropertyName := @parameter3: java.lang.String;
+        propertyMaker := @parameter4: org.apache.fop.fo.properties.PropertyMaker;
+        baseProperty = virtualinvoke this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property getExplicit(int)>(propId);
+        if baseProperty == null goto label0;
+
+        return baseProperty;
+
+     label0:
+        basePropertyValue = interfaceinvoke attributes.<org.xml.sax.Attributes: java.lang.String getValue(java.lang.String)>(basePropertyName);
+        if basePropertyValue == null goto label1;
+
+        if propertyMaker == null goto label1;
+
+        baseProperty = virtualinvoke propertyMaker.<org.apache.fop.fo.properties.PropertyMaker: org.apache.fop.fo.properties.Property make(org.apache.fop.fo.PropertyList,java.lang.String,org.apache.fop.fo.FObj)>(this, basePropertyValue, parentFO);
+        return baseProperty;
+
+     label1:
+        return null;
+    }
+
+    protected void handleInvalidProperty(java.lang.String, java.lang.String) throws org.apache.fop.fo.ValidationException
+    {
+        org.apache.fop.fo.PropertyList this;
+        java.lang.String message, propName, $r4;
+        boolean $z0;
+        org.apache.fop.fo.FObj $r0;
+        org.apache.fop.apps.FOUserAgent $r1;
+        org.apache.commons.logging.Log $r2;
+        java.lang.StringBuffer $r3;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        message := @parameter0: java.lang.String;
+        propName := @parameter1: java.lang.String;
+        $z0 = virtualinvoke propName.<java.lang.String: boolean startsWith(java.lang.String)>("xmlns");
+        if $z0 != 0 goto label1;
+
+        $r0 = this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.FObj fobj>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.FObj: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        $z0 = virtualinvoke $r1.<org.apache.fop.apps.FOUserAgent: boolean validateStrictly()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.FObj fobj>;
+        virtualinvoke $r0.<org.apache.fop.fo.FObj: void attributeError(java.lang.String)>(message);
+        goto label1;
+
+     label0:
+        $r2 = <org.apache.fop.fo.PropertyList: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(message);
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" Property ignored.");
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r4);
+
+     label1:
+        return;
+    }
+
+    protected static java.lang.String findBasePropertyName(java.lang.String)
+    {
+        java.lang.String attributeName, basePropertyName;
+        int separatorCharIndex;
+
+        attributeName := @parameter0: java.lang.String;
+        separatorCharIndex = virtualinvoke attributeName.<java.lang.String: int indexOf(int)>(46);
+        basePropertyName = attributeName;
+        if separatorCharIndex <= -1 goto label0;
+
+        basePropertyName = virtualinvoke attributeName.<java.lang.String: java.lang.String substring(int,int)>(0, separatorCharIndex);
+
+     label0:
+        return basePropertyName;
+    }
+
+    protected static java.lang.String findSubPropertyName(java.lang.String)
+    {
+        java.lang.String attributeName, subpropertyName;
+        int separatorCharIndex, $i0;
+
+        attributeName := @parameter0: java.lang.String;
+        separatorCharIndex = virtualinvoke attributeName.<java.lang.String: int indexOf(int)>(46);
+        subpropertyName = null;
+        if separatorCharIndex <= -1 goto label0;
+
+        $i0 = separatorCharIndex + 1;
+        subpropertyName = virtualinvoke attributeName.<java.lang.String: java.lang.String substring(int)>($i0);
+
+     label0:
+        return subpropertyName;
+    }
+
+    private org.apache.fop.fo.properties.Property getShorthand(int) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.PropertyList this;
+        int propId;
+        org.apache.fop.fo.properties.PropertyMaker propertyMaker;
+        org.apache.fop.fo.properties.Property $r0;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        propId := @parameter0: int;
+        propertyMaker = specialinvoke this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.PropertyMaker findMaker(int)>(propId);
+        if propertyMaker == null goto label0;
+
+        $r0 = virtualinvoke propertyMaker.<org.apache.fop.fo.properties.PropertyMaker: org.apache.fop.fo.properties.Property getShorthand(org.apache.fop.fo.PropertyList)>(this);
+        return $r0;
+
+     label0:
+        return null;
+    }
+
+    private org.apache.fop.fo.properties.Property makeProperty(int) throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.PropertyList this;
+        int propId;
+        org.apache.fop.fo.properties.PropertyMaker propertyMaker;
+        org.apache.fop.fo.properties.Property $r0;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        propId := @parameter0: int;
+        propertyMaker = specialinvoke this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.PropertyMaker findMaker(int)>(propId);
+        if propertyMaker == null goto label0;
+
+        $r0 = virtualinvoke propertyMaker.<org.apache.fop.fo.properties.PropertyMaker: org.apache.fop.fo.properties.Property make(org.apache.fop.fo.PropertyList)>(this);
+        return $r0;
+
+     label0:
+        return null;
+    }
+
+    private boolean isInherited(int)
+    {
+        org.apache.fop.fo.PropertyList this;
+        int propId, prop, $i0;
+        boolean[] $r0;
+        null_type maker;
+        org.apache.fop.fo.properties.PropertyMaker maker;
+        boolean $z0, $z1;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        propId := @parameter0: int;
+        $r0 = <org.apache.fop.fo.PropertyList: boolean[] inheritableProperty>;
+        if $r0 != null goto label3;
+
+        $r0 = newarray (boolean)[254];
+        <org.apache.fop.fo.PropertyList: boolean[] inheritableProperty> = $r0;
+        maker = null;
+        prop = 1;
+
+     label0:
+        if prop > 253 goto label3;
+
+        maker = specialinvoke this.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.PropertyMaker findMaker(int)>(prop);
+        $r0 = <org.apache.fop.fo.PropertyList: boolean[] inheritableProperty>;
+        $i0 = prop;
+        if maker == null goto label1;
+
+        $z0 = virtualinvoke maker.<org.apache.fop.fo.properties.PropertyMaker: boolean isInherited()>();
+        if $z0 == 0 goto label1;
+
+        $z0 = 1;
+        goto label2;
+
+     label1:
+        $z0 = 0;
+
+     label2:
+        $r0[$i0] = $z0;
+        prop = prop + 1;
+        goto label0;
+
+     label3:
+        $r0 = <org.apache.fop.fo.PropertyList: boolean[] inheritableProperty>;
+        $z1 = $r0[propId];
+        return $z1;
+    }
+
+    private org.apache.fop.fo.properties.PropertyMaker findMaker(int)
+    {
+        org.apache.fop.fo.PropertyList this;
+        int propId;
+        org.apache.fop.fo.properties.PropertyMaker $r0;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        propId := @parameter0: int;
+        if propId < 1 goto label0;
+
+        if propId <= 253 goto label1;
+
+     label0:
+        return null;
+
+     label1:
+        $r0 = staticinvoke <org.apache.fop.fo.FObj: org.apache.fop.fo.properties.PropertyMaker getPropertyMakerFor(int)>(propId);
+        return $r0;
+    }
+
+    public org.apache.fop.fo.properties.CommonBorderPaddingBackground getBorderPaddingBackgroundProps() throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.PropertyList this;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground $r0;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        $r0 = new org.apache.fop.fo.properties.CommonBorderPaddingBackground;
+        specialinvoke $r0.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: void <init>(org.apache.fop.fo.PropertyList)>(this);
+        return $r0;
+    }
+
+    public org.apache.fop.fo.properties.CommonHyphenation getHyphenationProps() throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.PropertyList this;
+        org.apache.fop.fo.properties.CommonHyphenation $r0;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        $r0 = staticinvoke <org.apache.fop.fo.properties.CommonHyphenation: org.apache.fop.fo.properties.CommonHyphenation getInstance(org.apache.fop.fo.PropertyList)>(this);
+        return $r0;
+    }
+
+    public org.apache.fop.fo.properties.CommonMarginBlock getMarginBlockProps() throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.PropertyList this;
+        org.apache.fop.fo.properties.CommonMarginBlock $r0;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        $r0 = new org.apache.fop.fo.properties.CommonMarginBlock;
+        specialinvoke $r0.<org.apache.fop.fo.properties.CommonMarginBlock: void <init>(org.apache.fop.fo.PropertyList)>(this);
+        return $r0;
+    }
+
+    public org.apache.fop.fo.properties.CommonMarginInline getMarginInlineProps() throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.PropertyList this;
+        org.apache.fop.fo.properties.CommonMarginInline $r0;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        $r0 = new org.apache.fop.fo.properties.CommonMarginInline;
+        specialinvoke $r0.<org.apache.fop.fo.properties.CommonMarginInline: void <init>(org.apache.fop.fo.PropertyList)>(this);
+        return $r0;
+    }
+
+    public org.apache.fop.fo.properties.CommonAccessibility getAccessibilityProps() throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.PropertyList this;
+        org.apache.fop.fo.properties.CommonAccessibility $r0;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        $r0 = new org.apache.fop.fo.properties.CommonAccessibility;
+        specialinvoke $r0.<org.apache.fop.fo.properties.CommonAccessibility: void <init>(org.apache.fop.fo.PropertyList)>(this);
+        return $r0;
+    }
+
+    public org.apache.fop.fo.properties.CommonAural getAuralProps() throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.PropertyList this;
+        org.apache.fop.fo.properties.CommonAural $r0, props;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        $r0 = new org.apache.fop.fo.properties.CommonAural;
+        specialinvoke $r0.<org.apache.fop.fo.properties.CommonAural: void <init>(org.apache.fop.fo.PropertyList)>(this);
+        props = $r0;
+        return props;
+    }
+
+    public org.apache.fop.fo.properties.CommonRelativePosition getRelativePositionProps() throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.PropertyList this;
+        org.apache.fop.fo.properties.CommonRelativePosition $r0;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        $r0 = new org.apache.fop.fo.properties.CommonRelativePosition;
+        specialinvoke $r0.<org.apache.fop.fo.properties.CommonRelativePosition: void <init>(org.apache.fop.fo.PropertyList)>(this);
+        return $r0;
+    }
+
+    public org.apache.fop.fo.properties.CommonAbsolutePosition getAbsolutePositionProps() throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.PropertyList this;
+        org.apache.fop.fo.properties.CommonAbsolutePosition $r0;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        $r0 = new org.apache.fop.fo.properties.CommonAbsolutePosition;
+        specialinvoke $r0.<org.apache.fop.fo.properties.CommonAbsolutePosition: void <init>(org.apache.fop.fo.PropertyList)>(this);
+        return $r0;
+    }
+
+    public org.apache.fop.fo.properties.CommonFont getFontProps() throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.PropertyList this;
+        org.apache.fop.fo.properties.CommonFont $r0;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        $r0 = staticinvoke <org.apache.fop.fo.properties.CommonFont: org.apache.fop.fo.properties.CommonFont getInstance(org.apache.fop.fo.PropertyList)>(this);
+        return $r0;
+    }
+
+    public org.apache.fop.fo.properties.CommonTextDecoration getTextDecorationProps() throws org.apache.fop.fo.expr.PropertyException
+    {
+        org.apache.fop.fo.PropertyList this;
+        org.apache.fop.fo.properties.CommonTextDecoration $r0;
+
+        this := @this: org.apache.fop.fo.PropertyList;
+        $r0 = staticinvoke <org.apache.fop.fo.properties.CommonTextDecoration: org.apache.fop.fo.properties.CommonTextDecoration createFromPropertyList(org.apache.fop.fo.PropertyList)>(this);
+        return $r0;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.fo.PropertyList: java.lang.Class class$org$apache$fop$fo$PropertyList>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.fo.PropertyList: java.lang.Class class$(java.lang.String)>("org.apache.fop.fo.PropertyList");
+        <org.apache.fop.fo.PropertyList: java.lang.Class class$org$apache$fop$fo$PropertyList> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.fo.PropertyList: java.lang.Class class$org$apache$fop$fo$PropertyList>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.fo.PropertyList: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

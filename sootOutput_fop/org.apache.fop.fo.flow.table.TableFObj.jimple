@@ -1,0 +1,365 @@
+public abstract class org.apache.fop.fo.flow.table.TableFObj extends org.apache.fop.fo.FObj
+{
+    private org.apache.fop.datatypes.Numeric borderAfterPrecedence;
+    private org.apache.fop.datatypes.Numeric borderBeforePrecedence;
+    private org.apache.fop.datatypes.Numeric borderEndPrecedence;
+    private org.apache.fop.datatypes.Numeric borderStartPrecedence;
+    org.apache.fop.fo.flow.table.ConditionalBorder borderBefore;
+    org.apache.fop.fo.flow.table.ConditionalBorder borderAfter;
+    org.apache.fop.fo.flow.table.BorderSpecification borderStart;
+    org.apache.fop.fo.flow.table.BorderSpecification borderEnd;
+    org.apache.fop.layoutmgr.table.CollapsingBorderModel collapsingBorderModel;
+    static final boolean $assertionsDisabled;
+    static java.lang.Class class$org$apache$fop$fo$flow$table$TableFObj;
+
+    public void <init>(org.apache.fop.fo.FONode)
+    {
+        org.apache.fop.fo.flow.table.TableFObj this;
+        org.apache.fop.fo.FONode parent;
+
+        this := @this: org.apache.fop.fo.flow.table.TableFObj;
+        parent := @parameter0: org.apache.fop.fo.FONode;
+        specialinvoke this.<org.apache.fop.fo.FObj: void <init>(org.apache.fop.fo.FONode)>(parent);
+        return;
+    }
+
+    public void bind(org.apache.fop.fo.PropertyList) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.table.TableFObj this;
+        org.apache.fop.fo.PropertyList pList;
+        org.apache.fop.fo.properties.Property $r0;
+        org.apache.fop.datatypes.Numeric $r1;
+        int $i0;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground $r2;
+        org.apache.fop.datatypes.PercentBaseContext $r3;
+        boolean $z0;
+        java.lang.StringBuffer $r4;
+        java.lang.String $r5, $r6;
+
+        this := @this: org.apache.fop.fo.flow.table.TableFObj;
+        pList := @parameter0: org.apache.fop.fo.PropertyList;
+        specialinvoke this.<org.apache.fop.fo.FObj: void bind(org.apache.fop.fo.PropertyList)>(pList);
+        $r0 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(20);
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.datatypes.Numeric borderAfterPrecedence> = $r1;
+        $r0 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(24);
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.datatypes.Numeric borderBeforePrecedence> = $r1;
+        $r0 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(34);
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.datatypes.Numeric borderEndPrecedence> = $r1;
+        $r0 = virtualinvoke pList.<org.apache.fop.fo.PropertyList: org.apache.fop.fo.properties.Property get(int)>(48);
+        $r1 = virtualinvoke $r0.<org.apache.fop.fo.properties.Property: org.apache.fop.datatypes.Numeric getNumeric()>();
+        this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.datatypes.Numeric borderStartPrecedence> = $r1;
+        $i0 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableFObj: int getNameId()>();
+        if $i0 == 46 goto label0;
+
+        $i0 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableFObj: int getNameId()>();
+        if $i0 == 50 goto label0;
+
+        $r2 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        $r3 = staticinvoke <org.apache.fop.datatypes.ValidationPercentBaseContext: org.apache.fop.datatypes.PercentBaseContext getPseudoContext()>();
+        $z0 = virtualinvoke $r2.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: boolean hasPadding(org.apache.fop.datatypes.PercentBaseContext)>($r3);
+        if $z0 == 0 goto label0;
+
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("padding-* properties are not applicable to ");
+        $r5 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableFObj: java.lang.String getName()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", but a non-zero value for padding was found.");
+        $r6 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke this.<org.apache.fop.fo.flow.table.TableFObj: void attributeWarning(java.lang.String)>($r6);
+
+     label0:
+        return;
+    }
+
+    public org.apache.fop.datatypes.Numeric getBorderPrecedence(int)
+    {
+        org.apache.fop.fo.flow.table.TableFObj this;
+        int side;
+        org.apache.fop.datatypes.Numeric $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.TableFObj;
+        side := @parameter0: int;
+        tableswitch(side)
+        {
+            case 0: goto label0;
+            case 1: goto label1;
+            case 2: goto label2;
+            case 3: goto label3;
+            default: goto label4;
+        };
+
+     label0:
+        $r0 = this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.datatypes.Numeric borderBeforePrecedence>;
+        return $r0;
+
+     label1:
+        $r0 = this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.datatypes.Numeric borderAfterPrecedence>;
+        return $r0;
+
+     label2:
+        $r0 = this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.datatypes.Numeric borderStartPrecedence>;
+        return $r0;
+
+     label3:
+        $r0 = this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.datatypes.Numeric borderEndPrecedence>;
+        return $r0;
+
+     label4:
+        return null;
+    }
+
+    public org.apache.fop.fo.flow.table.Table getTable()
+    {
+        org.apache.fop.fo.flow.table.TableFObj this, $r1;
+        org.apache.fop.fo.FONode $r0;
+        org.apache.fop.fo.flow.table.Table $r2;
+
+        this := @this: org.apache.fop.fo.flow.table.TableFObj;
+        $r0 = this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.fo.FONode parent>;
+        $r1 = (org.apache.fop.fo.flow.table.TableFObj) $r0;
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.fo.flow.table.Table getTable()>();
+        return $r2;
+    }
+
+    public abstract org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground();
+
+    public void startOfNode() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.table.TableFObj this;
+        org.apache.fop.fo.flow.table.Table table;
+        boolean $z0;
+        int $i0;
+        org.apache.fop.layoutmgr.table.CollapsingBorderModel $r0;
+
+        this := @this: org.apache.fop.fo.flow.table.TableFObj;
+        specialinvoke this.<org.apache.fop.fo.FObj: void startOfNode()>();
+        table = virtualinvoke this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.fo.flow.table.Table getTable()>();
+        $z0 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableFObj: boolean inMarker()>();
+        if $z0 != 0 goto label0;
+
+        $z0 = virtualinvoke table.<org.apache.fop.fo.flow.table.Table: boolean isSeparateBorderModel()>();
+        if $z0 != 0 goto label0;
+
+        $i0 = virtualinvoke table.<org.apache.fop.fo.flow.table.Table: int getBorderCollapse()>();
+        $r0 = staticinvoke <org.apache.fop.layoutmgr.table.CollapsingBorderModel: org.apache.fop.layoutmgr.table.CollapsingBorderModel getBorderModelFor(int)>($i0);
+        this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.layoutmgr.table.CollapsingBorderModel collapsingBorderModel> = $r0;
+        virtualinvoke this.<org.apache.fop.fo.flow.table.TableFObj: void setCollapsedBorders()>();
+
+     label0:
+        return;
+    }
+
+    public void endOfNode() throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.fo.flow.table.TableFObj this;
+
+        this := @this: org.apache.fop.fo.flow.table.TableFObj;
+        specialinvoke this.<org.apache.fop.fo.FObj: void endOfNode()>();
+        return;
+    }
+
+    protected abstract void setCollapsedBorders();
+
+    protected void createBorder(int)
+    {
+        org.apache.fop.fo.flow.table.TableFObj this;
+        int side, $i0;
+        org.apache.fop.fo.flow.table.BorderSpecification $r0, borderSpec;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground $r1;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo $r2;
+        org.apache.fop.fo.flow.table.ConditionalBorder $r3;
+        org.apache.fop.layoutmgr.table.CollapsingBorderModel $r4;
+        boolean $z0;
+        java.lang.AssertionError $r5;
+
+        this := @this: org.apache.fop.fo.flow.table.TableFObj;
+        side := @parameter0: int;
+        $r0 = new org.apache.fop.fo.flow.table.BorderSpecification;
+        $r1 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        $r2 = virtualinvoke $r1.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo getBorderInfo(int)>(side);
+        $i0 = virtualinvoke this.<org.apache.fop.fo.flow.table.TableFObj: int getNameId()>();
+        specialinvoke $r0.<org.apache.fop.fo.flow.table.BorderSpecification: void <init>(org.apache.fop.fo.properties.CommonBorderPaddingBackground$BorderInfo,int)>($r2, $i0);
+        borderSpec = $r0;
+        tableswitch(side)
+        {
+            case 0: goto label0;
+            case 1: goto label1;
+            case 2: goto label2;
+            case 3: goto label3;
+            default: goto label4;
+        };
+
+     label0:
+        $r3 = new org.apache.fop.fo.flow.table.ConditionalBorder;
+        $r4 = this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.layoutmgr.table.CollapsingBorderModel collapsingBorderModel>;
+        specialinvoke $r3.<org.apache.fop.fo.flow.table.ConditionalBorder: void <init>(org.apache.fop.fo.flow.table.BorderSpecification,org.apache.fop.layoutmgr.table.CollapsingBorderModel)>(borderSpec, $r4);
+        this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.fo.flow.table.ConditionalBorder borderBefore> = $r3;
+        goto label5;
+
+     label1:
+        $r3 = new org.apache.fop.fo.flow.table.ConditionalBorder;
+        $r4 = this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.layoutmgr.table.CollapsingBorderModel collapsingBorderModel>;
+        specialinvoke $r3.<org.apache.fop.fo.flow.table.ConditionalBorder: void <init>(org.apache.fop.fo.flow.table.BorderSpecification,org.apache.fop.layoutmgr.table.CollapsingBorderModel)>(borderSpec, $r4);
+        this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.fo.flow.table.ConditionalBorder borderAfter> = $r3;
+        goto label5;
+
+     label2:
+        this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.fo.flow.table.BorderSpecification borderStart> = borderSpec;
+        goto label5;
+
+     label3:
+        this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.fo.flow.table.BorderSpecification borderEnd> = borderSpec;
+        goto label5;
+
+     label4:
+        $z0 = <org.apache.fop.fo.flow.table.TableFObj: boolean $assertionsDisabled>;
+        if $z0 != 0 goto label5;
+
+        $r5 = new java.lang.AssertionError;
+        specialinvoke $r5.<java.lang.AssertionError: void <init>()>();
+        throw $r5;
+
+     label5:
+        return;
+    }
+
+    protected void createBorder(int, org.apache.fop.fo.flow.table.TableFObj)
+    {
+        org.apache.fop.fo.flow.table.TableFObj this, competitor;
+        int side;
+        org.apache.fop.fo.flow.table.ConditionalBorder $r0, $r1;
+        org.apache.fop.layoutmgr.table.CollapsingBorderModel $r2;
+        org.apache.fop.fo.flow.table.BorderSpecification $r3, $r4, $r5;
+        boolean $z0;
+        java.lang.AssertionError $r6;
+
+        this := @this: org.apache.fop.fo.flow.table.TableFObj;
+        side := @parameter0: int;
+        competitor := @parameter1: org.apache.fop.fo.flow.table.TableFObj;
+        virtualinvoke this.<org.apache.fop.fo.flow.table.TableFObj: void createBorder(int)>(side);
+        tableswitch(side)
+        {
+            case 0: goto label0;
+            case 1: goto label1;
+            case 2: goto label2;
+            case 3: goto label3;
+            default: goto label4;
+        };
+
+     label0:
+        $r0 = this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.fo.flow.table.ConditionalBorder borderBefore>;
+        $r1 = competitor.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.fo.flow.table.ConditionalBorder borderBefore>;
+        virtualinvoke $r0.<org.apache.fop.fo.flow.table.ConditionalBorder: void integrateSegment(org.apache.fop.fo.flow.table.ConditionalBorder,boolean,boolean,boolean)>($r1, 1, 1, 1);
+        goto label5;
+
+     label1:
+        $r0 = this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.fo.flow.table.ConditionalBorder borderAfter>;
+        $r1 = competitor.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.fo.flow.table.ConditionalBorder borderAfter>;
+        virtualinvoke $r0.<org.apache.fop.fo.flow.table.ConditionalBorder: void integrateSegment(org.apache.fop.fo.flow.table.ConditionalBorder,boolean,boolean,boolean)>($r1, 1, 1, 1);
+        goto label5;
+
+     label2:
+        $r2 = this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.layoutmgr.table.CollapsingBorderModel collapsingBorderModel>;
+        $r3 = this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.fo.flow.table.BorderSpecification borderStart>;
+        $r4 = competitor.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.fo.flow.table.BorderSpecification borderStart>;
+        $r5 = virtualinvoke $r2.<org.apache.fop.layoutmgr.table.CollapsingBorderModel: org.apache.fop.fo.flow.table.BorderSpecification determineWinner(org.apache.fop.fo.flow.table.BorderSpecification,org.apache.fop.fo.flow.table.BorderSpecification)>($r3, $r4);
+        this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.fo.flow.table.BorderSpecification borderStart> = $r5;
+        goto label5;
+
+     label3:
+        $r2 = this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.layoutmgr.table.CollapsingBorderModel collapsingBorderModel>;
+        $r3 = this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.fo.flow.table.BorderSpecification borderEnd>;
+        $r4 = competitor.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.fo.flow.table.BorderSpecification borderEnd>;
+        $r5 = virtualinvoke $r2.<org.apache.fop.layoutmgr.table.CollapsingBorderModel: org.apache.fop.fo.flow.table.BorderSpecification determineWinner(org.apache.fop.fo.flow.table.BorderSpecification,org.apache.fop.fo.flow.table.BorderSpecification)>($r3, $r4);
+        this.<org.apache.fop.fo.flow.table.TableFObj: org.apache.fop.fo.flow.table.BorderSpecification borderEnd> = $r5;
+        goto label5;
+
+     label4:
+        $z0 = <org.apache.fop.fo.flow.table.TableFObj: boolean $assertionsDisabled>;
+        if $z0 != 0 goto label5;
+
+        $r6 = new java.lang.AssertionError;
+        specialinvoke $r6.<java.lang.AssertionError: void <init>()>();
+        throw $r6;
+
+     label5:
+        return;
+    }
+
+    static org.apache.commons.logging.Log access$000()
+    {
+        org.apache.commons.logging.Log $r0;
+
+        $r0 = <org.apache.fop.fo.flow.table.TableFObj: org.apache.commons.logging.Log log>;
+        return $r0;
+    }
+
+    static org.apache.commons.logging.Log access$100()
+    {
+        org.apache.commons.logging.Log $r0;
+
+        $r0 = <org.apache.fop.fo.flow.table.TableFObj: org.apache.commons.logging.Log log>;
+        return $r0;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        boolean $z0;
+
+        $r0 = <org.apache.fop.fo.flow.table.TableFObj: java.lang.Class class$org$apache$fop$fo$flow$table$TableFObj>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.fo.flow.table.TableFObj: java.lang.Class class$(java.lang.String)>("org.apache.fop.fo.flow.table.TableFObj");
+        <org.apache.fop.fo.flow.table.TableFObj: java.lang.Class class$org$apache$fop$fo$flow$table$TableFObj> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.fo.flow.table.TableFObj: java.lang.Class class$org$apache$fop$fo$flow$table$TableFObj>;
+
+     label1:
+        $z0 = virtualinvoke $r0.<java.lang.Class: boolean desiredAssertionStatus()>();
+        if $z0 != 0 goto label2;
+
+        $z0 = 1;
+        goto label3;
+
+     label2:
+        $z0 = 0;
+
+     label3:
+        <org.apache.fop.fo.flow.table.TableFObj: boolean $assertionsDisabled> = $z0;
+        return;
+    }
+}

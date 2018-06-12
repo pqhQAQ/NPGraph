@@ -1,0 +1,285 @@
+public class org.apache.fop.fo.pagination.PageNumberGenerator extends java.lang.Object
+{
+    private java.lang.String format;
+    private char groupingSeparator;
+    private int groupingSize;
+    private int letterValue;
+    private static final int DECIMAL;
+    private static final int LOWERALPHA;
+    private static final int UPPERALPHA;
+    private static final int LOWERROMAN;
+    private static final int UPPERROMAN;
+    private int formatType;
+    private int minPadding;
+    private java.lang.String[] zeros;
+
+    public void <init>(java.lang.String, char, int, int)
+    {
+        org.apache.fop.fo.pagination.PageNumberGenerator this;
+        java.lang.String format;
+        char groupingSeparator, $c1;
+        int groupingSize, letterValue, fmtLen, i, $i0;
+        java.lang.String[] $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fo.pagination.PageNumberGenerator;
+        format := @parameter0: java.lang.String;
+        groupingSeparator := @parameter1: char;
+        groupingSize := @parameter2: int;
+        letterValue := @parameter3: int;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.fo.pagination.PageNumberGenerator: int formatType> = 1;
+        this.<org.apache.fop.fo.pagination.PageNumberGenerator: int minPadding> = 0;
+        $r0 = newarray (java.lang.String)[6];
+        $r0[0] = "";
+        $r0[1] = "0";
+        $r0[2] = "00";
+        $r0[3] = "000";
+        $r0[4] = "0000";
+        $r0[5] = "00000";
+        this.<org.apache.fop.fo.pagination.PageNumberGenerator: java.lang.String[] zeros> = $r0;
+        this.<org.apache.fop.fo.pagination.PageNumberGenerator: java.lang.String format> = format;
+        this.<org.apache.fop.fo.pagination.PageNumberGenerator: char groupingSeparator> = groupingSeparator;
+        this.<org.apache.fop.fo.pagination.PageNumberGenerator: int groupingSize> = groupingSize;
+        this.<org.apache.fop.fo.pagination.PageNumberGenerator: int letterValue> = letterValue;
+        fmtLen = virtualinvoke format.<java.lang.String: int length()>();
+        if fmtLen != 1 goto label5;
+
+        $z0 = virtualinvoke format.<java.lang.String: boolean equals(java.lang.Object)>("1");
+        if $z0 == 0 goto label0;
+
+        this.<org.apache.fop.fo.pagination.PageNumberGenerator: int formatType> = 1;
+        this.<org.apache.fop.fo.pagination.PageNumberGenerator: int minPadding> = 0;
+        goto label9;
+
+     label0:
+        $z0 = virtualinvoke format.<java.lang.String: boolean equals(java.lang.Object)>("a");
+        if $z0 == 0 goto label1;
+
+        this.<org.apache.fop.fo.pagination.PageNumberGenerator: int formatType> = 2;
+        goto label9;
+
+     label1:
+        $z0 = virtualinvoke format.<java.lang.String: boolean equals(java.lang.Object)>("A");
+        if $z0 == 0 goto label2;
+
+        this.<org.apache.fop.fo.pagination.PageNumberGenerator: int formatType> = 3;
+        goto label9;
+
+     label2:
+        $z0 = virtualinvoke format.<java.lang.String: boolean equals(java.lang.Object)>("i");
+        if $z0 == 0 goto label3;
+
+        this.<org.apache.fop.fo.pagination.PageNumberGenerator: int formatType> = 4;
+        goto label9;
+
+     label3:
+        $z0 = virtualinvoke format.<java.lang.String: boolean equals(java.lang.Object)>("I");
+        if $z0 == 0 goto label4;
+
+        this.<org.apache.fop.fo.pagination.PageNumberGenerator: int formatType> = 5;
+        goto label9;
+
+     label4:
+        this.<org.apache.fop.fo.pagination.PageNumberGenerator: int formatType> = 1;
+        this.<org.apache.fop.fo.pagination.PageNumberGenerator: int minPadding> = 0;
+        goto label9;
+
+     label5:
+        i = 0;
+
+     label6:
+        $i0 = fmtLen - 1;
+        if i >= $i0 goto label9;
+
+        $c1 = virtualinvoke format.<java.lang.String: char charAt(int)>(i);
+        if $c1 == 48 goto label7;
+
+        this.<org.apache.fop.fo.pagination.PageNumberGenerator: int formatType> = 1;
+        this.<org.apache.fop.fo.pagination.PageNumberGenerator: int minPadding> = 0;
+        goto label8;
+
+     label7:
+        $i0 = fmtLen - 1;
+        this.<org.apache.fop.fo.pagination.PageNumberGenerator: int minPadding> = $i0;
+
+     label8:
+        i = i + 1;
+        goto label6;
+
+     label9:
+        return;
+    }
+
+    public java.lang.String makeFormattedPageNumber(int)
+    {
+        org.apache.fop.fo.pagination.PageNumberGenerator this;
+        int number, nz, $i0, $i1;
+        null_type pn;
+        java.lang.String pn, $r2;
+        java.lang.StringBuffer $r0;
+        java.lang.String[] $r1;
+
+        this := @this: org.apache.fop.fo.pagination.PageNumberGenerator;
+        number := @parameter0: int;
+        pn = null;
+        $i0 = this.<org.apache.fop.fo.pagination.PageNumberGenerator: int formatType>;
+        if $i0 != 1 goto label0;
+
+        pn = staticinvoke <java.lang.Integer: java.lang.String toString(int)>(number);
+        $i0 = this.<org.apache.fop.fo.pagination.PageNumberGenerator: int minPadding>;
+        $i1 = virtualinvoke pn.<java.lang.String: int length()>();
+        if $i0 < $i1 goto label3;
+
+        $i0 = this.<org.apache.fop.fo.pagination.PageNumberGenerator: int minPadding>;
+        $i1 = virtualinvoke pn.<java.lang.String: int length()>();
+        $i0 = $i0 - $i1;
+        nz = $i0 + 1;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r1 = this.<org.apache.fop.fo.pagination.PageNumberGenerator: java.lang.String[] zeros>;
+        $r2 = $r1[nz];
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(pn);
+        pn = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        goto label3;
+
+     label0:
+        $i0 = this.<org.apache.fop.fo.pagination.PageNumberGenerator: int formatType>;
+        if $i0 == 4 goto label1;
+
+        $i0 = this.<org.apache.fop.fo.pagination.PageNumberGenerator: int formatType>;
+        if $i0 != 5 goto label2;
+
+     label1:
+        pn = specialinvoke this.<org.apache.fop.fo.pagination.PageNumberGenerator: java.lang.String makeRoman(int)>(number);
+        $i0 = this.<org.apache.fop.fo.pagination.PageNumberGenerator: int formatType>;
+        if $i0 != 5 goto label3;
+
+        pn = virtualinvoke pn.<java.lang.String: java.lang.String toUpperCase()>();
+        goto label3;
+
+     label2:
+        pn = specialinvoke this.<org.apache.fop.fo.pagination.PageNumberGenerator: java.lang.String makeAlpha(int)>(number);
+        $i0 = this.<org.apache.fop.fo.pagination.PageNumberGenerator: int formatType>;
+        if $i0 != 3 goto label3;
+
+        pn = virtualinvoke pn.<java.lang.String: java.lang.String toUpperCase()>();
+
+     label3:
+        return pn;
+    }
+
+    private java.lang.String makeRoman(int)
+    {
+        org.apache.fop.fo.pagination.PageNumberGenerator this;
+        int num, i, $i0;
+        int[] arabic, $r0;
+        java.lang.String[] roman, $r1;
+        java.lang.StringBuffer romanNumber, $r2;
+        java.lang.String $r3, $r4;
+
+        this := @this: org.apache.fop.fo.pagination.PageNumberGenerator;
+        num := @parameter0: int;
+        $r0 = newarray (int)[13];
+        $r0[0] = 1000;
+        $r0[1] = 900;
+        $r0[2] = 500;
+        $r0[3] = 400;
+        $r0[4] = 100;
+        $r0[5] = 90;
+        $r0[6] = 50;
+        $r0[7] = 40;
+        $r0[8] = 10;
+        $r0[9] = 9;
+        $r0[10] = 5;
+        $r0[11] = 4;
+        $r0[12] = 1;
+        arabic = $r0;
+        $r1 = newarray (java.lang.String)[13];
+        $r1[0] = "m";
+        $r1[1] = "cm";
+        $r1[2] = "d";
+        $r1[3] = "cd";
+        $r1[4] = "c";
+        $r1[5] = "xc";
+        $r1[6] = "l";
+        $r1[7] = "xl";
+        $r1[8] = "x";
+        $r1[9] = "ix";
+        $r1[10] = "v";
+        $r1[11] = "iv";
+        $r1[12] = "i";
+        roman = $r1;
+        i = 0;
+        $r2 = new java.lang.StringBuffer;
+        specialinvoke $r2.<java.lang.StringBuffer: void <init>()>();
+        romanNumber = $r2;
+
+     label0:
+        if num <= 0 goto label3;
+
+     label1:
+        $i0 = arabic[i];
+        if num < $i0 goto label2;
+
+        $i0 = arabic[i];
+        num = num - $i0;
+        $r3 = roman[i];
+        virtualinvoke romanNumber.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        goto label1;
+
+     label2:
+        i = i + 1;
+        goto label0;
+
+     label3:
+        $r4 = virtualinvoke romanNumber.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r4;
+    }
+
+    private java.lang.String makeAlpha(int)
+    {
+        org.apache.fop.fo.pagination.PageNumberGenerator this;
+        int num, num, rem, $i1;
+        java.lang.String letters, $r1;
+        java.lang.StringBuffer alphaNumber, $r0;
+        byte base;
+        boolean rem;
+        char $c0;
+
+        this := @this: org.apache.fop.fo.pagination.PageNumberGenerator;
+        num := @parameter0: int;
+        letters = "abcdefghijklmnopqrstuvwxyz";
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        alphaNumber = $r0;
+        base = 26;
+        rem = 0;
+        num = num + -1;
+        if num >= base goto label0;
+
+        $c0 = virtualinvoke letters.<java.lang.String: char charAt(int)>(num);
+        virtualinvoke alphaNumber.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c0);
+        goto label2;
+
+     label0:
+        if num < base goto label1;
+
+        rem = num % base;
+        $c0 = virtualinvoke letters.<java.lang.String: char charAt(int)>(rem);
+        virtualinvoke alphaNumber.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c0);
+        num = num / base;
+        goto label0;
+
+     label1:
+        $i1 = num - 1;
+        $c0 = virtualinvoke letters.<java.lang.String: char charAt(int)>($i1);
+        virtualinvoke alphaNumber.<java.lang.StringBuffer: java.lang.StringBuffer append(char)>($c0);
+
+     label2:
+        $r0 = virtualinvoke alphaNumber.<java.lang.StringBuffer: java.lang.StringBuffer reverse()>();
+        $r1 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r1;
+    }
+}

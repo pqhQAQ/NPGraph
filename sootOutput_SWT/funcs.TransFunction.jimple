@@ -1,0 +1,172 @@
+public class funcs.TransFunction extends java.lang.Object
+{
+    public data.MyScript source;
+    public static final java.lang.String[] pythonFstLocators;
+    public static final java.lang.String[] pythonFstActions;
+    static java.lang.String rootpath;
+    public static final java.lang.String[] seqLocators;
+    public static java.util.Map action_py2seq;
+    public java.util.ArrayList actionseq;
+    public data.MyDevice tardev;
+    public data.MyApp tarapp;
+
+    static void <clinit>()
+    {
+        java.lang.String[] $r0;
+
+        $r0 = newarray (java.lang.String)[3];
+        $r0[0] = "find_element_by_name";
+        $r0[1] = "find_element_by_id";
+        $r0[2] = "find_element_by_xpath";
+        <funcs.TransFunction: java.lang.String[] pythonFstLocators> = $r0;
+        $r0 = newarray (java.lang.String)[3];
+        $r0[0] = "execute_script";
+        $r0[1] = "shake";
+        $r0[2] = "quit";
+        <funcs.TransFunction: java.lang.String[] pythonFstActions> = $r0;
+        $r0 = newarray (java.lang.String)[3];
+        $r0[0] = "name";
+        $r0[1] = "id";
+        $r0[2] = "xpath";
+        <funcs.TransFunction: java.lang.String[] seqLocators> = $r0;
+        return;
+    }
+
+    public static void main(java.lang.String[])
+    {
+        java.lang.String[] args;
+        funcs.ScriptFunction sf;
+        java.lang.InterruptedException e1, $r0;
+        funcs.TransFunction trans, $r2;
+        java.lang.Exception e, $r8;
+        java.util.ArrayList $r1, $r3;
+        boolean $z0;
+        java.lang.Object $r4;
+        data.MyScript $r5;
+        data.MyDevice $r6;
+        data.MyApp $r7;
+
+        args := @parameter0: java.lang.String[];
+        sf = staticinvoke <funcs.ScriptFunction: funcs.ScriptFunction getScriptFunction()>();
+        goto label3;
+
+     label0:
+        staticinvoke <java.lang.Thread: void sleep(long)>(100L);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r0 := @caughtexception;
+        e1 = $r0;
+        virtualinvoke e1.<java.lang.InterruptedException: void printStackTrace()>();
+
+     label3:
+        $r1 = virtualinvoke sf.<funcs.ScriptFunction: java.util.ArrayList getAllScripts()>();
+        $z0 = virtualinvoke $r1.<java.util.ArrayList: boolean isEmpty()>();
+        if $z0 != 0 goto label0;
+
+        $r2 = new funcs.TransFunction;
+        $r3 = virtualinvoke sf.<funcs.ScriptFunction: java.util.ArrayList getAllScripts()>();
+        $r4 = virtualinvoke $r3.<java.util.ArrayList: java.lang.Object get(int)>(0);
+        $r5 = (data.MyScript) $r4;
+        specialinvoke $r2.<funcs.TransFunction: void <init>(data.MyScript)>($r5);
+        trans = $r2;
+
+     label4:
+        $r6 = new data.MyDevice;
+        specialinvoke $r6.<data.MyDevice: void <init>(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)>("123", "Online", "device", "\u8bbe\u5907", "iOS");
+        $r7 = new data.MyApp;
+        specialinvoke $r7.<data.MyApp: void <init>(java.lang.String,java.lang.String,java.lang.String)>("Apps/ContactManager.apk", "6.02", "Android");
+        virtualinvoke trans.<funcs.TransFunction: void trans(data.MyDevice,data.MyApp)>($r6, $r7);
+
+     label5:
+        goto label7;
+
+     label6:
+        $r8 := @caughtexception;
+        e = $r8;
+        virtualinvoke e.<java.lang.Exception: void printStackTrace()>();
+
+     label7:
+        return;
+
+        catch java.lang.InterruptedException from label0 to label1 with label2;
+        catch java.lang.Exception from label4 to label5 with label6;
+    }
+
+    void <init>(data.MyScript)
+    {
+        funcs.TransFunction this;
+        data.MyScript s;
+        java.util.ArrayList $r0;
+        java.lang.Exception e, $r3;
+        java.io.File $r1;
+        java.lang.String $r2;
+
+        this := @this: funcs.TransFunction;
+        s := @parameter0: data.MyScript;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<funcs.TransFunction: java.util.ArrayList actionseq> = $r0;
+        this.<funcs.TransFunction: data.MyScript source> = s;
+
+     label0:
+        $r1 = new java.io.File;
+        specialinvoke $r1.<java.io.File: void <init>(java.lang.String)>("");
+        $r2 = virtualinvoke $r1.<java.io.File: java.lang.String getAbsolutePath()>();
+        <funcs.TransFunction: java.lang.String rootpath> = $r2;
+
+     label1:
+        goto label3;
+
+     label2:
+        $r3 := @caughtexception;
+        e = $r3;
+        virtualinvoke e.<java.lang.Exception: void printStackTrace()>();
+
+     label3:
+        return;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+
+    public void trans(data.MyDevice, data.MyApp)
+    {
+        funcs.TransFunction this;
+        data.MyDevice dev;
+        data.MyApp app;
+        data.MyScript $r0, $r1;
+        boolean $z0;
+        java.util.ArrayList $r2;
+        funcs.TransFunction$startTransform $r3;
+
+        this := @this: funcs.TransFunction;
+        dev := @parameter0: data.MyDevice;
+        app := @parameter1: data.MyApp;
+        this.<funcs.TransFunction: data.MyDevice tardev> = dev;
+        this.<funcs.TransFunction: data.MyApp tarapp> = app;
+        $r0 = this.<funcs.TransFunction: data.MyScript source>;
+        $z0 = $r0.<data.MyScript: boolean finishanalyse>;
+        if $z0 != 0 goto label0;
+
+        $r0 = this.<funcs.TransFunction: data.MyScript source>;
+        virtualinvoke $r0.<data.MyScript: void startAnalyse()>();
+
+     label0:
+        $r0 = this.<funcs.TransFunction: data.MyScript source>;
+        $z0 = $r0.<data.MyScript: boolean finishanalyse>;
+        if $z0 == 0 goto label1;
+
+        $r1 = this.<funcs.TransFunction: data.MyScript source>;
+        $r2 = $r1.<data.MyScript: java.util.ArrayList actionseq>;
+        this.<funcs.TransFunction: java.util.ArrayList actionseq> = $r2;
+        $r3 = new funcs.TransFunction$startTransform;
+        specialinvoke $r3.<funcs.TransFunction$startTransform: void <init>(funcs.TransFunction)>(this);
+        virtualinvoke $r3.<funcs.TransFunction$startTransform: void start()>();
+
+     label1:
+        return;
+    }
+}

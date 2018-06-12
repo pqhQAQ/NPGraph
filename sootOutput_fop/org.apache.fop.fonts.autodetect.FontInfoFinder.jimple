@@ -1,0 +1,376 @@
+public class org.apache.fop.fonts.autodetect.FontInfoFinder extends java.lang.Object
+{
+    private org.apache.commons.logging.Log log;
+    private final java.util.regex.Pattern quotePattern;
+    static java.lang.Class class$org$apache$fop$fonts$autodetect$FontInfoFinder;
+
+    public void <init>()
+    {
+        org.apache.fop.fonts.autodetect.FontInfoFinder this;
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r2;
+        java.util.regex.Pattern $r3;
+
+        this := @this: org.apache.fop.fonts.autodetect.FontInfoFinder;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        $r0 = <org.apache.fop.fonts.autodetect.FontInfoFinder: java.lang.Class class$org$apache$fop$fonts$autodetect$FontInfoFinder>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.fonts.autodetect.FontInfoFinder: java.lang.Class class$(java.lang.String)>("org.apache.fop.fonts.autodetect.FontInfoFinder");
+        <org.apache.fop.fonts.autodetect.FontInfoFinder: java.lang.Class class$org$apache$fop$fonts$autodetect$FontInfoFinder> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.fonts.autodetect.FontInfoFinder: java.lang.Class class$org$apache$fop$fonts$autodetect$FontInfoFinder>;
+
+     label1:
+        $r2 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        this.<org.apache.fop.fonts.autodetect.FontInfoFinder: org.apache.commons.logging.Log log> = $r2;
+        $r3 = staticinvoke <java.util.regex.Pattern: java.util.regex.Pattern compile(java.lang.String)>("\'");
+        this.<org.apache.fop.fonts.autodetect.FontInfoFinder: java.util.regex.Pattern quotePattern> = $r3;
+        return;
+    }
+
+    private void generateTripletsFromFont(org.apache.fop.fonts.CustomFont, java.util.Collection)
+    {
+        org.apache.fop.fonts.autodetect.FontInfoFinder this;
+        org.apache.fop.fonts.CustomFont customFont;
+        java.util.Collection triplets;
+        java.lang.StringBuffer $r0;
+        java.lang.String strippedName, fullName, searchName, style, familyName, $r2, $r4;
+        int guessedWeight, weight, priority, $i0, $i1;
+        java.util.Set familyNames, $r3;
+        java.util.Iterator iter;
+        org.apache.commons.logging.Log $r1;
+        boolean $z0;
+        org.apache.fop.fonts.FontTriplet $r5;
+        java.lang.Object $r6;
+
+        this := @this: org.apache.fop.fonts.autodetect.FontInfoFinder;
+        customFont := @parameter0: org.apache.fop.fonts.CustomFont;
+        triplets := @parameter1: java.util.Collection;
+        $r1 = this.<org.apache.fop.fonts.autodetect.FontInfoFinder: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r1.<org.apache.commons.logging.Log: boolean isTraceEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r1 = this.<org.apache.fop.fonts.autodetect.FontInfoFinder: org.apache.commons.logging.Log log>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Font: ");
+        $r2 = virtualinvoke customFont.<org.apache.fop.fonts.CustomFont: java.lang.String getFullName()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", family: ");
+        $r3 = virtualinvoke customFont.<org.apache.fop.fonts.CustomFont: java.util.Set getFamilyNames()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r3);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", PS: ");
+        $r2 = virtualinvoke customFont.<org.apache.fop.fonts.CustomFont: java.lang.String getFontName()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", EmbedName: ");
+        $r2 = virtualinvoke customFont.<org.apache.fop.fonts.CustomFont: java.lang.String getEmbedFontName()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r4 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void trace(java.lang.Object)>($r4);
+
+     label0:
+        $r4 = virtualinvoke customFont.<org.apache.fop.fonts.CustomFont: java.lang.String getStrippedFontName()>();
+        strippedName = specialinvoke this.<org.apache.fop.fonts.autodetect.FontInfoFinder: java.lang.String stripQuotes(java.lang.String)>($r4);
+        $r4 = virtualinvoke customFont.<org.apache.fop.fonts.CustomFont: java.lang.String getFullName()>();
+        fullName = specialinvoke this.<org.apache.fop.fonts.autodetect.FontInfoFinder: java.lang.String stripQuotes(java.lang.String)>($r4);
+        searchName = virtualinvoke fullName.<java.lang.String: java.lang.String toLowerCase()>();
+        style = specialinvoke this.<org.apache.fop.fonts.autodetect.FontInfoFinder: java.lang.String guessStyle(org.apache.fop.fonts.CustomFont,java.lang.String)>(customFont, searchName);
+        guessedWeight = staticinvoke <org.apache.fop.fonts.FontUtil: int guessWeight(java.lang.String)>(searchName);
+        weight = guessedWeight;
+        $r5 = new org.apache.fop.fonts.FontTriplet;
+        specialinvoke $r5.<org.apache.fop.fonts.FontTriplet: void <init>(java.lang.String,java.lang.String,int,int)>(fullName, "normal", 400, 0);
+        interfaceinvoke triplets.<java.util.Collection: boolean add(java.lang.Object)>($r5);
+        $z0 = virtualinvoke fullName.<java.lang.String: boolean equals(java.lang.Object)>(strippedName);
+        if $z0 != 0 goto label1;
+
+        $r5 = new org.apache.fop.fonts.FontTriplet;
+        specialinvoke $r5.<org.apache.fop.fonts.FontTriplet: void <init>(java.lang.String,java.lang.String,int,int)>(strippedName, "normal", 400, 0);
+        interfaceinvoke triplets.<java.util.Collection: boolean add(java.lang.Object)>($r5);
+
+     label1:
+        familyNames = virtualinvoke customFont.<org.apache.fop.fonts.CustomFont: java.util.Set getFamilyNames()>();
+        iter = interfaceinvoke familyNames.<java.util.Set: java.util.Iterator iterator()>();
+
+     label2:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label6;
+
+        $r6 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        $r4 = (java.lang.String) $r6;
+        familyName = specialinvoke this.<org.apache.fop.fonts.autodetect.FontInfoFinder: java.lang.String stripQuotes(java.lang.String)>($r4);
+        $z0 = virtualinvoke fullName.<java.lang.String: boolean equals(java.lang.Object)>(familyName);
+        if $z0 != 0 goto label5;
+
+        $z0 = virtualinvoke fullName.<java.lang.String: boolean startsWith(java.lang.String)>(familyName);
+        if $z0 == 0 goto label3;
+
+        $i0 = virtualinvoke fullName.<java.lang.String: int length()>();
+        $i1 = virtualinvoke familyName.<java.lang.String: int length()>();
+        $i0 = $i0 - $i1;
+        goto label4;
+
+     label3:
+        $i0 = virtualinvoke fullName.<java.lang.String: int length()>();
+
+     label4:
+        priority = $i0;
+        $r5 = new org.apache.fop.fonts.FontTriplet;
+        specialinvoke $r5.<org.apache.fop.fonts.FontTriplet: void <init>(java.lang.String,java.lang.String,int,int)>(familyName, style, weight, priority);
+        interfaceinvoke triplets.<java.util.Collection: boolean add(java.lang.Object)>($r5);
+
+     label5:
+        goto label2;
+
+     label6:
+        return;
+    }
+
+    private java.lang.String stripQuotes(java.lang.String)
+    {
+        org.apache.fop.fonts.autodetect.FontInfoFinder this;
+        java.lang.String name, $r2;
+        java.util.regex.Pattern $r0;
+        java.util.regex.Matcher $r1;
+
+        this := @this: org.apache.fop.fonts.autodetect.FontInfoFinder;
+        name := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.fonts.autodetect.FontInfoFinder: java.util.regex.Pattern quotePattern>;
+        $r1 = virtualinvoke $r0.<java.util.regex.Pattern: java.util.regex.Matcher matcher(java.lang.CharSequence)>(name);
+        $r2 = virtualinvoke $r1.<java.util.regex.Matcher: java.lang.String replaceAll(java.lang.String)>("");
+        return $r2;
+    }
+
+    private java.lang.String guessStyle(org.apache.fop.fonts.CustomFont, java.lang.String)
+    {
+        org.apache.fop.fonts.autodetect.FontInfoFinder this;
+        org.apache.fop.fonts.CustomFont customFont;
+        java.lang.String fontName, style;
+        int $i0;
+
+        this := @this: org.apache.fop.fonts.autodetect.FontInfoFinder;
+        customFont := @parameter0: org.apache.fop.fonts.CustomFont;
+        fontName := @parameter1: java.lang.String;
+        style = "normal";
+        $i0 = virtualinvoke customFont.<org.apache.fop.fonts.CustomFont: int getItalicAngle()>();
+        if $i0 <= 0 goto label0;
+
+        style = "italic";
+        goto label1;
+
+     label0:
+        style = staticinvoke <org.apache.fop.fonts.FontUtil: java.lang.String guessStyle(java.lang.String)>(fontName);
+
+     label1:
+        return style;
+    }
+
+    private org.apache.fop.fonts.EmbedFontInfo fontInfoFromCustomFont(java.net.URL, org.apache.fop.fonts.CustomFont, org.apache.fop.fonts.FontCache)
+    {
+        org.apache.fop.fonts.autodetect.FontInfoFinder this;
+        java.net.URL fontUrl;
+        org.apache.fop.fonts.CustomFont customFont;
+        org.apache.fop.fonts.FontCache fontCache;
+        java.util.ArrayList $r0, fontTripletList;
+        java.lang.String embedUrl;
+        org.apache.fop.fonts.EmbedFontInfo fontInfo, $r1;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.autodetect.FontInfoFinder;
+        fontUrl := @parameter0: java.net.URL;
+        customFont := @parameter1: org.apache.fop.fonts.CustomFont;
+        fontCache := @parameter2: org.apache.fop.fonts.FontCache;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        fontTripletList = $r0;
+        specialinvoke this.<org.apache.fop.fonts.autodetect.FontInfoFinder: void generateTripletsFromFont(org.apache.fop.fonts.CustomFont,java.util.Collection)>(customFont, fontTripletList);
+        embedUrl = virtualinvoke fontUrl.<java.net.URL: java.lang.String toExternalForm()>();
+        $r1 = new org.apache.fop.fonts.EmbedFontInfo;
+        $z0 = virtualinvoke customFont.<org.apache.fop.fonts.CustomFont: boolean isKerningEnabled()>();
+        specialinvoke $r1.<org.apache.fop.fonts.EmbedFontInfo: void <init>(java.lang.String,boolean,java.util.List,java.lang.String)>(null, $z0, fontTripletList, embedUrl);
+        fontInfo = $r1;
+        if fontCache == null goto label0;
+
+        virtualinvoke fontCache.<org.apache.fop.fonts.FontCache: void addFont(org.apache.fop.fonts.EmbedFontInfo)>(fontInfo);
+
+     label0:
+        return fontInfo;
+    }
+
+    public org.apache.fop.fonts.EmbedFontInfo find(java.net.URL, org.apache.fop.fonts.FontResolver, org.apache.fop.fonts.FontCache)
+    {
+        org.apache.fop.fonts.autodetect.FontInfoFinder this;
+        java.net.URL fontUrl;
+        org.apache.fop.fonts.FontResolver resolver;
+        org.apache.fop.fonts.FontCache fontCache;
+        null_type embedUrl, customFont;
+        long fileLastModified, $l0;
+        java.net.URLConnection conn;
+        java.lang.Throwable l8, $r2;
+        java.io.IOException e, $r3;
+        java.lang.StringBuffer $r0;
+        org.apache.fop.fonts.CachedFontInfo fontInfo;
+        java.lang.String embedUrl, $r5, $r6;
+        java.io.InputStream $r1;
+        org.apache.commons.logging.Log $r4;
+        boolean $z0;
+        byte $b1;
+        org.apache.fop.fonts.CustomFont customFont;
+        java.lang.Exception $r7, e;
+        org.apache.fop.fonts.EmbedFontInfo $r8;
+
+        this := @this: org.apache.fop.fonts.autodetect.FontInfoFinder;
+        fontUrl := @parameter0: java.net.URL;
+        resolver := @parameter1: org.apache.fop.fonts.FontResolver;
+        fontCache := @parameter2: org.apache.fop.fonts.FontCache;
+        embedUrl = null;
+        embedUrl = virtualinvoke fontUrl.<java.net.URL: java.lang.String toExternalForm()>();
+        fileLastModified = -1L;
+        if fontCache == null goto label12;
+
+     label0:
+        conn = virtualinvoke fontUrl.<java.net.URL: java.net.URLConnection openConnection()>();
+
+     label1:
+        fileLastModified = virtualinvoke conn.<java.net.URLConnection: long getLastModified()>();
+
+     label2:
+        $r1 = virtualinvoke conn.<java.net.URLConnection: java.io.InputStream getInputStream()>();
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.InputStream)>($r1);
+        goto label6;
+
+     label3:
+        $r2 := @caughtexception;
+
+     label4:
+        l8 = $r2;
+
+     label5:
+        $r1 = virtualinvoke conn.<java.net.URLConnection: java.io.InputStream getInputStream()>();
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.InputStream)>($r1);
+        throw l8;
+
+     label6:
+        goto label8;
+
+     label7:
+        $r3 := @caughtexception;
+        e = $r3;
+        $r4 = this.<org.apache.fop.fonts.autodetect.FontInfoFinder: org.apache.commons.logging.Log log>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("IOError: ");
+        $r5 = virtualinvoke e.<java.io.IOException: java.lang.String getMessage()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r6 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r4.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r6);
+        fileLastModified = 0L;
+
+     label8:
+        $z0 = virtualinvoke fontCache.<org.apache.fop.fonts.FontCache: boolean containsFont(java.lang.String)>(embedUrl);
+        if $z0 == 0 goto label10;
+
+        fontInfo = virtualinvoke fontCache.<org.apache.fop.fonts.FontCache: org.apache.fop.fonts.CachedFontInfo getFont(java.lang.String)>(embedUrl);
+        $l0 = virtualinvoke fontInfo.<org.apache.fop.fonts.CachedFontInfo: long lastModified()>();
+        $b1 = $l0 cmp fileLastModified;
+        if $b1 != 0 goto label9;
+
+        return fontInfo;
+
+     label9:
+        virtualinvoke fontCache.<org.apache.fop.fonts.FontCache: void removeFont(java.lang.String)>(embedUrl);
+        goto label12;
+
+     label10:
+        $z0 = virtualinvoke fontCache.<org.apache.fop.fonts.FontCache: boolean isFailedFont(java.lang.String,long)>(embedUrl, fileLastModified);
+        if $z0 == 0 goto label12;
+
+        $r4 = this.<org.apache.fop.fonts.autodetect.FontInfoFinder: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r4.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label11;
+
+        $r4 = this.<org.apache.fop.fonts.autodetect.FontInfoFinder: org.apache.commons.logging.Log log>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Skipping font file that failed to load previously: ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(embedUrl);
+        $r6 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r4.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r6);
+
+     label11:
+        return null;
+
+     label12:
+        customFont = null;
+
+     label13:
+        customFont = staticinvoke <org.apache.fop.fonts.FontLoader: org.apache.fop.fonts.CustomFont loadFont(java.net.URL,org.apache.fop.fonts.FontResolver)>(fontUrl, resolver);
+
+     label14:
+        goto label18;
+
+     label15:
+        $r7 := @caughtexception;
+        e = $r7;
+        $r4 = this.<org.apache.fop.fonts.autodetect.FontInfoFinder: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r4.<org.apache.commons.logging.Log: boolean isErrorEnabled()>();
+        if $z0 == 0 goto label16;
+
+        $r4 = this.<org.apache.fop.fonts.autodetect.FontInfoFinder: org.apache.commons.logging.Log log>;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unable to load font file: ");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(embedUrl);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(". Reason: ");
+        $r5 = virtualinvoke e.<java.lang.Exception: java.lang.String getMessage()>();
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r6 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r4.<org.apache.commons.logging.Log: void error(java.lang.Object)>($r6);
+
+     label16:
+        if fontCache == null goto label17;
+
+        virtualinvoke fontCache.<org.apache.fop.fonts.FontCache: void registerFailedFont(java.lang.String,long)>(embedUrl, fileLastModified);
+
+     label17:
+        return null;
+
+     label18:
+        $r8 = specialinvoke this.<org.apache.fop.fonts.autodetect.FontInfoFinder: org.apache.fop.fonts.EmbedFontInfo fontInfoFromCustomFont(java.net.URL,org.apache.fop.fonts.CustomFont,org.apache.fop.fonts.FontCache)>(fontUrl, customFont, fontCache);
+        return $r8;
+
+        catch java.lang.Throwable from label1 to label2 with label3;
+        catch java.lang.Throwable from label4 to label5 with label3;
+        catch java.io.IOException from label0 to label6 with label7;
+        catch java.lang.Exception from label13 to label14 with label15;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+}

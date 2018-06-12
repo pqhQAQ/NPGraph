@@ -1,0 +1,178 @@
+public abstract class org.apache.fop.render.AbstractGenericSVGHandler extends java.lang.Object implements org.apache.fop.render.XMLHandler, org.apache.fop.render.RendererContextConstants
+{
+    private static org.apache.commons.logging.Log log;
+    static java.lang.Class class$org$apache$fop$render$AbstractGenericSVGHandler;
+
+    public void <init>()
+    {
+        org.apache.fop.render.AbstractGenericSVGHandler this;
+
+        this := @this: org.apache.fop.render.AbstractGenericSVGHandler;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        return;
+    }
+
+    public void handleXML(org.apache.fop.render.RendererContext, org.w3c.dom.Document, java.lang.String) throws java.lang.Exception
+    {
+        org.apache.fop.render.AbstractGenericSVGHandler this;
+        org.apache.fop.render.RendererContext context;
+        org.w3c.dom.Document doc;
+        java.lang.String ns, $r0;
+        boolean $z0;
+
+        this := @this: org.apache.fop.render.AbstractGenericSVGHandler;
+        context := @parameter0: org.apache.fop.render.RendererContext;
+        doc := @parameter1: org.w3c.dom.Document;
+        ns := @parameter2: java.lang.String;
+        $r0 = "http://www.w3.org/2000/svg";
+        $z0 = virtualinvoke $r0.<java.lang.String: boolean equals(java.lang.Object)>(ns);
+        if $z0 == 0 goto label0;
+
+        virtualinvoke this.<org.apache.fop.render.AbstractGenericSVGHandler: void renderSVGDocument(org.apache.fop.render.RendererContext,org.w3c.dom.Document)>(context, doc);
+
+     label0:
+        return;
+    }
+
+    protected void renderSVGDocument(org.apache.fop.render.RendererContext, org.w3c.dom.Document) throws java.io.IOException
+    {
+        org.apache.fop.render.AbstractGenericSVGHandler this;
+        org.apache.fop.render.RendererContext context;
+        org.w3c.dom.Document doc;
+        org.apache.fop.render.RendererContext$RendererContextWrapper wrappedContext;
+        int x, y, $i0, $i1;
+        java.awt.geom.AffineTransform $r0;
+        org.apache.fop.svg.SVGUserAgent ua, $r1;
+        org.apache.batik.bridge.GVTBuilder builder, $r3;
+        org.apache.batik.bridge.BridgeContext ctx, $r4;
+        org.apache.batik.gvt.GraphicsNode root;
+        java.lang.Exception e, $r5;
+        org.apache.fop.render.AbstractGenericSVGHandler$1 painter, $r10;
+        org.apache.fop.render.Graphics2DAdapter adapter;
+        org.apache.fop.apps.FOUserAgent $r2;
+        float $f0;
+        org.apache.commons.logging.Log $r6;
+        java.lang.StringBuffer $r7;
+        java.lang.String $r8, $r9;
+        org.apache.fop.render.AbstractRenderer $r11;
+
+        this := @this: org.apache.fop.render.AbstractGenericSVGHandler;
+        context := @parameter0: org.apache.fop.render.RendererContext;
+        doc := @parameter1: org.w3c.dom.Document;
+        virtualinvoke this.<org.apache.fop.render.AbstractGenericSVGHandler: void updateRendererContext(org.apache.fop.render.RendererContext)>(context);
+        wrappedContext = staticinvoke <org.apache.fop.render.RendererContext: org.apache.fop.render.RendererContext$RendererContextWrapper wrapRendererContext(org.apache.fop.render.RendererContext)>(context);
+        x = virtualinvoke wrappedContext.<org.apache.fop.render.RendererContext$RendererContextWrapper: int getCurrentXPosition()>();
+        y = virtualinvoke wrappedContext.<org.apache.fop.render.RendererContext$RendererContextWrapper: int getCurrentYPosition()>();
+        $r1 = new org.apache.fop.svg.SVGUserAgent;
+        $r2 = virtualinvoke context.<org.apache.fop.render.RendererContext: org.apache.fop.apps.FOUserAgent getUserAgent()>();
+        $f0 = virtualinvoke $r2.<org.apache.fop.apps.FOUserAgent: float getSourcePixelUnitToMillimeter()>();
+        $r0 = new java.awt.geom.AffineTransform;
+        specialinvoke $r0.<java.awt.geom.AffineTransform: void <init>()>();
+        specialinvoke $r1.<org.apache.fop.svg.SVGUserAgent: void <init>(float,java.awt.geom.AffineTransform)>($f0, $r0);
+        ua = $r1;
+        $r3 = new org.apache.batik.bridge.GVTBuilder;
+        specialinvoke $r3.<org.apache.batik.bridge.GVTBuilder: void <init>()>();
+        builder = $r3;
+        $r4 = new org.apache.batik.bridge.BridgeContext;
+        specialinvoke $r4.<org.apache.batik.bridge.BridgeContext: void <init>(org.apache.batik.bridge.UserAgent)>(ua);
+        ctx = $r4;
+
+     label0:
+        root = virtualinvoke builder.<org.apache.batik.bridge.GVTBuilder: org.apache.batik.gvt.GraphicsNode build(org.apache.batik.bridge.BridgeContext,org.w3c.dom.Document)>(ctx, doc);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r5 := @caughtexception;
+        e = $r5;
+        $r6 = <org.apache.fop.render.AbstractGenericSVGHandler: org.apache.commons.logging.Log log>;
+        $r7 = new java.lang.StringBuffer;
+        specialinvoke $r7.<java.lang.StringBuffer: void <init>()>();
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("SVG graphic could not be built: ");
+        $r8 = virtualinvoke e.<java.lang.Exception: java.lang.String getMessage()>();
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r8);
+        $r9 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r6.<org.apache.commons.logging.Log: void error(java.lang.Object,java.lang.Throwable)>($r9, e);
+        return;
+
+     label3:
+        $r10 = new org.apache.fop.render.AbstractGenericSVGHandler$1;
+        specialinvoke $r10.<org.apache.fop.render.AbstractGenericSVGHandler$1: void <init>(org.apache.fop.render.AbstractGenericSVGHandler,org.apache.batik.bridge.BridgeContext,org.apache.batik.gvt.GraphicsNode,org.apache.fop.render.RendererContext$RendererContextWrapper)>(this, ctx, root, wrappedContext);
+        painter = $r10;
+        $r11 = virtualinvoke context.<org.apache.fop.render.RendererContext: org.apache.fop.render.AbstractRenderer getRenderer()>();
+        adapter = virtualinvoke $r11.<org.apache.fop.render.AbstractRenderer: org.apache.fop.render.Graphics2DAdapter getGraphics2DAdapter()>();
+        $i0 = virtualinvoke wrappedContext.<org.apache.fop.render.RendererContext$RendererContextWrapper: int getWidth()>();
+        $i1 = virtualinvoke wrappedContext.<org.apache.fop.render.RendererContext$RendererContextWrapper: int getHeight()>();
+        interfaceinvoke adapter.<org.apache.fop.render.Graphics2DAdapter: void paintImage(org.apache.fop.render.Graphics2DImagePainter,org.apache.fop.render.RendererContext,int,int,int,int)>(painter, context, x, y, $i0, $i1);
+        return;
+
+        catch java.lang.Exception from label0 to label1 with label2;
+    }
+
+    protected void updateRendererContext(org.apache.fop.render.RendererContext)
+    {
+        org.apache.fop.render.AbstractGenericSVGHandler this;
+        org.apache.fop.render.RendererContext context;
+
+        this := @this: org.apache.fop.render.AbstractGenericSVGHandler;
+        context := @parameter0: org.apache.fop.render.RendererContext;
+        return;
+    }
+
+    public java.lang.String getNamespace()
+    {
+        org.apache.fop.render.AbstractGenericSVGHandler this;
+
+        this := @this: org.apache.fop.render.AbstractGenericSVGHandler;
+        return "http://www.w3.org/2000/svg";
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.render.AbstractGenericSVGHandler: java.lang.Class class$org$apache$fop$render$AbstractGenericSVGHandler>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.render.AbstractGenericSVGHandler: java.lang.Class class$(java.lang.String)>("org.apache.fop.render.AbstractGenericSVGHandler");
+        <org.apache.fop.render.AbstractGenericSVGHandler: java.lang.Class class$org$apache$fop$render$AbstractGenericSVGHandler> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.render.AbstractGenericSVGHandler: java.lang.Class class$org$apache$fop$render$AbstractGenericSVGHandler>;
+
+     label1:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.render.AbstractGenericSVGHandler: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

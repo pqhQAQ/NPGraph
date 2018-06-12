@@ -1,0 +1,913 @@
+class org.apache.fop.layoutmgr.table.RowPainter extends java.lang.Object
+{
+    private static org.apache.commons.logging.Log log;
+    private int colCount;
+    private int currentRowOffset;
+    private org.apache.fop.fo.flow.table.EffRow currentRow;
+    private org.apache.fop.layoutmgr.LayoutContext layoutContext;
+    private int firstRowIndex;
+    private int firstRowOnPageIndex;
+    private java.util.List rowOffsets;
+    private int[] cellHeights;
+    private boolean[] firstCellOnPage;
+    private org.apache.fop.layoutmgr.table.CellPart[] firstCellParts;
+    private org.apache.fop.layoutmgr.table.CellPart[] lastCellParts;
+    private int tablePartOffset;
+    private org.apache.fop.fo.properties.CommonBorderPaddingBackground tablePartBackground;
+    private java.util.List tablePartBackgroundAreas;
+    private org.apache.fop.layoutmgr.table.TableContentLayoutManager tclm;
+    static java.lang.Class class$org$apache$fop$layoutmgr$table$RowPainter;
+    static final boolean $assertionsDisabled;
+
+    void <init>(org.apache.fop.layoutmgr.table.TableContentLayoutManager, org.apache.fop.layoutmgr.LayoutContext)
+    {
+        org.apache.fop.layoutmgr.table.RowPainter this;
+        org.apache.fop.layoutmgr.table.TableContentLayoutManager tclm;
+        org.apache.fop.layoutmgr.LayoutContext layoutContext;
+        java.util.ArrayList $r0;
+        org.apache.fop.layoutmgr.table.ColumnSetup $r1;
+        int $i0;
+        int[] $r2;
+        boolean[] $r3;
+        org.apache.fop.layoutmgr.table.CellPart[] $r4;
+
+        this := @this: org.apache.fop.layoutmgr.table.RowPainter;
+        tclm := @parameter0: org.apache.fop.layoutmgr.table.TableContentLayoutManager;
+        layoutContext := @parameter1: org.apache.fop.layoutmgr.LayoutContext;
+        specialinvoke this.<java.lang.Object: void <init>()>();
+        this.<org.apache.fop.layoutmgr.table.RowPainter: int currentRowOffset> = 0;
+        this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.fo.flow.table.EffRow currentRow> = null;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.layoutmgr.table.RowPainter: java.util.List rowOffsets> = $r0;
+        this.<org.apache.fop.layoutmgr.table.RowPainter: int tablePartOffset> = 0;
+        this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.layoutmgr.table.TableContentLayoutManager tclm> = tclm;
+        this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.layoutmgr.LayoutContext layoutContext> = layoutContext;
+        $r1 = virtualinvoke tclm.<org.apache.fop.layoutmgr.table.TableContentLayoutManager: org.apache.fop.layoutmgr.table.ColumnSetup getColumns()>();
+        $i0 = virtualinvoke $r1.<org.apache.fop.layoutmgr.table.ColumnSetup: int getColumnCount()>();
+        this.<org.apache.fop.layoutmgr.table.RowPainter: int colCount> = $i0;
+        $i0 = this.<org.apache.fop.layoutmgr.table.RowPainter: int colCount>;
+        $r2 = newarray (int)[$i0];
+        this.<org.apache.fop.layoutmgr.table.RowPainter: int[] cellHeights> = $r2;
+        $i0 = this.<org.apache.fop.layoutmgr.table.RowPainter: int colCount>;
+        $r3 = newarray (boolean)[$i0];
+        this.<org.apache.fop.layoutmgr.table.RowPainter: boolean[] firstCellOnPage> = $r3;
+        $i0 = this.<org.apache.fop.layoutmgr.table.RowPainter: int colCount>;
+        $r4 = newarray (org.apache.fop.layoutmgr.table.CellPart)[$i0];
+        this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.layoutmgr.table.CellPart[] firstCellParts> = $r4;
+        $i0 = this.<org.apache.fop.layoutmgr.table.RowPainter: int colCount>;
+        $r4 = newarray (org.apache.fop.layoutmgr.table.CellPart)[$i0];
+        this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.layoutmgr.table.CellPart[] lastCellParts> = $r4;
+        this.<org.apache.fop.layoutmgr.table.RowPainter: int firstRowIndex> = -1;
+        this.<org.apache.fop.layoutmgr.table.RowPainter: int firstRowOnPageIndex> = -1;
+        return;
+    }
+
+    void startTablePart(org.apache.fop.fo.flow.table.TableBody)
+    {
+        org.apache.fop.layoutmgr.table.RowPainter this;
+        org.apache.fop.fo.flow.table.TableBody tablePart;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground background;
+        boolean $z0;
+        java.util.List $r0;
+        java.util.ArrayList $r1;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.table.RowPainter;
+        tablePart := @parameter0: org.apache.fop.fo.flow.table.TableBody;
+        background = virtualinvoke tablePart.<org.apache.fop.fo.flow.table.TableBody: org.apache.fop.fo.properties.CommonBorderPaddingBackground getCommonBorderPaddingBackground()>();
+        $z0 = virtualinvoke background.<org.apache.fop.fo.properties.CommonBorderPaddingBackground: boolean hasBackground()>();
+        if $z0 == 0 goto label0;
+
+        this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.fo.properties.CommonBorderPaddingBackground tablePartBackground> = background;
+        $r0 = this.<org.apache.fop.layoutmgr.table.RowPainter: java.util.List tablePartBackgroundAreas>;
+        if $r0 != null goto label0;
+
+        $r1 = new java.util.ArrayList;
+        specialinvoke $r1.<java.util.ArrayList: void <init>()>();
+        this.<org.apache.fop.layoutmgr.table.RowPainter: java.util.List tablePartBackgroundAreas> = $r1;
+
+     label0:
+        $i0 = this.<org.apache.fop.layoutmgr.table.RowPainter: int currentRowOffset>;
+        this.<org.apache.fop.layoutmgr.table.RowPainter: int tablePartOffset> = $i0;
+        return;
+    }
+
+    void endTablePart(boolean, boolean)
+    {
+        org.apache.fop.layoutmgr.table.RowPainter this;
+        boolean lastInBody, lastOnPage, $z0;
+        org.apache.fop.layoutmgr.table.TableLayoutManager tableLM;
+        java.util.Iterator iter;
+        org.apache.fop.area.Block backgroundArea;
+        org.apache.fop.fo.properties.CommonBorderPaddingBackground $r0, $r4;
+        org.apache.fop.layoutmgr.table.TableContentLayoutManager $r1;
+        java.util.List $r2;
+        java.lang.Object $r3;
+        int $i0, $i1, $i2, $i3, $i4;
+
+        this := @this: org.apache.fop.layoutmgr.table.RowPainter;
+        lastInBody := @parameter0: boolean;
+        lastOnPage := @parameter1: boolean;
+        specialinvoke this.<org.apache.fop.layoutmgr.table.RowPainter: void addAreasAndFlushRow(boolean,boolean)>(lastInBody, lastOnPage);
+        $r0 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.fo.properties.CommonBorderPaddingBackground tablePartBackground>;
+        if $r0 == null goto label2;
+
+        $r1 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.layoutmgr.table.TableContentLayoutManager tclm>;
+        tableLM = virtualinvoke $r1.<org.apache.fop.layoutmgr.table.TableContentLayoutManager: org.apache.fop.layoutmgr.table.TableLayoutManager getTableLM()>();
+        $r2 = this.<org.apache.fop.layoutmgr.table.RowPainter: java.util.List tablePartBackgroundAreas>;
+        iter = interfaceinvoke $r2.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r3 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        backgroundArea = (org.apache.fop.area.Block) $r3;
+        $r4 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.fo.properties.CommonBorderPaddingBackground tablePartBackground>;
+        $i0 = virtualinvoke backgroundArea.<org.apache.fop.area.Block: int getXOffset()>();
+        $i0 = neg $i0;
+        $i1 = this.<org.apache.fop.layoutmgr.table.RowPainter: int tablePartOffset>;
+        $i2 = virtualinvoke backgroundArea.<org.apache.fop.area.Block: int getYOffset()>();
+        $i1 = $i1 - $i2;
+        $i2 = virtualinvoke tableLM.<org.apache.fop.layoutmgr.table.TableLayoutManager: int getContentAreaIPD()>();
+        $i3 = this.<org.apache.fop.layoutmgr.table.RowPainter: int currentRowOffset>;
+        $i4 = this.<org.apache.fop.layoutmgr.table.RowPainter: int tablePartOffset>;
+        $i3 = $i3 - $i4;
+        staticinvoke <org.apache.fop.layoutmgr.TraitSetter: void addBackground(org.apache.fop.area.Area,org.apache.fop.fo.properties.CommonBorderPaddingBackground,org.apache.fop.datatypes.PercentBaseContext,int,int,int,int)>(backgroundArea, $r4, tableLM, $i0, $i1, $i2, $i3);
+        goto label0;
+
+     label1:
+        this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.fo.properties.CommonBorderPaddingBackground tablePartBackground> = null;
+        $r2 = this.<org.apache.fop.layoutmgr.table.RowPainter: java.util.List tablePartBackgroundAreas>;
+        interfaceinvoke $r2.<java.util.List: void clear()>();
+
+     label2:
+        return;
+    }
+
+    int getAccumulatedBPD()
+    {
+        org.apache.fop.layoutmgr.table.RowPainter this;
+        int $i0;
+
+        this := @this: org.apache.fop.layoutmgr.table.RowPainter;
+        $i0 = this.<org.apache.fop.layoutmgr.table.RowPainter: int currentRowOffset>;
+        return $i0;
+    }
+
+    void handleTableContentPosition(org.apache.fop.layoutmgr.table.TableContentPosition)
+    {
+        org.apache.fop.layoutmgr.table.RowPainter this;
+        org.apache.fop.layoutmgr.table.TableContentPosition tcpos;
+        org.apache.commons.logging.Log $r0;
+        java.lang.StringBuffer $r1;
+        org.apache.fop.fo.flow.table.EffRow row, $r3, $r4;
+        java.util.Iterator partIter;
+        org.apache.fop.layoutmgr.table.CellPart cellPart, $r9;
+        int colIndex, $i0, $i1, $i2, $i3;
+        boolean $z0, $z1;
+        java.lang.String $r2;
+        java.util.List $r5;
+        java.lang.Object $r6;
+        org.apache.fop.fo.flow.table.PrimaryGridUnit $r7, $r12;
+        org.apache.fop.layoutmgr.table.CellPart[] $r8;
+        int[] $r10;
+        boolean[] $r11;
+        java.lang.AssertionError $r13;
+
+        this := @this: org.apache.fop.layoutmgr.table.RowPainter;
+        tcpos := @parameter0: org.apache.fop.layoutmgr.table.TableContentPosition;
+        $r0 = <org.apache.fop.layoutmgr.table.RowPainter: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = <org.apache.fop.layoutmgr.table.RowPainter: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("===handleTableContentPosition(");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(tcpos);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r2);
+
+     label0:
+        $r3 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.fo.flow.table.EffRow currentRow>;
+        if $r3 != null goto label1;
+
+        $r4 = virtualinvoke tcpos.<org.apache.fop.layoutmgr.table.TableContentPosition: org.apache.fop.fo.flow.table.EffRow getNewPageRow()>();
+        this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.fo.flow.table.EffRow currentRow> = $r4;
+        goto label2;
+
+     label1:
+        row = virtualinvoke tcpos.<org.apache.fop.layoutmgr.table.TableContentPosition: org.apache.fop.fo.flow.table.EffRow getRow()>();
+        $i0 = virtualinvoke row.<org.apache.fop.fo.flow.table.EffRow: int getIndex()>();
+        $r4 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.fo.flow.table.EffRow currentRow>;
+        $i1 = virtualinvoke $r4.<org.apache.fop.fo.flow.table.EffRow: int getIndex()>();
+        if $i0 <= $i1 goto label2;
+
+        specialinvoke this.<org.apache.fop.layoutmgr.table.RowPainter: void addAreasAndFlushRow(boolean,boolean)>(0, 0);
+        this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.fo.flow.table.EffRow currentRow> = row;
+
+     label2:
+        $i0 = this.<org.apache.fop.layoutmgr.table.RowPainter: int firstRowIndex>;
+        if $i0 >= 0 goto label3;
+
+        $r4 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.fo.flow.table.EffRow currentRow>;
+        $i1 = virtualinvoke $r4.<org.apache.fop.fo.flow.table.EffRow: int getIndex()>();
+        this.<org.apache.fop.layoutmgr.table.RowPainter: int firstRowIndex> = $i1;
+        $i0 = this.<org.apache.fop.layoutmgr.table.RowPainter: int firstRowOnPageIndex>;
+        if $i0 >= 0 goto label3;
+
+        $i1 = this.<org.apache.fop.layoutmgr.table.RowPainter: int firstRowIndex>;
+        this.<org.apache.fop.layoutmgr.table.RowPainter: int firstRowOnPageIndex> = $i1;
+
+     label3:
+        $r5 = tcpos.<org.apache.fop.layoutmgr.table.TableContentPosition: java.util.List cellParts>;
+        partIter = interfaceinvoke $r5.<java.util.List: java.util.Iterator iterator()>();
+
+     label4:
+        $z0 = interfaceinvoke partIter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label9;
+
+        $r6 = interfaceinvoke partIter.<java.util.Iterator: java.lang.Object next()>();
+        cellPart = (org.apache.fop.layoutmgr.table.CellPart) $r6;
+        $r0 = <org.apache.fop.layoutmgr.table.RowPainter: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label5;
+
+        $r0 = <org.apache.fop.layoutmgr.table.RowPainter: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(">");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(cellPart);
+        $r2 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r2);
+
+     label5:
+        $r7 = cellPart.<org.apache.fop.layoutmgr.table.CellPart: org.apache.fop.fo.flow.table.PrimaryGridUnit pgu>;
+        colIndex = virtualinvoke $r7.<org.apache.fop.fo.flow.table.PrimaryGridUnit: int getColIndex()>();
+        $r8 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.layoutmgr.table.CellPart[] firstCellParts>;
+        $r9 = $r8[colIndex];
+        if $r9 != null goto label6;
+
+        $r8 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.layoutmgr.table.CellPart[] firstCellParts>;
+        $r8[colIndex] = cellPart;
+        $r10 = this.<org.apache.fop.layoutmgr.table.RowPainter: int[] cellHeights>;
+        $r11 = this.<org.apache.fop.layoutmgr.table.RowPainter: boolean[] firstCellOnPage>;
+        $z1 = $r11[colIndex];
+        $i2 = virtualinvoke cellPart.<org.apache.fop.layoutmgr.table.CellPart: int getBorderPaddingBefore(boolean)>($z1);
+        $r10[colIndex] = $i2;
+        goto label8;
+
+     label6:
+        $z0 = <org.apache.fop.layoutmgr.table.RowPainter: boolean $assertionsDisabled>;
+        if $z0 != 0 goto label7;
+
+        $r8 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.layoutmgr.table.CellPart[] firstCellParts>;
+        $r9 = $r8[colIndex];
+        $r7 = $r9.<org.apache.fop.layoutmgr.table.CellPart: org.apache.fop.fo.flow.table.PrimaryGridUnit pgu>;
+        $r12 = cellPart.<org.apache.fop.layoutmgr.table.CellPart: org.apache.fop.fo.flow.table.PrimaryGridUnit pgu>;
+        if $r7 == $r12 goto label7;
+
+        $r13 = new java.lang.AssertionError;
+        specialinvoke $r13.<java.lang.AssertionError: void <init>()>();
+        throw $r13;
+
+     label7:
+        $r10 = this.<org.apache.fop.layoutmgr.table.RowPainter: int[] cellHeights>;
+        $i2 = $r10[colIndex];
+        $i3 = virtualinvoke cellPart.<org.apache.fop.layoutmgr.table.CellPart: int getConditionalBeforeContentLength()>();
+        $i2 = $i2 + $i3;
+        $r10[colIndex] = $i2;
+
+     label8:
+        $r10 = this.<org.apache.fop.layoutmgr.table.RowPainter: int[] cellHeights>;
+        $i2 = $r10[colIndex];
+        $i3 = virtualinvoke cellPart.<org.apache.fop.layoutmgr.table.CellPart: int getLength()>();
+        $i2 = $i2 + $i3;
+        $r10[colIndex] = $i2;
+        $r8 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.layoutmgr.table.CellPart[] lastCellParts>;
+        $r8[colIndex] = cellPart;
+        goto label4;
+
+     label9:
+        return;
+    }
+
+    private void addAreasAndFlushRow(boolean, boolean)
+    {
+        org.apache.fop.layoutmgr.table.RowPainter this;
+        boolean lastInPart, lastOnPage, $z0;
+        org.apache.commons.logging.Log $r0;
+        java.lang.StringBuffer $r1;
+        int actualRowHeight, i, cellHeight, cellOffset, $i0, $i1, $i2, $i3;
+        org.apache.fop.fo.flow.table.GridUnit currentGU;
+        byte borderBeforeWhich, borderAfterWhich;
+        org.apache.fop.fo.flow.table.EffRow $r2, $r4, $r5;
+        java.lang.String $r3;
+        org.apache.fop.layoutmgr.table.CellPart[] $r6, $r9, $r15, $r17;
+        org.apache.fop.layoutmgr.table.CellPart $r7, $r10, $r16, $r18;
+        int[] $r8;
+        org.apache.fop.fo.flow.table.PrimaryGridUnit $r11, $r13;
+        boolean[] $r12;
+        java.lang.AssertionError $r14;
+        org.apache.fop.fo.flow.table.TableCell $r19;
+        java.util.List $r21;
+
+        this := @this: org.apache.fop.layoutmgr.table.RowPainter;
+        lastInPart := @parameter0: boolean;
+        lastOnPage := @parameter1: boolean;
+        $r0 = <org.apache.fop.layoutmgr.table.RowPainter: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r0.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label0;
+
+        $r0 = <org.apache.fop.layoutmgr.table.RowPainter: org.apache.commons.logging.Log log>;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Remembering yoffset for row ");
+        $r2 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.fo.flow.table.EffRow currentRow>;
+        $i0 = virtualinvoke $r2.<org.apache.fop.fo.flow.table.EffRow: int getIndex()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(": ");
+        $i0 = this.<org.apache.fop.layoutmgr.table.RowPainter: int currentRowOffset>;
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i0);
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r0.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r3);
+
+     label0:
+        $r4 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.fo.flow.table.EffRow currentRow>;
+        $i1 = virtualinvoke $r4.<org.apache.fop.fo.flow.table.EffRow: int getIndex()>();
+        $i0 = this.<org.apache.fop.layoutmgr.table.RowPainter: int currentRowOffset>;
+        specialinvoke this.<org.apache.fop.layoutmgr.table.RowPainter: void recordRowOffset(int,int)>($i1, $i0);
+        actualRowHeight = 0;
+        i = 0;
+
+     label1:
+        $i1 = this.<org.apache.fop.layoutmgr.table.RowPainter: int colCount>;
+        if i >= $i1 goto label4;
+
+        $r5 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.fo.flow.table.EffRow currentRow>;
+        currentGU = virtualinvoke $r5.<org.apache.fop.fo.flow.table.EffRow: org.apache.fop.fo.flow.table.GridUnit getGridUnit(int)>(i);
+        $z0 = virtualinvoke currentGU.<org.apache.fop.fo.flow.table.GridUnit: boolean isEmpty()>();
+        if $z0 != 0 goto label3;
+
+        $i2 = virtualinvoke currentGU.<org.apache.fop.fo.flow.table.GridUnit: int getColSpanIndex()>();
+        if $i2 != 0 goto label3;
+
+        if lastInPart != 0 goto label2;
+
+        $z0 = virtualinvoke currentGU.<org.apache.fop.fo.flow.table.GridUnit: boolean isLastGridUnitRowSpan()>();
+        if $z0 == 0 goto label3;
+
+     label2:
+        $r6 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.layoutmgr.table.CellPart[] firstCellParts>;
+        $r7 = $r6[i];
+        if $r7 == null goto label3;
+
+        $r8 = this.<org.apache.fop.layoutmgr.table.RowPainter: int[] cellHeights>;
+        cellHeight = $r8[i];
+        $r9 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.layoutmgr.table.CellPart[] lastCellParts>;
+        $r10 = $r9[i];
+        $i1 = virtualinvoke $r10.<org.apache.fop.layoutmgr.table.CellPart: int getConditionalAfterContentLength()>();
+        cellHeight = cellHeight + $i1;
+        $r9 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.layoutmgr.table.CellPart[] lastCellParts>;
+        $r10 = $r9[i];
+        $i1 = virtualinvoke $r10.<org.apache.fop.layoutmgr.table.CellPart: int getBorderPaddingAfter(boolean)>(lastInPart);
+        cellHeight = cellHeight + $i1;
+        $r9 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.layoutmgr.table.CellPart[] firstCellParts>;
+        $r10 = $r9[i];
+        $r11 = $r10.<org.apache.fop.layoutmgr.table.CellPart: org.apache.fop.fo.flow.table.PrimaryGridUnit pgu>;
+        $i1 = virtualinvoke $r11.<org.apache.fop.fo.flow.table.PrimaryGridUnit: int getRowIndex()>();
+        $i0 = this.<org.apache.fop.layoutmgr.table.RowPainter: int firstRowIndex>;
+        $i1 = staticinvoke <java.lang.Math: int max(int,int)>($i1, $i0);
+        cellOffset = specialinvoke this.<org.apache.fop.layoutmgr.table.RowPainter: int getRowOffset(int)>($i1);
+        $i1 = cellOffset + cellHeight;
+        $i0 = this.<org.apache.fop.layoutmgr.table.RowPainter: int currentRowOffset>;
+        $i1 = $i1 - $i0;
+        actualRowHeight = staticinvoke <java.lang.Math: int max(int,int)>(actualRowHeight, $i1);
+
+     label3:
+        i = i + 1;
+        goto label1;
+
+     label4:
+        i = 0;
+
+     label5:
+        $i1 = this.<org.apache.fop.layoutmgr.table.RowPainter: int colCount>;
+        if i >= $i1 goto label17;
+
+        $r5 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.fo.flow.table.EffRow currentRow>;
+        currentGU = virtualinvoke $r5.<org.apache.fop.fo.flow.table.EffRow: org.apache.fop.fo.flow.table.GridUnit getGridUnit(int)>(i);
+        $z0 = virtualinvoke currentGU.<org.apache.fop.fo.flow.table.GridUnit: boolean isEmpty()>();
+        if $z0 == 0 goto label6;
+
+        $r12 = this.<org.apache.fop.layoutmgr.table.RowPainter: boolean[] firstCellOnPage>;
+        $r12[i] = 0;
+        goto label16;
+
+     label6:
+        $i2 = virtualinvoke currentGU.<org.apache.fop.fo.flow.table.GridUnit: int getColSpanIndex()>();
+        if $i2 != 0 goto label16;
+
+        if lastInPart != 0 goto label7;
+
+        $z0 = virtualinvoke currentGU.<org.apache.fop.fo.flow.table.GridUnit: boolean isLastGridUnitRowSpan()>();
+        if $z0 == 0 goto label16;
+
+     label7:
+        $r6 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.layoutmgr.table.CellPart[] firstCellParts>;
+        $r7 = $r6[i];
+        if $r7 == null goto label16;
+
+        $z0 = <org.apache.fop.layoutmgr.table.RowPainter: boolean $assertionsDisabled>;
+        if $z0 != 0 goto label8;
+
+        $r6 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.layoutmgr.table.CellPart[] firstCellParts>;
+        $r7 = $r6[i];
+        $r13 = $r7.<org.apache.fop.layoutmgr.table.CellPart: org.apache.fop.fo.flow.table.PrimaryGridUnit pgu>;
+        $r11 = virtualinvoke currentGU.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.PrimaryGridUnit getPrimary()>();
+        if $r13 == $r11 goto label8;
+
+        $r14 = new java.lang.AssertionError;
+        specialinvoke $r14.<java.lang.AssertionError: void <init>()>();
+        throw $r14;
+
+     label8:
+        $r6 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.layoutmgr.table.CellPart[] firstCellParts>;
+        $r7 = $r6[i];
+        $i2 = $r7.<org.apache.fop.layoutmgr.table.CellPart: int start>;
+        if $i2 != 0 goto label10;
+
+        $r12 = this.<org.apache.fop.layoutmgr.table.RowPainter: boolean[] firstCellOnPage>;
+        $z0 = $r12[i];
+        if $z0 == 0 goto label9;
+
+        borderBeforeWhich = 1;
+        goto label12;
+
+     label9:
+        borderBeforeWhich = 0;
+        goto label12;
+
+     label10:
+        $z0 = <org.apache.fop.layoutmgr.table.RowPainter: boolean $assertionsDisabled>;
+        if $z0 != 0 goto label11;
+
+        $r12 = this.<org.apache.fop.layoutmgr.table.RowPainter: boolean[] firstCellOnPage>;
+        $z0 = $r12[i];
+        if $z0 != 0 goto label11;
+
+        $r14 = new java.lang.AssertionError;
+        specialinvoke $r14.<java.lang.AssertionError: void <init>()>();
+        throw $r14;
+
+     label11:
+        borderBeforeWhich = 2;
+
+     label12:
+        $r6 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.layoutmgr.table.CellPart[] lastCellParts>;
+        $r7 = $r6[i];
+        $z0 = virtualinvoke $r7.<org.apache.fop.layoutmgr.table.CellPart: boolean isLastPart()>();
+        if $z0 == 0 goto label14;
+
+        if lastInPart == 0 goto label13;
+
+        borderAfterWhich = 1;
+        goto label15;
+
+     label13:
+        borderAfterWhich = 0;
+        goto label15;
+
+     label14:
+        borderAfterWhich = 2;
+
+     label15:
+        $r9 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.layoutmgr.table.CellPart[] firstCellParts>;
+        $r10 = $r9[i];
+        $r11 = $r10.<org.apache.fop.layoutmgr.table.CellPart: org.apache.fop.fo.flow.table.PrimaryGridUnit pgu>;
+        $r15 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.layoutmgr.table.CellPart[] firstCellParts>;
+        $r16 = $r15[i];
+        $i0 = $r16.<org.apache.fop.layoutmgr.table.CellPart: int start>;
+        $r17 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.layoutmgr.table.CellPart[] lastCellParts>;
+        $r18 = $r17[i];
+        $i3 = $r18.<org.apache.fop.layoutmgr.table.CellPart: int end>;
+        specialinvoke this.<org.apache.fop.layoutmgr.table.RowPainter: void addAreasForCell(org.apache.fop.fo.flow.table.PrimaryGridUnit,int,int,int,int,int,boolean)>($r11, $i0, $i3, actualRowHeight, borderBeforeWhich, borderAfterWhich, lastOnPage);
+        $r6 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.layoutmgr.table.CellPart[] firstCellParts>;
+        $r6[i] = null;
+        $r12 = this.<org.apache.fop.layoutmgr.table.RowPainter: boolean[] firstCellOnPage>;
+        $r19 = virtualinvoke currentGU.<org.apache.fop.fo.flow.table.GridUnit: org.apache.fop.fo.flow.table.TableCell getCell()>();
+        $i3 = virtualinvoke $r19.<org.apache.fop.fo.flow.table.TableCell: int getNumberColumnsSpanned()>();
+        $i0 = i + $i3;
+        staticinvoke <java.util.Arrays: void fill(boolean[],int,int,boolean)>($r12, i, $i0, 0);
+
+     label16:
+        i = i + 1;
+        goto label5;
+
+     label17:
+        $i1 = this.<org.apache.fop.layoutmgr.table.RowPainter: int currentRowOffset>;
+        $i1 = $i1 + actualRowHeight;
+        this.<org.apache.fop.layoutmgr.table.RowPainter: int currentRowOffset> = $i1;
+        if lastInPart == 0 goto label18;
+
+        this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.fo.flow.table.EffRow currentRow> = null;
+        this.<org.apache.fop.layoutmgr.table.RowPainter: int firstRowIndex> = -1;
+        $r21 = this.<org.apache.fop.layoutmgr.table.RowPainter: java.util.List rowOffsets>;
+        interfaceinvoke $r21.<java.util.List: void clear()>();
+        this.<org.apache.fop.layoutmgr.table.RowPainter: int firstRowOnPageIndex> = 2147483647;
+
+     label18:
+        return;
+    }
+
+    private int computeContentLength(org.apache.fop.fo.flow.table.PrimaryGridUnit, int, int)
+    {
+        org.apache.fop.layoutmgr.table.RowPainter this;
+        org.apache.fop.fo.flow.table.PrimaryGridUnit pgu;
+        int startIndex, endIndex, len, $i0, $i1;
+        java.util.ListIterator iter;
+        boolean nextIsBox, $z0;
+        org.apache.fop.layoutmgr.KnuthElement el, $r2, $r4;
+        java.util.LinkedList $r0;
+        java.lang.Object $r1, $r3;
+
+        this := @this: org.apache.fop.layoutmgr.table.RowPainter;
+        pgu := @parameter0: org.apache.fop.fo.flow.table.PrimaryGridUnit;
+        startIndex := @parameter1: int;
+        endIndex := @parameter2: int;
+        if startIndex <= endIndex goto label0;
+
+        return 0;
+
+     label0:
+        $r0 = virtualinvoke pgu.<org.apache.fop.fo.flow.table.PrimaryGridUnit: java.util.LinkedList getElements()>();
+        iter = virtualinvoke $r0.<java.util.LinkedList: java.util.ListIterator listIterator(int)>(startIndex);
+        nextIsBox = 0;
+
+     label1:
+        $i0 = interfaceinvoke iter.<java.util.ListIterator: int nextIndex()>();
+        if $i0 > endIndex goto label2;
+
+        if nextIsBox != 0 goto label2;
+
+        $r1 = interfaceinvoke iter.<java.util.ListIterator: java.lang.Object next()>();
+        $r2 = (org.apache.fop.layoutmgr.KnuthElement) $r1;
+        nextIsBox = virtualinvoke $r2.<org.apache.fop.layoutmgr.KnuthElement: boolean isBox()>();
+        goto label1;
+
+     label2:
+        len = 0;
+        $r1 = interfaceinvoke iter.<java.util.ListIterator: java.lang.Object previous()>();
+        $r2 = (org.apache.fop.layoutmgr.KnuthElement) $r1;
+        $z0 = virtualinvoke $r2.<org.apache.fop.layoutmgr.KnuthElement: boolean isBox()>();
+        if $z0 == 0 goto label7;
+
+     label3:
+        $i0 = interfaceinvoke iter.<java.util.ListIterator: int nextIndex()>();
+        if $i0 >= endIndex goto label6;
+
+        $r1 = interfaceinvoke iter.<java.util.ListIterator: java.lang.Object next()>();
+        el = (org.apache.fop.layoutmgr.KnuthElement) $r1;
+        $z0 = virtualinvoke el.<org.apache.fop.layoutmgr.KnuthElement: boolean isBox()>();
+        if $z0 != 0 goto label4;
+
+        $z0 = virtualinvoke el.<org.apache.fop.layoutmgr.KnuthElement: boolean isGlue()>();
+        if $z0 == 0 goto label5;
+
+     label4:
+        $i1 = virtualinvoke el.<org.apache.fop.layoutmgr.KnuthElement: int getW()>();
+        len = len + $i1;
+
+     label5:
+        goto label3;
+
+     label6:
+        $r3 = interfaceinvoke iter.<java.util.ListIterator: java.lang.Object next()>();
+        $r4 = (org.apache.fop.layoutmgr.KnuthElement) $r3;
+        $i1 = staticinvoke <org.apache.fop.layoutmgr.table.ActiveCell: int getElementContentLength(org.apache.fop.layoutmgr.KnuthElement)>($r4);
+        len = len + $i1;
+
+     label7:
+        return len;
+    }
+
+    private void addAreasForCell(org.apache.fop.fo.flow.table.PrimaryGridUnit, int, int, int, int, int, boolean)
+    {
+        org.apache.fop.layoutmgr.table.RowPainter this;
+        org.apache.fop.fo.flow.table.PrimaryGridUnit pgu;
+        int startPos, endPos, rowHeight, borderBeforeWhich, borderAfterWhich, currentRowIndex, startRowIndex, firstRowHeight, prevOffset, i, newOffset, cellOffset, cellTotalHeight, prevBreak, $i1, $i2, $i3, $i4, $i5, $i6, $i7;
+        boolean lastOnPage, $z0, $z1;
+        int[] spannedGridRowHeights, $r13;
+        org.apache.fop.layoutmgr.table.TableCellLayoutManager cellLM;
+        org.apache.fop.fo.flow.table.EffRow $r0;
+        org.apache.fop.layoutmgr.table.TableContentLayoutManager $r1, $r7;
+        org.apache.fop.layoutmgr.table.TableLayoutManager $r2;
+        org.apache.fop.fo.flow.table.Table $r3;
+        org.apache.commons.logging.Log $r4;
+        java.lang.StringBuffer $r5;
+        java.lang.String $r6;
+        java.util.LinkedList $r8, $r11;
+        org.apache.fop.layoutmgr.KnuthPossPosIter $r10;
+        org.apache.fop.layoutmgr.LayoutContext $r12;
+
+        this := @this: org.apache.fop.layoutmgr.table.RowPainter;
+        pgu := @parameter0: org.apache.fop.fo.flow.table.PrimaryGridUnit;
+        startPos := @parameter1: int;
+        endPos := @parameter2: int;
+        rowHeight := @parameter3: int;
+        borderBeforeWhich := @parameter4: int;
+        borderAfterWhich := @parameter5: int;
+        lastOnPage := @parameter6: boolean;
+        $r0 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.fo.flow.table.EffRow currentRow>;
+        currentRowIndex = virtualinvoke $r0.<org.apache.fop.fo.flow.table.EffRow: int getIndex()>();
+        $i1 = virtualinvoke pgu.<org.apache.fop.fo.flow.table.PrimaryGridUnit: int getRowIndex()>();
+        $i2 = this.<org.apache.fop.layoutmgr.table.RowPainter: int firstRowIndex>;
+        if $i1 < $i2 goto label1;
+
+        startRowIndex = virtualinvoke pgu.<org.apache.fop.fo.flow.table.PrimaryGridUnit: int getRowIndex()>();
+        if startRowIndex >= currentRowIndex goto label0;
+
+        $i2 = startRowIndex + 1;
+        $i1 = specialinvoke this.<org.apache.fop.layoutmgr.table.RowPainter: int getRowOffset(int)>($i2);
+        $i2 = specialinvoke this.<org.apache.fop.layoutmgr.table.RowPainter: int getRowOffset(int)>(startRowIndex);
+        firstRowHeight = $i1 - $i2;
+        goto label2;
+
+     label0:
+        firstRowHeight = rowHeight;
+        goto label2;
+
+     label1:
+        startRowIndex = this.<org.apache.fop.layoutmgr.table.RowPainter: int firstRowIndex>;
+        firstRowHeight = 0;
+
+     label2:
+        spannedGridRowHeights = null;
+        $r1 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.layoutmgr.table.TableContentLayoutManager tclm>;
+        $r2 = virtualinvoke $r1.<org.apache.fop.layoutmgr.table.TableContentLayoutManager: org.apache.fop.layoutmgr.table.TableLayoutManager getTableLM()>();
+        $r3 = virtualinvoke $r2.<org.apache.fop.layoutmgr.table.TableLayoutManager: org.apache.fop.fo.flow.table.Table getTable()>();
+        $z0 = virtualinvoke $r3.<org.apache.fop.fo.flow.table.Table: boolean isSeparateBorderModel()>();
+        if $z0 != 0 goto label5;
+
+        $z0 = virtualinvoke pgu.<org.apache.fop.fo.flow.table.PrimaryGridUnit: boolean hasSpanning()>();
+        if $z0 == 0 goto label5;
+
+        $i1 = currentRowIndex - startRowIndex;
+        $i1 = $i1 + 1;
+        spannedGridRowHeights = newarray (int)[$i1];
+        prevOffset = specialinvoke this.<org.apache.fop.layoutmgr.table.RowPainter: int getRowOffset(int)>(startRowIndex);
+        i = 0;
+
+     label3:
+        $i2 = currentRowIndex - startRowIndex;
+        if i >= $i2 goto label4;
+
+        $i2 = startRowIndex + i;
+        $i2 = $i2 + 1;
+        newOffset = specialinvoke this.<org.apache.fop.layoutmgr.table.RowPainter: int getRowOffset(int)>($i2);
+        $i3 = newOffset - prevOffset;
+        spannedGridRowHeights[i] = $i3;
+        prevOffset = newOffset;
+        i = i + 1;
+        goto label3;
+
+     label4:
+        $i2 = currentRowIndex - startRowIndex;
+        spannedGridRowHeights[$i2] = rowHeight;
+
+     label5:
+        cellOffset = specialinvoke this.<org.apache.fop.layoutmgr.table.RowPainter: int getRowOffset(int)>(startRowIndex);
+        $i2 = this.<org.apache.fop.layoutmgr.table.RowPainter: int currentRowOffset>;
+        $i1 = rowHeight + $i2;
+        cellTotalHeight = $i1 - cellOffset;
+        $r4 = <org.apache.fop.layoutmgr.table.RowPainter: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r4.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label6;
+
+        $r4 = <org.apache.fop.layoutmgr.table.RowPainter: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r4.<org.apache.commons.logging.Log: void debug(java.lang.Object)>("Creating area for cell:");
+        $r4 = <org.apache.fop.layoutmgr.table.RowPainter: org.apache.commons.logging.Log log>;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("  start row: ");
+        $i3 = virtualinvoke pgu.<org.apache.fop.fo.flow.table.PrimaryGridUnit: int getRowIndex()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i3);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $i3 = this.<org.apache.fop.layoutmgr.table.RowPainter: int currentRowOffset>;
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i3);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(cellOffset);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r4.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r6);
+        $r4 = <org.apache.fop.layoutmgr.table.RowPainter: org.apache.commons.logging.Log log>;
+        $r5 = new java.lang.StringBuffer;
+        specialinvoke $r5.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" rowHeight=");
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(rowHeight);
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" cellTotalHeight=");
+        $r5 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>(cellTotalHeight);
+        $r6 = virtualinvoke $r5.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r4.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r6);
+
+     label6:
+        cellLM = virtualinvoke pgu.<org.apache.fop.fo.flow.table.PrimaryGridUnit: org.apache.fop.layoutmgr.table.TableCellLayoutManager getCellLM()>();
+        $r7 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.layoutmgr.table.TableContentLayoutManager tclm>;
+        $i2 = virtualinvoke $r7.<org.apache.fop.layoutmgr.table.TableContentLayoutManager: int getXOffsetOfGridUnit(org.apache.fop.fo.flow.table.PrimaryGridUnit)>(pgu);
+        virtualinvoke cellLM.<org.apache.fop.layoutmgr.table.TableCellLayoutManager: void setXOffset(int)>($i2);
+        virtualinvoke cellLM.<org.apache.fop.layoutmgr.table.TableCellLayoutManager: void setYOffset(int)>(cellOffset);
+        $i2 = specialinvoke this.<org.apache.fop.layoutmgr.table.RowPainter: int computeContentLength(org.apache.fop.fo.flow.table.PrimaryGridUnit,int,int)>(pgu, startPos, endPos);
+        virtualinvoke cellLM.<org.apache.fop.layoutmgr.table.TableCellLayoutManager: void setContentHeight(int)>($i2);
+        virtualinvoke cellLM.<org.apache.fop.layoutmgr.table.TableCellLayoutManager: void setTotalHeight(int)>(cellTotalHeight);
+        $r8 = virtualinvoke pgu.<org.apache.fop.fo.flow.table.PrimaryGridUnit: java.util.LinkedList getElements()>();
+        prevBreak = staticinvoke <org.apache.fop.layoutmgr.ElementListUtils: int determinePreviousBreak(java.util.List,int)>($r8, startPos);
+        if endPos < 0 goto label7;
+
+        $r8 = virtualinvoke pgu.<org.apache.fop.fo.flow.table.PrimaryGridUnit: java.util.LinkedList getElements()>();
+        staticinvoke <org.apache.fop.layoutmgr.SpaceResolver: void performConditionalsNotification(java.util.List,int,int,int)>($r8, startPos, endPos, prevBreak);
+
+     label7:
+        $r10 = new org.apache.fop.layoutmgr.KnuthPossPosIter;
+        $r11 = virtualinvoke pgu.<org.apache.fop.fo.flow.table.PrimaryGridUnit: java.util.LinkedList getElements()>();
+        $i4 = endPos + 1;
+        specialinvoke $r10.<org.apache.fop.layoutmgr.KnuthPossPosIter: void <init>(java.util.List,int,int)>($r11, startPos, $i4);
+        $r12 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.layoutmgr.LayoutContext layoutContext>;
+        $r13 = spannedGridRowHeights;
+        $i4 = virtualinvoke pgu.<org.apache.fop.fo.flow.table.PrimaryGridUnit: int getRowIndex()>();
+        $i5 = startRowIndex - $i4;
+        $i6 = virtualinvoke pgu.<org.apache.fop.fo.flow.table.PrimaryGridUnit: int getRowIndex()>();
+        $i4 = currentRowIndex - $i6;
+        $i7 = this.<org.apache.fop.layoutmgr.table.RowPainter: int firstRowOnPageIndex>;
+        if startRowIndex != $i7 goto label8;
+
+        $z1 = 1;
+        goto label9;
+
+     label8:
+        $z1 = 0;
+
+     label9:
+        virtualinvoke cellLM.<org.apache.fop.layoutmgr.table.TableCellLayoutManager: void addAreas(org.apache.fop.layoutmgr.PositionIterator,org.apache.fop.layoutmgr.LayoutContext,int[],int,int,int,int,boolean,boolean,org.apache.fop.layoutmgr.table.RowPainter,int)>($r10, $r12, $r13, $i5, $i4, borderBeforeWhich, borderAfterWhich, $z1, lastOnPage, this, firstRowHeight);
+        return;
+    }
+
+    void registerPartBackgroundArea(org.apache.fop.area.Block)
+    {
+        org.apache.fop.layoutmgr.table.RowPainter this;
+        org.apache.fop.area.Block backgroundArea;
+        org.apache.fop.layoutmgr.table.TableContentLayoutManager $r0;
+        org.apache.fop.layoutmgr.table.TableLayoutManager $r1;
+        java.util.List $r2;
+
+        this := @this: org.apache.fop.layoutmgr.table.RowPainter;
+        backgroundArea := @parameter0: org.apache.fop.area.Block;
+        $r0 = this.<org.apache.fop.layoutmgr.table.RowPainter: org.apache.fop.layoutmgr.table.TableContentLayoutManager tclm>;
+        $r1 = virtualinvoke $r0.<org.apache.fop.layoutmgr.table.TableContentLayoutManager: org.apache.fop.layoutmgr.table.TableLayoutManager getTableLM()>();
+        virtualinvoke $r1.<org.apache.fop.layoutmgr.table.TableLayoutManager: void addBackgroundArea(org.apache.fop.area.Block)>(backgroundArea);
+        $r2 = this.<org.apache.fop.layoutmgr.table.RowPainter: java.util.List tablePartBackgroundAreas>;
+        interfaceinvoke $r2.<java.util.List: boolean add(java.lang.Object)>(backgroundArea);
+        return;
+    }
+
+    private void recordRowOffset(int, int)
+    {
+        org.apache.fop.layoutmgr.table.RowPainter this;
+        int rowIndex, offset, i, $i0, $i1;
+        java.util.List $r0;
+        java.lang.Integer $r1;
+
+        this := @this: org.apache.fop.layoutmgr.table.RowPainter;
+        rowIndex := @parameter0: int;
+        offset := @parameter1: int;
+        $r0 = this.<org.apache.fop.layoutmgr.table.RowPainter: java.util.List rowOffsets>;
+        i = interfaceinvoke $r0.<java.util.List: int size()>();
+
+     label0:
+        $i0 = this.<org.apache.fop.layoutmgr.table.RowPainter: int firstRowIndex>;
+        $i1 = rowIndex - $i0;
+        if i > $i1 goto label1;
+
+        $r0 = this.<org.apache.fop.layoutmgr.table.RowPainter: java.util.List rowOffsets>;
+        $r1 = new java.lang.Integer;
+        specialinvoke $r1.<java.lang.Integer: void <init>(int)>(offset);
+        interfaceinvoke $r0.<java.util.List: boolean add(java.lang.Object)>($r1);
+        i = i + 1;
+        goto label0;
+
+     label1:
+        return;
+    }
+
+    private int getRowOffset(int)
+    {
+        org.apache.fop.layoutmgr.table.RowPainter this;
+        int rowIndex, $i0, $i1, $i2;
+        java.util.List $r0;
+        java.lang.Object $r1;
+        java.lang.Integer $r2;
+
+        this := @this: org.apache.fop.layoutmgr.table.RowPainter;
+        rowIndex := @parameter0: int;
+        $r0 = this.<org.apache.fop.layoutmgr.table.RowPainter: java.util.List rowOffsets>;
+        $i0 = this.<org.apache.fop.layoutmgr.table.RowPainter: int firstRowIndex>;
+        $i1 = rowIndex - $i0;
+        $r1 = interfaceinvoke $r0.<java.util.List: java.lang.Object get(int)>($i1);
+        $r2 = (java.lang.Integer) $r1;
+        $i2 = virtualinvoke $r2.<java.lang.Integer: int intValue()>();
+        return $i2;
+    }
+
+    void startBody()
+    {
+        org.apache.fop.layoutmgr.table.RowPainter this;
+        boolean[] $r0;
+
+        this := @this: org.apache.fop.layoutmgr.table.RowPainter;
+        $r0 = this.<org.apache.fop.layoutmgr.table.RowPainter: boolean[] firstCellOnPage>;
+        staticinvoke <java.util.Arrays: void fill(boolean[],boolean)>($r0, 1);
+        return;
+    }
+
+    void endBody()
+    {
+        org.apache.fop.layoutmgr.table.RowPainter this;
+        boolean[] $r0;
+
+        this := @this: org.apache.fop.layoutmgr.table.RowPainter;
+        $r0 = this.<org.apache.fop.layoutmgr.table.RowPainter: boolean[] firstCellOnPage>;
+        staticinvoke <java.util.Arrays: void fill(boolean[],boolean)>($r0, 0);
+        return;
+    }
+
+    static java.lang.Class class$(java.lang.String)
+    {
+        java.lang.String x0;
+        java.lang.ClassNotFoundException l1, $r1;
+        java.lang.Class $r0;
+        java.lang.NoClassDefFoundError $r2;
+        java.lang.Throwable $r3;
+
+        x0 := @parameter0: java.lang.String;
+
+     label0:
+        $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(x0);
+
+     label1:
+        return $r0;
+
+     label2:
+        $r1 := @caughtexception;
+        l1 = $r1;
+        $r2 = new java.lang.NoClassDefFoundError;
+        specialinvoke $r2.<java.lang.NoClassDefFoundError: void <init>()>();
+        $r3 = virtualinvoke $r2.<java.lang.NoClassDefFoundError: java.lang.Throwable initCause(java.lang.Throwable)>(l1);
+        throw $r3;
+
+        catch java.lang.ClassNotFoundException from label0 to label1 with label2;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        boolean $z0;
+        org.apache.commons.logging.Log $r1;
+
+        $r0 = <org.apache.fop.layoutmgr.table.RowPainter: java.lang.Class class$org$apache$fop$layoutmgr$table$RowPainter>;
+        if $r0 != null goto label0;
+
+        $r0 = staticinvoke <org.apache.fop.layoutmgr.table.RowPainter: java.lang.Class class$(java.lang.String)>("org.apache.fop.layoutmgr.table.RowPainter");
+        <org.apache.fop.layoutmgr.table.RowPainter: java.lang.Class class$org$apache$fop$layoutmgr$table$RowPainter> = $r0;
+        goto label1;
+
+     label0:
+        $r0 = <org.apache.fop.layoutmgr.table.RowPainter: java.lang.Class class$org$apache$fop$layoutmgr$table$RowPainter>;
+
+     label1:
+        $z0 = virtualinvoke $r0.<java.lang.Class: boolean desiredAssertionStatus()>();
+        if $z0 != 0 goto label2;
+
+        $z0 = 1;
+        goto label3;
+
+     label2:
+        $z0 = 0;
+
+     label3:
+        <org.apache.fop.layoutmgr.table.RowPainter: boolean $assertionsDisabled> = $z0;
+        $r0 = <org.apache.fop.layoutmgr.table.RowPainter: java.lang.Class class$org$apache$fop$layoutmgr$table$RowPainter>;
+        if $r0 != null goto label4;
+
+        $r0 = staticinvoke <org.apache.fop.layoutmgr.table.RowPainter: java.lang.Class class$(java.lang.String)>("org.apache.fop.layoutmgr.table.RowPainter");
+        <org.apache.fop.layoutmgr.table.RowPainter: java.lang.Class class$org$apache$fop$layoutmgr$table$RowPainter> = $r0;
+        goto label5;
+
+     label4:
+        $r0 = <org.apache.fop.layoutmgr.table.RowPainter: java.lang.Class class$org$apache$fop$layoutmgr$table$RowPainter>;
+
+     label5:
+        $r1 = staticinvoke <org.apache.commons.logging.LogFactory: org.apache.commons.logging.Log getLog(java.lang.Class)>($r0);
+        <org.apache.fop.layoutmgr.table.RowPainter: org.apache.commons.logging.Log log> = $r1;
+        return;
+    }
+}

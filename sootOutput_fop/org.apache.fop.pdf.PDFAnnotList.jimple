@@ -1,0 +1,80 @@
+public class org.apache.fop.pdf.PDFAnnotList extends org.apache.fop.pdf.PDFObject
+{
+    private java.util.List links;
+
+    public void <init>()
+    {
+        org.apache.fop.pdf.PDFAnnotList this;
+        java.util.Vector $r0;
+
+        this := @this: org.apache.fop.pdf.PDFAnnotList;
+        specialinvoke this.<org.apache.fop.pdf.PDFObject: void <init>()>();
+        $r0 = new java.util.Vector;
+        specialinvoke $r0.<java.util.Vector: void <init>()>();
+        this.<org.apache.fop.pdf.PDFAnnotList: java.util.List links> = $r0;
+        return;
+    }
+
+    public void addAnnot(org.apache.fop.pdf.PDFObject)
+    {
+        org.apache.fop.pdf.PDFAnnotList this;
+        org.apache.fop.pdf.PDFObject link;
+        java.util.List $r0;
+
+        this := @this: org.apache.fop.pdf.PDFAnnotList;
+        link := @parameter0: org.apache.fop.pdf.PDFObject;
+        $r0 = this.<org.apache.fop.pdf.PDFAnnotList: java.util.List links>;
+        interfaceinvoke $r0.<java.util.List: boolean add(java.lang.Object)>(link);
+        return;
+    }
+
+    public int getCount()
+    {
+        org.apache.fop.pdf.PDFAnnotList this;
+        java.util.List $r0;
+        int $i0;
+
+        this := @this: org.apache.fop.pdf.PDFAnnotList;
+        $r0 = this.<org.apache.fop.pdf.PDFAnnotList: java.util.List links>;
+        $i0 = interfaceinvoke $r0.<java.util.List: int size()>();
+        return $i0;
+    }
+
+    public java.lang.String toPDFString()
+    {
+        org.apache.fop.pdf.PDFAnnotList this;
+        java.lang.StringBuffer $r0, p;
+        int i, $i0;
+        java.lang.String $r1, $r5;
+        java.util.List $r2;
+        java.lang.Object $r3;
+        org.apache.fop.pdf.PDFObject $r4;
+
+        this := @this: org.apache.fop.pdf.PDFAnnotList;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>(int)>(128);
+        p = $r0;
+        $r1 = virtualinvoke this.<org.apache.fop.pdf.PDFAnnotList: java.lang.String getObjectID()>();
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("[\n");
+        i = 0;
+
+     label0:
+        $i0 = virtualinvoke this.<org.apache.fop.pdf.PDFAnnotList: int getCount()>();
+        if i >= $i0 goto label1;
+
+        $r2 = this.<org.apache.fop.pdf.PDFAnnotList: java.util.List links>;
+        $r3 = interfaceinvoke $r2.<java.util.List: java.lang.Object get(int)>(i);
+        $r4 = (org.apache.fop.pdf.PDFObject) $r3;
+        $r1 = virtualinvoke $r4.<org.apache.fop.pdf.PDFObject: java.lang.String referencePDF()>();
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\n");
+        i = i + 1;
+        goto label0;
+
+     label1:
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("]\nendobj\n");
+        $r5 = virtualinvoke p.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r5;
+    }
+}

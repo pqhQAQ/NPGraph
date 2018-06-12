@@ -1,0 +1,41 @@
+method: org.apache.fop.render.ps.PSFontUtils.embedFont:565811108
+1129370815:gen := @parameter0: org.apache.xmlgraphics.ps.PSGenerator
+1874815519:tf := @parameter1: org.apache.fop.fonts.Typeface
+2144359049:fontRes := @parameter2: org.apache.xmlgraphics.ps.PSResource
+623293039:embeddedFont = 0
+260876407:$r0 = <org.apache.fop.fonts.FontType: org.apache.fop.fonts.FontType TYPE1>
+1192962408:$r1 = virtualinvoke tf.<org.apache.fop.fonts.Typeface: org.apache.fop.fonts.FontType getFontType()>()
+1211862864:if $r0 != $r1 goto (branch)
+1424646416:$z0 = tf instanceof org.apache.fop.fonts.CustomFont
+1737133309:if $z0 == 0 goto (branch)
+1380121626:cf = (org.apache.fop.fonts.CustomFont) tf
+112936412:$z0 = staticinvoke <org.apache.fop.render.ps.PSFontUtils: boolean isEmbeddable(org.apache.fop.fonts.CustomFont)>(cf)
+1894216183:if $z0 == 0 goto (branch)
+482072620:in = staticinvoke <org.apache.fop.render.ps.PSFontUtils: java.io.InputStream getInputStreamOnFont(org.apache.xmlgraphics.ps.PSGenerator,org.apache.fop.fonts.CustomFont)>(gen, cf)
+341838778:if in == null goto $r3 = new java.lang.StringBuffer
+1344863124:virtualinvoke gen.<org.apache.xmlgraphics.ps.PSGenerator: void writeDSCComment(java.lang.String,java.lang.Object)>("BeginResource", fontRes)
+253916154:staticinvoke <org.apache.fop.render.ps.PSFontUtils: void embedType1Font(org.apache.xmlgraphics.ps.PSGenerator,java.io.InputStream)>(gen, in)
+759551383:virtualinvoke gen.<org.apache.xmlgraphics.ps.PSGenerator: void writeDSCComment(java.lang.String)>("EndResource")
+1934674291:$r2 = virtualinvoke gen.<org.apache.xmlgraphics.ps.PSGenerator: org.apache.xmlgraphics.ps.dsc.ResourceTracker getResourceTracker()>()
+33475740:virtualinvoke $r2.<org.apache.xmlgraphics.ps.dsc.ResourceTracker: void registerSuppliedResource(org.apache.xmlgraphics.ps.PSResource)>(fontRes)
+1709516632:embeddedFont = 1
+662320811:goto [?= (branch)]
+1116966481:$r3 = new java.lang.StringBuffer
+731853669:specialinvoke $r3.<java.lang.StringBuffer: void <init>()>()
+1856974017:$r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("%WARNING: Could not embed font: ")
+1794244895:$r4 = virtualinvoke cf.<org.apache.fop.fonts.CustomFont: java.lang.String getFontName()>()
+908579091:$r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4)
+1880052267:$r5 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>()
+2111553158:virtualinvoke gen.<org.apache.xmlgraphics.ps.PSGenerator: void commentln(java.lang.String)>($r5)
+1706659831:$r6 = <org.apache.fop.render.ps.PSFontUtils: org.apache.commons.logging.Log log>
+2040190285:$r3 = new java.lang.StringBuffer
+1030955266:specialinvoke $r3.<java.lang.StringBuffer: void <init>()>()
+782091209:$r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Font ")
+1627953132:$r4 = virtualinvoke cf.<org.apache.fop.fonts.CustomFont: java.lang.String getFontName()>()
+2066626744:$r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r4)
+1767966286:$r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" is marked as supplied in the PostScript file but could not be embedded!")
+1625628910:$r5 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>()
+1658133236:interfaceinvoke $r6.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r5)
+665957598:if embeddedFont != 0 goto return
+382517104:virtualinvoke gen.<org.apache.xmlgraphics.ps.PSGenerator: void writeDSCComment(java.lang.String,java.lang.Object)>("IncludeResource", fontRes)
+1546411457:return

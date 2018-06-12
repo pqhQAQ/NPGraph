@@ -1,0 +1,441 @@
+public class org.apache.fop.render.afp.AFPRendererConfigurator extends org.apache.fop.render.PrintRendererConfigurator
+{
+
+    public void <init>(org.apache.fop.apps.FOUserAgent)
+    {
+        org.apache.fop.render.afp.AFPRendererConfigurator this;
+        org.apache.fop.apps.FOUserAgent userAgent;
+
+        this := @this: org.apache.fop.render.afp.AFPRendererConfigurator;
+        userAgent := @parameter0: org.apache.fop.apps.FOUserAgent;
+        specialinvoke this.<org.apache.fop.render.PrintRendererConfigurator: void <init>(org.apache.fop.apps.FOUserAgent)>(userAgent);
+        return;
+    }
+
+    private org.apache.fop.render.afp.fonts.AFPFontInfo buildFont(org.apache.avalon.framework.configuration.Configuration, java.lang.String) throws org.apache.avalon.framework.configuration.ConfigurationException
+    {
+        org.apache.fop.render.afp.AFPRendererConfigurator this;
+        org.apache.avalon.framework.configuration.Configuration fontCfg, afpFontCfg, rasterCfg, $r2, $r5, $r7;
+        java.lang.String fontPath, path, type, codepage, encoding, name, characterset, base14, msg, $r3, $r6, $r8, $r14;
+        org.apache.avalon.framework.configuration.Configuration[] triple, rasters;
+        java.util.ArrayList tripleList, $r0;
+        int j, weight, size, $i0, $i1;
+        org.apache.fop.render.afp.fonts.RasterFont font, $r9;
+        java.lang.Class clazz;
+        org.apache.fop.fonts.Typeface tf;
+        java.lang.Exception ie, $r13, $r19;
+        java.lang.ClassNotFoundException cnfe, $r15, $r20;
+        org.apache.fop.render.afp.fonts.CharacterSet characterSet, $r16, $r21;
+        org.apache.commons.logging.Log $r1;
+        org.apache.fop.fonts.FontTriplet $r4;
+        boolean $z0;
+        java.lang.StringBuffer $r10;
+        java.lang.Object $r11;
+        org.apache.fop.render.afp.fonts.FopCharacterSet $r12, $r18;
+        org.apache.fop.render.afp.fonts.AFPFontInfo $r17;
+        org.apache.fop.render.afp.fonts.OutlineFont $r22, font;
+
+        this := @this: org.apache.fop.render.afp.AFPRendererConfigurator;
+        fontCfg := @parameter0: org.apache.avalon.framework.configuration.Configuration;
+        fontPath := @parameter1: java.lang.String;
+        triple = interfaceinvoke fontCfg.<org.apache.avalon.framework.configuration.Configuration: org.apache.avalon.framework.configuration.Configuration[] getChildren(java.lang.String)>("font-triplet");
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        tripleList = $r0;
+        $i0 = lengthof triple;
+        if $i0 != 0 goto label0;
+
+        $r1 = <org.apache.fop.render.afp.AFPRendererConfigurator: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void error(java.lang.Object)>("Mandatory font configuration element \'<font-triplet...\' is missing");
+        return null;
+
+     label0:
+        j = 0;
+
+     label1:
+        $i1 = lengthof triple;
+        if j >= $i1 goto label2;
+
+        $r2 = triple[j];
+        $r3 = interfaceinvoke $r2.<org.apache.avalon.framework.configuration.Configuration: java.lang.String getAttribute(java.lang.String)>("weight");
+        weight = staticinvoke <org.apache.fop.fonts.FontUtil: int parseCSS2FontWeight(java.lang.String)>($r3);
+        $r4 = new org.apache.fop.fonts.FontTriplet;
+        $r5 = triple[j];
+        $r6 = interfaceinvoke $r5.<org.apache.avalon.framework.configuration.Configuration: java.lang.String getAttribute(java.lang.String)>("name");
+        $r7 = triple[j];
+        $r8 = interfaceinvoke $r7.<org.apache.avalon.framework.configuration.Configuration: java.lang.String getAttribute(java.lang.String)>("style");
+        specialinvoke $r4.<org.apache.fop.fonts.FontTriplet: void <init>(java.lang.String,java.lang.String,int)>($r6, $r8, weight);
+        interfaceinvoke tripleList.<java.util.List: boolean add(java.lang.Object)>($r4);
+        j = j + 1;
+        goto label1;
+
+     label2:
+        afpFontCfg = interfaceinvoke fontCfg.<org.apache.avalon.framework.configuration.Configuration: org.apache.avalon.framework.configuration.Configuration getChild(java.lang.String)>("afp-font");
+        if afpFontCfg != null goto label3;
+
+        $r1 = <org.apache.fop.render.afp.AFPRendererConfigurator: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void error(java.lang.Object)>("Mandatory font configuration element \'<afp-font...\' is missing");
+        return null;
+
+     label3:
+        path = interfaceinvoke afpFontCfg.<org.apache.avalon.framework.configuration.Configuration: java.lang.String getAttribute(java.lang.String,java.lang.String)>("path", fontPath);
+        type = interfaceinvoke afpFontCfg.<org.apache.avalon.framework.configuration.Configuration: java.lang.String getAttribute(java.lang.String)>("type");
+        if type != null goto label4;
+
+        $r1 = <org.apache.fop.render.afp.AFPRendererConfigurator: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void error(java.lang.Object)>("Mandatory afp-font configuration attribute \'type=\' is missing");
+        return null;
+
+     label4:
+        codepage = interfaceinvoke afpFontCfg.<org.apache.avalon.framework.configuration.Configuration: java.lang.String getAttribute(java.lang.String)>("codepage");
+        if codepage != null goto label5;
+
+        $r1 = <org.apache.fop.render.afp.AFPRendererConfigurator: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void error(java.lang.Object)>("Mandatory afp-font configuration attribute \'code=\' is missing");
+        return null;
+
+     label5:
+        encoding = interfaceinvoke afpFontCfg.<org.apache.avalon.framework.configuration.Configuration: java.lang.String getAttribute(java.lang.String)>("encoding");
+        if encoding != null goto label6;
+
+        $r1 = <org.apache.fop.render.afp.AFPRendererConfigurator: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void error(java.lang.Object)>("Mandatory afp-font configuration attribute \'encoding=\' is missing");
+        return null;
+
+     label6:
+        $r3 = "raster";
+        $z0 = virtualinvoke $r3.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>(type);
+        if $z0 == 0 goto label19;
+
+        name = interfaceinvoke afpFontCfg.<org.apache.avalon.framework.configuration.Configuration: java.lang.String getAttribute(java.lang.String,java.lang.String)>("name", "Unknown");
+        $r9 = new org.apache.fop.render.afp.fonts.RasterFont;
+        specialinvoke $r9.<org.apache.fop.render.afp.fonts.RasterFont: void <init>(java.lang.String)>(name);
+        font = $r9;
+        rasters = interfaceinvoke afpFontCfg.<org.apache.avalon.framework.configuration.Configuration: org.apache.avalon.framework.configuration.Configuration[] getChildren(java.lang.String)>("afp-raster-font");
+        $i0 = lengthof rasters;
+        if $i0 != 0 goto label7;
+
+        $r1 = <org.apache.fop.render.afp.AFPRendererConfigurator: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void error(java.lang.Object)>("Mandatory font configuration elements \'<afp-raster-font...\' are missing");
+        return null;
+
+     label7:
+        j = 0;
+
+     label8:
+        $i1 = lengthof rasters;
+        if j >= $i1 goto label18;
+
+        rasterCfg = rasters[j];
+        characterset = interfaceinvoke rasterCfg.<org.apache.avalon.framework.configuration.Configuration: java.lang.String getAttribute(java.lang.String)>("characterset");
+        if characterset != null goto label9;
+
+        $r1 = <org.apache.fop.render.afp.AFPRendererConfigurator: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void error(java.lang.Object)>("Mandatory afp-raster-font configuration attribute \'characterset=\' is missing");
+        return null;
+
+     label9:
+        size = interfaceinvoke rasterCfg.<org.apache.avalon.framework.configuration.Configuration: int getAttributeAsInteger(java.lang.String)>("size");
+        base14 = interfaceinvoke rasterCfg.<org.apache.avalon.framework.configuration.Configuration: java.lang.String getAttribute(java.lang.String,java.lang.String)>("base14-font", null);
+        if base14 == null goto label16;
+
+     label10:
+        $r10 = new java.lang.StringBuffer;
+        specialinvoke $r10.<java.lang.StringBuffer: void <init>()>();
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("org.apache.fop.fonts.base14.");
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(base14);
+        $r3 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.String toString()>();
+        clazz = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>($r3);
+
+     label11:
+        $r11 = virtualinvoke clazz.<java.lang.Class: java.lang.Object newInstance()>();
+        tf = (org.apache.fop.fonts.Typeface) $r11;
+        $r12 = new org.apache.fop.render.afp.fonts.FopCharacterSet;
+        specialinvoke $r12.<org.apache.fop.render.afp.fonts.FopCharacterSet: void <init>(java.lang.String,java.lang.String,java.lang.String,int,org.apache.fop.fonts.Typeface)>(codepage, encoding, characterset, size, tf);
+        virtualinvoke font.<org.apache.fop.render.afp.fonts.RasterFont: void addCharacterSet(int,org.apache.fop.render.afp.fonts.CharacterSet)>(size, $r12);
+
+     label12:
+        goto label14;
+
+     label13:
+        $r13 := @caughtexception;
+        ie = $r13;
+        $r10 = new java.lang.StringBuffer;
+        specialinvoke $r10.<java.lang.StringBuffer: void <init>()>();
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("The base 14 font class ");
+        $r14 = virtualinvoke clazz.<java.lang.Class: java.lang.String getName()>();
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r14);
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" could not be instantiated");
+        msg = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r1 = <org.apache.fop.render.afp.AFPRendererConfigurator: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void error(java.lang.Object)>(msg);
+
+     label14:
+        goto label17;
+
+     label15:
+        $r15 := @caughtexception;
+        cnfe = $r15;
+        $r10 = new java.lang.StringBuffer;
+        specialinvoke $r10.<java.lang.StringBuffer: void <init>()>();
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("The base 14 font class for ");
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(characterset);
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" could not be found");
+        msg = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r1 = <org.apache.fop.render.afp.AFPRendererConfigurator: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void error(java.lang.Object)>(msg);
+        goto label17;
+
+     label16:
+        $r16 = new org.apache.fop.render.afp.fonts.CharacterSet;
+        specialinvoke $r16.<org.apache.fop.render.afp.fonts.CharacterSet: void <init>(java.lang.String,java.lang.String,java.lang.String,java.lang.String)>(codepage, encoding, characterset, path);
+        virtualinvoke font.<org.apache.fop.render.afp.fonts.RasterFont: void addCharacterSet(int,org.apache.fop.render.afp.fonts.CharacterSet)>(size, $r16);
+
+     label17:
+        j = j + 1;
+        goto label8;
+
+     label18:
+        $r17 = new org.apache.fop.render.afp.fonts.AFPFontInfo;
+        specialinvoke $r17.<org.apache.fop.render.afp.fonts.AFPFontInfo: void <init>(org.apache.fop.render.afp.fonts.AFPFont,java.util.List)>(font, tripleList);
+        return $r17;
+
+     label19:
+        $r3 = "outline";
+        $z0 = virtualinvoke $r3.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>(type);
+        if $z0 == 0 goto label29;
+
+        characterset = interfaceinvoke afpFontCfg.<org.apache.avalon.framework.configuration.Configuration: java.lang.String getAttribute(java.lang.String)>("characterset");
+        if characterset != null goto label20;
+
+        $r1 = <org.apache.fop.render.afp.AFPRendererConfigurator: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void error(java.lang.Object)>("Mandatory afp-font configuration attribute \'characterset=\' is missing");
+        return null;
+
+     label20:
+        name = interfaceinvoke afpFontCfg.<org.apache.avalon.framework.configuration.Configuration: java.lang.String getAttribute(java.lang.String,java.lang.String)>("name", characterset);
+        characterSet = null;
+        base14 = interfaceinvoke afpFontCfg.<org.apache.avalon.framework.configuration.Configuration: java.lang.String getAttribute(java.lang.String,java.lang.String)>("base14-font", null);
+        if base14 == null goto label27;
+
+     label21:
+        $r10 = new java.lang.StringBuffer;
+        specialinvoke $r10.<java.lang.StringBuffer: void <init>()>();
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("org.apache.fop.fonts.base14.");
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(base14);
+        $r3 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.String toString()>();
+        clazz = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>($r3);
+
+     label22:
+        $r11 = virtualinvoke clazz.<java.lang.Class: java.lang.Object newInstance()>();
+        tf = (org.apache.fop.fonts.Typeface) $r11;
+        $r18 = new org.apache.fop.render.afp.fonts.FopCharacterSet;
+        specialinvoke $r18.<org.apache.fop.render.afp.fonts.FopCharacterSet: void <init>(java.lang.String,java.lang.String,java.lang.String,int,org.apache.fop.fonts.Typeface)>(codepage, encoding, characterset, 1, tf);
+        characterSet = $r18;
+
+     label23:
+        goto label25;
+
+     label24:
+        $r19 := @caughtexception;
+        ie = $r19;
+        $r10 = new java.lang.StringBuffer;
+        specialinvoke $r10.<java.lang.StringBuffer: void <init>()>();
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("The base 14 font class ");
+        $r14 = virtualinvoke clazz.<java.lang.Class: java.lang.String getName()>();
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r14);
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" could not be instantiated");
+        msg = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r1 = <org.apache.fop.render.afp.AFPRendererConfigurator: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void error(java.lang.Object)>(msg);
+
+     label25:
+        goto label28;
+
+     label26:
+        $r20 := @caughtexception;
+        cnfe = $r20;
+        $r10 = new java.lang.StringBuffer;
+        specialinvoke $r10.<java.lang.StringBuffer: void <init>()>();
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("The base 14 font class for ");
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(characterset);
+        $r10 = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" could not be found");
+        msg = virtualinvoke $r10.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r1 = <org.apache.fop.render.afp.AFPRendererConfigurator: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void error(java.lang.Object)>(msg);
+        goto label28;
+
+     label27:
+        $r21 = new org.apache.fop.render.afp.fonts.CharacterSet;
+        specialinvoke $r21.<org.apache.fop.render.afp.fonts.CharacterSet: void <init>(java.lang.String,java.lang.String,java.lang.String,java.lang.String)>(codepage, encoding, characterset, path);
+        characterSet = $r21;
+
+     label28:
+        $r22 = new org.apache.fop.render.afp.fonts.OutlineFont;
+        specialinvoke $r22.<org.apache.fop.render.afp.fonts.OutlineFont: void <init>(java.lang.String,org.apache.fop.render.afp.fonts.CharacterSet)>(name, characterSet);
+        font = $r22;
+        $r17 = new org.apache.fop.render.afp.fonts.AFPFontInfo;
+        specialinvoke $r17.<org.apache.fop.render.afp.fonts.AFPFontInfo: void <init>(org.apache.fop.render.afp.fonts.AFPFont,java.util.List)>(font, tripleList);
+        return $r17;
+
+     label29:
+        $r1 = <org.apache.fop.render.afp.AFPRendererConfigurator: org.apache.commons.logging.Log log>;
+        interfaceinvoke $r1.<org.apache.commons.logging.Log: void error(java.lang.Object)>("No or incorrect type attribute");
+        return null;
+
+        catch java.lang.Exception from label11 to label12 with label13;
+        catch java.lang.ClassNotFoundException from label10 to label14 with label15;
+        catch java.lang.Exception from label22 to label23 with label24;
+        catch java.lang.ClassNotFoundException from label21 to label25 with label26;
+    }
+
+    private java.util.List buildFontListFromConfiguration(org.apache.avalon.framework.configuration.Configuration) throws org.apache.avalon.framework.configuration.ConfigurationException
+    {
+        org.apache.fop.render.afp.AFPRendererConfigurator this;
+        org.apache.avalon.framework.configuration.Configuration cfg, $r1, $r2;
+        java.util.ArrayList $r0, fontList;
+        org.apache.avalon.framework.configuration.Configuration[] font;
+        int i, j, $i0, $i1;
+        org.apache.fop.render.afp.fonts.AFPFontInfo afi;
+        org.apache.fop.fonts.FontTriplet triplet;
+        org.apache.commons.logging.Log $r3;
+        boolean $z0;
+        java.lang.StringBuffer $r4;
+        org.apache.fop.render.afp.fonts.AFPFont $r5;
+        java.lang.String $r6, $r7;
+        java.util.List $r8, $r9;
+        java.lang.Object $r10;
+
+        this := @this: org.apache.fop.render.afp.AFPRendererConfigurator;
+        cfg := @parameter0: org.apache.avalon.framework.configuration.Configuration;
+        $r0 = new java.util.ArrayList;
+        specialinvoke $r0.<java.util.ArrayList: void <init>()>();
+        fontList = $r0;
+        $r1 = interfaceinvoke cfg.<org.apache.avalon.framework.configuration.Configuration: org.apache.avalon.framework.configuration.Configuration getChild(java.lang.String)>("fonts");
+        font = interfaceinvoke $r1.<org.apache.avalon.framework.configuration.Configuration: org.apache.avalon.framework.configuration.Configuration[] getChildren(java.lang.String)>("font");
+        i = 0;
+
+     label0:
+        $i0 = lengthof font;
+        if i >= $i0 goto label4;
+
+        $r2 = font[i];
+        afi = specialinvoke this.<org.apache.fop.render.afp.AFPRendererConfigurator: org.apache.fop.render.afp.fonts.AFPFontInfo buildFont(org.apache.avalon.framework.configuration.Configuration,java.lang.String)>($r2, null);
+        if afi == null goto label3;
+
+        $r3 = <org.apache.fop.render.afp.AFPRendererConfigurator: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r3.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label2;
+
+        $r3 = <org.apache.fop.render.afp.AFPRendererConfigurator: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Adding font ");
+        $r5 = virtualinvoke afi.<org.apache.fop.render.afp.fonts.AFPFontInfo: org.apache.fop.render.afp.fonts.AFPFont getAFPFont()>();
+        $r6 = virtualinvoke $r5.<org.apache.fop.render.afp.fonts.AFPFont: java.lang.String getFontName()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r7 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r7);
+        j = 0;
+
+     label1:
+        $r8 = virtualinvoke afi.<org.apache.fop.render.afp.fonts.AFPFontInfo: java.util.List getFontTriplets()>();
+        $i0 = interfaceinvoke $r8.<java.util.List: int size()>();
+        if j >= $i0 goto label2;
+
+        $r9 = virtualinvoke afi.<org.apache.fop.render.afp.fonts.AFPFontInfo: java.util.List getFontTriplets()>();
+        $r10 = interfaceinvoke $r9.<java.util.List: java.lang.Object get(int)>(j);
+        triplet = (org.apache.fop.fonts.FontTriplet) $r10;
+        $r3 = <org.apache.fop.render.afp.AFPRendererConfigurator: org.apache.commons.logging.Log log>;
+        $r4 = new java.lang.StringBuffer;
+        specialinvoke $r4.<java.lang.StringBuffer: void <init>()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("  Font triplet ");
+        $r6 = virtualinvoke triplet.<org.apache.fop.fonts.FontTriplet: java.lang.String getName()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", ");
+        $r6 = virtualinvoke triplet.<org.apache.fop.fonts.FontTriplet: java.lang.String getStyle()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r6);
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(", ");
+        $i1 = virtualinvoke triplet.<org.apache.fop.fonts.FontTriplet: int getWeight()>();
+        $r4 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.StringBuffer append(int)>($i1);
+        $r7 = virtualinvoke $r4.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r3.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r7);
+        j = j + 1;
+        goto label1;
+
+     label2:
+        interfaceinvoke fontList.<java.util.List: boolean add(java.lang.Object)>(afi);
+
+     label3:
+        i = i + 1;
+        goto label0;
+
+     label4:
+        return fontList;
+    }
+
+    public void configure(org.apache.fop.render.Renderer) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.render.afp.AFPRendererConfigurator this;
+        org.apache.fop.render.Renderer renderer;
+        org.apache.avalon.framework.configuration.Configuration cfg, imagesCfg, rendererResolutionCfg;
+        org.apache.fop.render.afp.AFPRenderer afpRenderer;
+        java.util.List fontList;
+        org.apache.avalon.framework.configuration.ConfigurationException e, $r0;
+        org.apache.commons.logging.Log $r1;
+        org.apache.fop.apps.FOUserAgent $r2;
+        org.apache.fop.apps.FopFactory $r3;
+        boolean $z0, $z1;
+        java.lang.String $r4, $r5;
+        int $i0;
+
+        this := @this: org.apache.fop.render.afp.AFPRendererConfigurator;
+        renderer := @parameter0: org.apache.fop.render.Renderer;
+        cfg = specialinvoke this.<org.apache.fop.render.PrintRendererConfigurator: org.apache.avalon.framework.configuration.Configuration getRendererConfig(org.apache.fop.render.Renderer)>(renderer);
+        if cfg == null goto label6;
+
+        afpRenderer = (org.apache.fop.render.afp.AFPRenderer) renderer;
+
+     label0:
+        fontList = specialinvoke this.<org.apache.fop.render.afp.AFPRendererConfigurator: java.util.List buildFontListFromConfiguration(org.apache.avalon.framework.configuration.Configuration)>(cfg);
+        virtualinvoke afpRenderer.<org.apache.fop.render.afp.AFPRenderer: void setFontList(java.util.List)>(fontList);
+
+     label1:
+        goto label3;
+
+     label2:
+        $r0 := @caughtexception;
+        e = $r0;
+        $r1 = <org.apache.fop.render.afp.AFPRendererConfigurator: org.apache.commons.logging.Log log>;
+        $r2 = this.<org.apache.fop.render.afp.AFPRendererConfigurator: org.apache.fop.apps.FOUserAgent userAgent>;
+        $r3 = virtualinvoke $r2.<org.apache.fop.apps.FOUserAgent: org.apache.fop.apps.FopFactory getFactory()>();
+        $z0 = virtualinvoke $r3.<org.apache.fop.apps.FopFactory: boolean validateUserConfigStrictly()>();
+        staticinvoke <org.apache.fop.util.LogUtil: void handleException(org.apache.commons.logging.Log,java.lang.Exception,boolean)>($r1, e, $z0);
+
+     label3:
+        imagesCfg = interfaceinvoke cfg.<org.apache.avalon.framework.configuration.Configuration: org.apache.avalon.framework.configuration.Configuration getChild(java.lang.String)>("images");
+        $r4 = "color";
+        $r5 = interfaceinvoke imagesCfg.<org.apache.avalon.framework.configuration.Configuration: java.lang.String getAttribute(java.lang.String,java.lang.String)>("mode", "b+w");
+        $z1 = virtualinvoke $r4.<java.lang.String: boolean equalsIgnoreCase(java.lang.String)>($r5);
+        if $z1 != 0 goto label4;
+
+        $i0 = interfaceinvoke imagesCfg.<org.apache.avalon.framework.configuration.Configuration: int getAttributeAsInteger(java.lang.String,int)>("bits-per-pixel", 8);
+        virtualinvoke afpRenderer.<org.apache.fop.render.afp.AFPRenderer: void setBitsPerPixel(int)>($i0);
+        goto label5;
+
+     label4:
+        virtualinvoke afpRenderer.<org.apache.fop.render.afp.AFPRenderer: void setColorImages(boolean)>(1);
+
+     label5:
+        rendererResolutionCfg = interfaceinvoke cfg.<org.apache.avalon.framework.configuration.Configuration: org.apache.avalon.framework.configuration.Configuration getChild(java.lang.String,boolean)>("renderer-resolution", 0);
+        if rendererResolutionCfg == null goto label6;
+
+        $i0 = interfaceinvoke rendererResolutionCfg.<org.apache.avalon.framework.configuration.Configuration: int getValueAsInteger(int)>(240);
+        virtualinvoke afpRenderer.<org.apache.fop.render.afp.AFPRenderer: void setResolution(int)>($i0);
+
+     label6:
+        return;
+
+        catch org.apache.avalon.framework.configuration.ConfigurationException from label0 to label1 with label2;
+    }
+}

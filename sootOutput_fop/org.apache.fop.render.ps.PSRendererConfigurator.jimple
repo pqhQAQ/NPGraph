@@ -1,0 +1,58 @@
+public class org.apache.fop.render.ps.PSRendererConfigurator extends org.apache.fop.render.PrintRendererConfigurator
+{
+
+    public void <init>(org.apache.fop.apps.FOUserAgent)
+    {
+        org.apache.fop.render.ps.PSRendererConfigurator this;
+        org.apache.fop.apps.FOUserAgent userAgent;
+
+        this := @this: org.apache.fop.render.ps.PSRendererConfigurator;
+        userAgent := @parameter0: org.apache.fop.apps.FOUserAgent;
+        specialinvoke this.<org.apache.fop.render.PrintRendererConfigurator: void <init>(org.apache.fop.apps.FOUserAgent)>(userAgent);
+        return;
+    }
+
+    public void configure(org.apache.fop.render.Renderer) throws org.apache.fop.apps.FOPException
+    {
+        org.apache.fop.render.ps.PSRendererConfigurator this;
+        org.apache.fop.render.Renderer renderer;
+        org.apache.avalon.framework.configuration.Configuration cfg, child, $r0;
+        org.apache.fop.render.ps.PSRenderer psRenderer;
+        boolean $z0;
+        int $i0;
+
+        this := @this: org.apache.fop.render.ps.PSRendererConfigurator;
+        renderer := @parameter0: org.apache.fop.render.Renderer;
+        cfg = specialinvoke this.<org.apache.fop.render.PrintRendererConfigurator: org.apache.avalon.framework.configuration.Configuration getRendererConfig(org.apache.fop.render.Renderer)>(renderer);
+        if cfg == null goto label2;
+
+        specialinvoke this.<org.apache.fop.render.PrintRendererConfigurator: void configure(org.apache.fop.render.Renderer)>(renderer);
+        psRenderer = (org.apache.fop.render.ps.PSRenderer) renderer;
+        $r0 = interfaceinvoke cfg.<org.apache.avalon.framework.configuration.Configuration: org.apache.avalon.framework.configuration.Configuration getChild(java.lang.String)>("auto-rotate-landscape");
+        $z0 = interfaceinvoke $r0.<org.apache.avalon.framework.configuration.Configuration: boolean getValueAsBoolean(boolean)>(0);
+        virtualinvoke psRenderer.<org.apache.fop.render.ps.PSRenderer: void setAutoRotateLandscape(boolean)>($z0);
+        child = interfaceinvoke cfg.<org.apache.avalon.framework.configuration.Configuration: org.apache.avalon.framework.configuration.Configuration getChild(java.lang.String)>("language-level");
+        if child == null goto label0;
+
+        $i0 = interfaceinvoke child.<org.apache.avalon.framework.configuration.Configuration: int getValueAsInteger(int)>(3);
+        virtualinvoke psRenderer.<org.apache.fop.render.ps.PSRenderer: void setLanguageLevel(int)>($i0);
+
+     label0:
+        child = interfaceinvoke cfg.<org.apache.avalon.framework.configuration.Configuration: org.apache.avalon.framework.configuration.Configuration getChild(java.lang.String)>("optimize-resources");
+        if child == null goto label1;
+
+        $z0 = interfaceinvoke child.<org.apache.avalon.framework.configuration.Configuration: boolean getValueAsBoolean(boolean)>(0);
+        virtualinvoke psRenderer.<org.apache.fop.render.ps.PSRenderer: void setOptimizeResources(boolean)>($z0);
+
+     label1:
+        $r0 = interfaceinvoke cfg.<org.apache.avalon.framework.configuration.Configuration: org.apache.avalon.framework.configuration.Configuration getChild(java.lang.String)>("safe-set-page-device");
+        $z0 = interfaceinvoke $r0.<org.apache.avalon.framework.configuration.Configuration: boolean getValueAsBoolean(boolean)>(0);
+        virtualinvoke psRenderer.<org.apache.fop.render.ps.PSRenderer: void setSafeSetPageDevice(boolean)>($z0);
+        $r0 = interfaceinvoke cfg.<org.apache.avalon.framework.configuration.Configuration: org.apache.avalon.framework.configuration.Configuration getChild(java.lang.String)>("dsc-compliant");
+        $z0 = interfaceinvoke $r0.<org.apache.avalon.framework.configuration.Configuration: boolean getValueAsBoolean(boolean)>(1);
+        virtualinvoke psRenderer.<org.apache.fop.render.ps.PSRenderer: void setDSCCompliant(boolean)>($z0);
+
+     label2:
+        return;
+    }
+}

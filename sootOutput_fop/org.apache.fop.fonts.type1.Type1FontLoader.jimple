@@ -1,0 +1,754 @@
+public class org.apache.fop.fonts.type1.Type1FontLoader extends org.apache.fop.fonts.FontLoader
+{
+    private org.apache.fop.fonts.SingleByteFont singleFont;
+    private static final java.lang.String[] AFM_EXTENSIONS;
+
+    public void <init>(java.lang.String, org.apache.fop.fonts.FontResolver) throws java.io.IOException
+    {
+        org.apache.fop.fonts.type1.Type1FontLoader this;
+        java.lang.String fontFileURI;
+        org.apache.fop.fonts.FontResolver resolver;
+
+        this := @this: org.apache.fop.fonts.type1.Type1FontLoader;
+        fontFileURI := @parameter0: java.lang.String;
+        resolver := @parameter1: org.apache.fop.fonts.FontResolver;
+        specialinvoke this.<org.apache.fop.fonts.FontLoader: void <init>(java.lang.String,org.apache.fop.fonts.FontResolver)>(fontFileURI, resolver);
+        return;
+    }
+
+    private java.lang.String getPFMURI(java.lang.String)
+    {
+        org.apache.fop.fonts.type1.Type1FontLoader this;
+        java.lang.String pfbURI, pfbExt, pfmExt, $r1, $r2;
+        int $i0, $i1, $i3;
+        java.lang.StringBuffer $r0;
+        char $c2;
+        boolean $z0;
+
+        this := @this: org.apache.fop.fonts.type1.Type1FontLoader;
+        pfbURI := @parameter0: java.lang.String;
+        $i0 = virtualinvoke pfbURI.<java.lang.String: int length()>();
+        $i0 = $i0 - 3;
+        $i1 = virtualinvoke pfbURI.<java.lang.String: int length()>();
+        pfbExt = virtualinvoke pfbURI.<java.lang.String: java.lang.String substring(int,int)>($i0, $i1);
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke pfbExt.<java.lang.String: java.lang.String substring(int,int)>(0, 2);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $c2 = virtualinvoke pfbExt.<java.lang.String: char charAt(int)>(2);
+        $z0 = staticinvoke <java.lang.Character: boolean isUpperCase(char)>($c2);
+        if $z0 == 0 goto label0;
+
+        $r1 = "M";
+        goto label1;
+
+     label0:
+        $r1 = "m";
+
+     label1:
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        pfmExt = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>()>();
+        $i3 = virtualinvoke pfbURI.<java.lang.String: int length()>();
+        $i3 = $i3 - 4;
+        $r1 = virtualinvoke pfbURI.<java.lang.String: java.lang.String substring(int,int)>(0, $i3);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r1);
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(".");
+        $r0 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(pfmExt);
+        $r2 = virtualinvoke $r0.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r2;
+    }
+
+    protected void read() throws java.io.IOException
+    {
+        org.apache.fop.fonts.type1.Type1FontLoader this;
+        org.apache.fop.fonts.type1.AFMFile afm;
+        org.apache.fop.fonts.type1.PFMFile pfm, $r9;
+        java.io.InputStream afmIn, pfmIn;
+        int i, $i0, $i1;
+        java.lang.String[] $r0;
+        java.lang.String afmUri, pfmUri, $r2, $r3, $r13;
+        java.io.IOException l5, $r5, $r8, l6;
+        org.apache.fop.fonts.type1.AFMParser afmParser, $r6;
+        java.lang.Throwable l6, l7, $r7, $r10;
+        java.lang.StringBuffer $r1, $r12;
+        org.apache.fop.fonts.FontResolver $r4;
+        java.io.FileNotFoundException $r11;
+
+        this := @this: org.apache.fop.fonts.type1.Type1FontLoader;
+        afm = null;
+        pfm = null;
+        afmIn = null;
+        i = 0;
+
+     label0:
+        $r0 = <org.apache.fop.fonts.type1.Type1FontLoader: java.lang.String[] AFM_EXTENSIONS>;
+        $i0 = lengthof $r0;
+        if i >= $i0 goto label6;
+
+     label1:
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r2 = this.<org.apache.fop.fonts.type1.Type1FontLoader: java.lang.String fontFileURI>;
+        $r3 = this.<org.apache.fop.fonts.type1.Type1FontLoader: java.lang.String fontFileURI>;
+        $i1 = virtualinvoke $r3.<java.lang.String: int length()>();
+        $i1 = $i1 - 4;
+        $r2 = virtualinvoke $r2.<java.lang.String: java.lang.String substring(int,int)>(0, $i1);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r0 = <org.apache.fop.fonts.type1.Type1FontLoader: java.lang.String[] AFM_EXTENSIONS>;
+        $r2 = $r0[i];
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        afmUri = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        $r4 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.FontResolver resolver>;
+        afmIn = staticinvoke <org.apache.fop.fonts.type1.Type1FontLoader: java.io.InputStream openFontUri(org.apache.fop.fonts.FontResolver,java.lang.String)>($r4, afmUri);
+        if afmIn == null goto label3;
+
+     label2:
+        goto label6;
+
+     label3:
+        goto label5;
+
+     label4:
+        $r5 := @caughtexception;
+        l5 = $r5;
+
+     label5:
+        i = i + 1;
+        goto label0;
+
+     label6:
+        if afmIn == null goto label12;
+
+     label7:
+        $r6 = new org.apache.fop.fonts.type1.AFMParser;
+        specialinvoke $r6.<org.apache.fop.fonts.type1.AFMParser: void <init>()>();
+        afmParser = $r6;
+        afm = virtualinvoke afmParser.<org.apache.fop.fonts.type1.AFMParser: org.apache.fop.fonts.type1.AFMFile parse(java.io.InputStream)>(afmIn);
+
+     label8:
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.InputStream)>(afmIn);
+        goto label12;
+
+     label9:
+        $r7 := @caughtexception;
+
+     label10:
+        l6 = $r7;
+
+     label11:
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.InputStream)>(afmIn);
+        throw l6;
+
+     label12:
+        $r2 = this.<org.apache.fop.fonts.type1.Type1FontLoader: java.lang.String fontFileURI>;
+        pfmUri = specialinvoke this.<org.apache.fop.fonts.type1.Type1FontLoader: java.lang.String getPFMURI(java.lang.String)>($r2);
+        pfmIn = null;
+
+     label13:
+        $r4 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.FontResolver resolver>;
+        pfmIn = staticinvoke <org.apache.fop.fonts.type1.Type1FontLoader: java.io.InputStream openFontUri(org.apache.fop.fonts.FontResolver,java.lang.String)>($r4, pfmUri);
+
+     label14:
+        goto label16;
+
+     label15:
+        $r8 := @caughtexception;
+        l6 = $r8;
+
+     label16:
+        if pfmIn == null goto label22;
+
+     label17:
+        $r9 = new org.apache.fop.fonts.type1.PFMFile;
+        specialinvoke $r9.<org.apache.fop.fonts.type1.PFMFile: void <init>()>();
+        pfm = $r9;
+        virtualinvoke pfm.<org.apache.fop.fonts.type1.PFMFile: void load(java.io.InputStream)>(pfmIn);
+
+     label18:
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.InputStream)>(pfmIn);
+        goto label22;
+
+     label19:
+        $r10 := @caughtexception;
+
+     label20:
+        l7 = $r10;
+
+     label21:
+        staticinvoke <org.apache.commons.io.IOUtils: void closeQuietly(java.io.InputStream)>(pfmIn);
+        throw l7;
+
+     label22:
+        if afm != null goto label23;
+
+        if pfm != null goto label23;
+
+        $r11 = new java.io.FileNotFoundException;
+        $r12 = new java.lang.StringBuffer;
+        specialinvoke $r12.<java.lang.StringBuffer: void <init>()>();
+        $r12 = virtualinvoke $r12.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Neither an AFM nor a PFM file was found for ");
+        $r3 = this.<org.apache.fop.fonts.type1.Type1FontLoader: java.lang.String fontFileURI>;
+        $r12 = virtualinvoke $r12.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r13 = virtualinvoke $r12.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r11.<java.io.FileNotFoundException: void <init>(java.lang.String)>($r13);
+        throw $r11;
+
+     label23:
+        if pfm != null goto label24;
+
+        $r11 = new java.io.FileNotFoundException;
+        $r12 = new java.lang.StringBuffer;
+        specialinvoke $r12.<java.lang.StringBuffer: void <init>()>();
+        $r12 = virtualinvoke $r12.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("No PFM file was found for ");
+        $r3 = this.<org.apache.fop.fonts.type1.Type1FontLoader: java.lang.String fontFileURI>;
+        $r12 = virtualinvoke $r12.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r13 = virtualinvoke $r12.<java.lang.StringBuffer: java.lang.String toString()>();
+        specialinvoke $r11.<java.io.FileNotFoundException: void <init>(java.lang.String)>($r13);
+        throw $r11;
+
+     label24:
+        specialinvoke this.<org.apache.fop.fonts.type1.Type1FontLoader: void buildFont(org.apache.fop.fonts.type1.AFMFile,org.apache.fop.fonts.type1.PFMFile)>(afm, pfm);
+        this.<org.apache.fop.fonts.type1.Type1FontLoader: boolean loaded> = 1;
+        return;
+
+        catch java.io.IOException from label1 to label2 with label4;
+        catch java.lang.Throwable from label7 to label8 with label9;
+        catch java.lang.Throwable from label10 to label11 with label9;
+        catch java.io.IOException from label13 to label14 with label15;
+        catch java.lang.Throwable from label17 to label18 with label19;
+        catch java.lang.Throwable from label20 to label21 with label19;
+    }
+
+    private void buildFont(org.apache.fop.fonts.type1.AFMFile, org.apache.fop.fonts.type1.PFMFile)
+    {
+        org.apache.fop.fonts.type1.Type1FontLoader this;
+        org.apache.fop.fonts.type1.AFMFile afm;
+        org.apache.fop.fonts.type1.PFMFile pfm;
+        java.lang.String encoding, effEncodingName, fullName, $r5, $r6, $r10;
+        org.apache.fop.fonts.CodePointMapping mapping;
+        java.util.HashSet names, $r12;
+        int xHeight, asc, desc, $i1, $i2, $i5;
+        org.apache.fop.fonts.type1.AFMCharMetrics chm;
+        java.awt.geom.RectangularShape rect;
+        short i, $s0, $s4;
+        java.lang.IllegalArgumentException $r0;
+        org.apache.fop.fonts.SingleByteFont $r1, $r2;
+        org.apache.fop.fonts.FontType $r3;
+        org.apache.fop.fonts.FontResolver $r4;
+        boolean $z0;
+        java.lang.StringBuffer $r7, $r9;
+        org.apache.commons.logging.Log $r8;
+        org.apache.fop.fonts.CustomFont $r11, $r18;
+        java.lang.Number $r13, $r14;
+        int[] $r15, $r17;
+        org.apache.fop.fonts.type1.AFMWritingDirectionMetrics $r16;
+        double $d0, $d1;
+        long $l3;
+        float $f0;
+        java.util.Map $r19;
+
+        this := @this: org.apache.fop.fonts.type1.Type1FontLoader;
+        afm := @parameter0: org.apache.fop.fonts.type1.AFMFile;
+        pfm := @parameter1: org.apache.fop.fonts.type1.PFMFile;
+        if afm != null goto label0;
+
+        if pfm != null goto label0;
+
+        $r0 = new java.lang.IllegalArgumentException;
+        specialinvoke $r0.<java.lang.IllegalArgumentException: void <init>(java.lang.String)>("Need at least an AFM or a PFM!");
+        throw $r0;
+
+     label0:
+        $r1 = new org.apache.fop.fonts.SingleByteFont;
+        specialinvoke $r1.<org.apache.fop.fonts.SingleByteFont: void <init>()>();
+        this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.SingleByteFont singleFont> = $r1;
+        $r2 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.SingleByteFont singleFont>;
+        $r3 = <org.apache.fop.fonts.FontType: org.apache.fop.fonts.FontType TYPE1>;
+        virtualinvoke $r2.<org.apache.fop.fonts.SingleByteFont: void setFontType(org.apache.fop.fonts.FontType)>($r3);
+        $r2 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.SingleByteFont singleFont>;
+        $r4 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.FontResolver resolver>;
+        virtualinvoke $r2.<org.apache.fop.fonts.SingleByteFont: void setResolver(org.apache.fop.fonts.FontResolver)>($r4);
+        $r2 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.SingleByteFont singleFont>;
+        $r5 = this.<org.apache.fop.fonts.type1.Type1FontLoader: java.lang.String fontFileURI>;
+        virtualinvoke $r2.<org.apache.fop.fonts.SingleByteFont: void setEmbedFileName(java.lang.String)>($r5);
+        $r1 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.SingleByteFont singleFont>;
+        this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont> = $r1;
+        if afm == null goto label6;
+
+        encoding = virtualinvoke afm.<org.apache.fop.fonts.type1.AFMFile: java.lang.String getEncodingScheme()>();
+        $r6 = "AdobeStandardEncoding";
+        $z0 = virtualinvoke $r6.<java.lang.String: boolean equals(java.lang.Object)>(encoding);
+        if $z0 == 0 goto label1;
+
+        $r2 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.SingleByteFont singleFont>;
+        virtualinvoke $r2.<org.apache.fop.fonts.SingleByteFont: void setEncoding(java.lang.String)>("WinAnsiEncoding");
+        goto label5;
+
+     label1:
+        $r6 = "FontSpecific";
+        $z0 = virtualinvoke $r6.<java.lang.String: boolean equals(java.lang.Object)>(encoding);
+        if $z0 == 0 goto label2;
+
+        $r7 = new java.lang.StringBuffer;
+        specialinvoke $r7.<java.lang.StringBuffer: void <init>()>();
+        $r5 = virtualinvoke afm.<org.apache.fop.fonts.type1.AFMFile: java.lang.String getFontName()>();
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r5);
+        $r7 = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Encoding");
+        effEncodingName = virtualinvoke $r7.<java.lang.StringBuffer: java.lang.String toString()>();
+        goto label3;
+
+     label2:
+        effEncodingName = encoding;
+
+     label3:
+        $r8 = <org.apache.fop.fonts.type1.Type1FontLoader: org.apache.commons.logging.Log log>;
+        $z0 = interfaceinvoke $r8.<org.apache.commons.logging.Log: boolean isDebugEnabled()>();
+        if $z0 == 0 goto label4;
+
+        $r8 = <org.apache.fop.fonts.type1.Type1FontLoader: org.apache.commons.logging.Log log>;
+        $r9 = new java.lang.StringBuffer;
+        specialinvoke $r9.<java.lang.StringBuffer: void <init>()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Unusual font encoding encountered: ");
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(encoding);
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" -> ");
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(effEncodingName);
+        $r5 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r8.<org.apache.commons.logging.Log: void debug(java.lang.Object)>($r5);
+
+     label4:
+        mapping = specialinvoke this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CodePointMapping buildCustomEncoding(java.lang.String,org.apache.fop.fonts.type1.AFMFile)>(effEncodingName, afm);
+        $r2 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.SingleByteFont singleFont>;
+        virtualinvoke $r2.<org.apache.fop.fonts.SingleByteFont: void setEncoding(org.apache.fop.fonts.CodePointMapping)>(mapping);
+
+     label5:
+        goto label8;
+
+     label6:
+        $s0 = virtualinvoke pfm.<org.apache.fop.fonts.type1.PFMFile: short getCharSet()>();
+        if $s0 < 0 goto label7;
+
+        $s0 = virtualinvoke pfm.<org.apache.fop.fonts.type1.PFMFile: short getCharSet()>();
+        if $s0 > 2 goto label7;
+
+        $r2 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.SingleByteFont singleFont>;
+        $r9 = new java.lang.StringBuffer;
+        specialinvoke $r9.<java.lang.StringBuffer: void <init>()>();
+        $r10 = virtualinvoke pfm.<org.apache.fop.fonts.type1.PFMFile: java.lang.String getCharSetName()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r10);
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Encoding");
+        $r5 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke $r2.<org.apache.fop.fonts.SingleByteFont: void setEncoding(java.lang.String)>($r5);
+        goto label8;
+
+     label7:
+        $r8 = <org.apache.fop.fonts.type1.Type1FontLoader: org.apache.commons.logging.Log log>;
+        $r9 = new java.lang.StringBuffer;
+        specialinvoke $r9.<java.lang.StringBuffer: void <init>()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("The PFM reports an unsupported encoding (");
+        $r10 = virtualinvoke pfm.<org.apache.fop.fonts.type1.PFMFile: java.lang.String getCharSetName()>();
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r10);
+        $r9 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("). The font may not work as expected.");
+        $r5 = virtualinvoke $r9.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r8.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r5);
+        $r2 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.SingleByteFont singleFont>;
+        virtualinvoke $r2.<org.apache.fop.fonts.SingleByteFont: void setEncoding(java.lang.String)>("WinAnsiEncoding");
+
+     label8:
+        if afm == null goto label9;
+
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $r5 = virtualinvoke afm.<org.apache.fop.fonts.type1.AFMFile: java.lang.String getFontName()>();
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setFontName(java.lang.String)>($r5);
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $r5 = virtualinvoke afm.<org.apache.fop.fonts.type1.AFMFile: java.lang.String getFullName()>();
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setFullName(java.lang.String)>($r5);
+        $r12 = new java.util.HashSet;
+        specialinvoke $r12.<java.util.HashSet: void <init>()>();
+        names = $r12;
+        $r5 = virtualinvoke afm.<org.apache.fop.fonts.type1.AFMFile: java.lang.String getFamilyName()>();
+        interfaceinvoke names.<java.util.Set: boolean add(java.lang.Object)>($r5);
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setFamilyNames(java.util.Set)>(names);
+        goto label10;
+
+     label9:
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $r5 = virtualinvoke pfm.<org.apache.fop.fonts.type1.PFMFile: java.lang.String getPostscriptName()>();
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setFontName(java.lang.String)>($r5);
+        fullName = virtualinvoke pfm.<org.apache.fop.fonts.type1.PFMFile: java.lang.String getPostscriptName()>();
+        fullName = virtualinvoke fullName.<java.lang.String: java.lang.String replace(char,char)>(45, 32);
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setFullName(java.lang.String)>(fullName);
+        $r12 = new java.util.HashSet;
+        specialinvoke $r12.<java.util.HashSet: void <init>()>();
+        names = $r12;
+        $r5 = virtualinvoke pfm.<org.apache.fop.fonts.type1.PFMFile: java.lang.String getWindowsName()>();
+        interfaceinvoke names.<java.util.Set: boolean add(java.lang.Object)>($r5);
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setFamilyNames(java.util.Set)>(names);
+
+     label10:
+        if afm == null goto label17;
+
+        $r13 = virtualinvoke afm.<org.apache.fop.fonts.type1.AFMFile: java.lang.Number getCapHeight()>();
+        if $r13 == null goto label11;
+
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $r14 = virtualinvoke afm.<org.apache.fop.fonts.type1.AFMFile: java.lang.Number getCapHeight()>();
+        $i1 = virtualinvoke $r14.<java.lang.Number: int intValue()>();
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setCapHeight(int)>($i1);
+
+     label11:
+        $r13 = virtualinvoke afm.<org.apache.fop.fonts.type1.AFMFile: java.lang.Number getXHeight()>();
+        if $r13 == null goto label12;
+
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $r14 = virtualinvoke afm.<org.apache.fop.fonts.type1.AFMFile: java.lang.Number getXHeight()>();
+        $i1 = virtualinvoke $r14.<java.lang.Number: int intValue()>();
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setXHeight(int)>($i1);
+
+     label12:
+        $r13 = virtualinvoke afm.<org.apache.fop.fonts.type1.AFMFile: java.lang.Number getAscender()>();
+        if $r13 == null goto label13;
+
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $r14 = virtualinvoke afm.<org.apache.fop.fonts.type1.AFMFile: java.lang.Number getAscender()>();
+        $i1 = virtualinvoke $r14.<java.lang.Number: int intValue()>();
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setAscender(int)>($i1);
+
+     label13:
+        $r13 = virtualinvoke afm.<org.apache.fop.fonts.type1.AFMFile: java.lang.Number getDescender()>();
+        if $r13 == null goto label14;
+
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $r14 = virtualinvoke afm.<org.apache.fop.fonts.type1.AFMFile: java.lang.Number getDescender()>();
+        $i1 = virtualinvoke $r14.<java.lang.Number: int intValue()>();
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setDescender(int)>($i1);
+
+     label14:
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $r15 = virtualinvoke afm.<org.apache.fop.fonts.type1.AFMFile: int[] getFontBBoxAsIntArray()>();
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setFontBBox(int[])>($r15);
+        $r13 = virtualinvoke afm.<org.apache.fop.fonts.type1.AFMFile: java.lang.Number getStdVW()>();
+        if $r13 == null goto label15;
+
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $r14 = virtualinvoke afm.<org.apache.fop.fonts.type1.AFMFile: java.lang.Number getStdVW()>();
+        $i1 = virtualinvoke $r14.<java.lang.Number: int intValue()>();
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setStemV(int)>($i1);
+        goto label16;
+
+     label15:
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setStemV(int)>(80);
+
+     label16:
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $r16 = virtualinvoke afm.<org.apache.fop.fonts.type1.AFMFile: org.apache.fop.fonts.type1.AFMWritingDirectionMetrics getWritingDirectionMetrics(int)>(0);
+        $d0 = virtualinvoke $r16.<org.apache.fop.fonts.type1.AFMWritingDirectionMetrics: double getItalicAngle()>();
+        $i1 = (int) $d0;
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setItalicAngle(int)>($i1);
+        goto label18;
+
+     label17:
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $r15 = virtualinvoke pfm.<org.apache.fop.fonts.type1.PFMFile: int[] getFontBBox()>();
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setFontBBox(int[])>($r15);
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i1 = virtualinvoke pfm.<org.apache.fop.fonts.type1.PFMFile: int getStemV()>();
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setStemV(int)>($i1);
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i1 = virtualinvoke pfm.<org.apache.fop.fonts.type1.PFMFile: int getItalicAngle()>();
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setItalicAngle(int)>($i1);
+
+     label18:
+        if pfm == null goto label22;
+
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i2 = virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: int getCapHeight()>();
+        if $i2 != 0 goto label19;
+
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i1 = virtualinvoke pfm.<org.apache.fop.fonts.type1.PFMFile: int getCapHeight()>();
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setCapHeight(int)>($i1);
+
+     label19:
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i2 = virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: int getXHeight(int)>(1);
+        if $i2 != 0 goto label20;
+
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i1 = virtualinvoke pfm.<org.apache.fop.fonts.type1.PFMFile: int getXHeight()>();
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setXHeight(int)>($i1);
+
+     label20:
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i2 = virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: int getAscender()>();
+        if $i2 != 0 goto label21;
+
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i1 = virtualinvoke pfm.<org.apache.fop.fonts.type1.PFMFile: int getLowerCaseAscent()>();
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setAscender(int)>($i1);
+
+     label21:
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i2 = virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: int getDescender()>();
+        if $i2 != 0 goto label22;
+
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i1 = virtualinvoke pfm.<org.apache.fop.fonts.type1.PFMFile: int getLowerCaseDescent()>();
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setDescender(int)>($i1);
+
+     label22:
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i2 = virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: int getXHeight(int)>(1);
+        if $i2 != 0 goto label25;
+
+        xHeight = 0;
+        if afm == null goto label23;
+
+        chm = virtualinvoke afm.<org.apache.fop.fonts.type1.AFMFile: org.apache.fop.fonts.type1.AFMCharMetrics getChar(java.lang.String)>("x");
+        if chm == null goto label23;
+
+        rect = virtualinvoke chm.<org.apache.fop.fonts.type1.AFMCharMetrics: java.awt.geom.RectangularShape getBBox()>();
+        if rect == null goto label23;
+
+        $d1 = virtualinvoke rect.<java.awt.geom.RectangularShape: double getMinX()>();
+        $l3 = staticinvoke <java.lang.Math: long round(double)>($d1);
+        xHeight = (int) $l3;
+
+     label23:
+        if xHeight != 0 goto label24;
+
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $r17 = virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: int[] getFontBBox()>();
+        $i2 = $r17[3];
+        $f0 = (float) $i2;
+        $f0 = $f0 * 0.6F;
+        xHeight = staticinvoke <java.lang.Math: int round(float)>($f0);
+
+     label24:
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setXHeight(int)>(xHeight);
+
+     label25:
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i2 = virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: int getAscender()>();
+        if $i2 != 0 goto label28;
+
+        asc = 0;
+        if afm == null goto label26;
+
+        chm = virtualinvoke afm.<org.apache.fop.fonts.type1.AFMFile: org.apache.fop.fonts.type1.AFMCharMetrics getChar(java.lang.String)>("d");
+        if chm == null goto label26;
+
+        rect = virtualinvoke chm.<org.apache.fop.fonts.type1.AFMCharMetrics: java.awt.geom.RectangularShape getBBox()>();
+        if rect == null goto label26;
+
+        $d1 = virtualinvoke rect.<java.awt.geom.RectangularShape: double getMinX()>();
+        $l3 = staticinvoke <java.lang.Math: long round(double)>($d1);
+        asc = (int) $l3;
+
+     label26:
+        if asc != 0 goto label27;
+
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $r17 = virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: int[] getFontBBox()>();
+        $i2 = $r17[3];
+        $f0 = (float) $i2;
+        $f0 = $f0 * 0.9F;
+        asc = staticinvoke <java.lang.Math: int round(float)>($f0);
+
+     label27:
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setAscender(int)>(asc);
+
+     label28:
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i2 = virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: int getDescender()>();
+        if $i2 != 0 goto label31;
+
+        desc = 0;
+        if afm == null goto label29;
+
+        chm = virtualinvoke afm.<org.apache.fop.fonts.type1.AFMFile: org.apache.fop.fonts.type1.AFMCharMetrics getChar(java.lang.String)>("p");
+        if chm == null goto label29;
+
+        rect = virtualinvoke chm.<org.apache.fop.fonts.type1.AFMCharMetrics: java.awt.geom.RectangularShape getBBox()>();
+        if rect == null goto label29;
+
+        $d1 = virtualinvoke rect.<java.awt.geom.RectangularShape: double getMinX()>();
+        $l3 = staticinvoke <java.lang.Math: long round(double)>($d1);
+        desc = (int) $l3;
+
+     label29:
+        if desc != 0 goto label30;
+
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $r17 = virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: int[] getFontBBox()>();
+        desc = $r17[1];
+
+     label30:
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setDescender(int)>(desc);
+
+     label31:
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i2 = virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: int getCapHeight()>();
+        if $i2 != 0 goto label32;
+
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $r18 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i1 = virtualinvoke $r18.<org.apache.fop.fonts.CustomFont: int getAscender()>();
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setCapHeight(int)>($i1);
+
+     label32:
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $i1 = virtualinvoke pfm.<org.apache.fop.fonts.type1.PFMFile: int getFlags()>();
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setFlags(int)>($i1);
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $s4 = virtualinvoke pfm.<org.apache.fop.fonts.type1.PFMFile: short getFirstChar()>();
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setFirstChar(int)>($s4);
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $s4 = virtualinvoke pfm.<org.apache.fop.fonts.type1.PFMFile: short getLastChar()>();
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void setLastChar(int)>($s4);
+        i = virtualinvoke pfm.<org.apache.fop.fonts.type1.PFMFile: short getFirstChar()>();
+
+     label33:
+        $s4 = virtualinvoke pfm.<org.apache.fop.fonts.type1.PFMFile: short getLastChar()>();
+        if i > $s4 goto label34;
+
+        $r2 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.SingleByteFont singleFont>;
+        $i5 = virtualinvoke pfm.<org.apache.fop.fonts.type1.PFMFile: int getCharWidth(short)>(i);
+        virtualinvoke $r2.<org.apache.fop.fonts.SingleByteFont: void setWidth(int,int)>(i, $i5);
+        $i2 = i + 1;
+        i = (short) $i2;
+        goto label33;
+
+     label34:
+        $r11 = this.<org.apache.fop.fonts.type1.Type1FontLoader: org.apache.fop.fonts.CustomFont returnFont>;
+        $r19 = virtualinvoke pfm.<org.apache.fop.fonts.type1.PFMFile: java.util.Map getKerning()>();
+        virtualinvoke $r11.<org.apache.fop.fonts.CustomFont: void replaceKerningMap(java.util.Map)>($r19);
+        return;
+    }
+
+    private org.apache.fop.fonts.CodePointMapping buildCustomEncoding(java.lang.String, org.apache.fop.fonts.type1.AFMFile)
+    {
+        org.apache.fop.fonts.type1.Type1FontLoader this;
+        java.lang.String encodingName, u, unicodes, $r1, $r4;
+        org.apache.fop.fonts.type1.AFMFile afm;
+        java.util.List chars;
+        int mappingCount, idx, $i0, $i1, $i2;
+        java.util.Iterator iter;
+        org.apache.fop.fonts.type1.AFMCharMetrics charMetrics;
+        int[] table;
+        java.lang.String[] charNameMap;
+        boolean $z0;
+        java.lang.Object $r0;
+        org.apache.commons.logging.Log $r2;
+        java.lang.StringBuffer $r3;
+        char $c3;
+        org.apache.fop.fonts.CodePointMapping $r5;
+
+        this := @this: org.apache.fop.fonts.type1.Type1FontLoader;
+        encodingName := @parameter0: java.lang.String;
+        afm := @parameter1: org.apache.fop.fonts.type1.AFMFile;
+        chars = virtualinvoke afm.<org.apache.fop.fonts.type1.AFMFile: java.util.List getCharMetrics()>();
+        mappingCount = 0;
+        iter = interfaceinvoke chars.<java.util.List: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label2;
+
+        $r0 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        charMetrics = (org.apache.fop.fonts.type1.AFMCharMetrics) $r0;
+        $i0 = virtualinvoke charMetrics.<org.apache.fop.fonts.type1.AFMCharMetrics: int getCharCode()>();
+        if $i0 < 0 goto label1;
+
+        u = virtualinvoke charMetrics.<org.apache.fop.fonts.type1.AFMCharMetrics: java.lang.String getUnicodeSequence()>();
+        if u == null goto label1;
+
+        $i0 = virtualinvoke u.<java.lang.String: int length()>();
+        if $i0 != 1 goto label1;
+
+        mappingCount = mappingCount + 1;
+
+     label1:
+        goto label0;
+
+     label2:
+        $i0 = mappingCount * 2;
+        table = newarray (int)[$i0];
+        charNameMap = newarray (java.lang.String)[256];
+        iter = interfaceinvoke chars.<java.util.List: java.util.Iterator iterator()>();
+        idx = 0;
+
+     label3:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label7;
+
+        $r0 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        charMetrics = (org.apache.fop.fonts.type1.AFMCharMetrics) $r0;
+        $i0 = virtualinvoke charMetrics.<org.apache.fop.fonts.type1.AFMCharMetrics: int getCharCode()>();
+        if $i0 < 0 goto label6;
+
+        $i1 = virtualinvoke charMetrics.<org.apache.fop.fonts.type1.AFMCharMetrics: int getCharCode()>();
+        $r1 = virtualinvoke charMetrics.<org.apache.fop.fonts.type1.AFMCharMetrics: java.lang.String getCharName()>();
+        charNameMap[$i1] = $r1;
+        unicodes = virtualinvoke charMetrics.<org.apache.fop.fonts.type1.AFMCharMetrics: java.lang.String getUnicodeSequence()>();
+        if unicodes != null goto label4;
+
+        $r2 = <org.apache.fop.fonts.type1.Type1FontLoader: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("No Unicode mapping for glyph: ");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(charMetrics);
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void info(java.lang.Object)>($r4);
+        goto label6;
+
+     label4:
+        $i0 = virtualinvoke unicodes.<java.lang.String: int length()>();
+        if $i0 != 1 goto label5;
+
+        $i2 = virtualinvoke charMetrics.<org.apache.fop.fonts.type1.AFMCharMetrics: int getCharCode()>();
+        table[idx] = $i2;
+        idx = idx + 1;
+        $c3 = virtualinvoke unicodes.<java.lang.String: char charAt(int)>(0);
+        table[idx] = $c3;
+        idx = idx + 1;
+        goto label6;
+
+     label5:
+        $r2 = <org.apache.fop.fonts.type1.Type1FontLoader: org.apache.commons.logging.Log log>;
+        $r3 = new java.lang.StringBuffer;
+        specialinvoke $r3.<java.lang.StringBuffer: void <init>()>();
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("Multi-character representation of glyph not currently supported: ");
+        $r3 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>(charMetrics);
+        $r4 = virtualinvoke $r3.<java.lang.StringBuffer: java.lang.String toString()>();
+        interfaceinvoke $r2.<org.apache.commons.logging.Log: void warn(java.lang.Object)>($r4);
+
+     label6:
+        goto label3;
+
+     label7:
+        $r5 = new org.apache.fop.fonts.CodePointMapping;
+        specialinvoke $r5.<org.apache.fop.fonts.CodePointMapping: void <init>(java.lang.String,int[],java.lang.String[])>(encodingName, table, charNameMap);
+        return $r5;
+    }
+
+    static void <clinit>()
+    {
+        java.lang.String[] $r0;
+
+        $r0 = newarray (java.lang.String)[3];
+        $r0[0] = ".AFM";
+        $r0[1] = ".afm";
+        $r0[2] = ".Afm";
+        <org.apache.fop.fonts.type1.Type1FontLoader: java.lang.String[] AFM_EXTENSIONS> = $r0;
+        return;
+    }
+}

@@ -1,0 +1,464 @@
+public class org.apache.fop.pdf.PDFResources extends org.apache.fop.pdf.PDFObject
+{
+    protected java.util.Map fonts;
+    protected java.util.Set xObjects;
+    protected java.util.Set patterns;
+    protected java.util.Set shadings;
+    protected java.util.Set gstates;
+    protected java.util.Map colorSpaces;
+    protected java.util.Map iccColorSpaces;
+
+    public void <init>(int)
+    {
+        org.apache.fop.pdf.PDFResources this;
+        int objnum;
+        java.util.HashMap $r0;
+        java.util.HashSet $r1;
+
+        this := @this: org.apache.fop.pdf.PDFResources;
+        objnum := @parameter0: int;
+        specialinvoke this.<org.apache.fop.pdf.PDFObject: void <init>()>();
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.pdf.PDFResources: java.util.Map fonts> = $r0;
+        $r1 = new java.util.HashSet;
+        specialinvoke $r1.<java.util.HashSet: void <init>()>();
+        this.<org.apache.fop.pdf.PDFResources: java.util.Set xObjects> = $r1;
+        $r1 = new java.util.HashSet;
+        specialinvoke $r1.<java.util.HashSet: void <init>()>();
+        this.<org.apache.fop.pdf.PDFResources: java.util.Set patterns> = $r1;
+        $r1 = new java.util.HashSet;
+        specialinvoke $r1.<java.util.HashSet: void <init>()>();
+        this.<org.apache.fop.pdf.PDFResources: java.util.Set shadings> = $r1;
+        $r1 = new java.util.HashSet;
+        specialinvoke $r1.<java.util.HashSet: void <init>()>();
+        this.<org.apache.fop.pdf.PDFResources: java.util.Set gstates> = $r1;
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.pdf.PDFResources: java.util.Map colorSpaces> = $r0;
+        $r0 = new java.util.HashMap;
+        specialinvoke $r0.<java.util.HashMap: void <init>()>();
+        this.<org.apache.fop.pdf.PDFResources: java.util.Map iccColorSpaces> = $r0;
+        virtualinvoke this.<org.apache.fop.pdf.PDFResources: void setObjectNumber(int)>(objnum);
+        return;
+    }
+
+    public void addFont(org.apache.fop.pdf.PDFFont)
+    {
+        org.apache.fop.pdf.PDFResources this;
+        org.apache.fop.pdf.PDFFont font;
+        java.util.Map $r0;
+        java.lang.String $r1;
+
+        this := @this: org.apache.fop.pdf.PDFResources;
+        font := @parameter0: org.apache.fop.pdf.PDFFont;
+        $r0 = this.<org.apache.fop.pdf.PDFResources: java.util.Map fonts>;
+        $r1 = virtualinvoke font.<org.apache.fop.pdf.PDFFont: java.lang.String getName()>();
+        interfaceinvoke $r0.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r1, font);
+        return;
+    }
+
+    public void addFonts(org.apache.fop.pdf.PDFDocument, org.apache.fop.fonts.FontInfo)
+    {
+        org.apache.fop.pdf.PDFResources this;
+        org.apache.fop.pdf.PDFDocument doc;
+        org.apache.fop.fonts.FontInfo fontInfo;
+        java.util.Map usedFonts;
+        java.util.Iterator e;
+        java.lang.String f, encoding, $r3;
+        org.apache.fop.fonts.Typeface font;
+        org.apache.fop.fonts.FontDescriptor desc;
+        java.util.Set $r0;
+        boolean $z0;
+        java.lang.Object $r1;
+        org.apache.fop.pdf.PDFFactory $r2;
+        org.apache.fop.pdf.PDFFont $r4;
+
+        this := @this: org.apache.fop.pdf.PDFResources;
+        doc := @parameter0: org.apache.fop.pdf.PDFDocument;
+        fontInfo := @parameter1: org.apache.fop.fonts.FontInfo;
+        usedFonts = virtualinvoke fontInfo.<org.apache.fop.fonts.FontInfo: java.util.Map getUsedFonts()>();
+        $r0 = interfaceinvoke usedFonts.<java.util.Map: java.util.Set keySet()>();
+        e = interfaceinvoke $r0.<java.util.Set: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke e.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label5;
+
+        $r1 = interfaceinvoke e.<java.util.Iterator: java.lang.Object next()>();
+        f = (java.lang.String) $r1;
+        $r1 = interfaceinvoke usedFonts.<java.util.Map: java.lang.Object get(java.lang.Object)>(f);
+        font = (org.apache.fop.fonts.Typeface) $r1;
+        $z0 = virtualinvoke font.<org.apache.fop.fonts.Typeface: boolean hadMappingOperations()>();
+        if $z0 == 0 goto label4;
+
+        desc = null;
+        $z0 = font instanceof org.apache.fop.fonts.FontDescriptor;
+        if $z0 == 0 goto label1;
+
+        desc = (org.apache.fop.fonts.FontDescriptor) font;
+
+     label1:
+        encoding = virtualinvoke font.<org.apache.fop.fonts.Typeface: java.lang.String getEncoding()>();
+        $z0 = font instanceof org.apache.fop.fonts.base14.Symbol;
+        if $z0 != 0 goto label2;
+
+        $z0 = font instanceof org.apache.fop.fonts.base14.ZapfDingbats;
+        if $z0 == 0 goto label3;
+
+     label2:
+        encoding = null;
+
+     label3:
+        $r2 = virtualinvoke doc.<org.apache.fop.pdf.PDFDocument: org.apache.fop.pdf.PDFFactory getFactory()>();
+        $r3 = virtualinvoke font.<org.apache.fop.fonts.Typeface: java.lang.String getEmbedFontName()>();
+        $r4 = virtualinvoke $r2.<org.apache.fop.pdf.PDFFactory: org.apache.fop.pdf.PDFFont makeFont(java.lang.String,java.lang.String,java.lang.String,org.apache.fop.fonts.FontMetrics,org.apache.fop.fonts.FontDescriptor)>(f, $r3, encoding, font, desc);
+        virtualinvoke this.<org.apache.fop.pdf.PDFResources: void addFont(org.apache.fop.pdf.PDFFont)>($r4);
+
+     label4:
+        goto label0;
+
+     label5:
+        return;
+    }
+
+    public void addGState(org.apache.fop.pdf.PDFGState)
+    {
+        org.apache.fop.pdf.PDFResources this;
+        org.apache.fop.pdf.PDFGState gs;
+        java.util.Set $r0;
+
+        this := @this: org.apache.fop.pdf.PDFResources;
+        gs := @parameter0: org.apache.fop.pdf.PDFGState;
+        $r0 = this.<org.apache.fop.pdf.PDFResources: java.util.Set gstates>;
+        interfaceinvoke $r0.<java.util.Set: boolean add(java.lang.Object)>(gs);
+        return;
+    }
+
+    public void addShading(org.apache.fop.pdf.PDFShading)
+    {
+        org.apache.fop.pdf.PDFResources this;
+        org.apache.fop.pdf.PDFShading theShading;
+        java.util.Set $r0;
+
+        this := @this: org.apache.fop.pdf.PDFResources;
+        theShading := @parameter0: org.apache.fop.pdf.PDFShading;
+        $r0 = this.<org.apache.fop.pdf.PDFResources: java.util.Set shadings>;
+        interfaceinvoke $r0.<java.util.Set: boolean add(java.lang.Object)>(theShading);
+        return;
+    }
+
+    public void addPattern(org.apache.fop.pdf.PDFPattern)
+    {
+        org.apache.fop.pdf.PDFResources this;
+        org.apache.fop.pdf.PDFPattern thePattern;
+        java.util.Set $r0;
+
+        this := @this: org.apache.fop.pdf.PDFResources;
+        thePattern := @parameter0: org.apache.fop.pdf.PDFPattern;
+        $r0 = this.<org.apache.fop.pdf.PDFResources: java.util.Set patterns>;
+        interfaceinvoke $r0.<java.util.Set: boolean add(java.lang.Object)>(thePattern);
+        return;
+    }
+
+    public void addXObject(org.apache.fop.pdf.PDFXObject)
+    {
+        org.apache.fop.pdf.PDFResources this;
+        org.apache.fop.pdf.PDFXObject xObject;
+        java.util.Set $r0;
+
+        this := @this: org.apache.fop.pdf.PDFResources;
+        xObject := @parameter0: org.apache.fop.pdf.PDFXObject;
+        $r0 = this.<org.apache.fop.pdf.PDFResources: java.util.Set xObjects>;
+        interfaceinvoke $r0.<java.util.Set: boolean add(java.lang.Object)>(xObject);
+        return;
+    }
+
+    public void addColorSpace(org.apache.fop.pdf.PDFICCBasedColorSpace)
+    {
+        org.apache.fop.pdf.PDFResources this;
+        org.apache.fop.pdf.PDFICCBasedColorSpace colorSpace;
+        java.lang.String desc, $r1;
+        java.util.Map $r0;
+        org.apache.fop.pdf.PDFICCStream $r3;
+        java.awt.color.ICC_Profile $r4;
+
+        this := @this: org.apache.fop.pdf.PDFResources;
+        colorSpace := @parameter0: org.apache.fop.pdf.PDFICCBasedColorSpace;
+        $r0 = this.<org.apache.fop.pdf.PDFResources: java.util.Map colorSpaces>;
+        $r1 = virtualinvoke colorSpace.<org.apache.fop.pdf.PDFICCBasedColorSpace: java.lang.String getName()>();
+        interfaceinvoke $r0.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>($r1, colorSpace);
+        $r3 = virtualinvoke colorSpace.<org.apache.fop.pdf.PDFICCBasedColorSpace: org.apache.fop.pdf.PDFICCStream getICCStream()>();
+        $r4 = virtualinvoke $r3.<org.apache.fop.pdf.PDFICCStream: java.awt.color.ICC_Profile getICCProfile()>();
+        desc = staticinvoke <org.apache.fop.util.ColorProfileUtil: java.lang.String getICCProfileDescription(java.awt.color.ICC_Profile)>($r4);
+        $r0 = this.<org.apache.fop.pdf.PDFResources: java.util.Map iccColorSpaces>;
+        interfaceinvoke $r0.<java.util.Map: java.lang.Object put(java.lang.Object,java.lang.Object)>(desc, colorSpace);
+        return;
+    }
+
+    public org.apache.fop.pdf.PDFICCBasedColorSpace getICCColorSpaceByProfileName(java.lang.String)
+    {
+        org.apache.fop.pdf.PDFResources this;
+        java.lang.String desc;
+        org.apache.fop.pdf.PDFICCBasedColorSpace cs;
+        java.util.Map $r0;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.pdf.PDFResources;
+        desc := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.pdf.PDFResources: java.util.Map iccColorSpaces>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>(desc);
+        cs = (org.apache.fop.pdf.PDFICCBasedColorSpace) $r1;
+        return cs;
+    }
+
+    public org.apache.fop.pdf.PDFICCBasedColorSpace getColorSpace(java.lang.String)
+    {
+        org.apache.fop.pdf.PDFResources this;
+        java.lang.String name;
+        org.apache.fop.pdf.PDFICCBasedColorSpace cs;
+        java.util.Map $r0;
+        java.lang.Object $r1;
+
+        this := @this: org.apache.fop.pdf.PDFResources;
+        name := @parameter0: java.lang.String;
+        $r0 = this.<org.apache.fop.pdf.PDFResources: java.util.Map colorSpaces>;
+        $r1 = interfaceinvoke $r0.<java.util.Map: java.lang.Object get(java.lang.Object)>(name);
+        cs = (org.apache.fop.pdf.PDFICCBasedColorSpace) $r1;
+        return cs;
+    }
+
+    public java.lang.String toPDFString()
+    {
+        org.apache.fop.pdf.PDFResources this;
+        java.lang.StringBuffer $r0, p, $r1;
+        java.util.Iterator fontIterator, iter;
+        java.lang.String fontName, $r2, $r3, $r12;
+        null_type currentShading, currentPattern;
+        org.apache.fop.pdf.PDFXObject xobj;
+        org.apache.fop.pdf.PDFGState gs;
+        org.apache.fop.pdf.PDFICCBasedColorSpace colorSpace;
+        java.util.Map $r4, $r7;
+        boolean $z0;
+        java.util.Set $r5;
+        java.lang.Object $r6, $r8;
+        org.apache.fop.pdf.PDFFont $r9;
+        org.apache.fop.pdf.PDFShading currentShading;
+        org.apache.fop.pdf.PDFPattern currentPattern;
+        org.apache.fop.pdf.PDFName $r10;
+        java.util.Collection $r11;
+
+        this := @this: org.apache.fop.pdf.PDFResources;
+        $r0 = new java.lang.StringBuffer;
+        specialinvoke $r0.<java.lang.StringBuffer: void <init>(int)>(128);
+        p = $r0;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r2 = virtualinvoke this.<org.apache.fop.pdf.PDFResources: java.lang.String getObjectID()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("<<\n");
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        $r4 = this.<org.apache.fop.pdf.PDFResources: java.util.Map fonts>;
+        $z0 = interfaceinvoke $r4.<java.util.Map: boolean isEmpty()>();
+        if $z0 != 0 goto label2;
+
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("/Font <<\n");
+        $r4 = this.<org.apache.fop.pdf.PDFResources: java.util.Map fonts>;
+        $r5 = interfaceinvoke $r4.<java.util.Map: java.util.Set keySet()>();
+        fontIterator = interfaceinvoke $r5.<java.util.Set: java.util.Iterator iterator()>();
+
+     label0:
+        $z0 = interfaceinvoke fontIterator.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label1;
+
+        $r6 = interfaceinvoke fontIterator.<java.util.Iterator: java.lang.Object next()>();
+        fontName = (java.lang.String) $r6;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("  /");
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(fontName);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $r7 = this.<org.apache.fop.pdf.PDFResources: java.util.Map fonts>;
+        $r8 = interfaceinvoke $r7.<java.util.Map: java.lang.Object get(java.lang.Object)>(fontName);
+        $r9 = (org.apache.fop.pdf.PDFFont) $r8;
+        $r2 = virtualinvoke $r9.<org.apache.fop.pdf.PDFFont: java.lang.String referencePDF()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\n");
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        goto label0;
+
+     label1:
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(">>\n");
+
+     label2:
+        currentShading = null;
+        $r5 = this.<org.apache.fop.pdf.PDFResources: java.util.Set shadings>;
+        $z0 = interfaceinvoke $r5.<java.util.Set: boolean isEmpty()>();
+        if $z0 != 0 goto label5;
+
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("/Shading <<\n");
+        $r5 = this.<org.apache.fop.pdf.PDFResources: java.util.Set shadings>;
+        iter = interfaceinvoke $r5.<java.util.Set: java.util.Iterator iterator()>();
+
+     label3:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label4;
+
+        $r6 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        currentShading = (org.apache.fop.pdf.PDFShading) $r6;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("  /");
+        $r2 = virtualinvoke currentShading.<org.apache.fop.pdf.PDFShading: java.lang.String getName()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $r2 = virtualinvoke currentShading.<org.apache.fop.pdf.PDFShading: java.lang.String referencePDF()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        goto label3;
+
+     label4:
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(">>\n");
+
+     label5:
+        currentShading = null;
+        currentPattern = null;
+        $r5 = this.<org.apache.fop.pdf.PDFResources: java.util.Set patterns>;
+        $z0 = interfaceinvoke $r5.<java.util.Set: boolean isEmpty()>();
+        if $z0 != 0 goto label8;
+
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("/Pattern <<\n");
+        $r5 = this.<org.apache.fop.pdf.PDFResources: java.util.Set patterns>;
+        iter = interfaceinvoke $r5.<java.util.Set: java.util.Iterator iterator()>();
+
+     label6:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label7;
+
+        $r6 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        currentPattern = (org.apache.fop.pdf.PDFPattern) $r6;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("  /");
+        $r2 = virtualinvoke currentPattern.<org.apache.fop.pdf.PDFPattern: java.lang.String getName()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $r2 = virtualinvoke currentPattern.<org.apache.fop.pdf.PDFPattern: java.lang.String referencePDF()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        goto label6;
+
+     label7:
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(">>\n");
+
+     label8:
+        currentPattern = null;
+        virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("/ProcSet [ /PDF /ImageB /ImageC /Text ]\n");
+        $r5 = this.<org.apache.fop.pdf.PDFResources: java.util.Set xObjects>;
+        if $r5 == null goto label11;
+
+        $r5 = this.<org.apache.fop.pdf.PDFResources: java.util.Set xObjects>;
+        $z0 = interfaceinvoke $r5.<java.util.Set: boolean isEmpty()>();
+        if $z0 != 0 goto label11;
+
+        p = virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("/XObject <<\n");
+        $r5 = this.<org.apache.fop.pdf.PDFResources: java.util.Set xObjects>;
+        iter = interfaceinvoke $r5.<java.util.Set: java.util.Iterator iterator()>();
+
+     label9:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label10;
+
+        $r6 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        xobj = (org.apache.fop.pdf.PDFXObject) $r6;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("  ");
+        $r10 = virtualinvoke xobj.<org.apache.fop.pdf.PDFXObject: org.apache.fop.pdf.PDFName getName()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.Object)>($r10);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $r2 = virtualinvoke xobj.<org.apache.fop.pdf.PDFXObject: java.lang.String referencePDF()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\n");
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        p = virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        goto label9;
+
+     label10:
+        p = virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(">>\n");
+
+     label11:
+        $r5 = this.<org.apache.fop.pdf.PDFResources: java.util.Set gstates>;
+        $z0 = interfaceinvoke $r5.<java.util.Set: boolean isEmpty()>();
+        if $z0 != 0 goto label14;
+
+        p = virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("/ExtGState <<\n");
+        $r5 = this.<org.apache.fop.pdf.PDFResources: java.util.Set gstates>;
+        iter = interfaceinvoke $r5.<java.util.Set: java.util.Iterator iterator()>();
+
+     label12:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label13;
+
+        $r6 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        gs = (org.apache.fop.pdf.PDFGState) $r6;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("  /");
+        $r2 = virtualinvoke gs.<org.apache.fop.pdf.PDFGState: java.lang.String getName()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $r2 = virtualinvoke gs.<org.apache.fop.pdf.PDFGState: java.lang.String referencePDF()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\n");
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        p = virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        goto label12;
+
+     label13:
+        p = virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(">>\n");
+
+     label14:
+        $r4 = this.<org.apache.fop.pdf.PDFResources: java.util.Map colorSpaces>;
+        $z0 = interfaceinvoke $r4.<java.util.Map: boolean isEmpty()>();
+        if $z0 != 0 goto label17;
+
+        p = virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("/ColorSpace <<\n");
+        $r4 = this.<org.apache.fop.pdf.PDFResources: java.util.Map colorSpaces>;
+        $r11 = interfaceinvoke $r4.<java.util.Map: java.util.Collection values()>();
+        iter = interfaceinvoke $r11.<java.util.Collection: java.util.Iterator iterator()>();
+
+     label15:
+        $z0 = interfaceinvoke iter.<java.util.Iterator: boolean hasNext()>();
+        if $z0 == 0 goto label16;
+
+        $r6 = interfaceinvoke iter.<java.util.Iterator: java.lang.Object next()>();
+        colorSpace = (org.apache.fop.pdf.PDFICCBasedColorSpace) $r6;
+        $r1 = new java.lang.StringBuffer;
+        specialinvoke $r1.<java.lang.StringBuffer: void <init>()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("  /");
+        $r2 = virtualinvoke colorSpace.<org.apache.fop.pdf.PDFICCBasedColorSpace: java.lang.String getName()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(" ");
+        $r2 = virtualinvoke colorSpace.<org.apache.fop.pdf.PDFICCBasedColorSpace: java.lang.String referencePDF()>();
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r2);
+        $r1 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>("\n");
+        $r3 = virtualinvoke $r1.<java.lang.StringBuffer: java.lang.String toString()>();
+        p = virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>($r3);
+        goto label15;
+
+     label16:
+        p = virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(">>\n");
+
+     label17:
+        p = virtualinvoke p.<java.lang.StringBuffer: java.lang.StringBuffer append(java.lang.String)>(">>\nendobj\n");
+        $r12 = virtualinvoke p.<java.lang.StringBuffer: java.lang.String toString()>();
+        return $r12;
+    }
+}
